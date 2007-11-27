@@ -65,7 +65,7 @@ public class FileServletTest {
     @Test
     public void testMissingFile() throws ServletException, IOException {
         final Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getString("file-servlet.dir")).andReturn("src/java/test/org/jcatapult/servlet");
+        EasyMock.expect(configuration.getString("file-servlet.dir")).andReturn("src/java/test/unit/org/jcatapult/servlet");
         EasyMock.replay(configuration);
 
         Injector injector = Guice.createInjector(new Module(){
@@ -94,7 +94,7 @@ public class FileServletTest {
     @Test
     public void testSuccess() throws ServletException, IOException {
         final Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getString("file-servlet.dir")).andReturn("src/java/test/org/jcatapult/servlet");
+        EasyMock.expect(configuration.getString("file-servlet.dir")).andReturn("src/java/test/unit/org/jcatapult/servlet");
         EasyMock.replay(configuration);
 
         Injector injector = Guice.createInjector(new Module(){

@@ -2,9 +2,10 @@
 <classpath>
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
     <classpathentry kind="src" path="src/conf/main" />
-    <classpathentry kind="src" path="src/conf/test" output="target/classes/test" />
+    <classpathentry kind="src" path="src/conf/test/unit" />
     <classpathentry kind="src" path="src/java/main" />
-    <classpathentry kind="src" path="src/java/test" output="target/classes/test" />
+    <classpathentry kind="src" path="src/java/test/integration" />
+    <classpathentry kind="src" path="src/java/test/unit" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/acegisecurity.org/acegisecurity/acegi-security-1.0.3.jar" sourcepath="/SAVANT_REPOSITORY/acegisecurity.org/acegisecurity/acegi-security-1.0.3-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/antlr.org/antlr/antlr-2.7.6.jar" sourcepath="/SAVANT_REPOSITORY/antlr.org/antlr/antlr-2.7.6-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-beanutils/commons-beanutils-1.6.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/commons-beanutils/commons-beanutils-1.6-src.jar" />

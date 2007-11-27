@@ -42,9 +42,9 @@ public class EnvironmentAwareConfigurationTest {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
         ServletContextHolder.setServletContext(context);
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
-            andReturn("src/java/test/org/jcatapult/config/config-default.xml");
+            andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-development.xml")).
-            andReturn("src/java/test/org/jcatapult/config/config-development.xml");
+            andReturn("src/java/test/unit/org/jcatapult/config/config-development.xml");
         EasyMock.replay(context);
 
         EnvironmentAwareConfiguration config = new EnvironmentAwareConfiguration(new JNDIEnvironmentResolver(),
