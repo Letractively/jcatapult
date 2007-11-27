@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<component>
+  <action_package>org.jcatapult.component.test</action_package>
+  <action_package namespace_prefix="/test2">org.jcatapult.component.test2</action_package>
+  <base_result_location>/WEB-INF/component</base_result_location>
+  <parent_package>foo-bar</parent_package>
+</component>
