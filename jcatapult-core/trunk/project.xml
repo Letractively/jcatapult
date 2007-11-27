@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-core"
-         group="inversoft.org"
-         version="1.0-RC1">
+         group="jcatapult.org"
+         version="1.0-RC2">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -54,7 +54,6 @@
       <artifact group="sourceforge.net" project="freemarker" name="freemarker" version="2.3.10" type="jar"/>
       <artifact group="sourceforge.net" project="cglib" name="cglib" version="2.1.3" type="jar"/>
       <artifact group="springframework.org" project="spring" name="spring" version="2.0.3" type="jar"/>
-      <artifact group="sun.com" project="javamail" name="javamail" version="1.4" type="jar"/>
       <artifact group="sun.com" project="jpa" name="jpa" version="1.0" type="jar"/>
     </artifactGroup>
     <artifactGroup type="run">
