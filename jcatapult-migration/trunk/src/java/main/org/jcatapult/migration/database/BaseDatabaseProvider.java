@@ -76,9 +76,8 @@ public abstract class BaseDatabaseProvider implements DatabaseProvider {
      */
     public DataSource getDatasource() {
         return new DataSource() {
-
             public Connection getConnection() throws SQLException {
-                return getConnection();
+                return BaseDatabaseProvider.this.getConnection();
             }
 
             public Connection getConnection(String s, String s1) throws SQLException {

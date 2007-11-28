@@ -30,31 +30,16 @@ public class PostgreSQL8DatabaseProviderTest {
 
     @Test
     public void testProviderGetConnection() throws SQLException {
-        PostgreSQL8DatabaseProvider p = new PostgreSQL8DatabaseProvider("jdbc:postgresql://localhost:3306/postgresql8_test?user=dev&password=dev");
-
-        Connection c = null;
-
-        try {
-            c = p.getConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        PostgreSQL8DatabaseProvider p = new PostgreSQL8DatabaseProvider("jdbc:postgresql://localhost/postgres8_database_provider_test?user=dev&password=dev");
+        Connection c = p.getConnection();
         Assert.assertNotNull(c);
     }
 
     @Test
-    public void testProviderGetDatasource() {
-        PostgreSQL8DatabaseProvider p = new PostgreSQL8DatabaseProvider("jdbc:postgresql://localhost:3306/postgresql8_test?user=dev&password=dev");
-
-        DataSource d = null;
-
-        try {
-            d = p.getDatasource();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    public void testProviderGetDatasource() throws SQLException {
+        PostgreSQL8DatabaseProvider p = new PostgreSQL8DatabaseProvider("jdbc:postgresql://localhost/postgres8_database_provider_test?user=dev&password=dev");
+        DataSource d = p.getDatasource();
         Assert.assertNotNull(d);
+        Assert.assertNotNull(d.getConnection());
     }
 }
