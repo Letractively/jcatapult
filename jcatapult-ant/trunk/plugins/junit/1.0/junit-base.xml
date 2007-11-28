@@ -56,10 +56,20 @@
 
   <!-- runs unit tests -->
   <target name="test"
-          description="Runs unit and integration tests.  This target ignores testing if -Dignore.test=true.">
+          description="Runs unit and integration tests.  This target ignores testing if -Dignore.test=true."
+          depends="-test-init-params,clean,jar,-test-init">
     <test-pre/>
-    <antcall target="test-unit"/>
-    <antcall target="test-integration"/>
+
+    <test-unit-pre/>
+    <echo>Executing unit tests...</echo>
+    <test-script type="unit"/>
+    <test-unit-post/>
+
+    <test-integration-pre/>
+    <echo>Executing integration tests...</echo>
+    <test-script type="integration"/>
+    <test-integration-post/>
+
     <test-post/>
   </target>
 
