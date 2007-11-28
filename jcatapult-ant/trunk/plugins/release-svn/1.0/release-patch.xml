@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+<project name="release-patch">
+
+  <!-- trunk scripts -->
+  <target name="rel-patch-tag-trunk-script" depends="-scm-init">
+    <echo>Executing tag-only patch release scripts on trunk...</echo>
+    <rel_validate_version type="patch"/>
+    <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_check_changelog/>
+    <savant_clean/>
+    <antcall target="test-unit"/>
+    <scm_tag_head tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_cleanup/>
+  </target>
+
+  <target name="rel-patch-full-trunk-script" depends="-scm-init">
+    <echo>Executing full patch release scripts on trunk...</echo>
+    <rel_validate_version type="patch"/>
+    <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_check_changelog/>
+    <savant_clean/>
+    <antcall target="test-unit"/>
+    <scm_tag_head tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_deploy_remote/>
+    <rel_cleanup/>
+  </target>
+
+  <!-- branch scripts -->
+  <target name="rel-patch-tag-branch-script" depends="-scm-init">
+    <echo>Executing tag-only patch release scripts on branch...</echo>
+    <rel_set_branch_version/>
+    <rel_validate_version type="patch"/>
+    <scm_check_tag_available tag="${project.version}"/>
+    <rel_check_changelog/>
+    <savant_clean/>
+    <antcall target="test-unit"/>
+    <scm_tag_branch tag="${project.version}" branch="${branch.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <scm_tag_head tag="pre-merge-${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_cleanup/>
+  </target>
+
+  <target name="rel-patch-full-branch-script" depends="-scm-init">
+    <echo>Executing full patch release scripts on branch...</echo>
+    <rel_set_branch_version/>
+    <rel_validate_version type="patch"/>
+    <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_check_changelog/>
+    <savant_clean/>
+    <antcall target="test-unit"/>
+    <scm_tag_branch tag="${project.version}" branch="${branch.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <scm_tag_head tag="pre-merge-${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_deploy_remote/>
+    <rel_cleanup/>
+  </target>
+
+</project>

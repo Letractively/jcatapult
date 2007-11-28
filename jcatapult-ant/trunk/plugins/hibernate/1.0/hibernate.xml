@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+<project name="hibernate">
+  <dirname property="dir.plugin.hibernate" file="${ant.file.hibernate}"/>
+  <path id="classpath.hibernate">
+    <fileset dir="${dir.plugin.hibernate}/lib" includes="*.jar"/>
+  </path>
+
+  <taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="classpath.hibernate"/>
+
+  <!-- Pre process macro for overriding -->
+  <macrodef name="table-sql-pre">
+    <sequential>
+    </sequential>
+  </macrodef>
+
+  <target name="table-sql" depends="jar" description="Outputs to stdout the tables.sql using the Entity Objects">
+    <table-sql-pre/>
+    <dependencypath pathid="classpath.hibernate.main" types="compile-only,compile,run" includedependencies="true"
+        workflow="workflow.project" dependencies="dependencies.project"/>
+    <hibernatetool destdir="${dir.src.db.main}/create">
+      <classpath>
+        <!-- it is in this classpath you put your classes dir, and/or jpa persistence compliant jar -->
+        <path refid="classpath.hibernate.main"/>
+        <path location="${dir.target.classes.main}"/>
+        <path location="${dir.target.classes.test}"/>
+        <path>
+          <fileset dir="${dir.target.jars}" includes="*.jar"/>
+        </path>
+      </classpath>
+
+      <!--<configuration propertyfile="${dir.src.conf.test}/hibernate.properties"/>-->
+      <jpaconfiguration persistenceunit="punit"/>
+      <hbm2ddl export="false" outputfilename="tables.sql" format="true"/>
+    </hibernatetool>
+    <table-sql-post/>
+  </target>
+
+  <!-- Post process macro for overriding -->
+  <macrodef name="table-sql-post">
+    <sequential>
+    </sequential>
+  </macrodef>
+</project>

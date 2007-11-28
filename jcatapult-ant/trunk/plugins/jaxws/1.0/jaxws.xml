@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+<project name="jaxws">
+  <dirname property="dir.plugin.jaxws" file="${ant.file.jaxws}"/>
+  <path id="classpath.jaxws">
+    <fileset dir="${dir.plugin.jaxws}/lib" includes="*.jar"/>
+  </path>
+
+  <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="classpath.jaxws"/>
+  <taskdef name="schemagen" classname="com.sun.tools.jxc.SchemaGenTask" classpathref="classpath.jaxws"/>
+  <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport" classpathref="classpath.jaxws"/>
+  <taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen" classpathref="classpath.jaxws"/>
+
+  <condition property="jre.endorsed" value="${jdk.project}/lib/endorsed">
+    <os family="mac"/>
+  </condition>
+  <property name="jre.endorsed" value="${jdk.project}/jre/lib/endorsed"/>
+
+  <fileset id="overrides.jaxws" dir="${dir.plugin.jaxws}/lib">
+    <include name="jaxb-api-*.jar"/>
+    <include name="jaxws-api-*.jar"/>
+    <include name="jsr173_api-*.jar"/>
+    <include name="saaj-api-*.jar"/>
+  </fileset>
+
+  <target name="init-jaxws"
+  	   description="Copies the jaxws jar files to the endorsed override directories in the JRE and Tomcat.">
+
+    <!-- copy the jars to the JRE's endorsed dir, creating it if necessary -->
+    <mkdir dir="${jre.endorsed}"/>
+  	<copy todir="${jre.endorsed}" failonerror="yes">
+  		<fileset refid="overrides.jaxws"/>
+    </copy>
+
+    <!-- copy the jars to Tomcat's endorsed dir -->
+  	<copy todir="${env.CATALINA_HOME}/common/endorsed" failonerror="yes">
+  		<fileset refid="overrides.jaxws"/>
+    </copy>
+  </target>
+
+</project>

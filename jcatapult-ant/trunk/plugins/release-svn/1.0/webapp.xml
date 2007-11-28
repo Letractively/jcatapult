@@ -1,0 +1,169 @@
+<!--
+  Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+  either express or implied. See the License for the specific
+  language governing permissions and limitations under the License.
+  -->
+<project name="release" basedir=".">
+
+  <!-- directory used for checking out releases -->
+  <property name="tmp.dir" value="${user.home}/.release/tmp"/>
+
+  <!-- get the directory where this file is being imported from -->
+  <dirname property="imported.dir" file="${ant.file.imported}"/>
+
+  <!-- location of where the tarballs deploy locally to -->
+  <property name="dir.deploy" value="${imported.dir}/${dir.target}/deploy"/>
+
+  <!-- the directory used for storing the project specific release files -->
+  <tstamp>
+    <format property="timestamp" pattern="yyyy-MM-dd-HmmS"/>
+  </tstamp>
+  <property name="dir.checkout" value="${tmp.dir}/${project.name}-${timestamp}"/>
+
+  <!-- Pull in the individual files -->
+  <dirname property="dir.release" file="${ant.file.release}"/>
+  <import file="${dir.release}/release-common.xml"/>
+  <import file="${dir.release}/release-patch.xml"/>
+  <import file="${dir.release}/release-minor.xml"/>
+  <import file="${dir.release}/release-major.xml"/>
+  <import file="${dir.release}/release-snapshot.xml"/>
+
+  <target name="-rel-init"/>
+
+  <!-- overridden to perform jive specific remote deployment -->
+  <macrodef name="rel_deploy_remote">
+    <sequential>
+      <echo>Running remote deployment scripts...</echo>
+
+      <!-- make the build directory -->
+      <echo>Creating directory [${dir.deploy}]...</echo>
+      <mkdir dir="${dir.deploy}"/>
+
+      <!-- pre macro -->
+      <rel_deploy_remote_pre/>
+
+      <!-- if there's db source, then tarball it -->
+      <if>
+        <available file="${imported.dir}/${dir.src.db.main}"/>
+        <then>
+          <echo>Tarballing ${dir.src.db.main} files to ${dir.deploy}...</echo>
+          <tar destfile="${dir.deploy}/release-database-${project.version}.tar.gz" compression="gzip">
+            <fileset dir="${imported.dir}/${dir.src.db.main}">
+              <include name="**/*"/>
+            </fileset>
+          </tar>
+        </then>
+      </if>
+
+      <echo>Tarballing all files located in ${dir.deploy}</echo>
+      <property name="tar.release.filename" value="${dir.target}/release-${project.version}.tar.gz"/>
+      <tar destfile="${tar.release.filename}" compression="gzip">
+        <fileset dir="${dir.deploy}">
+          <include name="**/*"/>
+        </fileset>
+      </tar>
+
+      <!-- resolve the environment -->
+      <env_resolver deployEnv="${deploy.env}"/>
+
+      <echo>SCPing tarball [${tar.release.filename}] to [${deploy.remote.user}@${deploy.remote.host}:${deploy.remote.dir}]</echo>
+      <scp todir="${deploy.remote.user}@${deploy.remote.host}:${deploy.remote.dir}" password="${deploy.remote.pass}" file="${tar.release.filename}"/>
+
+      <!-- post macro -->
+      <rel_deploy_remote_post/>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="env_resolver">
+    <attribute name="deployEnv" default="none"/>
+    <sequential>
+
+      <!-- make sure deploy.env is set to at least 'default' -->
+      <if>
+        <not><isset property="deploy.env"/></not>
+        <then>
+          <property name="deploy.env" value="default"/>
+        </then>
+      </if>
+
+      <if>
+        <not><equals arg1="${deploy.env}" arg2="default"/></not>
+        <then>
+          <if>
+            <or>
+              <not><isset property="@{deployEnv}.deploy.server.host"/></not>
+              <not><isset property="@{deployEnv}.deploy.server.user"/></not>
+              <not><isset property="@{deployEnv}.deploy.server.pass"/></not>
+              <not><isset property="@{deployEnv}.deploy.server.dir"/></not>
+            </or>
+            <then>
+              <echo>
+  The following credentials must be defined in the project.xml for deployment:
+    - @{deployEnv}.deploy.server.host
+    - @{deployEnv}.deploy.server.user
+    - @{deployEnv}.deploy.server.pass
+    - @{deployEnv}.deploy.server.dir
+              </echo>
+              <fail/>
+            </then>
+            <else>
+              <property name="deploy.remote.host" value="${@{deployEnv}.deploy.server.host}"/>
+              <property name="deploy.remote.user" value="${@{deployEnv}.deploy.server.user}"/>
+              <property name="deploy.remote.pass" value="${@{deployEnv}.deploy.server.pass}"/>
+              <property name="deploy.remote.dir" value="${@{deployEnv}.deploy.server.dir}"/>
+            </else>
+          </if>
+        </then>
+        <else>
+          <if>
+            <or>
+              <not><isset property="deploy.server.host"/></not>
+              <not><isset property="deploy.server.user"/></not>
+              <not><isset property="deploy.server.pass"/></not>
+              <not><isset property="deploy.server.dir"/></not>
+            </or>
+            <then>
+              <echo>
+  The following credentials must be defined in the project.xml for deployment:
+    - deploy.server.host
+    - deploy.server.user
+    - deploy.server.pass
+    - deploy.server.dir
+
+  *Did you forgot the '-Ddeploy.env=&lt;env&gt;' option?
+              </echo>
+              <fail/>
+            </then>
+            <else>
+              <property name="deploy.remote.host" value="${deploy.server.host}"/>
+              <property name="deploy.remote.user" value="${deploy.server.user}"/>
+              <property name="deploy.remote.pass" value="${deploy.server.pass}"/>
+              <property name="deploy.remote.dir" value="${deploy.server.dir}"/>
+            </else>
+          </if>
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="rel_deploy_remote_pre">
+    <sequential>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="rel_deploy_remote_post">
+    <sequential>
+    </sequential>
+  </macrodef>
+</project>
+

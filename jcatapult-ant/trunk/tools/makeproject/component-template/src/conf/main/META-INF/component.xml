@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<component name="@COMPONENT_NAME@">
+  <action_package>@PACKAGE_NAME@.action</action_package>
+  <base_result_location>/WEB-INF/component/@COMPONENT_NAME@/content</base_result_location>
+  <persistence>
+  </persistence>
+</component>

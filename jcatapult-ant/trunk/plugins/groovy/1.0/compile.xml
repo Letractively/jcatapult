@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+<project name="compile">
+  <dirname property="dir.plugin.compile" file="${ant.file.compile}/"/>
+  <path id="classpath.plugin.compile">
+    <path location="${dir.plugin.compile}/../../libraries/groovy-all-1.1-rc-1.jar"/>
+    <path location="${dir.plugin.compile}/../../libraries/commons-cli-1.0.jar"/>
+  </path>
+  <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="classpath.plugin.compile"/>
+
+  <target name="compile" depends="compile-main,compile-test" description="Compiles the main and test Groovy classes"/>
+
+  <target name="-compile-init-main">
+    <mkdir dir="${dir.target.classes.main}"/>
+    <!--
+      Fetch artifacts but DON'T grab transitive dependencies because this should be explicitly the
+      artifacts that are required to compile this project and NOT transitive deps.
+    -->
+    <dependencypath pathid="classpath.compile.main" types="compile-only,compile,domains" includedependencies="false"
+                    workflow="workflow.project" dependencies="dependencies.project"/>
+  </target>
+
+  <target name="-compile-init-test">
+    <mkdir dir="${dir.target.classes.test}"/>
+    <!--
+      Fetch artifacts but DON'T grab transitive dependencies because this should be explicitly the
+      artifacts that are required to compile this project and NOT transitive deps.
+    -->
+    <dependencypath pathid="classpath.compile.test" types="compile-only,compile,test-compile,domains"
+                    includedependencies="false" workflow="workflow.project" dependencies="dependencies.project"/>
+  </target>
+
+  <target name="-compile-main-conf" if="dir.src.conf.main">
+    <copy todir="${dir.target.classes.main}" failonerror="false">
+      <fileset dir="${dir.src.conf.main}">
+        <include name="**/*"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile-main" depends="-compile-init-main,-compile-main-conf"
+          description="Compiles the main Java and Groovy files">
+    <compile-main-pre/>
+    <javac srcdir="${dir.src.java.main}" destdir="${dir.target.classes.main}" debug="true"
+           deprecation="true" includeantruntime="false" fork="true" executable="${jdk.project}/bin/javac">
+      <classpath>
+        <path refid="classpath.compile.main"/>
+      </classpath>
+    </javac>
+    <groovyc srcdir="${dir.src.groovy.main}" destdir="${dir.target.classes.main}">
+      <classpath>
+        <path refid="classpath.compile.main"/>
+        <path location="${dir.target.classes.main}"/>
+      </classpath>
+    </groovyc>
+    <copy todir="${dir.target.classes.main}">
+      <fileset dir="${dir.src.groovy.main}">
+        <exclude name="**/*.groovy"/>
+      </fileset>
+    </copy>
+    <compile-main-post/>
+  </target>
+
+  <target name="-compile-test-conf" if="dir.src.conf.test">
+    <copy todir="${dir.target.classes.test}" failonerror="false">
+      <fileset dir="${dir.src.conf.test}">
+        <include name="**/*"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile-test" depends="-compile-init-test,-compile-test-conf"
+          description="Compiles the test Java files">
+    <compile-test-pre/>
+    <javac srcdir="${dir.src.java.test}" destdir="${dir.target.classes.test}" debug="true"
+           deprecation="true" includeantruntime="false" fork="true" executable="${jdk.project}/bin/javac">
+      <classpath>
+        <path refid="classpath.compile.test"/>
+        <path location="${dir.target.classes.main}"/>
+      </classpath>
+    </javac>
+    <groovyc srcdir="${dir.src.groovy.test}" destdir="${dir.target.classes.test}">
+      <classpath>
+        <path refid="classpath.compile.test"/>
+        <path location="${dir.target.classes.main}"/>
+        <path location="${dir.target.classes.test}"/>
+      </classpath>
+    </groovyc>
+    <copy todir="${dir.target.classes.test}">
+      <fileset dir="${dir.src.groovy.test}">
+        <exclude name="**/*.groovy"/>
+      </fileset>
+    </copy>
+    <compile-test-post/>
+  </target>
+
+  <!-- Pre process for overriding -->
+  <macrodef name="compile-main-pre">
+    <sequential>
+    </sequential>
+  </macrodef>
+
+  <!-- Pre process for overriding -->
+  <macrodef name="compile-test-pre">
+    <sequential>
+    </sequential>
+  </macrodef>
+
+  <!-- Post process for overriding -->
+  <macrodef name="compile-main-post">
+    <sequential>
+    </sequential>
+  </macrodef>
+
+  <!-- Post process for overriding -->
+  <macrodef name="compile-test-post">
+    <sequential>
+    </sequential>
+  </macrodef>
+</project>
