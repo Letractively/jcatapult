@@ -1,0 +1,101 @@
+<?xml version="1.0" ?>
+<!--
+  ~ Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+  ~ either express or implied. See the License for the specific
+  ~ language governing permissions and limitations under the License.
+  -->
+<project name="jcatapult-migration">
+  <!-- Savant -->
+  <import file="${ant.home}/plugins/savant-1.0/savant.xml"/>
+
+  <!-- Init -->
+  <import file="${ant.home}/plugins/init-2.0/init.xml"/>
+
+  <!-- Clean -->
+  <import file="${ant.home}/plugins/clean-1.0/clean.xml"/>
+
+  <!-- Java -->
+  <import file="${ant.home}/plugins/java-2.0/compile.xml"/>
+  <import file="${ant.home}/plugins/java-2.0/jar.xml"/>
+
+  <!-- JUnit -->
+  <import file="${ant.home}/plugins/junit-2.0/junit.xml"/>
+  <import file="${ant.home}/plugins/cobertura-1.0/cobertura.xml"/>
+
+  <!-- SVN -->
+  <import file="${ant.home}/plugins/svn-2.0/svn.xml"/>
+
+  <!-- Release -->
+  <import file="${ant.home}/plugins/release-2.0/jar.xml"/>
+
+  <!-- IDE -->
+  <import file="${ant.home}/plugins/ide-2.0/ide.xml"/>
+
+  <!-- Database -->
+  <import file="${ant.home}/plugins/mysql-2.0/mysql.xml"/>
+
+  <macrodef name="compile-main-post">
+    <sequential>
+      <copy todir="${dir.target.classes.main}">
+        <fileset dir="${dir.src.db.main}" includes="**/*"/>
+      </copy>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="jar-post">
+    <sequential>
+      <!-- Build the test component JARs -->
+      <jar destfile="${dir.target.jars}/component1-1.1.jar">
+        <fileset dir="test/component1" includes="**/*"/>
+      </jar>
+      <jar destfile="${dir.target.jars}/component2-1.1.jar">
+        <fileset dir="test/component2" includes="**/*"/>
+      </jar>
+      <jar destfile="${dir.target.jars}/component3-2.1.jar">
+        <fileset dir="test/component3" includes="**/*"/>
+      </jar>
+      <jar destfile="${dir.target.jars}/component4-1.0.jar">
+        <fileset dir="test/component4" includes="**/*"/>
+      </jar>
+   </sequential>
+  </macrodef>
+
+  <target name="create-test-database">
+    <echo>Creating custom test databases...</echo>
+    <sql driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/mysql"
+         userid="${db.username}" password="${db.password}" autocommit="true" expandproperties="true"
+         classpathref="classpath.plugin.mysql">
+
+      DROP DATABASE IF EXISTS mysql5_database_provider_test;
+      CREATE DATABASE mysql5_database_provider_test;
+      GRANT ALL PRIVILEGES on mysql5_database_provider_test.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on mysql5_database_provider_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS database_migrator_test;
+      CREATE DATABASE database_migrator_test;
+      GRANT ALL PRIVILEGES on database_migrator_test.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on database_migrator_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS patcher_seeder_test;
+      CREATE DATABASE patcher_seeder_test;
+      GRANT ALL PRIVILEGES on patcher_seeder_test.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on patcher_seeder_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS table_creator_test;
+      CREATE DATABASE table_creator_test;
+      GRANT ALL PRIVILEGES on table_creator_test.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on table_creator_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+    </sql>
+  </target>
+</project>
