@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <project name="@PROJECT_NAME@">
 
-  <property name="plugin.dir" value="${plugin.dir}-jcatapult"/>
+  <property name="plugin.dir" value="${ant.home}/plugins-jcatapult"/>
 
   <!-- Savant -->
   <import file="${plugin.dir}/savant/1.0/savant.xml"/>
