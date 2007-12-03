@@ -2,7 +2,7 @@
 
 = Introduction =
 
-This plugin allows applications to delete intermediate files and compiled source files. JCatapult projects place all of these files into the _target_ directory and this plugin deletes that directory.
+This plugin allows applications to delete intermediate files and compiled source files. JCatapult projects place all of these files into the _${dir.target}_ directory and this plugin deletes that directory.
 
 = Targets =
 
