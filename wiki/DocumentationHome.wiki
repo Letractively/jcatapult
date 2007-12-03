@@ -23,8 +23,14 @@ Here are the documentation pages that are available for the JCatapult framework:
 
 === Database ===
 
+  * [Persistence JCatapult persistence API]
   * [DatabaseMigrator JCatapult Database Migrator]
   * [JPA JCatapult JPA integration]
+
+=== Struts ===
+
+  * [CommonActions Common actions (countries select box, month select box, etc)]
+  * [ParameterAttributes Parameter attributes extension to Struts]
 
 === Email ===
 
@@ -45,3 +51,8 @@ Here are the documentation pages that are available for the JCatapult framework:
   * [FileManagerSetup Configuration and setup]
   * [FileManagerAPI XML API]
   * [FileManagerFck FCK editor integration]
+
+=== Configuration and environment ===
+
+  * [Environment Environment resolution]
+  * [EnvironmentAwareConfiguration Environment aware configuration]
