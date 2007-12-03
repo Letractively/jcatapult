@@ -18,7 +18,7 @@ JCatapult Ant is merely a collection of plugins for Apache Ant. These plugins pr
 
 A plugin is a directory within the plugins-jcatapult directory inside the Ant installation directory. Each plugin is defined by a single directory and the directory name denotes the name of the plugin. Under the plugin directory are one or more directories that contain the versions of that plugin. Each version of the plugin is defined in its own directory and the name of the directory denotes the version. A plugin version directory contains all of the Apache Ant build scripts and other resources for the plugin to work properly.
 
-Besides the plugin directories, JCatapult Ant contains a directory named __lib__ which contains all of the libraries used by various plugins. This is the common location where all libraries are located.
+Besides the plugin directories, JCatapult Ant contains a directory named _libraries_ which contains all of the libraries used by various plugins. This is the common location where all libraries are located.
 
 Here is how the JCatapult Ant plugin directories look:
 
@@ -28,7 +28,7 @@ $ANT_HOME/plugins-jcatapult
     |    |- 1.0
     |    |   |- init.xml
     |
-    |- lib
+    |- libraries
         |- commons-collections-3.1.jar
 }}}
 
