@@ -1,0 +1,27 @@
+#summary Plugins for the JCatapult Ant build system
+
+= Available plugins = 
+
+  * [AntCleanPlugin clean] - The clean plugin for cleaning compiled files. This will be used mostly by library projects. Web application projects will use the J2EE plugins clean script
+
+  * [AntCoberturaPlugin cobertura] - The cobertura code coverage plugin. Any project can use this plugin
+
+  * [AntComponentPlugin component] - The JCatapult component plugin for component development and component integration into applications. Web applications and component projects will use this plugin
+
+  * [AntGroovyPlugin groovy] - The Groovy plugin for compiling Groovy source code. This plugin can be used by any application using the Groovy language
+
+  * [AntHibernatePlugin hibernate] - The Hibernate plugin that contains Hibernate tools. This plugin will be used from web application and component projects in order to generate SQL files from JPA entity objects
+
+  * [AntIdePlugin ide] - The IDE plugin for generating and updating Eclipse and IntelliJ project files. Any project can use this plugin
+
+  * [AntInitPlugin init] - The init plugin that is required for projects using JCatapult Ant in order to configure the properties correctly for other plugins. All projects must use this plugin
+
+  * [AntJ2eePlugin j2ee] - The J2EE plugin that provides support for constructing web applications. Web application projects must use this plugin
+
+  * [AntJavaPlugin java] - The Java plugin that compiles and creates JAR file from Java source code. All projects must use this plugin, unless they are not using the Java language
+
+  * [AntJavadocPlugin javadoc] - The JavaDoc that creates JavaDoc from Java source code. This plugin can be used by any project
+
+  * [AntJaxwsPlugin jaxws] - The JAX-WS plugin that provides support for projects that will be consuming WebServices and would like to use JAX-WS 2.1 rather than the version shipped with the JDK. Web application projects might use this plugin
+
+  * [AntJunitPlugin junit] - The JUnit plugin that provides support for unit testing using the JUnit library. All project should DEFINITELY be using this plugin, but aren't required to unit test. The JCatapult team begs you to unit test because it will make you a happier person
