@@ -1,13 +1,21 @@
-#summary One-sentence summary of this page.
+#summary Getting start using JCatapult
 
 = Introduction =
 
-Add your content here.
+This document describes how to get up and running with JCatapult.
 
+= JCatapult Ant =
 
-= Details =
+You first need to install the JCatapult Ant build system. To do this you'll need to check out that module from the SubVersion repository into your Apache Ant installation. This procedure will change once the JCatapult Ant build system has produced a release.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+{{{
+cd $ANT_HOME
+svn co https://jcatapult.googlecode.com/svn/jcatapult-ant/trunk/plugins jcatapult-plugins
+}}}
+
+Next, check out the JCatapult Ant build tools, which provide easy ways to bootstrap new JCatapult applications, libraries and components.
+
+{{{
+cd $ANT_HOME
+svn co https://jcatapult.googlecode.com/svn/jcatapult-ant/trunk/plugins jcatapult-utils
+}}}
