@@ -1,0 +1,14 @@
+#summary The documentation home page.
+#labels Featured
+
+Here are the documentation pages that are available for the JCatapult framework:
+
+=== Introduction ===
+
+  * [GettingStarted Getting started]
+  * [Architecture]
+  * [ProjectLayout Project layout]
+
+=== Tutorials ===
+
+  * [SimpleCrud Simple CRUD]
