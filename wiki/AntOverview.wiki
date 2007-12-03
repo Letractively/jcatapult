@@ -1,0 +1,58 @@
+#summary Architecture overview of the JCatapult Ant build system
+
+= Introduction =
+
+This document covers the architecture of the JCatapult Ant build system and the Savant dependency management tool.
+
+= Why Apache Ant? =
+
+JCatapult uses Apache Ant because it is extremely flexible and doesn't force any restrictions that otherwise make development difficult. In addition, Apache Ant is the most widely used build system and therefore using it with JCatapult means that developers don't have to learn something new to get up and running.
+
+We considered using Maven, but JCatapult requires some heavy duty dependency management especially when working with JCatapult components and therefore we needed complete control of the dependency management tool. The developers at Inversoft (http://www.inversoft.com) provided JCatapult with access to the Savant dependency management tool source code and this partnership provides JCatapult with the tools it needed and the ability to change and add new features to Savant when necessary.
+
+= How it works =
+
+JCatapult Ant is merely a collection of plugins for Apache Ant. These plugins provide reusable functionality that is generally the same between all projects. However, each plugin provides the ability to be overridden and extended. 
+
+== Plugins ==
+
+A plugin is a directory within the plugins-jcatapult directory inside the Ant installation directory. Each plugin is defined by a single directory and the directory name denotes the name of the plugin. Under the plugin directory are one or more directories that contain the versions of that plugin. Each version of the plugin is defined in its own directory and the name of the directory denotes the version. A plugin version directory contains all of the Apache Ant build scripts and other resources for the plugin to work properly.
+
+Besides the plugin directories, JCatapult Ant contains a directory named __lib__ which contains all of the libraries used by various plugins. This is the common location where all libraries are located.
+
+Here is how the JCatapult Ant plugin directories look:
+
+{{{
+$ANT_HOME/plugins-jcatapult
+    |- init
+    |    |- 1.0
+    |    |   |- init.xml
+    |
+    |- lib
+        |- commons-collections-3.1.jar
+}}}
+
+When a project wants to use a JCatapult Ant plugin, it imports the plugin XML file like this:
+
+{{{
+<project name="example">
+  <import file="${ant.home}/plugins-jcatapult/init/1.0/init.xml"/>
+  ...
+</project>
+}}}
+
+=== Plugin versions ===
+
+Plugins are well versioned to prevent plugin updates from breaking historical builds. This phenomenon is known as "build drift" where an application uses a plugin, but not a specific version of a plugin, and that plugin changes over time. When a developer checks out an old version of that application from source control, the latest version of the plugin is no longer compatible with the applications configuration and the application no longer builds. This happens with build systems that do not enforce strict plugin versioning.
+
+=== Plugin libraries ===
+
+Furthermore, plugins often require libraries in order to function properly. These libraries might contain Ant tasks and types or might contain other Java classes that are used from Groovy or other scripting languages within Ant build files. JCatapult plugins clearly define which libraries and the specific versions of libraries that they depend on. This allows multiple plugins to use different versions of the same library without conflict.
+
+== Savant ==
+
+JCatapult Ant uses the Savant tool for dependency management. This tool allows projects to define dependencies and then download and cache those dependencies during the build. Rather than go into a detailed discussion of Savant here, check out the Savant documentation at http://www.inversoft.org/Wiki.jsp?page=Savant2.0Main. Each JCatapult application will define a project.xml file that contains the project information and dependencies that are used by Savant.
+
+= Looking ahead =
+
+JCatapult currently uses the Apache Ant build system, but relies heavily on the Savant tool for dependency management. Moving forward, JCatapult might add support for the Savant build system, which is an alternative to the Apache Ant build system. Currently, we don't have immediate plans to support the Maven build system, however, code donations are always welcome and if anyone wants to give Maven support a whirl, feel free. However, when adding support for Maven, it will be important to fully support depth first recursive dependency resolution that is required by the jcatapult-migration tool.
