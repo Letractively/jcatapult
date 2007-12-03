@@ -25,7 +25,7 @@
 
   <property file="${user.home}/build.properties"/>
 
-  <import file="${dir.plugin.makeproject}/../../plugins/svn/1.0/svn-macros.xml"/>
+  <import file="${plugin.dir}/svn/1.0/svn-macros.xml"/>
 
   <!--
     Gets all the required project information
