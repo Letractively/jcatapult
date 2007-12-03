@@ -15,7 +15,7 @@ Here are the documentation pages that are available for the JCatapult framework:
 
 === Ant ===
 
-  * [AntHome JCatapult Ant home]
+  * [Ant JCatapult Ant home]
   * [AntOverview Overview]
   * [AntPlugins Plugin documentation and reference]
   * [AntCreatingPlugins Creating ant plugins]
