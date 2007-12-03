@@ -20,3 +20,15 @@ Here are the documentation pages that are available for the JCatapult framework:
   * [AntPlugins Plugin documentation and reference]
   * [AntCreatingPlugins Creating ant plugins]
   * [AntDependencies Adding and removing project dependencies]
+
+=== Database ===
+
+  * [DatabaseMigrator JCatapult Database Migrator]
+  * [JPA JCatapult JPA integration]
+
+=== Email ===
+
+  * [EmailOverview Overview]
+  * [EmailTemplates Templates]
+  * [EmailSending Sending emails from code]
+  * [EmailConfiguration Configuration]
