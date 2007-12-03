@@ -1,0 +1,48 @@
+#summary JCatapult project layout
+
+= Project types =
+
+JCatapult projects fall into three types:
+
+  * Web applications
+  * Components
+  * Libraries
+
+Each project type has different project layouts and those layouts are as follows:
+
+= Web applications =
+
+Here is the web application project layout
+
+{{{
+src
+ |- java
+ |   |- main     - Main Java source files
+ |   |   |- org  
+ |   |   |   |- ...
+ |   |
+ |   |- test
+ |   |   |- unit     - Unit tests
+ |   |   |   |- org
+ |   |   |   |   |- ...
+ |   |   |
+ |   |   |- integration     - Integration tests
+ |   |   |   |- org
+ |   |   |   |   |- ...
+ |
+ |- conf
+ |   |- main     - Main configuration
+ |   |   |- META-INF
+ |   |   |   |- persistence.xml  - JPA configuration file
+ |   |
+ |   |- test
+ |   |   |- unit     - Unit test configuration
+ |   |   |   |- ...
+ |   |   |
+ |   |   |- integration     - Integration test configuration
+ |   |   |   |- ...
+ |
+web     - Web resources
+ |- WEB-INF
+ |   |- ...
+}}}
