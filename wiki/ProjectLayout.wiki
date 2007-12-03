@@ -15,6 +15,12 @@ Each project type has different project layouts and those layouts are as follows
 Here is the web application project layout
 
 {{{
+deploy                           <- J2EE container deployment files
+ |- tomcat
+ |   |- main                     
+ |   |   |- conf  
+ |   |   |   |- context.xml      <- The Tomcat context configuration file for development
+ |
 src
  |- java
  |   |- main                     <- Main Java source files
@@ -46,3 +52,5 @@ web                              <- Web resources
  |- WEB-INF
  |   |- ...
 }}}
+
+*NOTE:* Since JCatapult supports inline web applications so that JSPs and other web resources can be modified without requiring a re-compile or copy step to reload, the web directory is the location that the web application is run from during development. The standard web directories of __WEB-INF/classes__ and __WEB-INF/lib__ are therefore cleaned out by the JCatapult Ant J2EE clean target. In addition, these directories should not be part of source control.
