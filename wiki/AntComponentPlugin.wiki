@@ -1,0 +1,26 @@
+#summary The JCatapult Ant component plugin
+
+= Introduction =
+
+This plugin provides applications with the ability to integrate components into an existing web application. In addition, this plugin provides scripts and targets for developing new components.
+
+= Files =
+
+Web applications should import this file if they ever need to integrate components (this import statement is included with web applications that are built using the JCatapult _create-webapp_ tool).
+
+{{{
+<import file="${ant.home}/plugins-jcatapult/component/1.0/project-support.xml"/>
+}}}
+
+Component projects must import these files (these import statements are included with components that are built using the JCatapult _create-component_ tool).
+
+{{{
+  <import file="${ant.home}/plugins-jcatapult/component/1.0/clean.xml"/>
+  <import file="${ant.home}/plugins-jcatapult/component/1.0/component.xml"/>
+}}}
+
+= Web application targets =
+
+The plugin provides these targets for web applications:
+
+== add-component ==
