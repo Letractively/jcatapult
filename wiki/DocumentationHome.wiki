@@ -32,3 +32,16 @@ Here are the documentation pages that are available for the JCatapult framework:
   * [EmailTemplates Templates]
   * [EmailSending Sending emails from code]
   * [EmailConfiguration Configuration]
+
+=== Commerce ===
+
+  * [Money]
+  * [ChargingCreditCards Charging credit cards]
+  * [PreAuthCreditCards Pre-auth credit cards]
+
+=== File manager ===
+
+  * [FileManagerOverview Overview]
+  * [FileManagerSetup Configuration and setup]
+  * [FileManagerAPI XML API]
+  * [FileManagerFck FCK editor integration]
