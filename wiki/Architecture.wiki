@@ -34,7 +34,7 @@ One of the major features of JCatapult is that it provides a component methodolo
 
 The beauty of this type of componentization is that it is very simple to define functionality and reuse it across multiple applications. 
 
-An example of a component might be a __user__ component. This component might provide these pieces of functionality:
+An example of a component might be a _user_ component. This component might provide these pieces of functionality:
 
   * User and contact information entity
   * User services for managing and manipulating the entities
