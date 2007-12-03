@@ -48,3 +48,11 @@ Plugins are well versioned to prevent plugin updates from breaking historical bu
 === Plugin libraries ===
 
 Furthermore, plugins often require libraries in order to function properly. These libraries might contain Ant tasks and types or might contain other Java classes that are used from Groovy or other scripting languages within Ant build files. JCatapult plugins clearly define which libraries and the specific versions of libraries that they depend on. This allows multiple plugins to use different versions of the same library without conflict.
+
+== Savant ==
+
+JCatapult Ant uses the Savant tool for dependency management. This tool allows projects to define dependencies and then download and cache those dependencies during the build. Rather than go into a detailed discussion of Savant here, check out the Savant documentation at http://www.inversoft.org/Wiki.jsp?page=Savant2.0Main. Each JCatapult application will define a project.xml file that contains the project information and dependencies that are used by Savant.
+
+= Looking ahead =
+
+JCatapult currently uses the Apache Ant build system, but relies heavily on the Savant tool for dependency management. Moving forward, JCatapult might add support for the Savant build system, which is an alternative to the Apache Ant build system. Currently, we don't have immediate plans to support the Maven build system, however, code donations are always welcome and if anyone wants to give Maven support a whirl, feel free. However, when adding support for Maven, it will be important to fully support depth first recursive dependency resolution that is required by the jcatapult-migration tool.
