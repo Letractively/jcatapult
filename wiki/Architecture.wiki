@@ -1,0 +1,18 @@
+#summary JCatapult architecture
+
+= Frameworks =
+
+JCatapult is a large amount of glue for a bunch of other frameworks. It also adds functionality on top of those frameworks that is often useful for applications. The functionality that JCatapult adds is never required and can always be removed, ignored or replaced.
+
+The frameworks that JCatapult is currently constructed on top of are:
+
+  * Apache Ant *__build (required)__*
+  * Savant *__dependency management (required)__*
+  * Struts2 *__MVC (required)__*
+  * Guice *__dependency injection (optional)__*
+  * JPA via Hibernate *__ORM (optional)__*
+  * ACEGI *__security (optional)__*
+  * JavaMail *__email (optional)__*
+  * FreeMarker *__email and componentization (optional)__*
+  * SiteMesh *__template engine (optional)__*
+  * Commons configuration *__configuration (optional)__*
