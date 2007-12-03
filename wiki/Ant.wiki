@@ -3,3 +3,9 @@
 = Introduction =
 
 This document covers in detail the JCatapult Ant build system and the Savant dependency management tool. This assumes that you have created a working JCatapult application using the create-webapp tool as described in the GettingStarted document.
+
+= Why Apache Ant? =
+
+JCatapult uses Apache Ant because it is extremely flexible and doesn't force any restrictions that otherwise make development difficult. In addition, Apache Ant is the most widely used build system and therefore using it with JCatapult means that developers don't have to learn something new to get up and running.
+
+We considered using Maven, but JCatapult requires some heavy duty dependency management especially when working with JCatapult components and therefore we needed complete control of the dependency management tool. The developers at Inversoft (http://www.inversoft.com) provided JCatapult with access to the Savant dependency management tool source code and this partnership provided JCatapult with the tools it needed and the ability to change and add new features to Savant when necessary.
