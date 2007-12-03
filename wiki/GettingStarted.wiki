@@ -74,7 +74,7 @@ You should now have JCatapult web application in the current directory named tes
 $ ant clean app
 }}}
 
-This will build the web application and prepare it to run. Once the build has completed you should be able to run the application using the scripts placed in __target/tomcat/bin__ directory like this:
+This will build the web application and prepare it to run. Once the build has completed you should be able to run the application using the scripts placed in _target/tomcat/bin_ directory like this:
 
 {{{
 $ target/tomcat/bin/tomcat.sh start
