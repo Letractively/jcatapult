@@ -10,6 +10,7 @@ The frameworks that JCatapult is currently constructed on top of are:
 || Apache Ant || build || Yes ||
 || Savant || Dependency management || Yes ||
 || Struts2 || MVC || Yes ||
+|| SmartURLs || Struts2 convention based plugin || Yes ||
 || Guice || Dependency injection || No ||
 || JPA via Hibernate || ORM || No ||
 || ACEGI || Security || No ||
@@ -46,3 +47,7 @@ An example of a component might be a __user__ component. This component might pr
 This component can then be added to an existing web application project using a simple ant target and no additional configuration.
 
 Besides support for stand-alone components, JCatapult also support components which depend on other components. For example, there might be a news component that allows admins to add news to a website. This component might use the *User* class from the user component. JCatapult will handle this dependency and do all the work of database creation, migration, and dependency management.
+
+= Conventions =
+
+Whenever possible, JCatapult prefers providing good defaults and conventions over configuration. This reduces the amount of configuration required to write applications and reduces maintenance costs considerably.
