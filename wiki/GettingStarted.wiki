@@ -24,7 +24,23 @@ svn co http://jcatapult.googlecode.com/svn/jcatapult-ant/trunk/tools tools-jcata
 
 = Tomcat =
 
-Currently, JCatapult requires the use of Tomcat 5.5 or later for running applications in development. This will change in the future to support Jetty and many other application servers. For now, you will need to download Apache Tomcat from http://tomcat.apache.org.
+Currently, JCatapult requires the use of Tomcat 5.5 or later for running applications in development. This will change in the future to support Jetty and many other application servers. For now, you will need to download Apache Tomcat from http://tomcat.apache.org. Tomcat requires that you configure the CATALINA_HOME environment variable to point to the Tomcat installation directory and this must also be set to use JCatapult.
+
+= MySQL = 
+
+Currently, JCatapult requires the use of MySQL for projects that use a database. This is currently being worked on to support PostgreSQL and more database will be added soon. For now, you'll need to download and install MySQL 5 or later from http://www.mysql.com.
+
+= The build.properties file =
+
+JCatapult requires a file named build.properties to be created inside your home directory. This file points JCatapult to the location of the JDK for the project. This allows the project to clearly define which JDK it is using, which might be different than JDKs for other applications and the JDK used to run the JCatapult Ant build system. This file should contain entries for each of the JDKs you plan to use. Here is an example:
+
+{{{
+jdk1.6=/usr/lib/jvm/java-6-sun
+jdk1.5=/usr/lib/jvm/java-1.5.0-sun
+jdk1.4=/usr/lib/jvm/jdk1.4
+}}}
+
+By default, JCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring JCatapult to use that JDK.
 
 = Create a project =
 
@@ -58,4 +74,10 @@ You should now have JCatapult web application in the current directory named tes
 $ ant clean app
 }}}
 
-This will build the web application and prepare it to run.
+This will build the web application and prepare it to run. Once the build has completed you should be able to run the application using the scripts placed in __target/tomcat/bin__ directory like this:
+
+{{{
+$ target/tomcat/bin/tomcat.sh start
+}}}
+
+Now you should be able to access the newly created application in a browser via http://localhost:8080
