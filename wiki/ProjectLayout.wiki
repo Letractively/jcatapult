@@ -17,32 +17,32 @@ Here is the web application project layout
 {{{
 src
  |- java
- |   |- main     - Main Java source files
+ |   |- main                     <- Main Java source files
  |   |   |- org  
  |   |   |   |- ...
  |   |
  |   |- test
- |   |   |- unit     - Unit tests
+ |   |   |- unit                 <- Unit tests
  |   |   |   |- org
  |   |   |   |   |- ...
  |   |   |
- |   |   |- integration     - Integration tests
+ |   |   |- integration          <- Integration tests
  |   |   |   |- org
  |   |   |   |   |- ...
  |
  |- conf
- |   |- main     - Main configuration
+ |   |- main                     <- Main configuration
  |   |   |- META-INF
- |   |   |   |- persistence.xml  - JPA configuration file
+ |   |   |   |- persistence.xml  <- JPA configuration file
  |   |
  |   |- test
- |   |   |- unit     - Unit test configuration
+ |   |   |- unit                 <- Unit test configuration
  |   |   |   |- ...
  |   |   |
- |   |   |- integration     - Integration test configuration
+ |   |   |- integration          <- Integration test configuration
  |   |   |   |- ...
  |
-web     - Web resources
+web                              <- Web resources
  |- WEB-INF
  |   |- ...
 }}}
