@@ -8,4 +8,22 @@ This document covers in detail the JCatapult Ant build system and the Savant dep
 
 JCatapult uses Apache Ant because it is extremely flexible and doesn't force any restrictions that otherwise make development difficult. In addition, Apache Ant is the most widely used build system and therefore using it with JCatapult means that developers don't have to learn something new to get up and running.
 
-We considered using Maven, but JCatapult requires some heavy duty dependency management especially when working with JCatapult components and therefore we needed complete control of the dependency management tool. The developers at Inversoft (http://www.inversoft.com) provided JCatapult with access to the Savant dependency management tool source code and this partnership provided JCatapult with the tools it needed and the ability to change and add new features to Savant when necessary.
+We considered using Maven, but JCatapult requires some heavy duty dependency management especially when working with JCatapult components and therefore we needed complete control of the dependency management tool. The developers at Inversoft (http://www.inversoft.com) provided JCatapult with access to the Savant dependency management tool source code and this partnership provides JCatapult with the tools it needed and the ability to change and add new features to Savant when necessary.
+
+= How it works =
+
+JCatapult Ant is merely a collection of plugins for Apache Ant. These plugins provide reusable functionality that is generally the same between all projects. However, each plugin provides the ability to be overridden and extended. 
+
+== Plugins ==
+
+A plugin is a directory within the plugins-jcatapult directory inside the Ant installation directory. Each plugin is defined by a single directory and the directory name denotes the name of the plugin. Under the plugin directory are one or more directories that contain the versions of that plugin. Each version of the plugin is defined in its own directory and the name of the directory denotes the version.
+
+Besides the plugin directories, JCatapult Ant contains a directory named __lib__ which contains all of the libraries used by various plugins. This is the common location where all libraries are located.
+
+=== Plugin versions ===
+
+Plugins are well versioned to prevent plugin updates from breaking historical builds. This phenomenon is known as "build drift" where an application uses a plugin, but not a specific version of a plugin, and that plugin changes over time. When a developer checks out an old version of that application from source control, the latest version of the plugin is no longer compatible with the applications configuration and the application no longer builds. This happens with build systems that do not enforce strict plugin versioning.
+
+=== Plugin libraries ===
+
+Furthermore, plugins often require libraries in order to function properly. These libraries might contain Ant tasks and types or might contain other Java classes that are used from Groovy or other scripting languages within Ant build files. JCatapult plugins clearly define which libraries and the specific versions of libraries that they depend on. This allows multiple plugins to use different versions of the same library without conflict.
