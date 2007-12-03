@@ -25,3 +25,19 @@
   * [AntJaxwsPlugin jaxws] - The JAX-WS plugin that provides support for projects that will be consuming WebServices and would like to use JAX-WS 2.1 rather than the version shipped with the JDK. Web application projects might use this plugin
 
   * [AntJunitPlugin junit] - The JUnit plugin that provides support for unit testing using the JUnit library. All project should DEFINITELY be using this plugin, but aren't required to unit test. The JCatapult team begs you to unit test because it will make you a happier person
+
+  * [AntMysqlPlugin mysql] - The MySQL plugin that provides support for creating project databases on MySQL. This plugin can be ignored if a project doesn't use a database using some project configuration. However, other plugins require that a database plugin be used and this is the default database plugin that JCatapult uses.
+
+  * [AntReleaseSvnPlugin release-svn] - The release plugin that uses SubVersion for tagging and branching. This plugin allows projects to release versions and does a lot of the work of tagging, branching and ensuring that the project is ready to release. This plugin only works with SubVersion and is pretty useful if you are using SubVersion in the manner expected by the plugin. Any project can use this plugin
+
+  * [AntSavantPlugin savant] - The Savant plugin that provides support for dependency management. All projects must use this plugin
+
+  * [AntSecurityPlugin security] - The security plugin that provides tools for helping projects that are using JCatapult security and ACEGI. Most famously, this provides a tool to output the encrypted form of passwords for helping to seed databases. Any project can use this plugin
+
+  * [AntSvnPlugin svn] - The SubVersion plugin that provides tools for dealing with SubVersion repositories. This plugin is only useful for projects that are using SubVersion for source control
+
+  * [AntTomcatPlugin tomcat] - The Tomcat plugin that provides support for using Tomcat as the application server to development. This plugin must be used by web application and component projects for development
+
+
+
+
