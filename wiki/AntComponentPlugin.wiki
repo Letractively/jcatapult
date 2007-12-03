@@ -15,8 +15,8 @@ Web applications should import this file if they ever need to integrate componen
 Component projects must import these files (these import statements are included with components that are built using the JCatapult _create-component_ tool).
 
 {{{
-  <import file="${ant.home}/plugins-jcatapult/component/1.0/clean.xml"/>
-  <import file="${ant.home}/plugins-jcatapult/component/1.0/component.xml"/>
+<import file="${ant.home}/plugins-jcatapult/component/1.0/clean.xml"/>
+<import file="${ant.home}/plugins-jcatapult/component/1.0/component.xml"/>
 }}}
 
 = Web application targets =
