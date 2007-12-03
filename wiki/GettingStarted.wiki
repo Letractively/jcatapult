@@ -81,3 +81,7 @@ $ target/tomcat/bin/tomcat.sh start
 }}}
 
 Now you should be able to access the newly created application in a browser via http://localhost:8080
+
+= Next =
+
+Next, we'll cover the [ProjectLayout JCatapult project layout].
