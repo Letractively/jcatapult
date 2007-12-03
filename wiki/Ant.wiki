@@ -1,0 +1,5 @@
+#summary The JCatapult Ant build system
+
+= Introduction =
+
+This document covers in detail the JCatapult Ant build system and the Savant dependency management tool. This assumes that you have created a working JCatapult application using the create-webapp tool as described in the GettingStarted document.
