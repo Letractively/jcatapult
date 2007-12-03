@@ -10,4 +10,4 @@ The plugin provides these targets:
 
 == coverage ==
 
-Cleans, instruments, compiles and runs the unit tests. After the unit tests have run this target outputs the code coverage report from Cobertura into the __${dir.target}/test/coverage__ directory.
+Cleans, instruments, compiles and runs the unit tests. After the unit tests have run this target outputs the code coverage report from Cobertura into the _${dir.target}/test/coverage_ directory.
