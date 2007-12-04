@@ -1,7 +1,7 @@
 #summary The documentation home page.
 #labels Featured
 
-Here are the documentation pages that are available for the JCatapult framework:
+Here are the documentation pages that are available for the JCatapult framework. Some of the documentation has not yet been written. Please check back soon and it should be complete before 1.0 is released. If you are interested in helping build out or fix documentation, please contact Brian Pontarelli at *brian at inversoft.com*
 
 === Introduction ===
 
