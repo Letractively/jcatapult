@@ -13,6 +13,31 @@ Here are the documentation pages that are available for the JCatapult framework:
 
   * [SimpleCrud Simple CRUD]
 
+= Methodologies =
+
+Below are links to various documents around JCatapult standard methodologies. These are broken into the various application lifecycle stages as well as best practices.
+
+=== Lifecycle ===
+
+  * [ProjectCreation Project creation]
+  * [Scaffolding Scaffolding]
+  * [UnitTesting Unit testing]
+  * [IntegrationTestsing Integration testing]
+  * [RunningTheWebapp Running the web application]
+  * [RunningComponents Running components]
+  * [Releasing Releasing a version]
+
+=== Best Practices ===
+
+  * [BestPracticesStruts Struts2/SmartURLs best practices]
+  * [BestPracticesGuice Guice dependency injection best practices]
+  * [BestPracticesTiers Standard application tiers best practices]
+  * [BestPracticesTesting Testing best practices]
+
+= Technologies =
+
+Below are links to topics about a specific JCatapult technology, service or API.
+
 === Ant ===
 
   * [Ant JCatapult Ant home]
