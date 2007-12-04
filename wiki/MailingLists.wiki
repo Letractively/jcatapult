@@ -1,0 +1,3 @@
+#summary Mailing lists
+
+|| *User list* || http://groups.google.com/group/jcatapult-user ||
