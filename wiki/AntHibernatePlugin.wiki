@@ -4,6 +4,12 @@
 
 This plugin provides applications with the ability to generate table a creation SQL script from a JPA configuration file using Hibernate.
 
+This plugin contains a single XML file that should be imported like this:
+
+{{{
+<import file="${ant.home}/plugins-jcatapult/hibernate/1.0/hibernate.xml"/>
+}}}
+
 = Targets =
 
 The plugin provides these targets:
