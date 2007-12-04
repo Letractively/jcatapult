@@ -57,7 +57,7 @@ Below are links to topics about a specific JCatapult technology, service or API.
   * [CommonActions Common actions (countries select box, month select box, etc)]
   * [ParameterAttributes Parameter attributes extension to Struts]
 
-== SiteMesh ===
+=== SiteMesh ===
 
   * [SiteMeshDirectories JCatapult standard SiteMesh directories]
 
