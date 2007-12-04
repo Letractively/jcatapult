@@ -1,0 +1,13 @@
+#summary The JCatapult Ant java plugin
+
+= Introduction =
+
+This plugin provides applications with the ability compile Java source code into Java byte code .class files. This plugin also provides applications the ability to create JAR files from the compiled source code and publish these JAR files into the local Savant repository for other projects to use.
+
+= Targets =
+
+The plugin provides these targets:
+
+== coverage ==
+
+Cleans, instruments, compiles and runs the unit tests. After the unit tests have run this target outputs the code coverage report from Cobertura into the _${dir.target}/test/coverage_ directory.
