@@ -1,0 +1,26 @@
+#summary The JCatapult Ant release-svn plugin
+
+= Introduction =
+
+This plugin provides applications with the ability to create a release of a project and then publish the artifacts of the project to a remote repository for the other developers on the team to have access to.
+
+This plugin contains two XML files:
+
+|| *jar.xml* || Used for libraries and components. ||
+|| *webapp.xml* || Used for web applications. ||
+
+One of these two files should be imported like this:
+
+{{{
+<import file="${ant.home}/plugins-jcatapult/release-svn/1.0/jar.xml"/>
+or 
+<import file="${ant.home}/plugins-jcatapult/release-svn/1.0/webapp.xml"/>
+}}}
+
+= Targets =
+
+The plugin provides these targets regardless of which import is used:
+
+== rel ==
+
+This target is an interactive target that will assist in the release process. The documentation for doing JCatapult releases is contained in the [Releasing] documentation.
