@@ -104,3 +104,5 @@ test:
 BUILD SUCCESSFUL
 Total time: 4 seconds
 }}}
+
+As you can see, JCatapult ran our test case and it as successful. This example is simplistic, but it illustrates how you can use JCatapult for unit testing.
