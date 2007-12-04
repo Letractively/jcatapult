@@ -32,6 +32,10 @@ Here are the documentation pages that are available for the JCatapult framework:
   * [CommonActions Common actions (countries select box, month select box, etc)]
   * [ParameterAttributes Parameter attributes extension to Struts]
 
+== SiteMesh ===
+
+  * [SiteMeshDirectories JCatapult standard SiteMesh directories]
+
 === Email ===
 
   * [EmailOverview Overview]
