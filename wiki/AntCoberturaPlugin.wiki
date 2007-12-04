@@ -4,6 +4,12 @@
 
 This plugin provides applications with the ability to run cobertura code coverage tool when running JUnit tests.
 
+This plugin contains a single XML file that should be imported like this:
+
+{{{
+<import file="${ant.home}/plugins-jcatapult/cobertura/1.0/cobertura.xml"/>
+}}}
+
 = Targets =
 
 The plugin provides these targets:
