@@ -11,7 +11,8 @@ Here are the documentation pages that are available for the JCatapult framework:
 
 === Tutorials ===
 
-  * [SimpleCrud Simple CRUD]
+  * [TutorialSimpleCrud Simple CRUD]
+  * [TutorialSimpleUnitTest Simple unit test]
 
 = Methodologies =
 
