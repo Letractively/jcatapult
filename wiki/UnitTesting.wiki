@@ -1,0 +1,30 @@
+#summary JCatapult Unit Testing
+
+= Introduction =
+
+JCatapult supports JUnit 3 and 4 for unit testing your code. We highly encourage you to unit test you code as much as possible. JCatapult requires that all unit tests for a project be placed into the _src/java/test/unit_ source directory.
+
+Let's create a simple unit test for a class named Calculator. Here is the Calculator class:
+
+_src/java/main/org/jcatapult/example/Calculator.java_
+{{{
+package com.example;
+
+public class Calculator {
+  private int one;
+  private int two;
+
+  public Calculator(int one, int two) {
+    this.one = one;
+    this.two = two;
+  }
+
+  
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
