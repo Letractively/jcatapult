@@ -24,8 +24,8 @@ Below are links to various documents around JCatapult standard methodologies. Th
   * [Scaffolding Scaffolding]
   * [UnitTesting Unit testing]
   * [IntegrationTestsing Integration testing]
-  * [RunningTheWebapp Running the web application]
-  * [RunningComponents Running components]
+  * [RunningAWebapp Running a web application]
+  * [RunningAComponent Running a component]
   * [Releasing Releasing a version]
 
 === Best Practices ===
