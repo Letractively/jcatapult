@@ -1,0 +1,21 @@
+#summary The JCatapult Ant savant plugin
+
+= Introduction =
+
+This plugin provides other plugins the ability to use the Savant dependency management facilities. This plugin does provide a single target, but mainly is used to provide access to the Savant Ant extensions, which include all of the Ant Tasks and Types that come with Savant. 
+
+Once this plugin is imported into a project, it is initialized and using the savantinit task. 
+
+This plugin contains a single XML file that should be imported like this:
+
+{{{
+<import file="${ant.home}/plugins-jcatapult/savant/1.0/savant.xml"/>
+}}}
+
+= Targets =
+
+The plugin provides these targets:
+
+== deps-resolve ==
+
+Performs a dependency resolution for all of the projects dependencies and transitive dependencies.
