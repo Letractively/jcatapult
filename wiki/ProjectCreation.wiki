@@ -1,0 +1,47 @@
+#summary JCatapult project creation
+
+= Introduction =
+
+JCatapult projects are all created using the *makeproject* tool that is part of the JCatapult Ant build system. If you haven't already setup JCatapult Ant, you will need to follow the instructions in the [GettingStarted Getting started] document.
+
+There are three types of projects that can be created with JCatapult:
+
+  * Web application
+  * Library
+  * Component
+
+If you are interested in learning more about the layout for each project type check out the [ProjectLayout Project layout] document.
+
+Here are the commands used to create each of the projects:
+
+=== Web application ===
+
+{{{
+*nix:
+$ ant $ANT_HOME/tools-jcatapult/makeproject/build.xml create-webapp
+
+Windows:
+C:\> ant %ANT_HOME%\tools-jcatapult\makeproject\build.xml create-webapp
+}}}
+
+
+=== Library ===
+
+{{{
+*nix:
+$ ant $ANT_HOME/tools-jcatapult/makeproject/build.xml create-library
+
+Windows:
+C:\> ant %ANT_HOME%\tools-jcatapult\makeproject\build.xml create-library
+}}}
+
+
+=== Component ===
+
+{{{
+*nix:
+$ ant $ANT_HOME/tools-jcatapult/makeproject/build.xml create-component
+
+Windows:
+C:\> ant %ANT_HOME%\tools-jcatapult\makeproject\build.xml create-component
+}}}
