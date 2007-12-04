@@ -35,7 +35,7 @@ $ target/tomcat/bin/tomcat.sh
 
 This script takes a number of commands that control how Tomcat is started. Here are the commands and their purpose:
 
-|| *start* || Start Tomcat in a new process (fork in *nix). Output from Tomcat is directed to _target/tomcat/logs/catalina.out_ ||
+|| *start* || Start Tomcat in a new process (fork in `*`nix). Output from Tomcat is directed to _target/tomcat/logs/catalina.out_ ||
 || *stop* || Shutdown a previously started Tomcat instance ||
 || *run* || Starts Tomcat in the current process. The output is displayed to stdout ||
 || *start jpda* || Starts Tomcat in debug mode ||
