@@ -4,6 +4,12 @@
 
 This plugin allows applications to delete intermediate files and compiled source files. JCatapult projects place all of these files into the _${dir.target}_ directory and this plugin deletes that directory.
 
+This plugin contains a single XML file that should be imported like this:
+
+{{{
+<import file="${ant.home}/plugins-jcatapult/clean/1.0/clean.xml"/>
+}}}
+
 = Targets =
 
 The plugin provides these targets:
