@@ -8,3 +8,11 @@ This plugin bootstraps projects and sets up all the properties that the other pl
 || *init-component.xml* || Used by components ||
 
 This plugin does not provide any targets.
+
+This plugin should only be imported using one of the two files like this:
+
+{{{
+<import file="${ant.home}/plugins-jcatapult/init/1.0/init.xml"/>
+or 
+<import file="${ant.home}/plugins-jcatapult/init/1.0/init-component.xml"/>
+}}}
