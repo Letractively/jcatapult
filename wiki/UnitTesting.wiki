@@ -3,3 +3,8 @@
 = Introduction =
 
 JCatapult supports JUnit 3 and 4 for unit testing your code. We highly encourage you to unit test you code as much as possible. JCatapult requires that all unit tests for a project be placed into the _src/java/test/unit_ source directory.
+
+
+= Test first or second =
+
+JCatapult library projects should 
