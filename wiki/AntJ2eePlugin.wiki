@@ -1,0 +1,26 @@
+#summary The JCatapult Ant j2ee plugin
+
+= Introduction =
+
+This plugin provides web applications targets to clean and construct the JEE compliant web archive in exploded format. The web archive is contained completely within the _web_ directory of the project. This allows the applications to modify web resources and immediately see the changes without requiring a copy step.
+
+This plugin provides two XML files that must be used by web applications. These two files should be imported like this:
+
+{{{
+<import file="${ant.home}/plugins-jcatapult/j2ee/1.0/j2ee.xml"/>
+<import file="${ant.home}/plugins-jcatapult/j2ee/1.0/clean.xml"/>
+}}}
+
+= Targets =
+
+The plugin provides these targets:
+
+== clean ==
+
+This target cleans out the web application as well as deletes the target. Because the web application is inline and not placed in the target directory, the _WEB-INF/classes_ and _WEB-INF/lib_ directories are cleaned by this target. These directories should *never* be in source control.
+
+== app ==
+
+Constructs the web application by first calling the _jar_ target and then placing all of the projects dependencies into the _WEB-INF/lib_ directory along with the project JAR file. Any configuration in _src/conf/main_, except the JPA configuration, is copied into the _WEB-INF/classes_ directory.
+
+This target also places the necessary Tomcat configuration and scripts into the _target/tomcat_ directory by calling the _deploy-local_ target that is part of the _tomcat_ plugin.
