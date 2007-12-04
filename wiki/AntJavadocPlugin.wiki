@@ -4,6 +4,12 @@
 
 This plugin provides applications with the ability to create JavaDoc from the Java source files.
 
+This plugin contains a single XML file that should be imported like this:
+
+{{{
+<import file="${ant.home}/plugins-jcatapult/javadoc/1.0/javadoc.xml"/>
+}}}
+
 = Targets =
 
 The plugin provides these targets:
