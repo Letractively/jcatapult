@@ -1,0 +1,43 @@
+#summary The JCatapult Ant junit plugin
+
+= Introduction =
+
+This plugin provides applications with the ability to run JUnit tests.
+
+This plugin contains two different XML files:
+
+|| *junit.xml* || Used for projects that require a database for testing. Usually components and web applications. ||
+|| *junit-no-db.xml* || Used for projects that don't require a database for testing. Usually libraries. ||
+
+Only one of these two files needs to be imported like this:
+
+{{{
+<import file="${ant.home}/plugins-jcatapult/junit/1.0/junit.xml"/>
+or
+<import file="${ant.home}/plugins-jcatapult/junit/1.0/junit-no-db.xml"/>
+}}}
+
+= Targets =
+
+The plugin provides these targets:
+
+== test ==
+
+Runs all of the tests, including unit and integration tests. This is done by calling _test-unit_ and then _test-integration_ in turn.
+
+== test-unit ==
+
+Runs all of the unit tests that are defined in the _src/java/test/unit_ directory.
+
+== test-integration ==
+
+Runs all of the integration tests that are defined in the _src/java/test/integration_ directory.
+
+
+*NOTE:* All of the targets from this plugin take a parameter that allows a single unit test to be executed. This parameter is called *test* and can be used like this:
+
+{{{
+$ ant -Dtest=Foo test
+}}}
+
+This will only execute the tests defined in any class named FooTest regardless of the package.
