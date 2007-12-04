@@ -11,8 +11,11 @@ Here are the documentation pages that are available for the JCatapult framework.
 
 === Tutorials ===
 
+  * [TutorialView Simple view]
+  * [TutorialForm Simple form]
   * [TutorialSimpleCrud Simple CRUD]
   * [TutorialSimpleUnitTest Simple unit test]
+  * [TutorialLogin Login and security]
 
 = Methodologies =
 
