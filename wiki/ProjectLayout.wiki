@@ -61,7 +61,18 @@ src
  |
 web                              <- Web resources
  |- WEB-INF
- |   |- ...
+ |   |- config                   <- Environment aware configuration files
+ |   |   |- ...
+ |   |
+ |   |- content                  <- Website content JSPs/FreeMarker
+ |   |   |- ...
+ |   |
+ |   |- decorators               <- SiteMesh decorators
+ |   |   |- ...
+ |   |
+ |   |- includes                 <- Standard include files for SiteMesh/JSPs
+ |   |   |- ...
+ |   |
 }}}
 
 *NOTE:* Since JCatapult supports inline web applications so that JSPs and other web resources can be modified without requiring a re-compile or copy step to reload, the web directory is the location that the web application is run from during development. The standard web directories of _WEB-INF/classes_ and _WEB-INF/lib_ are therefore cleaned out by the JCatapult Ant J2EE clean target. In addition, these directories should not be part of source control.
