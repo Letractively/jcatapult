@@ -1,0 +1,13 @@
+#summary The JCatapult Ant javadoc plugin
+
+= Introduction =
+
+This plugin provides applications with the ability to create JavaDoc from the Java source files.
+
+= Targets =
+
+The plugin provides these targets:
+
+== javadoc ==
+
+Creates JavaDoc using the Java source files located in the _src/java/main_ directory.
