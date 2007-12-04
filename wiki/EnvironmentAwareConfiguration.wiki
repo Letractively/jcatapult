@@ -1,0 +1,112 @@
+#summary JCatapult Environment Aware Configuration.
+
+= Introduction =
+
+JCatapult provides an Environment Aware Configuration API that allows applications to control how they are configured for all of the environments they will be deployed to. This API leverages the [EnvironmentResolution JCatapult Environment Resolution System] to determine the current environment.
+
+
+= Commons Configuration =
+
+The JCatapult Environment Aware Configuration API is an implementation of the Apache Commons Configuration interfaces. The documentation for the Apache Commons Configuration library can be found at http://commons.apache.org/configuration/. The interface from this library that is available to JCatapult classes (via Guice dependency injection) is _org.apache.commons.configuration.Configuration_.
+
+The JCatapult implementation of the Apache Commons Configuration interface is backed by XML configuration files. If you would like to read up more on how these files are written, check out this documentation:
+
+http://commons.apache.org/configuration/userguide-1.2/howto_xml.html
+
+In addition, Apache Commons Configuration also supports many other concepts like variable replacement (interpolation). To learn about all the features available with the JCatapult Environment Aware Configuration, check out the documentation here:
+
+http://commons.apache.org/configuration/userguide/user_guide.html
+
+
+= Using the configuration =
+
+Here is an example class that is injected with the Configuration interface:
+
+{{{
+package org.jcatapult.example;
+
+import org.apache.commons.configuration.Configuration;
+
+import com.google.inject.Inject;
+
+public class ConfigurationExample {
+    private final Configuration configuration;
+
+    @Inject
+    public ConfigurationExample(Configuration configuration) {
+        this.configuration = configuration;
+    }
+}
+}}}
+
+This class can then use the _Configuration_ interface to retrieve configuration properties.
+
+Here is an example of using the _Configuration_ interface.
+
+{{{
+int number = this.configuration.getInt("number.of.turns");
+}}}
+
+
+= Configuration files =
+
+JCatapult by default expects that the Environment Aware Configuration files are placed in the _WEB-INF/config_ directory. The configuration files form a hierarchy and are named:
+
+  * config-default.xml
+  * config-<environment>.xml
+
+Let's say that you have three environments:
+
+  * development
+  * staging
+  * production
+
+You would have these files in _WEB-INF/config_
+
+  * config-default.xml
+  * config-development.xml
+  * config-staging.xml
+  * config-production.xml
+
+All default properties that are shared across multiple environments are placed into the _config-default.xml_ file. All environment specific values are placed into the individual environment files. Here is an example of using the default and environment specific files:
+
+_config-default.xml_
+{{{
+<config>
+  <number>
+    <of>
+      <turns>3</turns>
+    </of>
+  </number>
+</config>
+}}}
+
+_config-development.xml_
+{{{
+<config>
+  <number>
+    <of>
+      <turns>2</turns>
+    </of>
+  </number>
+</config>
+}}}
+
+_config-staging.xml_
+{{{
+<config>
+  <number>
+    <of>
+      <turns>2</turns>
+    </of>
+  </number>
+</config>
+}}}
+
+_config-production.xml_
+{{{
+<config>
+</config>
+}}}
+
+Notice that the production file did not define any value for _number.of.turns_ and therefore it would use the default value of *3*. The development and staging environments would use a value of *2*.
