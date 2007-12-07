@@ -17,7 +17,7 @@
   <import file="${plugin.dir}/java/1.0/jar.xml"/>
 
   <!-- JUnit -->
-  <import file="${plugin.dir}/junit/1.0/junit.xml"/>
+  <import file="${plugin.dir}/junit/1.0/junit-no-db.xml"/>
   <import file="${plugin.dir}/cobertura/1.0/cobertura.xml"/>
 
   <!-- SVN -->
@@ -28,7 +28,4 @@
 
   <!-- IDE -->
   <import file="${plugin.dir}/ide/1.0/ide.xml"/>
-
-  <!-- Database -->
-  <import file="${plugin.dir}/mysql/1.0/mysql.xml"/>
 </project>
