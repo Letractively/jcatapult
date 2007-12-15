@@ -45,10 +45,12 @@
   <dependencies id="dependencies.project">
     <artifactGroup type="run"/>
     <artifactGroup type="compile">
-      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.3.17" type="jar"/>
+      <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
+      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.3.18" type="jar"/>
       <artifact group="mysql.com" project="mysql-connector-java" name="mysql-connector-java" version="5.0.7" type="jar"/>
       <artifact group="postgresql.org" project="jdbc3" name="postgresql" version="8.2.506" type="jar"/>
       <artifact group="sun.com" project="jpa" name="jpa" version="1.0" type="jar"/>
+      <artifact group="inversoft.org" project="savant-core" name="savant-core" version="2.0-B3" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-run">
       <artifact group="hsqldb.org" project="hsqldb" name="hsqldb" version="1.8.9" type="jar"/>

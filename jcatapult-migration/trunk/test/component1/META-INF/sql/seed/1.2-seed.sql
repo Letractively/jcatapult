@@ -1,0 +1,1 @@
+insert into c1_t1 (id, name) values (3, '1.2-seed.sql-value1');

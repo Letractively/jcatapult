@@ -21,7 +21,6 @@ import javax.sql.DataSource;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.jcatapult.migration.database.MySQL5DatabaseProvider;
 
 /**
  * User: jhumphrey

@@ -65,7 +65,7 @@ public class DatabaseMigratorTest {
         s.close();
 
         DatabaseMigrator.main("punit", dbURL, "projectName", "test/db", dbType,
-            "java:comp/env/jdbc/database_migrator_test");
+            "java:comp/env/jdbc/database_migrator_test", "test/project.xml");
 
         s = c.createStatement();
         verifyTable(s, "projectName");

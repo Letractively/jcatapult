@@ -1,2 +1,2 @@
-insert into component4 (name) values ('bar');
-insert into component4 (name) values ('bar2');
+insert into c4_t1 (name) values ('1.0-seed.sql-value1');
+insert into c4_t1 (name) values ('1.0-seed.sql-value2');

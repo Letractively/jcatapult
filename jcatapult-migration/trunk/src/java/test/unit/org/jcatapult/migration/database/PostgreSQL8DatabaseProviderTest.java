@@ -15,12 +15,12 @@
  */
 package org.jcatapult.migration.database;
 
-import java.sql.SQLException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import javax.sql.DataSource;
 
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * User: jhumphrey

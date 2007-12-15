@@ -46,16 +46,17 @@
 
   <macrodef name="compile-main-post">
     <sequential>
+      <!-- copies db files to the target directory -->
       <copy todir="${dir.target.classes.main}">
         <fileset dir="${dir.src.db.main}" includes="**/*"/>
       </copy>
     </sequential>
   </macrodef>
 
+  <!-- implemented to jar up the test components -->
   <macrodef name="jar-post">
     <sequential>
-      <!-- Build the test component JARs -->
-      <jar destfile="${dir.target.jars}/component1-1.1.jar">
+      <jar destfile="${dir.target.jars}/component1-1.2.jar">
         <fileset dir="test/component1" includes="**/*"/>
       </jar>
       <jar destfile="${dir.target.jars}/component2-1.1.jar">
@@ -67,7 +68,23 @@
       <jar destfile="${dir.target.jars}/component4-1.0.jar">
         <fileset dir="test/component4" includes="**/*"/>
       </jar>
+      <jar destfile="${dir.target.jars}/dependency1-1.0.jar">
+        <fileset dir="test/dependency1" includes="**/*"/>
+      </jar>
+      <jar destfile="${dir.target.jars}/dependency2-1.0.jar">
+        <fileset dir="test/dependency2" includes="**/*"/>
+      </jar>
    </sequential>
+  </macrodef>
+
+  <!-- implemented to copy amd files over to amd -->
+  <macrodef name="test-unit-pre">
+    <sequential>
+      <copy file="test/component1/component1-1.2.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/component2/component2-1.1.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/component3/component3-2.1.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/component4/component4-1.0.jar.amd" todir="${dir.target.jars}"/>
+    </sequential>
   </macrodef>
 
   <target name="create-test-database">
@@ -83,37 +100,47 @@
       GRANT ALL PRIVILEGES on mysql5_database_provider_test.* to 'dev'@'localhost' identified by 'dev';
       GRANT ALL PRIVILEGES on mysql5_database_provider_test.* to 'dev'@'127.0.0.1' identified by 'dev';
 
-      DROP DATABASE IF EXISTS database_migrator_test;
-      CREATE DATABASE database_migrator_test;
-      GRANT ALL PRIVILEGES on database_migrator_test.* to 'dev'@'localhost' identified by 'dev';
-      GRANT ALL PRIVILEGES on database_migrator_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+      DROP DATABASE IF EXISTS table_generator_test_project5;
+      CREATE DATABASE table_generator_test_project5;
+      GRANT ALL PRIVILEGES on table_generator_test_project5.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on table_generator_test_project5.* to 'dev'@'127.0.0.1' identified by 'dev';
 
-      DROP DATABASE IF EXISTS patcher_seeder_test;
-      CREATE DATABASE patcher_seeder_test;
-      GRANT ALL PRIVILEGES on patcher_seeder_test.* to 'dev'@'localhost' identified by 'dev';
-      GRANT ALL PRIVILEGES on patcher_seeder_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+      DROP DATABASE IF EXISTS table_generator_test_component1;
+      CREATE DATABASE table_generator_test_component1;
+      GRANT ALL PRIVILEGES on table_generator_test_component1.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on table_generator_test_component1.* to 'dev'@'127.0.0.1' identified by 'dev';
 
-      DROP DATABASE IF EXISTS table_creator_test;
-      CREATE DATABASE table_creator_test;
-      GRANT ALL PRIVILEGES on table_creator_test.* to 'dev'@'localhost' identified by 'dev';
-      GRANT ALL PRIVILEGES on table_creator_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+      DROP DATABASE IF EXISTS database_generator_test_project5;
+      CREATE DATABASE database_generator_test_project5;
+      GRANT ALL PRIVILEGES on database_generator_test_project5.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on database_generator_test_project5.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS database_generator_test_project4;
+      CREATE DATABASE database_generator_test_project4;
+      GRANT ALL PRIVILEGES on database_generator_test_project4.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on database_generator_test_project4.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS database_generator_test_project1;
+      CREATE DATABASE database_generator_test_project1;
+      GRANT ALL PRIVILEGES on database_generator_test_project1.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on database_generator_test_project1.* to 'dev'@'127.0.0.1' identified by 'dev';
 
     </sql>
-    <sql driver="org.postgresql.Driver" url="jdbc:postgresql://localhost/postgres"
-         userid="postgres" password="postgres" autocommit="true" expandproperties="true"
-         classpathref="classpath.project">
+    <!--<sql driver="org.postgresql.Driver" url="jdbc:postgresql://localhost/postgres"-->
+         <!--userid="postgres" password="postgres" autocommit="true" expandproperties="true"-->
+         <!--classpathref="classpath.project">-->
 
-      DROP DATABASE IF EXISTS postgres8_database_provider_test;
-      CREATE DATABASE postgres8_database_provider_test WITH OWNER dev;
+      <!--DROP DATABASE IF EXISTS postgres8_database_provider_test;-->
+      <!--CREATE DATABASE postgres8_database_provider_test WITH OWNER dev;-->
 
-      DROP DATABASE IF EXISTS database_migrator_test;
-      CREATE DATABASE database_migrator_test WITH OWNER dev;
+      <!--DROP DATABASE IF EXISTS database_migrator_test;-->
+      <!--CREATE DATABASE database_migrator_test WITH OWNER dev;-->
 
-      DROP DATABASE IF EXISTS patcher_seeder_test;
-      CREATE DATABASE patcher_seeder_test WITH OWNER dev;
+      <!--DROP DATABASE IF EXISTS patcher_seeder_test;-->
+      <!--CREATE DATABASE patcher_seeder_test WITH OWNER dev;-->
 
-      DROP DATABASE IF EXISTS table_creator_test;
-      CREATE DATABASE table_creator_test WITH OWNER dev;
-    </sql>
+      <!--DROP DATABASE IF EXISTS table_creator_test;-->
+      <!--CREATE DATABASE table_creator_test WITH OWNER dev;-->
+    <!--</sql>-->
   </target>
 </project>

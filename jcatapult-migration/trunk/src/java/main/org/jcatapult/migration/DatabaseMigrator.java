@@ -24,13 +24,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import org.jcatapult.migration.database.DatabaseProvider;
 import org.jcatapult.migration.database.DatabaseProviderFactory;
+import org.jcatapult.migration.domain.ComponentJar;
+import org.jcatapult.migration.service.ComponentJarServiceImpl;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import net.java.naming.MockJNDI;
 import net.java.util.Version;
 
@@ -266,6 +271,9 @@ import net.java.util.Version;
  */
 public class DatabaseMigrator {
     private static final Logger logger = Logger.getLogger("DatabaseMigrator");
+
+    public static final String VERSION_TABLE = "JCATAPULT_ARTIFACT_VERSIONS";
+
     private final String persistenceUnit;
     private final Connection connection;
     private final String applicationName;
@@ -273,11 +281,15 @@ public class DatabaseMigrator {
     private final File createDir;
     private final File patchDir;
     private final File seedDir;
+    private final File projectXml;
+    private String dependenciesId;
 
     private final Map<String, Version> currentVersions = new HashMap<String, Version>();
 
+    private Injector injector = Guice.createInjector();
+
     public DatabaseMigrator(String persistenceUnit, Connection connection, String applicationName, boolean containsDomain,
-        File createDir, File patchDir, File seedDir) {
+        File createDir, File patchDir, File seedDir, File projectXml, String dependenciesId) {
         this.persistenceUnit = persistenceUnit;
         this.connection = connection;
         this.applicationName = applicationName;
@@ -285,6 +297,8 @@ public class DatabaseMigrator {
         this.createDir = createDir;
         this.patchDir = patchDir;
         this.seedDir = seedDir;
+        this.projectXml = projectXml;
+        this.dependenciesId = dependenciesId;
     }
 
     /**
@@ -297,22 +311,24 @@ public class DatabaseMigrator {
      */
     public static void main(String... args) throws SQLException, IOException {
 
-        if (args.length < 6 || args.length > 7) {
+        if (args.length < 8 || args.length > 9) {
             StringBuffer errMsg = new StringBuffer();
             errMsg.append("Invalid arguments: ").append(Arrays.asList(args)).append("\n");
-            errMsg.append("Usage: DatabaseMigrator [--no-domain] <persistence-unit> <db-url> <application-name> <sql-dir> <db-type> <jndi-name>");
+            errMsg.append("Usage: DatabaseMigrator [--no-domain] <persistence-unit> <db-url> <application-name> <sql-dir> <db-type> <jndi-name> <project-xml-path>");
             errMsg.append("\n\n");
             errMsg.append("--no-domain: Tells the DatabaseMigrator that the current application doesn't");
             errMsg.append("contain any domain objects and that it should only check for component");
-            errMsg.append(" tables.sql files.").append("\n\n");
-            errMsg.append("persistence-unit: The name of the persistence unit to use when in development mode.").append("\n\n");
+            errMsg.append(" tables.sql files.\n\n");
+            errMsg.append("persistence-unit: The name of the persistence unit to use when in development mode.\n\n");
             errMsg.append("db-url: The full JDBC URL to the database.").append("\n\n");
             errMsg.append("application-name: The name of the current application, which is used to find the current");
-            errMsg.append(" version of the application in the currentVersions table.").append("\n\n");
-            errMsg.append("sql-dir: The directory that contains the SQL files for this project. This can");
-            errMsg.append(" be a bogus directory if the project doesn't contain any SQL files.").append("\n\n");
-            errMsg.append("db-type: The database type to connect to").append("\n");
-            errMsg.append("jndi-name: The jndi name name that maps to the datasource");
+            errMsg.append(" version of the application in the currentVersions table.\n\n");
+            errMsg.append("sql-dir: The directory that contains the SQL files to create the database from. This can");
+            errMsg.append(" be a bogus directory if the project doesn't contain any SQL files.\n\n");
+            errMsg.append("db-type: The database type to connect to.\n\n");
+            errMsg.append("jndi-name: The jndi name name that maps to the datasource.\n\n");
+            errMsg.append("project-xml-path: the path to the project.xml file.\n\n");
+            errMsg.append("dependencies-id: the dependencies id defined within the project.xml.");
             System.err.println(errMsg);
             System.exit(1);
         }
@@ -329,7 +345,9 @@ public class DatabaseMigrator {
         String projectName = args[count++];
         String sqlDir = args[count++];
         String dbType = args[count++];
-        String jndiName = args[count];
+        String jndiName = args[count++];
+        String projectXmlPath = args[count++];
+        String dependenciesId = args[count];
 
         // create the database provider
         DatabaseProvider dp = DatabaseProviderFactory.getProvider(dbType, dbURL);
@@ -339,27 +357,33 @@ public class DatabaseMigrator {
         jndi.bind(jndiName, dp.getDatasource());
         jndi.activate();
 
-
         logger.info("DB Url [" + dbURL + "]");
         logger.info("JNDI name is [" + jndiName + "]");
 
         DatabaseMigrator dm = new DatabaseMigrator(persistenceUnit, dp.getConnection(), projectName,
             containsDomain, new File(sqlDir, "create"), new File(sqlDir, "patch"),
-            new File(sqlDir, "seed"));
+            new File(sqlDir, "seed"), new File(projectXmlPath), dependenciesId);
         dm.migrate();
     }
 
     public void migrate() throws SQLException, IOException {
-        // Load up the currentVersions from the database, if the table exists. If it doesn't exist, create it
-        boolean productionMode = loadVersions();
-        if (!productionMode) {
-            TableCreator creator = new TableCreator(persistenceUnit, connection, containsDomain, createDir);
-            productionMode = creator.create();
-        }
 
-        PatcherSeeder patcherSeeder = new PatcherSeeder(connection, applicationName, patchDir, seedDir,
-            productionMode, currentVersions);
-        patcherSeeder.patchSeed();
+        // resolve component
+        ComponentJarServiceImpl cr = injector.getInstance(ComponentJarServiceImpl.class);
+        List<ComponentJar> componentJars = cr.resolveJars(projectXml, dependenciesId);
+
+        // Load up the component and project versions from the database.  If the table hasn't yet been created,
+        // then assume we're NOT in production mode.  In that event, create all the tables
+        boolean productionMode = loadVersions();
+//        if (!productionMode) {
+//            TableCreator creator = new TableCreator(persistenceUnit, connection, containsDomain, createDir,
+//                componentJars);
+//            productionMode = creator.create();
+//        }
+
+//        PatcherSeeder patcherSeeder = new PatcherSeeder(connection, applicationName, patchDir, seedDir,
+//            productionMode, currentVersions, componentJars);
+//        patcherSeeder.patchSeed();
 
         // Update with the stuff we did
         updateVersions();
@@ -374,21 +398,23 @@ public class DatabaseMigrator {
     private boolean loadVersions() throws SQLException {
         Statement statement = connection.createStatement();
         try {
-            statement.execute("describe currentVersions");
+            // execute a random sql script to see if the currentVersions table already exists.
+            // if it doesn't, this will throw an exception.
+            statement.execute("select * from " + VERSION_TABLE);
 
-            logger.info("Loading the currentVersions table into memory");
-            ResultSet rs = statement.executeQuery("select * from currentVersions");
+            logger.info("Loading the jcatapult artifact version table [" + VERSION_TABLE + "] into memory");
+            ResultSet rs = statement.executeQuery("select * from " + VERSION_TABLE);
             while (rs.next()) {
                 String name = rs.getString("name");
                 String version = rs.getString("version");
                 currentVersions.put(name, new Version(version));
-                logger.info("Found version for [" + name + "] of [" + version + "]");
+                logger.info("Found version [" + version + "] for jcatapult artifact [" + name + "]");
             }
 
             return true;
         } catch (SQLException e) {
-            logger.info("The currentVersions table doesn't exist, creating it");
-            statement.execute("create table currentVersions (name varchar(1000), version varchar(255))");
+            logger.info("The [" + VERSION_TABLE + "] table doesn't exist, creating it");
+            statement.execute("create table " + VERSION_TABLE + " (name varchar(1000), version varchar(255))");
             statement.close();
             return false;
         }
@@ -401,23 +427,24 @@ public class DatabaseMigrator {
      * @throws SQLException If the update failed.
      */
     private void updateVersions() throws SQLException {
-        // Update the currentVersions in the database using the highest that we found on this entire patch/seed run
+        // Update the jcatapult artifact version in the database using the
+        // highest that we found on this entire patch/seed run
         Set<String> componentNames = currentVersions.keySet();
         for (String componentName : componentNames) {
-            PreparedStatement statement = connection.prepareStatement("update currentVersions set version = ? where name = ?");
+            PreparedStatement statement = connection.prepareStatement("update " + VERSION_TABLE + " set version = ? where name = ?");
             Version version = currentVersions.get(componentName);
             statement.setString(1, componentName);
             statement.setString(2, version.toString());
             int results = statement.executeUpdate();
             if (results == 0) {
                 logger.info("Set version for [" + componentName + "] to [" + version + "]");
-                statement = connection.prepareStatement("insert into currentVersions (name,version) values (?,?)");
+                statement = connection.prepareStatement("insert into " + VERSION_TABLE + " values (?,?)");
                 statement.setString(1, componentName);
                 statement.setString(2, version.toString());
                 results = statement.executeUpdate();
                 if (results == 0) {
-                    throw new RuntimeException("Unable to insert or update currentVersions table for name [" +
-                        componentName + "] and version [" + version + "]");
+                    throw new RuntimeException("Unable to insert or update to table [" + VERSION_TABLE +
+                        "] for column name [" + componentName + "] and column version [" + version + "]");
                 }
             } else {
                 logger.info("Updated version for [" + componentName + "] to [" + version + "]");

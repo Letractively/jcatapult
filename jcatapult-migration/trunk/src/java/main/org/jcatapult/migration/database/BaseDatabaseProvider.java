@@ -15,12 +15,12 @@
  */
 package org.jcatapult.migration.database;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 /**

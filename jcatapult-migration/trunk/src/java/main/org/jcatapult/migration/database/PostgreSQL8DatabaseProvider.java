@@ -15,10 +15,6 @@
  */
 package org.jcatapult.migration.database;
 
-import javax.sql.DataSource;
-
-import org.postgresql.jdbc3.Jdbc3PoolingDataSource;
-
 /**
  * User: jhumphrey
  * Date: Nov 27, 2007

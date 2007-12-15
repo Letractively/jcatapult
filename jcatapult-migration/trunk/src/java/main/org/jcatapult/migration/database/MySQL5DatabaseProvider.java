@@ -15,11 +15,6 @@
  */
 package org.jcatapult.migration.database;
 
-import java.util.logging.Logger;
-import javax.sql.DataSource;
-
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-
 /**
  * User: jhumphrey
  * Date: Nov 26, 2007
