@@ -26,6 +26,7 @@ import org.jcatapult.migration.domain.ProjectContext;
 import org.jcatapult.migration.service.ComponentJarServiceImpl;
 import org.jcatapult.migration.service.ComponentJarService;
 import org.junit.Test;
+import org.junit.Assert;
 
 import com.google.inject.Inject;
 import net.java.util.Version;
@@ -48,23 +49,36 @@ public class DatabaseGeneratorTest extends BaseTest {
      *
      * @throws java.io.IOException on exception
      */
-//    @Test
+    @Test
     public void testGenerateProject5() throws IOException {
-        DatabaseGenerator gen = getDbGen("project5", "project.deps", new HashMap<String, Version>(),
-            new Version("1.0"), null);
+
+        String projectName = "project5";
+
+        Map<String, Version> databaseVersions = new HashMap<String, Version>();
+        DatabaseGenerator gen = getDbGen(projectName, "project.deps", databaseVersions, new Version("1.0"), null);
         gen.generate();
+
+        Assert.assertEquals(1, databaseVersions.size());
+        Assert.assertEquals(new Version("1.0"), databaseVersions.get(projectName));
     }
 
     /**
-     * Simple test of a project that has no component dependencies
+     * Simple test of a project that has one component dependency
      *
      * @throws java.io.IOException on exception
      */
-//    @Test
+    @Test
     public void testGenerateProject4() throws IOException {
-        DatabaseGenerator gen = getDbGen("project4", "project.deps", new HashMap<String, Version>(),
-            new Version("1.0"), null);
+
+        String projectName = "project4";
+
+        Map<String, Version> databaseVersions = new HashMap<String, Version>();
+        DatabaseGenerator gen = getDbGen(projectName, "project.deps", databaseVersions, new Version("1.0"), null);
         gen.generate();
+
+        Assert.assertEquals(2, databaseVersions.size());
+        Assert.assertEquals(new Version("1.0"), databaseVersions.get(projectName));
+        Assert.assertEquals(new Version("1.2"), databaseVersions.get("component1"));
     }
 
     /**
@@ -74,9 +88,19 @@ public class DatabaseGeneratorTest extends BaseTest {
      */
     @Test
     public void testGenerateProject1() throws IOException {
-        DatabaseGenerator gen = getDbGen("project1", "project.deps", new HashMap<String, Version>(),
-            new Version("1.0"), null);
+
+        String projectName = "project1";
+
+        Map<String, Version> databaseVersions = new HashMap<String, Version>();
+        DatabaseGenerator gen = getDbGen(projectName, "project.deps", databaseVersions, new Version("1.0"), null);
         gen.generate();
+
+        Assert.assertEquals(5, databaseVersions.size());
+        Assert.assertEquals(new Version("1.0"), databaseVersions.get(projectName));
+        Assert.assertEquals(new Version("1.2"), databaseVersions.get("component1"));
+        Assert.assertEquals(new Version("1.1"), databaseVersions.get("component2"));
+        Assert.assertEquals(new Version("2.1"), databaseVersions.get("component3"));
+        Assert.assertEquals(new Version("1.0"), databaseVersions.get("component4"));
     }
 
     /**
@@ -94,8 +118,7 @@ public class DatabaseGeneratorTest extends BaseTest {
 
         List<ComponentJar> componentJars = cjs.resolveJars(new File("test/" + projectName + "/project.xml"), depsId);
 
-        ProjectContext pCtx = new ProjectContext(projectCurrentVersion, projectDatabaseVersion);
-        pCtx.setProjectName(projectName);
+        ProjectContext pCtx = new ProjectContext(projectName, projectCurrentVersion, projectDatabaseVersion);
         pCtx.setAlterDir(new File("test/" + projectName + "/db/alter"));
         pCtx.setBaseDir(new File("test/" + projectName + "/db/base"));
         pCtx.setSeedDir(new File("test/" + projectName + "/db/seed"));

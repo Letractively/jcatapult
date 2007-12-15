@@ -31,6 +31,7 @@ import org.jcatapult.migration.service.ProjectArtifactService;
 import org.jcatapult.migration.service.ComponentJarService;
 import org.jcatapult.migration.component.ComponentJarTools;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -43,7 +44,8 @@ import net.java.util.Version;
  * User: jhumphrey
  * Date: Nov 30, 2007
  */
-public class BaseTest {
+@Ignore
+public abstract class BaseTest {
 
     protected Injector injector;
 
@@ -82,8 +84,7 @@ public class BaseTest {
      * @return artifact
      */
     protected Artifact getProjectArtifact(String projectName, Version dbVersion) {
-        ProjectContext pCtx = new ProjectContext(new Version("1.1"), dbVersion);
-        pCtx.setProjectName(projectName);
+        ProjectContext pCtx = new ProjectContext(projectName, new Version("1.1"), dbVersion);
         pCtx.setAlterDir(new File("test/" + projectName + "/db/alter"));
         pCtx.setBaseDir(new File("test/" + projectName + "/db/base"));
         pCtx.setSeedDir(new File("test/" + projectName + "/db/seed"));

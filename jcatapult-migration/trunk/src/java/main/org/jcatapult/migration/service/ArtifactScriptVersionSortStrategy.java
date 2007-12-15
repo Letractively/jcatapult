@@ -37,15 +37,8 @@ public interface ArtifactScriptVersionSortStrategy {
      * Sorts artifact sql scripts into a queue where the first in is the first out
      *
      * @param artifact {@link org.jcatapult.migration.domain.Artifact}
+     * @param seedOnly true if sorting seed scripts only, false otherwise
      * @return a sorted set of {@link org.jcatapult.migration.domain.SQLScript} objects
      */
-    Queue<SQLScript> sort(Artifact artifact);
-
-    /**
-     * Returns the highest version detected
-     *
-     * @param artifact the artifact that contains the
-     * @return the highest script version
-     */
-    Version determineHighestScriptVersion(Artifact artifact);
+    Queue<SQLScript> sort(Artifact artifact, boolean seedOnly);
 }

@@ -58,12 +58,13 @@ public class TableGenerator {
     /**
      * Generates the tables for a particular artifact
      *
+     * @param seedOnly true if executing seed scripts only, false otherwise
      * @throws IOException thrown if there is a problem during sql script execution
      */
-    public void generate() throws IOException {
+    public void generate(boolean seedOnly) throws IOException {
         logger.info("Generating tables for artifact [" + artifact.getName() + "]");
 
-        Queue<SQLScript> sqlScripts = versionSortStrat.sort(artifact);
+        Queue<SQLScript> sqlScripts = versionSortStrat.sort(artifact, seedOnly);
 
         logger.info("Preparing the following script queue for execution for artifact [" + artifact.getName() + "] version [" +
             artifact.getCurrentVersion() + "]: " + sqlScripts);

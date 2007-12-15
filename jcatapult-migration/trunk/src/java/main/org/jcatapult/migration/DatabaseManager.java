@@ -26,14 +26,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.jcatapult.migration.database.DatabaseProvider;
 import org.jcatapult.migration.database.DatabaseProviderFactory;
 import org.jcatapult.migration.service.ComponentJarServiceImpl;
+import org.jcatapult.migration.service.ComponentJarService;
+import org.jcatapult.migration.domain.ComponentJar;
+import org.jcatapult.migration.domain.ProjectContext;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Inject;
 import net.java.naming.MockJNDI;
 import net.java.util.Version;
 
@@ -274,29 +279,31 @@ public class DatabaseManager {
 
     private final String persistenceUnit;
     private final Connection connection;
-    private final String applicationName;
+    private final String projectName;
     private final boolean containsDomain;
     private final File baseDir;
     private final File alterDir;
     private final File seedDir;
     private final File projectXml;
     private String dependenciesId;
+    private Version projectVersion;
 
     private final Map<String, Version> databaseVersions = new HashMap<String, Version>();
 
     private Injector injector = Guice.createInjector();
 
-    public DatabaseManager(String persistenceUnit, Connection connection, String applicationName, boolean containsDomain,
-        File baseDir, File alterDir, File seedDir, File projectXml, String dependenciesId) {
+    public DatabaseManager(String persistenceUnit, Connection connection, String projectName, boolean containsDomain,
+        File baseDir, File alterDir, File seedDir, File projectXml, String dependenciesId, Version projectVersion) {
         this.persistenceUnit = persistenceUnit;
         this.connection = connection;
-        this.applicationName = applicationName;
+        this.projectName = projectName;
         this.containsDomain = containsDomain;
         this.baseDir = baseDir;
         this.alterDir = alterDir;
         this.seedDir = seedDir;
         this.projectXml = projectXml;
         this.dependenciesId = dependenciesId;
+        this.projectVersion = projectVersion;
     }
 
     /**
@@ -345,7 +352,8 @@ public class DatabaseManager {
         String dbType = args[count++];
         String jndiName = args[count++];
         String projectXmlPath = args[count++];
-        String dependenciesId = args[count];
+        String dependenciesId = args[count++];
+        Version projectVersion = new Version(args[count]);
 
         // create the database provider
         DatabaseProvider dp = DatabaseProviderFactory.getProvider(dbType, dbURL);
@@ -360,20 +368,40 @@ public class DatabaseManager {
 
         DatabaseManager dm = new DatabaseManager(persistenceUnit, dp.getConnection(), projectName,
             containsDomain, new File(sqlDir, "base"), new File(sqlDir, "alter"),
-            new File(sqlDir, "seed"), new File(projectXmlPath), dependenciesId);
+            new File(sqlDir, "seed"), new File(projectXmlPath), dependenciesId, projectVersion);
         dm.manage();
     }
 
     public void manage() throws SQLException, IOException {
 
         // resolve components for project
-        ComponentJarServiceImpl cr = injector.getInstance(ComponentJarServiceImpl.class);
-        cr.resolveJars(projectXml, dependenciesId);
+        ComponentJarService cjs = injector.getInstance(ComponentJarServiceImpl.class);
+        List<ComponentJar> componentJars = cjs.resolveJars(projectXml, dependenciesId);
 
         // Load up the component and project versions from the database.
         loadDatabaseVersions();
 
+        // Build project context
+        ProjectContext pCtx = new ProjectContext(projectName, projectVersion, databaseVersions.get(projectName));
 
+        // set alter, seed, and base dirs if provided
+        if (alterDir != null) {
+            pCtx.setAlterDir(alterDir);
+        }
+        if (seedDir != null) {
+            pCtx.setSeedDir(seedDir);
+        }
+        if (baseDir != null) {
+            pCtx.setBaseDir(baseDir);
+        }
+        pCtx.setContainsDomain(containsDomain);
+        if (persistenceUnit != null) {
+            pCtx.setPersistenceUnit(persistenceUnit);
+        }
+
+
+        DatabaseGenerator gen = new DatabaseGenerator(connection, componentJars, databaseVersions, pCtx, cjs);
+        gen.generate();
 
 //        if (!productionMode) {
 //            TableCreator creator = new TableCreator(persistenceUnit, connection, containsDomain, baseDir,
@@ -381,7 +409,7 @@ public class DatabaseManager {
 //            productionMode = creator.create();
 //        }
 //
-//        PatcherSeeder patcherSeeder = new PatcherSeeder(connection, applicationName, alterDir, seedDir,
+//        PatcherSeeder patcherSeeder = new PatcherSeeder(connection, projectName, alterDir, seedDir,
 //            productionMode, databaseVersions, cr.getComponents());
 //        patcherSeeder.patchSeed();
 
@@ -428,7 +456,7 @@ public class DatabaseManager {
         // highest that we found on this entire patch/seed run
         Set<String> componentNames = databaseVersions.keySet();
         for (String componentName : componentNames) {
-            PreparedStatement statement = connection.prepareStatement("update " + VERSION_TABLE + " set version = ? where name = ?");
+            PreparedStatement statement = connection.prepareStatement("update " + VERSION_TABLE + " set version = ? where artifact_name = ?");
             Version version = databaseVersions.get(componentName);
             statement.setString(1, componentName);
             statement.setString(2, version.toString());

@@ -37,8 +37,7 @@ public class ProjectArtifactServiceTest {
 
     @Test
     public void testProjectService() {
-        ProjectContext pCtx = new ProjectContext(new Version("1.1"), new Version("0.0.0"));
-        pCtx.setProjectName("project1");
+        ProjectContext pCtx = new ProjectContext("project1", new Version("1.1"), new Version("0.0.0"));
         pCtx.setAlterDir(new File("test/project1/db/alter"));
         pCtx.setBaseDir(new File("test/project1/db/base"));
         pCtx.setSeedDir(new File("test/project1/db/seed"));

@@ -40,14 +40,14 @@ public class ArtifactScriptVersionSortStrategyImpl implements ArtifactScriptVers
     /**
      * {@inheritDoc}
      */
-    public Queue<SQLScript> sort(Artifact artifact) {
+    public Queue<SQLScript> sort(Artifact artifact, boolean seedOnly) {
 
         Queue<SQLScript> scripts = new LinkedList<SQLScript>();
 
         Version databaseVersion = artifact.getDatabaseVersion();
 
         // only add the base scripts if the database version is null
-        if (databaseVersion == null) {
+        if (databaseVersion == null && !seedOnly) {
             // currently, there's only ever 1 script in the base scripts set.  so, just get the last
             SQLScript baseScript = artifact.getBaseScripts().last();
             scripts.add(baseScript);
@@ -83,7 +83,7 @@ public class ArtifactScriptVersionSortStrategyImpl implements ArtifactScriptVers
             }
 
             while (alterScript != null && (seedScript == null || alterScript.compareTo(seedScript) <= 0)) {
-                if (databaseVersion == null || alterScript.getVersion().compareTo(databaseVersion) > 0) {
+                if (!seedOnly && (databaseVersion == null || alterScript.getVersion().compareTo(databaseVersion) > 0)) {
                     logger.finest("Sorted script [" + alterScript.getFilename() + "] for artifact [" +
                         artifact.getName() + "]");
                     scripts.add(alterScript);
@@ -96,9 +96,9 @@ public class ArtifactScriptVersionSortStrategyImpl implements ArtifactScriptVers
     }
 
     /**
-     * {@inheritDoc}
+     * Not currently used but kept just in case it's needed
      */
-    public Version determineHighestScriptVersion(Artifact artifact) {
+    private Version determineHighestScriptVersion(Artifact artifact) {
         // since the artifact contains a sorted set of sql scripts, and SQLScript implements comparable
         // with Version comparable delegate, we're guaranteed to always have the highest versioned
         // script as the last index in the set.  Also, because the base script set only ever contains

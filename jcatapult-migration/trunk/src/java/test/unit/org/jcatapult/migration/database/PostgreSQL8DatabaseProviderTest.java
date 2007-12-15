@@ -21,11 +21,13 @@ import javax.sql.DataSource;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Ignore;
 
 /**
  * User: jhumphrey
  * Date: Nov 28, 2007
  */
+@Ignore
 public class PostgreSQL8DatabaseProviderTest {
 
     @Test

@@ -42,7 +42,7 @@ public class TableGeneratorTest extends BaseTest {
     public void testTableGenProject5() throws IOException {
         TableGenerator tg = new TableGenerator(new ArtifactScriptVersionSortStrategyImpl(),
             getProjectArtifact("project5", null), getMySQL5Connection("table_generator_test_project5"));
-        tg.generate();
+        tg.generate(false);
     }
 
     @Test
@@ -55,6 +55,6 @@ public class TableGeneratorTest extends BaseTest {
 
         TableGenerator tg = new TableGenerator(new ArtifactScriptVersionSortStrategyImpl(),
             getComponentArtifact("component1", "1.2", null, cjs), c);
-        tg.generate();
+        tg.generate(false);
     }
 }

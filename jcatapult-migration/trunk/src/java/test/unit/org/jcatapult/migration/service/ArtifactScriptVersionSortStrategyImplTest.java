@@ -40,23 +40,23 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         this.cjs = cjs;
     }
 
-    @Test
-    public void testProject1HighestVersion() {
-        ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
+//    @Test
+//    public void testProject1HighestVersion() {
+//        ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
+//
+//        Version highest = sortStrat.determineHighestScriptVersion(getProjectArtifact("project1", null));
+//
+//        Assert.assertEquals(new Version("1.1"), highest);
+//    }
 
-        Version highest = sortStrat.determineHighestScriptVersion(getProjectArtifact("project1", null));
-
-        Assert.assertEquals(new Version("1.1"), highest);
-    }
-
-    @Test
-    public void testComponent1HighestVersion() throws IOException {
-        ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-
-        Version highest = sortStrat.determineHighestScriptVersion(getComponentArtifact("component1", "1.2", new Version("0.0.0"), cjs));
-
-        Assert.assertEquals(new Version("1.2"), highest);
-    }
+//    @Test
+//    public void testComponent1HighestVersion() throws IOException {
+//        ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
+//
+//        Version highest = sortStrat.determineHighestScriptVersion(getComponentArtifact("component1", "1.2", new Version("0.0.0"), cjs));
+//
+//        Assert.assertEquals(new Version("1.2"), highest);
+//    }
 
     @Test
     public void testProject1Sort() {
@@ -64,7 +64,7 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         // test with database version set to null
         {
             ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-            Queue<SQLScript> scripts = sortStrat.sort(getProjectArtifact("project1", null));
+            Queue<SQLScript> scripts = sortStrat.sort(getProjectArtifact("project1", null), false);
 
             Assert.assertEquals(4, scripts.size());
 
@@ -77,7 +77,7 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         // test with database version set to 0
         {
             ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-            Queue<SQLScript> scripts = sortStrat.sort(getProjectArtifact("project1", new Version("0.0.0")));
+            Queue<SQLScript> scripts = sortStrat.sort(getProjectArtifact("project1", new Version("0.0.0")), false);
 
             Assert.assertEquals(3, scripts.size());
 
@@ -89,7 +89,7 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         // test with database version set to 1.0
         {
             ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-            Queue<SQLScript> scripts = sortStrat.sort(getProjectArtifact("project1", new Version("1.0")));
+            Queue<SQLScript> scripts = sortStrat.sort(getProjectArtifact("project1", new Version("1.0")), false);
 
             Assert.assertEquals(1, scripts.size());
 
@@ -99,7 +99,7 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         // test with database version set to 1.2
         {
             ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-            Queue<SQLScript> scripts = sortStrat.sort(getProjectArtifact("project1", new Version("1.2")));
+            Queue<SQLScript> scripts = sortStrat.sort(getProjectArtifact("project1", new Version("1.2")), false);
 
             Assert.assertEquals(0, scripts.size());
         }
@@ -111,7 +111,7 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         // test with database version set to null
         {
             ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", null, cjs));
+            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", null, cjs), false);
 
             Assert.assertEquals(6, scripts.size());
 
@@ -126,7 +126,8 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         // test with database version set to 0
         {
             ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", new Version("0.0.0"), cjs));
+            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2",
+                new Version("0.0.0"), cjs), false);
 
             Assert.assertEquals(5, scripts.size());
 
@@ -140,7 +141,7 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         // test with database version set to 1.0
         {
             ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", new Version("1.0"), cjs));
+            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", new Version("1.0"), cjs), false);
 
             Assert.assertEquals(3, scripts.size());
 
@@ -152,7 +153,7 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         // test with database version set to 1.1
         {
             ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", new Version("1.1"), cjs));
+            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", new Version("1.1"), cjs), false);
 
             Assert.assertEquals(1, scripts.size());
 
@@ -162,7 +163,65 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         // test with database version set to 1.3
         {
             ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", new Version("1.3"), cjs));
+            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", new Version("1.3"), cjs), false);
+
+            Assert.assertEquals(0, scripts.size());
+        }
+    }
+
+    @Test
+    public void testComponent1SortSeedOnly() throws IOException {
+
+        // test with database version set to null
+        {
+            ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
+            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", null, cjs), true);
+
+            Assert.assertEquals(3, scripts.size());
+
+            Assert.assertEquals("1.0-seed.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.1-seed.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.2-seed.sql", scripts.remove().getFilename());
+        }
+
+        // test with database version set to 0
+        {
+            ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
+            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2",
+                new Version("0.0.0"), cjs), true);
+
+            Assert.assertEquals(3, scripts.size());
+
+            Assert.assertEquals("1.0-seed.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.1-seed.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.2-seed.sql", scripts.remove().getFilename());
+        }
+
+        // test with database version set to 1.0
+        {
+            ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
+            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", new Version("1.0"), cjs), true);
+
+            Assert.assertEquals(2, scripts.size());
+
+            Assert.assertEquals("1.1-seed.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.2-seed.sql", scripts.remove().getFilename());
+        }
+
+        // test with database version set to 1.1
+        {
+            ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
+            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", new Version("1.1"), cjs), true);
+
+            Assert.assertEquals(1, scripts.size());
+
+            Assert.assertEquals("1.2-seed.sql", scripts.remove().getFilename());
+        }
+
+        // test with database version set to 1.3
+        {
+            ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
+            Queue<SQLScript> scripts = sortStrat.sort(getComponentArtifact("component1", "1.2", new Version("1.3"), cjs), true);
 
             Assert.assertEquals(0, scripts.size());
         }

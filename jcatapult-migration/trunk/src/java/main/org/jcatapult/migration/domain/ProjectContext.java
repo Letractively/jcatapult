@@ -32,14 +32,15 @@ import net.java.util.Version;
 public class ProjectContext {
     private Version currentVersion;
     private Version databaseVersion;
-    private String projectName = "Local";
+    private String projectName;
     private String persistenceUnit = "punit";
     private boolean containsDomain = true;
     private File baseDir = new File("src/db/main/base");
     private File alterDir = new File("src/db/main/alter");;
     private File seedDir = new File("src/db/main/seed");;
 
-    public ProjectContext(Version currentVersion, Version databaseVersion) {
+    public ProjectContext(String projectName, Version currentVersion, Version databaseVersion) {
+        this.projectName = projectName;
         this.currentVersion = currentVersion;
         this.databaseVersion = databaseVersion;
     }
@@ -54,10 +55,6 @@ public class ProjectContext {
 
     public String getProjectName() {
         return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
     }
 
     public String getPersistenceUnit() {

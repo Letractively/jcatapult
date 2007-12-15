@@ -29,11 +29,13 @@ import javax.persistence.Persistence;
 import org.jcatapult.migration.domain.ComponentContext;
 import org.jcatapult.migration.domain.ComponentJar;
 import org.jcatapult.migration.domain.ProjectContext;
+import org.jcatapult.migration.domain.Artifact;
 import org.jcatapult.migration.service.ArtifactScriptVersionSortStrategyImpl;
 import org.jcatapult.migration.service.ArtifactService;
 import org.jcatapult.migration.service.ComponentArtifactService;
 import org.jcatapult.migration.service.ProjectArtifactService;
 import org.jcatapult.migration.service.ComponentJarService;
+import org.jcatapult.migration.service.ArtifactScriptVersionSortStrategy;
 
 import net.java.util.Version;
 
@@ -51,6 +53,7 @@ public class DatabaseGenerator {
     private Map<String, Version> databaseVersions;
     private ProjectContext pCtx;
     private ComponentJarService cjs;
+    private boolean seedOnly = false;
 
     /**
      *
@@ -74,7 +77,7 @@ public class DatabaseGenerator {
         this.cjs = cjs;
     }
 
-    public boolean generate() throws IOException {
+    public void generate() throws IOException {
 
         boolean created = false;
 
@@ -100,10 +103,13 @@ public class DatabaseGenerator {
                 EntityManager em = emf.createEntityManager();
                 em.close();
                 emf.close();
+
+                seedOnly = true;
+
+                createComponentTables();
+                createProjectTables();
             }
         }
-
-        return created;
     }
 
     /**
@@ -138,7 +144,10 @@ public class DatabaseGenerator {
      * @throws IOException if there's a problem during table generation
      */
     private void generateTable(ArtifactService as) throws IOException {
-        TableGenerator tg = new TableGenerator(new ArtifactScriptVersionSortStrategyImpl(), as.getArtifact(), connection);
-        tg.generate();
+        Artifact a = as.getArtifact();
+        ArtifactScriptVersionSortStrategy sortStrat = new ArtifactScriptVersionSortStrategyImpl();
+        TableGenerator tg = new TableGenerator(sortStrat, a, connection);
+        tg.generate(seedOnly);
+        databaseVersions.put(a.getName(), a.getCurrentVersion());
     }
 }

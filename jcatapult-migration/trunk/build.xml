@@ -125,6 +125,11 @@
       GRANT ALL PRIVILEGES on database_generator_test_project1.* to 'dev'@'localhost' identified by 'dev';
       GRANT ALL PRIVILEGES on database_generator_test_project1.* to 'dev'@'127.0.0.1' identified by 'dev';
 
+      DROP DATABASE IF EXISTS database_manager_test;
+      CREATE DATABASE database_manager_test;
+      GRANT ALL PRIVILEGES on database_manager_test.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on database_manager_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+
     </sql>
     <!--<sql driver="org.postgresql.Driver" url="jdbc:postgresql://localhost/postgres"-->
          <!--userid="postgres" password="postgres" autocommit="true" expandproperties="true"-->
