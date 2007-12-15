@@ -14,7 +14,7 @@
   ~ language governing permissions and limitations under the License.
   -->
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
-    name="jcatapult-migration"
+    name="jcatapult-dbmgr"
     group="jcatapult.org"
     version="1.0-RC1">
 
