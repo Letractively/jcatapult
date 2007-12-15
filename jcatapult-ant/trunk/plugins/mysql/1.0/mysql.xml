@@ -147,7 +147,7 @@
           <property name="no.domain.switch" value=""/>
         </else>
       </if>
-      <java classname="org.jcatapult.database.DatabaseMigrator" fork="true" failonerror="true">
+      <java classname="org.inversoft.vertigo.database.DatabaseMigrator" fork="true" failonerror="true">
         <classpath>
           <path refid="classpath.project"/>
           <path refid="classpath.plugin.mysql"/>
