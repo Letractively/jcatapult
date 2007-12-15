@@ -16,7 +16,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
     name="jcatapult-migration"
     group="jcatapult.org"
-    version="1.0">
+    version="1.0-RC1">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
