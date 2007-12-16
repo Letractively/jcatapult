@@ -112,6 +112,7 @@ public class ComponentJarServiceImpl implements ComponentJarService {
 
         // iterate on all the savant artifacts and create ComponentJar objects
         for (Artifact art : arts) {
+            logger.finest("Checking artifact [" + art.getArtifactFile() + "] for component status");
             File artFile = sc.getArtifactFile(art);
 
             JarFile jf = null;
