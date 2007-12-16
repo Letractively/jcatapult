@@ -62,7 +62,7 @@
     </artifactGroup>
     <artifactGroup type="test-compile">
       <artifact group="easymock.org" project="easymock" name="easymock" version="2.2" type="jar"/>
-      <artifact group="junit.org" project="junit" name="junit" version="4.3.1" type="jar"/>
+      <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
     </artifactGroup>
   </dependencies>
 
