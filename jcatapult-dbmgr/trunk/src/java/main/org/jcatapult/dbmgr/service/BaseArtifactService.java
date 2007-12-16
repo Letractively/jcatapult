@@ -48,27 +48,4 @@ public abstract class BaseArtifactService implements ArtifactService {
         logger.finest("Extracted version string [" + versionStr + "] from sql script filename [" + filename + "]");
         return new Version(versionStr);
     }
-
-    /**
-     * Determines the current version for an artifact and figures out the next version. This is
-     * accomplished by incrementing the patch number. This is important because it will cause the
-     * patcher only to execute SQL scripts that contain versions AFTER the current version.
-     *
-     * @param artifactName the artifact name
-     * @param databaseVersion the database version associated to {@link org.jcatapult.dbmgr.domain.Artifact}
-     *          this class is performing services for
-     * @return The next Version of the component from the <strong>version</strong> database table
-     *          as described in the method commnt or a new version of <strong>0.0</strong> if there
-     *          isn't a version for the component in the database.
-     */
-    protected Version determineNextVersion(String artifactName, Version databaseVersion) {
-
-        if (databaseVersion == null) {
-            databaseVersion = Version.ZERO;
-        }
-        Version nextVersion = new Version(databaseVersion.getMajor(), databaseVersion.getMinor(),
-            databaseVersion.getPatch() + 1);
-        logger.finest("Determined next version for artifact [" + artifactName + "] to be [" + nextVersion + "]");
-        return nextVersion;
-    }
 }

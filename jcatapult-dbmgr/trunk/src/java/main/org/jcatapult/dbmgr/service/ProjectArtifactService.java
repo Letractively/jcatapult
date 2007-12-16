@@ -52,7 +52,6 @@ public class ProjectArtifactService extends BaseArtifactService {
         Artifact a = new Artifact();
         a.setCurrentVersion(pCtx.getCurrentVersion());
         a.setDatabaseVersion(pCtx.getDatabaseVersion());
-        a.setNextVersion(determineNextVersion(pCtx.getProjectName(), pCtx.getDatabaseVersion()));
         a.setName(pCtx.getProjectName());
         a.setBaseScripts(getScripts(pCtx.getBaseDir(), BASE));
         a.setAlterScripts(getScripts(pCtx.getAlterDir(), ALTER));

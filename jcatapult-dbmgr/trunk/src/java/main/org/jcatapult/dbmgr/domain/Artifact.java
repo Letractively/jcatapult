@@ -29,7 +29,6 @@ public class Artifact {
     private String name;
     private Version currentVersion;
     private Version databaseVersion;
-    private Version nextVersion;
     private SortedSet<SQLScript> baseScripts;
     private SortedSet<SQLScript> alterScripts;
     private SortedSet<SQLScript> seedScripts;
@@ -56,14 +55,6 @@ public class Artifact {
 
     public void setDatabaseVersion(Version databaseVersion) {
         this.databaseVersion = databaseVersion;
-    }
-
-    public Version getNextVersion() {
-        return nextVersion;
-    }
-
-    public void setNextVersion(Version nextVersion) {
-        this.nextVersion = nextVersion;
     }
 
     public SortedSet<SQLScript> getBaseScripts() {
