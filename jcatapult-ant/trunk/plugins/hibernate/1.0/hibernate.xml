@@ -33,7 +33,7 @@
     <table-sql-pre/>
     <dependencypath pathid="classpath.hibernate.main" types="compile-only,compile,run" includedependencies="true"
         workflow="workflow.project" dependencies="dependencies.project"/>
-    <hibernatetool destdir="${dir.src.db.main}/create">
+    <hibernatetool destdir="${dir.src.db.main}/base">
       <classpath>
         <!-- it is in this classpath you put your classes dir, and/or jpa persistence compliant jar -->
         <path refid="classpath.hibernate.main"/>

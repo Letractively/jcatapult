@@ -129,15 +129,16 @@
         GRANT ALL PRIVILEGES on @{database}.* to 'dev'@'127.0.0.1' identified by 'dev';
       </sql>
 
-      <database_migrate url="@{url}"/>
+      <database_manager url="@{url}"/>
 
       <echo>Done creating database</echo>
     </sequential>
   </macrodef>
 
-  <macrodef name="database_migrate">
+  <macrodef name="database_manager">
     <attribute name="url"/>
     <sequential>
+      <echo>underscored.project.name = ${underscored.project.name}</echo>
       <if>
         <equals arg1="${project.contains.domain}" arg2="false"/>
         <then>
@@ -147,7 +148,7 @@
           <property name="no.domain.switch" value=""/>
         </else>
       </if>
-      <java classname="org.inversoft.vertigo.database.DatabaseMigrator" fork="true" failonerror="true">
+      <java classname="org.jcatapult.dbmgr.DatabaseManager" fork="true" failonerror="true">
         <classpath>
           <path refid="classpath.project"/>
           <path refid="classpath.plugin.mysql"/>
@@ -163,7 +164,7 @@
           </path>
         </classpath>
         <sysproperty key="java.util.logging.config.file" value="${dir.plugin.mysql}/lib/logging.properties"/>
-        <arg line="${no.domain.switch} punit @{url} ${project.name} src/db/main"/>
+        <arg line="${no.domain.switch} punit @{url} ${project.name} src/db/main mysql5 jdbc/${underscored.project.name} ./project.xml dependencies.project ${project.version}"/>
       </java>
     </sequential>
   </macrodef>
