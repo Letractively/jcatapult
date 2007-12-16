@@ -138,7 +138,6 @@
   <macrodef name="database_manager">
     <attribute name="url"/>
     <sequential>
-      <echo>underscored.project.name = ${underscored.project.name}</echo>
       <if>
         <equals arg1="${project.contains.domain}" arg2="false"/>
         <then>
@@ -164,7 +163,7 @@
           </path>
         </classpath>
         <sysproperty key="java.util.logging.config.file" value="${dir.plugin.mysql}/lib/logging.properties"/>
-        <arg line="${no.domain.switch} punit @{url} ${project.name} src/db/main mysql5 jdbc/${underscored.project.name} ./project.xml dependencies.project ${project.version}"/>
+        <arg line="${no.domain.switch} punit @{url} ${project.name} src/db/main mysql5 ${underscored.project.name} ./project.xml dependencies.project ${project.version}"/>
       </java>
     </sequential>
   </macrodef>
