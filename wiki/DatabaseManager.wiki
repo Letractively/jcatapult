@@ -2,8 +2,9 @@
 
 = Introduction =
 
-Add your content here.
+The jCatapult Database Manager (*dbmgr* for short) was built to help make managing your databases easier.  It accomplishes this by managing creation, seeding, and patching of your project databases for you.
 
+The dbmgr is coupled tightly with hibernate and, therefore, should only be used if you're using hibernate as your ORM framework of choice.
 
 = Details =
 
