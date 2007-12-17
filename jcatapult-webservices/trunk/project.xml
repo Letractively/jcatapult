@@ -82,5 +82,7 @@
   -->
   <publishWorkflow id="workflow.publish.remote">
     <!-- Please setup your publishing processes -->
+    <process type="SVNPublishProcess" repository="https://svn.inversoft.org/savant-deps"
+             username="${svn.release.username}" password="${svn.release.password}"/>
   </publishWorkflow>
 </project>
