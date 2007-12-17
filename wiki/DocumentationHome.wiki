@@ -53,7 +53,7 @@ Below are links to topics about a specific JCatapult technology, service or API.
 === Database ===
 
   * [Persistence JCatapult persistence API]
-  * [DatabaseMigrator JCatapult Database Migrator]
+  * [DatabaseManager JCatapult Database Manager]
   * [JPA JCatapult JPA integration]
 
 === Struts ===
