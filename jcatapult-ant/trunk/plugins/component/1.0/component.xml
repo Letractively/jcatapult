@@ -78,10 +78,10 @@
       <fileset dir="${dir.target.jars}" includes="**/*"/>
     </copy>
     <copy todir="${dir.target.web}/WEB-INF/classes" failonerror="yes" overwrite="yes">
-      <fileset dir="${dir.src.conf.test}" includes="**/*"/>
+      <fileset dir="${dir.src.conf.test.unit}" includes="**/*"/>
     </copy>
     <copy todir="${dir.target.web}/WEB-INF" failonerror="yes" overwrite="yes">
-      <fileset dir="${dir.src.conf.test}" includes="logging.properties"/>
+      <fileset dir="${dir.src.conf.test.unit}" includes="logging.properties"/>
     </copy>
 
     <!-- Copy the content -->
