@@ -43,14 +43,25 @@ public class ComponentJarTools {
      * @return a Version object
      */
     public static Version getVersionFromJarFilename(String filename) {
-        String[] tokens = filename.split("-", 2);
-        String endString = tokens[tokens.length - 1];
-        int index = endString.lastIndexOf(".");
-        String numberStr = endString.substring(0, index);
+        String strippedExt = filename.split(".jar")[0];
 
-        Version v = new Version(numberStr);
+        logger.finest("Filename with extension stripped [" + strippedExt + "]");
 
-        logger.finest("Converted String [" + numberStr + "] to Version [" + v.toString() + "]");
+        String[] tokens = filename.split("[0-9]+.[0-9]+(.[0-9]+(-[\\w]*)?)?");
+
+        String jarLabel = tokens[0].substring(0, tokens[0].length() - 1);
+
+        logger.finest("Jar Label [" + jarLabel + "]");
+
+        int versionStartIndex = jarLabel.length() + 1;
+
+        String versionStr = filename.substring(versionStartIndex, strippedExt.length());
+
+        logger.finest("Version string [" + versionStr + "]");
+
+        Version v = new Version(versionStr);
+
+        logger.fine("Converted jar filename [" + filename + "] to Version [" + v.toString() + "]");
 
         return v;
     }

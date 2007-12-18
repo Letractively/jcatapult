@@ -27,9 +27,26 @@ import net.java.util.Version;
 public class ComponentJarToolsTest {
 
     @Test
-    public void testGetVersionFromJarFilename() {
-        Version v = ComponentJarTools.getVersionFromJarFilename("component1-1.1.jar");
+    public void testSimpleJarName() {
+        {
+            Version v = ComponentJarTools.getVersionFromJarFilename("component1-1.1.jar");
+            Assert.assertEquals(new Version("1.1"), v);
+        }
+    }
 
-        Assert.assertEquals(new Version("1.1"), v);
+    @Test
+    public void testComplextJarName() {
+        {
+            Version v = ComponentJarTools.getVersionFromJarFilename("my-component-1.1.jar");
+            Assert.assertEquals(new Version("1.1"), v);
+        }
+    }
+
+    @Test
+    public void testCrazyStupidJarName() {
+        {
+            Version v = ComponentJarTools.getVersionFromJarFilename("my-component-not-yours-1.1-alpha1.jar");
+            Assert.assertEquals(new Version("1.1-alpha1"), v);
+        }
     }
 }
