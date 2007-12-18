@@ -25,27 +25,36 @@ import net.java.util.Version;
  * Date: Dec 10, 2007
  */
 public class ComponentJarToolsTest {
+//
+//    @Test
+//    public void testSimpleJarName() {
+//        {
+//            Version v = ComponentJarTools.getVersionFromJarFilename("component1-1.1.jar");
+//            Assert.assertEquals(new Version("1.1"), v);
+//        }
+//    }
+//
+//    @Test
+//    public void testComplextJarName() {
+//        {
+//            Version v = ComponentJarTools.getVersionFromJarFilename("my-component-1.1.jar");
+//            Assert.assertEquals(new Version("1.1"), v);
+//        }
+//    }
+//
+//    @Test
+//    public void testCrazyStupidJarName() {
+//        {
+//            Version v = ComponentJarTools.getVersionFromJarFilename("my-component-not-yours-1.1-alpha1.jar");
+//            Assert.assertEquals(new Version("1.1-alpha1"), v);
+//        }
+//    }
+
 
     @Test
-    public void testSimpleJarName() {
+    public void testarNameWithANumberInIt() {
         {
-            Version v = ComponentJarTools.getVersionFromJarFilename("component1-1.1.jar");
-            Assert.assertEquals(new Version("1.1"), v);
-        }
-    }
-
-    @Test
-    public void testComplextJarName() {
-        {
-            Version v = ComponentJarTools.getVersionFromJarFilename("my-component-1.1.jar");
-            Assert.assertEquals(new Version("1.1"), v);
-        }
-    }
-
-    @Test
-    public void testCrazyStupidJarName() {
-        {
-            Version v = ComponentJarTools.getVersionFromJarFilename("my-component-not-yours-1.1-alpha1.jar");
+            Version v = ComponentJarTools.getVersionFromJarFilename("my-component-not-yours2-1.1-alpha1.jar");
             Assert.assertEquals(new Version("1.1-alpha1"), v);
         }
     }

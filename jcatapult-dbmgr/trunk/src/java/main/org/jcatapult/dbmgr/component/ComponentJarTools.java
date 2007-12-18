@@ -47,7 +47,7 @@ public class ComponentJarTools {
 
         logger.finest("Filename with extension stripped [" + strippedExt + "]");
 
-        String[] tokens = filename.split("[0-9]+.[0-9]+(.[0-9]+(-[\\w]*)?)?");
+        String[] tokens = filename.split("[0-9]+\\Q.\\E[0-9]+(\\Q.\\E[0-9]+(-[\\w]*)?)?");
 
         String jarLabel = tokens[0].substring(0, tokens[0].length() - 1);
 
