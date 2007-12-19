@@ -112,8 +112,18 @@ public class ComponentJarServiceImpl implements ComponentJarService {
 
         // iterate on all the savant artifacts and create ComponentJar objects
         for (Artifact art : arts) {
-            logger.finest("Checking artifact [" + art.getArtifactFile() + "] for component status");
+            // if savant returns a null artifact file, this means that there were multiple version
+            // of the same project and savant resolved to a higher version jar within the artifact graph.
+            // As a result, we need to properly message this via a runtime exception
             File artFile = sc.getArtifactFile(art);
+
+            if (artFile == null) {
+                logger.warning(("Higher, compatible version of " + art.getGroup() + "/" + art.getProject() +
+                    " found, not checking component status for [" + art + "]"));
+                continue;
+            }
+
+            logger.finest("Checking artifact [" + art.getArtifactFile() + "] for component status");
 
             JarFile jf = null;
             try {
