@@ -73,8 +73,8 @@ public class GuiceObjectFactory extends ObjectFactory {
         return false;
     }
 
-    @Inject(value = "guice.modules", required = true)
-    public void setModuleClassNames(String moduleClassNames) {
+    @Inject
+    public GuiceObjectFactory(@Inject(value = "guice.modules", required = true) String moduleClassNames) {
         String[] moduleClassNamesArray = moduleClassNames.split(",");
         modules = new ArrayList<Module>(moduleClassNamesArray.length);
 
