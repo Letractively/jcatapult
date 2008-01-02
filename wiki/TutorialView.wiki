@@ -1,0 +1,184 @@
+#summary How to create a simple view with JCatapult
+
+= Introduction =
+
+JCatapult uses Struts2 and the Convention plugin for Struts2 in order to make developing websites easier. These two technologies have extension documentation in addition to the documentation provided by JCatapult. You can get more information by visiting the websites for those projects:
+
+http://struts.apache.org
+http://cwiki.apache.org/confluence/display/S2PLUGINS/Convention+Plugin
+
+= Hello world =
+
+Now that the SmartURLs plugin is setup for use, let's start with a very simple example. This example will use an actionless result that is identified by the URL. By default, SmartURLs uses assumes that all of the results are stored in *WEB-INF/content*. This can be changed by setting the property *smarturls.base.result.location* in the Struts properties file to the new location. Don't worry about trailing slashes, SmartURLs handles this for you. Here is our hello world JSP:
+
+{{{
+Hello world!
+}}}
+
+If you start Tomcat (or whichever J2EE container you are using) and type in _http://localhost:8080/hello-world.action_ in to your browser you should see our JSP. This illustrates that SmartURLs will find results ever when no action exists and it is all based on the URL passed to Struts.
+
+= Code behind hello world =
+
+Let's expand on this example and add a code behind class. In order to do this we first have to tell SmartURLs where the classes live. This is controlled via the property *smarturls.action.packages* setting in the struts.properties file. If you don't have a struts.properties file, simply create one and place it into the classpath of the application. This can be done by putting the file in WEB-INF/classes or into a JAR file in the root directory of that JAR file. Here's how it should look:
+
+{{{
+smarturls.action.packages=com.example.actions
+}}}
+
+This configuration tells SmartURLs to go find all the actions in the *com.example.actions* package and configure them for use. This will also find all actions in sub-packages as well. We'll get to sub-packages and namespaces next. Here's our code behind:
+
+{{{
+package com.example.actions;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+public class HelloWorld extends ActionSupport {
+  private String message;
+
+  public String getMessage() {
+    return message;
+  }
+
+  public String execute() {
+    message = "Hello World!"
+    return SUCCESS;
+  }
+}
+}}}
+
+Now that we have the action code that will be executed prior to the JSP being rendered, we can use the message property from the action inside our JSP. Here's the new JSP:
+
+{{{
+The message is ${message}
+}}}
+
+Now if we hit the _http://localhost:8080/hello-world.action_ URL again we'll get the new result JSP. SmartURLs ensures that the URL specified will invoke the HelloWorld action class and then the hello-world.jsp file will be rendered.
+
+= Result codes and results =
+
+SmartURLs also provides the ability to specify different results for an action based on the result code of that action. The search order for results is:
+
+{{{
+<action-name>-<result-code>.jsp
+<action-name>.jsp
+}}}
+
+For our hello world example, SmartURLs will first look for a JSP named *hello-world-success.jsp* followed by a JSP named *hello-world.jsp*.
+
+= Class naming =
+
+You can name your action classes either by simple names (e.g. HelloWorld) or more explicit names (e.g. HelloWorldAction). In either case, SmartURLs will map the action class to the same URL. 
+
+The way that SmartURLs converts the class name into a URL is that it first removes the String _Action_ from the end of the class name if it exists. Next, each camel case word in the class name is split. Each word is then lower-cased. Finally, all of the words are joined back together using the - (dash) character. The character that is used to join the words back together can be controlled using the *smarturls.action.name.separator* property. Here is an example of this workflow:
+
+{{{
+HelloWorldAction
+
+HelloWorld
+
+Hello World
+
+hello world
+
+hello-world
+}}}
+
+= Sub-packages and namespaces =
+
+SmartURLs is not limited to handling action classes in a single package. In fact, SmartURLs will find all action classes based on the package name specified by the *smarturls.action.packages* property and all of the sub-packages. Let's add another action in a sub-package and see how it can be accessed. Here is our action
+
+{{{
+package com.example.actions.hello;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+public class World extends ActionSupport {
+  private String message;
+
+  public String getMessage() {
+    return message;
+  }
+
+  public String execute() {
+    message = "Hello World!"
+    return SUCCESS;
+  }
+}
+}}}
+
+Notice that this action is in the sub-package named *hello* underneath the *com.example.actions* package. The URL that will be used to access this action class will be _http://localhost:8080/hello/world.action_. As you can see, SmartURLs has used the sub-package names as directories in the URL. You can nest these as deeply as you want.
+
+== Results and locations ==
+
+The results for actions in sub-packages are as you would expect, inside directories underneath the *WEB-INF/content* directory. For example, for our World action in the hello package, our result page would be located in a file named *WEB-INF/content/hello/world.jsp*. Notice that the file is in a sub-directory named *hello*, which matches the package that the class is in.
+
+= Index pages and actions =
+
+SmartURLs makes it simple to handle index actions. Index actions are the default handling used by most web servers to find the correct file for a specific URL. Here are three URLs:
+
+{{{
+1. http://www.example.com/contact
+2. http://www.example.com/contact/
+3. http://www.example.com/contact/index.html
+}}}
+
+Most web servers will treat all of these URLs as the same resource. In fact, when most web servers receive URL #1 they will send a redirect to URL #2. Likewise, URL #2 and URL #3 both refer to the same resource. This resource is the index of the *contact* directory.
+
+SmartURLs handles index actions in the exact same manner. If a package contains an action named Index (or IndexAction) or there is a result named index.jsp (or .ftl/.vm) in a directory, SmartURLs will treat this as the index for that directory. Let's look at an example:
+
+{{{
+package com.example.actions.users;
+
+...
+
+public class Index {
+  ...
+}
+}}}
+
+Assuming that we are still using the action package configuration from above, this class will respond to these URLs:
+
+{{{
+http://localhost:8080/users.action
+http://localhost:8080/users/index.action
+}}}
+
+If you are using the extensionless configuration of SmartURLs (discussed below), this action will respond to all of these URLs:
+
+{{{
+http://localhost:8080/users
+http://localhost:8080/users/
+http://localhost:8080/users/index
+}}}
+
+There is one caveat to be aware of and it is the same caveat of other web servers like Apache:
+
+  * If there is an action with the same name as the URL, it takes precedence. That is to say, if there is an action class *com.example.actions.Users* or a result at *WEB-INF/content/users.jsp*, it will be used in favor of the index action/result, even if the index action/result exists.
+
+= Extensionless URLs =
+
+One of the drawbacks of Struts out of the box is that it is difficult to handle URLs unless they have an extension. The standard extension is *.action*. This is difficult because Struts needs a method of identifying which URLs it should handle and which it should pass through to the servlet container or other filters in the filter chain. SmartURLs provides a special filter that allows applications to use URLs without the extension.
+
+This is accomplished by flipping the requires. Rather than using the extension to figure out if Struts should handle the URL, the SmartURLs filter handles all URLs without extensions and passes everything else on. There is one special case and that is for any URLs that start with the */struts* directory name. These URLs are used by Struts to load static resources and SmartURLs honors those URLs correctly.
+
+In order to configure your web application to use extensionless URLs, you need to configure a different filter than the standard Struts2 dispatch filter. Here is the configuration:
+
+{{{
+  <filter>
+    <filter-name>struts2</filter-name>
+    <filter-class>org.texturemedia.smarturls.SmartURLsFilter</filter-class>
+  </filter>
+}}}
+
+One thing to mention here is that you no longer need to specify the *configProviders* init-param to the filter. The SmartURLs filter assumes you are using SmartURLs and sets up this configuration provider automatically.
+
+You also need to tell Struts to handle URLs without extensions. This is accomplished by setting the Struts configuration property named *struts.action.extension* like this:
+
+{{{
+#
+# This makes actions respond to all URLs and gets rid of the .action extension requirement
+#
+struts.action.extension=
+}}}
+
+Once you configure this filter, the property and remove the Struts2 filter, you should be able to access all the actions of your application without any extensions.
