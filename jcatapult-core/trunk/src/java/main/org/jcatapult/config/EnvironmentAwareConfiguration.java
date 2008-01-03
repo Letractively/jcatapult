@@ -96,7 +96,8 @@ public class EnvironmentAwareConfiguration extends CompositeConfiguration {
         }
 
         // Try to use the ServletContext to load the default configuration
-        File defaultConfig = new File(resolver.getRealPath(location + "config-default.xml"));
+        String locationRealPath = resolver.getRealPath(location + "config-default.xml");
+        File defaultConfig = locationRealPath != null ? new File(locationRealPath) : null;
         if (defaultConfig != null && defaultConfig.exists() && defaultConfig.isFile()) {
             logger.info("Loading JCatapult configuration file [" + defaultConfig.getAbsolutePath() + "]");
             super.addConfiguration(new XMLConfiguration(defaultConfig));
@@ -110,7 +111,8 @@ public class EnvironmentAwareConfiguration extends CompositeConfiguration {
 
         // Try to use the ServletContext to load the environment configuration
         String envFile = "config-" + environmentResolver.getEnvironment() + ".xml";
-        File envConfig = new File(resolver.getRealPath(location + envFile));
+        locationRealPath = resolver.getRealPath(location + envFile);
+        File envConfig = locationRealPath != null ? new File(locationRealPath) : null;
         if (envConfig != null && envConfig.exists() && envConfig.isFile()) {
             logger.info("Loading JCatapult configuration file [" + envConfig.getAbsolutePath() + "]");
             super.addConfiguration(new XMLConfiguration(envConfig));
