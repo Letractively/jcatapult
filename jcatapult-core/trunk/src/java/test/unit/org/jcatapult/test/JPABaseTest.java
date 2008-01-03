@@ -177,6 +177,25 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
     }
 
     /**
+     * Clears all the data from the table that the given Class is mapped to using JPA.
+     *
+     * @param   klass The JPA class to get the table name from. This first checks if the Class has
+     *          a JPA Table annotation and uses that. Otherwise, it uses the Class's simple name.
+     * @throws  SQLException If the clear failed.
+     */
+    protected void clearTable(Class<?> klass) throws SQLException {
+        Table table = klass.getAnnotation(Table.class);
+        String tableName;
+        if (table == null || table.name().equals("")) {
+            tableName = klass.getSimpleName();
+        } else {
+            tableName = table.name();
+        }
+
+        clearTable(tableName);
+    }
+
+    /**
      * Runs the given query and returns the results in a detached RowSet.
      *
      * @param   query The query to run.
