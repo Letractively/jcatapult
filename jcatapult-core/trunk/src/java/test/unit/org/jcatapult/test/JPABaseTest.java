@@ -22,9 +22,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
+import java.util.Map;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.EntityTransaction;
 import javax.sql.RowSet;
 import javax.sql.rowset.CachedRowSet;
 
@@ -41,7 +46,10 @@ import com.google.inject.Module;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.sun.rowset.CachedRowSetImpl;
 import net.java.sql.ScriptExecutor;
-import net.java.util.CollectionTools;
+import net.java.util.CollectionTools;import static net.java.util.CollectionTools.map;
+import net.java.xml.Unmarshaller;
+import net.java.xml.JavaBeanObjectCreator;
+import net.java.text.SimplePluralizer;
 
 /**
  * <p>
@@ -193,5 +201,90 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      */
     protected Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }
+
+    /**
+     * <p>
+     * First clears the table for the given Entity object. This allows fixture files to load defaults
+     * without worrying about unique and primary key collisions.
+     * </p>
+     *
+     * <p>
+     * Second, loads the given fixture XML file into a new instance of the given JavaBean using the
+     * Java.net commons XML unmarshaller. This then uses an EntityManager from the EntityManagerFactory
+     * to persist the JavaBean. This means that the bean must be an Entity.
+     * </p>
+     *
+     * <p>
+     * The fixture XML format must have a root element named fixture and then child elements for the
+     * objects being created. The name of the child element must be the same as the name of the table
+     * that the Entity is associated with. The attributes of the child elements correspond to the
+     * properties of the JavaBean. Here's an example for the class: <b>com.example.Role</b>
+     * </p>
+     *
+     * <pre>
+     * &lt;fixture>
+     *   &lt;role name="User"/>
+     *   &lt;role name="Admin"/>
+     * &lt;/fixture>
+     * </pre>
+     *
+     * <p>
+     * Notice that the ID is left out. This is because JPA freaks out if IDs are set. Therefore, you
+     * will have to figure out the IDs manually in your tests.
+     * </p>
+     *
+     * @param   fixture The fixture file. This is relative to the directory of the current test.
+     * @param   type The type of objects to create and persist.
+     * @throws  RuntimeException If anything failed.
+     */
+    @SuppressWarnings(value="unchecked")
+    protected <T> void loadFixture(String fixture, Class<T> type)
+    throws RuntimeException {
+        logger.fine("Loading fixtures from [" + fixture + "] for [" + type + "]");
+
+        // Clear the table via the annotation
+        Table table = type.getAnnotation(Table.class);
+        String tableName;
+        if (table == null) {
+            Entity entity = type.getAnnotation(Entity.class);
+            if (entity == null) {
+                throw new IllegalArgumentException("The type [" + type + "] is not annotated with @Entity");
+            }
+
+            tableName = type.getSimpleName();
+        } else {
+            tableName = table.name();
+        }
+
+        try {
+            clearTable(tableName);
+
+            String pkg = getClass().getPackage().getName();
+            String location = "src/java/test/unit/" + pkg.replace(".", "/") + "/" + fixture;
+            logger.fine("Mapped location to [" + location + "]");
+
+            Map<String, String> mappings = map(tableName, "child");
+            Unmarshaller um = new Unmarshaller(null);
+            um.addObjectCreator("fixture", JavaBeanObjectCreator.forClass(Fixture.class,
+                new SimplePluralizer(), mappings));
+            um.addObjectCreator("fixture/*", JavaBeanObjectCreator.forClass(type));
+            Fixture<T> fix = (Fixture<T>) um.unmarshal(location);
+
+            EntityManager em = emf.createEntityManager();
+            EntityTransaction et = em.getTransaction();
+            et.begin();
+
+            List<T> objs = fix.getChildren();
+            for (T obj : objs) {
+                logger.fine("Running fixure for object [" + obj + "]");
+                em.persist(obj);
+            }
+
+            et.commit();
+            em.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
