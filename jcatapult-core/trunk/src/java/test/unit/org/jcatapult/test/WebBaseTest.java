@@ -79,24 +79,26 @@ public abstract class WebBaseTest extends JPABaseTest {
      * hack for Guice.
      */
     public void setUpWeb() {
-        File web = new File("web");
-        if (web.exists()) {
-            logger.info("Project is a web project. Setting up web test support.");
+        final String webRootDir = getWebRootDir();
+        if (new File(webRootDir).exists()) {
+            logger.info("Project is a web project or a component.  Setting up web test support.");
             modules.add(new AbstractModule() {
                 protected void configure() {
                     bind(ContainerResolver.class).toInstance(new ContainerResolver() {
                         public String getRealPath(String path) {
-                            File f = new File("web/" + path);
+                            String realPath = webRootDir + "/" + path;
+                            File f = new File(realPath);
                             if (f.exists()) {
-                                return "web/" + path;
+                                return realPath;
                             }
 
                             return null;
                         }
 
                         public URL getResource(String path) {
+                            String resource = webRootDir + "/" + path;
                             try {
-                                File f = new File("web/" + path);
+                                File f = new File(resource);
                                 if (f.exists()) {
                                     return f.toURI().toURL();
                                 }
@@ -114,5 +116,14 @@ public abstract class WebBaseTest extends JPABaseTest {
         // Setup servlet context
         this.servletContext = EasyMock.createStrictMock(ServletContext.class);
         ServletContextHolder.setServletContext(this.servletContext);
+    }
+
+    /**
+     * Returns the directory of the web root
+     *
+     * @return web root directory
+     */
+    protected String getWebRootDir() {
+        return "web";
     }
 }
