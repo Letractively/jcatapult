@@ -65,9 +65,16 @@
     <!-- Create the initial template web application -->
     <mkdir dir="${dir.target.web}"/>
 
+    <if>
+      <not><isset property="jcatapult.home"/></not>
+      <then>
+        <fail>Please set 'jcatapult.home' to the location of your jcatapult home directory in ${user.home}/build.properties</fail>
+      </then>
+    </if>
+
     <!-- Initial layout of project -->
     <copy todir="${dir.target.web}" failonerror="yes" overwrite="yes" encoding="ISO-8859-1">
-      <fileset dir="${ant.home}/tools-jcatapult/makeproject/webapp-template/web" includes="**/*"/>
+      <fileset dir="${jcatapult.home}/tools/makeproject/webapp-template/web" includes="**/*"/>
       <filterset>
         <filter token="DOMAIN_NAME" value="${project.group}"/>
       </filterset>

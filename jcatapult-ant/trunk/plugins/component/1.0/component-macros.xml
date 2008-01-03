@@ -261,7 +261,6 @@ fos.close();
       </copy>
       <dependencypath pathid="classpath.project" workflow="workflow.project"
                       dependencies="dependencies.project"/>
-      <echo message="Path ${bar}"/>
       <component_add_entities persistenceFile="@{persistenceDir}/META-INF/persistence.xml">
         <componentClasspath>
           <path refid="classpath.project"/>
