@@ -30,7 +30,15 @@
       copying the context.xml file into the Engine/Host directory and calling it ROOT, which
       tomcat assumes is the default webapp.
     -->
-    <copy file="${ant.home}/utils/makeproject/webapp-template/deploy/tomcat/main/conf/context.xml"
+
+    <if>
+      <not><isset property="jcatapult.home"/></not>
+      <then>
+        <fail>Please set 'jcatapult.home' to the location of your jcatapult home directory in ${user.home}/build.properties</fail>
+      </then>
+    </if>
+
+    <copy file="${jcatapult.home}/tools/makeproject/webapp-template/deploy/tomcat/main/conf/context.xml"
         tofile="target/tomcat/conf/Catalina/localhost/ROOT.xml">
       <filterset>
         <filter token="UNDERSCORED_PROJECT_NAME" value="${underscored.project.name}"/>
