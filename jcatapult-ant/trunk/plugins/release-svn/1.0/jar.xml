@@ -38,7 +38,7 @@
   <macrodef name="rel_deploy_remote">
     <sequential>
       <rel_deploy_remote_pre/>
-      <publish publishWorkflow="workflow.publish.remote"/>
+      <publish publishWorkflow="workflow.publish.remote" checkintegrationbuild="true"/>
       <rel_deploy_remote_post/>
     </sequential>
   </macrodef>

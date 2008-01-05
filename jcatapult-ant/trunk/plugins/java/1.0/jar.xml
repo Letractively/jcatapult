@@ -37,7 +37,7 @@
 
   <macrodef name="jar-publish">
     <sequential>
-      <publish publishWorkflow="workflow.publish.local"/>
+      <publish publishWorkflow="workflow.publish.local" integrationbuild="true"/>
     </sequential>
   </macrodef>
 
