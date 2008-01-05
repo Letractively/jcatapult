@@ -23,7 +23,6 @@
     <rel_validate_version type="patch"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_check_changelog/>
-    <savant_clean/>
     <antcall target="test-unit"/>
     <scm_tag_head tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_cleanup/>
@@ -34,7 +33,6 @@
     <rel_validate_version type="patch"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_check_changelog/>
-    <savant_clean/>
     <antcall target="test-unit"/>
     <scm_tag_head tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_deploy_remote/>
@@ -48,7 +46,6 @@
     <rel_validate_version type="patch"/>
     <scm_check_tag_available tag="${project.version}"/>
     <rel_check_changelog/>
-    <savant_clean/>
     <antcall target="test-unit"/>
     <scm_tag_branch tag="${project.version}" branch="${branch.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <scm_tag_head tag="pre-merge-${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
@@ -61,7 +58,6 @@
     <rel_validate_version type="patch"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_check_changelog/>
-    <savant_clean/>
     <antcall target="test-unit"/>
     <scm_tag_branch tag="${project.version}" branch="${branch.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <scm_tag_head tag="pre-merge-${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>

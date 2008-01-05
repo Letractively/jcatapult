@@ -56,10 +56,4 @@
   <target name="deps-resolve" description="Resolves the project dependencies">
     <dependencyresolve workflow="workflow.project" dependencies="dependencies.project"/>
   </target>
-
-  <macrodef name="savant_clean">
-    <sequential>
-      <delete dir="${user.home}/.savant_repository"/>
-    </sequential>
-  </macrodef>
 </project>

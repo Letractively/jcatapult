@@ -23,7 +23,6 @@
     <rel_validate_version type="major"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_check_changelog/>
-    <savant_clean/>
     <antcall target="test-unit"/>
     <scm_tag_head tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <scm_branch_head branch="${branch.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
@@ -38,7 +37,6 @@
     <rel_validate_version type="major"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_check_changelog/>
-    <savant_clean/>
     <antcall target="test-unit"/>
     <scm_tag_head tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <scm_branch_head branch="${branch.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
