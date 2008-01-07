@@ -20,6 +20,7 @@ import org.jcatapult.persistence.PersistenceService;
 import com.opensymphony.xwork2.Preparable;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -41,6 +42,7 @@ public abstract class BaseAction extends ActionSupport implements Preparable {
      *          add the Inject annotation to your action's constructor and Catapult/Guice will find
      *          the Configuration instance and inject it.
      */
+    @Inject
     public void setServices(PersistenceService persistenceService, Configuration configuration) {
         this.persistenceService = persistenceService;
         this.configuration = configuration;
