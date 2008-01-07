@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component name="jcatapult-core">
+  <action_package namespace_prefix="/jcatapult">org.jcatapult.action</action_package>
+</component>
