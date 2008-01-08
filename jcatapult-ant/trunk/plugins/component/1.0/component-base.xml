@@ -102,7 +102,7 @@
     <delete dir="${java.target}/META-INF"/>
 
      <!--Publish everything except the special test JAR-->
-    <publish publishWorkflow="workflow.publish.local"/>
+    <publish publishWorkflow="workflow.publish.local" integrationbuild="true"/>
     <echo message="Done"/>
   </target>
 </project>
