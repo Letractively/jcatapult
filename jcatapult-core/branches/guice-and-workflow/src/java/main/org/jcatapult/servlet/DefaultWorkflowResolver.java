@@ -13,32 +13,32 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.jpa;
+package org.jcatapult.servlet;
 
-import javax.persistence.Entity;
+import java.util.Arrays;
+import java.util.List;
 
-import org.jcatapult.domain.TimeStampableImpl;
+import org.jcatapult.jpa.JPAWorkflow;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
- * This is a simple User for testing.
+ * This is the default workflow resolver and it currently only returns an
+ * instance of the {@link org.jcatapult.jpa.JPAWorkflow}
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-@Entity
-public class User extends TimeStampableImpl {
-    private String name;
+public class DefaultWorkflowResolver implements WorkflowResolver {
+    private final JPAWorkflow jpaWorkflow;
 
-    public String getName() {
-        return name;
+    @Inject
+    public DefaultWorkflowResolver(JPAWorkflow jpaWorkflow) {
+        this.jpaWorkflow = jpaWorkflow;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String toString() {
-        return super.toString() + " name=" + name;
+    public List<Workflow> resolve() {
+        return Arrays.<Workflow>asList(jpaWorkflow);
     }
 }

@@ -19,8 +19,9 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.config.EnvironmentAwareConfiguration;
-import org.jcatapult.servlet.ServletContextHolder;
+import org.jcatapult.servlet.ServletObjectsHolder;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
@@ -32,27 +33,30 @@ import com.google.inject.Singleton;
  * </p>
  *
  * <p>
- * If you need any security for your application, you should use the
- * {@link ACEGIWebSecurityModule} instead of this one. That is
- * abstract and forces you to properly implement the required security
- * interfaces that JCatapult needs.
+ * This module ensure that it can be configured correctly by verifiying
+ * that it is running in a web container. This is done by checking that
+ * the {@link ServletObjectsHolder} returns a valid ServletContext instance.
+ * If it returns null, that this is a no-op module and it does not bind
+ * anything.
  * </p>
  *
  * @author  James Humphrey and Brian Pontarelli
  */
-public class WebModule extends JPAModule {
+public class WebModule extends AbstractModule {
     /**
-     * Calls super and then calls these methods in this order:
+     * Calls these methods in this order:
      *
      * <ol>
-     * <li>{@link super#configure()}</li>
      * <li>{@link #configureConfiguration()}</li>
      * <li>{@link #configureServletContext()}</li>
      * </ol>
      */
+    @Override
     protected void configure() {
-        super.configure();
-
+        if (ServletObjectsHolder.getServletContext() == null) {
+            return;
+        }
+        
         configureConfiguration();
         configureServletContext();
     }
@@ -64,7 +68,7 @@ public class WebModule extends JPAModule {
         // Bind the servlet context
         bind(ServletContext.class).toProvider(new Provider<ServletContext>() {
             public ServletContext get() {
-                return ServletContextHolder.getServletContext();
+                return ServletObjectsHolder.getServletContext();
             }
         }).in(Singleton.class);
     }
@@ -74,6 +78,6 @@ public class WebModule extends JPAModule {
      */
     protected void configureConfiguration() {
         // Setup the configuration
-        bind(Configuration.class).to(EnvironmentAwareConfiguration.class);
+        bind(Configuration.class).to(EnvironmentAwareConfiguration.class).in(Singleton.class);
     }
 }

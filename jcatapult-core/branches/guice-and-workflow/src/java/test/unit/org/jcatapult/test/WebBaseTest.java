@@ -16,20 +16,17 @@
 package org.jcatapult.test;
 
 import java.io.File;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 import javax.servlet.ServletContext;
 
 import org.easymock.EasyMock;
 import org.jcatapult.container.ContainerResolver;
-import org.jcatapult.guice.WebModule;
-import org.jcatapult.servlet.ServletContextHolder;
+import org.jcatapult.servlet.ServletObjectsHolder;
 import org.junit.Before;
 import org.junit.Ignore;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-import net.java.util.CollectionTools;
 
 /**
  * <p>
@@ -44,12 +41,9 @@ public abstract class WebBaseTest extends JPABaseTest {
     protected ServletContext servletContext;
 
     /**
-     * Default constructor to set the {@link org.jcatapult.guice.WebModule} as the module for injection
-     * via the {@link JPABaseTest} and its parent class.
+     * Default constructor.
      */
     protected WebBaseTest() {
-        modules = CollectionTools.<Module>list(new WebModule());
-
     }
 
     /**
@@ -115,7 +109,7 @@ public abstract class WebBaseTest extends JPABaseTest {
 
         // Setup servlet context
         this.servletContext = EasyMock.createStrictMock(ServletContext.class);
-        ServletContextHolder.setServletContext(this.servletContext);
+        ServletObjectsHolder.setServletContext(this.servletContext);
     }
 
     /**

@@ -5,8 +5,9 @@
   <!--  Make the Guice object factory the automatic default -->
   <bean type="com.opensymphony.xwork2.ObjectFactory" name="jcatapult" class="org.jcatapult.guice.GuiceObjectFactory"/>
   <constant name="struts.objectFactory" value="jcatapult"/>
-  <constant name="smarturls.action.default.parent.package" value="jcatapult-default"/>
 
+  <!-- Struts 2 Convention plugin stuff -->
+  <constant name="struts.convention.default.parent.package" value="jcatapult-default"/>
   <package name="jcatapult-default" extends="struts-default">
     <interceptors>
       <interceptor name="jcatapultParameters" class="org.jcatapult.struts.interceptor.JCatapultParametersInterceptor"/>

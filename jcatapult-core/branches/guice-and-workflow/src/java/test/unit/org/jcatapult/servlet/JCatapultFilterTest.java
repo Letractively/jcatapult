@@ -16,15 +16,20 @@
 package org.jcatapult.servlet;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import org.easymock.EasyMock;
 import org.jcatapult.database.DatabaseTools;
+import org.jcatapult.jpa.EntityManagerContext;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
-import com.google.inject.Injector;
 import net.java.naming.MockJNDI;
 
 /**
@@ -35,26 +40,6 @@ import net.java.naming.MockJNDI;
  * @author Brian Pontarelli
  */
 public class JCatapultFilterTest {
-    @Test
-    public void testGuice() throws ServletException, IOException {
-        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
-        context.setAttribute(EasyMock.isA(String.class), EasyMock.isA(Injector.class));
-        EasyMock.replay(context);
-
-        FilterConfig filterConfig = EasyMock.createStrictMock(FilterConfig.class);
-        EasyMock.expect(filterConfig.getServletContext()).andReturn(context);
-        EasyMock.replay(filterConfig);
-
-        JCatapultFilter filter = new JCatapultFilter();
-        filter.setInitGuice(true);
-        filter.setGuiceModules("org.jcatapult.guice.ConfigurationModule");
-        filter.setJpaEnabled(false);
-        filter.init(filterConfig);
-
-        EasyMock.verify(context);
-        EasyMock.verify(filterConfig);
-    }
-
     @Test
     public void testJPA() throws ServletException, IOException {
         MockJNDI jndi = new MockJNDI();
@@ -69,9 +54,22 @@ public class JCatapultFilterTest {
         EasyMock.replay(filterConfig);
 
         JCatapultFilter filter = new JCatapultFilter();
-        filter.setInitGuice(false);
-        filter.setJpaEnabled(true);
         filter.init(filterConfig);
+
+        ServletRequest request = EasyMock.createStrictMock(ServletRequest.class);
+        ServletResponse response  = EasyMock.createStrictMock(ServletResponse.class);
+        EasyMock.replay(request, response);
+
+        final AtomicBoolean called = new AtomicBoolean(false);
+        FilterChain chain = new FilterChain() {
+            public void doFilter(ServletRequest request, ServletResponse response) {
+                assertNotNull(EntityManagerContext.get());
+                called.set(true);
+            }
+        };
+
+        filter.doFilter(request, response, chain);
+        assertTrue(called.get());
 
         EasyMock.verify(context);
         EasyMock.verify(filterConfig);

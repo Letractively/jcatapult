@@ -13,32 +13,20 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.jpa;
+package org.jcatapult.guice;
 
-import javax.persistence.Entity;
-
-import org.jcatapult.domain.TimeStampableImpl;
+import com.google.inject.AbstractModule;
 
 /**
  * <p>
- * This is a simple User for testing.
+ * This class tests the parent child relationship when loading modules
+ * from the classpath.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-@Entity
-public class User extends TimeStampableImpl {
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String toString() {
-        return super.toString() + " name=" + name;
+public class ParentModule extends AbstractModule {
+    protected void configure() {
+        bind(TestInterface3.class).to(TestClass3.class);
     }
 }

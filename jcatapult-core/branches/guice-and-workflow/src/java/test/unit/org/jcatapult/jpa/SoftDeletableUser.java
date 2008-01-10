@@ -17,17 +17,17 @@ package org.jcatapult.jpa;
 
 import javax.persistence.Entity;
 
-import org.jcatapult.domain.TimeStampableImpl;
+import org.jcatapult.domain.SoftDeletableTimeStampableImpl;
 
 /**
  * <p>
- * This is a simple User for testing.
+ * This class is an entity bean for testing soft deletes.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 @Entity
-public class User extends TimeStampableImpl {
+public class SoftDeletableUser extends SoftDeletableTimeStampableImpl {
     private String name;
 
     public String getName() {

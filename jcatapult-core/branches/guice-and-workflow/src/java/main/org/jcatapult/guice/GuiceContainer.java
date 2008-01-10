@@ -15,17 +15,18 @@
  */
 package org.jcatapult.guice;
 
-import java.util.logging.Logger;
-import java.util.List;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Module;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.name.Named;
 import net.java.lang.ClassClassLoaderResolver;
 
@@ -40,9 +41,11 @@ import net.java.lang.ClassClassLoaderResolver;
  *
  * @author Brian Pontarelli
  */
+@SuppressWarnings("unchecked")
 public class GuiceContainer {
     private static final Logger logger = Logger.getLogger(GuiceContainer.class.getName());
-    private static String[] guiceModules;
+    private static Module[] guiceModules;
+    private static String[] guiceModulesNames;
     private static String[] guiceExcludeModules;
     private static boolean loadFromClasspath;
     private static Injector injector;
@@ -61,8 +64,21 @@ public class GuiceContainer {
      * @param   guiceModules A comma separated list of guice modules to use.
      */
     @Inject(optional = true)
-    public static void setGuiceModules(@Named("jcatapult.guice.modules") String guiceModules) {
-        GuiceContainer.guiceModules = guiceModules.split("\\W*,\\W*");
+    public static void setGuiceModulesNames(@Named("jcatapult.guice.modules") String guiceModules) {
+        if (guiceModules == null) {
+            GuiceContainer.guiceModulesNames = null;
+        } else {
+            GuiceContainer.guiceModulesNames = guiceModules.split("\\W*,\\W*");
+        }
+    }
+
+    /**
+     * The list of guice modules to use if guice is being setup by the filter.
+     *
+     * @param   guiceModules A list of guice modules to use.
+     */
+    public static void setGuiceModules(Module... guiceModules) {
+        GuiceContainer.guiceModules = guiceModules;
     }
 
     /**
@@ -74,7 +90,11 @@ public class GuiceContainer {
      */
     @Inject(optional = true)
     public static void setExcludeGuiceModules(@Named("jcatapult.guice.exclude.modules") String guiceExcludeModules) {
-        GuiceContainer.guiceExcludeModules = guiceExcludeModules.split("\\W*,\\W*");
+        if (guiceExcludeModules == null) {
+            GuiceContainer.guiceExcludeModules = null;
+        } else {
+            GuiceContainer.guiceExcludeModules = guiceExcludeModules.split("\\W*,\\W*");
+        }
     }
 
     /**
@@ -97,72 +117,98 @@ public class GuiceContainer {
     public static final void initialize() {
         logger.info("Initializing JCatapult's Guice support");
 
+        Set<Class<? extends Module>> classes = new HashSet<Class<? extends Module>>();
+        if (loadFromClasspath) {
+            addFromClasspath(classes);
+        }
+
+        addFromConfiguration(classes);
+
+        List<Module> modules = new ArrayList<Module>();
+        for (Class<? extends Module> moduleClass : classes) {
+            try {
+                modules.add(moduleClass.newInstance());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (GuiceContainer.guiceModules != null) {
+            for (Module module : GuiceContainer.guiceModules) {
+                if (classes.contains(module.getClass())) {
+                    continue;
+                }
+
+                modules.add(module);
+            }
+        }
+
+        GuiceContainer.injector = Guice.createInjector(modules);
+    }
+
+    /**
+     * This method should normally be called prior to the initialize method in order to inject the
+     * configuration values from the <code>jcatapult.properties</code> file into this class. This
+     * is however not required if you prefer to setup things using another mechanism or by hand.
+     * The only thing you must do is to set the correct configuration using the various static
+     * setter methods prior to invoking the {@link #initialize()} method.
+     */
+    public static final void inject() {
         // Inject the JCatapult configuration
         Guice.createInjector(new ConfigurationModule(), new AbstractModule() {
             protected void configure() {
                 requestStaticInjection(GuiceContainer.class);
             }
         });
-
-        if (loadFromClasspath) {
-            loadFromClasspath();
-        } else {
-            loadFromConfiguration();
-        }
     }
 
-    private static void loadFromConfiguration() {
-        if (GuiceContainer.guiceModules == null) {
-            throw new IllegalStateException("JCatapult has Guice initialization set to use the JCatapult " +
-                "configuration file named [jcatapult.properties] but no modules were specified in that file. " +
-                "Use the jcatapult.guice.modules configuration property in that file to setup your Guice modules.");
+    private static void addFromConfiguration(Set<Class<? extends Module>> modules) {
+        // If there is nothing to build, return
+        if ((GuiceContainer.guiceModules == null || GuiceContainer.guiceModules.length == 0) &&
+                (GuiceContainer.guiceModulesNames == null || GuiceContainer.guiceModulesNames.length == 0)) {
+            return;
         }
 
-        List<Module> modules = new ArrayList<Module>();
-        for (String moduleName : GuiceContainer.guiceModules) {
-            try {
-                Class moduleClass = Class.forName(moduleName);
-                if (!Module.class.isAssignableFrom(moduleClass)) {
-                    throw new IllegalArgumentException("Invalid Guice module class [" + moduleName + "]");
-                }
+        if (GuiceContainer.guiceModulesNames != null) {
+            for (String moduleName : GuiceContainer.guiceModulesNames) {
+                try {
+                    Class<? extends Module> moduleClass = (Class<? extends Module>) Class.forName(moduleName);
+                    if (!Module.class.isAssignableFrom(moduleClass)) {
+                        throw new IllegalArgumentException("Invalid Guice module class [" + moduleName + "]");
+                    }
 
-                Module module = (Module) moduleClass.newInstance();
-                modules.add(module);
-                logger.finest("Adding module [" + module.getClass().getName() + "] to the guice injector");
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
+                    modules.add(moduleClass);
+                    logger.finest("Adding module [" + moduleClass.getName() + "] to the guice injector");
+                } catch (Exception e) {
+                    throw new IllegalStateException(e);
+                }
             }
         }
-
-        GuiceContainer.injector = Guice.createInjector(modules);
     }
 
-    private static void loadFromClasspath() {
+    private static void addFromClasspath(Set<Class<? extends Module>> modules) {
         ClassClassLoaderResolver resolver = new ClassClassLoaderResolver();
         resolver.findByLocators(new ClassClassLoaderResolver.IsA(Module.class), false, GuiceContainer.guiceExcludeModules, "guice");
         Set<Class<?>> moduleClasses = resolver.getMatches();
-        Set<Class<?>> matches = new HashSet<Class<?>>();
+        Set<Class<? extends Module>> matches = new HashSet<Class<? extends Module>>();
 
         for (Class<?> moduleClass : moduleClasses) {
+            // Ensure the class is not abstract
+            if ((moduleClass.getModifiers() & Modifier.ABSTRACT) != 0 ||
+                    moduleClass.isAnonymousClass() || moduleClass.isLocalClass()) {
+                continue;
+            }
+
             // Remove any instances of this classes parents from the matches
             Class<?> parent = moduleClass.getSuperclass();
             while (Module.class.isAssignableFrom(parent)) {
                 matches.remove(parent);
+                parent = parent.getSuperclass();
             }
 
-            matches.add(moduleClass);
+            matches.add((Class<? extends Module>) moduleClass);
         }
 
-        Module[] modules = new Module[matches.size()];
-        int index = 0;
-        for (Class<?> match : matches) {
-            try {
-                modules[index++] = (Module) match.newInstance();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-        }
-
-        GuiceContainer.injector = Guice.createInjector(modules);
+        modules.addAll(matches);
     }
 }

@@ -13,32 +13,23 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.jpa;
+package org.jcatapult.guice.annotation;
 
-import javax.persistence.Entity;
-
-import org.jcatapult.domain.TimeStampableImpl;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * <p>
- * This is a simple User for testing.
+ * This annotation allows a Module to define that it is optional and must be
+ * explicitly included in the list of Guice modules that the {@link org.jcatapult.guice.GuiceContainer}
+ * will load. Therefore, it is empty and just a marker annotation.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-@Entity
-public class User extends TimeStampableImpl {
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String toString() {
-        return super.toString() + " name=" + name;
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface Optional {
 }

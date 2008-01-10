@@ -20,7 +20,7 @@ import javax.servlet.ServletContext;
 import org.easymock.EasyMock;
 import org.jcatapult.container.ServletContainerResolver;
 import org.jcatapult.environment.JNDIEnvironmentResolver;
-import org.jcatapult.servlet.ServletContextHolder;
+import org.jcatapult.servlet.ServletObjectsHolder;
 import org.junit.Test;
 
 import net.java.naming.MockJNDI;
@@ -40,7 +40,7 @@ public class EnvironmentAwareConfigurationTest {
         jndi.activate();
 
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
-        ServletContextHolder.setServletContext(context);
+        ServletObjectsHolder.setServletContext(context);
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
             andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-development.xml")).

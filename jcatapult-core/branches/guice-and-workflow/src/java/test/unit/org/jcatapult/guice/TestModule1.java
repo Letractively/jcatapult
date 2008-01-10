@@ -13,32 +13,20 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.jpa;
+package org.jcatapult.guice;
 
-import javax.persistence.Entity;
-
-import org.jcatapult.domain.TimeStampableImpl;
+import com.google.inject.Module;
+import com.google.inject.Binder;
 
 /**
  * <p>
- * This is a simple User for testing.
+ * This is a test module.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-@Entity
-public class User extends TimeStampableImpl {
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String toString() {
-        return super.toString() + " name=" + name;
+public class TestModule1 implements Module {
+    public void configure(Binder binder) {
+        binder.bind(TestInterface1.class).to(TestClass1.class);
     }
 }

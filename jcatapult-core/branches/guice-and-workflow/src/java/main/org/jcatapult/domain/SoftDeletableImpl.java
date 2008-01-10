@@ -13,32 +13,26 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.jpa;
+package org.jcatapult.domain;
 
-import javax.persistence.Entity;
-
-import org.jcatapult.domain.TimeStampableImpl;
+import javax.persistence.MappedSuperclass;
 
 /**
  * <p>
- * This is a simple User for testing.
+ * This class implements the SoftDeletable interface and is also identifiable.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-@Entity
-public class User extends TimeStampableImpl {
-    private String name;
+@MappedSuperclass
+public class SoftDeletableImpl extends IdentifiableImpl implements SoftDeletable {
+    private boolean deleted;
 
-    public String getName() {
-        return name;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String toString() {
-        return super.toString() + " name=" + name;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

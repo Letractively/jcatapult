@@ -22,9 +22,6 @@ import javax.persistence.EntityTransaction;
 import javax.sql.RowSet;
 
 import org.jcatapult.JCatapultCoreBaseTest;
-import org.jcatapult.acegi.ACEGISecurityContextProvider;
-import org.jcatapult.acegi.TestUserAdapter;
-import org.jcatapult.security.SecurityContext;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -37,16 +34,12 @@ import org.junit.Test;
  */
 public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
 
-    static {
-        SecurityContext.setProvider(new ACEGISecurityContextProvider(new TestUserAdapter()));
-    }
-
     @Test
     public void testReloadAttached() throws Exception {
         clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (insert_date, update_date, name) " +
             "values (now(), now(), 'test', 'test', 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (insert_date, update_date, name) " +
             "values (now(), now(), 'test', 'test', 'George')");
 
         EntityManager em = EntityManagerContext.get();
@@ -62,9 +55,9 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     @Test
     public void testReloadDetached() throws Exception {
         clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (insert_date, update_date, name) " +
             "values (now(), now(), 'test', 'test', 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (insert_date, update_date, name) " +
             "values (now(), now(), 'test', 'test', 'George')");
 
         EntityManager em = EntityManagerContext.get();
@@ -84,15 +77,15 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     @Test
     public void testFindAll() throws Exception {
         clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (insert_date, update_date, name) " +
             "values (now(), now(), 'test', 'test', 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (insert_date, update_date, name) " +
             "values (now(), now(), 'test', 'test', 'George')");
 
-        clearTable("SoftDeleteUser");
-        executeSQL("insert into SoftDeleteUser (insert_date, update_date, insert_user, update_user, name, deleted) " +
+        clearTable("SoftDeletableUser");
+        executeSQL("insert into SoftDeletableUser (insert_date, update_date, name, deleted) " +
             "values (now(), now(), 'test', 'test', 'Fred', false)");
-        executeSQL("insert into SoftDeleteUser (insert_date, update_date, insert_user, update_user, name, deleted) " +
+        executeSQL("insert into SoftDeletableUser (insert_date, update_date, name, deleted) " +
             "values (now(), now(), 'test', 'test', 'George', true)");
 
         // This tests that non-soft delete find all works.
@@ -110,12 +103,12 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         assertEquals("George", users.get(1).getName());
 
         // This tests that soft delete objects work correctly when ignoring inactive
-        List<SoftDeleteUser> softDeleteUsers = service.findAllByType(SoftDeleteUser.class, false);
+        List<SoftDeletableUser> softDeleteUsers = service.findAllByType(SoftDeletableUser.class, false);
         assertEquals(1, softDeleteUsers.size());
         assertEquals("Fred", softDeleteUsers.get(0).getName());
 
         // This tests that soft delete objects work correctly when including inactive
-        softDeleteUsers = service.findAllByType(SoftDeleteUser.class, true);
+        softDeleteUsers = service.findAllByType(SoftDeletableUser.class, true);
         assertEquals(2, softDeleteUsers.size());
         assertEquals("Fred", softDeleteUsers.get(0).getName());
         assertEquals("George", softDeleteUsers.get(1).getName());
@@ -128,13 +121,13 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     public void testFind() throws Exception {
         clearTable("User");
         for (int i = 0; i < 100; i++) {
-            executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+            executeSQL("insert into User (insert_date, update_date, name) " +
                 "values (now(), now(), 'test', 'test', 'Fred" + i + "')");
         }
 
-        clearTable("SoftDeleteUser");
+        clearTable("SoftDeletableUser");
         for (int i = 0; i < 100; i++) {
-            executeSQL("insert into SoftDeleteUser (insert_date, update_date, insert_user, update_user, name, deleted) " +
+            executeSQL("insert into SoftDeletableUser (insert_date, update_date, name, deleted) " +
                 "values (now(), now(), 'test', 'test', 'Fred" + i + "', " + ((i % 2 == 0) ? "false" : "true") + ")");
         }
 
@@ -162,7 +155,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         // This tests that we correctly get the paginated results for soft delete beans with inactive
         // set to false
         for (int i = 0; i < 100; i += 20) {
-            List<SoftDeleteUser> users = service.findByType(SoftDeleteUser.class, i / 2, 10, false);
+            List<SoftDeletableUser> users = service.findByType(SoftDeletableUser.class, i / 2, 10, false);
             assertEquals(10, users.size());
             for (int j = 0; j < 10; j++) {
                 assertEquals("Fred" + ((j * 2) + i), users.get(j).getName());
@@ -172,7 +165,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         // This tests that we correctly get the paginated results for soft delete beans with inactive
         // set to true
         for (int i = 0; i < 100; i += 10) {
-            List<SoftDeleteUser> users = service.findByType(SoftDeleteUser.class, i, 10, true);
+            List<SoftDeletableUser> users = service.findByType(SoftDeletableUser.class, i, 10, true);
             assertEquals(10, users.size());
             for (int j = 0; j < 10; j++) {
                 assertEquals("Fred" + (j + i), users.get(j).getName());
@@ -183,11 +176,11 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     @Test
     public void testFindById() throws SQLException {
         clearTable("User");
-        executeSQL("insert into User (id, insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (id, insert_date, update_date, name) " +
             "values (1, now(), now(), 'test', 'test', 'Fred')");
-        executeSQL("insert into User (id, insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (id, insert_date, update_date, name) " +
             "values (2, now(), now(), 'test', 'test', 'George')");
-        executeSQL("insert into User (id, insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (id, insert_date, update_date, name) " +
             "values (3, now(), now(), 'test', 'test', 'Alan')");
 
         // This tests that querying by id works
@@ -208,11 +201,11 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     @Test
     public void testFindByIdNoVerify() throws SQLException {
         clearTable("User");
-        executeSQL("insert into User (id, insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (id, insert_date, update_date, name) " +
             "values (1, now(), now(), 'test', 'test', 'Fred')");
-        executeSQL("insert into User (id, insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (id, insert_date, update_date, name) " +
             "values (2, now(), now(), 'test', 'test', 'George')");
-        executeSQL("insert into User (id, insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (id, insert_date, update_date, name) " +
             "values (3, now(), now(), 'test', 'test', 'Alan')");
 
         // This tests that querying by id works
@@ -234,11 +227,11 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     @Test
     public void testQueryAll() throws Exception {
         clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (insert_date, update_date, name) " +
             "values (now(), now(), 'test', 'test', 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (insert_date, update_date, name) " +
             "values (now(), now(), 'test', 'test', 'George')");
-        executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+        executeSQL("insert into User (insert_date, update_date, name) " +
             "values (now(), now(), 'test', 'test', 'Alan')");
 
         // This tests that querying with an orderBy clause works
@@ -256,7 +249,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
             'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
         for (int i = 25; i >= 0; i--) {
-            executeSQL("insert into User (insert_date, update_date, insert_user, update_user, name) " +
+            executeSQL("insert into User (insert_date, update_date, name) " +
                 "values (now(), now(), 'test', 'test', 'Fred" + alphabet[i] + "')");
         }
 
@@ -387,13 +380,13 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
      */
     private void doRemove(boolean id, boolean verifyExists) throws Exception {
         clearTable("User");
-        clearTable("SoftDeleteUser");
+        clearTable("SoftDeletableUser");
         JPAPersistenceService service = new JPAPersistenceService(EntityManagerContext.get());
 
         User user = new User();
         user.setName("Fred");
 
-        SoftDeleteUser softDeleteUser = new SoftDeleteUser();
+        SoftDeletableUser softDeleteUser = new SoftDeletableUser();
         softDeleteUser.setName("Zeus");
 
         service.persist(user);
@@ -411,7 +404,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
             assertFalse(rw.next());
             rw.close();
 
-            rw = executeQuery("select * from SoftDeleteUser where deleted = false");
+            rw = executeQuery("select * from SoftDeletableUser where deleted = false");
             assertTrue(rw.next());
             assertEquals("Zeus", rw.getString("name"));
             assertFalse(rw.next());
@@ -422,7 +415,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
             assertFalse(rw.next());
             rw.close();
 
-            rw = executeQuery("select * from SoftDeleteUser");
+            rw = executeQuery("select * from SoftDeletableUser");
             assertFalse(rw.next());
             rw.close();
         }
@@ -433,7 +426,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
             service.delete(softDeleteUser);
         } else {
             assertTrue(service.delete(User.class, user.getId()));
-            assertTrue(service.delete(SoftDeleteUser.class, softDeleteUser.getId()));
+            assertTrue(service.delete(SoftDeletableUser.class, softDeleteUser.getId()));
         }
     }
 
@@ -448,7 +441,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         assertFalse(rw.next());
         rw.close();
 
-        rw = executeQuery("select * from SoftDeleteUser where deleted = true");
+        rw = executeQuery("select * from SoftDeletableUser where deleted = true");
         assertTrue(rw.next());
         assertEquals("Zeus", rw.getString("name"));
         assertFalse(rw.next());

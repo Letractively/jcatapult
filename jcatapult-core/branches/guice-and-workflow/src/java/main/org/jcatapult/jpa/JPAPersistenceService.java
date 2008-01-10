@@ -27,7 +27,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.jcatapult.domain.Identifiable;
-import org.jcatapult.domain.SoftDelete;
+import org.jcatapult.domain.SoftDeletable;
 import org.jcatapult.persistence.PersistenceService;
 import org.jcatapult.persistence.Transaction;
 
@@ -144,24 +144,24 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
-    public <T extends SoftDelete> List<T> findAllByType(Class<T> type, boolean includeDeleted) {
+    public <T extends SoftDeletable> List<T> findAllByType(Class<T> type, boolean includeDeleted) {
         return findAllByTypeInternal(type, includeDeleted);
     }
 
     /**
      * This is the internal method that performs the find but also determines if the Object is a
-     * {@link SoftDelete} and appends "where eb.deleted = false" if the includeDeleted is false.
+     * {@link org.jcatapult.domain.SoftDeletable} and appends "where eb.deleted = false" if the includeDeleted is false.
      *
      * @param   type The type to find.
      * @param   includeDeleted Determines if this should return all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link SoftDelete}
+     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
      *          objects.
      * @return  The list.
      */
     protected <T> List<T> findAllByTypeInternal(Class<T> type, boolean includeDeleted) {
         verify(type);
         StringBuilder queryString = new StringBuilder("select eb from ").append(stripPackage(type)).append(" eb");
-        if (SoftDelete.class.isAssignableFrom(type) && !includeDeleted) {
+        if (SoftDeletable.class.isAssignableFrom(type) && !includeDeleted) {
             queryString.append(" where eb.deleted = false");
         }
 
@@ -179,24 +179,24 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
-    public <T extends SoftDelete> long count(Class<T> type, boolean includeDeleted) {
+    public <T extends SoftDeletable> long count(Class<T> type, boolean includeDeleted) {
         return countInternal(type, includeDeleted);
     }
 
     /**
      * This is the internal method that performs the count but also determines if the Object is a
-     * {@link SoftDelete} and appends "where eb.deleted = false" if the includeDeleted is false.
+     * {@link org.jcatapult.domain.SoftDeletable} and appends "where eb.deleted = false" if the includeDeleted is false.
      *
      * @param   type The type to count.
      * @param   includeDeleted Determines if this should count all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link SoftDelete}
+     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
      *          objects.
      * @return  The count.
      */
     protected <T> long countInternal(Class<T> type, boolean includeDeleted) {
         verify(type);
         StringBuilder queryString = new StringBuilder("select count(eb) from ").append(stripPackage(type)).append(" eb");
-        if (SoftDelete.class.isAssignableFrom(type) && !includeDeleted) {
+        if (SoftDeletable.class.isAssignableFrom(type) && !includeDeleted) {
             queryString.append(" where eb.deleted = false");
         }
 
@@ -214,12 +214,12 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
-    public <T extends SoftDelete> List<T> findByType(Class<T> type, int start, int number, boolean includeInactive) {
+    public <T extends SoftDeletable> List<T> findByType(Class<T> type, int start, int number, boolean includeInactive) {
         return findByTypeInternal(type, start, number, includeInactive);
     }
 
     /**
-     * This is the internal method that handles finding by type. If the type is {@link SoftDelete}
+     * This is the internal method that handles finding by type. If the type is {@link org.jcatapult.domain.SoftDeletable}
      * this and the includeInactive flag is false method also appends "where eb.active = true" to
      * the query.
      *
@@ -227,7 +227,7 @@ public class JPAPersistenceService implements PersistenceService {
      * @param   start The start location within the results for pagination.
      * @param   number The number to fetch.
      * @param   includeDeleted Determines if this should return all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link SoftDelete}
+     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
      *          objects.
      * @return  The list of objects found.
      */
@@ -235,7 +235,7 @@ public class JPAPersistenceService implements PersistenceService {
         verify(type);
 
         StringBuilder queryString = new StringBuilder("select eb from ").append(stripPackage(type)).append(" eb");
-        if (SoftDelete.class.isAssignableFrom(type) && !includeDeleted) {
+        if (SoftDeletable.class.isAssignableFrom(type) && !includeDeleted) {
             queryString.append(" where eb.deleted = false");
         }
 
@@ -377,8 +377,8 @@ public class JPAPersistenceService implements PersistenceService {
             Transaction transaction = startTransaction();
 
             // Remove it for normal entities and soft delete for others
-            if (t instanceof SoftDelete) {
-                ((SoftDelete) t).setDeleted(true);
+            if (t instanceof SoftDeletable) {
+                ((SoftDeletable) t).setDeleted(true);
                 entityManager.persist(t);
             } else {
                 entityManager.remove(t);
@@ -402,8 +402,8 @@ public class JPAPersistenceService implements PersistenceService {
         Transaction transaction = startTransaction();
 
         // Remove it for normal entities and soft delete for others
-        if (obj instanceof SoftDelete) {
-            ((SoftDelete) obj).setDeleted(true);
+        if (obj instanceof SoftDeletable) {
+            ((SoftDeletable) obj).setDeleted(true);
             entityManager.persist(obj);
         } else {
             entityManager.remove(obj);
