@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.inject.AbstractModule;
@@ -178,7 +179,7 @@ public class GuiceContainer {
                     }
 
                     modules.add(moduleClass);
-                    logger.finest("Adding module [" + moduleClass.getName() + "] to the guice injector");
+                    logger.finest("Adding module [" + moduleClass.getName() + "] to the Guice injector.");
                 } catch (Exception e) {
                     throw new IllegalStateException(e);
                 }
@@ -187,15 +188,16 @@ public class GuiceContainer {
     }
 
     private static void addFromClasspath(Set<Class<? extends Module>> modules) {
-        ClassClassLoaderResolver resolver = new ClassClassLoaderResolver();
-        resolver.findByLocators(new ClassClassLoaderResolver.IsA(Module.class), false, GuiceContainer.guiceExcludeModules, "guice");
-        Set<Class<?>> moduleClasses = resolver.getMatches();
-        Set<Class<? extends Module>> matches = new HashSet<Class<? extends Module>>();
+        ClassClassLoaderResolver<Module> resolver = new ClassClassLoaderResolver<Module>();
+        Set<Class<Module>> moduleClasses = resolver.findByLocators(new ClassClassLoaderResolver.IsA(Module.class), false,
+            GuiceContainer.guiceExcludeModules, "guice");
+        Set<Class<Module>> matches = new HashSet<Class<Module>>(moduleClasses);
 
-        for (Class<?> moduleClass : moduleClasses) {
+        for (Class<Module> moduleClass : moduleClasses) {
             // Ensure the class is not abstract
             if ((moduleClass.getModifiers() & Modifier.ABSTRACT) != 0 ||
                     moduleClass.isAnonymousClass() || moduleClass.isLocalClass()) {
+                matches.remove(moduleClass);
                 continue;
             }
 
@@ -205,8 +207,10 @@ public class GuiceContainer {
                 matches.remove(parent);
                 parent = parent.getSuperclass();
             }
+        }
 
-            matches.add((Class<? extends Module>) moduleClass);
+        if (logger.isLoggable(Level.FINEST)) {
+            logger.finest("Adding modules [" + matches + "] from classpath to Guice injector.");
         }
 
         modules.addAll(matches);

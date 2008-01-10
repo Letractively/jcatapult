@@ -26,7 +26,7 @@ import javax.persistence.MappedSuperclass;
  * @author Brian Pontarelli
  */
 @MappedSuperclass
-public abstract class SoftDeletableTimeStampableImpl extends TimeStampableImpl implements TimeStampable {
+public abstract class SoftDeletableTimeStampableImpl extends TimeStampableImpl implements TimeStampable, SoftDeletable {
     private boolean deleted = false;
 
     public boolean isDeleted() {

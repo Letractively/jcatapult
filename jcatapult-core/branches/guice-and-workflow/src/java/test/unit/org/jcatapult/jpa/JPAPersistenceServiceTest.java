@@ -38,9 +38,9 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     public void testReloadAttached() throws Exception {
         clearTable("User");
         executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'test', 'test', 'Fred')");
+            "values (now(), now(), 'Fred')");
         executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'test', 'test', 'George')");
+            "values (now(), now(), 'George')");
 
         EntityManager em = EntityManagerContext.get();
         User user = (User) em.createQuery("select u from User u where u.name = 'Fred'").getSingleResult();
@@ -56,9 +56,9 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     public void testReloadDetached() throws Exception {
         clearTable("User");
         executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'test', 'test', 'Fred')");
+            "values (now(), now(), 'Fred')");
         executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'test', 'test', 'George')");
+            "values (now(), now(), 'George')");
 
         EntityManager em = EntityManagerContext.get();
         User user = (User) em.createQuery("select u from User u where u.name = 'Fred'").getSingleResult();
@@ -78,15 +78,15 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     public void testFindAll() throws Exception {
         clearTable("User");
         executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'test', 'test', 'Fred')");
+            "values (now(), now(), 'Fred')");
         executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'test', 'test', 'George')");
+            "values (now(), now(), 'George')");
 
         clearTable("SoftDeletableUser");
         executeSQL("insert into SoftDeletableUser (insert_date, update_date, name, deleted) " +
-            "values (now(), now(), 'test', 'test', 'Fred', false)");
+            "values (now(), now(), 'Fred', false)");
         executeSQL("insert into SoftDeletableUser (insert_date, update_date, name, deleted) " +
-            "values (now(), now(), 'test', 'test', 'George', true)");
+            "values (now(), now(), 'George', true)");
 
         // This tests that non-soft delete find all works.
         JPAPersistenceService service = new JPAPersistenceService(EntityManagerContext.get());
@@ -122,13 +122,13 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         clearTable("User");
         for (int i = 0; i < 100; i++) {
             executeSQL("insert into User (insert_date, update_date, name) " +
-                "values (now(), now(), 'test', 'test', 'Fred" + i + "')");
+                "values (now(), now(), 'Fred" + i + "')");
         }
 
         clearTable("SoftDeletableUser");
         for (int i = 0; i < 100; i++) {
             executeSQL("insert into SoftDeletableUser (insert_date, update_date, name, deleted) " +
-                "values (now(), now(), 'test', 'test', 'Fred" + i + "', " + ((i % 2 == 0) ? "false" : "true") + ")");
+                "values (now(), now(), 'Fred" + i + "', " + ((i % 2 == 0) ? "false" : "true") + ")");
         }
 
         JPAPersistenceService service = new JPAPersistenceService(EntityManagerContext.get());
@@ -177,11 +177,11 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     public void testFindById() throws SQLException {
         clearTable("User");
         executeSQL("insert into User (id, insert_date, update_date, name) " +
-            "values (1, now(), now(), 'test', 'test', 'Fred')");
+            "values (1, now(), now(), 'Fred')");
         executeSQL("insert into User (id, insert_date, update_date, name) " +
-            "values (2, now(), now(), 'test', 'test', 'George')");
+            "values (2, now(), now(), 'George')");
         executeSQL("insert into User (id, insert_date, update_date, name) " +
-            "values (3, now(), now(), 'test', 'test', 'Alan')");
+            "values (3, now(), now(), 'Alan')");
 
         // This tests that querying by id works
         JPAPersistenceService service = new JPAPersistenceService(EntityManagerContext.get());
@@ -202,11 +202,11 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     public void testFindByIdNoVerify() throws SQLException {
         clearTable("User");
         executeSQL("insert into User (id, insert_date, update_date, name) " +
-            "values (1, now(), now(), 'test', 'test', 'Fred')");
+            "values (1, now(), now(), 'Fred')");
         executeSQL("insert into User (id, insert_date, update_date, name) " +
-            "values (2, now(), now(), 'test', 'test', 'George')");
+            "values (2, now(), now(), 'George')");
         executeSQL("insert into User (id, insert_date, update_date, name) " +
-            "values (3, now(), now(), 'test', 'test', 'Alan')");
+            "values (3, now(), now(), 'Alan')");
 
         // This tests that querying by id works
         JPAPersistenceService service = new JPAPersistenceService(EntityManagerContext.get());
@@ -228,11 +228,11 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     public void testQueryAll() throws Exception {
         clearTable("User");
         executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'test', 'test', 'Fred')");
+            "values (now(), now(), 'Fred')");
         executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'test', 'test', 'George')");
+            "values (now(), now(), 'George')");
         executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'test', 'test', 'Alan')");
+            "values (now(), now(), 'Alan')");
 
         // This tests that querying with an orderBy clause works
         JPAPersistenceService service = new JPAPersistenceService(EntityManagerContext.get());
@@ -250,7 +250,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
             'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
         for (int i = 25; i >= 0; i--) {
             executeSQL("insert into User (insert_date, update_date, name) " +
-                "values (now(), now(), 'test', 'test', 'Fred" + alphabet[i] + "')");
+                "values (now(), now(), 'Fred" + alphabet[i] + "')");
         }
 
         // This tests that querying with an orderBy clause works
