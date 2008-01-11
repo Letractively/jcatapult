@@ -16,35 +16,24 @@
 package org.jcatapult.security.servlet;
 
 import java.io.IOException;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.ServletException;
 
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 
 /**
  * <p>
- * This class is the main security workflow that attaches to the JCatapult
- * Workflow system and provides the functionality for handling all the JCatapult
- * security needs. In fact, this is a sub-workflow. It uses a number of other
- * Workflow implementations in a specific order. Here is the default ordering
- * of the Workflows this class uses.
+ * This
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public class SecurityWorkflow implements Workflow {
-    private final CredentialStorageWorkflow credentialStorageWorkflow;
-//    private final RememberMeWorkflow rememberMeWorkflow;
-    private final LoginWorkflow loginWorkflow;
-//    private final SavedRequestWorkflow savedRequestWorkflow;
-    private final AuthorizationWorkflow authorizationWorkflow;
-
-
-
+public class AuthorizationWorkflow implements Workflow {
     public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
+        
     }
 
     public void destroy() {

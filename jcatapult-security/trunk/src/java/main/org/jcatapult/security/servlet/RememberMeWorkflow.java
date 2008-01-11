@@ -58,7 +58,6 @@ public class RememberMeWorkflow {
         if (fileName != null) {
             try {
                 String encryptionKey = FileTools.read(fileName).toString().trim();
-                
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
