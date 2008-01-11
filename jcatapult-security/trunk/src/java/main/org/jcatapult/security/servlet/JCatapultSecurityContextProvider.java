@@ -37,13 +37,12 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class JCatapultSecurityContextProvider implements SecurityContextProvider {
+    private static final ThreadLocal<Object> userHolder = new ThreadLocal<Object>();
     private final UserAdapter userAdapter;
-    private final CredentialStorage credentialStorage;
 
     @Inject
-    public JCatapultSecurityContextProvider(UserAdapter userAdapter, CredentialStorage credentialStorage) {
+    public JCatapultSecurityContextProvider(UserAdapter userAdapter) {
         this.userAdapter = userAdapter;
-        this.credentialStorage = credentialStorage;
     }
 
     public String getCurrentUsername() {
@@ -69,5 +68,13 @@ public class JCatapultSecurityContextProvider implements SecurityContextProvider
 
     public void update(Object user) {
         login(user);
+    }
+
+    static void setUserObject(Object userObject) {
+        userHolder.set(userObject);
+    }
+
+    public static void removeUserObject() {
+        userHolder.remove();
     }
 }

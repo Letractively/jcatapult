@@ -17,6 +17,7 @@ package org.jcatapult.security.servlet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletRequest;
 
 /**
  * <p>
@@ -42,7 +43,7 @@ public class HttpSessionCredentialStorage implements CredentialStorage {
      * @param   request The request.
      * @return  The credentials if they exist, otherwise false.
      */
-    public Object locate(HttpServletRequest request) {
+    public Object locate(ServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             return session.getAttribute(KEY);

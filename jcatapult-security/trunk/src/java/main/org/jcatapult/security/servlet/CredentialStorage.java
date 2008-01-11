@@ -16,6 +16,7 @@
 package org.jcatapult.security.servlet;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequest;
 
 /**
  * <p>
@@ -33,7 +34,7 @@ public interface CredentialStorage {
      * @param   request The HTTP servlet request if it is needed to help find the credentials.
      * @return  The user credentials or null if there are none (i.e. the user is not logged in).
      */
-    Object locate(HttpServletRequest request);
+    Object locate(ServletRequest request);
 
     /**
      * Stores the user credentials into a persistent storage location so that they can be retrieved

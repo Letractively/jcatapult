@@ -17,7 +17,7 @@
       <artifact group="acegisecurity.org" project="acegisecurity" name="acegi-security" version="1.0.3" type="jar"/>
       <artifact group="apache.org" project="commons-configuration" name="commons-configuration" version="1.3" type="jar"/>
       <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="1.0-RC3-{integration}" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="1.0-RC4-{integration}" type="jar"/>
       <artifact group="sun.com" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="run"/>
