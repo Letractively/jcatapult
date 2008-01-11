@@ -13,15 +13,17 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.security;
+package org.jcatapult.security.login;
+
+import org.jcatapult.security.JCatapultSecurityException;
 
 /**
  * <p>
  * This class is a marker exception that is thrown when the security framework
- * finds and invalid login.
+ * finds and invalid password.
  * </p>
  *
  * @author Brian Pontarelli
  */
-public class InvalidLoginException extends RuntimeException {
+public class InvalidPasswordException extends JCatapultSecurityException {
 }

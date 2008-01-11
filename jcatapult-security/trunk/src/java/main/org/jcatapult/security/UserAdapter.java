@@ -15,6 +15,9 @@
  */
 package org.jcatapult.security;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * <p>
  * This interface is a user adapter that allows the JCatapult framework access
@@ -76,4 +79,12 @@ public interface UserAdapter<T> {
      * @return  True if any credentials have expired, false otherwise.
      */
     boolean areCredentialsExpired(T user);
+
+    /**
+     * Retrieves all of the roles that the user has.
+     *
+     * @param   user The user.
+     * @return  The list of rolls or an empty list if they have none.
+     */
+    Set<String> getRoles(T user);
 }

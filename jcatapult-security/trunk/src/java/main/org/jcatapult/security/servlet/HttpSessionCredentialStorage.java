@@ -28,7 +28,7 @@ import javax.servlet.ServletRequest;
  *
  * <p>
  * The object that is stored into the HttpSession is the same object that
- * is returned from the {@link org.jcatapult.security.AuthenticationService}
+ * is returned from the {@link org.jcatapult.security.login.AuthenticationService}
  * and it is stored under the key <code>jcatapult.security.servlet.http.session.credentials</code>.
  * </p>
  *

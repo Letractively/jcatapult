@@ -18,6 +18,8 @@ package org.jcatapult.security.servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletRequest;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This class provides a mechanism for locating user credentials within
@@ -26,6 +28,7 @@ import javax.servlet.ServletRequest;
  *
  * @author Brian Pontarelli
  */
+@ImplementedBy(HttpSessionCredentialStorage.class)
 public interface CredentialStorage {
 
     /**

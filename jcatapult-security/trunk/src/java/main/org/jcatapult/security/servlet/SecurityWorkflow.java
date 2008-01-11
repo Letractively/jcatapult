@@ -16,10 +16,12 @@
 package org.jcatapult.security.servlet;
 
 import java.io.IOException;
+import java.util.Arrays;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.ServletException;
 
+import org.jcatapult.servlet.SubWorkflowChain;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 
@@ -32,6 +34,17 @@ import org.jcatapult.servlet.WorkflowChain;
  * of the Workflows this class uses.
  * </p>
  *
+ * <p>
+ * This class uses {@link SubWorkflowChain} to handle the call to all of
+ * the workflows in the constructor. These are called in this order:
+ * </p>
+ *
+ * <ol>
+ * <li>{@link CredentialStorageWorkflow}</li>
+ * <li>{@link LoginWorkflow}</li>
+ * <li>{@link AuthorizationWorkflow}</li>
+ * </ol>
+ *
  * @author  Brian Pontarelli
  */
 public class SecurityWorkflow implements Workflow {
@@ -41,10 +54,26 @@ public class SecurityWorkflow implements Workflow {
 //    private final SavedRequestWorkflow savedRequestWorkflow;
     private final AuthorizationWorkflow authorizationWorkflow;
 
+    public SecurityWorkflow(CredentialStorageWorkflow credentialStorageWorkflow, LoginWorkflow loginWorkflow,
+            AuthorizationWorkflow authorizationWorkflow) {
+        this.credentialStorageWorkflow = credentialStorageWorkflow;
+        this.loginWorkflow = loginWorkflow;
+        this.authorizationWorkflow = authorizationWorkflow;
+    }
 
-
+    /**
+     * Creates a sub-workflow chain that calls the sub-workflows in the order from the class comment.
+     *
+     * @param   request The request which is passed to the sub-workflow chain.
+     * @param   response The response which is passed to the sub-workflow chain.
+     * @param   workflowChain The workflow chain, which is the end point of the sub-workflow chain.
+     * @throws  IOException If the chain throws.
+     * @throws  ServletException If the chain throws.
+     */
     public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
+        SubWorkflowChain chain = new SubWorkflowChain(Arrays.asList(credentialStorageWorkflow, loginWorkflow, authorizationWorkflow), workflowChain);
+        chain.doWorkflow(request, response);
     }
 
     public void destroy() {

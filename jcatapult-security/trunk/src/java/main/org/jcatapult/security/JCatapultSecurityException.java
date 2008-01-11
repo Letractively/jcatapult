@@ -17,11 +17,25 @@ package org.jcatapult.security;
 
 /**
  * <p>
- * This class is a marker exception that is thrown when the security framework
- * finds and invalid password.
+ * This class is the base class for all JCatapult security exceptions.
  * </p>
  *
  * @author Brian Pontarelli
  */
-public class InvalidPasswordException extends RuntimeException {
+public class JCatapultSecurityException extends RuntimeException {
+    public JCatapultSecurityException() {
+        super();
+    }
+
+    public JCatapultSecurityException(String message) {
+        super(message);
+    }
+
+    public JCatapultSecurityException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public JCatapultSecurityException(Throwable cause) {
+        super(cause);
+    }
 }

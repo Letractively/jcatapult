@@ -15,6 +15,8 @@
  */
 package org.jcatapult.security.spi;
 
+import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
+
 import com.google.inject.ImplementedBy;
 
 /**
@@ -26,7 +28,7 @@ import com.google.inject.ImplementedBy;
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy()
+@ImplementedBy(JCatapultSecurityContextProvider.class)
 public interface SecurityContextProvider {
     /**
      * Returns the user name of the currently logged in user or some type of default.

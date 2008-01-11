@@ -15,6 +15,8 @@
  */
 package org.jcatapult.security;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This interface defines a method for retrieving a salt that can be
@@ -23,6 +25,7 @@ package org.jcatapult.security;
  *
  * @author Brian Pontarelli
  */
+@ImplementedBy(ConfiguredSaltSource.class)
 public interface SaltSource<T> {
     /**
      * Retrieves the default salt for the salt source. This salt should always be the same no matter
