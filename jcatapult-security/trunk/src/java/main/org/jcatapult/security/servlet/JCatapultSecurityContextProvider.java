@@ -15,8 +15,6 @@
  */
 package org.jcatapult.security.servlet;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.jcatapult.security.UserAdapter;
 import org.jcatapult.security.spi.SecurityContextProvider;
 import org.jcatapult.servlet.ServletObjectsHolder;
@@ -55,15 +53,15 @@ public class JCatapultSecurityContextProvider implements SecurityContextProvider
     }
 
     public void login(Object user) {
-        credentialStorage.store(user, (HttpServletRequest) ServletObjectsHolder.getServletRequest());
+        userHolder.set(user);
     }
 
     public void logout() {
-        credentialStorage.remove((HttpServletRequest) ServletObjectsHolder.getServletRequest());
+        userHolder.remove();
     }
 
     public Object getCurrentUser() {
-        return credentialStorage.locate((HttpServletRequest) ServletObjectsHolder.getServletRequest());
+        return userHolder.get();
     }
 
     public void update(Object user) {

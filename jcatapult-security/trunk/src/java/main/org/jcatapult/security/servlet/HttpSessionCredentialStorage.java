@@ -44,7 +44,7 @@ public class HttpSessionCredentialStorage implements CredentialStorage {
      * @return  The credentials if they exist, otherwise false.
      */
     public Object locate(ServletRequest request) {
-        HttpSession session = request.getSession(false);
+        HttpSession session = ((HttpServletRequest) request).getSession(false);
         if (session != null) {
             return session.getAttribute(KEY);
         }
@@ -58,8 +58,20 @@ public class HttpSessionCredentialStorage implements CredentialStorage {
      * @param   credentials The credentials to store.
      * @param   request Used to get the HTTP session.
      */
-    public void store(Object credentials, HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+    public void store(Object credentials, ServletRequest request) {
+        HttpSession session = ((HttpServletRequest) request).getSession(true);
         session.setAttribute(KEY, credentials);
+    }
+
+    /**
+     * Removes the credentials from the session.
+     *
+     * @param   request TO get the session from.
+     */
+    public void remove(ServletRequest request) {
+        HttpSession session = ((HttpServletRequest) request).getSession(false);
+        if (session != null) {
+            session.removeAttribute(KEY);
+        }
     }
 }

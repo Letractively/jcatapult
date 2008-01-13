@@ -106,7 +106,6 @@ public class ConfiguredAuthorizer implements Authorizer {
 
     public void authorize(Object user, String resource) throws UnauthorizedException, NotLoggedInException {
         Set<String> roles = user != null ? userAdapter.getRoles(user) : null;
-        boolean found = false;
         for (ResourceAuth resourceAuth : resourceAuths) {
             boolean equal = resource.equals(resourceAuth.resource);
             if (equal || (resource.startsWith(resourceAuth.resource) && (resourceAuth.dirWildcard || resourceAuth.subDirWildcard))) {
@@ -122,17 +121,18 @@ public class ConfiguredAuthorizer implements Authorizer {
                 }
 
                 // Check the roles
+                boolean found = false;
                 for (String role : resourceAuth.roles) {
                     if (roles.contains(role)) {
                         found = true;
                         break;
                     }
                 }
-            }
-        }
 
-        if (!found) {
-            throw new UnauthorizedException();
+                if (!found) {
+                    throw new UnauthorizedException();
+                }
+            }
         }
     }
 

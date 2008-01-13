@@ -17,7 +17,6 @@ package org.jcatapult.security.domain;
 
 import javax.persistence.MappedSuperclass;
 
-import org.jcatapult.domain.AuditableImpl;
 import org.jcatapult.domain.SoftDelete;
 
 /**
@@ -26,10 +25,10 @@ import org.jcatapult.domain.SoftDelete;
  * This version of soft delete is also auditable.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 @MappedSuperclass
-public class AuditableSoftDelete extends AuditableImpl implements SoftDelete {
+public abstract class AuditableSoftDelete extends AuditableImpl implements SoftDelete {
     private boolean deleted = false;
 
     public boolean isDeleted() {

@@ -15,7 +15,6 @@
  */
 package org.jcatapult.security.servlet;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletRequest;
 
 import com.google.inject.ImplementedBy;
@@ -46,12 +45,12 @@ public interface CredentialStorage {
      * @param   credentials The credentials to store.
      * @param   request The HTTP servlet request if it is needed to store the credentials.
      */
-    void store(Object credentials, HttpServletRequest request);
+    void store(Object credentials, ServletRequest request);
 
     /**
      * Removes the stored user credentials if there are any.
      *
      * @param   request The HTTP servlet request if it is needed to remove the credentials.
      */
-    void remove(HttpServletRequest request);
+    void remove(ServletRequest request);
 }

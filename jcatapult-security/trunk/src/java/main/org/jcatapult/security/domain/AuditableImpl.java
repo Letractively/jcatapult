@@ -20,16 +20,16 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import org.jcatapult.domain.Auditable;
+import org.jcatapult.domain.TimeStampableImpl;
 import org.jcatapult.security.SecurityContext;
 
 /**
  * <p>
  * This class is an auditing persistable Object instance. Since Java is
- * lacking multiple inheritance I had to force this to extend Identifiable
- * since that will be the most common case. This does however mean that
- * Auditable will not have the ability to handle objects with natural keys
- * or other types of keys.
+ * lacking multiple inheritance I had to force this to extend TimeStampableImpl
+ * since that will be the most common case. This means that AuditableImpl will
+ * not have the ability to handle objects with natural keys or other types of
+ * keys or not have time stamp information.
  * </p>
  *
  * @author  Brian Pontarelli

@@ -34,7 +34,7 @@ import com.google.inject.Inject;
  * retrieved from the AuthenticationService.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 public class DefaultLoginService implements LoginService {
     private final AuthenticationService authenticationService;
@@ -42,7 +42,8 @@ public class DefaultLoginService implements LoginService {
     private final PasswordEncryptor passwordEncryptor;
 
     @Inject
-    public DefaultLoginService(AuthenticationService authenticationService, UserAdapter userAdapter, PasswordEncryptor passwordEncryptor) {
+    public DefaultLoginService(AuthenticationService authenticationService, UserAdapter userAdapter,
+            PasswordEncryptor passwordEncryptor) {
         this.authenticationService = authenticationService;
         this.userAdapter = userAdapter;
         this.passwordEncryptor = passwordEncryptor;
@@ -57,7 +58,7 @@ public class DefaultLoginService implements LoginService {
 
         String encrypted = passwordEncryptor.encryptPassword(password, user);
         String userPassword = userAdapter.getPassword(user);
-        if (userPassword.equals(encrypted)) {
+        if (!userPassword.equals(encrypted)) {
             throw new InvalidPasswordException();
         }
 
