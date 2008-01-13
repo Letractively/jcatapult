@@ -38,9 +38,9 @@ public interface LoginService {
      * @param   password The password from a form.
      * @param   parameters Any extra parameters that might be used to log the user in.
      * @return  The user object if it was found.
-     * @throws  InvalidLoginException If the username is incorrect.
+     * @throws InvalidUsernameException If the username is incorrect.
      * @throws  InvalidPasswordException If the password is incorrect.
      */
     Object login(String username, String password, Map<String, Object> parameters)
-    throws InvalidLoginException, InvalidPasswordException;
+    throws InvalidUsernameException, InvalidPasswordException;
 }

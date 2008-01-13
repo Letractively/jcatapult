@@ -41,11 +41,13 @@ public class DefaultLoginServiceTest {
         try {
             dls.login("test", "test", null);
             fail("Should have failed");
-        } catch (InvalidLoginException e) {
+        } catch (InvalidUsernameException e) {
             // expect
         } catch (InvalidPasswordException e) {
             fail("Should not have thrown this");
         }
+
+        EasyMock.verify(as);
     }
 
     @Test
@@ -67,11 +69,13 @@ public class DefaultLoginServiceTest {
         try {
             dls.login("test", "test", null);
             fail("Should have failed");
-        } catch (InvalidLoginException e) {
+        } catch (InvalidUsernameException e) {
             fail("Should not have thrown this");
         } catch (InvalidPasswordException e) {
             // expect
         }
+
+        EasyMock.verify(as, ua, pe);
     }
 
     @Test
@@ -93,10 +97,12 @@ public class DefaultLoginServiceTest {
         DefaultLoginService dls = new DefaultLoginService(as, ua, pe);
         try {
             dls.login("test", "test", null);
-        } catch (InvalidLoginException e) {
+        } catch (InvalidUsernameException e) {
             fail("Should not have thrown this");
         } catch (InvalidPasswordException e) {
             fail("Should not have thrown this");
         }
+
+        EasyMock.verify(as, ua, pe);
     }
 }

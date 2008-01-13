@@ -25,5 +25,5 @@ import org.jcatapult.security.JCatapultSecurityException;
  *
  * @author Brian Pontarelli
  */
-public class InvalidLoginException extends JCatapultSecurityException {
+public class InvalidUsernameException extends JCatapultSecurityException {
 }

@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletRequest;
 
+import org.jcatapult.security.servlet.CredentialStorage;
+
 /**
  * <p>
  * This class provides a persistent storage location within the HTTP

@@ -24,6 +24,8 @@ import javax.servlet.ServletResponse;
 import org.jcatapult.servlet.SubWorkflowChain;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.security.servlet.login.LoginWorkflow;
+import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
 
 /**
  * <p>

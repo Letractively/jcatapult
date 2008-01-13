@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
 import org.jcatapult.security.auth.Authorizer;
 import org.jcatapult.security.auth.NotLoggedInException;
 import org.jcatapult.security.auth.UnauthorizedException;
@@ -65,6 +66,7 @@ public class AuthorizationWorkflowTest {
 
         AuthorizationWorkflow aw = new AuthorizationWorkflow(a, c);
         aw.perform(req, res, null);
+        EasyMock.verify(a, c, req, res);
     }
 
     @Test
@@ -95,6 +97,7 @@ public class AuthorizationWorkflowTest {
 
         AuthorizationWorkflow aw = new AuthorizationWorkflow(a, c);
         aw.perform(req, res, null);
+        EasyMock.verify(a, c, req, res);
     }
 
     @Test
@@ -126,5 +129,6 @@ public class AuthorizationWorkflowTest {
 
         AuthorizationWorkflow aw = new AuthorizationWorkflow(a, c);
         aw.perform(req, res, wc);
+        EasyMock.verify(a, c, req, res);
     }
 }

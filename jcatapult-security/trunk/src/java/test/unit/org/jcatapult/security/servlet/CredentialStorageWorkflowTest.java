@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.servlet.CredentialStorage;
 import org.jcatapult.servlet.WorkflowChain;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -61,6 +62,7 @@ public class CredentialStorageWorkflowTest {
         csw.perform(req, null, wc);
         assertNull(SecurityContext.getCurrentUser());
         assertTrue(called.get());
+        EasyMock.verify(req, cs);
     }
 
     @Test
@@ -90,6 +92,7 @@ public class CredentialStorageWorkflowTest {
         csw.perform(req, null, wc);
         assertNull(SecurityContext.getCurrentUser());
         assertTrue(called.get());
+        EasyMock.verify(req, cs);
     }
 
     @Test
@@ -119,5 +122,6 @@ public class CredentialStorageWorkflowTest {
         csw.perform(req, null, wc);
         assertNull(SecurityContext.getCurrentUser());
         assertTrue(called.get());
+        EasyMock.verify(req, cs);
     }
 }

@@ -43,9 +43,8 @@ public class SecurityWorkflowResolver extends DefaultWorkflowResolver {
 
     @Override
     public List<Workflow> resolve() {
-        List<Workflow> workflows = new ArrayList<Workflow>();
+        List<Workflow> workflows = new ArrayList<Workflow>(super.resolve());
         workflows.add(securityWorkflow);
-        workflows.addAll(super.resolve());
         return workflows;
     }
 }

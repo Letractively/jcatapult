@@ -48,6 +48,7 @@ public class ConfiguredAuthorizerTest {
 
         ca.authorize(user2, "/admin2"); // not a restricted url
         ca.authorize(user2, "/admin/resource"); // not a restricted url
+        ca.authorize(user2, "/admin/resource/resource2"); // not a restricted url
 
         try {
             ca.authorize(user2, "/admin");
@@ -70,6 +71,8 @@ public class ConfiguredAuthorizerTest {
         } catch (NotLoggedInException e) {
             // expect
         }
+
+        EasyMock.verify(c, ua);
     }
 
     @Test
@@ -125,6 +128,8 @@ public class ConfiguredAuthorizerTest {
         } catch (NotLoggedInException e) {
             // expect
         }
+
+        EasyMock.verify(c, ua);
     }
 
     @Test
@@ -164,6 +169,8 @@ public class ConfiguredAuthorizerTest {
         } catch (NotLoggedInException e) {
             // expect
         }
+
+        EasyMock.verify(c, ua);
     }
 
     @Test
@@ -249,6 +256,8 @@ public class ConfiguredAuthorizerTest {
         } catch (NotLoggedInException e) {
             // expect
         }
+
+        EasyMock.verify(c, ua);
     }
 
     private UserAdapter makeUserAdapter(Object user, Object user2, String... roles) {
@@ -258,7 +267,6 @@ public class ConfiguredAuthorizerTest {
         EasyMock.expect(ua.getRoles(user)).andReturn(rolesSet);
         EasyMock.expect(ua.getRoles(user)).andReturn(rolesSet);
         EasyMock.expect(ua.getRoles(user)).andReturn(rolesSet);
-        EasyMock.expect(ua.getRoles(user2)).andReturn(new HashSet<String>());
         EasyMock.expect(ua.getRoles(user2)).andReturn(new HashSet<String>());
         EasyMock.expect(ua.getRoles(user2)).andReturn(new HashSet<String>());
         EasyMock.expect(ua.getRoles(user2)).andReturn(new HashSet<String>());

@@ -17,6 +17,8 @@ package org.jcatapult.security.servlet;
 
 import javax.servlet.ServletRequest;
 
+import org.jcatapult.security.servlet.HttpSessionCredentialStorage;
+
 import com.google.inject.ImplementedBy;
 
 /**

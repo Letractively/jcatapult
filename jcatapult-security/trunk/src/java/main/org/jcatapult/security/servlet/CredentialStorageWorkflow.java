@@ -21,6 +21,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.servlet.CredentialStorage;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 

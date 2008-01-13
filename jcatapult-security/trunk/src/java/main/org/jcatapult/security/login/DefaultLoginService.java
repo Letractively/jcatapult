@@ -50,10 +50,10 @@ public class DefaultLoginService implements LoginService {
     }
 
     public Object login(String username, String password, Map<String, Object> parameters)
-    throws InvalidLoginException, InvalidPasswordException {
+    throws InvalidUsernameException, InvalidPasswordException {
         Object user = authenticationService.loadUser(username, parameters);
         if (user == null) {
-            throw new InvalidLoginException();
+            throw new InvalidUsernameException();
         }
 
         String encrypted = passwordEncryptor.encryptPassword(password, user);
