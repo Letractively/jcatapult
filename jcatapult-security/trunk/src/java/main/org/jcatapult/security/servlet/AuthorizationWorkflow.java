@@ -77,8 +77,8 @@ public class AuthorizationWorkflow implements Workflow {
     @Inject
     public AuthorizationWorkflow(Authorizer authorizer, Configuration configuration) {
         this.authorizer = authorizer;
-        this.loginURL = configuration.getString("jcatapul.security.login.url", "/login");
-        this.notAuthorizedURL = configuration.getString("jcatapul.security.not-authorized.url", "/not-authorized");
+        this.loginURL = configuration.getString("jcatapult.security.login.url", "/login");
+        this.notAuthorizedURL = configuration.getString("jcatapult.security.not-authorized.url", "/not-authorized");
     }
 
     /**
@@ -101,14 +101,27 @@ public class AuthorizationWorkflow implements Workflow {
         try {
             authorizer.authorize(user, uri);
         } catch (UnauthorizedException e) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/" + notAuthorizedURL);
+            httpResponse.sendRedirect(getContextPath(httpRequest, notAuthorizedURL));
             return;
         } catch (NotLoggedInException e) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/" + loginURL);
+            httpResponse.sendRedirect(getContextPath(httpRequest, loginURL));
             return;
         }
 
         workflowChain.doWorkflow(request, response);
+    }
+
+    private String getContextPath(HttpServletRequest httpRequest, String url) {
+        String context = httpRequest.getContextPath();
+        if (context.equals("")) {
+            return url;
+        }
+
+        if (url.startsWith("/")) {
+            return context + url;
+        }
+
+        return context + "/" + url;
     }
 
     public void destroy() {
