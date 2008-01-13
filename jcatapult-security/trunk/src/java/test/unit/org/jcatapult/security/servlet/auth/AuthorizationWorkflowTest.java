@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.security.servlet;
+package org.jcatapult.security.servlet.auth;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -24,6 +24,7 @@ import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
+import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
 import org.jcatapult.security.auth.Authorizer;
 import org.jcatapult.security.auth.NotLoggedInException;
 import org.jcatapult.security.auth.UnauthorizedException;
