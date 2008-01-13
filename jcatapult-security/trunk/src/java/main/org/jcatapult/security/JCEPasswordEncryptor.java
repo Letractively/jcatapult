@@ -48,12 +48,14 @@ import com.google.inject.Inject;
  */
 public class JCEPasswordEncryptor implements PasswordEncryptor<Object> {
     private final SaltSource saltSource;
-    private final Configuration configuration;
+    private final boolean encodeBase64;
+    private final String algorithm;
 
     @Inject
     public JCEPasswordEncryptor(SaltSource saltSource, Configuration configuration) {
         this.saltSource = saltSource;
-        this.configuration = configuration;
+        this.encodeBase64 = configuration.getBoolean("jcatapult.security.password-encryptor.encode-base-64", true);
+        this.algorithm = configuration.getString("jcatapult.security.password-encryptor.algorithm", "MD5");
     }
 
     /**
@@ -67,13 +69,13 @@ public class JCEPasswordEncryptor implements PasswordEncryptor<Object> {
      *          enabled).
      */
     public String encryptPassword(String password, Object obj) {
-        String salt = obj == null ? saltSource.getSalt() : saltSource.getSalt(obj);
+        String salt = (obj == null) ? saltSource.getSalt() : saltSource.getSalt(obj);
         String saltedPass = mergePasswordAndSalt(password, salt, false);
         MessageDigest messageDigest = getMessageDigest();
 
         byte[] digest = messageDigest.digest(saltedPass.getBytes());
 
-        if (configuration.getBoolean("jcatapult.security.passwordEncryptor.encodeBase64", true)) {
+        if (encodeBase64) {
             return new String(Base64.encodeBase64(digest));
         } else {
             return new String(Hex.encodeHex(digest));
@@ -87,7 +89,6 @@ public class JCEPasswordEncryptor implements PasswordEncryptor<Object> {
      * @throws  IllegalArgumentException If the algorithm configured is not valid.
      */
     protected final MessageDigest getMessageDigest() throws IllegalArgumentException {
-        String algorithm = configuration.getString("jcatapult.security.passwordEncryptor.algorithm", "MD5");
         try {
             return MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
