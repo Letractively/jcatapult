@@ -59,21 +59,21 @@ public class CredentialStorageWorkflow implements Workflow {
     throws IOException, ServletException {
         Object userObject = credentialStorage.locate(request);
         boolean existing = (userObject != null);
-        if (userObject != null) {
-            JCatapultSecurityContextProvider.setUserObject(userObject);
+        if (existing) {
+            SecurityContext.login(userObject);
         }
 
         try {
             workflowChain.doWorkflow(request, response);
         } finally {
-            JCatapultSecurityContextProvider.removeUserObject();
-
             // If the user didn't exist before and now it does, store it.
             if (!existing && SecurityContext.getCurrentUser() != null) {
                 credentialStorage.store(SecurityContext.getCurrentUser(), request);
             } else if (existing && SecurityContext.getCurrentUser() == null) {
                 credentialStorage.remove(request);
             }
+
+            SecurityContext.logout();
         }
     }
 

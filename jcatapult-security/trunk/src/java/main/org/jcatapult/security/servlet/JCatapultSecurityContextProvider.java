@@ -67,12 +67,4 @@ public class JCatapultSecurityContextProvider implements SecurityContextProvider
     public void update(Object user) {
         login(user);
     }
-
-    static void setUserObject(Object userObject) {
-        userHolder.set(userObject);
-    }
-
-    public static void removeUserObject() {
-        userHolder.remove();
-    }
 }
