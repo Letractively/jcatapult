@@ -35,4 +35,12 @@ public interface PasswordEncryptor<T> {
      * @return  The encrypted password.
      */
     String encryptPassword(String password, T t);
+
+    /**
+     * Encrypts a password.
+     *
+     * @param   password The password to encrypt.
+     * @return  The encrypted password.
+     */
+    String encryptPassword(String password);
 }

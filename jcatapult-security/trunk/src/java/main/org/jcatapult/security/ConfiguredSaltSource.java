@@ -47,7 +47,7 @@ public class ConfiguredSaltSource implements SaltSource {
      * {@inheritDoc}
      */
     public String getSalt() {
-        return configuration.getString("jcatapult.security.saltSource.salt", "jcatapult");
+        return configuration.getString("jcatapult.security.salt", "jcatapult");
     }
 
     /**

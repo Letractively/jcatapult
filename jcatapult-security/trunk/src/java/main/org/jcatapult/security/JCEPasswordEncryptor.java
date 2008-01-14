@@ -83,6 +83,13 @@ public class JCEPasswordEncryptor implements PasswordEncryptor<Object> {
     }
 
     /**
+     * Calls {@link #encryptPassword(String, Object)}.
+     */
+    public String encryptPassword(String password) {
+        return encryptPassword(password, null);
+    }
+
+    /**
      * Get a MessageDigest instance for the given algorithm.
      *
      * @return  The MessageDigest instance.
