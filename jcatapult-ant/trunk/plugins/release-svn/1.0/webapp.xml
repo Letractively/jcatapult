@@ -47,22 +47,22 @@
 	        <rel_deploy_remote_pre/>
 
 			<antcall target="app"/>
-	    	
+
 	    	<property name="rel_deploy.buildcache.dir" location="${user.home}/jcatapult/build-cache"/>
 	    	<property name="rel_deploy.archive" location="${rel_deploy.buildcache.dir}/${project.name}-${project.version}.tar.gz"/>
 	    	<echo>Create archive for deploy ${rel_deploy.archive}</echo>
 	    	<mkdir dir="${rel_deploy.buildcache.dir}"/>
-	    	
+
 	    	<tar destfile="${rel_deploy.archive}" compression="gzip">
 	    		<tarfileset prefix="db" dir="${imported.dir}/src/db/main"/>
 	    		<tarfileset prefix="web" dir="${imported.dir}/web"/>
 	    		<!-- tarfileset prefix="files" dir="${imported.dir}/src/files"/-->
 	     	</tar>
-	    
+
 
 	    	<!-- post macro -->
 	        <rel_deploy_remote_post/>
-	    	
+
 	    </sequential>
   </macrodef>
 

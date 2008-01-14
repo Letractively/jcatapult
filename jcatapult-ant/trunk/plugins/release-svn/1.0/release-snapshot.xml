@@ -26,7 +26,6 @@
     <antcall target="test-unit"/>
     <scm_tag_head tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_cleanup/>
-    <rel_post_process/>
   </target>
 
   <target name="rel-snapshot-full-trunk-script" depends="-scm-init">
