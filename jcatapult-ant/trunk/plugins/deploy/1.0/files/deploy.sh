@@ -37,7 +37,9 @@ echo     Database: $DB_DATABASE
 echo
 echo
 
+#
 #BEGIN STEPS FOR TAR ONLY
+#
 VERSION_DIR="$WORK_DIR/$VERSION"
 if [ -d "$VERSION_DIR" ] ; then
 	rm -rf $VERSION_DIR
@@ -51,6 +53,9 @@ if ! tar -zxf $WORK_DIR/$ARCHIVE ; then
 	echo "Cannot open archive.  Exiting."
 	exit 1
 fi
+#
+#END STEPS FOR TAR ONLY
+#
 
 if [ ! -d web ] ; then 
 	echo "/web Directory missing.  Exiting."
