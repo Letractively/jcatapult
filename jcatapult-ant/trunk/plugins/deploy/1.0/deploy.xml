@@ -74,6 +74,7 @@
 				<filter token="deploy.cmd.start" value="${deploy.cmd.start}"/>
 				<filter token="deploy.environment" value="${deploy.environment}"/>
 				<filter token="deploy.db.host" value="${deploy.db.host}"/>
+				<filter token="deploy.db.port" value="${deploy.db.port}"/>
 				<filter token="deploy.db.username" value="${deploy.db.username}"/>
 				<filter token="deploy.db.password" value="${deploy.db.password}"/>
 				<filter token="deploy.db.database" value="${deploy.db.database}"/>
@@ -105,6 +106,7 @@
 			<deploy_set_env_var_default env="@{env}" var="deploy.cmd.start"/>
 			
 			<deploy_set_env_var env="@{env}" var="deploy.db.host"/>
+			<deploy_set_env_var env="@{env}" var="deploy.db.port"/>
 			<deploy_set_env_var env="@{env}" var="deploy.db.username"/>
 			<deploy_set_env_var env="@{env}" var="deploy.db.password"/>
 			<deploy_set_env_var env="@{env}" var="deploy.db.database"/>

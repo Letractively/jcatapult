@@ -12,6 +12,7 @@ START_CMD=@deploy.cmd.start@
 ENVIRONMENT=@deploy.environment@
 
 DB_HOST=@deploy.db.host@
+DB_PORT=@deploy.db.port@
 DB_USERNAME=@deploy.db.username@
 DB_PASSWORD=@deploy.db.password@
 DB_DATABASE=@deploy.db.database@
