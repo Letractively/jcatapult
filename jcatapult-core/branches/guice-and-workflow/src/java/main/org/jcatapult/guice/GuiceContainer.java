@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.inject.AbstractModule;
@@ -179,10 +178,13 @@ public class GuiceContainer {
                     }
 
                     modules.add(moduleClass);
-                    logger.finest("Adding module [" + moduleClass.getName() + "] to the Guice injector.");
                 } catch (Exception e) {
                     throw new IllegalStateException(e);
                 }
+            }
+
+            for (Class<? extends Module> module : modules) {
+                logger.info("Adding module [" + module + "] from configuration to the Guice injector.");
             }
         }
     }
@@ -209,8 +211,8 @@ public class GuiceContainer {
             }
         }
 
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("Adding modules [" + matches + "] from classpath to Guice injector.");
+        for (Class<Module> match : matches) {
+            logger.info("Adding module [" + match + "] from classpath to Guice injector.");
         }
 
         modules.addAll(matches);
