@@ -28,7 +28,7 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class SecurityContext {
-    private static SecurityContextProvider provider;
+    protected static SecurityContextProvider provider;
 
     /**
      * Returns the current provider.
