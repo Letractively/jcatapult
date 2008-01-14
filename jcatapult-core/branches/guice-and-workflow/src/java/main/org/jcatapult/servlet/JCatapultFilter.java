@@ -66,16 +66,6 @@ public class JCatapultFilter implements Filter {
     private List<Workflow> workflows;
 
     /**
-     * Constructs the filter and then injects the configuration properties using Guice and the JCatapult
-     * configuration files. This is done in the constructor so that the this is more easily tested.
-     */
-    public JCatapultFilter() {
-        // Inject the JCatapult configuration
-        Injector injector = Guice.createInjector(new ConfigurationModule());
-        injector.injectMembers(this);
-    }
-
-    /**
      * First this adds the ServletContext to the holder so that is available anywhere in the web
      * application. Next this checks for the <em>persistentUnit</em> configuration option and defaults
      * to <em>punit</em>. This also constructs the EntityManagerFactory that will be used to create

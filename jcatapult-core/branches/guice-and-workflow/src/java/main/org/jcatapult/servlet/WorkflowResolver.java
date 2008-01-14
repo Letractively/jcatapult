@@ -17,8 +17,6 @@ package org.jcatapult.servlet;
 
 import java.util.List;
 
-import com.google.inject.ImplementedBy;
-
 /**
  * <p>
  * This class is used by the {@link JCatapultFilter} to allow additional processing
@@ -29,7 +27,6 @@ import com.google.inject.ImplementedBy;
  *
  * @author Brian Pontarelli
  */
-@ImplementedBy(DefaultWorkflowResolver.class)
 public interface WorkflowResolver {
     /**
      * Called in the {@link JCatapultFilter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)}
