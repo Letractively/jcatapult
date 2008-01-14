@@ -20,10 +20,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.jcatapult.security.SecurityContext;
-import org.jcatapult.security.servlet.CredentialStorage;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.security.EnhancedSecurityContext;
 
 import com.google.inject.Inject;
 
@@ -32,7 +31,7 @@ import com.google.inject.Inject;
  * This class provides a simple mechanism for locating an existing user
  * object using the {@link CredentialStorage} and then storing it into
  * the {@link JCatapultSecurityContextProvider}, which is the default
- * implementation of the {@link org.jcatapult.security.spi.SecurityContextProvider}.
+ * implementation of the {@link org.jcatapult.security.spi.EnhancedSecurityContextProvider}.
  * </p>
  *
  * @author Brian Pontarelli
@@ -61,20 +60,20 @@ public class CredentialStorageWorkflow implements Workflow {
         Object userObject = credentialStorage.locate(request);
         boolean existing = (userObject != null);
         if (existing) {
-            SecurityContext.login(userObject);
+            EnhancedSecurityContext.login(userObject);
         }
 
         try {
             workflowChain.doWorkflow(request, response);
         } finally {
             // If the user didn't exist before and now it does, store it.
-            if (!existing && SecurityContext.getCurrentUser() != null) {
-                credentialStorage.store(SecurityContext.getCurrentUser(), request);
-            } else if (existing && SecurityContext.getCurrentUser() == null) {
+            if (!existing && EnhancedSecurityContext.getCurrentUser() != null) {
+                credentialStorage.store(EnhancedSecurityContext.getCurrentUser(), request);
+            } else if (existing && EnhancedSecurityContext.getCurrentUser() == null) {
                 credentialStorage.remove(request);
             }
 
-            SecurityContext.logout();
+            EnhancedSecurityContext.logout();
         }
     }
 

@@ -27,7 +27,7 @@ import org.jcatapult.servlet.WorkflowChain;
 import org.jcatapult.security.auth.Authorizer;
 import org.jcatapult.security.auth.UnauthorizedException;
 import org.jcatapult.security.auth.NotLoggedInException;
-import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.EnhancedSecurityContext;
 import org.apache.commons.configuration.Configuration;
 
 import com.google.inject.Inject;
@@ -82,7 +82,7 @@ public class AuthorizationWorkflow implements Workflow {
     }
 
     /**
-     * Grabs the current request URI and then sends it along with the current user from the {@link SecurityContext}
+     * Grabs the current request URI and then sends it along with the current user from the {@link org.jcatapult.security.EnhancedSecurityContext}
      * to the {@link Authorizer} to be authorized.
      *
      * @param   request The HTTP request to get the request URI from.
@@ -96,7 +96,7 @@ public class AuthorizationWorkflow implements Workflow {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         String uri = httpRequest.getRequestURI();
-        Object user = SecurityContext.getCurrentUser();
+        Object user = EnhancedSecurityContext.getCurrentUser();
 
         try {
             authorizer.authorize(user, uri);

@@ -19,6 +19,7 @@ import org.easymock.EasyMock;
 import org.jcatapult.security.PasswordEncryptor;
 import org.jcatapult.security.UserAdapter;
 import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -37,7 +38,9 @@ public class DefaultLoginServiceTest {
         EasyMock.expect(as.loadUser("test", null)).andReturn(null);
         EasyMock.replay(as);
 
-        DefaultLoginService dls = new DefaultLoginService(as, null, null);
+        JCatapultSecurityContextProvider scp = new JCatapultSecurityContextProvider(null);
+        SecurityContext.setProvider(scp);
+        DefaultLoginService dls = new DefaultLoginService(as, null, null, scp);
         try {
             dls.login("test", "test", null);
             fail("Should have failed");
@@ -65,7 +68,9 @@ public class DefaultLoginServiceTest {
         EasyMock.expect(pe.encryptPassword("test", user)).andReturn("encrypted");
         EasyMock.replay(pe);
 
-        DefaultLoginService dls = new DefaultLoginService(as, ua, pe);
+        JCatapultSecurityContextProvider scp = new JCatapultSecurityContextProvider(ua);
+        SecurityContext.setProvider(scp);
+        DefaultLoginService dls = new DefaultLoginService(as, ua, pe, scp);
         try {
             dls.login("test", "test", null);
             fail("Should have failed");
@@ -93,8 +98,9 @@ public class DefaultLoginServiceTest {
         EasyMock.expect(pe.encryptPassword("test", user)).andReturn("encrypted");
         EasyMock.replay(pe);
 
-        SecurityContext.setProvider(new JCatapultSecurityContextProvider(ua));
-        DefaultLoginService dls = new DefaultLoginService(as, ua, pe);
+        JCatapultSecurityContextProvider scp = new JCatapultSecurityContextProvider(ua);
+        EnhancedSecurityContext.setProvider(scp);
+        DefaultLoginService dls = new DefaultLoginService(as, ua, pe, scp);
         try {
             dls.login("test", "test", null);
         } catch (InvalidUsernameException e) {

@@ -29,7 +29,7 @@ import com.google.inject.ImplementedBy;
  * @author  Brian Pontarelli
  */
 @ImplementedBy(JCatapultSecurityContextProvider.class)
-public interface SecurityContextProvider {
+public interface EnhancedSecurityContextProvider extends SecurityContextProvider {
     /**
      * Returns the user name of the currently logged in user or some type of default.
      *

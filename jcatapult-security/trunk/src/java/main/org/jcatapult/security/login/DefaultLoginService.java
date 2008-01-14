@@ -18,8 +18,8 @@ package org.jcatapult.security.login;
 import java.util.Map;
 
 import org.jcatapult.security.PasswordEncryptor;
-import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.UserAdapter;
+import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
 
 import com.google.inject.Inject;
 
@@ -40,13 +40,15 @@ public class DefaultLoginService implements LoginService {
     private final AuthenticationService authenticationService;
     private final UserAdapter userAdapter;
     private final PasswordEncryptor passwordEncryptor;
+    private final JCatapultSecurityContextProvider securityContextProvider;
 
     @Inject
     public DefaultLoginService(AuthenticationService authenticationService, UserAdapter userAdapter,
-            PasswordEncryptor passwordEncryptor) {
+            PasswordEncryptor passwordEncryptor, JCatapultSecurityContextProvider securityContextProvider) {
         this.authenticationService = authenticationService;
         this.userAdapter = userAdapter;
         this.passwordEncryptor = passwordEncryptor;
+        this.securityContextProvider = securityContextProvider;
     }
 
     public Object login(String username, String password, Map<String, Object> parameters)
@@ -63,7 +65,7 @@ public class DefaultLoginService implements LoginService {
         }
 
         // Save the user to the context since the login was good
-        SecurityContext.login(user);
+        securityContextProvider.login(user);
 
         return user;
     }

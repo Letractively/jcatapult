@@ -16,7 +16,7 @@
 package org.jcatapult.security.servlet;
 
 import org.jcatapult.security.UserAdapter;
-import org.jcatapult.security.spi.SecurityContextProvider;
+import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
 import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;
@@ -34,7 +34,7 @@ import com.google.inject.Inject;
  *
  * @author Brian Pontarelli
  */
-public class JCatapultSecurityContextProvider implements SecurityContextProvider {
+public class JCatapultSecurityContextProvider implements EnhancedSecurityContextProvider {
     private static final ThreadLocal<Object> userHolder = new ThreadLocal<Object>();
     private final UserAdapter userAdapter;
 
