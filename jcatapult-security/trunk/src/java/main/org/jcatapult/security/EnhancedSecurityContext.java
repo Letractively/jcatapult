@@ -15,7 +15,7 @@
  */
 package org.jcatapult.security;
 
-import org.jcatapult.security.spi.SecurityContextProvider;
+import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
 
 import com.google.inject.Inject;
 
@@ -27,41 +27,18 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class SecurityContext {
-    private static SecurityContextProvider provider;
+public class EnhancedSecurityContext extends SecurityContext {
+    protected static EnhancedSecurityContextProvider enhancedProvider;
 
     /**
-     * Returns the current provider.
+     * Sets the enhanced provider and passes it to the SecurityContext.
      *
-     * @return The provider.
-     */
-    public static SecurityContextProvider getProvider() {
-        return provider;
-    }
-
-    /**
-     * Sets a new provider.
-     *
-     * @param   provider The new provider to use.
+     * @param   provider The enhanced provider.
      */
     @Inject
-    public static void setProvider(SecurityContextProvider provider) {
-        SecurityContext.provider = provider;
-    }
-
-    /**
-     * @return  The currently logged in user's name or some default. If the provider has not been
-     *          setup, this method will throw a NullPointerException.
-     */
-    public static String getCurrentUsername() {
-        return provider.getCurrentUsername();
-    }
-
-    /**
-     * @return  The currently logged in user object.
-     */
-    public static Object getCurrentUser() {
-        return provider.getCurrentUser();
+    public static void setProvider(EnhancedSecurityContextProvider provider) {
+        enhancedProvider = provider;
+        SecurityContext.setProvider(provider);
     }
 
     /**
@@ -70,14 +47,14 @@ public class SecurityContext {
      * @param   user The user domain object. This is dependent on the provider being used.
      */
     public static void login(Object user) {
-        provider.login(user);
+        enhancedProvider.login(user);
     }
 
     /**
      * Logs the user out of the application.
      */
     public static void logout() {
-        provider.logout();
+        enhancedProvider.logout();
     }
 
     /**
@@ -86,6 +63,6 @@ public class SecurityContext {
      * @param   user The new user instance.
      */
     public static void update(Object user) {
-        provider.update(user);
+        enhancedProvider.update(user);
     }
 }

@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
-import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
 import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
 import org.jcatapult.security.auth.Authorizer;
@@ -62,8 +62,8 @@ public class AuthorizationWorkflowTest {
         res.sendRedirect("/context/not-authed");
         EasyMock.replay(res);
 
-        SecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
-        SecurityContext.login(user);
+        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+        EnhancedSecurityContext.login(user);
 
         AuthorizationWorkflow aw = new AuthorizationWorkflow(a, c);
         aw.perform(req, res, null);
@@ -93,8 +93,8 @@ public class AuthorizationWorkflowTest {
         res.sendRedirect("/login-url");
         EasyMock.replay(res);
 
-        SecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
-        SecurityContext.login(user);
+        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+        EnhancedSecurityContext.login(user);
 
         AuthorizationWorkflow aw = new AuthorizationWorkflow(a, c);
         aw.perform(req, res, null);
@@ -125,8 +125,8 @@ public class AuthorizationWorkflowTest {
         wc.doWorkflow(req, res);
         EasyMock.replay(wc);
 
-        SecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
-        SecurityContext.login(user);
+        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+        EnhancedSecurityContext.login(user);
 
         AuthorizationWorkflow aw = new AuthorizationWorkflow(a, c);
         aw.perform(req, res, wc);

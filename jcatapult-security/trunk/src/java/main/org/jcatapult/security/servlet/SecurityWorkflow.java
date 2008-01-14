@@ -27,6 +27,8 @@ import org.jcatapult.servlet.WorkflowChain;
 import org.jcatapult.security.servlet.login.LoginWorkflow;
 import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
 
+import com.google.inject.Inject;
+
 /**
  * <p>
  * This class is the main security workflow that attaches to the JCatapult
@@ -56,6 +58,7 @@ public class SecurityWorkflow implements Workflow {
 //    private final SavedRequestWorkflow savedRequestWorkflow;
     private final AuthorizationWorkflow authorizationWorkflow;
 
+    @Inject
     public SecurityWorkflow(CredentialStorageWorkflow credentialStorageWorkflow, LoginWorkflow loginWorkflow,
             AuthorizationWorkflow authorizationWorkflow) {
         this.credentialStorageWorkflow = credentialStorageWorkflow;

@@ -15,16 +15,16 @@
  */
 package org.jcatapult.security.servlet;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import org.jcatapult.security.SecurityContext;
-import org.jcatapult.security.servlet.CredentialStorage;
+import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.servlet.WorkflowChain;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class CredentialStorageWorkflowTest {
     public void testExisting() throws IOException, ServletException {
         Object user = new Object();
 
-        SecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.replay(req);
@@ -69,7 +69,7 @@ public class CredentialStorageWorkflowTest {
     public void testLogin() throws IOException, ServletException {
         final Object user = new Object();
 
-        SecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.replay(req);
@@ -83,7 +83,7 @@ public class CredentialStorageWorkflowTest {
         WorkflowChain wc = new WorkflowChain() {
             public void doWorkflow(ServletRequest request, ServletResponse response) {
                 assertNull(SecurityContext.getCurrentUser());
-                SecurityContext.login(user);
+                EnhancedSecurityContext.login(user);
                 called.set(true);
             }
         };
@@ -99,7 +99,7 @@ public class CredentialStorageWorkflowTest {
     public void testLogout() throws IOException, ServletException {
         final Object user = new Object();
 
-        SecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.replay(req);
@@ -112,15 +112,15 @@ public class CredentialStorageWorkflowTest {
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
             public void doWorkflow(ServletRequest request, ServletResponse response) {
-                assertNotNull(SecurityContext.getCurrentUser());
-                SecurityContext.logout();
+                assertNotNull(EnhancedSecurityContext.getCurrentUser());
+                EnhancedSecurityContext.logout();
                 called.set(true);
             }
         };
 
         CredentialStorageWorkflow csw = new CredentialStorageWorkflow(cs);
         csw.perform(req, null, wc);
-        assertNull(SecurityContext.getCurrentUser());
+        assertNull(EnhancedSecurityContext.getCurrentUser());
         assertTrue(called.get());
         EasyMock.verify(req, cs);
     }
