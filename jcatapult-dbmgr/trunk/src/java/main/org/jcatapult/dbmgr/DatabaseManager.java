@@ -318,21 +318,22 @@ public class DatabaseManager {
         if (args.length < 8 || args.length > 9) {
             StringBuffer errMsg = new StringBuffer();
             errMsg.append("Invalid arguments: ").append(Arrays.asList(args)).append("\n");
-            errMsg.append("Usage: DatabaseMigrator [--no-domain] <persistence-unit> <db-url> <application-name> <sql-dir> <db-type> <jndi-name> <project-xml-path>");
+            errMsg.append("Usage: DatabaseMigrator [--no-domain] <persistence-unit> <db-url> <application-name> <sql-dir> <db-type> <jndi-name> <project-xml-path> <dependencies-id> <version>");
             errMsg.append("\n\n");
             errMsg.append("--no-domain: Tells the DatabaseMigrator that the current application doesn't");
             errMsg.append("contain any domain objects and that it should only check for component");
-            errMsg.append(" tables.sql files.\n\n");
-            errMsg.append("persistence-unit: The name of the persistence unit to use when in development mode.\n\n");
-            errMsg.append("db-url: The full JDBC URL to the database.").append("\n\n");
+            errMsg.append(" tables.sql files.\n");
+            errMsg.append("persistence-unit: The name of the persistence unit to use when in development mode.\n");
+            errMsg.append("db-url: The full JDBC URL to the database.").append("\n");
             errMsg.append("application-name: The name of the current application, which is used to find the current");
-            errMsg.append(" version of the application in the databaseVersions table.\n\n");
+            errMsg.append(" version of the application in the databaseVersions table.\n");
             errMsg.append("sql-dir: The directory that contains the SQL files to create the database from. This can");
-            errMsg.append(" be a bogus directory if the project doesn't contain any SQL files.\n\n");
-            errMsg.append("db-type: The database type to connect to.\n\n");
-            errMsg.append("jndi-name: The jndi name name that maps to the datasource.\n\n");
-            errMsg.append("project-xml-path: the path to the project.xml file.\n\n");
-            errMsg.append("dependencies-id: the dependencies id defined within the project.xml.");
+            errMsg.append(" be a bogus directory if the project doesn't contain any SQL files.\n");
+            errMsg.append("db-type: The database type to connect to.\n");
+            errMsg.append("jndi-name: The jndi name name that maps to the datasource.\n");
+            errMsg.append("project-xml-path: the path to the project.xml file.\n");
+            errMsg.append("dependencies-id: the dependencies id defined within the project.xml.\n");
+            errMsg.append("version: The version of the project.");
             System.err.println(errMsg);
             System.exit(1);
         }

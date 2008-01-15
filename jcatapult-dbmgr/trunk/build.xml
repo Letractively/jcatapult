@@ -18,7 +18,7 @@
  
   <property file="${user.home}/build.properties"/>
 
-  <property name="plugins.dir" value="${jcatapult.home}/plugins"/>
+  <property name="plugins.dir" value="${ant.home}/plugins-jcatapult"/>
 
   <!-- Savant -->
   <import file="${plugins.dir}/savant/1.0/savant.xml"/>
