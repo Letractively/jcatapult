@@ -53,7 +53,13 @@ public class DefaultPostLoginHandler implements PostLoginHandler {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
+            @Override
             public String getRequestURI() {
+                return successfulLoginURI;
+            }
+
+            @Override
+            public String getServletPath() {
                 return successfulLoginURI;
             }
         };
