@@ -36,20 +36,52 @@
 			</then>
 		</if>
 
-		<property name="deploy.buildcache.dir" location="${user.home}/jcatapult/build-cache"/>
-    	<property name="deploy.archive" location="${deploy.buildcache.dir}/${project.name}-${deploy.version}.tar.gz"/>
+    	<property name="deploy.archive" location="${dir.deploy.archive}/${project.name}-${deploy.version}.tar.gz"/>
 		<if>
 			<not><available file="${deploy.archive}"/></not>
 			<then><fail>The archive for this build does not exist: ${deploy.archive}</fail></then>
 		</if>
 	</target>
 	
-	<target name="deploy" depends="-deploy-init">
+	<target name="deploy" depends="-deploy-init" description="Deploys the web application to the server">
 
 		<antcall target="deploy-tar"/>
 	</target>
 	
-	<target name="deploy-tar" depends="-deploy-init">
+	<target name="deploy-rsync" depends="-deploy-init" description="Deploys using Rsync to update the site.  Requires installation of SSH & Rsync">
+		<property name="deploy.mode" value="rsync"/>
+		<echo>Deploying using RSYNC method</echo>
+
+		<echo>Setting up directory on the server</echo>
+		<property name="deploy.rsync_setup" value="cd ${deploy.dir.work}; if [ ! -d CURRENT ] ; then echo 'CURRENT directory Missing' ; exit 1; fi; mkdir ${deploy.version}; cp -R CURRENT/* ${deploy.version}/"/>  
+		<sshexec host="${deploy.server.host}" username="${deploy.server.username}"
+			password="${deploy.server.password}" trust="true" failonerror="true"
+			command="if [ ! -d ${deploy.dir.work} ] ; then mkdir ${deploy.dir.work} ; fi ; ${deploy.rsync_setup}"/>
+		
+		<echo>Expanding archive for rsync</echo>
+		<tempfile property="deploy.tempdir" deleteonexit="true" destdir="${dir.jcatapult}"/>
+		<mkdir dir="${deploy.tempdir}"/>
+		<untar dest="${deploy.tempdir}" src="${deploy.archive}" compression="gzip"/>
+
+		<property name="deploy.rsync_target" value="${deploy.server.username}@${deploy.server.host}:${deploy.dir.work}/${deploy.version}"/>
+		<echo>RSync from ${deploy.tempdir} to ${deploy.rsync_target}</echo>
+		<exec executable="rsync" failonerror="true">
+			<arg value="-aicqz"/>
+			<arg value="--delete"/>
+			<arg file="${deploy.tempdir}/web"/>
+			<arg file="${deploy.tempdir}/db"/>
+			<!-- arg file="${deploy.tempdir}/files"/ -->
+			
+			<arg value="${deploy.rsync_target}"/>
+		</exec>
+				
+		<antcall target="deploy-run-script"/>
+		
+	</target>
+	
+	<target name="deploy-tar" depends="-deploy-init" description="Deploys using a tar file">
+		<property name="deploy.mode" value="tar"/>
+		
 		<echo>Deploying using Tar method</echo>
 		<sshexec host="${deploy.server.host}" username="${deploy.server.username}"
 			password="${deploy.server.password}" trust="true"
@@ -91,7 +123,7 @@
 		<sshexec host="${deploy.server.host}" username="${deploy.server.username}"
 			password="${deploy.server.password}" trust="true"
 			failonerror="true"
-			command="cd ${deploy.dir.work}; chmod u+x deploy.sh; ./deploy.sh '${deploy.version}' '${project.name}-${deploy.version}.tar.gz' "/>
+			command="cd ${deploy.dir.work}; chmod u+x deploy.sh; ./deploy.sh '${deploy.version}'  '${deploy.mode}' '${project.name}-${deploy.version}.tar.gz' "/>
 	</target>
 	
 	<!-- Sets up the environment given the deploy.environment property -->

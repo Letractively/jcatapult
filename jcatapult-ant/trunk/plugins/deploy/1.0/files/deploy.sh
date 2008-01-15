@@ -1,7 +1,8 @@
 #!/bin/bash
 
 VERSION=$1
-ARCHIVE=$2
+MODE=$2
+ARCHIVE=$3
 
 PROJECT_NAME=@project.name@
 FILES_DIR=@deploy.dir.files@
@@ -38,25 +39,34 @@ echo     Database: $DB_DATABASE
 echo
 echo
 
+VERSION_DIR="$WORK_DIR/$VERSION"
+BACKUP_DIR="$WORK_DIR/backup"
+if [ ! -d $BACKUP_DIR ] ; then
+	mkdir $BACKUP_DIR
+fi
+
 #
 #BEGIN STEPS FOR TAR ONLY
 #
-VERSION_DIR="$WORK_DIR/$VERSION"
-if [ -d "$VERSION_DIR" ] ; then
-	rm -rf $VERSION_DIR
-fi
-
-mkdir "$VERSION_DIR"
-
-#Untar the archive
-cd "$VERSION_DIR"
-if ! tar -zxf $WORK_DIR/$ARCHIVE ; then 
-	echo "Cannot open archive.  Exiting."
-	exit 1
+if [ $MODE == 'tar' ] ; then
+	if [ -d "$VERSION_DIR" ] ; then
+		rm -rf $VERSION_DIR
+	fi
+	
+	mkdir "$VERSION_DIR"
+	
+	#Untar the archive
+	cd "$VERSION_DIR"
+	if ! tar -zxf $WORK_DIR/$ARCHIVE ; then 
+		echo "Cannot open archive.  Exiting."
+		exit 1
+	fi
 fi
 #
 #END STEPS FOR TAR ONLY
 #
+
+cd "$VERSION_DIR"
 
 if [ ! -d web ] ; then 
 	echo "/web Directory missing.  Exiting."
@@ -75,7 +85,7 @@ sleep 10
 
 #Redeploy Web Files
 echo Deploying Web Application Files
-mv $DEPLOY_DIR $VERSION_DIR/deploy_$NOW
+mv $DEPLOY_DIR $BACKUP_DIR/deploy_$NOW
 mv web_stage $DEPLOY_DIR
 
 #Load Database Scripts
