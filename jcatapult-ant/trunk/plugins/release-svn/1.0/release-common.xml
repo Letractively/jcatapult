@@ -108,8 +108,21 @@
           <input message="Enter tag to deploy or publish (e.g. 1.0):" addproperty="input.tag.version"/>
 
           <scm_tag_validation tag="${input.tag.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
-          <scm_check_out_tag dir="${dir.checkout}" tag="${input.tag.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
-          <rel_fork dir="${dir.checkout}" target="rel-deploy-script"/>
+
+          <!-- check jcatapult cache to see if the deploy archive already exists. -->
+          <!-- If not, then check it out from source control and run the deploy scripts -->
+          <property name="deploy.archive" location="${dir.deploy.archive}/${project.name}-${input.tag.version}.tar.gz"/>
+          <if>
+            <not><available file="${deploy.archive}"/></not>
+            <then>
+              <echo>Deploy archive does not exists at location ${deploy.archive}.  Checking out from source control...</echo>
+              <scm_check_out_tag dir="${dir.checkout}" tag="${input.tag.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+              <rel_fork dir="${dir.checkout}" target="rel-deploy-script"/>
+            </then>
+            <else>
+              <echo>Deploy archive exists at location ${deploy.archive}</echo>
+            </else>
+          </if>
         </then>
         <!-- else, execute all other types of version releases -->
         <else>
