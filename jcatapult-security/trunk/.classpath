@@ -32,7 +32,8 @@
     <classpathentry kind="var" path="SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.jar" sourcepath="/SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/jboss.org/archive-browsing/jboss-archive-browsing-5.0.0-alpha.jar" sourcepath="/SAVANT_REPOSITORY/jboss.org/archive-browsing/jboss-archive-browsing-5.0.0-alpha-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/jboss.org/javassist/javassist-3.4.jar" sourcepath="/SAVANT_REPOSITORY/jboss.org/javassist/javassist-3.4-src.jar" />
-    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-RC4-IB20080114180748619.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-RC4-IB20080114180748619-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-RC4-IB20080113154340879.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-RC4-IB20080113154340879-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-test-1.0-RC4-IB20080113154340879.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-test-1.0-RC4-IB20080113154340879-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4.jar" sourcepath="/SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-hibernate-0.8.jar" sourcepath="/SAVANT_REPOSITORY/joda.org/joda-time/joda-time-hibernate-0.8-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/junit.org/junit/junit-4.4.jar" sourcepath="/SAVANT_REPOSITORY/junit.org/junit/junit-4.4-src.jar" />
