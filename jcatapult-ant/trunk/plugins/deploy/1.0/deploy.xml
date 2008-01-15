@@ -48,7 +48,7 @@
 		<antcall target="deploy-tar"/>
 	</target>
 	
-	<target name="deploy-rsync" depends="-deploy-init" description="Deploys using Rsync to update the site.  Requires installation of SSH & Rsync">
+	<target name="deploy-rsync" depends="-deploy-init" description="Deploys using Rsync to update the site.  Requires installation of SSH &amp; Rsync">
 		<property name="deploy.mode" value="rsync"/>
 		<echo>Deploying using RSYNC method</echo>
 
