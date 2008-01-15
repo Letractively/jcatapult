@@ -315,7 +315,7 @@ public class DatabaseManager {
      */
     public static void main(String... args) throws SQLException, IOException {
 
-        if (args.length < 8 || args.length > 9) {
+        if (args.length < 9 || args.length > 10) {
             StringBuffer errMsg = new StringBuffer();
             errMsg.append("Invalid arguments: ").append(Arrays.asList(args)).append("\n");
             errMsg.append("Usage: DatabaseMigrator [--no-domain] <persistence-unit> <db-url> <application-name> <sql-dir> <db-type> <jndi-name> <project-xml-path> <dependencies-id> <version>");
