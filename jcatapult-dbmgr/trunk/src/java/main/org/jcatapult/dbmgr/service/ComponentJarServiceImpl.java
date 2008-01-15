@@ -130,6 +130,7 @@ public class ComponentJarServiceImpl implements ComponentJarService {
                 jf = new JarFile(artFile); // might have to use this: new File(URLDecoder.decode(artFile, "UTF-8"))
             } catch (IOException e) {
                 logger.warning("Artifact file [" + artFile.getAbsolutePath() + "] is not a jar file");
+                continue;
             }
 
             JarEntry tablesSqlEntry = jf.getJarEntry(ComponentJar.PATH_TABLES_SQL);
