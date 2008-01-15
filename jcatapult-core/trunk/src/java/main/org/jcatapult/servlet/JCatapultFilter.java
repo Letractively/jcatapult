@@ -28,6 +28,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.guice.ConfigurationModule;
 import org.jcatapult.jpa.EntityManagerContext;
@@ -70,8 +71,9 @@ public class JCatapultFilter implements Filter {
 
     private static final Logger logger = Logger.getLogger(JCatapultFilter.class.getName());
 
-    private EntityManagerFactory emf;
+    public static final String ORIGINAL_REQUEST_URI = "ORIGINAL_REQUEST_URI";
 
+    private EntityManagerFactory emf;
     private boolean initGuice;
     private String guiceModules;
     private boolean jpaEnabled;
@@ -202,6 +204,11 @@ public class JCatapultFilter implements Filter {
      */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
     throws IOException, ServletException {
+
+        if (request.getAttribute(ORIGINAL_REQUEST_URI) == null) {
+            request.setAttribute(ORIGINAL_REQUEST_URI, ((HttpServletRequest) request).getRequestURI());
+        }
+
         if (jpaEnabled) {
             EntityManager entityManager = emf.createEntityManager();
             try {
