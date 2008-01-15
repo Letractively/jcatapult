@@ -37,6 +37,12 @@
   <!-- Changes dashes to underscores in the project name -->
   <groovy src="${init.dir.scripts.groovy}/DashesToUnderscores.groovy"/>
 
+  <property name="dir.jcatapult.cache" value="${user.home}/.jcatapult"/>
+
+  <!-- create the jcatapult cache directory -->
+  <mkdir dir="${dir.jcatapult.cache}"/>
+
+  <property name="dir.deploy.archive" value="${dir.jcatapult.cache}/deploy-archive"/>
   <property name="dir.src" value="src"/>
   <property name="dir.web" value="web"/>
   <property name="dir.src.conf.main" value="${dir.src}/conf/main"/>
