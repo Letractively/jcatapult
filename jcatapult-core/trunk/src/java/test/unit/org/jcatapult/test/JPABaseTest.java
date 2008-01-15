@@ -46,7 +46,8 @@ import com.google.inject.Module;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.sun.rowset.CachedRowSetImpl;
 import net.java.sql.ScriptExecutor;
-import net.java.util.CollectionTools;import static net.java.util.CollectionTools.map;
+import net.java.util.CollectionTools;
+import static net.java.util.CollectionTools.map;
 import net.java.xml.Unmarshaller;
 import net.java.xml.JavaBeanObjectCreator;
 import net.java.text.SimplePluralizer;
@@ -57,7 +58,7 @@ import net.java.text.SimplePluralizer;
  * setting up and tearing down JPA.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @Ignore
 public abstract class JPABaseTest extends JCatapultBaseTest {
@@ -72,6 +73,14 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      */
     protected JPABaseTest() {
         modules = CollectionTools.<Module>list(new JPAModule());
+    }
+
+    /**
+     * Constructs the EntityManager and puts it in the context.
+     */
+    public void setUpEntityManager() {
+        EntityManager em = emf.createEntityManager();
+        EntityManagerContext.set(em);
     }
 
     /**
@@ -181,7 +190,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      *
      * @param   klass The JPA class to get the table name from. This first checks if the Class has
      *          a JPA Table annotation and uses that. Otherwise, it uses the Class's simple name.
-     * @throws  SQLException If the clear failed.
+     * @throws SQLException If the clear failed.
      */
     protected void clearTable(Class<?> klass) throws SQLException {
         Table table = klass.getAnnotation(Table.class);
@@ -199,8 +208,8 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * Runs the given query and returns the results in a detached RowSet.
      *
      * @param   query The query to run.
-     * @return  The results of the query.
-     * @throws  SQLException If the query failed.
+     * @return The results of the query.
+     * @throws SQLException If the query failed.
      */
     protected RowSet executeQuery(String query) throws SQLException {
         Connection c = dataSource.getConnection();
@@ -215,7 +224,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
     }
 
     /**
-     * @return  A connection.
+     * @return A connection.
      * @throws java.sql.SQLException on sql exception
      */
     protected Connection getConnection() throws SQLException {
@@ -255,11 +264,11 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      *
      * @param   fixture The fixture file. This is relative to the directory of the current test.
      * @param   type The type of objects to create and persist.
-     * @throws  RuntimeException If anything failed.
+     * @throws RuntimeException If anything failed.
      */
-    @SuppressWarnings(value="unchecked")
+    @SuppressWarnings(value = "unchecked")
     protected <T> void loadFixture(String fixture, Class<T> type)
-    throws RuntimeException {
+        throws RuntimeException {
         logger.fine("Loading fixtures from [" + fixture + "] for [" + type + "]");
 
         // Clear the table via the annotation
