@@ -15,8 +15,13 @@
  */
 package org.jcatapult.security.guice;
 
+import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.UserAdapter;
 import org.jcatapult.security.login.AuthenticationService;
+import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
+import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
+import org.jcatapult.security.spi.SecurityContextProvider;
 
 import com.google.inject.AbstractModule;
 
@@ -33,6 +38,12 @@ public abstract class SecurityModule extends AbstractModule {
     protected void configure() {
         bind(AuthenticationService.class).to(getAuthenticationService());
         bind(UserAdapter.class).to(getUserAdapter());
+
+        // Static inject the contexts
+        bind(SecurityContextProvider.class).to(JCatapultSecurityContextProvider.class);
+        requestStaticInjection(SecurityContext.class);
+        bind(EnhancedSecurityContextProvider.class).to(JCatapultSecurityContextProvider.class);
+        requestStaticInjection(EnhancedSecurityContext.class);
     }
 
     /**
