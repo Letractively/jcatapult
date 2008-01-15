@@ -23,6 +23,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.ServletContextEvent;
 
 import org.easymock.EasyMock;
 import org.jcatapult.database.DatabaseTools;
@@ -50,8 +51,12 @@ public class JCatapultFilterTest {
         EasyMock.replay(context);
 
         FilterConfig filterConfig = EasyMock.createStrictMock(FilterConfig.class);
-        EasyMock.expect(filterConfig.getServletContext()).andReturn(context);
         EasyMock.replay(filterConfig);
+
+        // Initialize JCatapult via the listener first.
+        ServletContextEvent event = new ServletContextEvent(context);
+        JCatapultServletContextListener listener = new JCatapultServletContextListener();
+        listener.contextInitialized(event);
 
         JCatapultFilter filter = new JCatapultFilter();
         filter.init(filterConfig);

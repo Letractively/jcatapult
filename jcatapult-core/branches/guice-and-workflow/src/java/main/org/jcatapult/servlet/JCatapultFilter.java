@@ -17,8 +17,8 @@ package org.jcatapult.servlet;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -26,12 +26,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.jcatapult.guice.ConfigurationModule;
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.jpa.EntityManagerContext;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 /**
  * <p>
@@ -66,27 +62,16 @@ public class JCatapultFilter implements Filter {
     private List<Workflow> workflows;
 
     /**
-     * First this adds the ServletContext to the holder so that is available anywhere in the web
-     * application. Next this checks for the <em>persistentUnit</em> configuration option and defaults
-     * to <em>punit</em>. This also constructs the EntityManagerFactory that will be used to create
-     * the EntityManagers from.
+     * This fetches the top level workflows for JCatapult using the {@link WorkflowResolver}
+     * that is fetched from the Guice injector, which is retrieved from {@link GuiceContainer}.
+     * This requires that the {@link JCatapultServletContextListener} is setup in web.xml.
      *
      * @param   filterConfig The filter config to get the init params from.
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        logger.info("Initializing JCatapultFilter");
-        ServletObjectsHolder.setServletContext(filterConfig.getServletContext());
-
-        // setup guice and set it into the servlet context
-        initGuice();
-    }
-
-    protected void initGuice() throws ServletException {
-        GuiceContainer.inject();
-        GuiceContainer.initialize();
+        logger.info("Initializing JCatapultFilter with the workflows");
         WorkflowResolver workflowResolver = GuiceContainer.getInjector().getInstance(WorkflowResolver.class);
         workflows = workflowResolver.resolve();
-
         if (logger.isLoggable(Level.FINEST)) {
             logger.finest("Found these workflows: " + workflows);
         }
@@ -107,8 +92,7 @@ public class JCatapultFilter implements Filter {
         ServletObjectsHolder.setServletResponse(response);
         try {
             DefaultWorkflowChain workflowChain = new DefaultWorkflowChain(workflows, chain);
-            Workflow workflow = workflows.get(0);
-            workflow.perform(request, response, workflowChain);
+            workflowChain.doWorkflow(request, response);
         } finally {
             ServletObjectsHolder.clearServletRequest();
             ServletObjectsHolder.clearServletResponse();
