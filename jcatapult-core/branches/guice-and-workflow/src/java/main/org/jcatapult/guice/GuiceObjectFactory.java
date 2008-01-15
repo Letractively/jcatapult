@@ -86,7 +86,9 @@ public class GuiceObjectFactory extends ObjectFactory {
                 clazz.getName() + "]");
         }
 
-        return GuiceContainer.getInjector().getInstance(clazz);
+        Object obj = GuiceContainer.getInjector().getInstance(clazz);
+        super.injectInternalBeans(obj);
+        return obj;
     }
 
     public Interceptor buildInterceptor(InterceptorConfig interceptorConfig, Map interceptorRefParams)
@@ -109,7 +111,9 @@ public class GuiceObjectFactory extends ObjectFactory {
                 "remove the scope annotation from [" + interceptorClass.getName() + "].");
         }
 
-        return (Interceptor) buildBean(interceptorClass, interceptorRefParams);
+        Interceptor interceptor = (Interceptor) buildBean(interceptorClass, interceptorRefParams);
+        super.injectInternalBeans(interceptor);
+        return interceptor;
     }
 
     /**

@@ -17,7 +17,7 @@ package org.jcatapult.guice;
 
 import javax.servlet.ServletContext;
 
-import org.acegisecurity.providers.encoding.PasswordEncoder;
+import org.apache.commons.configuration.FileConfiguration;
 import org.easymock.EasyMock;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import static org.junit.Assert.*;
@@ -66,7 +66,7 @@ public class GuiceContainerTest {
         assertNotNull(injector.getInstance(ServletContext.class));
 
         try {
-            injector.getInstance(PasswordEncoder.class);
+            injector.getInstance(FileConfiguration.class);
             fail("Should have failed");
         } catch (Exception e) {
             // Expected since Guice throws exceptions for missing bindings
