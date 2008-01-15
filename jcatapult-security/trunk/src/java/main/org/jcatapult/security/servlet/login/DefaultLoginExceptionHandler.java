@@ -47,6 +47,7 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
+    public static final String EXCEPTION_KEY = "jcatapult_security_login_exception";
     private final String failedLoginURI;
 
     @Inject
@@ -63,12 +64,18 @@ public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
+            @Override
             public String getRequestURI() {
+                return failedLoginURI;
+            }
+
+            @Override
+            public String getServletPath() {
                 return failedLoginURI;
             }
         };
 
-        httpRequest.setAttribute("jcatapult.security.login.exception", exception);
+        httpRequest.setAttribute(EXCEPTION_KEY, exception);
         workflowChain.doWorkflow(wrapper, response);
     }
 }

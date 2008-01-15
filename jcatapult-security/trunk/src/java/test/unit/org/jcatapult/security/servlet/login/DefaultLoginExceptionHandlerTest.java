@@ -48,7 +48,7 @@ public class DefaultLoginExceptionHandlerTest {
         InvalidUsernameException exception = new InvalidUsernameException();
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
-        req.setAttribute("jcatapult.security.login.exception", exception);
+        req.setAttribute("jcatapult_security_login_exception", exception);
         EasyMock.replay(req);
 
         HttpServletResponse res = EasyMock.createStrictMock(HttpServletResponse.class);

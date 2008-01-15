@@ -64,6 +64,14 @@ public class DefaultLoginService implements LoginService {
             throw new InvalidPasswordException();
         }
 
+        if (userAdapter.areCredentialsExpired(user)) {
+            throw new CredentialsExpiredException();
+        } else if (userAdapter.isExpired(user)) {
+            throw new AccountExpiredException();
+        } else if (userAdapter.isLocked(user)) {
+            throw new AccountLockedException();
+        }
+
         // Save the user to the context since the login was good
         securityContextProvider.login(user);
 

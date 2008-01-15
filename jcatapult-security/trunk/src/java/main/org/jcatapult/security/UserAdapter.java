@@ -15,7 +15,6 @@
  */
 package org.jcatapult.security;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -62,14 +61,6 @@ public interface UserAdapter<T> {
      * @return  True if the account is locked, false otherwise.
      */
     boolean isLocked(T user);
-
-    /**
-     * Determines if the users account has been disabled (by an admin or by the user).
-     *
-     * @param   user The user to verify.
-     * @return  True if the account is disabled, false otherwise.
-     */
-    boolean isDisabled(T user);
 
     /**
      * Determines if any of the users credenditals have expired (the password was reset and needs
