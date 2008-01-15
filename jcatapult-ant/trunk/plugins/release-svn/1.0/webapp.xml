@@ -42,28 +42,28 @@
 
   <!-- overridden to perform jive specific remote deployment -->
   <macrodef name="rel_deploy_remote">
-	    <sequential>
-	        <!-- pre macro -->
-	        <rel_deploy_remote_pre/>
+    <sequential>
+      <!-- pre macro -->
+      <rel_deploy_remote_pre/>
 
-			<antcall target="app"/>
+      <antcall target="app"/>
 
-	    	<property name="rel_deploy.buildcache.dir" location="${user.home}/jcatapult/build-cache"/>
-	    	<property name="rel_deploy.archive" location="${rel_deploy.buildcache.dir}/${project.name}-${project.version}.tar.gz"/>
-	    	<echo>Create archive for deploy ${rel_deploy.archive}</echo>
-	    	<mkdir dir="${rel_deploy.buildcache.dir}"/>
+      <property name="rel_deploy.archive"
+                location="${dir.deploy.archive}/${project.name}-${project.version}.tar.gz"/>
 
-	    	<tar destfile="${rel_deploy.archive}" compression="gzip">
-	    		<tarfileset prefix="db" dir="${imported.dir}/src/db/main"/>
-	    		<tarfileset prefix="web" dir="${imported.dir}/web"/>
-	    		<!-- tarfileset prefix="files" dir="${imported.dir}/src/files"/-->
-	     	</tar>
+      <mkdir dir="${dir.deploy.archive}"/>
 
+      <echo>Creating deploy tarball and archiving to ${dir.deploy.archive}</echo>
+      <tar destfile="${rel_deploy.archive}" compression="gzip">
+        <tarfileset prefix="db" dir="${imported.dir}/src/db/main"/>
+        <tarfileset prefix="web" dir="${imported.dir}/web"/>
+        <!-- tarfileset prefix="files" dir="${imported.dir}/src/files"/-->
+      </tar>
 
-	    	<!-- post macro -->
-	        <rel_deploy_remote_post/>
+      <!-- post macro -->
+      <rel_deploy_remote_post/>
 
-	    </sequential>
+    </sequential>
   </macrodef>
 
   <macrodef name="rel_deploy_remote_pre">
