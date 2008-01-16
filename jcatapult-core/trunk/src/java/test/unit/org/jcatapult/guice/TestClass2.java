@@ -13,27 +13,14 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.domain;
-
-import javax.persistence.MappedSuperclass;
+package org.jcatapult.guice;
 
 /**
  * <p>
- * This class adds a column called 'deleted' to all entities that extend it.
- * This version of soft delete is also auditable.
+ * This is a test class.
  * </p>
  *
  * @author Brian Pontarelli
  */
-@MappedSuperclass
-public class AuditableSoftDelete extends AuditableImpl implements SoftDelete {
-    private boolean deleted = false;
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
+public class TestClass2 implements TestInterface2 {
 }

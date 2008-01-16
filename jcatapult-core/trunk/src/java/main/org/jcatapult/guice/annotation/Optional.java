@@ -13,27 +13,23 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.security.spi;
+package org.jcatapult.guice.annotation;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * <p>
- * This interface defines the SPI for the SecurityContext. This can be
- * implemented in order to handle fecthing of the Security credentials
- * from any type of store.
+ * This annotation allows a Module to define that it is optional and must be
+ * explicitly included in the list of Guice modules that the {@link org.jcatapult.guice.GuiceContainer}
+ * will load. Therefore, it is empty and just a marker annotation.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public interface SecurityContextProvider {
-    /**
-     * Returns the user name of the currently logged in user or some type of default.
-     *
-     * @return  The current user name or a default.
-     */
-    String getCurrentUsername();
-
-    /**
-     * @return  The currently logged in user object, if there is one. Otherwise, this must return null.
-     */
-    Object getCurrentUser();
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface Optional {
 }

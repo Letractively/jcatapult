@@ -13,26 +13,14 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.domain;
-
-import javax.persistence.MappedSuperclass;
+package org.jcatapult.guice;
 
 /**
  * <p>
- * This class implements the SoftDelete interface and is also identifiable.
+ * This is a test class.
  * </p>
  *
  * @author Brian Pontarelli
  */
-@MappedSuperclass
-public class SoftDeleteImpl extends IdentifiableImpl implements SoftDelete {
-    private boolean deleted;
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
+public class TestClass1 implements TestInterface1 {
 }

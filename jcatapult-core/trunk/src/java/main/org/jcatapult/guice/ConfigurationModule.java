@@ -41,16 +41,7 @@ public class ConfigurationModule extends AbstractModule {
      */
     @Override
     protected void configure() {
-        configureInjectorContext();
         configureProperties();
-    }
-
-    /**
-     * This sets up the {@link InjectorContext} class for static injection so that the Injector
-     * itself can be setup into that class.
-     */
-    protected void configureInjectorContext() {
-        requestStaticInjection(InjectorContext.class);
     }
 
     /**

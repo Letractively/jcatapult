@@ -18,7 +18,7 @@ package org.jcatapult.persistence;
 import java.util.List;
 
 import org.jcatapult.domain.Identifiable;
-import org.jcatapult.domain.SoftDelete;
+import org.jcatapult.domain.SoftDeletable;
 import org.jcatapult.jpa.JPAPersistenceService;
 
 import com.google.inject.ImplementedBy;
@@ -82,11 +82,11 @@ public interface PersistenceService {
      *
      * @param   type The type of Objects to fetch.
      * @param   includeDeleted Determines if this should return all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link SoftDelete}
+     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
      *          objects.
      * @return  A List of the Objects found in the database.
      */
-    <T extends SoftDelete> List<T> findAllByType(Class<T> type, boolean includeDeleted);
+    <T extends SoftDeletable> List<T> findAllByType(Class<T> type, boolean includeDeleted);
 
     /**
      * This locates a subset of all the instances of an Object by class. This helps when paginating
@@ -109,14 +109,14 @@ public interface PersistenceService {
      *          based.
      * @param   number The number of results to return in this page.
      * @param   includeDeleted Determines if this should return all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link SoftDelete}
+     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
      *          objects.
      * @return  A List of the Objects found in the database.
      */
-    <T extends SoftDelete> List<T> findByType(Class<T> type, int start, int number, boolean includeDeleted);
+    <T extends SoftDeletable> List<T> findByType(Class<T> type, int start, int number, boolean includeDeleted);
 
     /**
-     * Determines the total number of instances of the type given. If these are {@link SoftDelete} Objects,
+     * Determines the total number of instances of the type given. If these are {@link org.jcatapult.domain.SoftDeletable} Objects,
      * this will include all the deleted objects as well.
      *
      * @param   type The type of Objects to count.
@@ -129,11 +129,11 @@ public interface PersistenceService {
      *
      * @param   type The type of Objects to count.
      * @param   includeDeleted Determines if this should count all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link SoftDelete}
+     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
      *          objects.
      * @return  A total number of Objects in the database.
      */
-    <T extends SoftDelete> long count(Class<T> type, boolean includeDeleted);
+    <T extends SoftDeletable> long count(Class<T> type, boolean includeDeleted);
 
     /**
      * Executes the given query and returns all of the results from the query.
@@ -232,7 +232,7 @@ public interface PersistenceService {
     /**
      * Removes the object with the given type and primary key. Since this uses a primary key to remove
      * the instance, this method will only work with identified instances. In addition, if the object
-     * type passed in is {@link SoftDelete} than this method will update the active flag and perform
+     * type passed in is {@link org.jcatapult.domain.SoftDeletable} than this method will update the active flag and perform
      * an update rather than a delete.
      *
      * @param   type The type of Object to remove.
@@ -242,7 +242,7 @@ public interface PersistenceService {
     <T extends Identifiable> boolean delete(Class<T> type, int id);
 
     /**
-     * Removes the given object. If the object type passed in is {@link SoftDelete} than this
+     * Removes the given object. If the object type passed in is {@link org.jcatapult.domain.SoftDeletable} than this
      * method will update the active flag and perform an update rather than a delete.
      *
      * @param   obj The Object to remove.

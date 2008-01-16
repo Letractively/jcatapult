@@ -13,27 +13,32 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.security.spi;
+package org.jcatapult.servlet;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.jcatapult.jpa.JPAWorkflow;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
- * This interface defines the SPI for the SecurityContext. This can be
- * implemented in order to handle fecthing of the Security credentials
- * from any type of store.
+ * This is the default workflow resolver and it currently only returns an
+ * instance of the {@link org.jcatapult.jpa.JPAWorkflow}
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public interface SecurityContextProvider {
-    /**
-     * Returns the user name of the currently logged in user or some type of default.
-     *
-     * @return  The current user name or a default.
-     */
-    String getCurrentUsername();
+public class DefaultWorkflowResolver implements WorkflowResolver {
+    private final JPAWorkflow jpaWorkflow;
 
-    /**
-     * @return  The currently logged in user object, if there is one. Otherwise, this must return null.
-     */
-    Object getCurrentUser();
+    @Inject
+    public DefaultWorkflowResolver(JPAWorkflow jpaWorkflow) {
+        this.jpaWorkflow = jpaWorkflow;
+    }
+
+    public List<Workflow> resolve() {
+        return Arrays.<Workflow>asList(jpaWorkflow);
+    }
 }

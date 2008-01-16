@@ -15,15 +15,24 @@
  */
 package org.jcatapult.domain;
 
+import javax.persistence.MappedSuperclass;
+
 /**
  * <p>
- * This interface marks a class never being deleted permenantly from the
- * database. Instead, it is marked as being deleted and can be resurrected.
+ * This class implements the SoftDeletable interface and is also identifiable.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public interface SoftDelete {
-    boolean isDeleted();
-    void setDeleted(boolean deleted);
+@MappedSuperclass
+public class SoftDeletableImpl extends IdentifiableImpl implements SoftDeletable {
+    private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

@@ -16,15 +16,22 @@
 package org.jcatapult.servlet;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import org.jcatapult.database.DatabaseTools;
+import org.jcatapult.jpa.EntityManagerContext;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
-import com.google.inject.Injector;
 import net.java.naming.MockJNDI;
 
 /**
@@ -36,26 +43,6 @@ import net.java.naming.MockJNDI;
  */
 public class JCatapultFilterTest {
     @Test
-    public void testGuice() throws ServletException, IOException {
-        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
-        context.setAttribute(EasyMock.isA(String.class), EasyMock.isA(Injector.class));
-        EasyMock.replay(context);
-
-        FilterConfig filterConfig = EasyMock.createStrictMock(FilterConfig.class);
-        EasyMock.expect(filterConfig.getServletContext()).andReturn(context);
-        EasyMock.replay(filterConfig);
-
-        JCatapultFilter filter = new JCatapultFilter();
-        filter.setInitGuice(true);
-        filter.setGuiceModules("org.jcatapult.guice.ConfigurationModule");
-        filter.setJpaEnabled(false);
-        filter.init(filterConfig);
-
-        EasyMock.verify(context);
-        EasyMock.verify(filterConfig);
-    }
-
-    @Test
     public void testJPA() throws ServletException, IOException {
         MockJNDI jndi = new MockJNDI();
         DatabaseTools.setupJDBCandJNDI(jndi, "jcatapult_core_test");
@@ -65,13 +52,34 @@ public class JCatapultFilterTest {
         EasyMock.replay(context);
 
         FilterConfig filterConfig = EasyMock.createStrictMock(FilterConfig.class);
-        EasyMock.expect(filterConfig.getServletContext()).andReturn(context);
         EasyMock.replay(filterConfig);
 
+        // Initialize JCatapult via the listener first.
+        ServletContextEvent event = new ServletContextEvent(context);
+        JCatapultServletContextListener listener = new JCatapultServletContextListener();
+        listener.contextInitialized(event);
+
         JCatapultFilter filter = new JCatapultFilter();
-        filter.setInitGuice(false);
-        filter.setJpaEnabled(true);
         filter.init(filterConfig);
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getAttribute(JCatapultFilter.ORIGINAL_REQUEST_URI)).andReturn(null);
+        EasyMock.expect(request.getRequestURI()).andReturn("/test");
+        request.setAttribute(JCatapultFilter.ORIGINAL_REQUEST_URI, "/test");
+        
+        ServletResponse response  = EasyMock.createStrictMock(ServletResponse.class);
+        EasyMock.replay(request, response);
+
+        final AtomicBoolean called = new AtomicBoolean(false);
+        FilterChain chain = new FilterChain() {
+            public void doFilter(ServletRequest request, ServletResponse response) {
+                assertNotNull(EntityManagerContext.get());
+                called.set(true);
+            }
+        };
+
+        filter.doFilter(request, response, chain);
+        assertTrue(called.get());
 
         EasyMock.verify(context);
         EasyMock.verify(filterConfig);

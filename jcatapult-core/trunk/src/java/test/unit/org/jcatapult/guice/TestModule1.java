@@ -13,27 +13,20 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.security.spi;
+package org.jcatapult.guice;
+
+import com.google.inject.Module;
+import com.google.inject.Binder;
 
 /**
  * <p>
- * This interface defines the SPI for the SecurityContext. This can be
- * implemented in order to handle fecthing of the Security credentials
- * from any type of store.
+ * This is a test module.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public interface SecurityContextProvider {
-    /**
-     * Returns the user name of the currently logged in user or some type of default.
-     *
-     * @return  The current user name or a default.
-     */
-    String getCurrentUsername();
-
-    /**
-     * @return  The currently logged in user object, if there is one. Otherwise, this must return null.
-     */
-    Object getCurrentUser();
+public class TestModule1 implements Module {
+    public void configure(Binder binder) {
+        binder.bind(TestInterface1.class).to(TestClass1.class);
+    }
 }

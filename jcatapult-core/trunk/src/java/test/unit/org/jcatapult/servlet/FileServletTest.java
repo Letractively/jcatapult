@@ -23,13 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
-import org.jcatapult.guice.InjectorContext;
+import org.jcatapult.guice.GuiceContainer;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.inject.Binder;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
@@ -42,7 +40,6 @@ import com.google.inject.Module;
 public class FileServletTest {
     @Test
     public void testNoInjector() {
-        InjectorContext.setInjector(null);
         FileServlet fs = new FileServlet();
         try {
             fs.init();
@@ -50,11 +47,11 @@ public class FileServletTest {
         } catch (ServletException e) {
         }
 
-        Injector injector = Guice.createInjector(new Module(){
+        GuiceContainer.setGuiceModules(new Module(){
             public void configure(Binder binder) {
             }
         });
-        InjectorContext.setInjector(injector);
+        GuiceContainer.initialize();
         try {
             fs.init();
             Assert.fail("Should have failed because of no Configuration");
@@ -68,12 +65,12 @@ public class FileServletTest {
         EasyMock.expect(configuration.getString("file-servlet.dir")).andReturn("src/java/test/unit/org/jcatapult/servlet");
         EasyMock.replay(configuration);
 
-        Injector injector = Guice.createInjector(new Module(){
+        GuiceContainer.setGuiceModules(new Module() {
             public void configure(Binder binder) {
                 binder.bind(Configuration.class).toInstance(configuration);
             }
         });
-        InjectorContext.setInjector(injector);
+        GuiceContainer.initialize();
 
         FileServlet fs = new FileServlet();
         fs.init();
@@ -97,12 +94,12 @@ public class FileServletTest {
         EasyMock.expect(configuration.getString("file-servlet.dir")).andReturn("src/java/test/unit/org/jcatapult/servlet");
         EasyMock.replay(configuration);
 
-        Injector injector = Guice.createInjector(new Module(){
+        GuiceContainer.setGuiceModules(new Module(){
             public void configure(Binder binder) {
                 binder.bind(Configuration.class).toInstance(configuration);
             }
         });
-        InjectorContext.setInjector(injector);
+        GuiceContainer.initialize();
 
         FileServlet fs = new FileServlet();
         fs.init();

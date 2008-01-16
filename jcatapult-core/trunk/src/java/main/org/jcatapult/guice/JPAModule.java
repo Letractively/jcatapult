@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 
 import org.jcatapult.jpa.EntityManagerProvider;
 
+import com.google.inject.AbstractModule;
+
 /**
  * <p>
  * This module should be used when JPA is required. This sets up the EntityManager
@@ -15,13 +17,12 @@ import org.jcatapult.jpa.EntityManagerProvider;
  *
  * @author  Brian Pontarelli and James Humphrey
  */
-public class JPAModule extends ConfigurationModule {
+public class JPAModule extends AbstractModule {
     /**
      * Calls super then configures JPA.
      */
     @Override
     protected void configure() {
-        super.configure();
         configureJPA();
     }
 
