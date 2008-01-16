@@ -3,6 +3,10 @@
 
 Here are the documentation pages that are available for the JCatapult framework. Some of the documentation has not yet been written. Please check back soon and it should be complete before 1.0 is released. If you are interested in helping build out or fix documentation, please contact Brian Pontarelli at *brian at inversoft.com*
 
+=== Plan ===
+
+  * [1_0ReleasePlan 1.0 Release Plan]
+
 === Introduction ===
 
   * [GettingStarted Getting started]
