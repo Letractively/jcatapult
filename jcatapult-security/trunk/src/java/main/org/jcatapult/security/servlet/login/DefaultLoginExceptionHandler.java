@@ -19,6 +19,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
@@ -61,7 +62,7 @@ public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
     public void handle(JCatapultSecurityException exception, ServletRequest request,
             ServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        final HttpServletRequest httpRequest = (HttpServletRequest) request;
 
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
             @Override
@@ -72,6 +73,20 @@ public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
             @Override
             public String getServletPath() {
                 return failedLoginURI;
+            }
+
+            @Override
+            public RequestDispatcher getRequestDispatcher(String uri) {
+                final RequestDispatcher rd = httpRequest.getRequestDispatcher(uri);
+                return new RequestDispatcher() {
+                    public void forward(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+                        rd.forward(httpRequest, servletResponse);
+                    }
+
+                    public void include(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+                        rd.include(httpRequest, servletResponse);
+                    }
+                };
             }
         };
 

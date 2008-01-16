@@ -19,6 +19,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
@@ -50,7 +51,7 @@ public class DefaultPostLoginHandler implements PostLoginHandler {
 
     public void handle(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
     throws ServletException, IOException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        final HttpServletRequest httpRequest = (HttpServletRequest) request;
 
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
             @Override
@@ -61,6 +62,20 @@ public class DefaultPostLoginHandler implements PostLoginHandler {
             @Override
             public String getServletPath() {
                 return successfulLoginURI;
+            }
+
+            @Override
+            public RequestDispatcher getRequestDispatcher(String uri) {
+                final RequestDispatcher rd = httpRequest.getRequestDispatcher(uri);
+                return new RequestDispatcher() {
+                    public void forward(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+                        rd.forward(httpRequest, servletResponse);
+                    }
+
+                    public void include(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+                        rd.include(httpRequest, servletResponse);
+                    }
+                };
             }
         };
 
