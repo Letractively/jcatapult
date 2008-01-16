@@ -63,7 +63,7 @@ public class LoginExceptionTag extends BodyTagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        Throwable t = (Throwable) pageContext.getAttribute(DefaultLoginExceptionHandler.EXCEPTION_KEY);
+        Throwable t = (Throwable) pageContext.findAttribute(DefaultLoginExceptionHandler.EXCEPTION_KEY);
         if (t != null) {
             if ((username && t instanceof InvalidUsernameException) ||
                     (password && t instanceof InvalidPasswordException) ||
