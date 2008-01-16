@@ -13,35 +13,32 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.acegi;
+package org.jcatapult.jpa;
 
-import org.acegisecurity.providers.AbstractAuthenticationToken;
+import javax.persistence.Entity;
+
+import org.jcatapult.domain.SoftDeletableTimeStampableImpl;
 
 /**
  * <p>
- * This class simply holds the User as an Object.
+ * This class is an entity bean for testing soft deletes.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class JCatapultAuthentication extends AbstractAuthenticationToken {
-    private Object user;
+@Entity
+public class SoftDeletableUser extends SoftDeletableTimeStampableImpl {
+    private String name;
 
-    public JCatapultAuthentication(Object user) {
-        this.user = user;
+    public String getName() {
+        return name;
     }
 
-    /**
-     * @return  The User object.
-     */
-    public Object getCredentials() {
-        return user;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    /**
-     * @return  The User object.
-     */
-    public Object getPrincipal() {
-        return user;
+    public String toString() {
+        return super.toString() + " name=" + name;
     }
 }

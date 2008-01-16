@@ -21,20 +21,19 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Logger;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Table;
-import javax.persistence.Entity;
-import javax.persistence.EntityTransaction;
 import javax.sql.RowSet;
 import javax.sql.rowset.CachedRowSet;
 
 import org.jcatapult.database.DatabaseTools;
-import org.jcatapult.guice.JPAModule;
 import org.jcatapult.jpa.EntityManagerContext;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -42,15 +41,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 
-import com.google.inject.Module;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.sun.rowset.CachedRowSetImpl;
 import net.java.sql.ScriptExecutor;
-import net.java.util.CollectionTools;
-import static net.java.util.CollectionTools.map;
-import net.java.xml.Unmarshaller;
-import net.java.xml.JavaBeanObjectCreator;
 import net.java.text.SimplePluralizer;
+import static net.java.util.CollectionTools.*;
+import net.java.xml.JavaBeanObjectCreator;
+import net.java.xml.Unmarshaller;
 
 /**
  * <p>
@@ -69,10 +66,9 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
     public static String databaseName;
 
     /**
-     * Default constructor to setup modules with {@link org.jcatapult.guice.JPAModule}
+     * Default constructor.
      */
     protected JPABaseTest() {
-        modules = CollectionTools.<Module>list(new JPAModule());
     }
 
     /**

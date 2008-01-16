@@ -13,32 +13,17 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.jpa;
-
-import javax.persistence.Entity;
-
-import org.jcatapult.domain.AuditableSoftDelete;
+package org.jcatapult.domain;
 
 /**
  * <p>
- * This class is an entity bean for testing soft deletes.
+ * This interface marks a class never being deleted permenantly from the
+ * database. Instead, it is marked as being deleted and can be resurrected.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@Entity
-public class SoftDeleteUser extends AuditableSoftDelete {
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String toString() {
-        return super.toString() + " name=" + name;
-    }
+public interface SoftDeletable {
+    boolean isDeleted();
+    void setDeleted(boolean deleted);
 }

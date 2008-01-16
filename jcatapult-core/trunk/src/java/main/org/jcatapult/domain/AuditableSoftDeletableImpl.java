@@ -13,28 +13,27 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.security;
+package org.jcatapult.domain;
 
-import org.jcatapult.acegi.ACEGIPasswordEncryptor;
-
-import com.google.inject.ImplementedBy;
+import javax.persistence.MappedSuperclass;
 
 /**
  * <p>
- * This interface is a simple password encryptor.
+ * This class adds a column called 'deleted' to all entities that extend it.
+ * This version of soft delete is also auditable.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(ACEGIPasswordEncryptor.class)
-public interface PasswordEncryptor {
-    /**
-     * Encrypts a password.
-     *
-     * @param   password The password to encrypt.
-     * @param   obj This object is sometimes used to assist in the salt source to make the encryption
-     *          better. However, implementations might not use this or a salt source at all.
-     * @return  The encrypted password.
-     */
-    String encryptPassword(String password, Object obj);
+@MappedSuperclass
+public abstract class AuditableSoftDeletableImpl extends AuditableImpl implements SoftDeletable {
+    private boolean deleted = false;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

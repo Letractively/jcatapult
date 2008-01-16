@@ -13,39 +13,14 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.acegi;
+package org.jcatapult.guice;
 
 /**
  * <p>
- * This is the test user.
+ * This is a test class.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public class TestUser {
-    private String username;
-    private String password;
-
-    public TestUser() {
-    }
-
-    public TestUser(String username) {
-        this.username = username;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+public class TestClass4 implements TestInterface4 {
 }

@@ -16,20 +16,26 @@
 package org.jcatapult.test;
 
 import java.io.File;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletContext;
 
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.easymock.EasyMock;
 import org.jcatapult.container.ContainerResolver;
-import org.jcatapult.guice.WebModule;
-import org.jcatapult.servlet.ServletContextHolder;
+import org.jcatapult.servlet.ServletObjectsHolder;
 import org.junit.Before;
 import org.junit.Ignore;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-import net.java.util.CollectionTools;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * <p>
@@ -42,14 +48,14 @@ import net.java.util.CollectionTools;
 @Ignore
 public abstract class WebBaseTest extends JPABaseTest {
     protected ServletContext servletContext;
+    protected ConfigurationManager configurationManager;
+    protected Configuration configuration;
+    protected Container container;
 
     /**
-     * Default constructor to set the {@link org.jcatapult.guice.WebModule} as the module for injection
-     * via the {@link JPABaseTest} and its parent class.
+     * Default constructor.
      */
     protected WebBaseTest() {
-        modules = CollectionTools.<Module>list(new WebModule());
-
     }
 
     /**
@@ -60,6 +66,7 @@ public abstract class WebBaseTest extends JPABaseTest {
     public void setUp() {
         setUpWeb();
         super.setUp();
+        setUpStruts();
     }
 
     /**
@@ -115,7 +122,30 @@ public abstract class WebBaseTest extends JPABaseTest {
 
         // Setup servlet context
         this.servletContext = EasyMock.createStrictMock(ServletContext.class);
-        ServletContextHolder.setServletContext(this.servletContext);
+        ServletObjectsHolder.setServletContext(this.servletContext);
+    }
+
+    /**
+     * Sets up the Struts2 objects that might be required by some test cases such as the ValueStack
+     * and ActionContext.
+     */
+    protected void setUpStruts() {
+        ServletContext servletContext = EasyMock.createNiceMock(ServletContext.class);
+        EasyMock.replay(servletContext);
+
+        Map<String, String> params = new HashMap<String, String>();
+        Dispatcher du = new Dispatcher(servletContext, params);
+        du.init();
+        Dispatcher.setInstance(du);
+
+        // Reset the value stack
+        ValueStack stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+        stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
+        ActionContext.setContext(new ActionContext(stack.getContext()));
+
+        configurationManager = du.getConfigurationManager();
+        configuration = configurationManager.getConfiguration();
+        container = configuration.getContainer();
     }
 
     /**

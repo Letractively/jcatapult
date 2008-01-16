@@ -27,7 +27,7 @@ import com.google.inject.Inject;
  * This class is the abstract base class for all actions.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 public abstract class BaseAction extends ActionSupport implements Preparable {
     protected PersistenceService persistenceService;

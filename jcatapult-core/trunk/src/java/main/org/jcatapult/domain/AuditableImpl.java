@@ -20,50 +20,25 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
-
 import org.jcatapult.security.SecurityContext;
 
 /**
  * <p>
  * This class is an auditing persistable Object instance. Since Java is
- * lacking multiple inheritance I had to force this to extend Identifiable
- * since that will be the most common case. This does however mean that
- * Auditable will not have the ability to handle objects with natural keys
- * or other types of keys.
+ * lacking multiple inheritance I had to force this to extend TimeStampableImpl
+ * since that will be the most common case. This means that AuditableImpl will
+ * not have the ability to handle objects with natural keys or other types of
+ * keys or not have time stamp information.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 @MappedSuperclass
-public abstract class AuditableImpl extends IdentifiableImpl implements Auditable {
-    @Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
-    @Column(name="insert_date")
-    private DateTime insertDate;
-    @Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
-    @Column(name="update_date")
-    private DateTime updateDate;
+public abstract class AuditableImpl extends TimeStampableImpl implements Auditable {
     @Column(name="insert_user")
     private String insertUser;
     @Column(name="update_user")
     private String updateUser;
-
-    public DateTime getInsertDate() {
-        return insertDate;
-    }
-
-    public void setInsertDate(DateTime insertDate) {
-        this.insertDate = insertDate;
-    }
-
-    public DateTime getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(DateTime updateDate) {
-        this.updateDate = updateDate;
-    }
 
     public String getInsertUser() {
         return insertUser;
@@ -83,14 +58,14 @@ public abstract class AuditableImpl extends IdentifiableImpl implements Auditabl
 
     @PrePersist
     public void preInsert() {
-        insertDate = new DateTime();
+        super.preInsert();
         insertUser = SecurityContext.getCurrentUsername();
         preUpdate();
     }
 
     @PreUpdate
     public void preUpdate() {
-        updateDate = new DateTime();
+        super.preUpdate();
         updateUser = SecurityContext.getCurrentUsername();
     }
 }

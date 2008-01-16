@@ -27,11 +27,12 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.jcatapult.domain.Identifiable;
-import org.jcatapult.domain.SoftDelete;
+import org.jcatapult.domain.SoftDeletable;
 import org.jcatapult.persistence.PersistenceService;
 import org.jcatapult.persistence.Transaction;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * <p>
@@ -46,18 +47,18 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings(value = {"unchecked"})
 public class JPAPersistenceService implements PersistenceService {
-    private EntityManager entityManager;
+    private Provider<EntityManager> entityManagerProvider;
     private boolean verifyEntityClasses = true;
 
     /**
      * Constructs a new JPAPersistenceService that uses the given EntityManager to communicate
      * with the database.
      *
-     * @param   entityManager The entity manager to use.
+     * @param   entityManagerProvider The entity manager provider to use.
      */
     @Inject
-    public JPAPersistenceService(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public JPAPersistenceService(Provider<EntityManager> entityManagerProvider) {
+        this.entityManagerProvider = entityManagerProvider;
     }
 
     public void setVerifyEntityClasses(boolean verifyEntityClasses) {
@@ -68,14 +69,14 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public void clearCache() {
-        entityManager.clear();
+        entityManagerProvider.get().clear();
     }
 
     /**
      * {@inheritDoc}
      */
     public void reload(Object obj) {
-        entityManager.refresh(obj);
+        entityManagerProvider.get().refresh(obj);
     }
 
     /**
@@ -87,7 +88,11 @@ public class JPAPersistenceService implements PersistenceService {
      * @return  The transaction.
      */
     public Transaction startTransaction() {
-        final EntityTransaction transaction = entityManager.getTransaction();
+        return startTransaction(entityManagerProvider.get());
+    }
+
+    private Transaction startTransaction(EntityManager em) {
+        final EntityTransaction transaction = em.getTransaction();
         final boolean local = !transaction.isActive();
         if (local) {
             transaction.begin();
@@ -128,9 +133,9 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public void lock(Object obj, boolean read) {
         if (read) {
-            entityManager.lock(obj, LockModeType.READ);
+            entityManagerProvider.get().lock(obj, LockModeType.READ);
         } else {
-            entityManager.lock(obj, LockModeType.WRITE);
+            entityManagerProvider.get().lock(obj, LockModeType.WRITE);
         }
     }
 
@@ -144,28 +149,28 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
-    public <T extends SoftDelete> List<T> findAllByType(Class<T> type, boolean includeDeleted) {
+    public <T extends SoftDeletable> List<T> findAllByType(Class<T> type, boolean includeDeleted) {
         return findAllByTypeInternal(type, includeDeleted);
     }
 
     /**
      * This is the internal method that performs the find but also determines if the Object is a
-     * {@link SoftDelete} and appends "where eb.deleted = false" if the includeDeleted is false.
+     * {@link org.jcatapult.domain.SoftDeletable} and appends "where eb.deleted = false" if the includeDeleted is false.
      *
      * @param   type The type to find.
      * @param   includeDeleted Determines if this should return all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link SoftDelete}
+     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
      *          objects.
      * @return  The list.
      */
     protected <T> List<T> findAllByTypeInternal(Class<T> type, boolean includeDeleted) {
         verify(type);
         StringBuilder queryString = new StringBuilder("select eb from ").append(stripPackage(type)).append(" eb");
-        if (SoftDelete.class.isAssignableFrom(type) && !includeDeleted) {
+        if (SoftDeletable.class.isAssignableFrom(type) && !includeDeleted) {
             queryString.append(" where eb.deleted = false");
         }
 
-        Query q = entityManager.createQuery(queryString.toString());
+        Query q = entityManagerProvider.get().createQuery(queryString.toString());
         return q.getResultList();
     }
 
@@ -179,28 +184,28 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
-    public <T extends SoftDelete> long count(Class<T> type, boolean includeDeleted) {
+    public <T extends SoftDeletable> long count(Class<T> type, boolean includeDeleted) {
         return countInternal(type, includeDeleted);
     }
 
     /**
      * This is the internal method that performs the count but also determines if the Object is a
-     * {@link SoftDelete} and appends "where eb.deleted = false" if the includeDeleted is false.
+     * {@link org.jcatapult.domain.SoftDeletable} and appends "where eb.deleted = false" if the includeDeleted is false.
      *
      * @param   type The type to count.
      * @param   includeDeleted Determines if this should count all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link SoftDelete}
+     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
      *          objects.
      * @return  The count.
      */
     protected <T> long countInternal(Class<T> type, boolean includeDeleted) {
         verify(type);
         StringBuilder queryString = new StringBuilder("select count(eb) from ").append(stripPackage(type)).append(" eb");
-        if (SoftDelete.class.isAssignableFrom(type) && !includeDeleted) {
+        if (SoftDeletable.class.isAssignableFrom(type) && !includeDeleted) {
             queryString.append(" where eb.deleted = false");
         }
 
-        Query q = entityManager.createQuery(queryString.toString());
+        Query q = entityManagerProvider.get().createQuery(queryString.toString());
         return (Long) q.getSingleResult();
     }
 
@@ -214,12 +219,12 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
-    public <T extends SoftDelete> List<T> findByType(Class<T> type, int start, int number, boolean includeInactive) {
+    public <T extends SoftDeletable> List<T> findByType(Class<T> type, int start, int number, boolean includeInactive) {
         return findByTypeInternal(type, start, number, includeInactive);
     }
 
     /**
-     * This is the internal method that handles finding by type. If the type is {@link SoftDelete}
+     * This is the internal method that handles finding by type. If the type is {@link org.jcatapult.domain.SoftDeletable}
      * this and the includeInactive flag is false method also appends "where eb.active = true" to
      * the query.
      *
@@ -227,7 +232,7 @@ public class JPAPersistenceService implements PersistenceService {
      * @param   start The start location within the results for pagination.
      * @param   number The number to fetch.
      * @param   includeDeleted Determines if this should return all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link SoftDelete}
+     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
      *          objects.
      * @return  The list of objects found.
      */
@@ -235,11 +240,11 @@ public class JPAPersistenceService implements PersistenceService {
         verify(type);
 
         StringBuilder queryString = new StringBuilder("select eb from ").append(stripPackage(type)).append(" eb");
-        if (SoftDelete.class.isAssignableFrom(type) && !includeDeleted) {
+        if (SoftDeletable.class.isAssignableFrom(type) && !includeDeleted) {
             queryString.append(" where eb.deleted = false");
         }
 
-        Query q = entityManager.createQuery(queryString.toString());
+        Query q = entityManagerProvider.get().createQuery(queryString.toString());
         q.setFirstResult(start);
         q.setMaxResults(number);
         return q.getResultList();
@@ -250,7 +255,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> List<T> queryAll(Class<T> type, String query, Object... params) {
         verify(type);
-        Query q = entityManager.createQuery(query);
+        Query q = entityManagerProvider.get().createQuery(query);
         addParams(q, params);
         return q.getResultList();
     }
@@ -260,7 +265,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> List<T> query(Class<T> type, String query, int start, int number, Object... params) {
         verify(type);
-        Query q = entityManager.createQuery(query);
+        Query q = entityManagerProvider.get().createQuery(query);
         addParams(q, params);
         q.setFirstResult(start);
         q.setMaxResults(number);
@@ -272,7 +277,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> T queryFirst(Class<T> type, String query, Object... params) {
         verify(type);
-        Query q = entityManager.createQuery(query);
+        Query q = entityManagerProvider.get().createQuery(query);
         addParams(q, params);
         List<T> results = q.getResultList();
         if (results.size() > 0) {
@@ -287,7 +292,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> List<T> namedQueryAll(Class<T> type, String query, Object... params) {
         verify(type);
-        Query q = entityManager.createNamedQuery(query);
+        Query q = entityManagerProvider.get().createNamedQuery(query);
         addParams(q, params);
         return q.getResultList();
     }
@@ -297,7 +302,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> List<T> namedQuery(Class<T> type, String query, int start, int number, Object... params) {
         verify(type);
-        Query q = entityManager.createNamedQuery(query);
+        Query q = entityManagerProvider.get().createNamedQuery(query);
         addParams(q, params);
         q.setFirstResult(start);
         q.setMaxResults(number);
@@ -309,7 +314,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> T namedQueryFirst(Class<T> type, String query, Object... params) {
         verify(type);
-        Query q = entityManager.createNamedQuery(query);
+        Query q = entityManagerProvider.get().createNamedQuery(query);
         addParams(q, params);
         List<T> results = q.getResultList();
         if (results.size() > 0) {
@@ -326,7 +331,7 @@ public class JPAPersistenceService implements PersistenceService {
         verify(type);
         T t = null;
         try {
-            t = entityManager.find(type, id);
+            t = entityManagerProvider.get().find(type, id);
         } catch (EntityNotFoundException enfe) {
             // This is okay, just return null
         }
@@ -339,15 +344,16 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public boolean persist(Object obj) {
         // Check for and possibly start a tranasction
-        Transaction transaction = startTransaction();
+        EntityManager em = entityManagerProvider.get();
+        Transaction transaction = startTransaction(em);
         boolean uniqueConstraint = false;
         boolean exception = false;
         try {
-            if (entityManager.contains(obj) ||
+            if (em.contains(obj) ||
                     (obj instanceof Identifiable && ((Identifiable) obj).getId() == null)) {
-                entityManager.persist(obj);
+                em.persist(obj);
             } else {
-                entityManager.merge(obj);
+                em.merge(obj);
             }
         } catch (EntityExistsException e) {
             uniqueConstraint = true;
@@ -374,14 +380,15 @@ public class JPAPersistenceService implements PersistenceService {
         T t = findById(type, id);
         if (t != null) {
             // Check for and possibly start a transaction
-            Transaction transaction = startTransaction();
+            EntityManager em = entityManagerProvider.get();
+            Transaction transaction = startTransaction(em);
 
             // Remove it for normal entities and soft delete for others
-            if (t instanceof SoftDelete) {
-                ((SoftDelete) t).setDeleted(true);
-                entityManager.persist(t);
+            if (t instanceof SoftDeletable) {
+                ((SoftDeletable) t).setDeleted(true);
+                em.persist(t);
             } else {
-                entityManager.remove(t);
+                em.remove(t);
             }
 
             // No need for a try-catch block because a call to commit that fails will rollback the
@@ -399,14 +406,15 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public void delete(Object obj) {
         // Check for and possibly start a transaction
-        Transaction transaction = startTransaction();
+        EntityManager em = entityManagerProvider.get();
+        Transaction transaction = startTransaction(em);
 
         // Remove it for normal entities and soft delete for others
-        if (obj instanceof SoftDelete) {
-            ((SoftDelete) obj).setDeleted(true);
-            entityManager.persist(obj);
+        if (obj instanceof SoftDeletable) {
+            ((SoftDeletable) obj).setDeleted(true);
+            em.persist(obj);
         } else {
-            entityManager.remove(obj);
+            em.remove(obj);
         }
 
         // No need for a try-catch block because a call to commit that fails will rollback the

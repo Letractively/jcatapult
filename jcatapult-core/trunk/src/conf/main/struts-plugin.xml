@@ -5,25 +5,26 @@
   <!--  Make the Guice object factory the automatic default -->
   <bean type="com.opensymphony.xwork2.ObjectFactory" name="jcatapult" class="org.jcatapult.guice.GuiceObjectFactory"/>
   <constant name="struts.objectFactory" value="jcatapult"/>
-  <constant name="smarturls.action.default.parent.package" value="jcatapult-default"/>
 
+  <!-- Struts 2 Convention plugin stuff -->
+  <constant name="struts.convention.default.parent.package" value="jcatapult-default"/>
   <package name="jcatapult-default" extends="struts-default">
     <interceptors>
       <interceptor name="jcatapultParameters" class="org.jcatapult.struts.interceptor.JCatapultParametersInterceptor"/>
       <interceptor-stack name="jcatapultStack">
           <interceptor-ref name="exception"/>
           <interceptor-ref name="alias"/>
-          <interceptor-ref name="servlet-config"/>
+          <interceptor-ref name="servletConfig"/>
           <interceptor-ref name="prepare"/>
           <interceptor-ref name="i18n"/>
           <interceptor-ref name="chain"/>
           <interceptor-ref name="debugging"/>
           <interceptor-ref name="profiling"/>
-          <interceptor-ref name="scoped-model-driven"/>
-          <interceptor-ref name="model-driven"/>
+          <interceptor-ref name="scopedModelDriven"/>
+          <interceptor-ref name="modelDriven"/>
           <interceptor-ref name="fileUpload"/>
           <interceptor-ref name="checkbox"/>
-          <interceptor-ref name="static-params"/>
+          <interceptor-ref name="staticParams"/>
           <interceptor-ref name="jcatapultParameters">
             <param name="excludeParams">dojo\..*</param>
           </interceptor-ref>

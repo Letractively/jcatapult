@@ -13,21 +13,20 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.acegi;
+package org.jcatapult.guice;
 
-import java.util.Map;
-
-import org.jcatapult.security.AuthenticationService;
+import com.google.inject.AbstractModule;
 
 /**
  * <p>
- * This is a test authentication service.
+ * This class tests the parent child relationship when loading modules
+ * from the classpath.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public class TestAuthenticationService implements AuthenticationService<TestUser> {
-    public TestUser loadUser(String username, Map<String, Object> parameters) {
-        return new TestUser(username);
+public class ParentModule extends AbstractModule {
+    protected void configure() {
+        bind(TestInterface3.class).to(TestClass3.class);
     }
 }

@@ -16,16 +16,16 @@
 package org.jcatapult.servlet;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileInputStream;
+import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServlet;
 
-import org.jcatapult.guice.InjectorContext;
 import org.apache.commons.configuration.Configuration;
+import org.jcatapult.guice.GuiceContainer;
 
 import com.google.inject.Injector;
 import net.java.io.IOTools;
@@ -56,7 +56,7 @@ public class FileServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        Injector injector = InjectorContext.getInjector();
+        Injector injector = GuiceContainer.getInjector();
         if (injector == null) {
             throw new ServletException("It looks like you might have set the FileServlet as a load-on-startup " +
                 "servlet. This servlet requires that Guice be initialized so that it can get to the configuration " +

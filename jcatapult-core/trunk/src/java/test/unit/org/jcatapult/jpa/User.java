@@ -17,7 +17,7 @@ package org.jcatapult.jpa;
 
 import javax.persistence.Entity;
 
-import org.jcatapult.domain.AuditableImpl;
+import org.jcatapult.domain.TimeStampableImpl;
 
 /**
  * <p>
@@ -27,7 +27,7 @@ import org.jcatapult.domain.AuditableImpl;
  * @author  Brian Pontarelli
  */
 @Entity
-public class User extends AuditableImpl {
+public class User extends TimeStampableImpl {
     private String name;
 
     public String getName() {

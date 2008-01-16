@@ -19,12 +19,11 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 
-import org.jcatapult.guice.ConfigurationModule;
+import org.jcatapult.guice.GuiceContainer;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import net.java.naming.MockJNDI;
@@ -44,7 +43,7 @@ import net.java.util.CollectionTools;
 public abstract class JCatapultBaseTest {
     private static final Logger logger = Logger.getLogger(JCatapultBaseTest.class.getName());
     public static final MockJNDI jndi = new MockJNDI();
-    protected List<Module> modules = CollectionTools.<Module>list(new ConfigurationModule());
+    protected List<Module> modules = CollectionTools.list();
     protected Injector injector;
     protected ServletContext servletContext;
 
@@ -95,7 +94,13 @@ public abstract class JCatapultBaseTest {
         }
 
         logger.info("Setting up injection with modules [" + moduleNames.toString() + "]");
-        injector = Guice.createInjector(modules);
+        if (modules.size() > 0) {
+            GuiceContainer.setGuiceModules(modules.toArray(new Module[modules.size()]));
+        }
+
+        GuiceContainer.inject();
+        GuiceContainer.initialize();
+        injector = GuiceContainer.getInjector();
         injector.injectMembers(this);
     }
 }

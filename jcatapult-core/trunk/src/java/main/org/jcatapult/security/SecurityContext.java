@@ -28,7 +28,7 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class SecurityContext {
-    private static SecurityContextProvider provider;
+    protected static SecurityContextProvider provider;
 
     /**
      * Returns the current provider.
@@ -62,30 +62,5 @@ public class SecurityContext {
      */
     public static Object getCurrentUser() {
         return provider.getCurrentUser();
-    }
-
-    /**
-     * Logs the user into the application.
-     *
-     * @param   user The user domain object. This is dependent on the provider being used.
-     */
-    public static void login(Object user) {
-        provider.login(user);
-    }
-
-    /**
-     * Logs the user out of the application.
-     */
-    public static void logout() {
-        provider.logout();
-    }
-
-    /**
-     * Updates the user that is currently stored in with a new instance.
-     *
-     * @param   user The new user instance.
-     */
-    public static void update(Object user) {
-        provider.update(user);
     }
 }
