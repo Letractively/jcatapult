@@ -57,7 +57,7 @@ import com.google.inject.Inject;
  * If the user is logged in but doesn't have the correct permissions for
  * the request URI, this class redirects the request to the not authorized
  * URL. The not authorized URL is setup using the configuration parameter
- * named <code>jcatapult.security.not-authorized.url</code>.
+ * named <code>jcatapult.security.authorization.restricted-url</code>.
  * If this parameter is not set, the default is <code>/not-authorized</code>.
  * </p>
  *
@@ -78,7 +78,7 @@ public class AuthorizationWorkflow implements Workflow {
     public AuthorizationWorkflow(Authorizer authorizer, Configuration configuration) {
         this.authorizer = authorizer;
         this.loginURL = configuration.getString("jcatapult.security.login.url", "/login");
-        this.notAuthorizedURL = configuration.getString("jcatapult.security.not-authorized.url", "/not-authorized");
+        this.notAuthorizedURL = configuration.getString("jcatapult.security.authorization.restricted-url", "/not-authorized");
     }
 
     /**
