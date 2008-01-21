@@ -39,7 +39,7 @@
     <artifactGroup type="compile">
       <artifact group="apache.org" project="commons-configuration" name="commons-configuration" version="1.3" type="jar"/>
       <artifact group="apache.org" project="commons-lang" name="commons-lang" version="2.3" type="jar"/>
-      <artifact group="apache.org" project="struts2" name="struts2-core" version="2.0.6" type="jar"/>
+      <artifact group="apache.org" project="struts2" name="struts2-core" version="2.1.1-SNAPSHOT" type="jar"/>
       <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
       <artifact group="google.com" project="google-guice" name="guice-servlet" version="1.0" type="jar"/>
       <artifact group="hibernate.org" project="hibernate" name="hibernate" version="3.2.2" type="jar"/>
