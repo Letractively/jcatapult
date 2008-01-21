@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.security.EnhancedSecurityContext;
-import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
 import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
 import org.jcatapult.security.auth.Authorizer;
 import org.jcatapult.security.auth.NotLoggedInException;
@@ -50,7 +49,7 @@ public class AuthorizationWorkflowTest {
 
         Configuration c = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(c.getString("jcatapult.security.login.url", "/login")).andReturn("/login-url");
-        EasyMock.expect(c.getString("jcatapult.security.not-authorized.url", "/not-authorized")).andReturn("/not-authed");
+        EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-url", "/not-authorized")).andReturn("/not-authed");
         EasyMock.replay(c);
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -81,7 +80,7 @@ public class AuthorizationWorkflowTest {
 
         Configuration c = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(c.getString("jcatapult.security.login.url", "/login")).andReturn("/login-url");
-        EasyMock.expect(c.getString("jcatapult.security.not-authorized.url", "/not-authorized")).andReturn("/not-authed");
+        EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-url", "/not-authorized")).andReturn("/not-authed");
         EasyMock.replay(c);
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -111,7 +110,7 @@ public class AuthorizationWorkflowTest {
 
         Configuration c = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(c.getString("jcatapult.security.login.url", "/login")).andReturn("/login-url");
-        EasyMock.expect(c.getString("jcatapult.security.not-authorized.url", "/not-authorized")).andReturn("/not-authed");
+        EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-url", "/not-authorized")).andReturn("/not-authed");
         EasyMock.replay(c);
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
