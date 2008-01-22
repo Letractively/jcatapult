@@ -31,39 +31,66 @@ import org.jcatapult.security.SecurityContext;
  * keys or not have time stamp information.
  * </p>
  *
+ * <p>
+ * The user information is pulled from the {@link SecurityContext}.
+ * </p>
+ *
  * @author  Brian Pontarelli
  */
 @MappedSuperclass
 public abstract class AuditableImpl extends TimeStampableImpl implements Auditable {
     @Column(name="insert_user")
     private String insertUser;
+
     @Column(name="update_user")
     private String updateUser;
 
+    /**
+     * {@inheritDoc}
+     */
     public String getInsertUser() {
         return insertUser;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setInsertUser(String insertUser) {
         this.insertUser = insertUser;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getUpdateUser() {
         return updateUser;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser;
     }
 
+    /**
+     * Sets the insertUser and updateUser fields from the {@link SecurityContext} and calls the super
+     * method to setup the timestamp information.
+     */
     @PrePersist
+    @Override
     public void preInsert() {
         super.preInsert();
         insertUser = SecurityContext.getCurrentUsername();
         preUpdate();
     }
 
+    /**
+     * Sets the updateUser field from the {@link SecurityContext} and calls the super method to setup
+     * the timestamp information.
+     */
     @PreUpdate
+    @Override
     public void preUpdate() {
         super.preUpdate();
         updateUser = SecurityContext.getCurrentUsername();

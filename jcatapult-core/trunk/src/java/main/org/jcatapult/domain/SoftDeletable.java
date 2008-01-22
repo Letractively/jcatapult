@@ -24,6 +24,15 @@ package org.jcatapult.domain;
  * @author  Brian Pontarelli
  */
 public interface SoftDeletable {
+    /**
+     * @return  True if this entity has been deleted, false otherwise.
+     */
     boolean isDeleted();
+
+    /**
+     * Sets whether or not this entity has been deleted.
+     *
+     * @param   deleted True if the entity is deleted, false otherwise.
+     */
     void setDeleted(boolean deleted);
 }

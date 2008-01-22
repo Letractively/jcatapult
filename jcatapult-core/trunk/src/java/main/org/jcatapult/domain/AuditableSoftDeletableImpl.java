@@ -19,8 +19,8 @@ import javax.persistence.MappedSuperclass;
 
 /**
  * <p>
- * This class adds a column called 'deleted' to all entities that extend it.
- * This version of soft delete is also auditable.
+ * This class implements the SoftDeletable interface and extends AuditableImpl for all
+ * of the audit, timestamp and primary key information.
  * </p>
  *
  * @author  Brian Pontarelli
@@ -29,10 +29,16 @@ import javax.persistence.MappedSuperclass;
 public abstract class AuditableSoftDeletableImpl extends AuditableImpl implements SoftDeletable {
     private boolean deleted = false;
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isDeleted() {
         return deleted;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }

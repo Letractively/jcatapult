@@ -22,24 +22,27 @@ import javax.persistence.MappedSuperclass;
 
 /**
  * <p>
- * This class is a parent class for anything with a primary key.
+ * This class can be the parent class for anything with a primary key.
  * </p>
  *
  * @author Brian Pontarelli
  */
 @MappedSuperclass
-public class IdentifiableImpl implements Serializable, Identifiable {
+public abstract class IdentifiableImpl implements Serializable, Identifiable {
     @Id
     @GeneratedValue
     private Integer id;
 
-    public IdentifiableImpl() {
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setId(Integer id) {
         this.id = id;
     }

@@ -15,8 +15,6 @@
  */
 package org.jcatapult.domain;
 
-import org.joda.time.DateTime;
-
 /**
  * <p>
  * This interface marks a class as being auditable where the user and time the
@@ -26,16 +24,32 @@ import org.joda.time.DateTime;
  *
  * @author  Brian Pontarelli
  */
-public interface Auditable {
-    DateTime getInsertDate();
-    void setInsertDate(DateTime insertDate);
-
-    DateTime getUpdateDate();
-    void setUpdateDate(DateTime updateDate);
-
+public interface Auditable extends TimeStampable {
+    /**
+     * @return  The user that inserted this entity, null if the entity is transient or so type of signifier
+     *          if the entity was inserted by someone anonymous.
+     */
     String getInsertUser();
+
+    /**
+     * Sets the user that inserted this entity. This should be set to a signifier if the entity is being
+     * inserted by an anonymous user.
+     *
+     * @param   insertUser The insert user.
+     */
     void setInsertUser(String insertUser);
 
+    /**
+     * @return  The user that updated this entity last, null if the entity is transient or so type of signifier
+     *          if the entity was updated by someone anonymous.
+     */
     String getUpdateUser();
+
+    /**
+     * Sets the user that updated this entity. This should be set to a signifier if the entity is being
+     * updated by an anonymous user.
+     *
+     * @param   updateUser The update user.
+     */
     void setUpdateUser(String updateUser);
 }
