@@ -68,12 +68,18 @@ public abstract class TimeStampableImpl extends IdentifiableImpl implements Time
         this.updateDate = updateDate;
     }
 
+    /**
+     * Sets the insertDate and updateDate fields to the current date-time.
+     */
     @PrePersist
     public void preInsert() {
         insertDate = new DateTime();
         preUpdate();
     }
 
+    /**
+     * Sets the updateDate field to the current date-time.
+     */
     @PreUpdate
     public void preUpdate() {
         updateDate = new DateTime();

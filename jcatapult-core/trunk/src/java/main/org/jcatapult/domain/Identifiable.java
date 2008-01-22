@@ -24,6 +24,15 @@ package org.jcatapult.domain;
  * @author  Brian Pontarelli
  */
 public interface Identifiable {
+    /**
+     * @return  The primary key or null if this entity has not been persisted.
+     */
     Integer getId();
+
+    /**
+     * Sets the new primary key for the enitty.
+     *
+     * @param   id The primary key.
+     */
     void setId(Integer id);
 }
