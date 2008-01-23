@@ -31,7 +31,7 @@
 
   <target name="table-sql" depends="jar" description="Outputs to stdout the tables.sql using the Entity Objects">
     <table-sql-pre/>
-    <dependencypath pathid="classpath.hibernate.main" types="compile-only,compile,run" includedependencies="true"
+    <dependencypath pathid="classpath.hibernate.main" types="compile-only,compile,run" transitive="true"
         workflow="workflow.project" dependencies="dependencies.project"/>
     <hibernatetool destdir="${dir.src.db.main}/base">
       <classpath>

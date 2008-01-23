@@ -134,7 +134,7 @@
     <sequential>
       <!-- Grab the dependencies that the project needs to run the tests -->
       <dependencypath pathid="classpath.run.test" types="compile-only,compile,run,test-compile,test-run"
-                      includedependencies="true" workflow="workflow.project" dependencies="dependencies.project"/>
+                      transitive="true" workflow="workflow.project" dependencies="dependencies.project"/>
 
       <mkdir dir="${dir.target.report}"/>
       <!-- Run the tests -->
