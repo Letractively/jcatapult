@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.email;
+package org.jcatapult.email.service;
 
 import java.util.Iterator;
 import java.util.List;
@@ -46,12 +46,16 @@ import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.domain.contact.EmailAddress;
+import org.jcatapult.email.domain.Attachment;
+import org.jcatapult.email.domain.Email;
+import org.jcatapult.email.service.EmailTransportService;
+import org.jcatapult.email.EmailException;
 
 import com.google.inject.Inject;
 
 /**
  * <p>
- * This class implements the {@link EmailTransportService} interface using
+ * This class implements the {@link org.jcatapult.email.service.EmailTransportService} interface using
  * the JavaMail API and a JavaMail session. This class should normally be
  * handled via Guice as a singleton so that it will only use a single session,
  * reducing the overhead.

@@ -13,12 +13,13 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.email;
+package org.jcatapult.email.domain;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jcatapult.domain.contact.EmailAddress;
+import org.jcatapult.email.domain.Attachment;
 
 import net.java.util.CollectionTools;
 

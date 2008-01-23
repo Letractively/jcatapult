@@ -17,7 +17,7 @@ package org.jcatapult.email;
 
 /**
  * <p>
- * This class is an exception that is thrown from the {@link EmailService}
+ * This class is an exception that is thrown from the {@link org.jcatapult.email.service.EmailService}
  * on failures.
  * </p>
  *

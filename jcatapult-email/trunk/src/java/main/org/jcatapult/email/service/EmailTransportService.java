@@ -13,9 +13,12 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.email;
+package org.jcatapult.email.service;
 
 import java.util.concurrent.Future;
+
+import org.jcatapult.email.domain.Email;
+import org.jcatapult.email.service.JavaMailEmailTransportService;
 
 import com.google.inject.ImplementedBy;
 

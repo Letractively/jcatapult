@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.email;
+package org.jcatapult.email.service;
 
 import java.util.concurrent.Future;
 import java.util.Collections;
@@ -24,6 +24,9 @@ import org.junit.Ignore;
 import org.easymock.EasyMock;
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.domain.contact.EmailAddress;
+import org.jcatapult.email.domain.Attachment;
+import org.jcatapult.email.domain.Email;
+import org.jcatapult.email.service.JavaMailEmailTransportService;
 
 /**
  * <p>
