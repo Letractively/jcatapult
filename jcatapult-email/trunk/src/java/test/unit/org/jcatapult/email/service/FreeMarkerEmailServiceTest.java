@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.email;
+package org.jcatapult.email.service;
 
 import java.io.File;
 import java.util.concurrent.Future;
@@ -21,6 +21,10 @@ import java.util.concurrent.Future;
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.container.ContainerResolver;
+import org.jcatapult.email.domain.Email;
+import org.jcatapult.email.service.EmailTransportService;
+import org.jcatapult.email.service.FreeMarkerEmailService;
+import org.jcatapult.domain.contact.EmailAddress;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -57,8 +61,9 @@ public class FreeMarkerEmailServiceTest {
 
         MockEmailTransportService transport = new MockEmailTransportService();
         FreeMarkerEmailService service = new FreeMarkerEmailService(transport, config, containerResolver, "/WEB-INF/email");
-        service.sendEmail("test-template", "Test subject", "from@example.com", "to@example.com").add("key1", "value1").done();
-        Assert.assertEquals("Test subject", transport.email.getSubject());
+        EmailService.EmailBuilder eb = service.buildEmail("test-template").setCCEmails(new EmailAddress("from@example.com")).setBCCEmails(new EmailAddress("from@example.com")).setSubject("test subject").setFromEmail(new EmailAddress("from@example.com")).setToEmails(new EmailAddress("to@example.com")).addTemplateParam("key1", "value1");
+        service.sendEmail(eb);
+        Assert.assertEquals("test subject", transport.email.getSubject());
         Assert.assertEquals("from@example.com", transport.email.getFrom().getAddress());
         Assert.assertEquals("to@example.com", transport.email.getTo()[0].getAddress());
         Assert.assertEquals("Text value1", transport.email.getText());
@@ -92,8 +97,9 @@ public class FreeMarkerEmailServiceTest {
 
         MockEmailTransportService transport = new MockEmailTransportService();
         FreeMarkerEmailService service = new FreeMarkerEmailService(transport, config, containerResolver, "/WEB-INF/email");
-        service.sendEmail("test-template", "Test subject", "from@example.com", "to@example.com").add("key1", "value1").done();
-        Assert.assertEquals("Test subject", transport.email.getSubject());
+        EmailService.EmailBuilder eb = service.buildEmail("test-template").setCCEmails(new EmailAddress("from@example.com")).setBCCEmails(new EmailAddress("from@example.com")).setSubject("test subject").setFromEmail(new EmailAddress("from@example.com")).setToEmails(new EmailAddress("to@example.com")).addTemplateParam("key1", "value1");
+        service.sendEmail(eb);
+        Assert.assertEquals("test subject", transport.email.getSubject());
         Assert.assertEquals("from@example.com", transport.email.getFrom().getAddress());
         Assert.assertEquals("to@example.com", transport.email.getTo()[0].getAddress());
         Assert.assertEquals("Text value1", transport.email.getText());
@@ -123,15 +129,19 @@ public class FreeMarkerEmailServiceTest {
         EasyMock.expect(config.getString("email.templates.location")).andReturn("/org/jcatapult/email");
         EasyMock.expect(config.getBoolean("email.templates.cache", false)).andReturn(true);
         EasyMock.expect(config.getInt("email.templates.check-interval", 2)).andReturn(1);
-        EasyMock.expect(config.getString("email.test-template.from")).andReturn("from@example.com");
         EasyMock.expect(config.getStringArray("email.test-template.to")).andReturn(new String[]{"to@example.com"});
-        EasyMock.expect(config.getString("email.test-template.subject")).andReturn("Test subject");
+        EasyMock.expect(config.getString("email.test-template.from")).andReturn("from@example.com");
+        EasyMock.expect(config.getString("email.test-template.from.display")).andReturn("From Example");
+        EasyMock.expect(config.getString("email.test-template.subject")).andReturn("test subject");
+        EasyMock.expect(config.getStringArray("email.test-template.cc")).andReturn(new String[]{"from@example.com"});
+        EasyMock.expect(config.getStringArray("email.test-template.bcc")).andReturn(new String[]{"from@example.com"});
         EasyMock.replay(config);
 
         MockEmailTransportService transport = new MockEmailTransportService();
         FreeMarkerEmailService service = new FreeMarkerEmailService(transport, config, containerResolver, "/WEB-INF/email");
-        service.sendConfiguredEmail("test-template").add("key1", "value1").done();
-        Assert.assertEquals("Test subject", transport.email.getSubject());
+        EmailService.EmailBuilder eb = service.buildEmail("test-template").addTemplateParam("key1", "value1");
+        service.sendEmail(eb);
+        Assert.assertEquals("test subject", transport.email.getSubject());
         Assert.assertEquals("from@example.com", transport.email.getFrom().getAddress());
         Assert.assertEquals("to@example.com", transport.email.getTo()[0].getAddress());
         Assert.assertEquals("Text value1", transport.email.getText());
@@ -142,6 +152,7 @@ public class FreeMarkerEmailServiceTest {
 
     public static class MockEmailTransportService implements EmailTransportService {
         public Email email;
+
         public Future<Email> sendEmail(Email email) {
             this.email = email;
             return null;
