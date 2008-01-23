@@ -16,21 +16,21 @@
 package org.jcatapult.security.guice;
 
 import org.jcatapult.guice.WorkflowResolverModule;
-import org.jcatapult.security.servlet.SecurityWorkflowResolver;
-import org.jcatapult.servlet.WorkflowResolver;
-
-import com.google.inject.Singleton;
 
 /**
  * <p>
- * This class sub-classes the workflow resolver module in order to add in
- * the security workflow.
+ * This class sub-classes the workflow resolver module from the JCatapult core
+ * in order to make sure that the default workflow resolver is not installed
+ * into Guice. However, this doesn't actually install the SecurityWorkflowResolver
+ * instead. Applications wanting to use security need to sub-class the
+ * {@link SecurityModule} in order to set everything up, including the
+ * SecurityWorkflowResolver.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 public class SecurityWorkflowResolverModule extends WorkflowResolverModule {
     public void configure() {
-        bind(WorkflowResolver.class).to(SecurityWorkflowResolver.class).in(Singleton.class);
+        // Makes sure the the default workflow resolver module (parent class) doesn't setup anything
     }
 }
