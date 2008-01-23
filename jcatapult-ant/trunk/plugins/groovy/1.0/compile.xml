@@ -31,7 +31,7 @@
       Fetch artifacts but DON'T grab transitive dependencies because this should be explicitly the
       artifacts that are required to compile this project and NOT transitive deps.
     -->
-    <dependencypath pathid="classpath.compile.main" types="compile-only,compile,domains" includedependencies="false"
+    <dependencypath pathid="classpath.compile.main" types="compile-only,compile,domains" transitive="false"
                     workflow="workflow.project" dependencies="dependencies.project"/>
   </target>
 
@@ -42,7 +42,7 @@
       artifacts that are required to compile this project and NOT transitive deps.
     -->
     <dependencypath pathid="classpath.compile.test" types="compile-only,compile,test-compile,domains"
-                    includedependencies="false" workflow="workflow.project" dependencies="dependencies.project"/>
+                    transitive="false" workflow="workflow.project" dependencies="dependencies.project"/>
   </target>
 
   <target name="-compile-main-conf" if="dir.src.conf.main">

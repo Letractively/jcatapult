@@ -26,7 +26,7 @@
 
   <target name="ide" description="Generates the IntelliJ and Eclipse project files">
     <ide-pre/>
-    <dependencypath pathid="classpath.project" includedependencies="true"
+    <dependencypath pathid="classpath.project" transitive="true"
                     workflow="workflow.project" dependencies="dependencies.project"/>
     <pathconvert pathsep="," property="path" refid="classpath.project"/>
 

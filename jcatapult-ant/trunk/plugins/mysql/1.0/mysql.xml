@@ -79,7 +79,7 @@
   </target>
 
   <target name="-init-database">
-    <dependencypath pathid="classpath.project" includedependencies="true"
+    <dependencypath pathid="classpath.project" transitive="true"
                     workflow="workflow.project" dependencies="dependencies.project"/>
   </target>
 
