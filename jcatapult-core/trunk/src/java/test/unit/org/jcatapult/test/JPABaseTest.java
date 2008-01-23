@@ -264,7 +264,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      */
     @SuppressWarnings(value = "unchecked")
     protected <T> void loadFixture(String fixture, Class<T> type)
-        throws RuntimeException {
+    throws RuntimeException {
         logger.fine("Loading fixtures from [" + fixture + "] for [" + type + "]");
 
         // Clear the table via the annotation
