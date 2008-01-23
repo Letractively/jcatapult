@@ -278,6 +278,8 @@ public class JPAPersistenceService implements PersistenceService {
     public <T> T queryFirst(Class<T> type, String query, Object... params) {
         verify(type);
         Query q = entityManagerProvider.get().createQuery(query);
+        q.setFirstResult(0);
+        q.setMaxResults(1);
         addParams(q, params);
         List<T> results = q.getResultList();
         if (results.size() > 0) {
