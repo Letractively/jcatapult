@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
     name="@PROJECT_NAME@"
     group="@GROUP_NAME@"
-    version="1.0-RC1">
+    version="1.0-A1">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
