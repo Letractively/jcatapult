@@ -19,9 +19,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-import org.jcatapult.test.JCatapultBaseTest;
 import org.jcatapult.email.domain.Email;
 import org.jcatapult.email.service.EmailTransportService;
+import org.jcatapult.test.JCatapultBaseTest;
 
 import com.google.inject.AbstractModule;
 

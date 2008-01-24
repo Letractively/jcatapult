@@ -15,16 +15,15 @@
  */
 package org.jcatapult.email.service;
 
-import java.util.concurrent.Future;
 import java.util.Map;
+import java.util.concurrent.Future;
 
-import org.jcatapult.email.domain.Email;
-import org.jcatapult.email.domain.Attachment;
-import org.jcatapult.email.service.FreeMarkerEmailService;
 import org.jcatapult.domain.contact.EmailAddress;
+import org.jcatapult.email.domain.Attachment;
+import org.jcatapult.email.domain.Email;
 
-import net.java.util.NameValuePairChain;
 import com.google.inject.ImplementedBy;
+import net.java.util.NameValuePairChain;
 
 /**
  * <p>

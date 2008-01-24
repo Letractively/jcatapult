@@ -15,18 +15,17 @@
  */
 package org.jcatapult.email.service;
 
-import java.util.concurrent.Future;
 import java.util.Collections;
+import java.util.concurrent.Future;
 
-import org.junit.Test;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.easymock.EasyMock;
 import org.apache.commons.configuration.Configuration;
+import org.easymock.EasyMock;
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.domain.Attachment;
 import org.jcatapult.email.domain.Email;
-import org.jcatapult.email.service.JavaMailEmailTransportService;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * <p>

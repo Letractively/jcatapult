@@ -15,11 +15,10 @@
  */
 package org.jcatapult.email.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -27,7 +26,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.Authenticator;
@@ -46,10 +46,9 @@ import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.domain.contact.EmailAddress;
+import org.jcatapult.email.EmailException;
 import org.jcatapult.email.domain.Attachment;
 import org.jcatapult.email.domain.Email;
-import org.jcatapult.email.service.EmailTransportService;
-import org.jcatapult.email.EmailException;
 
 import com.google.inject.Inject;
 
