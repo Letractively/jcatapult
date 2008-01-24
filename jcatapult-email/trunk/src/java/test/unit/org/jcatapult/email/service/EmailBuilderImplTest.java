@@ -16,8 +16,6 @@
 package org.jcatapult.email.service;
 
 import org.jcatapult.container.ContainerResolver;
-import org.easymock.EasyMock;
-import org.apache.commons.configuration.Configuration;
 import org.junit.Assert;
 import org.junit.Test;
 

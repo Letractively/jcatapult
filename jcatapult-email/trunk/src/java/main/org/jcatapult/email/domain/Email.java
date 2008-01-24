@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jcatapult.domain.contact.EmailAddress;
-import org.jcatapult.email.domain.Attachment;
 
 import net.java.util.CollectionTools;
 

@@ -21,10 +21,8 @@ import java.util.concurrent.Future;
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.container.ContainerResolver;
-import org.jcatapult.email.domain.Email;
-import org.jcatapult.email.service.EmailTransportService;
-import org.jcatapult.email.service.FreeMarkerEmailService;
 import org.jcatapult.domain.contact.EmailAddress;
+import org.jcatapult.email.domain.Email;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -15,14 +15,12 @@
  */
 package org.jcatapult.email.service;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
-import org.jcatapult.email.domain.Email;
-import org.jcatapult.email.domain.Attachment;
-import org.jcatapult.email.EmailException;
 import org.jcatapult.domain.contact.EmailAddress;
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.email.domain.Attachment;
+import org.jcatapult.email.domain.Email;
 
 /**
  * {@inheritDoc}

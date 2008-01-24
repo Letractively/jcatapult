@@ -18,7 +18,6 @@ package org.jcatapult.email.service;
 import java.util.concurrent.Future;
 
 import org.jcatapult.email.domain.Email;
-import org.jcatapult.email.service.JavaMailEmailTransportService;
 
 import com.google.inject.ImplementedBy;
 

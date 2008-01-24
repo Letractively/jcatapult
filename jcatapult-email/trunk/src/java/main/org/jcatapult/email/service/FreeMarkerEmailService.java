@@ -25,11 +25,9 @@ import java.util.logging.Logger;
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.container.FreeMarkerContainerTemplateLoader;
-import org.jcatapult.email.domain.Email;
-import org.jcatapult.email.service.EmailService;
-import org.jcatapult.email.service.EmailTransportService;
-import org.jcatapult.email.EmailException;
 import org.jcatapult.domain.contact.EmailAddress;
+import org.jcatapult.email.EmailException;
+import org.jcatapult.email.domain.Email;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
