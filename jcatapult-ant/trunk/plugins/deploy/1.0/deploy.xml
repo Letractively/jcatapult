@@ -117,7 +117,8 @@
 		<echo>Sending deploy script</echo>
 		<scp file="${dir.target}/deploy.sh" 
 			todir="${deploy.server.username}@${deploy.server.host}:${deploy.dir.work}"
-			password="${deploy.server.password}"/>
+			password="${deploy.server.password}"
+			trust="true"/>
 
 
 		<echo>Executing Deploy Script</echo>
