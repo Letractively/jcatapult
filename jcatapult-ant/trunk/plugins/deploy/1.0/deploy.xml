@@ -65,7 +65,7 @@
 
 		<property name="deploy.rsync_target" value="${deploy.server.username}@${deploy.server.host}:${deploy.dir.work}/${deploy.version}"/>
 		<echo>RSync from ${deploy.tempdir} to ${deploy.rsync_target}</echo>
-		<exec executable="rsync" failonerror="true">
+		<exec executable="rsync" failonerror="true" >
 			<arg value="-aicqz"/>
 			<arg value="--delete"/>
 			<arg file="${deploy.tempdir}/web"/>
@@ -90,7 +90,8 @@
 		<echo>Sending TAR file</echo>
 		<scp file="${deploy.archive}" 
 			todir="${deploy.server.username}@${deploy.server.host}:${deploy.dir.work}"
-			password="${deploy.server.password}"/>
+			password="${deploy.server.password}"
+			trust="true"/>
 		
 		<antcall target="deploy-run-script"/>
 	</target>
