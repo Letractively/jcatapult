@@ -20,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.jcatapult.security.servlet.saved.SavedRequestWorkflow;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.ImplementedBy;
@@ -32,7 +33,7 @@ import com.google.inject.ImplementedBy;
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultPostLoginHandler.class)
+@ImplementedBy(SavedRequestWorkflow.class)
 public interface PostLoginHandler {
     /**
      * Handles a successful login.

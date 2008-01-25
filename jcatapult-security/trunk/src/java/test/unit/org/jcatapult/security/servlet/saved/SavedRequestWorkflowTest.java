@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.security.servlet.login;
+package org.jcatapult.security.servlet.saved;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,7 +37,7 @@ import org.junit.Test;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultPostLoginHandlerTest {
+public class SavedRequestWorkflowTest {
     @Test
     public void testHandle() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
@@ -61,8 +61,8 @@ public class DefaultPostLoginHandlerTest {
             }
         };
 
-        DefaultPostLoginHandler dleh = new DefaultPostLoginHandler(c);
-        dleh.handle(req, res, wc);
+        SavedRequestWorkflow srw = new SavedRequestWorkflow(c);
+        srw.handle(req, res, wc);
         assertTrue(called.get());
         EasyMock.verify(c, req, res);
     }
