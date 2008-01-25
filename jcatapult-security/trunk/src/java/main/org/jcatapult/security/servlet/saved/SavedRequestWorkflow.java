@@ -22,11 +22,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.auth.NotLoggedInException;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
+import static org.jcatapult.security.servlet.ServletTools.*;
 import org.jcatapult.security.servlet.auth.NotLoggedInHandler;
 import org.jcatapult.security.servlet.login.PostLoginHandler;
 import org.jcatapult.servlet.Workflow;
@@ -92,9 +94,10 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
     throws IOException, ServletException {
         // See if there is a saved request
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        SavedHttpRequest saved = (SavedHttpRequest) httpRequest.getSession(true).getAttribute(POST_LOGIN_KEY);
+        HttpSession session = httpRequest.getSession(true);
+        SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(POST_LOGIN_KEY);
         if (saved != null && SecurityContext.getCurrentUser() != null) {
-            httpRequest.getSession(true).removeAttribute(POST_LOGIN_KEY);
+            session.removeAttribute(POST_LOGIN_KEY);
             httpRequest = new FacadeHttpServletRequest(httpRequest, null, saved.parameters);
         }
 
@@ -125,11 +128,12 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
         // See if there is a saved request
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        SavedHttpRequest saved = (SavedHttpRequest) httpRequest.getSession(true).getAttribute(LOGIN_KEY);
+        HttpSession session = httpRequest.getSession(true);
+        SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(LOGIN_KEY);
         if (saved != null) {
-            httpRequest.removeAttribute(LOGIN_KEY);
-            httpRequest.setAttribute(POST_LOGIN_KEY, saved);
-            httpResponse.sendRedirect(getContextPath(httpRequest, saved.uri));
+            session.removeAttribute(LOGIN_KEY);
+            session.setAttribute(POST_LOGIN_KEY, saved);
+            httpResponse.sendRedirect(getContextURI(httpRequest, saved.uri));
         } else {
             FacadeHttpServletRequest facade = new FacadeHttpServletRequest(httpRequest, successfulLoginURI, null);
             workflowChain.doWorkflow(facade, response);
@@ -154,36 +158,15 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
     throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpSession session = httpRequest.getSession(true);
 
         // Save the request
         String uri = httpRequest.getRequestURI();
         Map<String, String[]> requestParameters = httpRequest.getParameterMap();
         SavedHttpRequest saved = new SavedHttpRequest(uri, requestParameters);
-        httpRequest.getSession(true).setAttribute(LOGIN_KEY, saved);
+        session.setAttribute(LOGIN_KEY, saved);
 
-        httpResponse.sendRedirect(getContextPath(httpRequest, loginURL));
+        httpResponse.sendRedirect(getContextURI(httpRequest, loginURL));
     }
 
-    private String getContextPath(HttpServletRequest httpRequest, String url) {
-        String context = httpRequest.getContextPath();
-        if (context.equals("")) {
-            return url;
-        }
-
-        if (url.startsWith("/")) {
-            return context + url;
-        }
-
-        return context + "/" + url;
-    }
-
-    private class SavedHttpRequest {
-        public final String uri;
-        public final Map<String, String[]> parameters;
-
-        public SavedHttpRequest(String uri, Map<String, String[]> parameters) {
-            this.uri = uri;
-            this.parameters = parameters;
-        }
-    }
 }

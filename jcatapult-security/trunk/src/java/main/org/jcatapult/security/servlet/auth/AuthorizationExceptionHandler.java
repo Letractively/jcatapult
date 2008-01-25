@@ -23,6 +23,8 @@ import javax.servlet.ServletResponse;
 import org.jcatapult.security.auth.UnauthorizedException;
 import org.jcatapult.servlet.WorkflowChain;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This interface handles authorization exceptions that are thrown by the
@@ -31,6 +33,7 @@ import org.jcatapult.servlet.WorkflowChain;
  *
  * @author Brian Pontarelli
  */
+@ImplementedBy(DefaultAuthorizationExceptionHandler.class)
 public interface AuthorizationExceptionHandler {
     /**
      * Handles the exception.

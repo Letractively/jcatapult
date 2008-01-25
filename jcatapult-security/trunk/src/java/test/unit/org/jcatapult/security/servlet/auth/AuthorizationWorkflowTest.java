@@ -42,62 +42,58 @@ public class AuthorizationWorkflowTest {
     public void testUnauthorized() throws IOException, ServletException {
         Object user = new Object();
 
+        UnauthorizedException ue = new UnauthorizedException();
         Authorizer a = EasyMock.createStrictMock(Authorizer.class);
         a.authorize(user, "/foo");
-        EasyMock.expectLastCall().andThrow(new UnauthorizedException());
+        EasyMock.expectLastCall().andThrow(ue);
         EasyMock.replay(a);
-
-        Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.url", "/login")).andReturn("/login-url");
-        EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-url", "/not-authorized")).andReturn("/not-authed");
-        EasyMock.replay(c);
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/foo");
-        EasyMock.expect(req.getContextPath()).andReturn("/context");
         EasyMock.replay(req);
 
         HttpServletResponse res = EasyMock.createStrictMock(HttpServletResponse.class);
-        res.sendRedirect("/context/not-authed");
         EasyMock.replay(res);
 
         EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
         EnhancedSecurityContext.login(user);
 
-        AuthorizationWorkflow aw = new AuthorizationWorkflow(a, c);
+        AuthorizationExceptionHandler aeh = EasyMock.createStrictMock(AuthorizationExceptionHandler.class);
+        aeh.handle(ue, req, res, null);
+        EasyMock.replay(aeh);
+
+        AuthorizationWorkflow aw = new AuthorizationWorkflow(a, null, aeh);
         aw.perform(req, res, null);
-        EasyMock.verify(a, c, req, res);
+        EasyMock.verify(a, req, res, aeh);
     }
 
     @Test
     public void testNotLoggedIn() throws IOException, ServletException {
         Object user = new Object();
 
+        NotLoggedInException nlie = new NotLoggedInException();
         Authorizer a = EasyMock.createStrictMock(Authorizer.class);
         a.authorize(user, "/foo");
-        EasyMock.expectLastCall().andThrow(new NotLoggedInException());
+        EasyMock.expectLastCall().andThrow(nlie);
         EasyMock.replay(a);
-
-        Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.url", "/login")).andReturn("/login-url");
-        EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-url", "/not-authorized")).andReturn("/not-authed");
-        EasyMock.replay(c);
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/foo");
-        EasyMock.expect(req.getContextPath()).andReturn("");
         EasyMock.replay(req);
 
         HttpServletResponse res = EasyMock.createStrictMock(HttpServletResponse.class);
-        res.sendRedirect("/login-url");
         EasyMock.replay(res);
 
         EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
         EnhancedSecurityContext.login(user);
 
-        AuthorizationWorkflow aw = new AuthorizationWorkflow(a, c);
+        NotLoggedInHandler nlih = EasyMock.createStrictMock(NotLoggedInHandler.class);
+        nlih.handle(nlie, req, res, null);
+        EasyMock.replay(nlih);
+
+        AuthorizationWorkflow aw = new AuthorizationWorkflow(a, nlih, null);
         aw.perform(req, res, null);
-        EasyMock.verify(a, c, req, res);
+        EasyMock.verify(a, req, res, nlih);
     }
 
     @Test
@@ -107,11 +103,6 @@ public class AuthorizationWorkflowTest {
         Authorizer a = EasyMock.createStrictMock(Authorizer.class);
         a.authorize(user, "/foo");
         EasyMock.replay(a);
-
-        Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.url", "/login")).andReturn("/login-url");
-        EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-url", "/not-authorized")).andReturn("/not-authed");
-        EasyMock.replay(c);
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/foo");
@@ -127,8 +118,8 @@ public class AuthorizationWorkflowTest {
         EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
         EnhancedSecurityContext.login(user);
 
-        AuthorizationWorkflow aw = new AuthorizationWorkflow(a, c);
+        AuthorizationWorkflow aw = new AuthorizationWorkflow(a, null, null);
         aw.perform(req, res, wc);
-        EasyMock.verify(a, c, req, res);
+        EasyMock.verify(a, req, res);
     }
 }

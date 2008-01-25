@@ -21,7 +21,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.jcatapult.security.auth.NotLoggedInException;
+import org.jcatapult.security.servlet.saved.SavedRequestWorkflow;
 import org.jcatapult.servlet.WorkflowChain;
+
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
@@ -31,6 +34,7 @@ import org.jcatapult.servlet.WorkflowChain;
  *
  * @author  Brian Pontarelli
  */
+@ImplementedBy(SavedRequestWorkflow.class)
 public interface NotLoggedInHandler {
     /**
      * Handles the exception.
