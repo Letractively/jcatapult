@@ -21,11 +21,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
+import org.jcatapult.security.servlet.login.LoginWorkflow;
+import org.jcatapult.security.servlet.saved.SavedRequestWorkflow;
 import org.jcatapult.servlet.SubWorkflowChain;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
-import org.jcatapult.security.servlet.login.LoginWorkflow;
-import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
 
 import com.google.inject.Inject;
 
@@ -52,15 +53,17 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class SecurityWorkflow implements Workflow {
-    private final CredentialStorageWorkflow credentialStorageWorkflow;
-//    private final RememberMeWorkflow rememberMeWorkflow;
-    private final LoginWorkflow loginWorkflow;
-//    private final SavedRequestWorkflow savedRequestWorkflow;
+    private final SavedRequestWorkflow savedRequestWorkflow;
     private final AuthorizationWorkflow authorizationWorkflow;
+    private final CredentialStorageWorkflow credentialStorageWorkflow;
+    //    private final RememberMeWorkflow rememberMeWorkflow;
+    private final LoginWorkflow loginWorkflow;
 
     @Inject
-    public SecurityWorkflow(CredentialStorageWorkflow credentialStorageWorkflow, LoginWorkflow loginWorkflow,
+    public SecurityWorkflow(SavedRequestWorkflow savedRequestWorkflow,
+            CredentialStorageWorkflow credentialStorageWorkflow, LoginWorkflow loginWorkflow,
             AuthorizationWorkflow authorizationWorkflow) {
+        this.savedRequestWorkflow = savedRequestWorkflow;
         this.credentialStorageWorkflow = credentialStorageWorkflow;
         this.loginWorkflow = loginWorkflow;
         this.authorizationWorkflow = authorizationWorkflow;
@@ -77,7 +80,8 @@ public class SecurityWorkflow implements Workflow {
      */
     public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
-        SubWorkflowChain chain = new SubWorkflowChain(Arrays.asList(credentialStorageWorkflow, loginWorkflow, authorizationWorkflow), workflowChain);
+        SubWorkflowChain chain = new SubWorkflowChain(Arrays.asList(savedRequestWorkflow,
+            credentialStorageWorkflow, loginWorkflow, authorizationWorkflow), workflowChain);
         chain.doWorkflow(request, response);
     }
 

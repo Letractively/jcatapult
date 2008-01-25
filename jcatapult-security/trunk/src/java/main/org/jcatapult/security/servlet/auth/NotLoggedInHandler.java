@@ -20,18 +20,18 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.jcatapult.security.auth.UnauthorizedException;
+import org.jcatapult.security.auth.NotLoggedInException;
 import org.jcatapult.servlet.WorkflowChain;
 
 /**
  * <p>
- * This interface handles authorization exceptions that are thrown by the
- * {@link org.jcatapult.security.auth.Authorizer} out to the {@link AuthorizationWorkflow}.
+ * This interface defines how the framework responds to authorization failures
+ * due to the user not being logged in.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public interface AuthorizationExceptionHandler {
+public interface NotLoggedInHandler {
     /**
      * Handles the exception.
      *
@@ -40,10 +40,10 @@ public interface AuthorizationExceptionHandler {
      * @param   response The response for redirects, forwarding and including.
      * @param   workflowChain The workflow chain in case the implementation wants to keep going down
      *          the chain.
-     * @throws  ServletException If something goes wrong during the exception handling.
-     * @throws  IOException If something goes wrong during the exception handling.
+     * @throws javax.servlet.ServletException If something goes wrong during the exception handling.
+     * @throws java.io.IOException If something goes wrong during the exception handling.
      */
-    void handle(UnauthorizedException exception, ServletRequest request, ServletResponse response,
+    void handle(NotLoggedInException exception, ServletRequest request, ServletResponse response,
             WorkflowChain workflowChain)
     throws ServletException, IOException;
 }

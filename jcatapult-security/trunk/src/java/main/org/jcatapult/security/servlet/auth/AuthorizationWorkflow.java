@@ -71,13 +71,16 @@ import com.google.inject.Inject;
  */
 public class AuthorizationWorkflow implements Workflow {
     private final Authorizer authorizer;
-    private final String loginURL;
+    private final NotLoggedInHandler notLoggedInHandler;
+    private final AuthorizationExceptionHandler authorizationExceptionHandler;
     private final String notAuthorizedURL;
 
     @Inject
-    public AuthorizationWorkflow(Authorizer authorizer, Configuration configuration) {
+    public AuthorizationWorkflow(Authorizer authorizer, NotLoggedInHandler notLoggedInHandler,
+            AuthorizationExceptionHandler authorizationExceptionHandler, Configuration configuration) {
         this.authorizer = authorizer;
-        this.loginURL = configuration.getString("jcatapult.security.login.url", "/login");
+        this.notLoggedInHandler = notLoggedInHandler;
+        this.authorizationExceptionHandler = authorizationExceptionHandler;
         this.notAuthorizedURL = configuration.getString("jcatapult.security.authorization.restricted-url", "/not-authorized");
     }
 
@@ -101,6 +104,7 @@ public class AuthorizationWorkflow implements Workflow {
         try {
             authorizer.authorize(user, uri);
         } catch (UnauthorizedException e) {
+            authorizationExceptionHandler.
             httpResponse.sendRedirect(getContextPath(httpRequest, notAuthorizedURL));
             return;
         } catch (NotLoggedInException e) {
