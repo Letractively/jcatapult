@@ -21,27 +21,6 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [TutorialSimpleUnitTest Simple unit test]
   * [TutorialLogin Login and security]
 
-= Methodologies =
-
-Below are links to various documents around JCatapult standard methodologies. These are broken into the various application lifecycle stages as well as best practices.
-
-=== Lifecycle ===
-
-  * [ProjectCreation Project creation]
-  * [Scaffolding Scaffolding]
-  * [UnitTesting Unit testing]
-  * [IntegrationTestsing Integration testing]
-  * [RunningAWebapp Running a web application]
-  * [RunningAComponent Running a component]
-  * [Releasing Releasing a version]
-
-=== Best Practices ===
-
-  * [BestPracticesStruts Struts2/SmartURLs best practices]
-  * [BestPracticesGuice Guice dependency injection best practices]
-  * [BestPracticesTiers Standard application tiers best practices]
-  * [BestPracticesTesting Testing best practices]
-
 = Technologies =
 
 Below are links to topics about a specific JCatapult technology, service or API.
@@ -53,6 +32,10 @@ Below are links to topics about a specific JCatapult technology, service or API.
   * [AntPlugins Plugin documentation and reference]
   * [AntCreatingPlugins Creating ant plugins]
   * [AntDependencies Adding and removing project dependencies]
+
+=== Scaffolder ===
+
+  * [Scaffolder JCatapult Scaffolder]
 
 === Database ===
 
@@ -93,3 +76,24 @@ Below are links to topics about a specific JCatapult technology, service or API.
 
   * [Environment Environment resolution]
   * [EnvironmentAwareConfiguration Environment aware configuration]
+
+= Methodologies =
+
+Below are links to various documents around JCatapult standard methodologies. These are broken into the various application lifecycle stages as well as best practices.
+
+=== Lifecycle ===
+
+  * [ProjectCreation Project creation]
+  * [Scaffolding Scaffolding]
+  * [UnitTesting Unit testing]
+  * [IntegrationTestsing Integration testing]
+  * [RunningAWebapp Running a web application]
+  * [RunningAComponent Running a component]
+  * [Releasing Releasing a version]
+
+=== Best Practices ===
+
+  * [BestPracticesStruts Struts2/SmartURLs best practices]
+  * [BestPracticesGuice Guice dependency injection best practices]
+  * [BestPracticesTiers Standard application tiers best practices]
+  * [BestPracticesTesting Testing best practices]
