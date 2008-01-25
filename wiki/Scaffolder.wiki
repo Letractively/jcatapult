@@ -1,0 +1,11 @@
+#summary Home page for the JCatapult Scaffolder
+
+= Introduction =
+
+Here are the various documents for the JCatapult Scaffolder.
+
+
+= Details =
+
+  * [ScaffolderUseCases Scaffolder Use Cases]
+  * [ScaffolderCommandLine Scaffolder Command Line]
