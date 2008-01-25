@@ -5,7 +5,14 @@
 Here are the various documents for the JCatapult Scaffolder.
 
 
-= Details =
+= Documents =
 
   * [ScaffolderUseCases Scaffolder Use Cases]
-  * [ScaffolderCommandLine Scaffolder Command Line]
+  * [ScaffolderCommandLine Scaffolder command line]
+  * [ScaffolderWriting Writing a custom scaffolder]
+  * [ScaffolderAnnotations Annotation processing for scaffolders]
+
+= Available Scaffolders =
+
+  * [ScaffolderCrud The CRUD scaffolder]
+  * [ScaffolderComponentCrud The component CRUD scaffolder]
