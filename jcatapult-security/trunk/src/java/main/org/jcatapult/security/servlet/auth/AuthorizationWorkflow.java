@@ -20,15 +20,13 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.auth.Authorizer;
+import org.jcatapult.security.auth.NotLoggedInException;
+import org.jcatapult.security.auth.UnauthorizedException;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
-import org.jcatapult.security.auth.Authorizer;
-import org.jcatapult.security.auth.UnauthorizedException;
-import org.jcatapult.security.auth.NotLoggedInException;
-import org.jcatapult.security.EnhancedSecurityContext;
-import org.apache.commons.configuration.Configuration;
 
 import com.google.inject.Inject;
 
@@ -46,25 +44,21 @@ import com.google.inject.Inject;
  *
  * <h3>Not logged it</h3>
  * <p>
- * If the user is not logged in and needs to be, this class redirects
- * the request to the login URL. The login URL is setup using the
- * configuration parameter named <code>jcatapult.security.login.url</code>.
- * If this parameter is not set, the default is <code>/login</code>.
+ * If the user is not logged in and needs to be, this class delegates
+ * control to an implementation of the {@link NotLoggedInHandler}.
  * </p>
  *
  * <h3>Invalid permissions</h3>
  * <p>
  * If the user is logged in but doesn't have the correct permissions for
- * the request URI, this class redirects the request to the not authorized
- * URL. The not authorized URL is setup using the configuration parameter
- * named <code>jcatapult.security.authorization.restricted-url</code>.
- * If this parameter is not set, the default is <code>/not-authorized</code>.
+ * the request URI, this class delegates control to an implementation of
+ * the {@link AuthorizationExceptionHandler}
  * </p>
  *
  * <p>
- * Whenever a failure occurs as described above, the workflow is stopped
- * completely because the HTTP response is a redirect and no more processing
- * should occur.
+ * Whenever a failure occurs as described above, the workflow is not
+ * executed so that those classes can take control. Otherwise, the workflow
+ * chain is executed to continue processing the request.
  * </p>
  *
  * @author Brian Pontarelli
@@ -73,20 +67,22 @@ public class AuthorizationWorkflow implements Workflow {
     private final Authorizer authorizer;
     private final NotLoggedInHandler notLoggedInHandler;
     private final AuthorizationExceptionHandler authorizationExceptionHandler;
-    private final String notAuthorizedURL;
 
     @Inject
     public AuthorizationWorkflow(Authorizer authorizer, NotLoggedInHandler notLoggedInHandler,
-            AuthorizationExceptionHandler authorizationExceptionHandler, Configuration configuration) {
+            AuthorizationExceptionHandler authorizationExceptionHandler) {
         this.authorizer = authorizer;
         this.notLoggedInHandler = notLoggedInHandler;
         this.authorizationExceptionHandler = authorizationExceptionHandler;
-        this.notAuthorizedURL = configuration.getString("jcatapult.security.authorization.restricted-url", "/not-authorized");
     }
 
     /**
-     * Grabs the current request URI and then sends it along with the current user from the {@link org.jcatapult.security.EnhancedSecurityContext}
-     * to the {@link Authorizer} to be authorized.
+     * Grabs the current request URI and then sends it along with the current user from the
+     * {@link org.jcatapult.security.EnhancedSecurityContext} to the {@link Authorizer} to be
+     * authorized. If authorization fails, this delegates control to the
+     * {@link AuthorizationExceptionHandler}. If there is not a logged in user and there must
+     * be one to verify credentials (i.e. the authorizer threw a NotLoggedInException), this
+     * delegates control to the {@link NotLoggedInHandler}.
      *
      * @param   request The HTTP request to get the request URI from.
      * @param   response Not used.
@@ -97,35 +93,20 @@ public class AuthorizationWorkflow implements Workflow {
     public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
         String uri = httpRequest.getRequestURI();
         Object user = EnhancedSecurityContext.getCurrentUser();
 
         try {
             authorizer.authorize(user, uri);
         } catch (UnauthorizedException e) {
-            authorizationExceptionHandler.
-            httpResponse.sendRedirect(getContextPath(httpRequest, notAuthorizedURL));
+            authorizationExceptionHandler.handle(e, request, response, workflowChain);
             return;
         } catch (NotLoggedInException e) {
-            httpResponse.sendRedirect(getContextPath(httpRequest, loginURL));
+            notLoggedInHandler.handle(e, request, response, workflowChain);
             return;
         }
 
         workflowChain.doWorkflow(request, response);
-    }
-
-    private String getContextPath(HttpServletRequest httpRequest, String url) {
-        String context = httpRequest.getContextPath();
-        if (context.equals("")) {
-            return url;
-        }
-
-        if (url.startsWith("/")) {
-            return context + url;
-        }
-
-        return context + "/" + url;
     }
 
     public void destroy() {
