@@ -1,0 +1,43 @@
+#summary The JCatapult Scaffolder use cases
+
+= Introduction =
+
+The JCatapult Scaffolder is aimed at providing functionality for the following use cases.
+
+== List Scaffolders ==
+
+The user should be able to list out all of the available scaffolders using the command line tool. This listing should be a short view with a minimal description. For example:
+
+{{{
+$ scaffold list
+Here are the available scaffolders:
+
+  foo - The foo scaffolder does some foo stuff
+  bar - The bar scaffolder does some bar stuff
+}}}
+
+== Get Scaffolder Help ==
+
+The user should be able to get help on a specific scaffolder. This help should provide detailed information about the questions the scaffolder will ask the user and what it will produce when successfully invoked. For example:
+
+{{{
+$ scaffold help foo
+The foo scaffolder will ask the user the following questions:
+
+  1. What's your name?
+  2. What's your age?
+
+Once the foo scaffolder has all of the information it needs it will produces some foo stuff.
+}}}
+
+== Invoke a Scaffolder ==
+
+The user should be able to invoke a specific scaffolder from the command line. This will execute that specific scaffolder and let the scaffolder interact with the user. For example:
+
+{{{
+$ scaffold foo
+What is your name?  Bob
+What is your age?  32
+
+Created some foo stuff.
+}}}
