@@ -74,12 +74,10 @@ Each scaffolder is defined in a separate directory and that directory has a very
 
 === scaffolder.groovy ===
 
-Inside the scaffolder directory must be a single file named `scaffolder.groovy`. This file is a Groovy source file that contains the scaffolder implementation. The JCatapult Scaffolding system will load this file up and execute it.
+Inside the scaffolder directory must be a single file named `scaffolder.groovy`. This file is a Groovy source file that contains the scaffolder implementation, which must implement the `org.jcatapult.scaffold.Scaffolder` interface or extend the abstract class. The JCatapult Scaffolding system will load this file and execute it.
 
 === lib ===
 
 If a scaffolder requires additional libraries in order to function properly it can define an additional directory named *lib*. This directory can contain any number of JAR files that will be loaded for the scaffolder to use.
 
-=== ClassLoading ===
-
-For those who are interested, JCatapult creates a new classloader for the scaffolder and loads the classloader with each of the JAR files from the lib directory as well as the `scaffolder.groovy` class after it has been compiled by Groovy into Java byte-code.
+*ClassLoading note*: For those who are interested, JCatapult creates a new classloader for the scaffolder and loads the classloader with each of the JAR files from the lib directory as well as the `scaffolder.groovy` class after it has been compiled by Groovy into Java byte-code.
