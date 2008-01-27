@@ -36,13 +36,21 @@ import org.jcatapult.email.domain.Email;
  */
 public interface EmailCommand {
     /**
-     * Adds template params for token replacement within the template
+     * Adds a single template param for token replacement within the template.
      *
      * @param   name the param name
      * @param   value the param value
      * @return  This instance.
      */
     EmailCommand withTemplateParam(String name, Object value);
+
+    /**
+     * Adds template params for token replacement within the template.
+     *
+     * @param   params The params to add for token replacement in te template.
+     * @return  This instance.
+     */
+    EmailCommand withTemplateParams(Map<String, Object> params);
 
     /**
      * Returns a map of all the template params.
@@ -205,7 +213,7 @@ public interface EmailCommand {
     /**
      * Sends the email right now and waits until it is sent.
      *
-     * 
+     *
      * @return  The email if it was successfully sent, false if it wasn't sent.
      * @throws  ExecutionException If the execution of the email send failed.
      * @throws  InterruptedException If the thread used to send the email was interrupted.
