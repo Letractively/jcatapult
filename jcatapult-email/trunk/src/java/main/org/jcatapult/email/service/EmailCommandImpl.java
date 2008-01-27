@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.domain.Attachment;
@@ -50,7 +53,7 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand addTemplateParam(String name, Object value) {
+    public EmailCommand withTemplateParam(String name, Object value) {
         paramMap.put(name, value);
         return this;
     }
@@ -65,7 +68,7 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand setSubject(String subject) {
+    public EmailCommand subject(String subject) {
         email.setSubject(subject);
         return this;
     }
@@ -80,8 +83,15 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand setTo(EmailAddress... toEmails) {
-        email.setTo(toEmails);
+    public EmailCommand to(EmailAddress... to) {
+        email.addTo(to);
+        return this;
+    }
+
+    public EmailCommand to(String... to) {
+        for (String s : to) {
+            email.addTo(new EmailAddress(s));
+        }
         return this;
     }
 
@@ -95,9 +105,25 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand setFrom(EmailAddress fromEmail) {
+    public EmailCommand from(EmailAddress fromEmail) {
         email.setFrom(fromEmail);
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EmailCommand from(String from) {
+        email.setFrom(new EmailAddress(from));
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EmailCommand from(String from, String display) {
+        email.setFrom(new EmailAddress(from, display));
+        return null;
     }
 
     /**
@@ -110,8 +136,49 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand setBcc(EmailAddress... bccEmails) {
-        email.setBcc(bccEmails);
+    public EmailCommand replyTo(EmailAddress replyTo) {
+        email.setReplyTo(replyTo);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EmailCommand replyTo(String replyTo) {
+        email.setReplyTo(new EmailAddress(replyTo));
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EmailCommand replyTo(String replyTo, String display) {
+        email.setReplyTo(new EmailAddress(replyTo, display));
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EmailAddress getReplyTo() {
+        return email.getReplyTo();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EmailCommand bcc(EmailAddress... bccEmails) {
+        email.addBcc(bccEmails);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EmailCommand bcc(String... bcc) {
+        for (String s : bcc) {
+            email.addBcc(new EmailAddress(s));
+        }
         return this;
     }
 
@@ -125,8 +192,18 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand setCc(EmailAddress... ccEmails) {
-        email.setCc(ccEmails);
+    public EmailCommand cc(EmailAddress... ccEmails) {
+        email.addCc(ccEmails);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EmailCommand cc(String... cc) {
+        for (String s : cc) {
+            email.addCc(new EmailAddress(s));
+        }
         return this;
     }
 
@@ -140,7 +217,7 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand addAttachments(Attachment... attachments) {
+    public EmailCommand withAttachments(Attachment... attachments) {
         for (Attachment attachment : attachments) {
             email.addAttachment(attachment);
         }
@@ -157,7 +234,31 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public Future<Email> sendEmail() {
+    public Future<Email> later() {
         return freeMarkerEmailService.sendEmail(template, email, paramMap);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Email now() throws ExecutionException, InterruptedException {
+        Future<Email> future = freeMarkerEmailService.sendEmail(template, email, paramMap);
+        return future.get();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public TimeCommand withinTheNext(final long amount) {
+        final Future<Email> future = freeMarkerEmailService.sendEmail(template, email, paramMap);
+        return new TimeCommand() {
+            public Email seconds() throws ExecutionException, TimeoutException, InterruptedException {
+                return future.get(amount, TimeUnit.SECONDS);
+            }
+
+            public Email milliseconds() throws ExecutionException, TimeoutException, InterruptedException {
+                return future.get(amount, TimeUnit.MILLISECONDS);
+            }
+        };
     }
 }

@@ -16,6 +16,7 @@
 package org.jcatapult.email.domain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.jcatapult.domain.contact.EmailAddress;
@@ -77,8 +78,8 @@ public class Email {
      *
      * @param   to The to EmailAddress address.
      */
-    public void addTo(EmailAddress to) {
-        this.to.add(to);
+    public void addTo(EmailAddress... to) {
+        this.to.addAll(Arrays.asList(to));
     }
 
     public EmailAddress[] getCc() {
@@ -94,8 +95,8 @@ public class Email {
      *
      * @param   cc The cc EmailAddress address.
      */
-    public void addCc(EmailAddress cc) {
-        this.cc.add(cc);
+    public void addCc(EmailAddress... cc) {
+        this.cc.addAll(Arrays.asList(cc));
     }
 
     public EmailAddress[] getBcc() {
@@ -107,12 +108,12 @@ public class Email {
     }
 
     /**
-     * Adds a setBcc EmailAddress address to the list.
+     * Adds a bcc EmailAddress address to the list.
      *
-     * @param   bcc The setBcc EmailAddress address.
+     * @param   bcc The bcc EmailAddress address.
      */
-    public void addBcc(EmailAddress bcc) {
-        this.bcc.add(bcc);
+    public void addBcc(EmailAddress... bcc) {
+        this.bcc.addAll(Arrays.asList(bcc));
     }
 
     public String getText() {

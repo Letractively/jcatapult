@@ -17,6 +17,9 @@ package org.jcatapult.email.service;
 
 import java.io.File;
 import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
@@ -64,10 +67,10 @@ public class FreeMarkerEmailServiceTest {
 
         MockEmailTransportService transport = new MockEmailTransportService();
         FreeMarkerEmailService service = new FreeMarkerEmailService(transport, config, containerResolver, "/WEB-INF/email");
-        service.begin("test-template").setCc(new EmailAddress("from@example.com")).
-            setBcc(new EmailAddress("from@example.com")).setSubject("test subject").
-            setFrom(new EmailAddress("from@example.com")).setTo(new EmailAddress("to@example.com")).
-            addTemplateParam("key1", "value1").sendEmail();
+        service.sendEmail("test-template").cc(new EmailAddress("from@example.com")).
+            bcc(new EmailAddress("from@example.com")).subject("test subject").
+            from(new EmailAddress("from@example.com")).to(new EmailAddress("to@example.com")).
+            withTemplateParam("key1", "value1").now();
         Assert.assertEquals("test subject", transport.email.getSubject());
         Assert.assertEquals("from@example.com", transport.email.getFrom().getAddress());
         Assert.assertEquals("to@example.com", transport.email.getTo()[0].getAddress());
@@ -107,10 +110,10 @@ public class FreeMarkerEmailServiceTest {
 
         MockEmailTransportService transport = new MockEmailTransportService();
         FreeMarkerEmailService service = new FreeMarkerEmailService(transport, config, containerResolver, "/WEB-INF/email");
-        service.begin("test-template").setCc(new EmailAddress("from@example.com")).
-            setBcc(new EmailAddress("from@example.com")).setSubject("test subject").
-            setFrom(new EmailAddress("from@example.com")).setTo(new EmailAddress("to@example.com")).
-            addTemplateParam("key1", "value1").sendEmail();
+        service.sendEmail("test-template").cc(new EmailAddress("from@example.com")).
+            bcc(new EmailAddress("from@example.com")).subject("test subject").
+            from(new EmailAddress("from@example.com")).to(new EmailAddress("to@example.com")).
+            withTemplateParam("key1", "value1").now();
         Assert.assertEquals("test subject", transport.email.getSubject());
         Assert.assertEquals("from@example.com", transport.email.getFrom().getAddress());
         Assert.assertEquals("to@example.com", transport.email.getTo()[0].getAddress());
@@ -151,7 +154,7 @@ public class FreeMarkerEmailServiceTest {
 
         MockEmailTransportService transport = new MockEmailTransportService();
         FreeMarkerEmailService service = new FreeMarkerEmailService(transport, config, containerResolver, "/WEB-INF/email");
-        service.begin("test-template").addTemplateParam("key1", "value1").sendEmail();
+        service.sendEmail("test-template").withTemplateParam("key1", "value1").now();
         Assert.assertEquals("test subject", transport.email.getSubject());
         Assert.assertEquals("from@example.com", transport.email.getFrom().getAddress());
         Assert.assertEquals("to@example.com", transport.email.getTo()[0].getAddress());
@@ -166,7 +169,27 @@ public class FreeMarkerEmailServiceTest {
 
         public Future<Email> sendEmail(Email email) {
             this.email = email;
-            return null;
+            return new Future<Email>() {
+                public boolean cancel(boolean mayInterruptIfRunning) {
+                    return false;
+                }
+
+                public boolean isCancelled() {
+                    return false;
+                }
+
+                public boolean isDone() {
+                    return false;
+                }
+
+                public Email get() throws InterruptedException, ExecutionException {
+                    return null;
+                }
+
+                public Email get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+                    return null;
+                }
+            };
         }
     }
 }
