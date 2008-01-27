@@ -41,7 +41,7 @@ public class DefaultAuthorizationExceptionHandler implements AuthorizationExcept
 
     @Inject
     public DefaultAuthorizationExceptionHandler(Configuration configuration) {
-        this.notAuthorizedURL = configuration.getString("jcatapult.security.authorization.restricted-url", "/not-authorized");
+        this.notAuthorizedURL = configuration.getString("jcatapult.security.authorization.restricted-uri", "/not-authorized");
     }
 
     public void handle(UnauthorizedException exception, ServletRequest request, ServletResponse response,

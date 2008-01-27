@@ -47,7 +47,7 @@ public class SavedRequestWorkflowTest {
     @Test
     public void testMainWorkflowNoSavedRequest() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.uri", "/login")).andReturn("/login");
+        EasyMock.expect(c.getString("jcatapult.security.login.page-uri", "/login")).andReturn("/login");
         EasyMock.expect(c.getString("jcatapult.security.login.successful-login-uri", "/successful-login")).andReturn("/successful-login");
         EasyMock.replay(c);
 
@@ -74,7 +74,7 @@ public class SavedRequestWorkflowTest {
     @Test
     public void testMainWorkflowSavedRequest() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.uri", "/login")).andReturn("/login");
+        EasyMock.expect(c.getString("jcatapult.security.login.page-uri", "/login")).andReturn("/login");
         EasyMock.expect(c.getString("jcatapult.security.login.successful-login-uri", "/successful-login")).andReturn("/successful-login");
         EasyMock.replay(c);
 
@@ -107,7 +107,7 @@ public class SavedRequestWorkflowTest {
     @Test
     public void testPostLoginHandleWithNoSavedRequest() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.uri", "/login")).andReturn("/login");
+        EasyMock.expect(c.getString("jcatapult.security.login.page-uri", "/login")).andReturn("/login");
         EasyMock.expect(c.getString("jcatapult.security.login.successful-login-uri", "/successful-login")).andReturn("/successful-login");
         EasyMock.replay(c);
 
@@ -142,7 +142,7 @@ public class SavedRequestWorkflowTest {
     @Test
     public void testPostLoginHandleWithSavedRequest() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.uri", "/login")).andReturn("/login");
+        EasyMock.expect(c.getString("jcatapult.security.login.page-uri", "/login")).andReturn("/login");
         EasyMock.expect(c.getString("jcatapult.security.login.successful-login-uri", "/successful-login")).andReturn("/successful-login");
         EasyMock.replay(c);
 
@@ -170,7 +170,7 @@ public class SavedRequestWorkflowTest {
     @Test
     public void testNotLoggedInHandle() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.uri", "/login")).andReturn("/login");
+        EasyMock.expect(c.getString("jcatapult.security.login.page-uri", "/login")).andReturn("/login");
         EasyMock.expect(c.getString("jcatapult.security.login.successful-login-uri", "/successful-login")).andReturn("/successful-login");
         EasyMock.replay(c);
 

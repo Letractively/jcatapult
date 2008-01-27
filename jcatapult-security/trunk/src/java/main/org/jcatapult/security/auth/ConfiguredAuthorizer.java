@@ -80,9 +80,9 @@ public class ConfiguredAuthorizer implements Authorizer {
     @Inject
     public ConfiguredAuthorizer(UserAdapter userAdapter, Configuration configuration) {
         this.userAdapter = userAdapter;
-        String[] rules = configuration.getString("jcatapult.security.authorization", "/admin**=admin").split("\n");
+        String[] rules = configuration.getString("jcatapult.security.authorization.rules", "/admin**=admin").trim().split("\n");
         for (String rule : rules) {
-            String[] parts = rule.split("=");
+            String[] parts = rule.trim().split("=");
             if (parts.length != 2) {
                 throw new RuntimeException("Invalid authorization configuration rule [" + rule +
                     "] in the JCatapult configuration files");

@@ -39,7 +39,7 @@ public class LoginWorkflowTest {
     @Test
     public void testIncorrectURI() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.uri", "/jcatapult-security-check")).andReturn("/jcatapult-security-check");
+        EasyMock.expect(c.getString("jcatapult.security.login.submit-uri", "/jcatapult-security-check")).andReturn("/jcatapult-security-check");
         EasyMock.expect(c.getString("jcatapult.security.login.username-parameter", "j_username")).andReturn("j_username");
         EasyMock.expect(c.getString("jcatapult.security.login.password-parameter", "j_password")).andReturn("j_password");
         EasyMock.replay(c);
@@ -61,7 +61,7 @@ public class LoginWorkflowTest {
     @Test
     public void testSuccessfulLogin() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.uri", "/jcatapult-security-check")).andReturn("/jcatapult-security-check");
+        EasyMock.expect(c.getString("jcatapult.security.login.submit-uri", "/jcatapult-security-check")).andReturn("/jcatapult-security-check");
         EasyMock.expect(c.getString("jcatapult.security.login.username-parameter", "j_username")).andReturn("j_username");
         EasyMock.expect(c.getString("jcatapult.security.login.password-parameter", "j_password")).andReturn("j_password");
         EasyMock.replay(c);
@@ -95,7 +95,7 @@ public class LoginWorkflowTest {
     @Test
     public void testFailedLogin() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.uri", "/jcatapult-security-check")).andReturn("/jcatapult-security-check");
+        EasyMock.expect(c.getString("jcatapult.security.login.submit-uri", "/jcatapult-security-check")).andReturn("/jcatapult-security-check");
         EasyMock.expect(c.getString("jcatapult.security.login.username-parameter", "j_username")).andReturn("j_username");
         EasyMock.expect(c.getString("jcatapult.security.login.password-parameter", "j_password")).andReturn("j_password");
         EasyMock.replay(c);

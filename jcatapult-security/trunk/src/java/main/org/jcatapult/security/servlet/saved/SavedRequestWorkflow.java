@@ -74,7 +74,7 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
 
     @Inject
     public SavedRequestWorkflow(Configuration configuration) {
-        this.loginURL = configuration.getString("jcatapult.security.login.uri", "/login");
+        this.loginURL = configuration.getString("jcatapult.security.login.page-uri", "/login");
         this.successfulLoginURI = configuration.getString("jcatapult.security.login.successful-login-uri", "/successful-login");
     }
 

@@ -277,7 +277,7 @@ public class ConfiguredAuthorizerTest {
 
     private Configuration makeConfiguration(String config) {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.authorization", "/admin**=admin")).andReturn(config);
+        EasyMock.expect(c.getString("jcatapult.security.authorization.rules", "/admin**=admin")).andReturn(config);
         EasyMock.replay(c);
         return c;
     }

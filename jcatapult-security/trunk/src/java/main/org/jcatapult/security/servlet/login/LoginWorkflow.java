@@ -52,7 +52,7 @@ public class LoginWorkflow implements Workflow {
         this.loginService = loginService;
         this.exceptionHandler = exceptionHandler;
         this.loginHandler = loginHandler;
-        this.loginURI = configuration.getString("jcatapult.security.login.uri", "/jcatapult-security-check");
+        this.loginURI = configuration.getString("jcatapult.security.login.submit-uri", "/jcatapult-security-check");
         this.userNameParameter = configuration.getString("jcatapult.security.login.username-parameter", "j_username");
         this.passwordParameter = configuration.getString("jcatapult.security.login.password-parameter", "j_password");
     }
