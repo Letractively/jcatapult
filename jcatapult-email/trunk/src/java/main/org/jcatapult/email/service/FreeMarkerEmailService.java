@@ -144,7 +144,7 @@ public class FreeMarkerEmailService implements EmailService {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand begin(String template) {
+    public EmailCommand sendEmail(String template) {
         Email email = new Email();
 
         String[] configToEmails = configuration.getStringArray("email." + template + ".to");

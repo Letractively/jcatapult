@@ -30,7 +30,7 @@ public class EmailBuilderImplTest {
     @Test
     public void testTemplateParams() {
         EmailCommand eb = new EmailCommandImpl(null, null, new Email());
-        eb = eb.addTemplateParam("key1", "value1").addTemplateParam("key2", "value2");
+        eb = eb.withTemplateParam("key1", "value1").withTemplateParam("key2", "value2");
 
         Assert.assertEquals(2, eb.getTemplateParams().size());
 
@@ -41,7 +41,7 @@ public class EmailBuilderImplTest {
     @Test
     public void testSubjectExplicit() {
         EmailCommand eb = new EmailCommandImpl(null, null, new Email());
-        eb.setSubject("test subject");
+        eb.subject("test subject");
         Assert.assertEquals("test subject", eb.getSubject());
     }
 }

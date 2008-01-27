@@ -15,9 +15,10 @@
  */
 package org.jcatapult.email.service;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
 
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.domain.Attachment;
@@ -41,7 +42,7 @@ public interface EmailCommand {
      * @param   value the param value
      * @return  This instance.
      */
-    EmailCommand addTemplateParam(String name, Object value);
+    EmailCommand withTemplateParam(String name, Object value);
 
     /**
      * Returns a map of all the template params.
@@ -56,7 +57,7 @@ public interface EmailCommand {
      * @param   subject the email subject
      * @return  This instance.
      */
-    EmailCommand setSubject(String subject);
+    EmailCommand subject(String subject);
 
     /**
      * @return  The previous set subject or null.
@@ -70,7 +71,16 @@ public interface EmailCommand {
      * @param   to The list of to email to send the email to (required).
      * @return  This instance.
      */
-    EmailCommand setTo(EmailAddress... to);
+    EmailCommand to(EmailAddress... to);
+
+    /**
+     * Method to set a list of email to addresses.  This method assumes that the to display is equal to the
+     * to address.
+     *
+     * @param   to The list of to email to send the email to (required).
+     * @return  This instance.
+     */
+    EmailCommand to(String... to);
 
     /**
      * @return  The previously set to addresses or null.
@@ -80,10 +90,27 @@ public interface EmailCommand {
     /**
      * Sets the from email address
      *
-     * @param   from The from email
+     * @param   from The from email.
      * @return  This instance.
      */
-    EmailCommand setFrom(EmailAddress from);
+    EmailCommand from(EmailAddress from);
+
+    /**
+     * Sets the from email address
+     *
+     * @param   from The from email.
+     * @return  This instance.
+     */
+    EmailCommand from(String from);
+
+    /**
+     * Sets the from email address
+     *
+     * @param   from The from email.
+     * @param   display The display part of the email address.
+     * @return  This instance.
+     */
+    EmailCommand from(String from, String display);
 
     /**
      * @return  The previously set from address or null.
@@ -91,12 +118,50 @@ public interface EmailCommand {
     EmailAddress getFrom();
 
     /**
-     * vararg method to add blind carbon copies
+     * Sets the reply to email address
      *
-     * @param   bcc The email blind carbon copy
+     * @param   replyTo The reply to email address.
      * @return  This instance.
      */
-    EmailCommand setBcc(EmailAddress... bcc);
+    EmailCommand replyTo(EmailAddress replyTo);
+
+    /**
+     * Sets the reply to email address
+     *
+     * @param   replyTo The reply to email address.
+     * @return  This instance.
+     */
+    EmailCommand replyTo(String replyTo);
+
+    /**
+     * Sets the reply to email address
+     *
+     * @param   replyTo The reply to email address.
+     * @param   display The display part of the email address.
+     * @return  This instance.
+     */
+    EmailCommand replyTo(String replyTo, String display);
+
+    /**
+     * @return  The previously set reply to address or null.
+     */
+    EmailAddress getReplyTo();
+
+    /**
+     * A vararg method to add blind carbon copies.
+     *
+     * @param   bcc The blind carbon copy email addresses.
+     * @return  This instance.
+     */
+    EmailCommand bcc(EmailAddress... bcc);
+
+    /**
+     * A vararg method to add blind carbon copies.
+     *
+     * @param   bcc The blind carbon copy email addresses.
+     * @return  This instance.
+     */
+    EmailCommand bcc(String... bcc);
 
     /**
      * @return  The previously set bcc address or null.
@@ -104,12 +169,20 @@ public interface EmailCommand {
     EmailAddress[] getBcc();
 
     /**
-     * vararg method to add email carbon copies
+     * A vararg method to add email carbon copies.
      *
      * @param   cc The carbon copy email addresses.
      * @return  This instance.
      */
-    EmailCommand setCc(EmailAddress... cc);
+    EmailCommand cc(EmailAddress... cc);
+
+    /**
+     * A vararg method to add email carbon copies.
+     *
+     * @param   cc The carbon copy email addresses.
+     * @return  This instance.
+     */
+    EmailCommand cc(String... cc);
 
     /**
      * @return  The previously set cc addresses or null.
@@ -122,7 +195,7 @@ public interface EmailCommand {
      * @param   attachments The list of email attachments.
      * @return  This instance.
      */
-    EmailCommand addAttachments(Attachment... attachments);
+    EmailCommand withAttachments(Attachment... attachments);
 
     /**
      * @return  The previously set list of attachments.
@@ -130,10 +203,28 @@ public interface EmailCommand {
     List<Attachment> getAttachments();
 
     /**
-     * Sends the email.
+     * Sends the email right now and waits until it is sent.
+     *
+     * 
+     * @return  The email if it was successfully sent, false if it wasn't sent.
+     * @throws  ExecutionException If the execution of the email send failed.
+     * @throws  InterruptedException If the thread used to send the email was interrupted.
+     */
+    Email now() throws ExecutionException, InterruptedException;
+
+    /**
+     * Sends the email within the next given period of time.
+     *
+     * @param   amount The amount of time.
+     * @return  A time command that allows the time parameters to be set.
+     */
+    TimeCommand withinTheNext(long amount);
+
+    /**
+     * Sends the email later.
      *
      * @return  A Future that represents the sending operation which might have already happened or
-     *          will happen in the future.
+     *          will happen in the future, depending on the speed of things.
      */
-    Future<Email> sendEmail();
+    Future<Email> later();
 }

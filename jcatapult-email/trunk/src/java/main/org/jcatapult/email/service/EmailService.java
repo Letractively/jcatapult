@@ -45,12 +45,12 @@ public interface EmailService {
      * </p>
      *
      * <pre>
-     * begin("hello").addTemplateParam("name", "Joe Blow").setTo("joe@blow.com").setFrom("info@example.com").sendEmail();
+     * sendEmail("hello").withTemplateParam("name", "Joe Blow").to("joe@blow.com").from("info@example.com").now();
      * </pre>
      *
      * @param   template (Required) The name of the template. The implementation will dictate the type
      *          of template and how they are stored.
      * @return  The name value pair chain.
      */
-    EmailCommand begin(String template);
+    EmailCommand sendEmail(String template);
 }
