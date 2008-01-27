@@ -31,7 +31,7 @@ import org.jcatapult.email.domain.Email;
  * {@inheritDoc}
  */
 public class EmailCommandImpl implements EmailCommand {
-    private final Map<String, Object> paramMap = new HashMap<String, Object>();
+    private final Map<String, Object> params = new HashMap<String, Object>();
     private final String template;
     private final Email email;
     private final FreeMarkerEmailService freeMarkerEmailService;
@@ -54,7 +54,15 @@ public class EmailCommandImpl implements EmailCommand {
      * {@inheritDoc}
      */
     public EmailCommand withTemplateParam(String name, Object value) {
-        paramMap.put(name, value);
+        params.put(name, value);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EmailCommand withTemplateParams(Map<String, Object> params) {
+        this.params.putAll(params);
         return this;
     }
 
@@ -62,7 +70,7 @@ public class EmailCommandImpl implements EmailCommand {
      * {@inheritDoc}
      */
     public Map<String, Object> getTemplateParams() {
-        return paramMap;
+        return params;
     }
 
     /**
@@ -235,14 +243,14 @@ public class EmailCommandImpl implements EmailCommand {
      * {@inheritDoc}
      */
     public Future<Email> later() {
-        return freeMarkerEmailService.sendEmail(template, email, paramMap);
+        return freeMarkerEmailService.sendEmail(template, email, params);
     }
 
     /**
      * {@inheritDoc}
      */
     public Email now() throws ExecutionException, InterruptedException {
-        Future<Email> future = freeMarkerEmailService.sendEmail(template, email, paramMap);
+        Future<Email> future = freeMarkerEmailService.sendEmail(template, email, params);
         return future.get();
     }
 
@@ -250,7 +258,7 @@ public class EmailCommandImpl implements EmailCommand {
      * {@inheritDoc}
      */
     public TimeCommand withinTheNext(final long amount) {
-        final Future<Email> future = freeMarkerEmailService.sendEmail(template, email, paramMap);
+        final Future<Email> future = freeMarkerEmailService.sendEmail(template, email, params);
         return new TimeCommand() {
             public Email seconds() throws ExecutionException, TimeoutException, InterruptedException {
                 return future.get(amount, TimeUnit.SECONDS);
