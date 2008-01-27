@@ -101,7 +101,6 @@ public class FreeMarkerEmailService implements EmailService {
     private EmailTransportService emailTransportService;
     private Configuration configuration;
     private freemarker.template.Configuration freeMarkerConfiguration = new freemarker.template.Configuration();
-    private String template;
 
     /**
      * Constructs a FreeMarkerEmailService. The transport given is used to send the emails and the
@@ -116,9 +115,9 @@ public class FreeMarkerEmailService implements EmailService {
      */
     @Inject
     public FreeMarkerEmailService(EmailTransportService emailTransportService,
-        Configuration configuration, ContainerResolver containerResolver,
-        @Named("jcatapult.email.templates.location")String defaultLocation)
-        throws Exception {
+            Configuration configuration, ContainerResolver containerResolver,
+            @Named("jcatapult.email.templates.location")String defaultLocation)
+    throws Exception {
         this.emailTransportService = emailTransportService;
         this.configuration = configuration;
 
@@ -145,26 +144,11 @@ public class FreeMarkerEmailService implements EmailService {
     /**
      * {@inheritDoc}
      */
-    public EmailBuilder buildEmail(String template) {
-        this.template = template;
-        return new EmailBuilderImpl();
-    }
+    public EmailCommand begin(String template) {
+        Email email = new Email();
 
-    /**
-     * {@inheritDoc}
-     */
-    public Future<Email> sendEmail(EmailBuilder emailBuilder) {
-
-        Email email = emailBuilder.getEmail();
-        Map<String, Object> paramMap = emailBuilder.getTemplateParamMap();
-
-        // check if email to is null, if it is, try and set it via configuration
-        if (email.getTo() == null || email.getTo().length == 0) {
-            String[] configToEmails = configuration.getStringArray("email." + template + ".to");
-            if (configToEmails == null) {
-                throw new EmailException("The [to] parameter was not configured during the email build and it was " +
-                    "not in the configuration under the key [email." + template + ".to]");
-            }
+        String[] configToEmails = configuration.getStringArray("email." + template + ".to");
+        if (configToEmails != null) {
             EmailAddress[] toEmails = new EmailAddress[configToEmails.length];
             for (int i = 0; i < configToEmails.length; i++) {
                 toEmails[i] = new EmailAddress(configToEmails[i]);
@@ -172,17 +156,11 @@ public class FreeMarkerEmailService implements EmailService {
             email.setTo(toEmails);
         }
 
-        // check email from.  if it's null, check if it's defined in config
-        if (email.getFrom() == null) {
-            String configFromEmail = configuration.getString("email." + template + ".from");
-            // if the from email is still not set, then throw an exception
-            if (configFromEmail == null) {
-                throw new EmailException("The [from] parameter was not configured during the email build and it was " +
-                    "not in the configuration under the key [email." + template + ".from]");
-            }
-
+        String configFromEmail = configuration.getString("email." + template + ".from");
+        if (configFromEmail != null) {
             // if the from display is null then see if it's set in the configuration
             String configFromEmailDisplay = configuration.getString("email." + template + ".from.display");
+
             // if it's still null, then set it to the from email
             if (configFromEmailDisplay == null) {
                 configFromEmailDisplay = configFromEmail;
@@ -191,50 +169,51 @@ public class FreeMarkerEmailService implements EmailService {
             email.setFrom(new EmailAddress(configFromEmail, configFromEmailDisplay));
         }
 
-        // check email subject.  if it's null, check if it's defined in config
-        if (email.getSubject() == null) {
-            String configEmailSubject = configuration.getString("email." + template + ".subject");
-            // if the from email is still not set, then throw an exception
-            if (configEmailSubject == null) {
-                throw new EmailException("The [subject] parameter was not configured during the email build and it was " +
-                    "not in the configuration under the key [email." + template + ".subject]");
-            }
-
+        String configEmailSubject = configuration.getString("email." + template + ".subject");
+        if (configEmailSubject != null) {
             email.setSubject(configEmailSubject);
         }
 
-        // check email cc.  If it's not defined, check config
-        if (email.getCc() == null || email.getCc().length == 0) {
-            String[] configCcEmails = configuration.getStringArray("email." + template + ".cc");
-            if (configCcEmails != null) {
-                EmailAddress[] ccEmails = new EmailAddress[configCcEmails.length];
-                for (int i = 0; i < configCcEmails.length; i++) {
-                    ccEmails[i] = new EmailAddress(configCcEmails[i]);
-                }
-                email.setCc(ccEmails);
+        String[] configCcEmails = configuration.getStringArray("email." + template + ".cc");
+        if (configCcEmails != null) {
+            EmailAddress[] ccEmails = new EmailAddress[configCcEmails.length];
+            for (int i = 0; i < configCcEmails.length; i++) {
+                ccEmails[i] = new EmailAddress(configCcEmails[i]);
             }
+            email.setCc(ccEmails);
         }
 
         // check email cc.  If it's not defined, check config
-        if (email.getBcc() == null || email.getBcc().length == 0) {
-            String[] configBccEmails = configuration.getStringArray("email." + template + ".bcc");
-            if (configBccEmails != null) {
-                EmailAddress[] bccEmails = new EmailAddress[configBccEmails.length];
-                for (int i = 0; i < configBccEmails.length; i++) {
-                    bccEmails[i] = new EmailAddress(configBccEmails[i]);
-                }
-                email.setBcc(bccEmails);
+        String[] configBccEmails = configuration.getStringArray("email." + template + ".bcc");
+        if (configBccEmails != null) {
+            EmailAddress[] bccEmails = new EmailAddress[configBccEmails.length];
+            for (int i = 0; i < configBccEmails.length; i++) {
+                bccEmails[i] = new EmailAddress(configBccEmails[i]);
             }
+            email.setBcc(bccEmails);
         }
 
+        return new EmailCommandImpl(template, this, email);
+    }
+
+    /**
+     * This call back executes the templates and then sends the email using the transport service
+     * that is set in the constructor.
+     *
+     * @param   template The template to execute.
+     * @param   email The email to add the text to and send.
+     * @param   params The params that are sent to the template.
+     * @return  The future from the transport.
+     */
+    Future<Email> sendEmail(String template, Email email, Map<String, Object> params) {
         // Get the text version if there is a template
-        String text = callTemplate(template + "-text.ftl", paramMap);
+        String text = callTemplate(template + "-text.ftl", params);
         if (text != null) {
             email.setText(text);
         }
 
         // Handle the HTML version if there is one
-        String html = callTemplate(template + "-html.ftl", paramMap);
+        String html = callTemplate(template + "-html.ftl", params);
         if (html != null) {
             email.setHtml(html);
         }

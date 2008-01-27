@@ -107,9 +107,9 @@ public class Email {
     }
 
     /**
-     * Adds a bcc EmailAddress address to the list.
+     * Adds a setBcc EmailAddress address to the list.
      *
-     * @param   bcc The bcc EmailAddress address.
+     * @param   bcc The setBcc EmailAddress address.
      */
     public void addBcc(EmailAddress bcc) {
         this.bcc.add(bcc);
