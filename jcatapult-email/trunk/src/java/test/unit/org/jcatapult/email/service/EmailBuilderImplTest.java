@@ -15,31 +15,33 @@
  */
 package org.jcatapult.email.service;
 
-import org.jcatapult.container.ContainerResolver;
 import org.junit.Assert;
 import org.junit.Test;
+import org.jcatapult.email.domain.Email;
 
 /**
- * User: jhumphrey
- * Date: Jan 23, 2008
+ * <p>
+ * This class tests the email command.
+ * </p>
+ *
+ * @author  James Humphrey
  */
 public class EmailBuilderImplTest {
     @Test
     public void testTemplateParams() {
-        EmailService.EmailBuilder eb = new EmailBuilderImpl();
+        EmailCommand eb = new EmailCommandImpl(null, null, new Email());
         eb = eb.addTemplateParam("key1", "value1").addTemplateParam("key2", "value2");
 
-        Assert.assertEquals(2, eb.getTemplateParamMap().size());
+        Assert.assertEquals(2, eb.getTemplateParams().size());
 
-        Assert.assertEquals("value1", eb.getTemplateParamMap().get("key1"));
-        Assert.assertEquals("value2", eb.getTemplateParamMap().get("key2"));
+        Assert.assertEquals("value1", eb.getTemplateParams().get("key1"));
+        Assert.assertEquals("value2", eb.getTemplateParams().get("key2"));
     }
 
     @Test
     public void testSubjectExplicit() {
-        EmailService.EmailBuilder eb = new EmailBuilderImpl();
+        EmailCommand eb = new EmailCommandImpl(null, null, new Email());
         eb.setSubject("test subject");
-
-        Assert.assertEquals("test subject", eb.getEmail().getSubject());
+        Assert.assertEquals("test subject", eb.getSubject());
     }
 }
