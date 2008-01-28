@@ -175,7 +175,7 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand withBCC(EmailAddress... bccEmails) {
+    public EmailCommand andBCC(EmailAddress... bccEmails) {
         email.addBcc(bccEmails);
         return this;
     }
@@ -183,7 +183,7 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand withBCC(String... bcc) {
+    public EmailCommand andBCC(String... bcc) {
         for (String s : bcc) {
             email.addBcc(new EmailAddress(s));
         }
@@ -200,7 +200,7 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand withCC(EmailAddress... ccEmails) {
+    public EmailCommand andCC(EmailAddress... ccEmails) {
         email.addCc(ccEmails);
         return this;
     }
@@ -208,7 +208,7 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public EmailCommand withCC(String... cc) {
+    public EmailCommand andCC(String... cc) {
         for (String s : cc) {
             email.addCc(new EmailAddress(s));
         }
