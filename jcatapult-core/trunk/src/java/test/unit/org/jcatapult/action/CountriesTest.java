@@ -21,8 +21,6 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static net.java.util.CollectionTools.list;
-
 /**
  * <p>
  * This tests the countries action.
@@ -52,7 +50,7 @@ public class CountriesTest {
     @Test
     public void testPreferred() {
         Countries countries = new Countries();
-        countries.setPreferredCodes(list("US", "AE", "DE"));
+        countries.setPreferredCodes("US, AE, DE");
         countries.execute();
         Map<String, String> map = countries.getCountries();
         System.out.println("Result pref " + map);
@@ -113,7 +111,7 @@ public class CountriesTest {
         Countries countries = new Countries();
         countries.setBlankValue("--");
         countries.setIncludeBlank(true);
-        countries.setPreferredCodes(list("US", "AE", "DE"));
+        countries.setPreferredCodes("US,AE,DE");
         countries.execute();
         Map<String, String> map = countries.getCountries();
         System.out.println("Result blank pref" + map);

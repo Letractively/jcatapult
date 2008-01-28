@@ -15,20 +15,19 @@
  */
 package org.jcatapult.action;
 
-import java.util.ResourceBundle;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
-import org.junit.Test;
 import org.junit.Assert;
-
-import net.java.util.CollectionTools;
+import org.junit.Test;
 
 /**
- * User: jhumphrey
- * Date: Jan 22, 2008
+ * <p>
+ * This class tests the states class.
+ * </p>
+ *
+ * @author  Brian Pontarelli and James Humphrey
  */
 public class StatesTest {
 
@@ -73,7 +72,7 @@ public class StatesTest {
         stateAction.setIncludeBlank(true);
         String blankValue = "-- SELECT A STATE --";
         stateAction.setBlankValue(blankValue);
-        stateAction.setPreferredStates(CollectionTools.list("CA"));
+        stateAction.setPreferredStates("CA");
         stateAction.execute();
 
         ResourceBundle rb = ResourceBundle.getBundle("org.jcatapult.action.states");
