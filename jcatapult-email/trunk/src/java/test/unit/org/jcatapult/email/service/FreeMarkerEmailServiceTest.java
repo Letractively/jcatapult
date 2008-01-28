@@ -67,8 +67,8 @@ public class FreeMarkerEmailServiceTest {
 
         MockEmailTransportService transport = new MockEmailTransportService();
         FreeMarkerEmailService service = new FreeMarkerEmailService(transport, config, containerResolver, "/WEB-INF/email");
-        service.sendEmail("test-template").cc(new EmailAddress("from@example.com")).
-            bcc(new EmailAddress("from@example.com")).subject("test subject").
+        service.sendEmail("test-template").withCC(new EmailAddress("from@example.com")).
+            withBCC(new EmailAddress("from@example.com")).withSubject("test subject").
             from(new EmailAddress("from@example.com")).to(new EmailAddress("to@example.com")).
             withTemplateParam("key1", "value1").now();
         Assert.assertEquals("test subject", transport.email.getSubject());
@@ -110,8 +110,8 @@ public class FreeMarkerEmailServiceTest {
 
         MockEmailTransportService transport = new MockEmailTransportService();
         FreeMarkerEmailService service = new FreeMarkerEmailService(transport, config, containerResolver, "/WEB-INF/email");
-        service.sendEmail("test-template").cc(new EmailAddress("from@example.com")).
-            bcc(new EmailAddress("from@example.com")).subject("test subject").
+        service.sendEmail("test-template").withCC(new EmailAddress("from@example.com")).
+            withBCC(new EmailAddress("from@example.com")).withSubject("test subject").
             from(new EmailAddress("from@example.com")).to(new EmailAddress("to@example.com")).
             withTemplateParam("key1", "value1").now();
         Assert.assertEquals("test subject", transport.email.getSubject());

@@ -41,7 +41,7 @@ public class EmailBuilderImplTest {
     @Test
     public void testSubjectExplicit() {
         EmailCommand eb = new EmailCommandImpl(null, null, new Email());
-        eb.subject("test subject");
+        eb.withSubject("test subject");
         Assert.assertEquals("test subject", eb.getSubject());
     }
 }
