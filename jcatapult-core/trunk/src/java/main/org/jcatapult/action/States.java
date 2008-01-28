@@ -1,33 +1,27 @@
 package org.jcatapult.action;
 
-import java.util.Locale;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.LinkedHashMap;
-import java.util.Comparator;
-import java.util.ResourceBundle;
 import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 import com.opensymphony.xwork2.Action;
-import net.java.lang.ObjectTools;
-import net.java.lang.StringTools;
 
 /**
- * User: jhumphrey
- * Date: Jan 22, 2008
+ * <p>
+ * This class is a common action that provides a list of the US states
+ * in a map where the key of the map is the state code and the value of
+ * the map is the state name.
+ * </p>
+ *
+ * @author  Brian Pontarelli and James Humphrey
  */
 public class States implements Action {
-
-    private static final Logger logger = Logger.getLogger(States.class.getName());
-
     private boolean includeBlank;
     private boolean includeTerritories;
     private String blankValue;
-    private List<String> preferredStates;
+    private String[] preferredStates;
     private Map<String, String> states;
 
     /**
@@ -68,9 +62,8 @@ public class States implements Action {
      *
      * @param   preferredStates The preferred state abbreviation codes.
      */
-    @SuppressWarnings({"unchecked"})
-    public void setPreferredStates(Object preferredStates) {
-        this.preferredStates = (List<String>) ObjectTools.makeList(preferredStates);
+    public void setPreferredStates(String preferredStates) {
+        this.preferredStates = preferredStates.split("\\W*,\\W*");
     }
 
     /**
@@ -88,7 +81,6 @@ public class States implements Action {
      * @return Always success.
      */
     public String execute() {
-
         // alphabetize the resource bundle
         Map<String, String> alphaStates = new TreeMap<String, String>();
 
@@ -110,7 +102,7 @@ public class States implements Action {
             states.put("", blankValue == null ? "" : blankValue);
         }
 
-        if (preferredStates != null && preferredStates.size() > 0) {
+        if (preferredStates != null && preferredStates.length > 0) {
             for (String preferredState : preferredStates) {
                 states.put(preferredState, stateResourceBundle.getString(preferredState));
             }

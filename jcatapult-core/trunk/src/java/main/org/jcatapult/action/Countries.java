@@ -17,14 +17,12 @@ package org.jcatapult.action;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.opensymphony.xwork2.Action;
-import net.java.lang.ObjectTools;
 import net.java.lang.StringTools;
 
 /**
@@ -33,7 +31,7 @@ import net.java.lang.StringTools;
  * chained in order to build a Map of countries. This Map is a linked
  * Map so that the countries are in a specific order. By default this
  * order is alphabetical. In addition, you can set the preferred set
- * of countries that go at the top using the {@link #setPreferredCodes(Object)}
+ * of countries that go at the top using the {@link #setPreferredCodes(String)}
  * method.
  * </p>
  *
@@ -48,7 +46,7 @@ public class Countries implements Action {
     private boolean includeBlank;
     private String blankValue;
     private Locale displayLocale;
-    private List<String> preferredCodes;
+    private String[] preferredCodes;
     private Map<String, String> countries;
 
     /**
@@ -92,8 +90,8 @@ public class Countries implements Action {
      * @param   preferredCodes The preferred country codes.
      */
     @SuppressWarnings({"unchecked"})
-    public void setPreferredCodes(Object preferredCodes) {
-        this.preferredCodes = (List<String>) ObjectTools.makeList(preferredCodes);
+    public void setPreferredCodes(String preferredCodes) {
+        this.preferredCodes = preferredCodes.split("\\W*,\\W*");
     }
 
     /**
@@ -128,7 +126,7 @@ public class Countries implements Action {
             countries.put("", blankValue == null ? "" : blankValue);
         }
 
-        if (preferredCodes != null && preferredCodes.size() > 0) {
+        if (preferredCodes != null && preferredCodes.length > 0) {
             for (String preferCode : preferredCodes) {
                 Locale locale = new Locale("", preferCode);
                 countries.put(preferCode, locale.getDisplayCountry(displayLocale));
