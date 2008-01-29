@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="jhumphrey.texturemedia.net" name="org.jcatapult.scaffold.ScaffoldingHelperTest" tests="1" time="0.411" timestamp="2008-01-29T22:03:15">
+  <properties>
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="underscored.project.name" value="jcatapult_scaffold" />
+    <property name="dir.src.java.test.integration" value="src/java/test/integration" />
+    <property name="ant.file.cobertura" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/cobertura/1.0/cobertura.xml" />
+    <property name="java.home" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home" />
+    <property name="env.DISPLAY" value="/tmp/launch-ARGJ32/:0" />
+    <property name="env.SECURITYSESSIONID" value="c9a140" />
+    <property name="javadoc.bottom" value="Copyright (c) jcatapult.org, 2007, All Rights Reserved" />
+    <property name="java.endorsed.dirs" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/endorsed" />
+    <property name="env.JAVA_MAIN_CLASS_1575" value="org.apache.tools.ant.launch.Launcher" />
+    <property name="env.LOGNAME" value="jhumphrey" />
+    <property name="ant.file.init" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/init/1.0/init.xml" />
+    <property name="sun.os.patch.level" value="unknown" />
+    <property name="java.vendor.url" value="http://www.apple.com/" />
+    <property name="dir.plugin.ide" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/ide/1.0" />
+    <property name="timestamp" value="2008-01-29-1503779" />
+    <property name="java.version" value="1.6.0_01-dp" />
+    <property name="jikes.class.path" value=":/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/../Classes/charsets.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/../Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/../Classes/dt.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/../Classes/jce.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/../Classes/jconsole.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/../Classes/jsse.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/../Classes/laf.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/../Classes/management-agent.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/../Classes/ui.jar" />
+    <property name="tmp.dir" value="/Users/jhumphrey/.release/tmp" />
+    <property name="java.vendor.url.bug" value="http://bugreport.apple.com/" />
+    <property name="dir.plugin.init" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/init/1.0" />
+    <property name="dir.deploy.archive" value="/Users/jhumphrey/.jcatapult/deploy-archive" />
+    <property name="user.name" value="jhumphrey" />
+    <property name="ant.file.clean" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/clean/1.0/clean.xml" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="env.CVSROOT" value=":pserver:jhumphrey@cvs.thoughtmine.com:/home/vhost1/qa.thoughtmine.com/cvs" />
+    <property name="dir.src.java.test.unit" value="src/java/test/unit" />
+    <property name="dir.target.jars" value="target/jars" />
+    <property name="sun.jnu.encoding" value="MacRoman" />
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
+    <property name="ide.dir.scripts.groovy" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/ide/1.0/scripts/groovy" />
+    <property name="dir.src.db.test" value="src/db/test" />
+    <property name="svn.password" value="Pazwurd1" />
+    <property name="ant.file.svn-macros" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/svn/1.0/svn-macros.xml" />
+    <property name="project.version" value="1.0-A1" />
+    <property name="project.database" value="jcatapult_scaffold" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16" />
+    <property name="user.timezone" value="" />
+    <property name="dir.target.classes.test.integration" value="target/classes/test/integration" />
+    <property name="path.separator" value=":" />
+    <property name="dir.src.java.main" value="src/java/main" />
+    <property name="project.name" value="jcatapult-scaffold" />
+    <property name="url.javadoc.javase" value="http://java.sun.com/javase/6/docs/api/" />
+    <property name="file.encoding" value="MacRoman" />
+    <property name="env.HOME" value="/Users/jhumphrey" />
+    <property name="env.MANPATH" value="/usr/share/man:/usr/local/share/man:/usr/X11/man" />
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16" />
+    <property name="ant.file" value="/Users/jhumphrey/dev/new-projects/jcatapult-scaffold/build.xml" />
+    <property name="dir.src.conf.test.integration" value="src/conf/test/integration" />
+    <property name="ant.file.ide" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/ide/1.0/ide.xml" />
+    <property name="ant.file.release-minor" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/release-svn/1.0/release-minor.xml" />
+    <property name="db.username" value="jhumphrey" />
+    <property name="ant.file.junit-base" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/junit/1.0/junit-base.xml" />
+    <property name="java.io.tmpdir" value="/tmp" />
+    <property name="TODAY" value="January 29 2008" />
+    <property name="user.language" value="en" />
+    <property name="line.separator" value="
+" />
+    <property name="env.ANT_OPTS" value="-Xmx512m" />
+    <property name="ant.file.jcatapult-scaffold" value="/Users/jhumphrey/dev/new-projects/jcatapult-scaffold/build.xml" />
+    <property name="java.vm.info" value="mixed mode" />
+    <property name="ant.file.release-snapshot" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/release-svn/1.0/release-snapshot.xml" />
+    <property name="url.javadoc.javaee" value="http://java.sun.com/javaee/5/docs/api/" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="env.__CF_USER_TEXT_ENCODING" value="0x1F6:0:0" />
+    <property name="cobertura.dir" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/cobertura/1.0" />
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16" />
+    <property name="dir.target.tomcat" value="target/tomcat" />
+    <property name="java.awt.printerjob" value="apple.awt.CPrinterJob" />
+    <property name="ant.version" value="Apache Ant version 1.7.0 compiled on December 13 2006" />
+    <property name="jdk1.6" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home" />
+    <property name="jdk1.5" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home" />
+    <property name="jdk1.4" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.4.0/Home" />
+    <property name="gopherProxySet" value="false" />
+    <property name="dir.release-library" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/release-svn/1.0" />
+    <property name="plugin.dir" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult" />
+    <property name="svn.username" value="jhumphrey" />
+    <property name="dir.target.classes.test.unit" value="target/classes/test/unit" />
+    <property name="os.name" value="Mac OS X" />
+    <property name="java.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="env.TERM" value="xterm-color" />
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM" />
+    <property name="dir.plugin.release-common" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/release-svn/1.0" />
+    <property name="mrj.version" value="1040.1.6.0_01-101" />
+    <property name="dir.src.db.main" value="src/db/main" />
+    <property name="dir.plugin.svn" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/svn/1.0" />
+    <property name="java.library.path" value=".:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java" />
+    <property name="env.PATH" value="~/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/local/sbin:/bin:/usr/local/apache-tomcat-5.5.25/bin:/usr/local/maven-1.1/bin:/usr/local/mysql/bin:~/scripts:~/bin:/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/bin:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin" />
+    <property name="ignore.tests" value="false" />
+    <property name="ant.java.version" value="1.6" />
+    <property name="dir.plugin.mysql" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/mysql/1.0" />
+    <property name="basedir" value="/Users/jhumphrey/dev/new-projects/jcatapult-scaffold" />
+    <property name="java.class.version" value="50.0" />
+    <property name="env.SHLVL" value="1" />
+    <property name="env.BUILD_TOOLS_HOME" value="/Users/jhumphrey/dev/texturemedia/tools/build_tools" />
+    <property name="ant.home" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant" />
+    <property name="dir.checkout" value="/Users/jhumphrey/.release/tmp/jcatapult-scaffold-2008-01-29-1503779" />
+    <property name="jdk.project" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home" />
+    <property name="ant.file.release-major" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/release-svn/1.0/release-major.xml" />
+    <property name="java.util.logging.config.file" value="src/conf/test/unit/logging.properties" />
+    <property name="dir.src" value="src" />
+    <property name="ant.file.savant" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/savant/1.0/savant.xml" />
+    <property name="dir.web" value="web" />
+    <property name="sun.boot.library.path" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Libraries" />
+    <property name="dir.src.conf.main" value="src/conf/main" />
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Server Compiler" />
+    <property name="java.awt.graphicsenv" value="apple.awt.CGraphicsEnvironment" />
+    <property name="dir.src.conf.test.unit" value="src/conf/test/unit" />
+    <property name="ant.file.release-patch" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/release-svn/1.0/release-patch.xml" />
+    <property name="env.USER" value="jhumphrey" />
+    <property name="env.TERM_PROGRAM" value="iTerm.app" />
+    <property name="env.COMMAND_MODE" value="legacy" />
+    <property name="ant.project.name" value="jcatapult-scaffold" />
+    <property name="java.vm.specification.version" value="1.0" />
+    <property name="project.requires.database" value="false" />
+    <property name="dir.plugin.junit" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/junit/1.0" />
+    <property name="awt.toolkit" value="apple.awt.CToolkit" />
+    <property name="ant.file.svn" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/svn/1.0/svn.xml" />
+    <property name="dir.target" value="target" />
+    <property name="ant.file.release-common" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/release-svn/1.0/release-common.xml" />
+    <property name="env.MAVEN_HOME" value="/usr/local/maven-1.1" />
+    <property name="sun.cpu.isalist" value="" />
+    <property name="list.javadoc.packages" value="*" />
+    <property name="haltonfailure" value="true" />
+    <property name="java.ext.dirs" value="/Library/Java/Extensions:/System/Library/Java/Extensions:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext" />
+    <property name="os.version" value="10.5.1" />
+    <property name="project.needs.database" value="true" />
+    <property name="user.home" value="/Users/jhumphrey" />
+    <property name="java.vm.vendor" value="Apple Inc." />
+    <property name="ant.file.mysql" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/mysql/1.0/mysql.xml" />
+    <property name="env.JAVA_HOME" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home" />
+    <property name="user.dir" value="/Users/jhumphrey/dev/new-projects/jcatapult-scaffold" />
+    <property name="project.group" value="jcatapult.org" />
+    <property name="env.PWD" value="/Users/jhumphrey/dev/new-projects/jcatapult-scaffold" />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="project.dir" value="/Users/jhumphrey/dev/texturemedia" />
+    <property name="env.TMPDIR" value="/var/folders/Yo/Yo0UDT97HEC0Vj445KzG3k+++TM/-Tmp-/" />
+    <property name="java.vm.version" value="1.6.0_01-41-release" />
+    <property name="java.class.path" value="/Users/jhumphrey/.savant_repository/junit.org/junit/junit-4.4.jar:/Users/jhumphrey/.savant_repository/sun.com/jpa/jpa-1.0.jar:/Users/jhumphrey/.savant_repository/codehaus.org/groovy/groovy-1.5.2.jar:/Users/jhumphrey/.savant_repository/sourceforge.net/freemarker/freemarker-2.3.10.jar:/Users/jhumphrey/.savant_repository/sourceforge.net/jline/jline-0.9.92.jar:/Users/jhumphrey/.savant_repository/java.net/java-net-commons/java-net-commons-1.4.1.jar:/Users/jhumphrey/.savant_repository/hsqldb.org/hsqldb/hsqldb-1.8.9.jar:/Users/jhumphrey/.savant_repository/savant.inversoft.org/savant-core/savant-core-2.0-M1-IB20080129195026485.jar:/Users/jhumphrey/.savant_repository/easymock.org/easymock/easymock-2.2.jar:/Users/jhumphrey/.savant_repository/codehaus.org/groovy/groovy-all-1.1-rc-1.jar:/Users/jhumphrey/.savant_repository/google.com/google-guice/guice-1.0.jar:/Users/jhumphrey/.savant_repository/joda.org/joda-time/joda-time-1.4.jar:/Users/jhumphrey/.savant_repository/jcraft.com/jsch/jsch-0.1.31.jar:/Users/jhumphrey/.savant_repository/ganymed.ethz.ch/ganymed/ganymed-1.1.4.jar:/Users/jhumphrey/.savant_repository/svnkit.com/svnkit/svnkit-1.1.4.jar:/Users/jhumphrey/dev/new-projects/jcatapult-scaffold/target/jars/jcatapult-scaffold-1.0-A1-src.jar:/Users/jhumphrey/dev/new-projects/jcatapult-scaffold/target/jars/jcatapult-scaffold-1.0-A1.jar:/Users/jhumphrey/dev/new-projects/jcatapult-scaffold/target/classes/test/unit:/Users/jhumphrey/dev/new-projects/jcatapult-scaffold/target/classes/test/integration:/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/lib/ant-launcher.jar:/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/lib/ant.jar:/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/lib/ant-junit.jar" />
+    <property name="DSTAMP" value="20080129" />
+    <property name="ant.library.dir" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/lib" />
+    <property name="os.arch" value="x86_64" />
+    <property name="env.Apple_PubSub_Socket_Render" value="/tmp/launch-tAUxW5/Render" />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="env.MYSQL_HOME" value="/usr/local/mysql" />
+    <property name="maven.repo.remote" value="http://maven,http://www.apextechnology.com/maven,http://repo1.maven.org/maven/" />
+    <property name="ant.core.lib" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/lib/ant.jar" />
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="TSTAMP" value="1503" />
+    <property name="jboss.home" value="/usr/local/jboss-4.0.5.GA" />
+    <property name="file.separator" value="/" />
+    <property name="dir.target.report" value="target/report" />
+    <property name="java.runtime.version" value="1.6.0_01-dp-b06-101" />
+    <property name="env.SSH_AUTH_SOCK" value="/tmp/launch-1vrziU/Listeners" />
+    <property name="sun.boot.class.path" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/ui.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/laf.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/sunrsasign.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/jsse.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/jce.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/charsets.jar" />
+    <property name="ant.file.junit" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/junit/1.0/junit-no-db.xml" />
+    <property name="dir.target.javadocs" value="target/javadocs" />
+    <property name="db.password" value="" />
+    <property name="dir.jcatapult.cache" value="/Users/jhumphrey/.jcatapult" />
+    <property name="ant.file.compile" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/java/1.0/compile.xml" />
+    <property name="ant.file.release-library" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/release-svn/1.0/jar.xml" />
+    <property name="init.dir.scripts.groovy" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/init/1.0/scripts/groovy" />
+    <property name="env.SVN_EDITOR" value="vi" />
+    <property name="user.country" value="US" />
+    <property name="env.ANT_HOME" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant" />
+    <property name="env.SHELL" value="/bin/bash" />
+    <property name="release.dir.scripts.groovy" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/release-svn/1.0/scripts/groovy" />
+    <property name="dir.plugin.savant" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/savant/1.0" />
+    <property name="java.vendor" value="Apple Inc." />
+    <property name="javadoc.project.name" value="jcatapult-scaffold" />
+    <property name="dir.target.classes.main" value="target/classes/main" />
+    <property name="dir.plugin.svn-macros" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/svn/1.0" />
+    <property name="awt.nativeDoubleBuffering" value="true" />
+    <property name="project.contains.domain" value="true" />
+    <property name="ant.file.jar" value="/Users/jhumphrey/dev/texturemedia/tools/texturemedia-ant/plugins-jcatapult/java/1.0/jar.xml" />
+    <property name="env.CATALINA_HOME" value="/usr/local/apache-tomcat-5.5.25" />
+    <property name="java.specification.version" value="1.6" />
+    <property name="sun.arch.data.model" value="64" />
+  </properties>
+  <testcase classname="org.jcatapult.scaffold.ScaffoldingHelperTest" name="testGetClassInformation" time="0.332" />
+  <system-out><![CDATA[Field name email
+Field type Email
+Field name notSaved
+Field type String
+Field name age
+Field type int
+Field name inner
+Field type Inner
+Field name optional
+Field type String
+Field name flag
+Field type boolean
+Field name name
+Field type String
+Field name categories
+Field type List
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

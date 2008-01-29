@@ -1,0 +1,28 @@
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+       "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+<validators>
+  <!-- Validation for ManyToOne and ManyToMany -->
+  <field name="emailId">
+    <field-validator type="required">
+      <message key="missing.email"/>
+    </field-validator>
+  </field>
+  <field name="categoriesIds">
+    <field-validator type="fieldexpression">
+      <param name="expression">categoriesIds != null and categoriesIds.length > 0</param>
+      <message key="missing.categories"/>
+    </field-validator>
+  </field>
+
+  <!-- Validation for fields -->
+  <field name="bean.name">
+    <field-validator type="requiredstring">
+      <message key="missing.bean.name"/>
+    </field-validator>
+  </field>
+  <field name="bean.inner.firstName">
+    <field-validator type="requiredstring">
+      <message key="missing.bean.inner.firstName"/>
+    </field-validator>
+  </field>
+</validators>
