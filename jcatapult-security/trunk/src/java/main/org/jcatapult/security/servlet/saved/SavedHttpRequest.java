@@ -15,6 +15,7 @@
  */
 package org.jcatapult.security.servlet.saved;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,6 +31,6 @@ public class SavedHttpRequest {
 
     public SavedHttpRequest(String uri, Map<String, String[]> parameters) {
         this.uri = uri;
-        this.parameters = parameters;
+        this.parameters = new HashMap<String, String[]>(parameters);
     }
 }
