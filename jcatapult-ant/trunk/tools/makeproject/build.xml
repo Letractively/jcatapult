@@ -70,6 +70,13 @@
     <create-project template="webapp-template"/>
   </target>
 
+  <!--
+    Creates a component module.
+  -->
+  <target name="create-component" depends="-init" description="Creates a new component project">
+    <create-project template="component-template"/>
+  </target>
+
   <target name="svn-import" description="Imports a project into a subversion repository.  This target creates the trunk, tags, and branches directory for you.">
     <input message="Enter project name (e.g. projectX)" addproperty="svn-import.project.name"/>
     <input message="Enter the path to your project (e.g. /home/jdoe/projectX)" addproperty="svn-import.project.path"/>
@@ -115,7 +122,6 @@
       <copy todir="${create.project.dir}/${create.project.name}">
         <fileset dir="${basedir}/@{template}" includes="**/*" excludes="@{template}*"/>
         <filterset>
-          <filter token="COMPONENT_NAME" value="${create.component.name}"/>
           <filter token="GROUP_NAME" value="${create.group.name}"/>
           <filter token="PACKAGE_NAME" value="${create.package.name}"/>
           <filter token="PROJECT_NAME" value="${create.project.name}"/>
@@ -174,16 +180,16 @@
           }
         }
 
-        new File("versions.xml").delete();
+        new File("${basedir}/versions.xml").delete();
 
         String moduleName = "@{url}";
+        String propName = "@{property}";
         if (best != null) {
-          String propName = "@{property}";
-
           properties[propName] = bestStr;
           ant.echo("Determined latest ${moduleName} version to be ${bestStr}.");
         } else {
-          ant.fail("${moduleName} doesn't have any releases yet.");
+          properties[propName] = "1.0-M1-{integration}";
+          ant.echo("WARNING: ${moduleName} doesn't have any releases, assuming 1.0-M1-{integration}");
         }
       </groovy>
     </sequential>

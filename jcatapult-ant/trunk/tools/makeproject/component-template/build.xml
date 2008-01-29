@@ -20,7 +20,7 @@
   <import file="${plugin.dir}/java/1.0/jar.xml"/>
 
   <!-- Releasing -->
-  <import file="${plugin.dir}/release/1.0/jar.xml"/>
+  <import file="${plugin.dir}/release-svn/1.0/jar.xml"/>
 
   <!-- Hibernate stuff -->
   <import file="${plugin.dir}/hibernate/1.0/hibernate.xml"/>
