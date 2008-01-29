@@ -14,7 +14,7 @@
 
   <path id="classpath.makeproject">
     <fileset dir="${dir.plugin.makeproject}/lib" includes="*.jar"/>
-    <pathelement location="${plugin.dir}/libraries/groovy-all-1.5.1.jar"/>
+    <pathelement location="${plugin.dir}/libraries/groovy-all-1.5.2.jar"/>
     <pathelement location="${plugin.dir}/libraries/java-net-commons-1.3.13.jar"/>
     <pathelement location="${plugin.dir}/libraries/ant-contrib-1.0b2.jar"/>
   </path>
