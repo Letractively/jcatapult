@@ -53,18 +53,17 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class SecurityWorkflow implements Workflow {
-    private final SavedRequestWorkflow savedRequestWorkflow;
-    private final AuthorizationWorkflow authorizationWorkflow;
     private final CredentialStorageWorkflow credentialStorageWorkflow;
+    private final SavedRequestWorkflow savedRequestWorkflow;
     //    private final RememberMeWorkflow rememberMeWorkflow;
     private final LoginWorkflow loginWorkflow;
+    private final AuthorizationWorkflow authorizationWorkflow;
 
     @Inject
-    public SecurityWorkflow(SavedRequestWorkflow savedRequestWorkflow,
-            CredentialStorageWorkflow credentialStorageWorkflow, LoginWorkflow loginWorkflow,
-            AuthorizationWorkflow authorizationWorkflow) {
-        this.savedRequestWorkflow = savedRequestWorkflow;
+    public SecurityWorkflow(CredentialStorageWorkflow credentialStorageWorkflow, SavedRequestWorkflow savedRequestWorkflow,
+            LoginWorkflow loginWorkflow, AuthorizationWorkflow authorizationWorkflow) {
         this.credentialStorageWorkflow = credentialStorageWorkflow;
+        this.savedRequestWorkflow = savedRequestWorkflow;
         this.loginWorkflow = loginWorkflow;
         this.authorizationWorkflow = authorizationWorkflow;
     }
@@ -80,8 +79,8 @@ public class SecurityWorkflow implements Workflow {
      */
     public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
-        SubWorkflowChain chain = new SubWorkflowChain(Arrays.asList(savedRequestWorkflow,
-            credentialStorageWorkflow, loginWorkflow, authorizationWorkflow), workflowChain);
+        SubWorkflowChain chain = new SubWorkflowChain(Arrays.asList(credentialStorageWorkflow, savedRequestWorkflow,
+            loginWorkflow, authorizationWorkflow), workflowChain);
         chain.doWorkflow(request, response);
     }
 
