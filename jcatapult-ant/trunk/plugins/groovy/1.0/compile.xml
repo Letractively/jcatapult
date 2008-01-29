@@ -18,7 +18,7 @@
 <project name="compile">
   <dirname property="dir.plugin.compile" file="${ant.file.compile}/"/>
   <path id="classpath.plugin.compile">
-    <path location="${dir.plugin.compile}/../../libraries/groovy-all-1.1-rc-1.jar"/>
+    <path location="${dir.plugin.compile}/../../libraries/groovy-all-1.5.2.jar"/>
     <path location="${dir.plugin.compile}/../../libraries/commons-cli-1.0.jar"/>
   </path>
   <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="classpath.plugin.compile"/>
