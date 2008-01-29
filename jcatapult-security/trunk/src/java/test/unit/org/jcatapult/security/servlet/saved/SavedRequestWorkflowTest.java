@@ -78,7 +78,7 @@ public class SavedRequestWorkflowTest {
         EasyMock.expect(c.getString("jcatapult.security.login.successful-login-uri", "/successful-login")).andReturn("/successful-login");
         EasyMock.replay(c);
 
-        SavedHttpRequest sr = new SavedHttpRequest(null, null);
+        SavedHttpRequest sr = new SavedHttpRequest(null, new HashMap<String, String[]>());
         HttpSession session = EasyMock.createStrictMock(HttpSession.class);
         EasyMock.expect(session.getAttribute(SavedRequestWorkflow.POST_LOGIN_KEY)).andReturn(sr);
         session.removeAttribute(SavedRequestWorkflow.POST_LOGIN_KEY);
@@ -146,7 +146,7 @@ public class SavedRequestWorkflowTest {
         EasyMock.expect(c.getString("jcatapult.security.login.successful-login-uri", "/successful-login")).andReturn("/successful-login");
         EasyMock.replay(c);
 
-        SavedHttpRequest sr = new SavedHttpRequest("/foo", null);
+        SavedHttpRequest sr = new SavedHttpRequest("/foo", new HashMap<String, String[]>());
         HttpSession session = EasyMock.createStrictMock(HttpSession.class);
         EasyMock.expect(session.getAttribute(SavedRequestWorkflow.LOGIN_KEY)).andReturn(sr);
         session.removeAttribute(SavedRequestWorkflow.LOGIN_KEY);
