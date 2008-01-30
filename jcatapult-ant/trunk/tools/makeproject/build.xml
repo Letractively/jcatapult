@@ -79,8 +79,8 @@
 
   <target name="svn-import" description="Imports a project into a subversion repository.  This target creates the trunk, tags, and branches directory for you.">
     <input message="Enter project name (e.g. projectX)" addproperty="svn-import.project.name"/>
-    <input message="Enter the path to your project (e.g. /home/jdoe/projectX)" addproperty="svn-import.project.path"/>
-    <input message="Enter the subversion repository url (e.g. http://www.johndoe.com/subversion/projects)" addproperty="svn-import.url"/>
+    <input message="Enter the path to your project (e.g. /home/jdoe/projectX)" addproperty="svn-import.project.path" defaultvalue="${user.dir}"/>
+    <input message="Enter the subversion repository url where to import the project (e.g. http://www.johndoe.com/subversion/projects - note the project name will be appended to this)" addproperty="svn-import.url"/>
     <input message="Enter the subversion repository username" addproperty="svn-import.username"/>
     <input message="Enter the subversion repository password" addproperty="svn-import.password"/>
 
@@ -180,7 +180,7 @@
           }
         }
 
-        new File("${basedir}/versions.xml").delete();
+        new File(properties["basedir"] + "/versions.xml").delete();
 
         String moduleName = "@{url}";
         String propName = "@{property}";
