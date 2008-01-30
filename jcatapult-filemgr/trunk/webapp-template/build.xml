@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project name="@PROJECT_NAME@">
+
+  <property name="plugin.dir" value="${ant.home}/plugins-jcatapult"/>
+
+  <!-- Dependencies -->
+  <import file="${plugin.dir}/savant/1.0/savant.xml"/>
+
+  <!-- Initialization -->
+  <import file="${plugin.dir}/init/1.0/init.xml"/>
+
+  <!-- Java base -->
+  <import file="${plugin.dir}/java/1.0/compile.xml"/>
+  <import file="${plugin.dir}/java/1.0/jar.xml"/>
+
+    <!-- hibernate -->
+  <import file="${plugin.dir}/hibernate/1.0/hibernate.xml"/>
+
+  <!-- Webapp stuff -->
+  <import file="${plugin.dir}/j2ee/1.0/j2ee.xml"/>
+  <import file="${plugin.dir}/j2ee/1.0/clean.xml"/>
+
+  <!-- Testing -->
+  <import file="${plugin.dir}/junit/1.0/junit.xml"/>
+  <import file="${plugin.dir}/cobertura/1.0/cobertura.xml"/>
+
+  <!-- Component support -->
+  <import file="${plugin.dir}/component/1.0/project-support.xml"/>
+
+  <!-- subversion -->
+  <import file="${plugin.dir}/svn/1.0/svn.xml"/>
+
+  <!-- ide utils -->
+  <import file="${plugin.dir}/ide/1.0/ide.xml"/>
+
+  <!-- mysql -->
+  <import file="${plugin.dir}/mysql/1.0/mysql.xml"/>
+
+  <!-- tomcat deployment -->
+  <import file="${plugin.dir}/tomcat/1.0/webapp-deploy.xml"/>
+
+  <!-- security utils -->
+  <import file="${plugin.dir}/security/1.0/password.xml"/>
+</project>
