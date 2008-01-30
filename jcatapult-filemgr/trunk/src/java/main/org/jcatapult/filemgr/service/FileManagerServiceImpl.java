@@ -64,7 +64,8 @@ public class FileManagerServiceImpl implements FileManagerService {
 
         // Check the content type
         if (Arrays.binarySearch(allowedContentTypes, contentType) < 0) {
-            connector.setError(new Error(1, "The file you are trying to upload is not an allowed type."));
+            connector.setError(new Error(1, "The file you are trying to upload is type [" + contentType +
+                "] which is not an allowed type."));
             return connector;
         }
 

@@ -16,7 +16,7 @@
 <html>
 <head><title>Test</title></head>
 <body>
-<form action="/jcatapult/file-manager">
+<form action="/jcatapult/file-manager" enctype="multipart/form-data" method="POST">
   <input type="file" name="NewFile"/>
 
   <input type="hidden" name="command" value="FileUpload"/>
