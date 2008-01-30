@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <!--
+  ==================================================================================================
+                                          Filter chain
+  ==================================================================================================
+  -->
+  <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
+    <property name="filterInvocationDefinitionSource">
+      <value>
+        CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+        PATTERN_TYPE_APACHE_ANT
+        /**=savedRequestFilter,httpSessionContextIntegrationFilterWithASCTrue,authenticationProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor
+      </value>
+    </property>
+  </bean>
+
+  <!--
+  ==================================================================================================
+                                          Authentication
+  ==================================================================================================
+  -->
+  <bean id="savedRequestFilter" class="org.acegisecurity.wrapper.SecurityContextHolderAwareRequestFilter"/>
+
+  <bean id="httpSessionContextIntegrationFilterWithASCTrue" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter">
+    <property name="allowSessionCreation" value="true"/>
+  </bean>
+
+  <bean id="authenticationProcessingFilter" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+    <property name="authenticationManager" ref="authenticationManager"/>
+    <property name="authenticationFailureUrl" value="/security/login?login=failed"/>
+    <property name="defaultTargetUrl" value="/"/>
+    <property name="filterProcessesUrl" value="/j_acegi_security_check"/>
+  </bean>
+
+  <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+    <property name="providers">
+      <list>
+        <ref bean="jcatapultAuthenticationProvider"/>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="jcatapultAuthenticationProvider" class="org.jcatapult.acegi.JCatapultAuthenticationProvider" autowire="constructor"/>
+
+  <!-- ************************************************* -->
+  <!-- Place your project's authentication service here! -->
+  <!-- ************************************************* -->
+  <!--<bean id="jcatapultAuthenticationService" class="com.example.security.ExampleAuthenticationService" autowire="byName"/>-->
+
+  <!-- *************************************************************************** -->
+  <!-- Change the salt here if you specified a different salt in your Guice module -->
+  <!-- *************************************************************************** -->
+  <bean id="saltSource" class="org.acegisecurity.providers.dao.salt.SystemWideSaltSource">
+    <property name="systemWideSalt" value="jcatapult"/>
+  </bean>
+
+  <bean id="passwordEncoder" class="org.acegisecurity.providers.encoding.Md5PasswordEncoder">
+    <property name="encodeHashAsBase64" value="true"/>
+  </bean>
+
+  <bean id="anonymousProcessingFilter" class="org.acegisecurity.providers.anonymous.AnonymousProcessingFilter">
+    <property name="key" value="anonymous"/>
+    <property name="userAttribute" value="anonymousUser, anonymous"/>
+  </bean>
+
+  <!--
+  ==================================================================================================
+                                          Exception handling
+  ==================================================================================================
+  -->
+  <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
+    <property name="authenticationEntryPoint">
+      <ref local="authenticationEntryPoint"/>
+    </property>
+  </bean>
+
+  <bean id="authenticationEntryPoint" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+    <property name="loginFormUrl" value="/security/login"/>
+    <property name="forceHttps" value="true"/>
+  </bean>
+
+  <!--
+  ==================================================================================================
+                                          Authorization
+  ==================================================================================================
+  -->
+  <bean id="filterSecurityInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
+    <property name="authenticationManager" ref="authenticationManager"/>
+    <property name="accessDecisionManager" ref="accessDecisionManager"/>
+    <property name="objectDefinitionSource">
+      <value>
+        CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+        PATTERN_TYPE_APACHE_ANT
+        /purchase/**=ROLE_USER,ROLE_ADMIN
+        /admin/**=ROLE_ADMIN
+        /account/**=ROLE_USER,ROLE_ADMIN
+        /profanity/**=ROLE_USER,ROLE_ADMIN
+      </value>
+    </property>
+  </bean>
+
+  <bean id="accessDecisionManager" class="org.acegisecurity.vote.AffirmativeBased">
+    <property name="decisionVoters">
+      <list>
+        <ref bean="roleVoter"/>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter">
+    <property name="rolePrefix" value="ROLE_"/>
+  </bean>
+
+</beans>
