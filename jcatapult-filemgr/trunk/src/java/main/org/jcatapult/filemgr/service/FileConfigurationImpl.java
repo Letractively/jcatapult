@@ -56,7 +56,7 @@ public class FileConfigurationImpl implements FileConfiguration {
      */
     public String[] getFileUploadAllowedContentTypes() {
         String[] value = configuration.getStringArray("file-mgr.file-upload.allowed-content-types");
-        if (value == null) {
+        if (value == null || value.length == 0) {
             value = new String[]{"image/jpeg", "image/png", "image/gif", "application/x-shockwave-flash",
                 "application/pdf"};
         }

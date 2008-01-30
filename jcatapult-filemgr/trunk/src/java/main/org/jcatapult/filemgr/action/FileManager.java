@@ -31,7 +31,6 @@ import org.jcatapult.filemgr.service.FileManagerService;
 import org.jcatapult.struts.action.BaseAction;
 
 import com.google.inject.Inject;
-import com.opensymphony.xwork2.Action;
 
 /**
  * <p>
@@ -199,7 +198,7 @@ public class FileManager extends BaseAction {
 
         marshal(connector);
 
-        return Action.SUCCESS;
+        return SUCCESS;
     }
 
     /**

@@ -4,6 +4,10 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
 
+  <listener>
+    <listener-class>org.jcatapult.servlet.JCatapultServletContextListener</listener-class>
+  </listener>
+
   <filter>
     <filter-name>jcatapult</filter-name>
     <filter-class>org.jcatapult.servlet.JCatapultFilter</filter-class>
@@ -44,6 +48,6 @@
 
   <servlet-mapping>
     <servlet-name>FileServlet</servlet-name>
-    <url-pattern>/files</url-pattern>
+    <url-pattern>/files/*</url-pattern>
   </servlet-mapping>
 </web-app>
