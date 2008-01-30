@@ -16,7 +16,7 @@
 <project name="deploy" basedir=".">
 
 	<target name="-deploy-init">
-		<property name="jcatapult.deploy.dir" location="${jcatapult.home}/plugins/deploy/1.0"/>
+		<property name="jcatapult.deploy.dir" location="${ant.home}/plugins-jcatapult/deploy/1.0"/>
 		<property file="${jcatapult.deploy.dir}/evolution-defaults.properties"/>
 		<if>
 			<not><isset property="deploy.environment"/></not>
