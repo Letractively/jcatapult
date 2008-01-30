@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.configuration.Configuration;
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.domain.CurrentFolder;
 import org.jcatapult.filemgr.domain.Error;
@@ -42,21 +41,15 @@ import net.java.lang.StringTools;
  */
 public class FileManagerServiceImpl implements FileManagerService {
     private static final Logger logger = Logger.getLogger(FileManagerServiceImpl.class.getName());
-    private final Configuration configuration;
+    private final FileConfiguration configuration;
     private final ServletContext servletContext;
     private String[] allowedContentTypes;
 
     @Inject
-    public FileManagerServiceImpl(Configuration configuration, ServletContext servletContext) {
+    public FileManagerServiceImpl(FileConfiguration configuration, ServletContext servletContext) {
         this.configuration = configuration;
         this.servletContext = servletContext;
-
-        this.allowedContentTypes = configuration.getStringArray("file-mgr.file-upload.allowed-content-types");
-        if (this.allowedContentTypes == null || this.allowedContentTypes.length == 0) {
-            this.allowedContentTypes = new String[]{"image/jpeg", "image/png", "image/gif", "application/x-shockwave-flash",
-                "application/pdf"};
-        }
-        Arrays.sort(this.allowedContentTypes);
+        this.allowedContentTypes = configuration.getFileUploadAllowedContentTypes();
     }
 
     /**
@@ -128,7 +121,7 @@ public class FileManagerServiceImpl implements FileManagerService {
         folder.setUrl(getExternalDirectoryURL(fileType) + currentFolder);
         connector.setCurrentFolder(folder);
 
-        if (!configuration.getBoolean("file-mgr.create-folder.allowed", true)) {
+        if (!configuration.isCreateFolderAllowed()) {
             Error error = new Error();
             error.setNumber(103);
             connector.setError(error);
@@ -180,7 +173,7 @@ public class FileManagerServiceImpl implements FileManagerService {
      * @throws  RuntimeException If the configuration property is not setup.
      */
     private String getFileDir(String fileType) {
-        String dirName = configuration.getString("file-mgr.file-servlet.dir");
+        String dirName = configuration.getFileServletDir();
         if (dirName == null) {
             throw new RuntimeException("The file-mgr.file-servlet.dir configuration property is not set and is required");
         }
@@ -212,10 +205,10 @@ public class FileManagerServiceImpl implements FileManagerService {
         String fullyQualifiedDirName;
         fullyQualifiedDirName = servletContext.getRealPath(dirName);
         if (fullyQualifiedDirName == null) {
-            throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified a relative directory " +
-                "of [" + configuration.getString("file-mgr.file-servlet.dir") + "] however it appears that the web " +
-                "application is running from a WAR and therefore you must use an absolute directory in order to save " +
-                "uploded files elsewhere on the server.");
+            throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified a relative " +
+                "directory of [" + configuration.getFileServletDir() + "] however it appears that the web application " +
+                "is running from a WAR and therefore you must use an absolute directory in order to save uploded " +
+                "files elsewhere on the server.");
         }
         return fullyQualifiedDirName;
     }
@@ -236,10 +229,10 @@ public class FileManagerServiceImpl implements FileManagerService {
         if (relative) {
             fileURL = ((HttpServletRequest) ServletObjectsHolder.getServletRequest()).getContextPath() + fileDir;
         } else {
-            String fileServletPrefix = configuration.getString("file-mgr.file-servlet.prefix");
+            String fileServletPrefix = configuration.getFileServletPrefix();
             if (fileServletPrefix == null) {
-                throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified an absolute directory " +
-                    "of [" + configuration.getString("file-mgr.file-servlet.dir") + "] however the configuration property " +
+                throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified an absolute " +
+                    "directory of [" + configuration.getFileServletDir() + "] however the configuration property " +
                     "file-mgr.file-servlet.prefix was not specified. This is required so that the browser can access files " +
                     "outside of the web application. Therefore, you must configure the FileServlet in the web.xml " +
                     "as well as set this configuration property to the same prefix that you mapped the servlet to in " +

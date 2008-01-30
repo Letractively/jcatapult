@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.filemgr.service.FileManagerServiceImpl;
+import org.jcatapult.filemgr.service.FileConfigurationImpl;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,7 +47,8 @@ public class FckFileManagerTest {
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        FckFileManager fm = new FckFileManager(new FileManagerServiceImpl(configuration, servletContext));
+        FckFileManager fm = new FckFileManager(new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+            servletContext));
         fm.setCommand(FileManagerCommand.FileUpload);
         fm.setNewFileContentType("application/active-x");
         String result = fm.execute();
@@ -61,7 +63,8 @@ public class FckFileManagerTest {
         FileTools.prune("/tmp/jcatapult-filemgr");
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getStringArray("file-mgr.file-upload.allowed-content-types")).andReturn(null);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir")).andReturn("some-dir").times(2);
+        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+            andReturn("some-dir").times(2);
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
@@ -73,7 +76,8 @@ public class FckFileManagerTest {
         EasyMock.replay(httpRequest);
         ServletObjectsHolder.setServletRequest(httpRequest);
 
-        FckFileManager fm = new FckFileManager(new FileManagerServiceImpl(configuration, servletContext));
+        FckFileManager fm = new FckFileManager(new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+            servletContext));
         fm.setCommand(FileManagerCommand.FileUpload);
         fm.setNewFileContentType("image/gif");
         fm.setNewFileFileName("foo-bar.xml");

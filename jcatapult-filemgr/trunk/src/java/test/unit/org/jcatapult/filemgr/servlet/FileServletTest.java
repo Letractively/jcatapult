@@ -62,7 +62,8 @@ public class FileServletTest {
     @Test
     public void testMissingFile() throws ServletException, IOException {
         final Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir")).andReturn("src/java/test/unit/org/jcatapult/filemgr/servlet");
+        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+            andReturn("src/java/test/unit/org/jcatapult/filemgr/servlet");
         EasyMock.replay(configuration);
 
         GuiceContainer.setGuiceModules(new Module() {
@@ -91,7 +92,8 @@ public class FileServletTest {
     @Test
     public void testSuccess() throws ServletException, IOException {
         final Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir")).andReturn("src/java/test/unit/org/jcatapult/filemgr/servlet");
+        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+            andReturn("src/java/test/unit/org/jcatapult/filemgr/servlet");
         EasyMock.replay(configuration);
 
         GuiceContainer.setGuiceModules(new Module(){
