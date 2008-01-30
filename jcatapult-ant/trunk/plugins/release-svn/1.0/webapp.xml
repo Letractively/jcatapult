@@ -16,7 +16,7 @@
 <project name="release" basedir=".">
 
   <!-- directory used for checking out releases -->
-  <property name="tmp.dir" value="${user.home}/.release/tmp"/>
+  <property name="tmp.dir" value="${dir.catapult.cache}/release"/>
 
   <!-- get the directory where this file is being imported from -->
   <dirname property="imported.dir" file="${ant.file.imported}"/>
