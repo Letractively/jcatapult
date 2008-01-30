@@ -114,7 +114,7 @@ public interface FileManagerService {
     /**
      * <p>
      * This action handles the creation of a new folder on disk. This uses
-     * the configuration property named <strong>file-mgr.create-folder.allowed</strong>
+     * the configuration property named <strong>file-mgr.create-folder-allowed</strong>
      * to determine if the clients are allowed to create folders on the
      * file system or not. This defaults to true, so be sure to set this to
      * false if you do not want to allow directory creation.

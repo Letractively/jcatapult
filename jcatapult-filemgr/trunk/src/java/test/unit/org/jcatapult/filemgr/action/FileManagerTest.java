@@ -23,12 +23,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
+import org.jcatapult.filemgr.domain.Connector;
+import org.jcatapult.filemgr.domain.Folder;
+import org.jcatapult.filemgr.service.FileConfigurationImpl;
+import org.jcatapult.filemgr.service.FileManagerServiceImpl;
+import org.jcatapult.servlet.ServletObjectsHolder;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jcatapult.filemgr.service.FileManagerServiceImpl;
-import org.jcatapult.filemgr.domain.Folder;
-import org.jcatapult.filemgr.domain.Connector;
-import org.jcatapult.servlet.ServletObjectsHolder;
 
 import net.java.io.FileTools;
 import net.java.io.IOTools;
@@ -47,16 +48,18 @@ public class FileManagerTest {
         FileTools.prune("/tmp/jcatapult-filemgr");
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getStringArray("file-mgr.file-upload.allowed-content-types")).andReturn(null);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir")).andReturn("/tmp/jcatapult-filemgr/some-dir");
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.prefix")).andReturn("/file-servlet");
-        EasyMock.expect(configuration.getBoolean("file-mgr.create-folder.allowed", true)).andReturn(true);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir")).andReturn("/tmp/jcatapult-filemgr/some-dir");
+        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+            andReturn("/tmp/jcatapult-filemgr/some-dir");
+        EasyMock.expect(configuration.getString("file-mgr.file-servlet.prefix", "/files")).andReturn("/file-servlet");
+        EasyMock.expect(configuration.getBoolean("file-mgr.create-folder-allowed", true)).andReturn(true);
+        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+            andReturn("/tmp/jcatapult-filemgr/some-dir");
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        FileManager fm = new FileManager(new FileManagerServiceImpl(configuration, servletContext));
+        FileManager fm = new FileManager(new FileManagerServiceImpl(new FileConfigurationImpl(configuration), servletContext));
         fm.setCommand(FileManagerCommand.CreateFolder);
         fm.setCurrentFolder("/deep/dir/");
         fm.setNewFolderName("test");
@@ -79,7 +82,8 @@ public class FileManagerTest {
         new File("/tmp/jcatapult-filemgr/some-dir/test2").mkdirs();
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getStringArray("file-mgr.file-upload.allowed-content-types")).andReturn(null);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir")).andReturn("files").times(2);
+        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+            andReturn("files").times(2);
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
@@ -91,7 +95,7 @@ public class FileManagerTest {
         EasyMock.replay(httpRequest);
         ServletObjectsHolder.setServletRequest(httpRequest);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(configuration, servletContext);
+        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration), servletContext);
         Connector connector = service.getFolders("", null);
         Assert.assertEquals("GetFolders", connector.getCommand());
         Assert.assertEquals("/servlet-context/files/", connector.getCurrentFolder().getUrl());
@@ -115,7 +119,8 @@ public class FileManagerTest {
         new File("/tmp/jcatapult-filemgr/some-dir/file").createNewFile();
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getStringArray("file-mgr.file-upload.allowed-content-types")).andReturn(null);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir")).andReturn("files").times(2);
+        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+            andReturn("files").times(2);
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
@@ -127,7 +132,7 @@ public class FileManagerTest {
         EasyMock.replay(httpRequest);
         ServletObjectsHolder.setServletRequest(httpRequest);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(configuration, servletContext);
+        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration), servletContext);
         Connector connector = service.getFoldersAndFiles("", null);
         Assert.assertEquals("GetFoldersAndFiles", connector.getCommand());
         Assert.assertEquals("/servlet-context/files/", connector.getCurrentFolder().getUrl());

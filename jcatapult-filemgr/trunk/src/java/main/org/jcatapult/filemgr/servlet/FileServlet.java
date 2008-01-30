@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.filemgr.service.FileConfiguration;
 import org.jcatapult.guice.GuiceContainer;
 
 import com.google.inject.Injector;
@@ -65,16 +65,16 @@ public class FileServlet extends HttpServlet {
                 "system. Therefore, the struts2 filter must be called prior to this servlet being created.");
         }
 
-        Configuration configuration;
+        FileConfiguration configuration;
         try {
-            configuration = injector.getInstance(Configuration.class);
+            configuration = injector.getInstance(FileConfiguration.class);
         } catch (Exception e) {
             throw new ServletException("It looks like you do not have an Apache configuration bound into Guice. " +
                 "This is used to locate the file directory on the server in order for this servlet to correctly " +
                 "serve up files.", e);
         }
 
-        location = new File(configuration.getString("file-mgr.file-servlet.dir"));
+        location = new File(configuration.getFileServletDir());
         super.init();
     }
 
