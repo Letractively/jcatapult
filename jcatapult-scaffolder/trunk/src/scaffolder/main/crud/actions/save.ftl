@@ -24,7 +24,7 @@ import ${type.fullName};
 @Results({
     @Result(name = "success", location = "index", type = "redirect-action")
 })
-public class Save extends ActionSupport {
+public class Save extends BaseAction {
     private static final Logger logger = Logger.getLogger(Save.class.getName());
     private final ${type.name}Service ${type.fieldName}Service;
     private final Configuration configuration;
@@ -50,8 +50,8 @@ public class Save extends ActionSupport {
 
     @Override
     @Actions({
-        @Action(name = "save", results = {@Result(name = "input", location = "add.jsp")}),
-        @Action(name = "update", results = {@Result(name = "input", location = "edit.jsp")})
+        @Action(value = "save", results = {@Result(name = "input", location = "add.jsp")}),
+        @Action(value = "update", results = {@Result(name = "input", location = "edit.jsp")})
     })
     public String execute() {
         ${type.fieldName}Service.persist(${type.fieldName}<@global.idParams/>);

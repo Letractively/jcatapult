@@ -18,7 +18,7 @@ import ${servicePackage}.${type.name}Service;
  *
  * @author  Brian Pontarelli
  */
-public class Prepare implements Action {
+public class Prepare extends BaseAction {
     private static final Logger logger = Logger.getLogger(Prepare.class.getName());
     private final ${type.name}Service ${type.fieldName}Service;
 <#list type.allFields as field>

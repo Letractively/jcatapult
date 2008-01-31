@@ -35,7 +35,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
 
         page--;
 
-        return catapultBeanService.queryPaginated(${type.name}.class, "select obj from ${type.name} obj " +
+        return persistenceService.query(${type.name}.class, "select obj from ${type.name} obj " +
 <#if type.isA("org.jcatapult.domain.SoftDeletable")>
             "where obj.deleted = false " +
 </#if>
@@ -50,7 +50,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
             sortProperty = getDefaultSortProperty();
         }
 
-        return catapultBeanService.query(${type.name}.class, "select obj from ${type.name} obj " +
+        return persistenceService.queryAll(${type.name}.class, "select obj from ${type.name} obj " +
 <#if type.isA("org.jcatapult.domain.SoftDeletable")>
             "where obj.deleted = false " +
 </#if>
@@ -73,7 +73,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      * {@inheritDoc}
      */
     public int getNumberOf${type.pluralName}() {
-        return (int) catapultBeanService.queryCount(${type.name}.class,
+        return (int) persistenceService.queryCount(${type.name}.class,
         "select count(obj) from ${type.name} obj " <#if type.isA("org.jcatapult.domain.SoftDeletable")>
             + "where obj.deleted = false "
 </#if> );
@@ -85,33 +85,33 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
     public void persist(${type.name} ${type.fieldName}<@global.idParamsList />) {
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-        ${field.mainType.name} ${field.name} = catapultBeanService.getById(${field.mainType.name}.class, ${field.name}Id);
+        ${field.mainType.name} ${field.name} = persistenceService.findById(${field.mainType.name}.class, ${field.name}Id);
         ${type.fieldName}.set${field.methodName}(${field.name});
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name != "java.util.Map">
         List<${field.genericTypes[0].name}> ${field.pluralName} = new ArrayList<${field.genericTypes[0].name}>();
         for (Integer id : ${field.name}Ids) {
-            ${field.pluralName}.add(catapultBeanService.findById(${field.genericTypes[0].name}.class, id));
+            ${field.pluralName}.add(persistenceService.findById(${field.genericTypes[0].name}.class, id));
         }
         ${type.fieldName}.set${field.methodName}(${field.pluralName});
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name == "java.util.Map">
         List<${field.genericTypes[1].name}> ${field.pluralName} = new ArrayList<${field.genericTypes[1].name}>();
         for (Integer id : ${field.name}Ids) {
-            ${field.pluralName}.add(catapultBeanService.findById(${field.genericTypes[1].name}.class, id));
+            ${field.pluralName}.add(persistenceService.findById(${field.genericTypes[1].name}.class, id));
         }
         ${type.fieldName}.set${field.methodName}(${field.pluralName});
 
   </#if>
 </#list>
-        catapultBeanService.persist(${type.fieldName});
+        persistenceService.persist(${type.fieldName});
     }
 
     /**
      * {@inheritDoc}
      */
     public void delete(int id) {
-        catapultBeanService.delete(${type.name}.class, id);
+        persistenceService.delete(${type.name}.class, id);
     }
 
     /**
@@ -129,7 +129,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      * {@inheritDoc}
      */
     public List<${field.mainType.name}> get${field.mainType.pluralName}() {
-        return catapultBeanService.findAllByType(${field.mainType.name}.class<#if field.mainType.isA("org.jcatapult.domain.SoftDeletable")>, false</#if>);
+        return persistenceService.findAllByType(${field.mainType.name}.class<#if field.mainType.isA("org.jcatapult.domain.SoftDeletable")>, false</#if>);
     }
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name != "java.util.Map">
@@ -137,7 +137,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      * {@inheritDoc}
      */
     public List<${field.genericTypes[0].name}> get${field.genericTypes[0].pluralName}() {
-        return catapultBeanService.getAll(${field.genericTypes[0].name}.class<#if field.genericTypes[0].isA("org.jcatapult.domain.SoftDeletable")>, false</#if>);
+        return persistenceService.findAllByType(${field.genericTypes[0].name}.class<#if field.genericTypes[0].isA("org.jcatapult.domain.SoftDeletable")>, false</#if>);
     }
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name == "java.util.Map">
@@ -145,7 +145,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      * {@inheritDoc}
      */
     public List<${field.genericTypes[1].name}> get${field.genericTypes[1].pluralName}() {
-        return catapultBeanService.findAllByType(${field.genericTypes[1].name}.class<#if field.genericTypes[1].isA("org.jcatapult.domain.SoftDeletable")>, false</#if>);
+        return persistenceService.findAllByType(${field.genericTypes[1].name}.class<#if field.genericTypes[1].isA("org.jcatapult.domain.SoftDeletable")>, false</#if>);
     }
 
   </#if>
@@ -154,7 +154,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      * {@inheritDoc}
      */
     public ${type.name} getById(Integer id) {
-        ${type.name} ${type.fieldName} = catapultBeanService.getById(${type.name}.class, id);
+        ${type.name} ${type.fieldName} = persistenceService.findById(${type.name}.class, id);
 <#if type.isA("org.jcatapult.domain.SoftDeletable")>
         if (${type.fieldName} != null && ${type.fieldName}.isDeleted()) {
             return null;

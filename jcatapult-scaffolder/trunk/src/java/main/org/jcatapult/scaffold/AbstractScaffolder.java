@@ -143,7 +143,7 @@ public abstract class AbstractScaffolder implements Scaffolder {
         while (queue.peek() != null) {
             File file = queue.remove();
             if (file.getName().equals(token)) {
-                return file.getAbsolutePath().substring(main.getAbsolutePath().length()).replace("/", ".").
+                return file.getAbsolutePath().substring(main.getAbsolutePath().length() + 1).replace("/", ".").
                     replace("\\\\", ".");
             }
 

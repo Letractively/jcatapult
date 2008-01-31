@@ -11,5 +11,5 @@ import org.jcatapult.struts.action.BaseAction;
  *
  * @author  Scaffolder
  */
-public class Add extends ActionSupport {
+public class Add extends BaseAction {
 }

@@ -21,7 +21,7 @@ import ${servicePackage}.${type.name}Service;
  * @author  Scaffolder
  */
 @Result(name = "error", location = "index.jsp")
-public class Edit extends ActionSupport {
+public class Edit extends BaseAction {
     private final ${type.name}Service ${type.fieldName}Service;
     private Integer id;
     private ${type.name} ${type.fieldName};

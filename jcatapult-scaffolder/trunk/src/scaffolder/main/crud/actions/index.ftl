@@ -15,7 +15,7 @@ import ${servicePackage}.${type.name}Service;
  *
  * @author  Scaffolder
  */
-public class Index extends ActionSupport {
+public class Index extends BaseAction {
     private final ${type.name}Service ${type.fieldName}Service;
     private List<${type.name}> ${type.pluralFieldName};
     private String sortProperty;
