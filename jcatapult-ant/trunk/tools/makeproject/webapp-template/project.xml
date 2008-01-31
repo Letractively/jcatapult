@@ -14,7 +14,7 @@
   <property name="version.jcatapult.core" value="@JCATAPULT_VERSION@"/>
 
    <!-- database props -->
-  <property name="project.requires.database" value="false"/>
+  <property name="project.requires.database" value="true"/>
   <property name="project.contains.domain" value="false"/>
 
   <dependencies id="dependencies.project">
