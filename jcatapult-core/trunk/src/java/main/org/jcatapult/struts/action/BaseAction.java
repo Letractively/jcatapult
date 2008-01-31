@@ -17,10 +17,10 @@ package org.jcatapult.struts.action;
 
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.persistence.PersistenceService;
-import com.opensymphony.xwork2.Preparable;
+
+import com.google.inject.Inject;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public abstract class BaseAction extends ActionSupport implements Preparable {
+public abstract class BaseAction extends ActionSupport {
     protected PersistenceService persistenceService;
     protected Configuration configuration;
 
@@ -46,13 +46,6 @@ public abstract class BaseAction extends ActionSupport implements Preparable {
     public void setServices(PersistenceService persistenceService, Configuration configuration) {
         this.persistenceService = persistenceService;
         this.configuration = configuration;
-    }
-
-    /**
-     * Used to prepare the action prior to invocation. Sub-classes can override this to prepare
-     * properties for the JSPs.
-     */
-    public void prepare() throws Exception {
     }
 
     /**
