@@ -22,7 +22,7 @@ import ${type.fullName};
  * @author  Scaffolder
  */
 @Results({
-    @Result(name = "success", location = "index", type = "redirect-action")
+    @Result(name = "success", location = "index", type = "redirectAction")
 })
 public class Save extends BaseAction {
     private static final Logger logger = Logger.getLogger(Save.class.getName());

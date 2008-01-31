@@ -73,10 +73,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      * {@inheritDoc}
      */
     public int getNumberOf${type.pluralName}() {
-        return (int) persistenceService.queryCount(${type.name}.class,
-        "select count(obj) from ${type.name} obj " <#if type.isA("org.jcatapult.domain.SoftDeletable")>
-            + "where obj.deleted = false "
-</#if> );
+        return (int) persistenceService.count(${type.name}.class<#if type.isA("org.jcatapult.domain.SoftDeletable")>, false</#if>);
     }
 
     /**
