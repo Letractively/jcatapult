@@ -292,6 +292,15 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
+    public long queryCount(String query, Object... params) {
+        Query q = entityManagerProvider.get().createQuery(query);
+        addParams(q, params);
+        return (Long) q.getSingleResult();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public <T> List<T> namedQueryAll(Class<T> type, String query, Object... params) {
         verify(type);
         Query q = entityManagerProvider.get().createNamedQuery(query);
@@ -474,7 +483,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     protected void addParams(Query q, Object... params) {
         if (params.length > 0) {
-            int count = 0;
+            int count = 1;
             for (Object param : params) {
                 q.setParameter(count++, param);
             }

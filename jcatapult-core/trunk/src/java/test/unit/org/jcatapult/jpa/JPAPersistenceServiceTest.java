@@ -244,6 +244,25 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     }
 
     @Test
+    public void testQueryCount() throws Exception {
+        clearTable("User");
+        executeSQL("insert into User (insert_date, update_date, name) " +
+            "values (now(), now(), 'Fred')");
+        executeSQL("insert into User (insert_date, update_date, name) " +
+            "values (now(), now(), 'George')");
+        executeSQL("insert into User (insert_date, update_date, name) " +
+            "values (now(), now(), 'Alan')");
+
+        // This tests that querying with an orderBy clause works
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        long count = service.queryCount("select count(user) from User user where user.name = ?1", "Alan");
+        assertEquals(1, count);
+
+        count = service.queryCount("select count(user) from User user");
+        assertEquals(3, count);
+    }
+
+    @Test
     public void testQuery() throws Exception {
         clearTable("User");
         char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
