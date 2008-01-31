@@ -1,9 +1,9 @@
 package ${actionPackage};
 
-import org.texturemedia.smarturls.Result;
+import org.apache.struts2.convention.annotation.Result;
+import org.jcatapult.struts.action.BaseAction;
 
 import com.google.inject.Inject;
-import com.opensymphony.xwork2.ActionSupport;
 import ${servicePackage}.${type.name}Service;
 
 /**

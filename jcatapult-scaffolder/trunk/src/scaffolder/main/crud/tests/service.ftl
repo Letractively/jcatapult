@@ -3,7 +3,7 @@ package ${servicePackage};
 
 import java.util.List;
 
-import com.texturemedia.catapult.test.JPABaseTest;
+import org.jcatapult.test.JPABaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

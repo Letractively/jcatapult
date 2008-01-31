@@ -20,7 +20,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <h2>${type.pluralName}</h2>
-<s:form action="${g.jspEL("param['action']")}" method="POST" theme="css_xhtml">
+<c:set name="actionType" value="${g.jspEL("param['action']")}"/>
+<s:form action="%{#attr.actionType}" method="POST" theme="semantic">
   <h3>${type.name}</h3>
   <div class="notice">
     Notice here.

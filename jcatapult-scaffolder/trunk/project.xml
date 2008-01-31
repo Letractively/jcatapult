@@ -17,6 +17,7 @@
       <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-M1-{integration}" type="jar"/>
     </artifactGroup>
     <artifactGroup type="compile">
+      <artifact group="commons.apache.org" project="commons-cli" name="commons-cli" version="1.1" type="jar"/>
       <artifact group="codehaus.org" project="groovy" name="groovy" version="1.5.2" type="jar"/>
       <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.1" type="jar"/>
       <artifact group="sourceforge.net" project="freemarker" name="freemarker" version="2.3.10" type="jar"/>

@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.jcatapult.struts.action.BaseAction;
+
 import com.google.inject.Inject;
-import com.opensymphony.xwork2.Action;
 <@global.importFields />
 import ${servicePackage}.${type.name}Service;
 

@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # Run ant jar first
-ant jar
+echo "Running the Ant build"
+if ! ant jar > /dev/null 2>&1; then
+  echo "Build failed"
+  exit 1
+fi
 
 # Build up the scaffolding classpath
 dir=$(dirname $0)

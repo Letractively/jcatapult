@@ -9,15 +9,15 @@
     <classpathentry kind="src" path="src/java/test/unit" output="target/classes/test/unit" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/codehaus.org/groovy/groovy-1.5.2.jar" sourcepath="/SAVANT_REPOSITORY/codehaus.org/groovy/groovy-1.5.2-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/codehaus.org/groovy/groovy-all-1.1-rc-1.jar" sourcepath="/SAVANT_REPOSITORY/codehaus.org/groovy/groovy-all-1.1-rc-1-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/commons.apache.org/commons-cli/commons-cli-1.1.jar" sourcepath="/SAVANT_REPOSITORY/commons.apache.org/commons-cli/commons-cli-1.1-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/easymock.org/easymock/easymock-2.2.jar" sourcepath="/SAVANT_REPOSITORY/easymock.org/easymock/easymock-2.2-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/ganymed.ethz.ch/ganymed/ganymed-1.1.4.jar" sourcepath="/SAVANT_REPOSITORY/ganymed.ethz.ch/ganymed/ganymed-1.1.4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/google.com/google-guice/guice-1.0.jar" sourcepath="/SAVANT_REPOSITORY/google.com/google-guice/guice-1.0-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/hsqldb.org/hsqldb/hsqldb-1.8.9.jar" sourcepath="/SAVANT_REPOSITORY/hsqldb.org/hsqldb/hsqldb-1.8.9-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.1.jar" sourcepath="/SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.1-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/jcraft.com/jsch/jsch-0.1.31.jar" sourcepath="/SAVANT_REPOSITORY/jcraft.com/jsch/jsch-0.1.31-src.jar" />
-    <classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4.jar" sourcepath="/SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/junit.org/junit/junit-4.4.jar" sourcepath="/SAVANT_REPOSITORY/junit.org/junit/junit-4.4-src.jar" />
-    <classpathentry kind="var" path="SAVANT_REPOSITORY/savant.inversoft.org/savant-core/savant-core-2.0-M1-IB20080129195026485.jar" sourcepath="/SAVANT_REPOSITORY/savant.inversoft.org/savant-core/savant-core-2.0-M1-IB20080129195026485-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/savant.inversoft.org/savant-core/savant-core-2.0-M1-IB20080122232409976.jar" sourcepath="/SAVANT_REPOSITORY/savant.inversoft.org/savant-core/savant-core-2.0-M1-IB20080122232409976-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/sourceforge.net/freemarker/freemarker-2.3.10.jar" sourcepath="/SAVANT_REPOSITORY/sourceforge.net/freemarker/freemarker-2.3.10-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/sourceforge.net/jline/jline-0.9.92.jar" sourcepath="/SAVANT_REPOSITORY/sourceforge.net/jline/jline-0.9.92-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/jpa/jpa-1.0.jar" sourcepath="/SAVANT_REPOSITORY/sun.com/jpa/jpa-1.0-src.jar" />

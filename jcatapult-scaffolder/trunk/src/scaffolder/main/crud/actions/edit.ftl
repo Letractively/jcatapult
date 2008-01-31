@@ -4,11 +4,11 @@ package ${actionPackage};
 import java.util.ArrayList;
 import java.util.List;
 
-import com.texturemedia.catapult.domain.CatapultBean;
-import org.texturemedia.smarturls.Result;
+import org.apache.struts2.convention.annotation.Result;
+import org.jcatapult.domain.Identifiable;
+import org.jcatapult.struts.action.BaseAction;
 
 import com.google.inject.Inject;
-import com.opensymphony.xwork2.ActionSupport;
 import ${type.fullName};
 <@global.importFields />
 import ${servicePackage}.${type.name}Service;
@@ -60,8 +60,8 @@ public class Edit extends ActionSupport {
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany")>
         List<Integer> ${field.name}Ids = new ArrayList<Integer>();
-        for (CatapultBean bean : ${type.fieldName}.get${field.methodName}()) {
-            ${field.name}Ids.add(bean.getId());
+        for (Identifiable identifiable : ${type.fieldName}.get${field.methodName}()) {
+            ${field.name}Ids.add(identifiable.getId());
         }
         this.${field.name}Ids = ${field.name}Ids.toArray(new Integer[${field.name}Ids.size()]);
 

@@ -3,14 +3,14 @@ package ${actionPackage};
 
 import java.util.logging.Logger;
 
-import org.texturemedia.smarturls.ActionNames;
-import org.texturemedia.smarturls.ActionName;
-import org.texturemedia.smarturls.Results;
-import org.texturemedia.smarturls.Result;
 import org.apache.commons.configuration.Configuration;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Actions;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.jcatapult.struts.action.BaseAction;
 
 import com.google.inject.Inject;
-import com.opensymphony.xwork2.ActionSupport;
 import ${servicePackage}.${type.name}Service;
 import ${type.fullName};
 
@@ -21,14 +21,8 @@ import ${type.fullName};
  *
  * @author  Scaffolder
  */
-@ActionNames({
-    @ActionName(name = "save"),
-    @ActionName(name = "update")
-})
 @Results({
-    @Result(name = "success", location = "index", type = "redirect-action"),
-    @Result(action = "save", name = "input", location = "add.jsp"),
-    @Result(action = "update", name = "input", location = "edit.jsp")
+    @Result(name = "success", location = "index", type = "redirect-action")
 })
 public class Save extends ActionSupport {
     private static final Logger logger = Logger.getLogger(Save.class.getName());
@@ -55,6 +49,10 @@ public class Save extends ActionSupport {
     <@global.idProperties setters=true />
 
     @Override
+    @Actions({
+        @Action(name = "save", results = {@Result(name = "input", location = "add.jsp")}),
+        @Action(name = "update", results = {@Result(name = "input", location = "edit.jsp")})
+    })
     public String execute() {
         ${type.fieldName}Service.persist(${type.fieldName}<@global.idParams/>);
         return SUCCESS;
