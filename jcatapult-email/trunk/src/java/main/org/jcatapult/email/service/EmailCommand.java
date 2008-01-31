@@ -161,7 +161,7 @@ public interface EmailCommand {
      * @param   bcc The blind carbon copy email addresses.
      * @return  This instance.
      */
-    EmailCommand andBCC(EmailAddress... bcc);
+    EmailCommand bcc(EmailAddress... bcc);
 
     /**
      * A vararg method to add blind carbon copies.
@@ -169,7 +169,7 @@ public interface EmailCommand {
      * @param   bcc The blind carbon copy email addresses.
      * @return  This instance.
      */
-    EmailCommand andBCC(String... bcc);
+    EmailCommand bcc(String... bcc);
 
     /**
      * @return  The previously set bcc address or null.
@@ -182,7 +182,7 @@ public interface EmailCommand {
      * @param   cc The carbon copy email addresses.
      * @return  This instance.
      */
-    EmailCommand andCC(EmailAddress... cc);
+    EmailCommand cc(EmailAddress... cc);
 
     /**
      * A vararg method to add email carbon copies.
@@ -190,7 +190,7 @@ public interface EmailCommand {
      * @param   cc The carbon copy email addresses.
      * @return  This instance.
      */
-    EmailCommand andCC(String... cc);
+    EmailCommand cc(String... cc);
 
     /**
      * @return  The previously set cc addresses or null.
