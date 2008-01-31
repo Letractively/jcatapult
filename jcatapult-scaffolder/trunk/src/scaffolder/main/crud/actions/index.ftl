@@ -2,8 +2,9 @@ package ${actionPackage};
 
 import java.util.List;
 
+import org.jcatapult.struts.action.BaseAction;
+
 import com.google.inject.Inject;
-import com.opensymphony.xwork2.ActionSupport;
 import ${type.fullName};
 import ${servicePackage}.${type.name}Service;
 

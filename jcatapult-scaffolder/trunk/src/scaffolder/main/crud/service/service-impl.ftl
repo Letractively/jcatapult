@@ -4,7 +4,7 @@ package ${servicePackage};
 import java.util.ArrayList;
 import java.util.List;
 
-import com.texturemedia.catapult.service.CatapultBeanService;
+import org.jcatapult.persistence.PersistenceService;
 
 import com.google.inject.Inject;
 import ${type.fullName};
@@ -18,11 +18,11 @@ import ${type.fullName};
  * @author  Scaffolder
  */
 public class ${type.name}ServiceImpl implements ${type.name}Service {
-    private CatapultBeanService catapultBeanService;
+    private PersistenceService persistenceService;
 
     @Inject
-    public ${type.name}ServiceImpl(CatapultBeanService catapultBeanService) {
-        this.catapultBeanService = catapultBeanService;
+    public ${type.name}ServiceImpl(PersistenceService persistenceService) {
+        this.persistenceService = persistenceService;
     }
 
     /**
@@ -36,7 +36,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
         page--;
 
         return catapultBeanService.queryPaginated(${type.name}.class, "select obj from ${type.name} obj " +
-<#if type.isA("com.texturemedia.catapult.domain.SoftDeleteCatapultBean")>
+<#if type.isA("org.jcatapult.domain.SoftDeletable")>
             "where obj.deleted = false " +
 </#if>
             "order by obj." + sortProperty, page * number, number);
@@ -51,7 +51,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
         }
 
         return catapultBeanService.query(${type.name}.class, "select obj from ${type.name} obj " +
-<#if type.isA("com.texturemedia.catapult.domain.SoftDeleteCatapultBean")>
+<#if type.isA("org.jcatapult.domain.SoftDeletable")>
             "where obj.deleted = false " +
 </#if>
             "order by obj." + sortProperty);
@@ -74,7 +74,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      */
     public int getNumberOf${type.pluralName}() {
         return (int) catapultBeanService.queryCount(${type.name}.class,
-        "select count(obj) from ${type.name} obj " <#if type.isA("com.texturemedia.catapult.domain.SoftDeleteCatapultBean")>
+        "select count(obj) from ${type.name} obj " <#if type.isA("org.jcatapult.domain.SoftDeletable")>
             + "where obj.deleted = false "
 </#if> );
     }
@@ -129,7 +129,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      * {@inheritDoc}
      */
     public List<${field.mainType.name}> get${field.mainType.pluralName}() {
-        return catapultBeanService.findAllByType(${field.mainType.name}.class<#if field.mainType.isA("com.texturemedia.catapult.domain.SoftDeleteCatapultBean")>, false</#if>);
+        return catapultBeanService.findAllByType(${field.mainType.name}.class<#if field.mainType.isA("org.jcatapult.domain.SoftDeletable")>, false</#if>);
     }
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name != "java.util.Map">
@@ -137,7 +137,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      * {@inheritDoc}
      */
     public List<${field.genericTypes[0].name}> get${field.genericTypes[0].pluralName}() {
-        return catapultBeanService.getAll(${field.genericTypes[0].name}.class<#if field.genericTypes[0].isA("com.texturemedia.catapult.domain.SoftDeleteCatapultBean")>, false</#if>);
+        return catapultBeanService.getAll(${field.genericTypes[0].name}.class<#if field.genericTypes[0].isA("org.jcatapult.domain.SoftDeletable")>, false</#if>);
     }
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name == "java.util.Map">
@@ -145,7 +145,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      * {@inheritDoc}
      */
     public List<${field.genericTypes[1].name}> get${field.genericTypes[1].pluralName}() {
-        return catapultBeanService.findAllByType(${field.genericTypes[1].name}.class<#if field.genericTypes[1].isA("com.texturemedia.catapult.domain.SoftDeleteCatapultBean")>, false</#if>);
+        return catapultBeanService.findAllByType(${field.genericTypes[1].name}.class<#if field.genericTypes[1].isA("org.jcatapult.domain.SoftDeletable")>, false</#if>);
     }
 
   </#if>
@@ -155,7 +155,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
      */
     public ${type.name} getById(Integer id) {
         ${type.name} ${type.fieldName} = catapultBeanService.getById(${type.name}.class, id);
-<#if type.isA("com.texturemedia.catapult.domain.SoftDeleteCatapultBean")>
+<#if type.isA("org.jcatapult.domain.SoftDeletable")>
         if (${type.fieldName} != null && ${type.fieldName}.isDeleted()) {
             return null;
         }

@@ -1,7 +1,7 @@
 <#import "/global/macros.ftl" as global>
 package ${actionPackage};
 
-import com.opensymphony.xwork2.ActionSupport;
+import org.jcatapult.struts.action.BaseAction;
 
 /**
  * <p>

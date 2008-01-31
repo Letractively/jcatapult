@@ -1,148 +1,157 @@
-import org.jcatapult.scaffold.ScaffoldingHelper
 import org.jcatapult.scaffold.URLPrefixCompletor
 import org.jcatapult.scaffold.lang.Type
-import net.java.text.SimplePluralizer;
+import net.java.text.SimplePluralizer
+import org.jcatapult.scaffold.AbstractScaffolder
+import org.jcatapult.scaffold.annotation.ShortDescription
+import org.jcatapult.scaffold.annotation.LongDescription;
 
-// Ask the user what the bean they want to scaffold is
-String className = ScaffoldingHelper.ask("Enter the domain class to CRUD scaffold", "Scaffolding domain object ",
-    "Invalid domain class", null);
 
-// Setup some useful names
-String simpleClassName = ScaffoldingHelper.makeSimpleClassName(className);
-String simplePropertyName = ScaffoldingHelper.makePropertyName(simpleClassName);
-SimplePluralizer pluralizer = new SimplePluralizer();
-String simplePluralPropertyName = pluralizer.pluralize(simplePropertyName);
+/**
+ * This class is a simple CRUD scaffolder for JCatapult.
+ */
+@ShortDescription("Creates a CRUD operation for a single domain object")
+@LongDescription(
+"""Creates a CRUD operation for a single domain object.
 
-// Try to get the AST
-Type type = ScaffoldingHelper.getType(className);
-if (type == null) {
-  println "Invalid domain class [" + className + "]";
-  System.exit 1;
-}
+  This scaffolder asks the following questions:
+    1. The domain class to create the CRUD for (tab completion available)
+    2. The URL prefix for the CRUD (tab completion available)
+    3. The action package (tab completion available)
+    4. The service package (tab completion available)
 
-// Get the URL
-String defaultURL = "/admin/" + simplePluralPropertyName;
-String url = ScaffoldingHelper.ask("Enter the URL prefix of the CRUD", "Scaffolding URL prefix ",
-    "Invalid URL prefix", defaultURL, new URLPrefixCompletor());
+  This scaffolder creates all of a service, the actions, JSPs, and action tests for the
+  CRUD operation. It handles basic JPA domain modelling, but doesn't handle complex
+  relationships such as enumeration tables and such.
+""")
+public class CrudScaffolder extends AbstractScaffolder {
+  public void execute() {
+    // Ask the user what the bean they want to scaffold is
+    String className = ask("Enter the domain class to CRUD scaffold", "Scaffolding domain object ",
+        "Invalid domain class", null);
 
-// Get the action package
-String defaultActionPackage = ScaffoldingHelper.getDefaultActionPackage();
-if (defaultActionPackage != null) {
-  defaultActionPackage = defaultActionPackage + url.replace("/", ".");
-}
-String actionPackage = ScaffoldingHelper.ask("Enter the action package",
-    "Scaffolding action package ", "Invalid action package", defaultActionPackage);
+    // Setup some useful names
+    String simpleClassName = makeSimpleClassName(className);
+    String simplePropertyName = makePropertyName(simpleClassName);
+    SimplePluralizer pluralizer = new SimplePluralizer();
+    String simplePluralPropertyName = pluralizer.pluralize(simplePropertyName);
 
-// Get the service package
-String baseActionPackage = null;
-if (actionPackage.endsWith(url.replace("/", "."))) {
-  baseActionPackage = actionPackage.substring(0, actionPackage.length() - url.length());
-} else {
-  baseActionPackage = actionPackage;
-}
+    // Try to get the AST
+    Type type = getType(className);
+    if (type == null) {
+      println "Invalid domain class [" + className + "]";
+      System.exit 1;
+    }
 
-String defaultServicePackage = ScaffoldingHelper.getDefaultServicePackage(baseActionPackage);
-String servicePackage = ScaffoldingHelper.ask("Enter the service package",
-    "Scaffolding service package ", "Invalid service package", defaultServicePackage);
+    // Get the URL
+    String defaultURL = "/admin/" + simplePluralPropertyName;
+    String url = ask("Enter the URL prefix of the CRUD", "Scaffolding URL prefix ",
+        "Invalid URL prefix", defaultURL, new URLPrefixCompletor());
 
-// Verify
-String verify = null;
-while (verify != "yes") {
-  verify = ScaffoldingHelper.ask(
-  """Please review the scaffolding configuration
+    // Get the action package
+    String defaultActionPackage = getFirstPackage("action");
+    if (defaultActionPackage != null) {
+      defaultActionPackage = defaultActionPackage + url.replace("/", ".");
+    }
+    String actionPackage = ask("Enter the action package",
+        "Scaffolding action package ", "Invalid action package", defaultActionPackage);
 
-Type: crud
-Domain class: ${className}
-URL: ${url}
-Action package: ${actionPackage}
-Service package: ${servicePackage}
+    // Get the service package
+    String baseActionPackage = null;
+    if (actionPackage.endsWith(url.replace("/", "."))) {
+      baseActionPackage = actionPackage.substring(0, actionPackage.length() - url.length());
+    } else {
+      baseActionPackage = actionPackage;
+    }
 
-Is this is correct, type yes, if not type no""", "", "Invalid input", "yes");
+    String defaultServicePackage = getFirstPackage("service");
+    String servicePackage = ask("Enter the service package",
+        "Scaffolding service package ", "Invalid service package", defaultServicePackage);
 
-  if (verify == "no") {
-    println("Scaffolding cancelled");
-    System.exit(1);
-  } else if (verify != "yes") {
-    println("Invalid response");
+    // Verify
+    String verify = null;
+    while (verify != "yes") {
+      verify = ask(
+      """Please review the scaffolding configuration
+
+    Type: crud
+    Domain class: ${className}
+    URL: ${url}
+    Action package: ${actionPackage}
+    Service package: ${servicePackage}
+
+    Is this is correct, type yes, if not type no""", "", "Invalid input", "yes");
+
+      if (verify == "no") {
+        println("Scaffolding cancelled");
+        System.exit(1);
+      } else if (verify != "yes") {
+        println("Invalid response");
+      }
+    }
+
+    // Create the index action
+    def params = [actionPackage: actionPackage, servicePackage: servicePackage, url: url, type: type];
+
+    // Make the directory for all the actions
+    String actionDirName = "src/java/main/" + actionPackage.replace(".", "/");
+    File actionsDir = new File(actionDirName);
+    actionsDir.mkdirs();
+
+    // Create the actions
+    String scriptPath = dir.getAbsolutePath();
+    executeFreemarkerTemplate("/actions/add.ftl", actionDirName + "Add.java", params);
+    executeFreemarkerTemplate("/actions/index.ftl", actionDirName + "Index.java", params);
+    executeFreemarkerTemplate("/actions/edit.ftl", actionDirName + "Edit.java", params);
+    executeFreemarkerTemplate("/actions/save.ftl", actionDirName + "Save.java", params);
+    executeFreemarkerTemplate("/actions/delete.ftl", actionDirName + "Delete.java", params);
+    executeFreemarkerTemplate("/actions/prepare.ftl", actionDirName + "Prepare.java", params);
+
+    // Create the form validation
+    executeFreemarkerTemplate("/actions/validation.ftl", actionDirName + "Save-validation.xml", params);
+
+    // Create the error and message bundles
+    executeFreemarkerTemplate("/actions/messages.ftl", actionDirName + "Save.properties", params);
+    executeFreemarkerTemplate("/actions/package.ftl", actionDirName + "package.properties", params);
+
+    // Make the directory for the service
+    String serviceDirName = "src/java/main/" + servicePackage.replace(".", "/");
+    File serviceDir = new File(serviceDirName);
+    serviceDir.mkdirs();
+
+    // Create the service interface and implementation
+    executeFreemarkerTemplate("/service/service.ftl", serviceDirName + simpleClassName + "Service.java", params);
+    executeFreemarkerTemplate("/service/service-impl.ftl", serviceDirName + simpleClassName + "ServiceImpl.java", params);
+
+    // Make the directory for the JSPs
+    String webDirName = "web/WEB-INF/content" + url;
+    File webDir = new File(webDirName);
+    webDir.mkdirs();
+
+    // Create the JSPs
+    executeFreemarkerTemplate("/jsps/add.ftl", webDirName + "add.jsp", params);
+    executeFreemarkerTemplate("/jsps/edit.ftl", webDirName + "edit.jsp", params);
+    executeFreemarkerTemplate("/jsps/index.ftl", webDirName + "index.jsp", params);
+    executeFreemarkerTemplate("/jsps/form.ftl", webDirName + "form.jsp", params);
+
+    // Make the directory for the action unit tests
+    String actionTestDirName = "src/java/test/" + actionPackage.replace(".", "/");
+    File actionTestsDir = new File(actionTestDirName);
+    actionTestsDir.mkdirs();
+
+    // Create the action unit tests
+    executeFreemarkerTemplate("/tests/index.ftl", actionTestDirName + "IndexTest.java", params);
+    executeFreemarkerTemplate("/tests/edit.ftl", actionTestDirName + "EditTest.java", params);
+    executeFreemarkerTemplate("/tests/save.ftl", actionTestDirName + "SaveTest.java", params);
+    executeFreemarkerTemplate("/tests/delete.ftl", actionTestDirName + "DeleteTest.java", params);
+    executeFreemarkerTemplate("/tests/prepare.ftl", actionTestDirName + "PrepareTest.java", params);
+
+    // Make the directory for the service unit tests
+    String serviceTestDirName = "src/java/test/" + servicePackage.replace(".", "/");
+    File serviceTestDir = new File(serviceTestDirName);
+    serviceTestDir.mkdirs();
+
+    // Create the service unit tests
+    executeFreemarkerTemplate("/tests/service.ftl", serviceTestDirName + simpleClassName + "ServiceImplTest.java", params);
   }
+
 }
-
-// Create the index action
-def params = [actionPackage: actionPackage, servicePackage: servicePackage, url: url, type: type];
-
-// Make the directory for all the actions
-File actionsDir = new File("src/java/main/" + actionPackage.replace(".", "/"));
-actionsDir.mkdirs();
-
-// Create the actions
-String scriptPath = scriptDir.getAbsolutePath();
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/actions/add.ftl", new File(actionsDir, "Add.java"),
-    overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/actions/index.ftl", new File(actionsDir, "Index.java"),
-    overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/actions/edit.ftl", new File(actionsDir, "Edit.java"),
-    overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/actions/save.ftl", new File(actionsDir, "Save.java"),
-    overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/actions/delete.ftl", new File(actionsDir, "Delete.java"),
-    overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/actions/prepare.ftl", new File(actionsDir, "Prepare.java"),
-    overwrite, params);
-
-// Create the form validation
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/actions/validation.ftl", new File(actionsDir, "Save-validation.xml"),
-    overwrite, params);
-
-// Create the error and message bundles
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/actions/messages.ftl", new File(actionsDir, "Save.properties"),
-    overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/actions/package.ftl", new File(actionsDir, "package.properties"),
-    overwrite, params);
-
-// Make the directory for the service
-File serviceDir = new File("src/java/main/" + servicePackage.replace(".", "/"));
-serviceDir.mkdirs();
-
-// Create the service interface and implementation
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/service/service.ftl",
-    new File(serviceDir, simpleClassName + "Service.java"), overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/service/service-impl.ftl",
-    new File(serviceDir, simpleClassName + "ServiceImpl.java"), overwrite, params);
-
-// Make the directory for the JSPs
-File webDir = new File("web/WEB-INF/content" + url);
-webDir.mkdirs();
-
-// Create the JSPs
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/jsps/add.ftl",
-    new File(webDir, "add.jsp"), overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/jsps/edit.ftl",
-    new File(webDir, "edit.jsp"), overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/jsps/index.ftl",
-  new File(webDir, "index.jsp"), overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/jsps/form.ftl",
-  new File(webDir, "form.jsp"), overwrite, params);
-
-// Make the directory for the action unit tests
-File actionTestsDir = new File("src/java/test/" + actionPackage.replace(".", "/"));
-actionTestsDir.mkdirs();
-
-// Create the action unit tests
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/tests/index.ftl", new File(actionTestsDir, "IndexTest.java"),
-    overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/tests/edit.ftl", new File(actionTestsDir, "EditTest.java"),
-    overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/tests/save.ftl", new File(actionTestsDir, "SaveTest.java"),
-    overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/tests/delete.ftl", new File(actionTestsDir, "DeleteTest.java"),
-    overwrite, params);
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/tests/prepare.ftl", new File(actionTestsDir, "PrepareTest.java"),
-    overwrite, params);
-
-// Make the directory for the service unit tests
-File serviceTestsDir = new File("src/java/test/" + servicePackage.replace(".", "/"));
-serviceTestsDir.mkdirs();
-
-// Create the service unit tests
-ScaffoldingHelper.executeFreemarkerTemplate(scriptPath, "/tests/service.ftl",
-    new File(serviceTestsDir, simpleClassName + "ServiceImplTest.java"), overwrite, params);
