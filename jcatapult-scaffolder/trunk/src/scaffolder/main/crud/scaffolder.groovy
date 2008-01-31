@@ -140,7 +140,7 @@ public class CrudScaffolder extends AbstractScaffolder {
     executeFreemarkerTemplate("/jsps/form.ftl", webDirName + "form.jsp", params);
 
     // Make the directory for the action unit tests
-    String actionTestDirName = "src/java/test/" + actionPackage.replace(".", "/") + "/";
+    String actionTestDirName = "src/java/test/unit/" + actionPackage.replace(".", "/") + "/";
     File actionTestsDir = new File(actionTestDirName);
     actionTestsDir.mkdirs();
 
@@ -152,7 +152,7 @@ public class CrudScaffolder extends AbstractScaffolder {
     executeFreemarkerTemplate("/tests/prepare.ftl", actionTestDirName + "PrepareTest.java", params);
 
     // Make the directory for the service unit tests
-    String serviceTestDirName = "src/java/test/" + servicePackage.replace(".", "/") + "/";
+    String serviceTestDirName = "src/java/test/unit/" + servicePackage.replace(".", "/") + "/";
     File serviceTestDir = new File(serviceTestDirName);
     serviceTestDir.mkdirs();
 

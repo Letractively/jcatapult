@@ -13,7 +13,7 @@ import ${servicePackage}.${type.name}Service;
  *
  * @author Scaffolder
  */
-@Result(name = "success", location = "index", type = "redirect-action")
+@Result(name = "success", location = "index", type = "redirectAction")
 public class Delete extends BaseAction {
     private final ${type.name}Service ${type.fieldName}Service;
     private int[] ids;

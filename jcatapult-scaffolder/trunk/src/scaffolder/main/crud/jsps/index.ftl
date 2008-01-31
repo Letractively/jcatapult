@@ -39,7 +39,7 @@
     <c:forEach items="${g.jspEL(type.pluralFieldName)}" var="${type.fieldName}" varStatus="status">
       <tr>
         <@values type ""/>
-        <td><s:checkbox name="ids" fieldValue="${g.jspEL(type.fieldName + '.id')}"/></td>
+        <td><s:checkbox name="ids" fieldValue="%{#attr.${type.fieldName}.id}"/></td>
       </tr>
     </c:forEach>
     <c:if test="${g.jspEL('empty ' + type.pluralFieldName)}">
