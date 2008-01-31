@@ -10,6 +10,7 @@ Here are the documentation pages that are available for the JCatapult framework.
 === Introduction ===
 
   * [GettingStarted Getting started]
+  * [BuildFromSource Build from source]
   * [Architecture]
   * [ProjectLayout Project layout]
 
