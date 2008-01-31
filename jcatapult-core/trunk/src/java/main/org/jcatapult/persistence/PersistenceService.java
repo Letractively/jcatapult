@@ -109,14 +109,14 @@ public interface PersistenceService {
      *          based.
      * @param   number The number of results to return in this page.
      * @param   includeDeleted Determines if this should return all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
+     *          including those instances that are marked as deleted and are {@link SoftDeletable}
      *          objects.
      * @return  A List of the Objects found in the database.
      */
     <T extends SoftDeletable> List<T> findByType(Class<T> type, int start, int number, boolean includeDeleted);
 
     /**
-     * Determines the total number of instances of the type given. If these are {@link org.jcatapult.domain.SoftDeletable} Objects,
+     * Determines the total number of instances of the type given. If these are {@link SoftDeletable} Objects,
      * this will include all the deleted objects as well.
      *
      * @param   type The type of Objects to count.
@@ -129,7 +129,7 @@ public interface PersistenceService {
      *
      * @param   type The type of Objects to count.
      * @param   includeDeleted Determines if this should count all the instances of the Object
-     *          including those instances that are marked as deleted and are {@link org.jcatapult.domain.SoftDeletable}
+     *          including those instances that are marked as deleted and are {@link SoftDeletable}
      *          objects.
      * @return  A total number of Objects in the database.
      */
@@ -141,7 +141,8 @@ public interface PersistenceService {
      * @param   type The type of Objects to fetch.
      * @param   query The EJB3 query language query string.
      * @param   params A list of parameters that are parameterized within the query string (e.g.
-     *          select user from User user where firstName = ?)
+     *          select user from User user where firstName = ?1). These are 1 based within the query
+     *          String.
      * @return  A List of the Objects found in the database.
      */
     <T> List<T> queryAll(Class<T> type, String query, Object... params);
@@ -156,7 +157,8 @@ public interface PersistenceService {
      *          based.
      * @param   number The number of results to return in this page.
      * @param   params A list of parameters that are parameterized within the query string (e.g.
-     *          select user from User user where firstName = ?)
+     *          select user from User user where firstName = ?1). These are 1 based within the query
+     *          String.
      * @return  A List of the Objects found in the database.
      */
     <T> List<T> query(Class<T> type, String query, int start, int number, Object... params);
@@ -167,10 +169,23 @@ public interface PersistenceService {
      * @param   type The type of Objects to fetch.
      * @param   query The EJB3 query language query string.
      * @param   params A list of parameters that are parameterized within the query string (e.g.
-     *          select user from User user where firstName = ?)
+     *          select user from User user where firstName = ?1). These are 1 based within the query
+     *          String.
      * @return  The first result if there are 1 or more results, otherwise null.
      */
     <T> T queryFirst(Class<T> type, String query, Object... params);
+
+    /**
+     * Executes the given query and returns the count. This assumees that the query is a count
+     * query rather than a object query.
+     *
+     * @param   query The EJB3 query language query string that returns a count.
+     * @param   params A list of parameters that are parameterized within the query string (e.g.
+     *          select user from User user where firstName = ?). These are 1 based within the query
+     *          String.
+     * @return  The number of results that executing the query would return.
+     */
+    long queryCount(String query, Object... params);
 
     /**
      * Executes the given named query and returns all the results from the query.
@@ -178,7 +193,8 @@ public interface PersistenceService {
      * @param   type The type of Objects to fetch.
      * @param   query The named query.
      * @param   params A list of parameters that are parameterized within the query string (e.g.
-     *          select user from User user where firstName = ?)
+     *          select user from User user where firstName = ?1). These are 1 based within the query
+     *          String.
      * @return  A List of the Objects found in the database.
      */
     <T> List<T> namedQueryAll(Class<T> type, String query, Object... params);
@@ -193,7 +209,8 @@ public interface PersistenceService {
      *          based.
      * @param   number The number of results to return in this page.
      * @param   params A list of parameters that are parameterized within the query string (e.g.
-     *          select user from User user where firstName = ?)
+     *          select user from User user where firstName = ?1). These are 1 based within the query
+     *          String.
      * @return  A List of the Objects found in the database.
      */
     <T> List<T> namedQuery(Class<T> type, String query, int start, int number, Object... params);
@@ -204,7 +221,8 @@ public interface PersistenceService {
      * @param   type The type of Objects to fetch.
      * @param   query The named query.
      * @param   params A list of parameters that are parameterized within the query string (e.g.
-     *          select user from User user where firstName = ?)
+     *          select user from User user where firstName = ?1). These are 1 based within the query
+     *          String.
      * @return  The first result if there are 1 or more results, otherwise null.
      */
     <T> T namedQueryFirst(Class<T> type, String query, Object... params);
