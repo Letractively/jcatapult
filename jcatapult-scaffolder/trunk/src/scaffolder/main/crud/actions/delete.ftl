@@ -14,7 +14,7 @@ import ${servicePackage}.${type.name}Service;
  * @author Scaffolder
  */
 @Result(name = "success", location = "index", type = "redirect-action")
-public class Delete extends ActionSupport {
+public class Delete extends BaseAction {
     private final ${type.name}Service ${type.fieldName}Service;
     private int[] ids;
 
