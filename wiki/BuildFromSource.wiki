@@ -1,0 +1,25 @@
+#summary How to build JCatapult from source
+
+= Introduction =
+
+This document shows you how to build JCatapult modules and libraries from source.
+
+= The build properties files =
+
+There are two files that you will need to create in order to build JCatapult from source. These files are:
+
+== jcatapult-build.properties ==
+
+This file is used for contributors to provide the SubVersion credentials that contributors will use when releasing JCatapult. 
+
+If you are not a contributor but planning on building JCatapult modules or libraries from scratch, you will need this file. All you need to do is create an empty file named `jcatapult-build.properties` in your home directory and you should be able to build any JCatapult library or module by hand.
+
+If you are a contributor, you'll need to place your Google Code SubVersion username and password in this file under the properties `svn.username` and `svn.password`. This is only required if you are developing on Mac OSX or Windows. Linux users do not need these properties and can leave this file blank.
+
+== inversoft-org-release-build.properties ==
+
+This file is used by contributors to add the JCatapult JAR files, Savant AMD files and source JARs to the SubVersion repository hosted at savant.inversoft.org. This SubVersion repository is checked out on the HTTP server named savant.inversoft.org to provide Savant a location for downloading artifacts.
+
+If you are not a contributor but planning on building JCatapult modules or libraries from scratch, you will need this file. All you need to do is create an empty file named `inversoft-org-release-build.properties` in your home directory and you should be able to build any JCatapult library or module by hand.
+
+If you are a contributor, you'll need to place your Inversoft SubVersion repository username and password in this file under the properties `svn.release.username` and `svn.release.password`. This is only required if you are developing on Mac OSX or Windows. Linux users do not need these properties and can leave this file blank.
