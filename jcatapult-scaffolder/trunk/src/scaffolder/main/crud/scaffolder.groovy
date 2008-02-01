@@ -11,7 +11,9 @@ import org.jcatapult.scaffold.annotation.LongDescription;
  */
 @ShortDescription("Creates a CRUD operation for a single domain object")
 @LongDescription(
-"""Creates a CRUD operation for a single domain object.
+"""Creates a CRUD operation for a single domain object. If the project that the scaffolder
+is being run on is a webapp, it creates JSPs for the view. If the project is a component,
+FreeMarker templates are created.
 
   This scaffolder asks the following questions:
     1. The domain class to create the CRUD for (tab completion available)
@@ -19,7 +21,7 @@ import org.jcatapult.scaffold.annotation.LongDescription;
     3. The action package (tab completion available)
     4. The service package (tab completion available)
 
-  This scaffolder creates all of a service, the actions, JSPs, and action tests for the
+  This scaffolder creates all of a service, the actions, JSPs/FTLs, and action tests for the
   CRUD operation. It handles basic JPA domain modelling, but doesn't handle complex
   relationships such as enumeration tables and such.
 """)
@@ -128,16 +130,28 @@ public class CrudScaffolder extends AbstractScaffolder {
     executeFreemarkerTemplate("/service/service.ftl", serviceDirName + simpleClassName + "Service.java", params);
     executeFreemarkerTemplate("/service/service-impl.ftl", serviceDirName + simpleClassName + "ServiceImpl.java", params);
 
-    // Make the directory for the JSPs
-    String webDirName = "web/WEB-INF/content" + url + "/";
-    File webDir = new File(webDirName);
-    webDir.mkdirs();
+    // Create the JSPs or FreeMarker templates
+    if (new File("web").exists()) {
+      // Make the directory for the JSPs
+      String webDirName = "web/WEB-INF/content" + url + "/";
+      File webDir = new File(webDirName);
+      webDir.mkdirs();
 
-    // Create the JSPs
-    executeFreemarkerTemplate("/jsps/add.ftl", webDirName + "add.jsp", params);
-    executeFreemarkerTemplate("/jsps/edit.ftl", webDirName + "edit.jsp", params);
-    executeFreemarkerTemplate("/jsps/index.ftl", webDirName + "index.jsp", params);
-    executeFreemarkerTemplate("/jsps/form.ftl", webDirName + "form.jsp", params);
+      executeFreemarkerTemplate("/jsps/add.ftl", webDirName + "add.jsp", params);
+      executeFreemarkerTemplate("/jsps/edit.ftl", webDirName + "edit.jsp", params);
+      executeFreemarkerTemplate("/jsps/index.ftl", webDirName + "index.jsp", params);
+      executeFreemarkerTemplate("/jsps/form.ftl", webDirName + "form.jsp", params);
+    } else {
+      // Make the directory for the JSPs
+      String webDirName = "src/web/main" + url + "/";
+      File webDir = new File(webDirName);
+      webDir.mkdirs();
+
+      executeFreemarkerTemplate("/ftls/add.ftl", webDirName + "add.ftl", params);
+      executeFreemarkerTemplate("/ftls/edit.ftl", webDirName + "edit.ftl", params);
+      executeFreemarkerTemplate("/ftls/index.ftl", webDirName + "index.ftl", params);
+      executeFreemarkerTemplate("/ftls/form.ftl", webDirName + "form.ftl", params);
+    }
 
     // Make the directory for the action unit tests
     String actionTestDirName = "src/java/test/unit/" + actionPackage.replace(".", "/") + "/";

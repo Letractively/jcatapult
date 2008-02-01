@@ -20,6 +20,7 @@
       <artifact group="commons.apache.org" project="commons-cli" name="commons-cli" version="1.1" type="jar"/>
       <artifact group="codehaus.org" project="groovy" name="groovy" version="1.5.2" type="jar"/>
       <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.1" type="jar"/>
+      <artifact group="jdom.org" project="jdom" name="jdom" version="1.0" type="jar"/>
       <artifact group="sourceforge.net" project="freemarker" name="freemarker" version="2.3.10" type="jar"/>
       <artifact group="sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
     </artifactGroup>

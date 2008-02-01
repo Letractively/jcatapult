@@ -489,6 +489,7 @@
     <option name="DEFAULT_LAYOUT_MANAGER" value="GridLayoutManager" />
   </component>
   <UsedPathMacros>
+    <macro name="SAVANT_REPOSITORY" />
     <macro name="TEMPLATE" />
   </UsedPathMacros>
 </project>
