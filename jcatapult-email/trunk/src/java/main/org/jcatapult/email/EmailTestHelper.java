@@ -15,10 +15,8 @@
  */
 package org.jcatapult.email;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -45,7 +43,7 @@ import com.google.inject.AbstractModule;
  */
 public class EmailTestHelper {
     private static ThreadLocal<Email> emailResult = new ThreadLocal<Email>();
-    private static ThreadLocal<Boolean> cancelled = new ThreadLocal<Boolean>();
+    private static ThreadLocal<Future<Email>> future = new ThreadLocal<Future<Email>>();
 
     /**
      * Returns the email result for the last test run. This is a thread safe retrieval.
@@ -57,57 +55,19 @@ public class EmailTestHelper {
     }
 
     /**
-     * Calls the {@link #setup(JCatapultBaseTest, boolean)} method passing in false for timeout.
-     *
-     * @param   test The test to setup for email handling.
-     */
-    public static void setup(JCatapultBaseTest test) {
-        setup(test, false);
-    }
-
-    /**
      * Mocks out an {@link EmailTransportService} so that an SMTP server is not required to run the
      * tests. This will mock return the mail and also provides the email via the {@link #getEmailResult()}
      * method on this class. This class is thread safe and can be used in parallel test cases.
      *
      * @param   test The test to setup for email handling.
-     * @param   timeout Sets whether or not this should simulate a timeout.
      */
-    public static void setup(JCatapultBaseTest test, final boolean timeout) {
+    public static void setup(JCatapultBaseTest test) {
         emailResult.remove();
+        future.set(new MockFuture(false));
 
         final EmailTransportService ets = new EmailTransportService() {
             public Future<Email> sendEmail(Email email) {
-                emailResult.set(email);
-                return new Future<Email>() {
-                    public boolean cancel(boolean mayInterruptIfRunning) {
-                        cancelled.set(true);
-                        return true;
-                    }
-
-                    public boolean isCancelled() {
-                        return cancelled.get();
-                    }
-
-                    public boolean isDone() {
-                        return !timeout;
-                    }
-
-                    public Email get() throws InterruptedException, ExecutionException {
-                        if (timeout) {
-                            throw new AssertionError("Timeout set and get() was called. You should be calling " +
-                                "get(long, TimeUnit) from you code.");
-                        }
-                        return emailResult.get();
-                    }
-
-                    public Email get(long duration, TimeUnit unit) throws TimeoutException {
-                        if (timeout) {
-                            throw new TimeoutException("Timeout");
-                        }
-                        return emailResult.get();
-                    }
-                };
+                return future.get();
             }
         };
 
@@ -116,5 +76,57 @@ public class EmailTestHelper {
                 bind(EmailTransportService.class).toInstance(ets);
             }
         });
+    }
+
+    /**
+     * This method informs the mock that it should simulate a timeout when sending an email.
+     */
+    public static void timeout() {
+        future.set(new MockFuture(true));
+    }
+
+    /**
+     * This method informs the mock that it should reset itself and NOT simulate a timeout when sending
+     * an email.
+     */
+    public static void reset() {
+        future.set(new MockFuture(false));
+    }
+
+    public static class MockFuture implements Future<Email> {
+        private final boolean timeout;
+        private boolean cancelled;
+
+        public MockFuture(boolean timeout) {
+            this.timeout = timeout;
+        }
+
+        public boolean cancel(boolean mayInterruptIfRunning) {
+            cancelled = true;
+            return true;
+        }
+
+        public boolean isCancelled() {
+            return cancelled;
+        }
+
+        public boolean isDone() {
+            return !timeout;
+        }
+
+        public Email get() throws InterruptedException, ExecutionException {
+            if (timeout) {
+                throw new AssertionError("Timeout set and get() was called. You should be calling " +
+                    "get(long, TimeUnit) from you code.");
+            }
+            return emailResult.get();
+        }
+
+        public Email get(long duration, TimeUnit unit) throws TimeoutException {
+            if (timeout) {
+                throw new TimeoutException("Timeout");
+            }
+            return emailResult.get();
+        }
     }
 }
