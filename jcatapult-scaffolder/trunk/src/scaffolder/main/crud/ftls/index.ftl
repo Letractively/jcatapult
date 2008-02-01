@@ -25,63 +25,88 @@
     </#if>
   </#list>
 </#macro>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="s" uri="/struts-tags" %>
+${r"[#ftl]"}
 <html>
 <head><title>${type.name} | Index</title></head>
 <body>
-<s:form action="delete" method="POST" theme="simple">
+[@s.form action="delete" method="POST" theme="simple"]
   <table>
     <tr>
       <@headers type ""/>
       <th>Delete</th>
     </tr>
-    <c:forEach items="${g.jspEL(type.pluralFieldName)}" var="${type.fieldName}" varStatus="status">
+    [#list ${type.pluralFieldName} as ${type.fieldName}]
       <tr>
         <@values type ""/>
-        <td><s:checkbox name="ids" fieldValue="%{#attr.${type.fieldName}.id}"/></td>
+        <td>[@s.checkbox name="ids" fieldValue="${g.jspEL(type.fieldName + '.id')}"/]</td>
       </tr>
-    </c:forEach>
-    <c:if test="${g.jspEL('empty ' + type.pluralFieldName)}">
+    [/#list]
+
+    [#if ${type.pluralFieldName}?size == 0]
       <tr>
         <td colspan="4">No ${type.pluralFieldName} on file</td>
       </tr>
-    </c:if>
+    [/#if]
     <tr>
       <td colspan="3"><a href="add"><button>ADD AN ${type.fieldName?upper_case}</button></a></td>
-      <td><s:submit type="button" value="DELETE"/></td>
+      <td>[@s.submit type="button" value="DELETE"/]</td>
     </tr>
   </table>
-  <c:set var="totalPages" value="${g.jspEL('(totalCount / numberPerPage) + (totalCount % numberPerPage > 0 ? 1 : 0)')}"/>
-  <c:if test="${g.jspEL('totalPages >= 2 && !showAll')}">
+  [#if totalCount % numberPerPage > 0]
+    [#assign extra = 1]
+  [#else]
+    [#assign extra = 0]
+  [/#if]
+  [#assign totalPages = (totalCount / numberPerPage) + extra]
+  [#if totalPages > 1 && !showAll]
     <div id="pagination_controls">
-      <c:if test="${g.jspEL('page > 1')}">
+      [#if page > 1]
         <a href="index?page=${g.jspEL('page - 1')}&numberPerPage=${g.jspEL('numberPerPage')}">Prev</a> |
-      </c:if>
-      <c:if test="${g.jspEL('page == 1')}">
+      [/#if]
+      [#if page == 1]
         Prev |
-      </c:if>
-      <c:forEach begin="${g.jspEL('page - 5 < 1 ? 1 : page - 5')}" end="${g.jspEL('page - 1')}" step="1" var="i">
-        <a href="index?page=${g.jspEL('i')}&numberPerPage=${g.jspEL('numberPerPage')}">${g.jspEL('i')}</a> |
-      </c:forEach>
+      [/#if]
+
+      [#if page - 5 < 1]
+        [#assign start = 1]
+      [#else]
+        [#assign start = page - 5]
+      [/#if]
+
+      [#assign end = page - 1]
+      [#if end > start]
+        [#list start..end as i]
+          <a href="index?page=${g.jspEL('i')}&numberPerPage=${g.jspEL('numberPerPage')}">${g.jspEL('i')}</a> |
+        [/#list]
+      [/#if]
       ${g.jspEL('page')} |
-      <c:forEach begin="${g.jspEL('page + 1')}" end="${g.jspEL('page + 5 > totalPages ? totalPages : page + 5')}" step="1" var="i">
-        <a href="index?page=${g.jspEL('i')}&numberPerPage=${g.jspEL('numberPerPage')}">${g.jspEL('i')}</a> |
-      </c:forEach>
-      <c:if test="${g.jspEL('totalCount > (page * numberPerPage)')}">
+
+      [#assign start = page + 1]
+      [#if page + 5 > totalPages]
+        [#assign end = totalPages]
+      [#else]
+        [#assign end = page + 5]
+      [/#if]
+      [#if end > start]
+        [#list start..end as i]
+          <a href="index?page=${g.jspEL('i')}&numberPerPage=${g.jspEL('numberPerPage')}">${g.jspEL('i')}</a> |
+        [/#list]
+      [/#if]
+
+      [#if totalCount > (page * numberPerPage)]
         <a href="index?page=${g.jspEL('page + 1')}&numberPerPage=${g.jspEL('numberPerPage')}">Next</a>
-      </c:if>
-      <c:if test="${g.jspEL('totalCount <= (page * numberPerPage)')}">
+      [/#if]
+      [#if totalCount <= (page * numberPerPage)]
         Next
-      </c:if>
+      [/#if]
     </div>
-  </c:if>
+  [/#if]
   <div id="number_per_page">
     Number per page
     <a href="index?numberPerPage=25">25</a> |
     <a href="index?numberPerPage=100">100</a> |
     <a href="index?showAll=true">Show all</a><br/>
   </div>
-</s:form>
+[/@s.form]
 </body>
 </html>
