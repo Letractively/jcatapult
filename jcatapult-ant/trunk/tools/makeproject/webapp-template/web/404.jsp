@@ -1,8 +1,8 @@
 <html>
 <head>
-  <title>Error</title>
+  <title>Missing</title>
 </head>
 <body style="padding: 0 0 0 0; margin: 0 0 0 0;">
-<iframe src="/missing" style="width: 100%; height: 100%; overflow: hidden;" frameborder="0" scrolling="no"></iframe>
+Missing resource.
 </body>
 </html>
