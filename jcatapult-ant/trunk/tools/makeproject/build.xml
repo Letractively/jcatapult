@@ -112,9 +112,13 @@
       <mkdir dir="${create.project.dir}/${create.project.name}"/>
 
       <!-- Source directories -->
-      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/main/${dir.package}"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/main/${dir.package}/action"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/main/${dir.package}/domain"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/main/${dir.package}/service"/>
       <mkdir dir="${create.project.dir}/${create.project.name}/src/java/test/integration/${dir.package}"/>
-      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/test/unit/${dir.package}"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/test/unit/${dir.package}/action"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/test/unit/${dir.package}/domain"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/test/unit/${dir.package}/service"/>
 
       <!-- Figure out the versions of jcatapult-Core -->
       <determine_version url="http://jcatapult.googlecode.com/svn/jcatapult-core/tags/" property="version.jcatapult"/>
