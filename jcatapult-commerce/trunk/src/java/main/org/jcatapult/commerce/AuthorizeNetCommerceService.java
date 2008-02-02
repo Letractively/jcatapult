@@ -95,9 +95,9 @@ public class AuthorizeNetCommerceService implements CommerceService {
 
     private Object sendMessage(CreditCard creditCard, Money amount, Money tax, InetAddress userIp, boolean verify)
     throws IOException, CommerceException {
-        URL url = new URL(configuration.getString("commerce.aim.url"));
-        String username = configuration.getString("commerce.aim.username");
-        String password = configuration.getString("commerce.aim.password");
+        URL url = new URL(configuration.getString("jcatapult.commerce.aim.url"));
+        String username = configuration.getString("jcatapult.commerce.aim.username");
+        String password = configuration.getString("jcatapult.commerce.aim.password");
         if (logger.isLoggable(Level.FINEST)) {
             logger.finest("Contacting AIM with this info");
             logger.finest("URL: " + url.toExternalForm());
@@ -122,7 +122,7 @@ public class AuthorizeNetCommerceService implements CommerceService {
             build.append("x_type=AUTH_CAPTURE&");
         }
 
-        if (configuration.getBoolean("commerce.aim.test")) {
+        if (configuration.getBoolean("jcatapult.commerce.aim.test")) {
             build.append("x_test_request=TRUE&");
         }
 
@@ -147,8 +147,8 @@ public class AuthorizeNetCommerceService implements CommerceService {
         build.append("x_card_num=").append(creditCard.getNumber()).append("&");
         build.append("x_exp_date=").append(creditCard.getExpirationDate());
 
-        huc.setConnectTimeout(configuration.getInt("commerce.aim.connectTimeoutSeconds", 60) * 1000);
-        huc.setReadTimeout(configuration.getInt("commerce.aim.readTimeoutSeconds", 180) * 1000);
+        huc.setConnectTimeout(configuration.getInt("jcatapult.commerce.aim.connectTimeoutSeconds", 60) * 1000);
+        huc.setReadTimeout(configuration.getInt("jcatapult.commerce.aim.readTimeoutSeconds", 180) * 1000);
         huc.setUseCaches(false);
         huc.setDoInput(true);
         huc.setDoOutput(true);
