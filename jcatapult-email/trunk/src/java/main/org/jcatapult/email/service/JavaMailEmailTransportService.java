@@ -70,14 +70,14 @@ import com.google.inject.Inject;
  *
  * <table>
  * <tr><th>Name</th><th>Description</th><th>Optional</th><th>Default if optional</th></tr>
- * <tr><td>email.username</td><td>The user name for the SMTP server.</td><td><b>false</b></td><td>N/A</td></tr>
- * <tr><td>email.password</td><td>The password for the SMTP server.</td><td><b>false</b></td><td>N/A</td></tr>
- * <tr><td>email.smtp-host</td><td>The SMTP host.</td><td>true</td><td>localhost</td></tr>
- * <tr><td>email.thread-pool.core-size</td><td>The initial size of the thread pool for asynchronous
+ * <tr><td>jcatapult.email.username</td><td>The user name for the SMTP server.</td><td><b>false</b></td><td>N/A</td></tr>
+ * <tr><td>jcatapult.email.password</td><td>The password for the SMTP server.</td><td><b>false</b></td><td>N/A</td></tr>
+ * <tr><td>jcatapult.email.smtp-host</td><td>The SMTP host.</td><td>true</td><td>localhost</td></tr>
+ * <tr><td>jcatapult.email.thread-pool.core-size</td><td>The initial size of the thread pool for asynchronous
  *  handling of the email sending.</td><td>true</td><td>1</td></tr>
- * <tr><td>email.thread-pool.maximum-size</td><td>The maximum size of the thread pool for asynchronous
+ * <tr><td>jcatapult.email.thread-pool.maximum-size</td><td>The maximum size of the thread pool for asynchronous
  *  handling of the email sending.</td><td>true</td><td>5</td></tr>
- * <tr><td>email.thread-pool.keep-alive</td><td>The keep alive time (in milliseconds) to have threads
+ * <tr><td>jcatapult.email.thread-pool.keep-alive</td><td>The keep alive time (in milliseconds) to have threads
  *  stick around being idle prior to being thrown out.</td><td>true</td><td>500 milliseconds</td></tr>
  * </table>
  *
@@ -99,11 +99,13 @@ import com.google.inject.Inject;
  *
  * <pre>
  * &lt;config>
- *   &lt;email>
- *     &lt;mail>
- *       &lt;from>fred@example.com&lt;/from>
- *     &lt;/mail>
- *   &lt;/email>
+ *   &lt;jcatapult>
+ *     &lt;email>
+ *       &lt;mail>
+ *         &lt;from>fred@example.com&lt;/from>
+ *       &lt;/mail>
+ *     &lt;/email>
+ *   &lt;/jcatapult>
  * &lt;/config>
  * </pre>
  *
@@ -127,15 +129,15 @@ public class JavaMailEmailTransportService implements EmailTransportService {
         Properties props = new Properties();
         while (keysIter.hasNext()) {
             String key = keysIter.next();
-            if (key.startsWith("email.")) {
-                String emailKey = key.substring("email.".length());
+            if (key.startsWith("jcatapult.email.")) {
+                String emailKey = key.substring("jcatapult.email.".length());
                 String value = configuration.getString(key);
                 props.setProperty(emailKey, value);
             }
         }
 
-        final String username = configuration.getString("email.username");
-        final String password = configuration.getString("email.password");
+        final String username = configuration.getString("jcatapult.email.username");
+        final String password = configuration.getString("jcatapult.email.password");
         Authenticator auth = null;
         if (username != null && password != null) {
             auth = new Authenticator() {
@@ -146,7 +148,7 @@ public class JavaMailEmailTransportService implements EmailTransportService {
         }
 
         // Set the SMTP host
-        String smtpHost = configuration.getString("email.smtp-host");
+        String smtpHost = configuration.getString("jcatapult.email.smtp-host");
         if (smtpHost != null) {
             props.setProperty("mail.smtp.host", smtpHost);
             props.setProperty("mail.host", smtpHost);
@@ -159,9 +161,9 @@ public class JavaMailEmailTransportService implements EmailTransportService {
         session = Session.getInstance(props, auth);
 
         // Create the thread pool executor
-        int corePoolSize = configuration.getInt("email.thread-pool.core-size", 1);
-        int maximumPoolSize = configuration.getInt("email.thread-pool.maximum-size", 5);
-        int keepAlive = configuration.getInt("email.thread-pool.keep-alive", 500);
+        int corePoolSize = configuration.getInt("jcatapult.email.thread-pool.core-size", 1);
+        int maximumPoolSize = configuration.getInt("jcatapult.email.thread-pool.maximum-size", 5);
+        int keepAlive = configuration.getInt("jcatapult.email.thread-pool.keep-alive", 500);
         executorService = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAlive,
             TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     }

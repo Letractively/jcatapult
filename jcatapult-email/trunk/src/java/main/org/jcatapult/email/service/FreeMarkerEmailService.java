@@ -63,12 +63,12 @@ import freemarker.template.Template;
  *
  * <table>
  * <tr><th>Name</th><th>Description</th><th>Optional</th><th>Default if optional</th></tr>
- * <tr><td>email.templates.location</td><td>The location on disk of the email templates. This only
+ * <tr><td>jcatapult.email.templates.location</td><td>The location on disk of the email templates. This only
  *  works when the web application is deployed in exploded form. Otherwise the FreeMarker templates
  *  are searched for via the classpath.</td><td>Yes</td><td>/WEB-INF/email</td></tr>
- * <tr><td>email.templates.cache</td><td>A boolean that determines if the email templates should
+ * <tr><td>jcatapult.email.templates.cache</td><td>A boolean that determines if the email templates should
  *  be cached by FreeMarker.</td><td>Yes</td><td>false</td></tr>
- * <tr><td>email.templates.check-interval</td><td>The number of seconds to check if the FreeMarker
+ * <tr><td>jcatapult.email.templates.check-interval</td><td>The number of seconds to check if the FreeMarker
  *  template has been modified. If caching is turned off this value is ignored.</td><td>Yes</td>
  *  <td>N/A</td></tr>
  * </table>
@@ -85,11 +85,11 @@ import freemarker.template.Template;
  *
  * <table>
  * <tr><th>Name</th><th>Description</th><th>Optional</th><th>Default if optional</th></tr>
- * <tr><td>email.&lt;template>.from</td><td>This specifies from address for the email.</td>
+ * <tr><td>jcatapult.email.&lt;template>.from</td><td>This specifies from address for the email.</td>
  *  <td>Yes</td><td>The value passed in</td></tr>
- * <tr><td>email.&lt;template>.to</td><td>This specifies to address for the email.</td>
+ * <tr><td>jcatapult.email.&lt;template>.to</td><td>This specifies to address for the email.</td>
  *  <td>Yes</td><td>The value passed in</td></tr>
- * <tr><td>email.&lt;template>.subject</td><td>This specifies subject for the email.</td>
+ * <tr><td>jcatapult.email.&lt;template>.subject</td><td>This specifies subject for the email.</td>
  *  <td>Yes</td><td>The value passed in</td></tr>
  * </table>
  *
@@ -122,7 +122,7 @@ public class FreeMarkerEmailService implements EmailService {
         this.configuration = configuration;
 
         // Setup FreeMarker
-        String templatesLocation = configuration.getString("email.templates.location");
+        String templatesLocation = configuration.getString("jcatapult.email.templates.location");
         if (templatesLocation == null) {
             templatesLocation = defaultLocation;
         }
@@ -132,11 +132,11 @@ public class FreeMarkerEmailService implements EmailService {
         MultiTemplateLoader loader = new MultiTemplateLoader(new TemplateLoader[]{watl, ctl});
         freeMarkerConfiguration.setTemplateLoader(loader);
 
-        boolean cache = configuration.getBoolean("email.templates.cache", false);
+        boolean cache = configuration.getBoolean("jcatapult.email.templates.cache", false);
         if (!cache) {
             freeMarkerConfiguration.setTemplateUpdateDelay(Integer.MAX_VALUE);
         } else {
-            int checkInterval = configuration.getInt("email.templates.check-interval", 2);
+            int checkInterval = configuration.getInt("jcatapult.email.templates.check-interval", 2);
             freeMarkerConfiguration.setTemplateUpdateDelay(checkInterval);
         }
     }
@@ -147,7 +147,7 @@ public class FreeMarkerEmailService implements EmailService {
     public EmailCommand sendEmail(String template) {
         Email email = new Email();
 
-        String[] configToEmails = configuration.getStringArray("email." + template + ".to");
+        String[] configToEmails = configuration.getStringArray("jcatapult.email." + template + ".to");
         if (configToEmails != null) {
             EmailAddress[] toEmails = new EmailAddress[configToEmails.length];
             for (int i = 0; i < configToEmails.length; i++) {
@@ -156,10 +156,10 @@ public class FreeMarkerEmailService implements EmailService {
             email.setTo(toEmails);
         }
 
-        String configFromEmail = configuration.getString("email." + template + ".from");
+        String configFromEmail = configuration.getString("jcatapult.email." + template + ".from");
         if (configFromEmail != null) {
             // if the from display is null then see if it's set in the configuration
-            String configFromEmailDisplay = configuration.getString("email." + template + ".from.display");
+            String configFromEmailDisplay = configuration.getString("jcatapult.email." + template + ".from.display");
 
             // if it's still null, then set it to the from email
             if (configFromEmailDisplay == null) {
@@ -169,12 +169,12 @@ public class FreeMarkerEmailService implements EmailService {
             email.setFrom(new EmailAddress(configFromEmail, configFromEmailDisplay));
         }
 
-        String configEmailSubject = configuration.getString("email." + template + ".subject");
+        String configEmailSubject = configuration.getString("jcatapult.email." + template + ".subject");
         if (configEmailSubject != null) {
             email.setSubject(configEmailSubject);
         }
 
-        String[] configCcEmails = configuration.getStringArray("email." + template + ".cc");
+        String[] configCcEmails = configuration.getStringArray("jcatapult.email." + template + ".cc");
         if (configCcEmails != null) {
             EmailAddress[] ccEmails = new EmailAddress[configCcEmails.length];
             for (int i = 0; i < configCcEmails.length; i++) {
@@ -184,7 +184,7 @@ public class FreeMarkerEmailService implements EmailService {
         }
 
         // check email cc.  If it's not defined, check config
-        String[] configBccEmails = configuration.getStringArray("email." + template + ".bcc");
+        String[] configBccEmails = configuration.getStringArray("jcatapult.email." + template + ".bcc");
         if (configBccEmails != null) {
             EmailAddress[] bccEmails = new EmailAddress[configBccEmails.length];
             for (int i = 0; i < configBccEmails.length; i++) {
