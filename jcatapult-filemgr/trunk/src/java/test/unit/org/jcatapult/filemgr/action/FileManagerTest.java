@@ -47,12 +47,12 @@ public class FileManagerTest {
     public void testCreateDirNestedWithType() throws IOException {
         FileTools.prune("/tmp/jcatapult-filemgr");
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getStringArray("file-mgr.file-upload.allowed-content-types")).andReturn(null);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+        EasyMock.expect(configuration.getStringArray("jcatapult.file-mgr.file-upload.allowed-content-types")).andReturn(null);
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
             andReturn("/tmp/jcatapult-filemgr/some-dir");
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.prefix", "/files")).andReturn("/file-servlet");
-        EasyMock.expect(configuration.getBoolean("file-mgr.create-folder-allowed", true)).andReturn(true);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.prefix", "/files")).andReturn("/file-servlet");
+        EasyMock.expect(configuration.getBoolean("jcatapult.file-mgr.create-folder-allowed", true)).andReturn(true);
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
             andReturn("/tmp/jcatapult-filemgr/some-dir");
         EasyMock.replay(configuration);
 
@@ -81,8 +81,8 @@ public class FileManagerTest {
         new File("/tmp/jcatapult-filemgr/some-dir/test").mkdirs();
         new File("/tmp/jcatapult-filemgr/some-dir/test2").mkdirs();
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getStringArray("file-mgr.file-upload.allowed-content-types")).andReturn(null);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+        EasyMock.expect(configuration.getStringArray("jcatapult.file-mgr.file-upload.allowed-content-types")).andReturn(null);
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
             andReturn("files").times(2);
         EasyMock.replay(configuration);
 
@@ -103,8 +103,8 @@ public class FileManagerTest {
 
         List<Folder> folders = connector.getFolders();
         Assert.assertEquals(2, folders.size());
-        Assert.assertEquals("test2", folders.get(0).getName());
-        Assert.assertEquals("test", folders.get(1).getName());
+        Assert.assertTrue(folders.get(0).getName().equals("test2") || folders.get(0).getName().equals("test"));
+        Assert.assertTrue(folders.get(1).getName().equals("test2") || folders.get(1).getName().equals("test"));
 
         Assert.assertEquals(0, connector.getFiles().size());
 
@@ -118,8 +118,8 @@ public class FileManagerTest {
         new File("/tmp/jcatapult-filemgr/some-dir/test2").mkdirs();
         new File("/tmp/jcatapult-filemgr/some-dir/file").createNewFile();
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getStringArray("file-mgr.file-upload.allowed-content-types")).andReturn(null);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+        EasyMock.expect(configuration.getStringArray("jcatapult.file-mgr.file-upload.allowed-content-types")).andReturn(null);
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
             andReturn("files").times(2);
         EasyMock.replay(configuration);
 
@@ -140,8 +140,8 @@ public class FileManagerTest {
 
         List<Folder> folders = connector.getFolders();
         Assert.assertEquals(2, folders.size());
-        Assert.assertEquals("test2", folders.get(0).getName());
-        Assert.assertEquals("test", folders.get(1).getName());
+        Assert.assertTrue(folders.get(0).getName().equals("test2") || folders.get(0).getName().equals("test"));
+        Assert.assertTrue(folders.get(1).getName().equals("test2") || folders.get(1).getName().equals("test"));
 
         List<org.jcatapult.filemgr.domain.File> files = connector.getFiles();
         Assert.assertEquals(1, files.size());

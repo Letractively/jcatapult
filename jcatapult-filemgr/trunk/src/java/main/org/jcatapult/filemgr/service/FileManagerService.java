@@ -81,7 +81,7 @@ public interface FileManagerService {
      *
      * <p>
      * In addition, the location that the files are saved to can be controlled
-     * using the configuration parameter named <strong>file-servlet.dir</strong>.
+     * using the configuration parameter named <strong>jcatapult.file-mgr.file-servlet.dir</strong>.
      * This directory can be a fully qualified path name anywhere on the machine
      * that the application is running or it can be a directory relative to the
      * web application web root. In order to distinquish between these two, this
@@ -96,7 +96,7 @@ public interface FileManagerService {
      * you must also configure the FileServlet in web.xml so that it can serve
      * up the files appropriately. Or you could also use symlinks or an Apache
      * server is you prefer. In any case, you must set the configuration property
-     * named <strong>file-mgr.file-servlet.prefix</strong> to the URL prefix that
+     * named <strong>jcatapult.file-mgr.file-servlet.prefix</strong> to the URL prefix that
      * will provide access to the files. If you are using the
      * {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the prefix
      * mapped in the servlet-mapping of the web.xml file.
@@ -114,14 +114,14 @@ public interface FileManagerService {
     /**
      * <p>
      * This action handles the creation of a new folder on disk. This uses
-     * the configuration property named <strong>file-mgr.create-folder-allowed</strong>
+     * the configuration property named <strong>jcatapult.file-mgr.create-folder-allowed</strong>
      * to determine if the clients are allowed to create folders on the
      * file system or not. This defaults to true, so be sure to set this to
      * false if you do not want to allow directory creation.
      * </p>
      *
      * <p>
-     * The main configuration property of <strong>file-servlet.dir</strong> is used
+     * The main configuration property of <strong>jcatapult.file-mgr.file-servlet.dir</strong> is used
      * by this method to determine the location on disk that files are being
      * uploaded to and managed by the file manager.
      * This directory can be a fully qualified path name anywhere on the machine
@@ -138,7 +138,7 @@ public interface FileManagerService {
      * you must also configure the {@link org.jcatapult.filemgr.servlet.FileServlet}
      * in web.xml so that it can serve up the files appropriately. Or you could also
      * use symlinks or an Apache server is you prefer. In any case, you must set
-     * the configuration property named <strong>file-mgr.file-servlet.prefix</strong>
+     * the configuration property named <strong>jcatapult.file-mgr.file-servlet.prefix</strong>
      * to the URL prefix that will provide access to the files. If you are using the
      * {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the prefix
      * mapped in the servlet-mapping of the web.xml
@@ -161,7 +161,7 @@ public interface FileManagerService {
      * </p>
      *
      * <p>
-     * The main configuration property of <strong>file-servlet.dir</strong> is used
+     * The main configuration property of <strong>jcatapult.file-mgr.file-servlet.dir</strong> is used
      * by this method to determine the location on disk that files are being
      * uploaded to and managed by the file manager. This will be how the listings
      * are generated, by calling {@link java.io.File#listFiles()} on those directory
@@ -183,7 +183,7 @@ public interface FileManagerService {
      * you must also configure the {@link org.jcatapult.filemgr.servlet.FileServlet}
      * in web.xml so that it can serve up the files appropriately. Or you could
      * also use symlinks or an Apache server is you prefer. In any case, you must
-     * set the configuration property named <strong>file-mgr.file-servlet.prefix</strong>
+     * set the configuration property named <strong>jcatapult.file-mgr.file-servlet.prefix</strong>
      * to the URL prefix that will provide access to the files. If you are using
      * the {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the
      * prefix mapped in the servlet-mapping of the web.xml
@@ -204,7 +204,7 @@ public interface FileManagerService {
      * </p>
      *
      * <p>
-     * The main configuration property of <strong>file-servlet.dir</strong> is used
+     * The main configuration property of <strong>jcatapult.file-mgr.file-servlet.dir</strong> is used
      * by this method to determine the location on disk that files are being
      * uploaded to and managed by the file manager. This will be how the listings
      * are generated, by calling {@link java.io.File#listFiles()} on those directory
@@ -226,7 +226,7 @@ public interface FileManagerService {
      * you must also configure the {@link org.jcatapult.filemgr.servlet.FileServlet}
      * in web.xml so that it can serve up the files appropriately. Or you could
      * also use symlinks or an Apache server is you prefer. In any case, you must
-     * set the configuration property named <strong>file-mgr.file-servlet.prefix</strong>
+     * set the configuration property named <strong>jcatapult.file-mgr.file-servlet.prefix</strong>
      * to the URL prefix that will provide access to the files. If you are using
      * the {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the
      * prefix mapped in the servlet-mapping of the web.xml file.
