@@ -32,7 +32,6 @@
   -->
   <workflow id="workflow.project">
     <fetchWorkflow>
-      <extraItem pattern="$${name}-$${version}-src.$${type}"/>
       <process type="localCacheFetchProcess"/>
       <process type="savantInternetFetchProcess" url="http://savant.inversoft.org/"/>
     </fetchWorkflow>
