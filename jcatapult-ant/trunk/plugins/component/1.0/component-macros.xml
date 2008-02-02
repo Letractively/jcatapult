@@ -156,17 +156,6 @@
     <sequential>
       <get src="@{url}/@{name}-files-@{version}.jar" dest="${java.io.tmpdir}/files.jar"/>
 
-      <!-- TODO drop the -component from the name -->
-
-      <!-- Extract the JSP files -->
-      <mkdir dir="${dir.web}/WEB-INF/component/@{name.short}/content"/>
-      <unjar src="${java.io.tmpdir}/files.jar" dest="${dir.web}/WEB-INF/component/@{name.short}/content">
-        <patternset>
-          <include name="content/**/*"/>
-        </patternset>
-        <mapper type="glob" from="content/*" to="*"/>
-      </unjar>
-
       <!-- Extract the static files -->
       <unjar src="${java.io.tmpdir}/files.jar" dest="${dir.web}">
         <patternset>
