@@ -55,14 +55,14 @@ public class FreeMarkerEmailServiceTest {
         EasyMock.replay(containerResolver);
 
         Configuration config = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(config.getString("email.templates.location")).andReturn("/org/jcatapult/email");
-        EasyMock.expect(config.getBoolean("email.templates.cache", false)).andReturn(true);
-        EasyMock.expect(config.getInt("email.templates.check-interval", 2)).andReturn(1);
-        EasyMock.expect(config.getStringArray("email.test-template.to")).andReturn(null);
-        EasyMock.expect(config.getString("email.test-template.from")).andReturn(null);
-        EasyMock.expect(config.getString("email.test-template.subject")).andReturn(null);
-        EasyMock.expect(config.getStringArray("email.test-template.cc")).andReturn(null);
-        EasyMock.expect(config.getStringArray("email.test-template.bcc")).andReturn(null);
+        EasyMock.expect(config.getString("jcatapult.email.templates.location")).andReturn("/org/jcatapult/email");
+        EasyMock.expect(config.getBoolean("jcatapult.email.templates.cache", false)).andReturn(true);
+        EasyMock.expect(config.getInt("jcatapult.email.templates.check-interval", 2)).andReturn(1);
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template.to")).andReturn(null);
+        EasyMock.expect(config.getString("jcatapult.email.test-template.from")).andReturn(null);
+        EasyMock.expect(config.getString("jcatapult.email.test-template.subject")).andReturn(null);
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template.cc")).andReturn(null);
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template.bcc")).andReturn(null);
         EasyMock.replay(config);
 
         MockEmailTransportService transport = new MockEmailTransportService();
@@ -98,14 +98,14 @@ public class FreeMarkerEmailServiceTest {
         EasyMock.replay(containerResolver);
 
         Configuration config = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(config.getString("email.templates.location")).andReturn(null);
-        EasyMock.expect(config.getBoolean("email.templates.cache", false)).andReturn(true);
-        EasyMock.expect(config.getInt("email.templates.check-interval", 2)).andReturn(1);
-        EasyMock.expect(config.getStringArray("email.test-template.to")).andReturn(null);
-        EasyMock.expect(config.getString("email.test-template.from")).andReturn(null);
-        EasyMock.expect(config.getString("email.test-template.subject")).andReturn(null);
-        EasyMock.expect(config.getStringArray("email.test-template.cc")).andReturn(null);
-        EasyMock.expect(config.getStringArray("email.test-template.bcc")).andReturn(null);
+        EasyMock.expect(config.getString("jcatapult.email.templates.location")).andReturn(null);
+        EasyMock.expect(config.getBoolean("jcatapult.email.templates.cache", false)).andReturn(true);
+        EasyMock.expect(config.getInt("jcatapult.email.templates.check-interval", 2)).andReturn(1);
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template.to")).andReturn(null);
+        EasyMock.expect(config.getString("jcatapult.email.test-template.from")).andReturn(null);
+        EasyMock.expect(config.getString("jcatapult.email.test-template.subject")).andReturn(null);
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template.cc")).andReturn(null);
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template.bcc")).andReturn(null);
         EasyMock.replay(config);
 
         MockEmailTransportService transport = new MockEmailTransportService();
@@ -141,15 +141,15 @@ public class FreeMarkerEmailServiceTest {
         EasyMock.replay(containerResolver);
 
         Configuration config = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(config.getString("email.templates.location")).andReturn("/org/jcatapult/email");
-        EasyMock.expect(config.getBoolean("email.templates.cache", false)).andReturn(true);
-        EasyMock.expect(config.getInt("email.templates.check-interval", 2)).andReturn(1);
-        EasyMock.expect(config.getStringArray("email.test-template.to")).andReturn(new String[]{"to@example.com"});
-        EasyMock.expect(config.getString("email.test-template.from")).andReturn("from@example.com");
-        EasyMock.expect(config.getString("email.test-template.from.display")).andReturn("From Example");
-        EasyMock.expect(config.getString("email.test-template.subject")).andReturn("test subject");
-        EasyMock.expect(config.getStringArray("email.test-template.cc")).andReturn(new String[]{"from@example.com"});
-        EasyMock.expect(config.getStringArray("email.test-template.bcc")).andReturn(new String[]{"from@example.com"});
+        EasyMock.expect(config.getString("jcatapult.email.templates.location")).andReturn("/org/jcatapult/email");
+        EasyMock.expect(config.getBoolean("jcatapult.email.templates.cache", false)).andReturn(true);
+        EasyMock.expect(config.getInt("jcatapult.email.templates.check-interval", 2)).andReturn(1);
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template.to")).andReturn(new String[]{"to@example.com"});
+        EasyMock.expect(config.getString("jcatapult.email.test-template.from")).andReturn("from@example.com");
+        EasyMock.expect(config.getString("jcatapult.email.test-template.from.display")).andReturn("From Example");
+        EasyMock.expect(config.getString("jcatapult.email.test-template.subject")).andReturn("test subject");
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template.cc")).andReturn(new String[]{"from@example.com"});
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template.bcc")).andReturn(new String[]{"from@example.com"});
         EasyMock.replay(config);
 
         MockEmailTransportService transport = new MockEmailTransportService();
