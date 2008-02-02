@@ -15,7 +15,7 @@
 
    <!-- database props -->
   <property name="project.requires.database" value="true"/>
-  <property name="project.contains.domain" value="false"/>
+  <property name="project.contains.domain" value="true"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">

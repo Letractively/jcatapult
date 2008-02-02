@@ -71,7 +71,7 @@
     </copy>
 
     <!-- Copy the freemarker templates to the correct locations -->
-    <copy todir="${dir.target.classes.main}/WEB-INF/component/${component.name}/content" failonerror="false">
+    <copy todir="${dir.target.classes.main}/WEB-INF/content" failonerror="false">
       <fileset dir="${dir.src.web.main}" includes="**/*"/>
     </copy>
 

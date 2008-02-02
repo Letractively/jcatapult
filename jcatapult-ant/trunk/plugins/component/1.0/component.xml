@@ -85,9 +85,9 @@
     </copy>
 
     <!-- Copy the content -->
-    <mkdir dir="${dir.target.web}/WEB-INF/component/${component.name}"/>
-    <unlink link="${dir.target.web}/WEB-INF/component/${component.name}/content" failonerror="false"/>
-    <link link="${dir.target.web}/WEB-INF/component/${component.name}/content" resource="${basedir}/${dir.src.web.main}"/>
+    <mkdir dir="${dir.target.web}/WEB-INF/classes/WEB-INF"/>
+    <unlink link="${dir.target.web}/WEB-INF/classes/WEB-INF/content" failonerror="false"/>
+    <link link="${dir.target.web}/WEB-INF/classes/WEB-INF/content" resource="${basedir}/${dir.src.web.main}"/>
 
     <!-- Link the static resources -->
     <unlink link="${dir.target.web}/component" failonerror="false"/>
