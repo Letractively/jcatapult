@@ -41,21 +41,21 @@ public class FileConfigurationImpl implements FileConfiguration {
      * {@inheritDoc}
      */
     public String getFileServletDir() {
-        return configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data");
+        return configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data");
     }
 
     /**
      * {@inheritDoc}
      */
     public String getFileServletPrefix() {
-        return configuration.getString("file-mgr.file-servlet.prefix", "/files");
+        return configuration.getString("jcatapult.file-mgr.file-servlet.prefix", "/files");
     }
 
     /**
      * {@inheritDoc}
      */
     public String[] getFileUploadAllowedContentTypes() {
-        String[] value = configuration.getStringArray("file-mgr.file-upload.allowed-content-types");
+        String[] value = configuration.getStringArray("jcatapult.file-mgr.file-upload.allowed-content-types");
         if (value == null || value.length == 0) {
             value = new String[]{"image/jpeg", "image/png", "image/gif", "application/x-shockwave-flash",
                 "application/pdf"};
@@ -69,6 +69,6 @@ public class FileConfigurationImpl implements FileConfiguration {
      * {@inheritDoc}
      */
     public boolean isCreateFolderAllowed() {
-        return configuration.getBoolean("file-mgr.create-folder-allowed", true);
+        return configuration.getBoolean("jcatapult.file-mgr.create-folder-allowed", true);
     }
 }

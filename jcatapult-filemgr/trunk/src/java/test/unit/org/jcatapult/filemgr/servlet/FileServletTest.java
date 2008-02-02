@@ -62,7 +62,7 @@ public class FileServletTest {
     @Test
     public void testMissingFile() throws ServletException, IOException {
         final Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
             andReturn("src/java/test/unit/org/jcatapult/filemgr/servlet");
         EasyMock.replay(configuration);
 
@@ -92,7 +92,7 @@ public class FileServletTest {
     @Test
     public void testSuccess() throws ServletException, IOException {
         final Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getString("file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
             andReturn("src/java/test/unit/org/jcatapult/filemgr/servlet");
         EasyMock.replay(configuration);
 
