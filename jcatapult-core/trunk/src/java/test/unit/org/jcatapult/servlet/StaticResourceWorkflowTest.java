@@ -131,6 +131,32 @@ public class StaticResourceWorkflowTest {
         EasyMock.verify(configuration, req, res, wc);
     }
 
+    /**
+     * Tests that a normal request goes through to the chain.
+     *
+     * @throws  IOException Never.
+     * @throws  ServletException Never.
+     */
+    @Test
+    public void testNormal() throws IOException, ServletException {
+        Configuration configuration = makeConfiguration();
+
+        HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(req.getRequestURI()).andReturn("/foo/bar");
+        EasyMock.replay(req);
+
+        HttpServletResponse res = EasyMock.createStrictMock(HttpServletResponse.class);
+        EasyMock.replay(res);
+
+        WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
+        wc.doWorkflow(req, res);
+        EasyMock.replay(wc);
+
+        StaticResourceWorkflow srw = new StaticResourceWorkflow(configuration);
+        srw.perform(req, res, wc);
+        EasyMock.verify(configuration, req, res, wc);
+    }
+
     private Configuration makeConfiguration() {
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getStringArray("jcatapult.static-resource.prefixes")).andReturn(null);

@@ -100,6 +100,7 @@ public class StaticResourceWorkflow implements Workflow {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String uri = httpRequest.getRequestURI();
+        boolean handled = false;
         if (enabled) {
             // Ensure that this is a request for a resource like foo.jpg
             int dot = uri.lastIndexOf('.');
@@ -108,9 +109,14 @@ public class StaticResourceWorkflow implements Workflow {
                 for (String staticPrefix : staticPrefixes) {
                     if (uri.startsWith(staticPrefix)) {
                         findStaticResource(uri, httpRequest, httpResponse);
+                        handled = true;
                     }
                 }
             }
+        }
+
+        if (!handled) {
+            workflowChain.doWorkflow(request, response);
         }
     }
 
