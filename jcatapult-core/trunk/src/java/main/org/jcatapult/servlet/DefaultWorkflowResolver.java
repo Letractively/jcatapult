@@ -32,13 +32,15 @@ import com.google.inject.Inject;
  */
 public class DefaultWorkflowResolver implements WorkflowResolver {
     private final JPAWorkflow jpaWorkflow;
+    private final StaticResourceWorkflow staticResourceWorkflow;
 
     @Inject
-    public DefaultWorkflowResolver(JPAWorkflow jpaWorkflow) {
+    public DefaultWorkflowResolver(JPAWorkflow jpaWorkflow, StaticResourceWorkflow staticResourceWorkflow) {
         this.jpaWorkflow = jpaWorkflow;
+        this.staticResourceWorkflow = staticResourceWorkflow;
     }
 
     public List<Workflow> resolve() {
-        return Arrays.<Workflow>asList(jpaWorkflow);
+        return Arrays.asList(staticResourceWorkflow, jpaWorkflow);
     }
 }
