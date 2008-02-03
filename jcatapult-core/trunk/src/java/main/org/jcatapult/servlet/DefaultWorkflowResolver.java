@@ -24,18 +24,19 @@ import com.google.inject.Inject;
 
 /**
  * <p>
- * This is the default workflow resolver and it currently only returns an
- * instance of the {@link org.jcatapult.jpa.JPAWorkflow}
+ * This is the default workflow resolver and it currently returns an
+ * a list that contains an instance of {@link org.jcatapult.servlet.StaticResourceWorkflow} and
+ * {@link org.jcatapult.jpa.JPAWorkflow} in that order.
  * </p>
  *
  * @author Brian Pontarelli
  */
 public class DefaultWorkflowResolver implements WorkflowResolver {
-    private final JPAWorkflow jpaWorkflow;
-    private final StaticResourceWorkflow staticResourceWorkflow;
+    private JPAWorkflow jpaWorkflow;
+    private StaticResourceWorkflow staticResourceWorkflow;
 
     @Inject
-    public DefaultWorkflowResolver(JPAWorkflow jpaWorkflow, StaticResourceWorkflow staticResourceWorkflow) {
+    public void setWorkflows(JPAWorkflow jpaWorkflow, StaticResourceWorkflow staticResourceWorkflow) {
         this.jpaWorkflow = jpaWorkflow;
         this.staticResourceWorkflow = staticResourceWorkflow;
     }
