@@ -17,6 +17,7 @@ package org.jcatapult.guice;
 
 import org.jcatapult.servlet.DefaultWorkflowResolver;
 import org.jcatapult.servlet.WorkflowResolver;
+import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
@@ -31,6 +32,12 @@ import com.google.inject.Singleton;
  * for this issue yet. If you come up with something let us know.
  * </p>
  *
+ * <p>
+ * <b>NOTE:</b> This only configures a workflow resolver if the ServletContext
+ * is setup in the {@link ServletObjectsHolder} because it doesn't really
+ * make sense to have workflows outside a J2EE container.
+ * </p>
+ *
  * @author Brian Pontarelli
  */
 public class WorkflowResolverModule extends AbstractModule {
@@ -38,6 +45,10 @@ public class WorkflowResolverModule extends AbstractModule {
      * Configures the workflow resolver to be the default.
      */
     protected void configure() {
+        if (ServletObjectsHolder.getServletContext() == null) {
+            return;
+        }
+
         bind(WorkflowResolver.class).to(DefaultWorkflowResolver.class).in(Singleton.class);
     }
 }
