@@ -19,7 +19,7 @@
   <dirname property="dir.plugin.init" file="${ant.file.init}"/>
   <path id="classpath.init">
     <fileset dir="${dir.plugin.init}/lib" includes="*.jar"/>
-    <pathelement location="${dir.plugin.init}/../../libraries/java-net-commons-1.3.13.jar"/>
+    <pathelement location="${dir.plugin.init}/../../libraries/java-net-commons-1.4.2.jar"/>
     <pathelement location="${dir.plugin.init}/../../libraries/groovy-all-1.5.2.jar"/>
   </path>
 
