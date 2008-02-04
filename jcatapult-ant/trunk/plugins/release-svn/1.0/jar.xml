@@ -16,7 +16,7 @@
    language governing permissions and limitations under the License.
 -->
 <project name="release-library">
-  <property name="tmp.dir" value="${dir.catapult.cache}/release"/>
+  <property name="tmp.dir" value="${dir.jcatapult.cache}/release"/>
 
   <tstamp>
     <format property="timestamp" pattern="yyyy-MM-dd-HmmS"/>
