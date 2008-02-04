@@ -25,9 +25,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
 import org.jcatapult.database.DatabaseTools;
+import org.jcatapult.environment.Environment;
 import org.jcatapult.jpa.EntityManagerContext;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -46,9 +48,13 @@ public class JCatapultFilterTest {
     public void testJPA() throws ServletException, IOException {
         MockJNDI jndi = new MockJNDI();
         DatabaseTools.setupJDBCandJNDI(jndi, "jcatapult_core_test");
+        jndi.bind("java:comp/env/environment", new Environment("unittesting"));
         jndi.activate();
 
+        // Setup the configuration for the static resource workflow
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).andReturn(null);
+        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-unittesting.xml")).andReturn(null);
         EasyMock.replay(context);
 
         FilterConfig filterConfig = EasyMock.createStrictMock(FilterConfig.class);
@@ -63,12 +69,16 @@ public class JCatapultFilterTest {
         filter.init(filterConfig);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        // Filter
         EasyMock.expect(request.getAttribute(JCatapultFilter.ORIGINAL_REQUEST_URI)).andReturn(null);
         EasyMock.expect(request.getRequestURI()).andReturn("/test");
         request.setAttribute(JCatapultFilter.ORIGINAL_REQUEST_URI, "/test");
-        
-        ServletResponse response  = EasyMock.createStrictMock(ServletResponse.class);
-        EasyMock.replay(request, response);
+        // StaticResourceWorkflow
+        EasyMock.expect(request.getRequestURI()).andReturn("/test");
+        EasyMock.replay(request);
+
+        HttpServletResponse response  = EasyMock.createStrictMock(HttpServletResponse.class);
+        EasyMock.replay(response);
 
         final AtomicBoolean called = new AtomicBoolean(false);
         FilterChain chain = new FilterChain() {
