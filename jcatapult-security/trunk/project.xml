@@ -21,8 +21,8 @@
       <artifact group="apache.org" project="commons-configuration" name="commons-configuration" version="1.3" type="jar"/>
       <artifact group="apache.org" project="commons-codec" name="commons-codec" version="1.3" type="jar"/>
       <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="1.0-M1-{integration}" type="jar"/>
+      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.2" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="1.0-M1" type="jar"/>
     </artifactGroup>
     <artifactGroup type="run"/>
     <artifactGroup type="test-compile">
