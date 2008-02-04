@@ -3,8 +3,22 @@
     group="jcatapult.org"
     version="1.0-A1">
 
-  <!-- import property file properties -->
+  <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
+
+  <!--
+    jcatapult-build.properties must contain the following:
+      svn.username=<username>
+      svn.password=<password>
+  -->
+  <properties file="${user.home}/jcatapult-build.properties"/>
+
+  <!--
+    inversoft-org-release-build.properties must contain the following:
+      svn.release.username=<username>
+      svn.release.password=<password>
+  -->
+  <properties file="${user.home}/inversoft-org-release-build.properties"/>
 
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
@@ -71,6 +85,7 @@
     another project.
   -->
   <publishWorkflow id="workflow.publish.remote">
-    <!-- Please setup your publishing processes -->
+    <process type="SVNPublishProcess" repository="https://svn.inversoft.org/savant-deps"
+             username="${svn.release.username}" password="${svn.release.password}"/>
   </publishWorkflow>
 </project>
