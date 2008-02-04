@@ -33,11 +33,10 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class SecurityWorkflowResolver extends DefaultWorkflowResolver {
-    private final SecurityWorkflow securityWorkflow;
+    private SecurityWorkflow securityWorkflow;
 
     @Inject
-    public SecurityWorkflowResolver(JPAWorkflow jpaWorkflow, SecurityWorkflow securityWorkflow) {
-        super(jpaWorkflow);
+    public void setSecurityWorkflows(SecurityWorkflow securityWorkflow) {
         this.securityWorkflow = securityWorkflow;
     }
 
