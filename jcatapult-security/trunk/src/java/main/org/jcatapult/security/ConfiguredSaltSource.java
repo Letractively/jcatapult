@@ -15,6 +15,8 @@
  */
 package org.jcatapult.security;
 
+import java.util.logging.Logger;
+
 import org.apache.commons.configuration.Configuration;
 
 import com.google.inject.Inject;
@@ -36,6 +38,9 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class ConfiguredSaltSource implements SaltSource {
+
+    private static final Logger logger = Logger.getLogger(ConfiguredSaltSource.class.getName());
+
     private final Configuration configuration;
 
     @Inject
@@ -47,7 +52,9 @@ public class ConfiguredSaltSource implements SaltSource {
      * {@inheritDoc}
      */
     public String getSalt() {
-        return configuration.getString("jcatapult.security.salt", "jcatapult");
+        String salt = configuration.getString("jcatapult.security.salt");
+        logger.finest("jCatapult Security using salt source [" + salt + "]");
+        return salt;
     }
 
     /**
