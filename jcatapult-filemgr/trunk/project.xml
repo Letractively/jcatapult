@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
          name="jcatapult-filemgr"
          group="jcatapult.org"
-         version="1.0-A1">
+         version="1.0-M1">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
