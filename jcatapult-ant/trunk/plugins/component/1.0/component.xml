@@ -90,8 +90,9 @@
     <link link="${dir.target.web}/WEB-INF/classes/WEB-INF/content" resource="${basedir}/${dir.src.web.main}"/>
 
     <!-- Link the static resources -->
-    <unlink link="${dir.target.web}/component" failonerror="false"/>
-    <link link="${dir.target.web}/component" resource="${basedir}/${dir.src.static.main}"/>
+    <mkdir dir="${dir.target.web}/component/${project.name}"/>
+    <unlink link="${dir.target.web}/component/${project.name}/${project.version}" failonerror="false"/>
+    <link link="${dir.target.web}/component/${project.name}/${project.version}" resource="${basedir}/${dir.src.static.main}"/>
 
     <!-- Finally, overlay any testing stuff from web/test -->
     <copy todir="${dir.target.web}" failonerror="yes" overwrite="yes">
