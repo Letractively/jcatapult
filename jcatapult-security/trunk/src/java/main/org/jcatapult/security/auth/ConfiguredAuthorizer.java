@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.jcatapult.security.UserAdapter;
 import org.apache.commons.configuration.Configuration;
@@ -74,6 +75,7 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class ConfiguredAuthorizer implements Authorizer {
+    private static final Logger logger = Logger.getLogger(ConfiguredAuthorizer.class.getName());
     private final UserAdapter userAdapter;
     private final List<ResourceAuth> resourceAuths = new ArrayList<ResourceAuth>();
 
@@ -106,6 +108,7 @@ public class ConfiguredAuthorizer implements Authorizer {
 
     public void authorize(Object user, String resource) throws UnauthorizedException, NotLoggedInException {
         Set<String> roles = user != null ? userAdapter.getRoles(user) : null;
+        logger.finest("Authorizing user for roles [" + roles + "]");
         for (ResourceAuth resourceAuth : resourceAuths) {
             boolean equal = resource.equals(resourceAuth.resource);
             if (equal || (resource.startsWith(resourceAuth.resource) && (resourceAuth.dirWildcard || resourceAuth.subDirWildcard))) {
