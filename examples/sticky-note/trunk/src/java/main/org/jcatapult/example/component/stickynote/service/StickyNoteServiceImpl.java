@@ -53,7 +53,7 @@ public class StickyNoteServiceImpl implements StickyNoteService {
      * @return  The default sort property.
      */
     protected String getDefaultSortProperty() {
-        return "headline";
+        return "note";
     }
 
     /**

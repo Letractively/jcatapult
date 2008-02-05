@@ -1,6 +1,6 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="sticky-note"
-         group="jcatapult.org"
+         group="components.examples.jcatapult.org"
          version="1.0-A1">
 
   <!-- import property file properties -->
@@ -8,7 +8,7 @@
 
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult.core" value="1.0-M1-{integration}"/>
+  <property name="version.jcatapult.core" value="1.0-M1"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile">
@@ -46,7 +46,6 @@
   -->
   <workflow id="workflow.project">
     <fetchWorkflow>
-      <extraItem pattern="$${name}-$${version}-src.$${type}"/>
       <process type="localCacheFetchProcess"/>
       <process type="savantInternetFetchProcess" url="http://savant.inversoft.org/"/>
     </fetchWorkflow>

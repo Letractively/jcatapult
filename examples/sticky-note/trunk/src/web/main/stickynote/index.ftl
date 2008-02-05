@@ -3,39 +3,42 @@
 <head><title>StickyNote | Index</title></head>
 <body>
 [@s.form action="delete" method="POST" theme="simple"]
-  <table>
+  <table id="listing">
     <tr>
-      <th><a href="index?sortProperty=headline">Headline</a></th>
-      <th><a href="index?sortProperty=note">Note</a></th>
-      <th>Delete</th>
+      <th id="note-header"><a href="index?sortProperty=note">Note</a></th>
+      <th id="headline-header"><a href="index?sortProperty=headline">Headline</a></th>
+      <th id="delete-header">Delete</th>
     </tr>
     [#list stickyNotes as stickyNote]
       <tr>
-        <td><a href="edit?id=${stickyNote.id}">${stickyNote.headline}</a></td>
-        <td>${stickyNote.note}</td>
-        <td>[@s.checkbox name="ids" fieldValue="${stickyNote.id}"/]</td>
+        <td class="[#if stickyNote_index % 2 == 0]even[#else]odd[/#if] note-row"><a href="edit?id=${stickyNote.id}">${stickyNote.note}</a></td>
+        <td class="[#if stickyNote_index % 2 == 0]even[#else]odd[/#if] headline-row">${stickyNote.headline}</td>
+        <td class="[#if stickyNote_index % 2 == 0]even[#else]odd[/#if] delete-row">[@s.checkbox name="ids" fieldValue="${stickyNote.id}"/]</td>
       </tr>
     [/#list]
 
     [#if stickyNotes?size == 0]
       <tr>
-        <td colspan="4">No stickyNotes on file</td>
+        <td colspan="4" class="empty-row">No stickyNotes on file</td>
       </tr>
     [/#if]
-    <tr>
-      <td colspan="3"><a href="add"><button>ADD AN STICKYNOTE</button></a></td>
-      <td>[@s.submit type="button" value="DELETE"/]</td>
-    </tr>
   </table>
-
+  <div id="listing-controls">
+    <a href="add"><button>ADD AN STICKYNOTE</button></a>
+    [@s.submit type="button" value="DELETE"/]
+  </div>
+  tc is ${totalCount}
+  npp is ${numberPerPage}
   [#if totalCount % numberPerPage > 0]
     [#assign extra = 1]
   [#else]
     [#assign extra = 0]
   [/#if]
+  e is ${extra}
   [#assign totalPages = (totalCount / numberPerPage) + extra]
-  [#if totalPages > 1 && !showAll]
-    <div id="pagination_controls">
+  tp is ${totalPages}
+  [#if totalPages?int > 1 && !showAll]
+    <div id="pagination-controls">
       [#if page > 1]
         <a href="index?page=${page - 1}&numberPerPage=${numberPerPage}">Prev</a> |
       [/#if]
@@ -77,12 +80,14 @@
       [/#if]
     </div>
   [/#if]
-  <div id="number_per_page">
-    Number per page
-    <a href="index?numberPerPage=25">25</a> |
-    <a href="index?numberPerPage=100">100</a> |
-    <a href="index?showAll=true">Show all</a><br/>
-  </div>
+  [#if totalCount > 25]
+    <div id="number-per-page">
+      Number per page
+      <a href="index?numberPerPage=25">25</a> |
+      <a href="index?numberPerPage=100">100</a> |
+      <a href="index?showAll=true">Show all</a><br/>
+    </div>
+  [/#if]
 [/@s.form]
 </body>
 </html>
