@@ -96,9 +96,11 @@ public class CrudScaffolder extends AbstractScaffolder {
 
   private void executeTemplates(String simpleClassName, String servicePackage, String actionPackage,
                                 String url, Type type) {
+    boolean component = !new File("web").exists();
 
     // Create the index action
-    def params = [actionPackage: actionPackage, servicePackage: servicePackage, url: url, type: type];
+    def params = [actionPackage: actionPackage, servicePackage: servicePackage, url: url, type: type,
+            component: component];
 
     // Make the directory for all the actions
     String actionDirName = "src/java/main/" + actionPackage.replace(".", "/") + "/";
@@ -131,7 +133,17 @@ public class CrudScaffolder extends AbstractScaffolder {
     executeFreemarkerTemplate("/service/service-impl.ftl", serviceDirName + simpleClassName + "ServiceImpl.java", params);
 
     // Create the JSPs or FreeMarker templates
-    if (new File("web").exists()) {
+    if (component) {
+      // Make the directory for the FTLs
+      String webDirName = "src/web/main" + url + "/";
+      File webDir = new File(webDirName);
+      webDir.mkdirs();
+
+      executeFreemarkerTemplate("/ftls/add.ftl", webDirName + "add.ftl", params);
+      executeFreemarkerTemplate("/ftls/edit.ftl", webDirName + "edit.ftl", params);
+      executeFreemarkerTemplate("/ftls/index.ftl", webDirName + "index.ftl", params);
+      executeFreemarkerTemplate("/ftls/form.ftl", webDirName + "form.ftl", params);
+    } else {
       // Make the directory for the JSPs
       String webDirName = "web/WEB-INF/content" + url + "/";
       File webDir = new File(webDirName);
@@ -141,16 +153,6 @@ public class CrudScaffolder extends AbstractScaffolder {
       executeFreemarkerTemplate("/jsps/edit.ftl", webDirName + "edit.jsp", params);
       executeFreemarkerTemplate("/jsps/index.ftl", webDirName + "index.jsp", params);
       executeFreemarkerTemplate("/jsps/form.ftl", webDirName + "form.jsp", params);
-    } else {
-      // Make the directory for the JSPs
-      String webDirName = "src/web/main" + url + "/";
-      File webDir = new File(webDirName);
-      webDir.mkdirs();
-
-      executeFreemarkerTemplate("/ftls/add.ftl", webDirName + "add.ftl", params);
-      executeFreemarkerTemplate("/ftls/edit.ftl", webDirName + "edit.ftl", params);
-      executeFreemarkerTemplate("/ftls/index.ftl", webDirName + "index.ftl", params);
-      executeFreemarkerTemplate("/ftls/form.ftl", webDirName + "form.ftl", params);
     }
 
     // Make the directory for the action unit tests
