@@ -60,8 +60,8 @@ import com.google.inject.Inject;
  * redirect. If there is no saved request, this class passes the control
  * to a struts action. The URI of the struts action that is invoked is
  * controlled by the configuratin parameter
- * <code>jcatapult.security.login.succesful-login-uri</code>. This parameter
- * defaults to <b>/successful-login</b>.
+ * <code>jcatapult.security.login.successful-uri</code>. This parameter
+ * defaults to <b>/login-success</b>.
  * </p>
  *
  * @author Brian Pontarelli
@@ -74,8 +74,8 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
 
     @Inject
     public SavedRequestWorkflow(Configuration configuration) {
-        this.loginURL = configuration.getString("jcatapult.security.login.page-uri", "/login");
-        this.successfulLoginURI = configuration.getString("jcatapult.security.login.successful-login-uri", "/successful-login");
+        this.loginURL = configuration.getString("jcatapult.security.login.uri", "/login");
+        this.successfulLoginURI = configuration.getString("jcatapult.security.login.success-uri", "/login-success");
     }
 
     // --------------------- Workflow methods ----------------------
@@ -153,6 +153,7 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
      * @throws  ServletException If the redirect throws.
      * @throws  IOException If the redirect throws.
      */
+    @SuppressWarnings("unchecked")
     public void handle(NotLoggedInException exception, ServletRequest request, ServletResponse response,
             WorkflowChain workflowChain)
     throws ServletException, IOException {

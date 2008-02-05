@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.auth.Authorizer;
 import org.jcatapult.security.auth.NotLoggedInException;
-import org.jcatapult.security.auth.UnauthorizedException;
+import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 
@@ -98,7 +98,7 @@ public class AuthorizationWorkflow implements Workflow {
 
         try {
             authorizer.authorize(user, uri);
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             authorizationExceptionHandler.handle(e, request, response, workflowChain);
             return;
         } catch (NotLoggedInException e) {

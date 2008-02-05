@@ -20,7 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.jcatapult.security.auth.UnauthorizedException;
+import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.ImplementedBy;
@@ -46,7 +46,7 @@ public interface AuthorizationExceptionHandler {
      * @throws  ServletException If something goes wrong during the exception handling.
      * @throws  IOException If something goes wrong during the exception handling.
      */
-    void handle(UnauthorizedException exception, ServletRequest request, ServletResponse response,
+    void handle(AuthorizationException exception, ServletRequest request, ServletResponse response,
             WorkflowChain workflowChain)
     throws ServletException, IOException;
 }

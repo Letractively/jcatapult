@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.security.servlet.login;
+package org.jcatapult.security.servlet.auth;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,7 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
-import org.jcatapult.security.login.InvalidUsernameException;
+import org.jcatapult.security.auth.AuthorizationException;
+import org.jcatapult.security.servlet.login.DefaultLoginExceptionHandler;
 import org.jcatapult.servlet.WorkflowChain;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -38,17 +39,17 @@ import org.junit.Test;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultLoginExceptionHandlerTest {
+public class DefaultAuthorizationExceptionHandlerTest {
     @Test
     public void testHandle() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.login.failed-uri", "/login-failed")).andReturn("/login-failed");
+        EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-uri", "/not-authorized")).andReturn("/not-authorized");
         EasyMock.replay(c);
 
-        InvalidUsernameException exception = new InvalidUsernameException();
+        AuthorizationException exception = new AuthorizationException();
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
-        req.setAttribute("jcatapult_security_login_exception", exception);
+        req.setAttribute("jcatapult_authorization_exception", exception);
         EasyMock.replay(req);
 
         HttpServletResponse res = EasyMock.createStrictMock(HttpServletResponse.class);
@@ -60,12 +61,12 @@ public class DefaultLoginExceptionHandlerTest {
                 assertNotNull(request);
                 assertNotNull(response);
                 assertTrue(request instanceof HttpServletRequestWrapper);
-                assertEquals("/login-failed", ((HttpServletRequest) request).getRequestURI());
+                assertEquals("/not-authorized", ((HttpServletRequest) request).getRequestURI());
                 called.set(true);
             }
         };
 
-        DefaultLoginExceptionHandler dleh = new DefaultLoginExceptionHandler(c);
+        DefaultAuthorizationExceptionHandler dleh = new DefaultAuthorizationExceptionHandler(c);
         dleh.handle(exception, req, res, wc);
         assertTrue(called.get());
         EasyMock.verify(c, req, res);

@@ -53,7 +53,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(user2, "/admin");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             // expect
         } catch (NotLoggedInException e) {
             fail("Should not have thrown this");
@@ -66,7 +66,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(null, "/admin");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             fail("Should not have thrown this");
         } catch (NotLoggedInException e) {
             // expect
@@ -93,7 +93,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(user2, "/admin");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             // expect
         } catch (NotLoggedInException e) {
             fail("Should not have thrown this");
@@ -102,7 +102,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(user2, "/admin2");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             // expect
         } catch (NotLoggedInException e) {
             fail("Should not have thrown this");
@@ -114,7 +114,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(null, "/admin");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             fail("Should not have thrown this");
         } catch (NotLoggedInException e) {
             // expect
@@ -123,7 +123,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(null, "/admin2");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             fail("Should not have thrown this");
         } catch (NotLoggedInException e) {
             // expect
@@ -151,7 +151,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(user2, "/admin/resource");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             // expect
         } catch (NotLoggedInException e) {
             fail("Should not have thrown this");
@@ -164,7 +164,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(null, "/admin/resource");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             fail("Should not have thrown this");
         } catch (NotLoggedInException e) {
             // expect
@@ -188,7 +188,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(user2, "/admin");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             // expect
         } catch (NotLoggedInException e) {
             fail("Should not have thrown this");
@@ -197,7 +197,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(user2, "/admin2");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             // expect
         } catch (NotLoggedInException e) {
             fail("Should not have thrown this");
@@ -206,7 +206,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(user2, "/admin/resource");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             // expect
         } catch (NotLoggedInException e) {
             fail("Should not have thrown this");
@@ -215,7 +215,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(user2, "/admin/resource/resource2");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             // expect
         } catch (NotLoggedInException e) {
             fail("Should not have thrown this");
@@ -224,7 +224,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(null, "/admin");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             fail("Should not have thrown this");
         } catch (NotLoggedInException e) {
             // expect
@@ -233,7 +233,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(null, "/admin2");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             fail("Should not have thrown this");
         } catch (NotLoggedInException e) {
             // expect
@@ -242,7 +242,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(null, "/admin/resource");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             fail("Should not have thrown this");
         } catch (NotLoggedInException e) {
             // expect
@@ -251,7 +251,7 @@ public class ConfiguredAuthorizerTest {
         try {
             ca.authorize(null, "/admin/resource/resource2");
             fail("Should have failed");
-        } catch (UnauthorizedException e) {
+        } catch (AuthorizationException e) {
             fail("Should not have thrown this");
         } catch (NotLoggedInException e) {
             // expect

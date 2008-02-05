@@ -20,13 +20,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
 import org.jcatapult.security.auth.Authorizer;
 import org.jcatapult.security.auth.NotLoggedInException;
-import org.jcatapult.security.auth.UnauthorizedException;
+import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.servlet.WorkflowChain;
 import org.junit.Test;
 
@@ -42,7 +41,7 @@ public class AuthorizationWorkflowTest {
     public void testUnauthorized() throws IOException, ServletException {
         Object user = new Object();
 
-        UnauthorizedException ue = new UnauthorizedException();
+        AuthorizationException ue = new AuthorizationException();
         Authorizer a = EasyMock.createStrictMock(Authorizer.class);
         a.authorize(user, "/foo");
         EasyMock.expectLastCall().andThrow(ue);

@@ -29,10 +29,10 @@
     <classpathentry kind="var" path="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-annotations-3.2.1.jar" sourcepath="/SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-annotations-3.2.1-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-entitymanager-3.2.1.jar" sourcepath="/SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-entitymanager-3.2.1-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/hsqldb.org/hsqldb/hsqldb-1.8.9.jar" sourcepath="/SAVANT_REPOSITORY/hsqldb.org/hsqldb/hsqldb-1.8.9-src.jar" />
-    <classpathentry kind="var" path="SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.jar" sourcepath="/SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.2.jar" sourcepath="/SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.2-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/jboss.org/archive-browsing/jboss-archive-browsing-5.0.0-alpha.jar" sourcepath="/SAVANT_REPOSITORY/jboss.org/archive-browsing/jboss-archive-browsing-5.0.0-alpha-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/jboss.org/javassist/javassist-3.4.jar" sourcepath="/SAVANT_REPOSITORY/jboss.org/javassist/javassist-3.4-src.jar" />
-    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M1-IB20080131163836286.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M1-IB20080131163836286-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M1.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M1-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4.jar" sourcepath="/SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-hibernate-0.8.jar" sourcepath="/SAVANT_REPOSITORY/joda.org/joda-time/joda-time-hibernate-0.8-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/junit.org/junit/junit-4.4.jar" sourcepath="/SAVANT_REPOSITORY/junit.org/junit/junit-4.4-src.jar" />
