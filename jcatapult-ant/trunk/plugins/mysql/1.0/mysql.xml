@@ -20,6 +20,7 @@
   <path id="classpath.plugin.mysql">
     <fileset dir="${dir.plugin.mysql}/lib" includes="*.jar"/>
     <pathelement location="${dir.plugin.mysql}/../../libraries/java-net-commons-1.4.2.jar"/>
+    <pathelement location="${dir.plugin.mysql}/../../libraries/savant-core-2.0-M1.jar"/>
   </path>
 
   <target name="-init-params-mysql">

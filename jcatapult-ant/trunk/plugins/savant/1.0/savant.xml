@@ -20,6 +20,8 @@
   <path id="classpath.savant">
     <fileset dir="${dir.plugin.savant}/lib" includes="*.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/java-net-commons-1.4.2.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/savant-core-2.0-M1.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/ant-ext-2.0-M1.jar"/>
   </path>
 
   <!-- Dependency tasks -->
