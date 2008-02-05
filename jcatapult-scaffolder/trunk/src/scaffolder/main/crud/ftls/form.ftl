@@ -20,7 +20,6 @@
 ${r"[#ftl]"}
 <h2>${type.pluralName}</h2>
 [@s.form action="${r"${actionType}"}" method="POST" theme="semantic"]
-  <h3>${type.name}</h3>
   <div class="notice">
     Notice here.
   </div>
@@ -39,9 +38,11 @@ ${r"[#ftl]"}
   </#if>
 </#list>
 
-  [@s.submit value="Save"/]
-  [#if actionType =="update"]
-    [@s.submit action="delete" value="Delete"/]
-  [/#if]
-  [@s.submit name="redirectAction:index" value="Cancel"/]
+  <div id="form-controls">
+    [@s.submit value="Save"/]
+    [#if actionType =="update"]
+      [@s.submit action="delete" value="Delete"/]
+    [/#if]
+    [@s.submit name="redirect:index" value="Cancel"/]
+  </div>
 [/@s.form]
