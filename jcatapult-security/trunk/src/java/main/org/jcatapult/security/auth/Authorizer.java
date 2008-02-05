@@ -33,10 +33,10 @@ public interface Authorizer {
      *
      * @param   user The user.
      * @param   resource The resource.
-     * @throws  UnauthorizedException If the user is not null (meaning they are logged in) and they
+     * @throws AuthorizationException If the user is not null (meaning they are logged in) and they
      *          don't have the correct permissions to access the resource.
      * @throws  NotLoggedInException If the user is null (meaning they are NOT logged in) and they
      *          are accessing a resource that requires permission to access.
      */
-    void authorize(Object user, String resource) throws UnauthorizedException, NotLoggedInException;
+    void authorize(Object user, String resource) throws AuthorizationException, NotLoggedInException;
 }

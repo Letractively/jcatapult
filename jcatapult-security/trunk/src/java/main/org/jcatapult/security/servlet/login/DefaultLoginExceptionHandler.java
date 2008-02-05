@@ -19,12 +19,11 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.security.JCatapultSecurityException;
+import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -36,8 +35,8 @@ import com.google.inject.Inject;
  * for login is <code>/jcatapult-security-check</code>. This class
  * allows you to use a different URI to invoke a Struts action for
  * handling failed logins. The configuration parameter that controls
- * the failed login URI is <code>jcatapult.security.login.failed-login-uri</code>
- * The default for this configuration parameter is <b>/failed-login</b>.
+ * the failed login URI is <code>jcatapult.security.login.failed-uri</code>
+ * The default for this configuration parameter is <b>/login-failed</b>.
  * </p>
  *
  * <p>
@@ -53,7 +52,7 @@ public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
 
     @Inject
     public DefaultLoginExceptionHandler(Configuration configuration) {
-        this.failedLoginURI = configuration.getString("jcatapult.security.login.failed-login-uri", "/failed-login");
+        this.failedLoginURI = configuration.getString("jcatapult.security.login.failed-uri", "/login-failed");
     }
 
     /**
@@ -62,34 +61,8 @@ public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
     public void handle(JCatapultSecurityException exception, ServletRequest request,
             ServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
-        final HttpServletRequest httpRequest = (HttpServletRequest) request;
-
-        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
-            @Override
-            public String getRequestURI() {
-                return failedLoginURI;
-            }
-
-            @Override
-            public String getServletPath() {
-                return failedLoginURI;
-            }
-
-            @Override
-            public RequestDispatcher getRequestDispatcher(String uri) {
-                final RequestDispatcher rd = httpRequest.getRequestDispatcher(uri);
-                return new RequestDispatcher() {
-                    public void forward(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
-                        rd.forward(httpRequest, servletResponse);
-                    }
-
-                    public void include(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
-                        rd.include(httpRequest, servletResponse);
-                    }
-                };
-            }
-        };
-
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        FacadeHttpServletRequest wrapper = new FacadeHttpServletRequest(httpRequest, failedLoginURI, null);
         httpRequest.setAttribute(EXCEPTION_KEY, exception);
         workflowChain.doWorkflow(wrapper, response);
     }

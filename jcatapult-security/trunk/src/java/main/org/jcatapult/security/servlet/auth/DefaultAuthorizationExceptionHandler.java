@@ -16,27 +16,33 @@
 package org.jcatapult.security.servlet.auth;
 
 import java.io.IOException;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.security.auth.UnauthorizedException;
-import static org.jcatapult.security.servlet.ServletTools.getContextURI;
-import org.jcatapult.servlet.WorkflowChain;
 import org.apache.commons.configuration.Configuration;
+import org.jcatapult.security.auth.AuthorizationException;
+import org.jcatapult.security.servlet.FacadeHttpServletRequest;
+import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
 
 /**
  * <p>
- * This
+ * This class handles authorization exceptions that are thrown by
+ * the implementation of the {@link org.jcatapult.security.auth.Authorizer}
+ * that are caught by the {@link AuthorizationWorkflow}. This class
+ * handles the exception by creating a request that is handled by Struts
+ * action. The URI for the action that is invoked by Struts is controlled
+ * by the configuration parameter named <code>jcatapult.security.authorization.restricted-uri</code>.
+ * The default URI is <code>/not-authorized</code>.
  * </p>
  *
  * @author Brian Pontarelli
  */
 public class DefaultAuthorizationExceptionHandler implements AuthorizationExceptionHandler {
+    public static final String EXCEPTION_KEY = "jcatapult_authorization_exception";
     private final String notAuthorizedURL;
 
     @Inject
@@ -44,11 +50,12 @@ public class DefaultAuthorizationExceptionHandler implements AuthorizationExcept
         this.notAuthorizedURL = configuration.getString("jcatapult.security.authorization.restricted-uri", "/not-authorized");
     }
 
-    public void handle(UnauthorizedException exception, ServletRequest request, ServletResponse response,
+    public void handle(AuthorizationException exception, ServletRequest request, ServletResponse response,
         WorkflowChain workflowChain)
     throws ServletException, IOException {
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        httpResponse.sendRedirect(getContextURI(httpRequest, notAuthorizedURL));
+        FacadeHttpServletRequest wrapper = new FacadeHttpServletRequest(httpRequest, notAuthorizedURL, null);
+        httpRequest.setAttribute(EXCEPTION_KEY, exception);
+        workflowChain.doWorkflow(wrapper, response);
     }
 }

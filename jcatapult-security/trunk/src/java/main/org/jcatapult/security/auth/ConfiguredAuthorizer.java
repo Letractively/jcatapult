@@ -106,7 +106,7 @@ public class ConfiguredAuthorizer implements Authorizer {
         }
     }
 
-    public void authorize(Object user, String resource) throws UnauthorizedException, NotLoggedInException {
+    public void authorize(Object user, String resource) throws AuthorizationException, NotLoggedInException {
         Set<String> roles = user != null ? userAdapter.getRoles(user) : null;
         logger.finest("Authorizing user for roles [" + roles + "]");
         for (ResourceAuth resourceAuth : resourceAuths) {
@@ -133,7 +133,7 @@ public class ConfiguredAuthorizer implements Authorizer {
                 }
 
                 if (!found) {
-                    throw new UnauthorizedException();
+                    throw new AuthorizationException();
                 }
             }
         }

@@ -25,5 +25,5 @@ import org.jcatapult.security.JCatapultSecurityException;
  *
  * @author  Brian Pontarelli
  */
-public class UnauthorizedException extends JCatapultSecurityException {
+public class AuthorizationException extends JCatapultSecurityException {
 }
