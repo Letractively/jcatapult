@@ -1,5 +1,6 @@
 package org.jcatapult.example.component.stickynote.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import org.jcatapult.domain.IdentifiableImpl;
@@ -13,8 +14,22 @@ import org.jcatapult.domain.IdentifiableImpl;
  */
 @Entity()
 public class StickyNote extends IdentifiableImpl {
+    @Column(nullable = false)
+    private String uri;
+
+    @Column(nullable = false)
     private String headline;
+    
+    @Column(nullable = false)
     private String note;
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
 
     public String getHeadline() {
         return headline;

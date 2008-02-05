@@ -8,14 +8,13 @@
   [@s.hidden name="ids" value="%{stickyNote.id}"/]
   [@s.hidden name="stickyNote.id"/]
 
-  [@s.textfield key="stickyNote.note" required="true"/]
-  [@s.textfield key="stickyNote.uri" required="true"/]
-  [@s.textfield key="stickyNote.headline" required="true"/]
+  [@s.textfield key="stickyNote.note" required="false"/]
+  [@s.textfield key="stickyNote.headline" required="false"/]
 
   [@s.action name="prepare" id="prepare"/]
 
   <div id="form-controls">
-    [@s.submit value="Save"/]
+    [@s.submit value="Save" onclick="$.post(this.form.action, $(this.form).serialize(), function() {$('#sticky-note-editor').hide()}); return false"/]
     [#if actionType =="update"]
       [@s.submit action="delete" value="Delete"/]
     [/#if]

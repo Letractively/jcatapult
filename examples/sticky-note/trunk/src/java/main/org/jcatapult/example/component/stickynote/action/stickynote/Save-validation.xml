@@ -4,4 +4,19 @@
   <!-- Validation for ManyToOne and ManyToMany -->
 
   <!-- Validation for fields -->
+  <field name="stickyNote.note">
+    <field-validator type="requiredstring">
+      <message key="missing.stickyNote.note"/>
+    </field-validator>
+  </field>
+  <field name="stickyNote.uri">
+    <field-validator type="requiredstring">
+      <message key="missing.stickyNote.uri"/>
+    </field-validator>
+  </field>
+  <field name="stickyNote.headline">
+    <field-validator type="requiredstring">
+      <message key="missing.stickyNote.headline"/>
+    </field-validator>
+  </field>
 </validators>
