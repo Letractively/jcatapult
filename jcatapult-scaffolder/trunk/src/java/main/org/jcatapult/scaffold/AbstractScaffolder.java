@@ -193,7 +193,7 @@ public abstract class AbstractScaffolder implements Scaffolder {
                 ConsoleReader reader = new ConsoleReader();
                 reader.addCompletor(completor);
                 ANSIBuffer buffer = new ANSIBuffer();
-                buffer.blue(question).green(" [" + (defaultValue == null ? "" : defaultValue) + "]").blue(": ");
+                buffer.bold(question).blue(" [" + (defaultValue == null ? "" : defaultValue) + "]").bold(": ");
                 answer = reader.readLine(buffer.toString(reader.getTerminal().isANSISupported())).trim();
             } catch (IOException e) {
                 System.err.println("Error getting user input");

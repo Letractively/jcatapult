@@ -49,6 +49,10 @@
       <artifactcopy todir="target/dist/lib" flatten="true" dependencies="dependencies.project"
           workflow="workflow.project" types="compile,run">
       </artifactcopy>
+
+      <zip zipfile="${dir.target}/jcatapult-scaffolder-${project.version}.zip">
+        <fileset dir="${dir.target}/dist" includes="**/*"/>
+      </zip>
     </sequential>
   </macrodef>
 </project>
