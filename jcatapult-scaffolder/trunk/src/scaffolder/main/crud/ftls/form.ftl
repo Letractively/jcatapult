@@ -18,9 +18,9 @@
   </#if>
 </#macro>
 ${r"[#ftl]"}
-<h2>${type.pluralName}</h2>
+<h2>[#if actionType == 'update']Updating[#else]Adding[/#if] a ${type.name}</h2>
 [@s.form action="${r"${actionType}"}" method="POST" theme="semantic"]
-  <div class="notice">
+  <div id="form-notice">
     Notice here.
   </div>
   <!-- Save off the information for updates and deletes -->

@@ -19,7 +19,7 @@
 </#macro>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<h2>${type.pluralName}</h2>
+<h2>${g.jspEL("param['actionType'] == 'update' ? 'Updating' : 'Adding'")} a ${type.name}</h2>
 <c:set var="actionType" value="${g.jspEL("param['actionType']")}"/>
 <s:form action="%{#attr.actionType}" method="POST">
   <div id="form-notice">

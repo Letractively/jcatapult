@@ -15,10 +15,10 @@
     <#if !field.static && !field.final && field.name != "id" && field.mainType.simpleType &&
             (field.mainType.primitive || !field.hasAnnotation("javax.persistence.Transient"))>
       <#if !linked>
-        <td class="${g.jspEL("status.count % 2 == 0 ? 'even' : 'odd'")} ${field.name}-row"><a href="edit?id=${g.jspEL(prefix + localType.fieldName + '.id')}">${g.jspEL(prefix + localType.fieldName + '.' + field.name)}</a></td>
+        <td class="${g.jspEL("status.index % 2 == 0 ? 'even' : 'odd'")} ${field.name}-row"><a href="edit?id=${g.jspEL(prefix + localType.fieldName + '.id')}">${g.jspEL(prefix + localType.fieldName + '.' + field.name)}</a></td>
         <#assign linked=true />
       <#else>
-        <td class="${g.jspEL("status.count % 2 == 0 ? 'even' : 'odd'")} ${field.name}-row">${g.jspEL(prefix +  localType.fieldName + '.' + field.name)}</td>
+        <td class="${g.jspEL("status.index % 2 == 0 ? 'even' : 'odd'")} ${field.name}-row">${g.jspEL(prefix +  localType.fieldName + '.' + field.name)}</td>
       </#if>
     <#elseif !field.static && !field.final && !field.mainType.primitive && field.mainType.hasAnnotation("javax.persistence.Embeddable")>
       <@values field.mainType prefix + localType.fieldName + "." />
@@ -39,7 +39,7 @@
     <c:forEach items="${g.jspEL(type.pluralFieldName)}" var="${type.fieldName}" varStatus="status">
       <tr>
         <@values type ""/>
-        <td class="${g.jspEL("status.count % 2 == 0 ? 'even' : 'odd'")} delete-row"><s:checkbox name="ids" fieldValue="%{#attr.${type.fieldName}.id}"/></td>
+        <td class="${g.jspEL("status.index % 2 == 0 ? 'even' : 'odd'")} delete-row"><s:checkbox name="ids" fieldValue="%{#attr.${type.fieldName}.id}"/></td>
       </tr>
     </c:forEach>
     <c:if test="${g.jspEL('empty ' + type.pluralFieldName)}">
