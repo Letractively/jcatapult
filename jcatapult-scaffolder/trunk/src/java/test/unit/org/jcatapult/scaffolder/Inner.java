@@ -6,7 +6,7 @@
  * published or disclosed to others without company
  * authorization.
  */
-package org.jcatapult.scaffold;
+package org.jcatapult.scaffolder;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

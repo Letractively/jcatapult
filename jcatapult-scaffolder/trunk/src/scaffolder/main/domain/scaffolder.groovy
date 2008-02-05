@@ -1,6 +1,6 @@
-import org.jcatapult.scaffold.AbstractScaffolder
-import org.jcatapult.scaffold.annotation.LongDescription
-import org.jcatapult.scaffold.annotation.ShortDescription
+import org.jcatapult.scaffolder.AbstractScaffolder
+import org.jcatapult.scaffolder.annotation.LongDescription
+import org.jcatapult.scaffolder.annotation.ShortDescription
 import org.jdom.Document
 import org.jdom.Element
 import org.jdom.input.SAXBuilder

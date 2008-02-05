@@ -43,4 +43,4 @@ FOR /F "delims==" %%G IN ('java -cp "%RUN_CLASSPATH%" net.java.savant.dep.Depend
 ::
 :: Execute the scaffolder
 ::
-java -cp "%JAVA_HOME%\lib\tools.jar;%RUN_CLASSPATH%;%LOCAL_CLASSPATH%;%PROJECT_CLASSPATH%" -Dscaffolder.home=%DIR%\.. org.jcatapult.scaffold.Main %1
+java -cp "%JAVA_HOME%\lib\tools.jar;%RUN_CLASSPATH%;%LOCAL_CLASSPATH%;%PROJECT_CLASSPATH%" -Dscaffolder.home=%DIR%\.. org.jcatapult.scaffolder.Main %1

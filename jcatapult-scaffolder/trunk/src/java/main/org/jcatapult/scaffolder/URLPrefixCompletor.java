@@ -6,7 +6,7 @@
  * published or disclosed to others without company
  * authorization.
  */
-package org.jcatapult.scaffold;
+package org.jcatapult.scaffolder;
 
 import java.io.File;
 import java.io.IOException;

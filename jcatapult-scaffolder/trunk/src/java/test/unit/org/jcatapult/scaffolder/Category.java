@@ -6,7 +6,7 @@
  * published or disclosed to others without company
  * authorization.
  */
-package org.jcatapult.scaffold;
+package org.jcatapult.scaffolder;
 
 /**
  * <p>
@@ -15,14 +15,14 @@ package org.jcatapult.scaffold;
  *
  * @author Brian Pontarelli
  */
-public class Email {
-    private String value;
+public class Category {
+    private String name;
 
-    public String getValue() {
-        return value;
+    public String getName() {
+        return name;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setName(String name) {
+        this.name = name;
     }
 }

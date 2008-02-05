@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.scaffold.annotation;
+package org.jcatapult.scaffolder.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,17 +22,17 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * This annotation provides a longer description of a scaffolder that is
- * given to the user when they ask for help on a particular scaffolder.
+ * This annotation is used on scaffolders to provide a short description
+ * of the scaffolder's functionality.
  * </p>
  *
  * @author Brian Pontarelli
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface LongDescription {
+public @interface ShortDescription {
     /**
-     * @return  The long description.
+     * @return  The short description.
      */
     String value();
 }
