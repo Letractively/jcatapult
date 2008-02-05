@@ -21,9 +21,8 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <h2>${type.pluralName}</h2>
 <c:set var="actionType" value="${g.jspEL("param['actionType']")}"/>
-<s:form action="%{#attr.actionType}" method="POST" theme="semantic">
-  <h3>${type.name}</h3>
-  <div class="notice">
+<s:form action="%{#attr.actionType}" method="POST">
+  <div id="form-notice">
     Notice here.
   </div>
   <!-- Save off the information for updates and deletes -->
@@ -41,10 +40,11 @@
   </#if>
 </#list>
 
-  <s:submit value="Save"/>
-  <c:if test="${g.jspEL("param['actionType'] == 'update'")}">
-    <s:submit action="delete" value="Delete"/>
-  </c:if>
-  <s:submit name="redirectAction:index" value="Cancel"/>
-
+  <div id="form-controls">
+    <s:submit value="Save"/>
+    <c:if test="${g.jspEL("param['actionType'] == 'update'")}">
+      <s:submit action="delete" value="Delete"/>
+    </c:if>
+    <s:submit name="redirect:index" value="Cancel"/>
+  </div>
 </s:form>
