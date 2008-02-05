@@ -1,12 +1,11 @@
 package org.jcatapult.example.component.stickynote.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.jcatapult.example.component.stickynote.domain.StickyNote;
 import org.jcatapult.persistence.PersistenceService;
 
 import com.google.inject.Inject;
-import org.jcatapult.example.component.stickynote.domain.StickyNote;
 
 /**
  * <p>
@@ -90,7 +89,14 @@ public class StickyNoteServiceImpl implements StickyNoteService {
      * {@inheritDoc}
      */
     public StickyNote getById(Integer id) {
-        StickyNote stickyNote = persistenceService.findById(StickyNote.class, id);
-        return stickyNote;
+        return persistenceService.findById(StickyNote.class, id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<StickyNote> findByURI(String uri) {
+        return persistenceService.queryAll(StickyNote.class,
+            "select sn from StickyNote sn where sn.uri = ?1", uri);
     }
 }

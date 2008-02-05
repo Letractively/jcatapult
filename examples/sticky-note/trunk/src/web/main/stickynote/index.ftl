@@ -6,12 +6,14 @@
   <table id="listing">
     <tr>
       <th id="note-header"><a href="index?sortProperty=note">Note</a></th>
+      <th id="uri-header"><a href="index?sortProperty=uri">Uri</a></th>
       <th id="headline-header"><a href="index?sortProperty=headline">Headline</a></th>
       <th id="delete-header">Delete</th>
     </tr>
     [#list stickyNotes as stickyNote]
       <tr>
         <td class="[#if stickyNote_index % 2 == 0]even[#else]odd[/#if] note-row"><a href="edit?id=${stickyNote.id}">${stickyNote.note}</a></td>
+        <td class="[#if stickyNote_index % 2 == 0]even[#else]odd[/#if] uri-row">${stickyNote.uri}</td>
         <td class="[#if stickyNote_index % 2 == 0]even[#else]odd[/#if] headline-row">${stickyNote.headline}</td>
         <td class="[#if stickyNote_index % 2 == 0]even[#else]odd[/#if] delete-row">[@s.checkbox name="ids" fieldValue="${stickyNote.id}"/]</td>
       </tr>
@@ -27,16 +29,12 @@
     <a href="add"><button>ADD AN STICKYNOTE</button></a>
     [@s.submit type="button" value="DELETE"/]
   </div>
-  tc is ${totalCount}
-  npp is ${numberPerPage}
   [#if totalCount % numberPerPage > 0]
     [#assign extra = 1]
   [#else]
     [#assign extra = 0]
   [/#if]
-  e is ${extra}
   [#assign totalPages = (totalCount / numberPerPage) + extra]
-  tp is ${totalPages}
   [#if totalPages?int > 1 && !showAll]
     <div id="pagination-controls">
       [#if page > 1]

@@ -47,8 +47,8 @@ public class Save extends BaseAction {
 
     @Override
     @Actions({
-        @Action(value = "save", results = {@Result(name = "input", location = "add.jsp")}),
-        @Action(value = "update", results = {@Result(name = "input", location = "edit.jsp")})
+        @Action(value = "save", results = {@Result(name = "input", location = "add.ftl")}),
+        @Action(value = "update", results = {@Result(name = "input", location = "edit.ftl")})
     })
     public String execute() {
         stickyNoteService.persist(stickyNote);

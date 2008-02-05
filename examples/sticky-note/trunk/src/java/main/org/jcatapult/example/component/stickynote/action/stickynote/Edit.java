@@ -18,7 +18,7 @@ import org.jcatapult.example.component.stickynote.service.StickyNoteService;
  *
  * @author  Scaffolder
  */
-@Result(name = "error", location = "index.jsp")
+@Result(name = "error", location = "index.ftl")
 public class Edit extends BaseAction {
     private final StickyNoteService stickyNoteService;
     private Integer id;

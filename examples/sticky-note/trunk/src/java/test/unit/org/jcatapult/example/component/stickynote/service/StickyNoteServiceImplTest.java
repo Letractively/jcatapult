@@ -67,6 +67,7 @@ public class StickyNoteServiceImplTest extends JPABaseTest {
     private StickyNote makeStickyNote() {
         StickyNote stickyNote = new StickyNote();
         stickyNote.setNote("test note");
+        stickyNote.setUri("test uri");
         stickyNote.setHeadline("test headline");
 
         service.persist(stickyNote);
@@ -80,6 +81,7 @@ public class StickyNoteServiceImplTest extends JPABaseTest {
      */
     private void verify(StickyNote stickyNote) {
         assertEquals("test note", stickyNote.getNote());
+        assertEquals("test uri", stickyNote.getUri());
         assertEquals("test headline", stickyNote.getHeadline());
     }
 }

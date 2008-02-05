@@ -1,0 +1,13 @@
+div.sticky-note {
+  border: 1px khaki solid;
+  background-color: yellow;
+  padding: 5px 5px 5px 5px;
+  width: 300px;
+}
+
+div.sticky-note h3 {
+  color: burlywood;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}

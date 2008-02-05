@@ -11,6 +11,9 @@
   <property name="version.jcatapult.core" value="1.0-M1"/>
 
   <dependencies id="dependencies.project">
+    <artifactGroup type="compile-only">
+      <artifact group="sun.com" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
+    </artifactGroup>
     <artifactGroup type="compile">
       <artifact group="apache.org" project="commons-configuration" name="commons-configuration" version="1.3" type="jar"/>
       <artifact group="apache.org" project="struts2" name="struts2-convention-plugin" version="2.1.1-SNAPSHOT" type="jar"/>

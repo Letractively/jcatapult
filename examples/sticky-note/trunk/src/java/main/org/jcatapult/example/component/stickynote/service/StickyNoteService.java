@@ -2,8 +2,9 @@ package org.jcatapult.example.component.stickynote.service;
 
 import java.util.List;
 
-import com.google.inject.ImplementedBy;
 import org.jcatapult.example.component.stickynote.domain.StickyNote;
+
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
@@ -65,4 +66,12 @@ public interface StickyNoteService {
      * @return  The StickyNote or null if it doesn't exist or has been deleted.
      */
     StickyNote getById(Integer id);
+
+    /**
+     * Locates all of the sticky notes for a specific URI.
+     *
+     * @param   uri The uri.
+     * @return  The list of sticky notes or an empty list if there are none for the given URI.
+     */
+    List<StickyNote> findByURI(String uri);
 }
