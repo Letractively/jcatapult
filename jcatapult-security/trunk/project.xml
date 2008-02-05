@@ -1,10 +1,12 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
-    name="jcatapult-security"
-    group="jcatapult.org"
-    version="1.0-M1">
+         name="jcatapult-security"
+         group="jcatapult.org"
+         version="1.0-M1">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
+  <properties file="${user.home}/jcatapult-build.properties"/>
+  <properties file="${user.home}/inversoft-org-release-build.properties"/>
 
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
