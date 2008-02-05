@@ -6,7 +6,7 @@
  * published or disclosed to others without company
  * authorization.
  */
-package org.jcatapult.scaffold.lang;
+package org.jcatapult.scaffolder.lang;
 
 import java.lang.annotation.ElementType;
 import java.util.ArrayList;

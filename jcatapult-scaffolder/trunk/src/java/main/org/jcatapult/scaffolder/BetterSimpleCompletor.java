@@ -1,4 +1,4 @@
-package org.jcatapult.scaffold;
+package org.jcatapult.scaffolder;
 
 import java.io.BufferedReader;
 import java.io.IOException;

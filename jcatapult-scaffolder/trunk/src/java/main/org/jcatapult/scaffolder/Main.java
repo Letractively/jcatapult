@@ -6,7 +6,7 @@
  * published or disclosed to others without company
  * authorization.
  */
-package org.jcatapult.scaffold;
+package org.jcatapult.scaffolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +19,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.jcatapult.scaffold.annotation.LongDescription;
-import org.jcatapult.scaffold.annotation.ShortDescription;
+import org.jcatapult.scaffolder.annotation.LongDescription;
+import org.jcatapult.scaffolder.annotation.ShortDescription;
 
 import groovy.lang.GroovyClassLoader;
 

@@ -6,7 +6,7 @@
  * published or disclosed to others without company
  * authorization.
  */
-package org.jcatapult.scaffold;
+package org.jcatapult.scaffolder;
 
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
@@ -18,7 +18,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
-import org.jcatapult.scaffold.lang.ClassType;
+import org.jcatapult.scaffolder.lang.ClassType;
 
 /**
  * <p>

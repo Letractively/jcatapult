@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.scaffold;
+package org.jcatapult.scaffolder;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -26,8 +26,8 @@ import java.util.Queue;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
-import org.jcatapult.scaffold.lang.ClassType;
-import org.jcatapult.scaffold.lang.HasAnnotationMethod;
+import org.jcatapult.scaffolder.lang.ClassType;
+import org.jcatapult.scaffolder.lang.HasAnnotationMethod;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
