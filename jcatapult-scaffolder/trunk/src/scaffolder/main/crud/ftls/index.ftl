@@ -15,10 +15,10 @@
     <#if !field.static && !field.final && field.name != "id" && field.mainType.simpleType &&
             (field.mainType.primitive || !field.hasAnnotation("javax.persistence.Transient"))>
       <#if !linked>
-        <td class="[#if item_index % 2 == 0]even[#else]odd[/#if] ${field.name}-row"><a href="edit?id=${g.jspEL(prefix + localType.fieldName + '.id')}">${g.jspEL(prefix + localType.fieldName + '.' + field.name)}</a></td>
+        <td class="[#if ${type.fieldName}_index % 2 == 0]even[#else]odd[/#if] ${field.name}-row"><a href="edit?id=${g.jspEL(prefix + localType.fieldName + '.id')}">${g.jspEL(prefix + localType.fieldName + '.' + field.name)}</a></td>
         <#assign linked=true />
       <#else>
-        <td class="[#if item_index % 2 == 0]even[#else]odd[/#if] ${field.name}-row">${g.jspEL(prefix +  localType.fieldName + '.' + field.name)}</td>
+        <td class="[#if ${type.fieldName}_index % 2 == 0]even[#else]odd[/#if] ${field.name}-row">${g.jspEL(prefix +  localType.fieldName + '.' + field.name)}</td>
       </#if>
     <#elseif !field.static && !field.final && !field.mainType.primitive && field.mainType.hasAnnotation("javax.persistence.Embeddable")>
       <@values field.mainType prefix + localType.fieldName + "." />
@@ -38,7 +38,7 @@ ${r"[#ftl]"}
     [#list ${type.pluralFieldName} as ${type.fieldName}]
       <tr>
         <@values type ""/>
-        <td class="[#if item_index % 2 == 0]even[#else]odd[/#if] delete-row">[@s.checkbox name="ids" fieldValue="${g.jspEL(type.fieldName + '.id')}"/]</td>
+        <td class="[#if ${type.fieldName}_index % 2 == 0]even[#else]odd[/#if] delete-row">[@s.checkbox name="ids" fieldValue="${g.jspEL(type.fieldName + '.id')}"/]</td>
       </tr>
     [/#list]
 
@@ -58,7 +58,7 @@ ${r"[#ftl]"}
     [#assign extra = 0]
   [/#if]
   [#assign totalPages = (totalCount / numberPerPage) + extra]
-  [#if totalPages > 1 && !showAll]
+  [#if totalPages?int > 1 && !showAll]
     <div id="pagination-controls">
       [#if page > 1]
         <a href="index?page=${g.jspEL('page - 1')}&numberPerPage=${g.jspEL('numberPerPage')}">Prev</a> |
@@ -101,7 +101,7 @@ ${r"[#ftl]"}
       [/#if]
     </div>
   [/#if]
-  [#if totalcount > 25]
+  [#if totalCount > 25]
     <div id="number-per-page">
       Number per page
       <a href="index?numberPerPage=25">25</a> |
