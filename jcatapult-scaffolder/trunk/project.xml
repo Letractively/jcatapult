@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
     name="jcatapult-scaffold"
     group="jcatapult.org"
-    version="1.0-A1">
+    version="1.0-M1">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -27,22 +27,22 @@
   <property name="project.requires.database" value="false"/>
 
   <dependencies id="dependencies.project">
-    <artifactGroup type="run">
-      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-M1-{integration}" type="jar"/>
-    </artifactGroup>
     <artifactGroup type="compile">
       <artifact group="commons.apache.org" project="commons-cli" name="commons-cli" version="1.1" type="jar"/>
-      <artifact group="codehaus.org" project="groovy" name="groovy" version="1.5.2" type="jar"/>
-      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.1" type="jar"/>
+      <artifact group="codehaus.org" project="groovy" name="groovy-all" version="1.5.4" type="jar"/>
+      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.2" type="jar"/>
       <artifact group="jdom.org" project="jdom" name="jdom" version="1.0" type="jar"/>
       <artifact group="sourceforge.net" project="freemarker" name="freemarker" version="2.3.10" type="jar"/>
       <artifact group="sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
     </artifactGroup>
-    <artifactGroup type="test-run"/>
+    <artifactGroup type="run">
+      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-M1" type="jar"/>
+    </artifactGroup>
     <artifactGroup type="test-compile">
       <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
       <artifact group="sun.com" project="jpa" name="jpa" version="1.0" type="jar"/>
     </artifactGroup>
+    <artifactGroup type="test-run"/>
   </dependencies>
 
   <!--
