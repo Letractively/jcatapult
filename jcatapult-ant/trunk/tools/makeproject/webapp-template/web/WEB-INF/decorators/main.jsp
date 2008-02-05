@@ -8,6 +8,7 @@
   </title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <link rel="stylesheet" href="/css/main.css"/>
+  <script type="text/javascript" src="/js/jquery-1.2.2.pack.js"/>
   <sm:head/>
 </head>
 <body>
