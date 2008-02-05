@@ -92,7 +92,7 @@
   <target name="create-test-database">
     <echo>Creating custom test databases...</echo>
     <dependencypath pathid="classpath.project" dependencies="dependencies.project" workflow="workflow.project"
-                    includedependencies="true" types="compile,compile-test,run,run-test"/>
+                    transitive="true" types="compile,compile-test,run,run-test"/>
     <sql driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/mysql"
          userid="${db.username}" password="${db.password}" autocommit="true" expandproperties="true"
          classpathref="classpath.project">
