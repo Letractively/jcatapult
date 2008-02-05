@@ -50,8 +50,8 @@ public class Save extends BaseAction {
 
     @Override
     @Actions({
-        @Action(value = "save", results = {@Result(name = "input", location = "add.jsp")}),
-        @Action(value = "update", results = {@Result(name = "input", location = "edit.jsp")})
+        @Action(value = "save", results = {@Result(name = "input", location = "add.<#if component>ftl<#else>jsp</#if>")}),
+        @Action(value = "update", results = {@Result(name = "input", location = "edit.<#if component>ftl<#else>jsp</#if>")})
     })
     public String execute() {
         ${type.fieldName}Service.persist(${type.fieldName}<@global.idParams/>);
