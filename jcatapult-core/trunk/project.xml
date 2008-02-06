@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-core"
          group="jcatapult.org"
-         version="1.0-M1">
+         version="1.0-M2">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -50,7 +50,7 @@
       <artifact group="mysql.com" project="mysql-connector-java" name="mysql-connector-java" version="5.0.7" type="jar"/>
       <artifact group="ognl.org" project="ognl" name="ognl" version="2.6.11" type="jar"/>
       <artifact group="opensymphony.com" project="xwork" name="xwork" version="2.1.1-SNAPSHOT" type="jar"/>
-      <artifact group="sourceforge.net" project="freemarker" name="freemarker" version="2.3.10" type="jar"/>
+      <artifact group="sourceforge.net" project="freemarker" name="freemarker" version="2.3.12" type="jar"/>
       <artifact group="sourceforge.net" project="cglib" name="cglib" version="2.1.3" type="jar"/>
       <artifact group="sun.com" project="jpa" name="jpa" version="1.0" type="jar"/>
     </artifactGroup>
