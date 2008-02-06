@@ -176,25 +176,24 @@
   </macrodef>
 
   <macrodef name="scm_import" description="Imports the current directory into SubVersion">
-    <attribute name="project" description="The name of the project as it will exist in SubVersion"/>
     <attribute name="dir" description="The location on disk where the import image exists"/>
     <attribute name="url" description="The subversion url"/>
     <attribute name="username" description="The subversion username"/>
     <attribute name="password" description="The subversion password"/>
     <sequential>
-      <condition property="import.project.exists" value="true">
-        <betterhttp url="@{url}/@{project}" username="@{username}" password="@{password}"/>
+      <condition property="import.url.exists" value="true">
+        <betterhttp url="@{url}" username="@{username}" password="@{password}"/>
       </condition>
 
       <if>
-        <equals arg1="${import.project.exists}" arg2="true"/>
+        <equals arg1="${import.url.exists}" arg2="true"/>
         <then>
-          <fail message="Project name [@{project}] is already taken"/>
+          <fail message="URL [@{url}] already exists in the SubVersion repository"/>
         </then>
       </if>
 
       <svn username="@{username}" password="@{password}">
-        <import path="@{dir}" url="@{url}/@{project}" message="[JCATAPULT-ANT Import] project import of @{project}"/>
+        <import path="@{dir}" url="@{url}" message="[JCATAPULT-ANT Import] import"/>
       </svn>
     </sequential>
   </macrodef>
@@ -204,9 +203,18 @@
     <attribute name="username" description="The subversion username"/>
     <attribute name="password" description="The subversion password"/>
     <sequential>
-      <svn username="@{username}" password="@{password}">
-        <mkdir url="@{url}" message="[JCATAPULT-ANT mkdir] make dir"/>
-      </svn>
+      <condition property="import.url.exists" value="true">
+        <betterhttp url="@{url}" username="@{username}" password="@{password}"/>
+      </condition>
+
+      <if>
+        <not><equals arg1="${import.url.exists}" arg2="true"/></not>
+        <then>
+          <svn username="@{username}" password="@{password}">
+            <mkdir url="@{url}" message="[JCATAPULT-ANT mkdir] make dir"/>
+          </svn>
+        </then>
+      </if>
     </sequential>
   </macrodef>
 
