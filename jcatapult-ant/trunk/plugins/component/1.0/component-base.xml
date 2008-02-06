@@ -76,7 +76,7 @@
     </copy>
 
     <!-- Copy the static files into the struts location -->
-    <copy todir="${dir.target.classes.main}/component" failonerror="false">
+    <copy todir="${dir.target.classes.main}/component/${project.name}/${project.version}" failonerror="false">
       <fileset dir="${dir.src.static.main}" includes="**/*"/>
     </copy>
 

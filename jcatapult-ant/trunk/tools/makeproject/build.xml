@@ -60,21 +60,21 @@
     Creates a library module.
   -->
   <target name="create-library" depends="-init" description="Creates a new library project">
-    <create-project template="library-template"/>
+    <create-project template="library-template" jcatapult="false"/>
   </target>
 
   <!--
     Creates a webapp module.
   -->
   <target name="create-webapp" depends="-init" description="Creates a new webapp project">
-    <create-project template="webapp-template"/>
+    <create-project template="webapp-template" jcatapult="true"/>
   </target>
 
   <!--
     Creates a component module.
   -->
   <target name="create-component" depends="-init" description="Creates a new component project">
-    <create-project template="component-template"/>
+    <create-project template="component-template" jcatapult="true"/>
   </target>
 
   <target name="svn-import" description="Imports a project into a subversion repository.  This target creates the trunk, tags, and branches directory for you.">
@@ -104,6 +104,7 @@
   -->
   <macrodef name="create-project">
     <attribute name="template"/>
+    <attribute name="jcatapult"/>
     <sequential>
       <delete dir="${create.project.dir}/${create.project.name}"/>
       <mkdir dir="${create.project.dir}/${create.project.name}"/>
@@ -118,7 +119,12 @@
       <mkdir dir="${create.project.dir}/${create.project.name}/src/java/test/unit/${dir.package}/service"/>
 
       <!-- Figure out the versions of jcatapult-Core -->
-      <determine_version url="http://jcatapult.googlecode.com/svn/jcatapult-core/tags/" property="version.jcatapult"/>
+      <if>
+        <equals arg1="@{jcatapult}" arg2="true"/>
+        <then>
+          <determine_version url="http://jcatapult.googlecode.com/svn/jcatapult-core/tags/" property="version.jcatapult"/>
+        </then>
+      </if>
 
       <copy todir="${create.project.dir}/${create.project.name}">
         <fileset dir="${basedir}/@{template}" includes="**/*" excludes="@{template}*"/>
