@@ -79,26 +79,23 @@
 
   <target name="svn-import" description="Imports a project into a subversion repository.  This target creates the trunk, tags, and branches directory for you.">
     <input message="Enter project name (e.g. projectX)" addproperty="svn-import.project.name"/>
-    <input message="Enter the path to your project (e.g. /home/jdoe/projectX)" addproperty="svn-import.project.path" defaultvalue="${user.dir}"/>
+    <input message="Enter the path to your project (e.g. /home/jdoe/projectX)" addproperty="svn-import.project.path" defaultvalue="${user.dir}/${svn-import.project.name}"/>
     <input message="Enter the subversion repository url where to import the project (e.g. http://www.johndoe.com/subversion/projects - note the project name will be appended to this)" addproperty="svn-import.url"/>
     <input message="Enter the subversion repository username" addproperty="svn-import.username"/>
     <input message="Enter the subversion repository password" addproperty="svn-import.password"/>
 
-    <property name="import.dir" value="${user.home}/tmp/${svn-import.project.name}"/>
+    <delete dir="${user.home}/tmp"/>
 
-    <echo>Creating local subversion directory structure...</echo>
-    <delete dir="${import.dir}"/>
-    <mkdir dir="${import.dir}/trunk"/>
-    <mkdir dir="${import.dir}/tags"/>
-    <mkdir dir="${import.dir}/branches"/>
+    <echo>Importing [${svn-import.project.path}] to [${svn-import.url}/${svn-import.project.name}/trunk]...</echo>
+    <scm_import project="${svn-import.project.name}" dir="${svn-import.project.path}" url="${svn-import.url}/${svn-import.project.name}/trunk" username="${svn-import.username}" password="${svn-import.password}"/>
+    <scm_mkdir url="${svn-import.url}/${svn-import.project.name}/tags" username="${svn-import.username}" password="${svn-import.password}"/>
+    <scm_mkdir url="${svn-import.url}/${svn-import.project.name}/branches" username="${svn-import.username}" password="${svn-import.password}"/>
 
-    <copy todir="${import.dir}/trunk">
-        <fileset dir="${svn-import.project.path}" includes="**/*"/>
-    </copy>
+    <echo>Backing up project to [${user.home}/tmp]...</echo>
+    <move file="${svn-import.project.path}" todir="${user.home}/tmp"/>
 
-    <echo>Importing [${import.dir}] to [${svn-import.url}]...</echo>
-    <scm_import project="${svn-import.project.name}" dir="${import.dir}" url="${svn-import.url}" username="${svn-import.username}" password="${svn-import.password}"/>
-
+    <echo>Checking out trunk to [${svn-import.project.path}]...</echo>
+    <scm_checkout url="${svn-import.url}/${svn-import.project.name}/trunk" dir="${svn-import.project.path}" username="${svn-import.username}" password="${svn-import.password}"/>
   </target>
 
   <!--
