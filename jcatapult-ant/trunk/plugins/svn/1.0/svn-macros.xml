@@ -199,6 +199,17 @@
     </sequential>
   </macrodef>
 
+  <macrodef name="scm_mkdir" description="Makes a directory in a repository">
+    <attribute name="url" description="The subversion url to create"/>
+    <attribute name="username" description="The subversion username"/>
+    <attribute name="password" description="The subversion password"/>
+    <sequential>
+      <svn username="@{username}" password="@{password}">
+        <mkdir url="@{url}" message="[JCATAPULT-ANT mkdir] make dir"/>
+      </svn>
+    </sequential>
+  </macrodef>
+
   <macrodef name="scm_checkout" description="Checks out from source control.">
     <attribute name="url" description="The URL to check out."/>
     <attribute name="dir" description="The directory to check out to."/>
