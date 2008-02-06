@@ -76,7 +76,7 @@ public class StaticResourceWorkflow implements Workflow {
      */
     private String[] getPrefixes(Configuration configuration) {
         String[] prefixes = configuration.getStringArray("jcatapult.static-resource.prefixes");
-        if (prefixes == null) {
+        if (prefixes == null || prefixes.length == 0) {
             prefixes = new String[]{"/component", "/static", "/jcatapult"};
         }
         return prefixes;
