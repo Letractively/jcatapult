@@ -198,8 +198,7 @@ public class FileManagerServiceImpl implements FileManagerService {
      *          This usually means the web application is a WAR.
      */
     private String getFullyQualifiedDir(String dirName) {
-        boolean relative = !dirName.startsWith("/");
-        if (!relative) {
+        if (new File(dirName).isAbsolute()) {
             return dirName;
         }
 
