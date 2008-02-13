@@ -1,0 +1,73 @@
+#summary Ideas for the Database Manager DSL
+
+= Brain storming =
+
+  * Groovy based DSL
+  * Syntax for table creation, table alter, table drop, inserts, updates, deletes (essentially all SQL syntax)
+
+== Table creation ==
+
+Perhaps something like:
+
+{{{
+create_table "table_name", [options], { t ->
+  t.add_column name: "column_name", type: "type", nullable: true, defaultValue: "default"
+  t.add_column name: "column_name1", type: "type1", nullable: true, defaultValue: "default1"
+  t.add_index name: "idx", columns: ["column_name"]
+  t.add_foreign_key name: "fk", column: "column_name", ref: "table_name.column_name"
+}
+}}}
+
+== Table alter ==
+
+{{{
+alter_table "table_name", [options], { t ->
+  t.add_column name: "column_name", type: "type", nullable: true, defaultValue: "default"
+  t.change_column name: "column_name", type: "new_type", nullable: false, defaultValue: "newDefault"
+  t.rename_column old: "column_name", new: "new_name"
+  t.add_index
+  t.drop_index
+  t.add_foreign_key
+  t.drop_foreign_key
+}
+}}}
+
+== Table drop ==
+
+{{{
+drop_table "table_name"
+}}}
+
+== Insert ==
+
+{{{
+insert_data "table_name", [column: value, column2: value2]
+}}}
+
+Need support for nested selects.... Maybe:
+
+{{{
+insert_data "table_name", [column: value, column2: value2], [column3: "select column from table"]
+}}}
+
+== Update ===
+
+{{{
+update_data "table_name", "where", [column: value, column2: value2]
+}}}
+
+== Delete ==
+
+{{{
+delete_data "table_name", "where"
+}}}
+
+== Dependencies ==
+
+Need a method for managing dependencies on components within dependency scripts. When a project adds a new dependency on a component, an deps script needs to be created and the dependency inserted like this:
+
+*/src/db/deps/1.1-deps.db*
+
+{{{
+add_dependency "component_name", "version"
+}}}
