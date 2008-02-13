@@ -11,7 +11,7 @@ Perhaps something like:
 
 {{{
 create_table "table_name", [options], { t ->
-  t.add_column name: "column_name", type: "type", nullable: true, defaultValue: "default"
+  t.add_column name: "column_name", type: "type", nullable: true, primary: true, unique: true, increment: true, defaultValue: "default"
   t.add_column name: "column_name1", type: "type1", nullable: true, defaultValue: "default1"
   t.add_index name: "idx", columns: ["column_name"]
   t.add_foreign_key name: "fk", column: "column_name", ref: "table_name.column_name"
