@@ -1,0 +1,12 @@
+#summary Getting Started using the JCatapult Database Manager
+
+
+= Introduction =
+
+The jCatapult Database Manager (*dbmgr* for short) was built to help make managing your databases easier.  It accomplishes this by managing creation, seeding, and patching of your project databases for you.
+
+The dbmgr is coupled tightly with hibernate and, therefore, should only be used if you're using hibernate as your ORM framework of choice.
+
+= Warnings =
+
+*NOTE:*  Be aware that sql seed files are case-insensitive on windows and mac and case-sensitive on unix.  This means that if you refer to a table name within sql, you must specify the exact table name that was created in the database in order for proper execution across multiple platforms.
