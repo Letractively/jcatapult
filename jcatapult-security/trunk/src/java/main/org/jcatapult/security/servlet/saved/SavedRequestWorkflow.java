@@ -69,12 +69,12 @@ import com.google.inject.Inject;
 public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandler, Workflow {
     public static final String LOGIN_KEY = "org.jcatapult.security.servlet.saved.loginSavedHttpRequest";
     public static final String POST_LOGIN_KEY = "org.jcatapult.security.servlet.saved.postLoginSavedHttpRequest";
-    private final String loginURL;
+    private final String notLoggedInURI;
     private final String successfulLoginURI;
 
     @Inject
     public SavedRequestWorkflow(Configuration configuration) {
-        this.loginURL = configuration.getString("jcatapult.security.login.uri", "/login");
+        this.notLoggedInURI = configuration.getString("jcatapult.security.authorization.not-logged-in-uri", "/not-logged-in");
         this.successfulLoginURI = configuration.getString("jcatapult.security.login.success-uri", "/login-success");
     }
 
@@ -158,7 +158,6 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
             WorkflowChain workflowChain)
     throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession(true);
 
         // Save the request
@@ -167,7 +166,7 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
         SavedHttpRequest saved = new SavedHttpRequest(uri, requestParameters);
         session.setAttribute(LOGIN_KEY, saved);
 
-        httpResponse.sendRedirect(getContextURI(httpRequest, loginURL));
+        httpRequest = new FacadeHttpServletRequest(httpRequest, notLoggedInURI, null);
+        workflowChain.doWorkflow(httpRequest, response);
     }
-
 }
