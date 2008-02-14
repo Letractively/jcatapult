@@ -59,7 +59,7 @@
 
   <!-- Pseudo-target -->
   <target name="app" description="Builds a test bed for the component"
-          depends="jar,-app-local,-app-dependencies,deploy-local,create-main-database"/>
+          depends="jar,-app-local,-app-dependencies,deploy-local"/>
 
   <target name="-app-local">
     <!-- Create the initial template web application -->
