@@ -26,6 +26,9 @@
     <sequential>
       <jar destfile="${dir.target.jars}/${project.name}-${project.version}.jar">
         <fileset dir="${dir.target.classes.main}" includes="**/*"/>
+        <manifest>
+          <attribute name="Implementation-Version" value="${project.version}"/>
+        </manifest>
       </jar>
 
       <!-- Source JAR -->

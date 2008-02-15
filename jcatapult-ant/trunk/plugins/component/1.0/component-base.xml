@@ -81,6 +81,9 @@
     </copy>
 
     <jar destfile="${dir.target.jars}/${project.name}-${project.version}.jar">
+      <manifest>
+        <attribute name="Implementation-Version" value="${project.version}"/>
+      </manifest>
       <fileset dir="${dir.target.classes.main}" includes="**/*"/>
     </jar>
 
