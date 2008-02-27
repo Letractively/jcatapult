@@ -67,6 +67,7 @@ public class EmailTestHelper {
 
         final EmailTransportService ets = new EmailTransportService() {
             public Future<Email> sendEmail(Email email) {
+                emailResult.set(email);
                 return future.get();
             }
         };
