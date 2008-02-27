@@ -1,5 +1,5 @@
 <#setting number_format="#.#####">
-<#include "/${parameters.templateDir}/semantic/controlheader.ftl" />
+<#include "/${parameters.templateDir}/semantic/fieldheader.ftl" />
 <select<#rt/>
  name="${parameters.name?default("")?html}"<#rt/>
 <#if parameters.get("size")?exists>
@@ -26,8 +26,8 @@
 <#if parameters.multiple?default(false)>
  multiple="multiple"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/semantic/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/semantic/common-attributes.ftl" />
 >
 <#if parameters.headerKey?exists && parameters.headerValue?exists>
     <option value="${parameters.headerKey?html}"
@@ -65,6 +65,6 @@
     >${itemValue?html}</option><#lt/>
 </@s.iterator>
 
-<#include "/${parameters.templateDir}/simple/optgroup.ftl" />
+<#include "/${parameters.templateDir}/semantic/optgroup.ftl" />
 </select>
-<#include "/${parameters.templateDir}/semantic/controlfooter.ftl" />
+<#include "/${parameters.templateDir}/semantic/fieldfooter.ftl" />

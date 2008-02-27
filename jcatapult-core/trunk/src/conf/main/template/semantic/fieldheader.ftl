@@ -9,7 +9,7 @@
 -->
 <#if parameters.label?exists && parameters.labelposition?default("") == 'top'>
 <div class="label" <#rt/>
-<#if parameters.id?exists>id="${parameters.id}_label"</#if><#rt/>>
+<#if parameters.id?exists>id="${parameters.id}-label"</#if><#rt/>>
 </#if>
 
 <#--
@@ -21,7 +21,7 @@
   for="${parameters.id?html}" <#t/>
 </#if>
 <#if hasFieldErrors>
-  class="errorLabel"<#t/>
+  class="error-label"<#t/>
 <#else>
   class="label"<#t/>
 </#if>
@@ -43,5 +43,5 @@ ${parameters.label?html}<#t/>
 <#if parameters.label?exists && parameters.labelposition?default("") == 'top'>
 </div>
 </#if>
-<div class="control" <#rt/>
-<#if parameters.id?exists>id="${parameters.id}_control"</#if><#rt/>>
+<div class="field" <#rt/>
+<#if parameters.id?exists>id="${parameters.id}-control"</#if><#rt/>>

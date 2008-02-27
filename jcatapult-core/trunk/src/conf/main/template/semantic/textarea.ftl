@@ -1,4 +1,4 @@
-<#include "/${parameters.templateDir}/semantic/controlheader.ftl" />
+<#include "/${parameters.templateDir}/semantic/fieldheader.ftl" />
 <textarea<#rt/>
  name="${parameters.name?default("")?html}"<#rt/>
  cols="${parameters.cols?default("")?html}"<#rt/>
@@ -27,11 +27,11 @@
 <#if parameters.title?exists>
  title="${parameters.title?html}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/semantic/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/semantic/common-attributes.ftl" />
 ><#rt/>
 <#if parameters.nameValue?exists>
 <@s.property value="parameters.nameValue"/><#t/>
 </#if>
 </textarea>
-<#include "/${parameters.templateDir}/semantic/controlfooter.ftl" />
+<#include "/${parameters.templateDir}/semantic/fieldfooter.ftl" />

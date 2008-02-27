@@ -4,7 +4,7 @@
 </#if><#t/>
 <table>
 <tr><td>
-<#include "/${templateDir}/simple/select.ftl" /><#t/>
+<#include "/${templateDir}/semantic/select.ftl" /><#t/>
 </td></tr>
 <tr><td>
 <#if parameters.allowMoveUp?default(true)><#t/>

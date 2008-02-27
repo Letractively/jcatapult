@@ -1,7 +1,7 @@
 <#if (actionMessages?exists && actionMessages?size > 0)>
-	<ul>
+	<ul id="action-messages">
 		<#list actionMessages as message>
-			<li><span class="actionMessage">${message}</span></li>
+			<li><span class="action-message">${message}</span></li>
 		</#list>
 	</ul>
 </#if>

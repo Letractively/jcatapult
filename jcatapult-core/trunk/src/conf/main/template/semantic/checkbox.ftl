@@ -1,4 +1,4 @@
-<#include "/${parameters.templateDir}/semantic/controlheader.ftl" />
+<#include "/${parameters.templateDir}/semantic/fieldheader.ftl" />
 <input type="checkbox" name="${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
 <#if parameters.nameValue?exists && parameters.nameValue>
  checked="checked"<#rt/>
@@ -24,8 +24,8 @@
 <#if parameters.title?exists>
  title="${parameters.title?html}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/semantic/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/semantic/common-attributes.ftl" />
 />
 <input type="hidden" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}"/>
-<#include "/${parameters.templateDir}/semantic/controlfooter.ftl" />
+<#include "/${parameters.templateDir}/semantic/fieldfooter.ftl" />

@@ -33,8 +33,8 @@
 <#if parameters.title?exists>
  title="${parameters.title?html}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
-<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/semantic/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/semantic/common-attributes.ftl" />
 />
 
 
@@ -74,7 +74,7 @@
 <#if parameters.rightTitle?exists><#t/>
 	<label for="rightTitle">${parameters.rightTitle}</label><br/>
 </#if><#t/>
-<#include "/${parameters.templateDir}/simple/select.ftl" />
+<#include "/${parameters.templateDir}/semantic/select.ftl" />
 <#if parameters.allowUpDown?default(true)>
 <input type="button"
 <#if parameters.headerKey?exists>

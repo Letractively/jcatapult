@@ -11,11 +11,11 @@
 			<#assign haveMatchedErrorField=true><#t/>
 			<#assign eValue = fieldErrors[fieldErrorFieldName]><#t/>
 			<#if (haveMatchedErrorField && (!doneStartUlTag))><#t/>
-				<ul>
+				<ul id="field-errors">
 				<#assign doneStartUlTag=true><#t/>
 			</#if><#t/>
 			<#list eValue as eEachValue><#t/>
-				<li><span class="errorMessage">${eEachValue}</span></li>
+				<li><span class="field-error">${eEachValue}</span></li>
 			</#list><#t/>
 		</#if><#t/>
 		</#list><#t/>
@@ -26,11 +26,11 @@
 	</#if><#t/>
 <#else><#t/>
 	<#if (eKeysSize > 0)><#t/>
-		<ul>
+		<ul id="field-errors">
 			<#list eKeys as eKey><#t/>
 				<#assign eValue = fieldErrors[eKey]><#t/>
 				<#list eValue as eEachValue><#t/>
-					<li><span class="errorMessage">${eEachValue}</span></li>
+					<li><span class="field-error">${eEachValue}</span></li>
 				</#list><#t/>
 			</#list><#t/>
 		</ul>
