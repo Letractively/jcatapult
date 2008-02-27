@@ -8,7 +8,7 @@
 <#if parameters.leftTitle?exists><#t/>
 	<label for="leftTitle">${parameters.leftTitle}</label><br/>
 </#if><#t/>
-<#include "/${parameters.templateDir}/simple/select.ftl" />
+<#include "/${parameters.templateDir}/semantic/select.ftl" />
 <#if parameters.allowUpDownOnLeft?default(true)>
 <input type="button"
 <#if parameters.headerKey?exists>

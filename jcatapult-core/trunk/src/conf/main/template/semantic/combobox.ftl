@@ -13,7 +13,7 @@
 		targetElement.form.elements['${parameters.name?html}'].value=targetElement.options[targetElement.selectedIndex].value;
 	}
 </script>
-<#include "/${parameters.templateDir}/simple/text.ftl" />
+<#include "/${parameters.templateDir}/semantic/text.ftl" />
 <br/>
 <#if parameters.list?exists>
 <select onChange="autoPopulate_${parameters.name?html}(this);"<#rt/>

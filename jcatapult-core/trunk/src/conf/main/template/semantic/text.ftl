@@ -1,4 +1,4 @@
-<#include "/${parameters.templateDir}/semantic/controlheader.ftl" />
+<#include "/${parameters.templateDir}/semantic/fieldheader.ftl" />
 <input type="text"<#rt/>
  name="${parameters.name?default("")?html}"<#rt/>
 <#if parameters.get("size")?exists>
@@ -34,4 +34,4 @@
 <#include "/${parameters.templateDir}/semantic/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/semantic/common-attributes.ftl" />
 />
-<#include "/${parameters.templateDir}/semantic/controlfooter.ftl" />
+<#include "/${parameters.templateDir}/semantic/fieldfooter.ftl" />

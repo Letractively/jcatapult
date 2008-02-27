@@ -69,5 +69,5 @@
 	templateCssPath="<@s.url value='${parameters.templateCssPath}' encode="false" includeParams='none'/>"
   </#if>
   saveFormat="rfc"<#rt/>
-  <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
+  <#include "/${parameters.templateDir}/semantic/scripting-events.ftl" />
 ></div>

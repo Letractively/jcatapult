@@ -1,4 +1,4 @@
-<#include "/${parameters.templateDir}/simple/select.ftl" />
+<#include "/${parameters.templateDir}/semantic/select.ftl" />
 <#assign startCount = 0/>
 <#if parameters.headerKey?exists && parameters.headerValue?exists>
     <#assign startCount = startCount + 1/>

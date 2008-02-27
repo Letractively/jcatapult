@@ -1,6 +1,6 @@
 <#assign itemCount = 0/>
 <#if parameters.list?exists>
-  <#include "/${parameters.templateDir}/semantic/controlheader.ftl" />
+  <#include "/${parameters.templateDir}/semantic/fieldheader.ftl" />
   <@s.iterator value="parameters.list">
         <#assign itemCount = itemCount + 1/>
         <#if parameters.listKey?exists>
@@ -24,12 +24,12 @@
         <#if parameters.title?exists>
  title="${parameters.title?html}"<#rt/>
         </#if>
-        <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
-        <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+        <#include "/${parameters.templateDir}/semantic/scripting-events.ftl" />
+        <#include "/${parameters.templateDir}/semantic/common-attributes.ftl" />
 />
-  <label for="${parameters.name?html}-${itemCount}" class="checkboxLabel">${itemValue?html}</label>
+  <label for="${parameters.name?html}-${itemCount}" class="label">${itemValue?html}</label>
   </@s.iterator>
-  <#include "/${parameters.templateDir}/semantic/controlfooter.ftl" />
+  <#include "/${parameters.templateDir}/semantic/fieldfooter.ftl" />
 <#else>
   &nbsp;
 </#if>
