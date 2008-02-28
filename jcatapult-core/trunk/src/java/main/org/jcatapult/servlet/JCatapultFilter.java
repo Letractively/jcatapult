@@ -103,6 +103,16 @@ public class JCatapultFilter implements Filter {
         } finally {
             ServletObjectsHolder.clearServletRequest();
             ServletObjectsHolder.clearServletResponse();
+
+            // Handle any extra logging for handling issues that might have occurred.
+            Throwable t = (Throwable) request.getAttribute("javax.servlet.error.exception");
+            if (t != null) {
+                logger.log(Level.FINE, "Exception occurred during the request", t);
+            }
+            t = (Throwable) request.getAttribute("javax.servlet.jsp.jspException");
+            if (t != null) {
+                logger.log(Level.FINE, "Exception occurred during the request", t);
+            }
         }
     }
 
