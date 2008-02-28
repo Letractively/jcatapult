@@ -7,6 +7,10 @@ Here are the documentation pages that are available for the JCatapult framework.
 
   * [1_0ReleasePlan 1.0 Release Plan]
 
+== Future ==
+
+  * [1_1Ideas 1.1 Ideas]
+
 === Introduction ===
 
   * [GettingStarted Getting started]
