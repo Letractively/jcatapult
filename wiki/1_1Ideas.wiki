@@ -1,0 +1,33 @@
+#summary Ideas for the 1.1 release
+
+= DSL for the database manager =
+
+There are a number of pages for this brain storm under the DatabaseManager documentation.
+
+= LAF framework =
+
+Allows loading of LAF assets from the classpath so they are versioned and also provides the tag libraries for them. URLs would be handled like:
+
+{{{
+/laf/foo/js/bar.js
+}}}
+
+This would be handled by the LAF framework and the asset would be resolved from the classpath.
+
+= Workflow enhancements =
+
+It would be nice to remove the WorkflowResolver and replace it with something better that figures out the workflow order based on dependencies. The Workflow interface would contain a method like this:
+
+{{{
+List<Class<? extends Workflow>> getDependencies();
+}}}
+
+The dependencies would list out the other workflows required to have already been executed for the Workflow to run correctly. For example the SecurityWorkflow would depend on the JPA workflow like this:
+
+{{{
+public class SecurityWorkflow implements Workflow {
+  public List<Class<? extends Workflow>> getDependencies() {
+    return Arrays.asList(JPAWorkflow.class);
+  }
+}
+}}}
