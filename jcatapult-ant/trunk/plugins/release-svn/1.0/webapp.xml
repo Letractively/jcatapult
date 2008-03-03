@@ -21,9 +21,6 @@
   <!-- get the directory where this file is being imported from -->
   <dirname property="imported.dir" file="${ant.file.imported}"/>
 
-  <!-- location of where the tarballs deploy locally to -->
-  <property name="dir.deploy" value="${imported.dir}/${dir.target}/deploy"/>
-
   <!-- the directory used for storing the project specific release files -->
   <tstamp>
     <format property="timestamp" pattern="yyyy-MM-dd-HmmS"/>
