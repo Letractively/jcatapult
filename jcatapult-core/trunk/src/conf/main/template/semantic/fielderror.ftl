@@ -11,29 +11,65 @@
 			<#assign haveMatchedErrorField=true><#t/>
 			<#assign eValue = fieldErrors[fieldErrorFieldName]><#t/>
 			<#if (haveMatchedErrorField && (!doneStartUlTag))><#t/>
-				<ul id="field-errors">
-				<#assign doneStartUlTag=true><#t/>
+<ul <#t/>
+        <#if parameters.cssClass?exists>
+class="${parameters.cssClass?html}"<#rt/>
+        <#else>
+class="field-errors"<#rt/>
+        </#if>
+        <#if parameters.cssStyle?exists>
+style="${parameters.cssStyle?html}"<#rt/>
+        </#if>
+        <#include "/${parameters.templateDir}/semantic/scripting-events.ftl" />
+        <#include "/${parameters.templateDir}/semantic/common-attributes.ftl" />
+        <#assign doneStartUlTag=true><#t/>>
 			</#if><#t/>
 			<#list eValue as eEachValue><#t/>
-				<li><span class="field-error">${eEachValue}</span></li>
+<li <#rt/>
+        <#if parameters.cssErrorClass?exists>
+class="${parameters.cssErrorClass?html}"<#rt/>
+        <#else>
+class="field-error"<#rt/>
+        </#if>
+        <#if parameters.cssErrorStyle?exists>
+style="${parameters.cssErrorStyle?html}"<#rt/>
+        </#if>
+>${eEachValue}</li><#rt/>
 			</#list><#t/>
 		</#if><#t/>
 		</#list><#t/>
 	</#list><#t/>
 	<#if (haveMatchedErrorField && (!doneEndUlTag))><#t/>
-		</ul>
+		</ul><#lt/>
 		<#assign doneEndUlTag=true><#t/>
 	</#if><#t/>
 <#else><#t/>
 	<#if (eKeysSize > 0)><#t/>
-		<ul id="field-errors">
+<ul <#t/>
+        <#if parameters.cssClass?exists>
+class="${parameters.cssClass?html}"<#rt/>
+        <#else>
+class="field-errors"<#rt/>
+        </#if>
+        <#if parameters.cssStyle?exists>
+style="${parameters.cssStyle?html}"<#rt/>
+        </#if>
 			<#list eKeys as eKey><#t/>
 				<#assign eValue = fieldErrors[eKey]><#t/>
 				<#list eValue as eEachValue><#t/>
-					<li><span class="field-error">${eEachValue}</span></li>
+<li <#rt/>
+        <#if parameters.cssErrorClass?exists>
+class="${parameters.cssErrorClass?html}"<#rt/>
+        <#else>
+class="field-error"<#rt/>
+        </#if>
+        <#if parameters.cssErrorStyle?exists>
+style="${parameters.cssErrorStyle?html}"<#rt/>
+        </#if>
+>${eEachValue}</li><#rt/>
 				</#list><#t/>
 			</#list><#t/>
-		</ul>
+		</ul><#lt/>
 	</#if><#t/>
 </#if><#t/>
 </#if><#t/>
