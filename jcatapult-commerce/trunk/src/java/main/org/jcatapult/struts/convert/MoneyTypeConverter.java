@@ -50,7 +50,7 @@ public class MoneyTypeConverter implements TypeConverter {
     private static final Logger logger = Logger.getLogger(MoneyTypeConverter.class.getName());
 
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-        String fullPropertyName = (String) context.get("conversion.property.fullName");
+        String fullPropertyName = (String) context.get("current.property.path");
         String currencyCode = (String) context.get(fullPropertyName + "@currencyCode");
         if (currencyCode == null) {
             XWorkException exception  = new XWorkException("Attempting to convert a String to a " +
