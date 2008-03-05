@@ -15,12 +15,12 @@
  */
 package org.jcatapult.struts.convert;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.HashMap;
 
 import org.apache.struts2.components.Component;
-import org.jcatapult.struts.interceptor.JCatapultParametersInterceptor;
+import org.jcatapult.servlet.ServletObjectsHolder;
 
 import ognl.TypeConverter;
 
@@ -34,25 +34,31 @@ import ognl.TypeConverter;
  */
 public abstract class BaseTypeConverter implements TypeConverter {
     protected Map<String, Object> getAttributes(Map<String, Object> context) {
+        String fullPropertyName = (String) context.get("current.property.path");
         Map<String, Object> attributes = null;
 
         // First check if the field is in the context and this is rendering the JSP
         Stack componentStack = (Stack) context.get(Component.COMPONENT_STACK);
         if (componentStack != null) {
             Component component = (Component) componentStack.peek();
+            component.
             if (component != null && component.getParameters().containsKey("dynamicAttributes")) {
                 attributes = (Map<String, Object>) component.getParameters().get("dynamicAttributes");
             }
         }
 
         if (attributes == null) {
-            attributes = (Map<String, Object>) context.get(JCatapultParametersInterceptor.ATTRIBUTES);
+            attributes = (Map<String, Object>) ServletObjectsHolder.getServletRequest().
+                getAttribute(fullPropertyName + "#attributes");
         }
 
         if (attributes == null) {
             attributes = new HashMap<String, Object>();
         }
 
+        // Save these off. This is needed for when the form is submitted, goes through the parameters
+        // interceptor, gets converted and then validation fails and the form is re-displayed.
+        ServletObjectsHolder.getServletRequest().setAttribute(fullPropertyName + "#attributes", attributes);
         return attributes;
     }
 }

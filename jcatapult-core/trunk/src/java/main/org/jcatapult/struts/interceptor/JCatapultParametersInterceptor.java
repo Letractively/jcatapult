@@ -9,6 +9,8 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jcatapult.servlet.ServletObjectsHolder;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.inject.Inject;
@@ -50,7 +52,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class JCatapultParametersInterceptor extends ParametersInterceptor {
     private static final Logger logger = Logger.getLogger(JCatapultParametersInterceptor.class.getName());
-    public static final String ATTRIBUTES = "__attributes";
     static boolean devMode = false;
 
     @Inject(value = "devMode", required = false)
@@ -107,8 +108,8 @@ public class JCatapultParametersInterceptor extends ParametersInterceptor {
             Struct s = structs.get(key);
             Object value = s.parameter;
 
-            // Add the attributes to the context
-            stack.getContext().put(ATTRIBUTES, s.attributes);
+            // Add the attributes to the request so that they are always available
+            ServletObjectsHolder.getServletRequest().setAttribute(key + "#attributes", s.attributes);
 
             try {
                 stack.setValue(key, value);
