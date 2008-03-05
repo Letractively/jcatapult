@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 import org.jcatapult.domain.commerce.Money;
 
 import com.opensymphony.xwork2.XWorkException;
-import ognl.TypeConverter;
 
 /**
  * <p>
@@ -36,8 +35,7 @@ import ognl.TypeConverter;
  * </p>
  *
  * <pre>
- * &lt;s:textfield name="money"/>
- * &lt;s:hidden name="money" value="USD"/>
+ * &lt;s:textfield name="money" currencyCode="USD"/>
  * </pre>
  *
  * <p>
@@ -46,12 +44,12 @@ import ognl.TypeConverter;
  *
  * @author  Brian Pontarelli
  */
-public class MoneyTypeConverter implements TypeConverter {
+public class MoneyTypeConverter extends BaseTypeConverter {
     private static final Logger logger = Logger.getLogger(MoneyTypeConverter.class.getName());
 
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         String fullPropertyName = (String) context.get("current.property.path");
-        String currencyCode = (String) context.get(fullPropertyName + "@currencyCode");
+        String currencyCode = (String) getAttributes(context).get("currencyCode");
         if (currencyCode == null) {
             XWorkException exception  = new XWorkException("Attempting to convert a String to a " +
                 "Money on [" + member.getDeclaringClass() + "#" + member.getName() +
