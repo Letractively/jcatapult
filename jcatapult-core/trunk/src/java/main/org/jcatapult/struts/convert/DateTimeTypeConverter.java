@@ -25,7 +25,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.opensymphony.xwork2.XWorkException;
-import ognl.TypeConverter;
 
 /**
  * <p>
@@ -46,7 +45,7 @@ import ognl.TypeConverter;
  *
  * @author  Brian Pontarelli
  */
-public class DateTimeTypeConverter implements TypeConverter {
+public class DateTimeTypeConverter extends BaseTypeConverter {
     public static final String[] PATTERNS = {
         "MM/dd/yy", "MM-dd-yy",
         "MM/dd/yy hh:mm aa", "MM-dd-yy hh:mm aa",
@@ -55,8 +54,8 @@ public class DateTimeTypeConverter implements TypeConverter {
     private static final Logger logger = Logger.getLogger(DateTimeTypeConverter.class.getName());
 
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-        String fullPropertyName = (String) context.get("conversion.property.fullName");
-        if (toType.equals(String.class)) {
+        String fullPropertyName = (String) context.get("current.property.path");
+        if (toType == String.class) {
             return convertToString(context, fullPropertyName, value);
         } else if (value instanceof String[]) {
             return convertFromString(context, member, fullPropertyName, (String[]) value);
@@ -70,7 +69,7 @@ public class DateTimeTypeConverter implements TypeConverter {
 
     @SuppressWarnings("unchecked")
     public Object convertFromString(Map context, Member member, String propertyName, String[] values) {
-        String format = (String) context.get(makeKey(propertyName));
+        String format = (String) getAttributes(context).get("dateTimeFormat");
         DateTime dateTime = null;
         if (format == null) {
             // Brute force test all the patterns

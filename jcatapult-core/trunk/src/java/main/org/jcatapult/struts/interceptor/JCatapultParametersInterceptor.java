@@ -50,6 +50,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class JCatapultParametersInterceptor extends ParametersInterceptor {
     private static final Logger logger = Logger.getLogger(JCatapultParametersInterceptor.class.getName());
+    public static final String ATTRIBUTES = "__attributes";
     static boolean devMode = false;
 
     @Inject(value = "devMode", required = false)
@@ -107,7 +108,7 @@ public class JCatapultParametersInterceptor extends ParametersInterceptor {
             Object value = s.parameter;
 
             // Add the attributes to the context
-            stack.getContext().putAll(s.attributes);
+            stack.getContext().put(ATTRIBUTES, s.attributes);
 
             try {
                 stack.setValue(key, value);

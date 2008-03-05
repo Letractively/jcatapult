@@ -27,6 +27,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.jpa.EntityManagerContext;
 
@@ -78,6 +79,11 @@ public class JCatapultFilter implements Filter {
         if (logger.isLoggable(Level.FINEST)) {
             logger.finest("Found these workflows: " + workflows);
         }
+
+        // Put the environment into the ServletContext
+        EnvironmentResolver resolver = GuiceContainer.getInjector().getInstance(EnvironmentResolver.class);
+        String env = resolver.getEnvironment();
+        filterConfig.getServletContext().setAttribute("environment", env);
     }
 
     /**
