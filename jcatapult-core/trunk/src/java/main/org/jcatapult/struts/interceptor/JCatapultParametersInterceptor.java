@@ -26,7 +26,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * form fields into a single type, such as a phone number or a Money object
  * that requires a currency. This interceptor allows parameters to have any
  * number of attributes, which are also HTTP request parameters, but they are
- * assoicated with another parameters.
+ * associated with another parameters.
  * </p>
  *
  * <p>
@@ -42,10 +42,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
  * <p>
- * This attribute would then be pulled into this interceptor and put on the
- * ValueStack context under the key <strong>user.accountBalance@currencyCode</strong>.
- * By placing it on the ValueStack context, type converters and other classes
- * will have access to it.
+ * This attribute would then be pulled into this interceptor. This interceptor
+ * adds a new Map to the ServletRequest as an attribute. This Map contains all
+ * of the attributes for the property <strong>user.accountBalance</strong>. The
+ * key the Map is stored under is <strong>user.accountBalance#attributes</strong>.
+ * By placing the attributes into the ServletRequest they can be accessed anywhere
+ * in the entire container using the {@link ServletObjectsHolder} ThreadLocal.
  * </p>
  *
  * @author  Brian Pontarelli
@@ -93,9 +95,10 @@ public class JCatapultParametersInterceptor extends ParametersInterceptor {
 
             if (index > 0) {
                 if (logger.isLoggable(Level.FINE)) {
-                    logger.fine("Adding attribute [" + name + "] to parameter [" + parameter + "]");
+                    logger.fine("Adding attribute [" + name.substring(index + 1) + "] to parameter [" +
+                        parameter + "]");
                 }
-                s.attributes.put(name, ((String[]) parameters.get(name))[0]);
+                s.attributes.put(name.substring(index + 1), ((String[]) parameters.get(name))[0]);
             } else {
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine("Adding parameter value for parameter [" + parameter + "]");
