@@ -15,14 +15,17 @@
  */
 package org.jcatapult.struts.convert;
 
-import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.ServletRequest;
 
+import org.easymock.EasyMock;
+import org.jcatapult.servlet.ServletObjectsHolder;
+import org.jcatapult.test.servlet.MockServletRequest;
 import org.joda.time.DateTime;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import static net.java.util.CollectionTools.mapNV;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -34,51 +37,62 @@ import static net.java.util.CollectionTools.mapNV;
 public class DateTimeTypeConverterTest {
     @Test
     public void testFormatInValues() {
+        ServletRequest request = EasyMock.createStrictMock(ServletRequest.class);
+        EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("dateTimeFormat", "MM/dd/yyyy hh:mm aa"));
+        request.setAttribute(EasyMock.eq("foo.bar#attributes"), EasyMock.eq(mapNV("dateTimeFormat", "MM/dd/yyyy hh:mm aa")));
+        EasyMock.replay(request);
+        ServletObjectsHolder.setServletRequest(request);
+
         String[] values = {"10/20/2006 10:30 PM"};
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
-        Map context = mapNV("foo.bar@dateTimeFormat", "MM/dd/yyyy hh:mm aa", "conversion.property.fullName", "foo.bar");
+        Map context = mapNV("conversion.property.fullName", "foo.bar");
         DateTime dt = (DateTime) converter.convertValue(context, null, null, null, values, DateTime.class);
         assertNotNull(dt);
         assertEquals(20, dt.getDayOfMonth());
         assertEquals(2006, dt.getYear());
         assertEquals(30, dt.getMinuteOfHour());
-        assertEquals("MM/dd/yyyy hh:mm aa", context.get("foo.bar@dateTimeFormat"));
     }
 
     @Test
     public void testFormatStylePattern() {
+        ServletRequest request = new MockServletRequest();
+        ServletObjectsHolder.setServletRequest(request);
+
         String values = "10-20-2006 10:30:00 PM";
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
-        Map context = new HashMap();
-        context.put("conversion.property.fullName", "foo.bar");
+        Map<String, Object> context = mapNV("conversion.property.fullName", "foo.bar");
         DateTime dt = (DateTime) converter.convertValue(context, null, null, null, values, DateTime.class);
         assertNotNull(dt);
         assertEquals(20, dt.getDayOfMonth());
         assertEquals(2006, dt.getYear());
         assertEquals(30, dt.getMinuteOfHour());
-        assertEquals("MM-dd-yy hh:mm:ss aa", context.get("foo.bar@dateTimeFormat"));
+        assertEquals("MM-dd-yy hh:mm:ss aa", ((Map<String, Object>) request.getAttribute("foo.bar#attributes")).get("dateTimeFormat"));
     }
 
     @Test
     public void testFormatStylePatternPartial() {
+        ServletRequest request = new MockServletRequest();
+        ServletObjectsHolder.setServletRequest(request);
+
         String values = "10-20-06";
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
-        Map context = new HashMap();
-        context.put("conversion.property.fullName", "foo.bar");
+        Map<String, Object> context = mapNV("conversion.property.fullName", "foo.bar");
         DateTime dt = (DateTime) converter.convertValue(context, null, null, null, values, DateTime.class);
         assertNotNull(dt);
         assertEquals(20, dt.getDayOfMonth());
         assertEquals(2006, dt.getYear());
-        assertEquals("MM-dd-yy", context.get("foo.bar@dateTimeFormat"));
+        assertEquals("MM-dd-yy", ((Map<String, Object>) request.getAttribute("foo.bar#attributes")).get("dateTimeFormat"));
     }
 
     @Test
     public void testOutput() {
+        ServletRequest request = new MockServletRequest();
+        request.setAttribute("foo.bar#attributes", mapNV("dateTimeFormat", "MM/dd/yyyy hh:mm aa"));
+        ServletObjectsHolder.setServletRequest(request);
+
         DateTime now = new DateTime(2006, 10, 20, 22, 30, 0, 0);
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
-        Map context = new HashMap();
-        context.put("foo.bar@dateTimeFormat", "MM/dd/yyyy hh:mm aa");
-        context.put("conversion.property.fullName", "foo.bar");
+        Map<String, Object> context = mapNV("conversion.property.fullName", "foo.bar");
         String value = (String) converter.convertValue(context, null, null, null, now, String.class);
         assertNotNull(value);
         assertEquals("10/20/2006 10:30 PM", value);

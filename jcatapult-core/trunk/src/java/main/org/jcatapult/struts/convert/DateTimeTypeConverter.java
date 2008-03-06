@@ -68,7 +68,8 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
 
     @SuppressWarnings("unchecked")
     public Object convertFromString(Map context, Member member, String propertyName, String[] values) {
-        String format = (String) getAttributes(context).get(DATE_TIME_FORMAT);
+        Map<String, Object> attrs = getAttributes(context);
+        String format = (String) attrs.get(DATE_TIME_FORMAT);
         DateTime dateTime = null;
         if (format == null) {
             // Brute force test all the patterns
@@ -79,7 +80,7 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
 
                     // Save the format in case the form validation fails and the conversion happens
                     // again
-                    getAttributes(context).put(DATE_TIME_FORMAT, pattern);
+                    attrs.put(DATE_TIME_FORMAT, pattern);
                     break;
                 } catch (Exception e) {
                 }
@@ -125,8 +126,8 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
         String format = (String) getAttributes(context).get(DATE_TIME_FORMAT);
         if (format == null) {
             RuntimeException re = new IllegalArgumentException("Attempting to convert a DateTime to a " +
-                "String from the propertyName [" + propertyName + "] but the format wasn't no longer " +
-                "in the OGNL context.");
+                "String from the propertyName [" + propertyName + "] but the format was no longer " +
+                "in the ServletRequest.");
             logger.log(Level.SEVERE, re.getMessage(), re);
             throw re;
         }

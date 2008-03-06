@@ -63,8 +63,6 @@ public class JCatapultFilter implements Filter {
     private static final Logger logger = Logger.getLogger(JCatapultFilter.class.getName());
     public static final String ORIGINAL_REQUEST_URI = "ORIGINAL_REQUEST_URI";
 
-    private List<Workflow> workflows;
-
     /**
      * This fetches the top level workflows for JCatapult using the {@link WorkflowResolver}
      * that is fetched from the Guice injector, which is retrieved from {@link GuiceContainer}.
@@ -73,13 +71,6 @@ public class JCatapultFilter implements Filter {
      * @param   filterConfig The filter config to get the init params from.
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        logger.info("Initializing JCatapultFilter with the workflows");
-        WorkflowResolver workflowResolver = GuiceContainer.getInjector().getInstance(WorkflowResolver.class);
-        workflows = workflowResolver.resolve();
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("Found these workflows: " + workflows);
-        }
-
         // Put the environment into the ServletContext
         EnvironmentResolver resolver = GuiceContainer.getInjector().getInstance(EnvironmentResolver.class);
         String env = resolver.getEnvironment();
@@ -104,6 +95,12 @@ public class JCatapultFilter implements Filter {
         ServletObjectsHolder.setServletRequest(request);
         ServletObjectsHolder.setServletResponse(response);
         try {
+            WorkflowResolver workflowResolver = GuiceContainer.getInjector().getInstance(WorkflowResolver.class);
+            List<Workflow> workflows = workflowResolver.resolve();
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.finest("Found these workflows: " + workflows);
+            }
+
             DefaultWorkflowChain workflowChain = new DefaultWorkflowChain(workflows, chain);
             workflowChain.doWorkflow(request, response);
         } finally {
@@ -126,6 +123,8 @@ public class JCatapultFilter implements Filter {
      * Closes the Workflow instances
      */
     public void destroy() {
+        WorkflowResolver workflowResolver = GuiceContainer.getInjector().getInstance(WorkflowResolver.class);
+        List<Workflow> workflows = workflowResolver.resolve();
         for (Workflow workflow : workflows) {
             workflow.destroy();
         }
