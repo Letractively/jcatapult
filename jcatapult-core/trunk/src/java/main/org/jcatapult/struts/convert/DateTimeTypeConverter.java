@@ -34,13 +34,11 @@ import com.opensymphony.xwork2.XWorkException;
  * for the DateTime is to specify a parameter attribute that will be
  * processed by the {@link org.jcatapult.struts.interceptor.JCatapultParametersInterceptor}.
  * The name of the attribute is <strong>dateTimeFormat</strong>.
- * This is usually handled via a hidden input field that uses the
- * attribute notation like this:
+ * This is handled via the an attribute on the form field like this:
  * </p>
  *
  * <pre>
- * &lt;s:textfield name="date"/>
- * &lt;s:hidden name="date@dateTimeFormat" value="MM-dd-yyyy"/>
+ * &lt;s:textfield name="date" dateTimeFormat="MM-dd-yyyy"/>
  * </pre>
  *
  * @author  Brian Pontarelli
@@ -52,9 +50,10 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
         "MM/dd/yy hh:mm:ss aa", "MM-dd-yy hh:mm:ss aa",
         "MM/dd/yy hh:mm:ss aa zz", "MM-dd-yy hh:mm:ss aa zz"};
     private static final Logger logger = Logger.getLogger(DateTimeTypeConverter.class.getName());
+    private static final String DATE_TIME_FORMAT = "dateTimeFormat";
 
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-        String fullPropertyName = (String) context.get("current.property.path");
+        String fullPropertyName = getPropertyName(context);
         if (toType == String.class) {
             return convertToString(context, fullPropertyName, value);
         } else if (value instanceof String[]) {
@@ -69,7 +68,7 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
 
     @SuppressWarnings("unchecked")
     public Object convertFromString(Map context, Member member, String propertyName, String[] values) {
-        String format = (String) getAttributes(context).get("dateTimeFormat");
+        String format = (String) getAttributes(context).get(DATE_TIME_FORMAT);
         DateTime dateTime = null;
         if (format == null) {
             // Brute force test all the patterns
@@ -77,7 +76,10 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
                 try {
                     DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(pattern);
                     dateTime = dateTimeFormatter.parseDateTime(values[0]);
-                    context.put(makeKey(propertyName), pattern);
+
+                    // Save the format in case the form validation fails and the conversion happens
+                    // again
+                    getAttributes(context).put(DATE_TIME_FORMAT, pattern);
                     break;
                 } catch (Exception e) {
                 }
@@ -120,7 +122,7 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
     }
 
     public String convertToString(Map context, String propertyName, Object value) {
-        String format = (String) context.get(makeKey(propertyName));
+        String format = (String) getAttributes(context).get(DATE_TIME_FORMAT);
         if (format == null) {
             RuntimeException re = new IllegalArgumentException("Attempting to convert a DateTime to a " +
                 "String from the propertyName [" + propertyName + "] but the format wasn't no longer " +
@@ -142,9 +144,5 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
         }
 
         return result;
-    }
-
-    protected String makeKey(String propertyName) {
-        return propertyName + "@dateTimeFormat";
     }
 }

@@ -33,32 +33,54 @@ import ognl.TypeConverter;
  * @author  Brian Pontarelli
  */
 public abstract class BaseTypeConverter implements TypeConverter {
+    /**
+     * Retrieves the parameter attributes using the Struts Component stack, which is a stack that
+     * contains the current component being rendered if the conversion is occurring on the JSP. Or
+     * if this is during a form submission, this uses the attributes put into the ServletRequest by
+     * the {@link org.jcatapult.struts.interceptor.JCatapultParametersInterceptor} for the property.
+     *
+     * @param   context The context used to fetch the component stack.
+     * @return  The attributes or an empty Map if there are none.
+     */
     protected Map<String, Object> getAttributes(Map<String, Object> context) {
-        String fullPropertyName = (String) context.get("current.property.path");
-        Map<String, Object> attributes = null;
+        String fullPropertyName = getPropertyName(context);
 
         // First check if the field is in the context and this is rendering the JSP
+        Map<String, Object> attributes = new HashMap<String, Object>();
         Stack componentStack = (Stack) context.get(Component.COMPONENT_STACK);
         if (componentStack != null) {
             Component component = (Component) componentStack.peek();
-            component.
             if (component != null && component.getParameters().containsKey("dynamicAttributes")) {
-                attributes = (Map<String, Object>) component.getParameters().get("dynamicAttributes");
+                Map<String, Object> dynAttrs = (Map<String, Object>) component.getParameters().get("dynamicAttributes");
+                if (dynAttrs != null) {
+                    attributes.putAll(dynAttrs);
+                }
             }
         }
 
-        if (attributes == null) {
-            attributes = (Map<String, Object>) ServletObjectsHolder.getServletRequest().
-                getAttribute(fullPropertyName + "#attributes");
-        }
-
-        if (attributes == null) {
-            attributes = new HashMap<String, Object>();
+        Map<String, Object> paramInterceptorAttrs = (Map<String, Object>) ServletObjectsHolder.getServletRequest().
+            getAttribute(fullPropertyName + "#attributes");
+        if (paramInterceptorAttrs != null) {
+            attributes.putAll(paramInterceptorAttrs);
         }
 
         // Save these off. This is needed for when the form is submitted, goes through the parameters
         // interceptor, gets converted and then validation fails and the form is re-displayed.
         ServletObjectsHolder.getServletRequest().setAttribute(fullPropertyName + "#attributes", attributes);
         return attributes;
+    }
+
+    /**
+     * Determines the full name of the current property being converted.
+     *
+     * @param   context The context.
+     * @return  The full property name.
+     */
+    protected String getPropertyName(Map<String, Object> context) {
+        String fullPropertyName = (String) context.get("conversion.property.fullName");
+        if (fullPropertyName == null) {
+            fullPropertyName = (String) context.get("current.property.path");
+        }
+        return fullPropertyName;
     }
 }
