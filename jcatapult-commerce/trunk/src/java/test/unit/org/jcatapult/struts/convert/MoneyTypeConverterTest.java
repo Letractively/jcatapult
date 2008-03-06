@@ -15,15 +15,18 @@
  */
 package org.jcatapult.struts.convert;
 
-import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.util.Currency;
-import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.ServletRequest;
 
+import org.easymock.EasyMock;
 import org.jcatapult.domain.commerce.Money;
+import org.jcatapult.servlet.ServletObjectsHolder;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.opensymphony.xwork2.XWorkException;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -36,8 +39,13 @@ import static net.java.util.CollectionTools.*;
 public class MoneyTypeConverterTest {
     @Test
     public void testToMoney() {
+        ServletRequest request = EasyMock.createNiceMock(ServletRequest.class);
+        EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("currencyCode", "USD"));
+        EasyMock.replay(request);
+        ServletObjectsHolder.setServletRequest(request);
+
         String[] values = {"1.99"};
-        Map context = mapNV("foo.bar@currencyCode", "USD", "conversion.property.fullName", "foo.bar");
+        Map context = mapNV("conversion.property.fullName", "foo.bar");
         MoneyTypeConverter converter = new MoneyTypeConverter();
         Money money = (Money) converter.convertValue(context, null, null, null, values, Money.class);
         assertNotNull(money);
@@ -46,44 +54,57 @@ public class MoneyTypeConverterTest {
     }
 
     @Test
-    public void testToMoneyFailureSingleParameter() {
+    public void testToMoneyFailureSingleParameter() throws NoSuchMethodException {
+        ServletRequest request = EasyMock.createNiceMock(ServletRequest.class);
+        EasyMock.replay(request);
+        ServletObjectsHolder.setServletRequest(request);
+
         String[] values = {"1.5"};
         MoneyTypeConverter converter = new MoneyTypeConverter();
         try {
-            Member member = getClass().getMethod("testToMoney");
-            Map context = new HashMap();
-            context.put("conversion.property.fullName", "foo.bar");
-            converter.convertValue(context, null, member, null, values, Money.class);
+            Method method = getClass().getMethod("testToMoney");
+            Map context = mapNV("conversion.property.fullName", "foo.bar");
+            converter.convertValue(context, null, method, null, values, Money.class);
             fail("Should have failed");
-        } catch (Exception e) {
+        } catch (XWorkException e) {
             // Expected.
         }
     }
 
     @Test
-    public void testToMoneyFailureNoLength3() {
+    public void testToMoneyFailureNoLength3() throws NoSuchMethodException {
+        ServletRequest request = EasyMock.createNiceMock(ServletRequest.class);
+        EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("currencyCode", "US"));
+        EasyMock.replay(request);
+        ServletObjectsHolder.setServletRequest(request);
+
         String values = "1.99";
         MoneyTypeConverter converter = new MoneyTypeConverter();
         try {
-            Member member = getClass().getMethod("testToMoney");
-            Map context = mapNV("foo.bar@currencyCode", "US", "conversion.property.fullName", "foo.bar");
-            converter.convertValue(context, null, member, null, values, Money.class);
+            Method method = getClass().getMethod("testToMoney");
+            Map context = mapNV("conversion.property.fullName", "foo.bar");
+            converter.convertValue(context, null, method, null, values, Money.class);
             fail("Should have failed");
-        } catch (Exception e) {
+        } catch (XWorkException e) {
             // Expected.
         }
     }
 
     @Test
-    public void testToMoneyFailureBadCurrencyCode() {
+    public void testToMoneyFailureBadCurrencyCode() throws NoSuchMethodException {
+        ServletRequest request = EasyMock.createNiceMock(ServletRequest.class);
+        EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("currencyCode", "BAD"));
+        EasyMock.replay(request);
+        ServletObjectsHolder.setServletRequest(request);
+
         String values = "1.99";
         MoneyTypeConverter converter = new MoneyTypeConverter();
         try {
-            Member member = getClass().getMethod("testToMoney");
-            Map context = mapNV("foo.bar@currencyCode", "BAD", "conversion.property.fullName", "foo.bar");
-            converter.convertValue(context, null, member, null, values, Money.class);
+            Method method = getClass().getMethod("testToMoney");
+            Map context = mapNV("conversion.property.fullName", "foo.bar");
+            converter.convertValue(context, null, method, null, values, Money.class);
             fail("Should have failed");
-        } catch (Exception e) {
+        } catch (XWorkException e) {
             // Expected.
         }
     }

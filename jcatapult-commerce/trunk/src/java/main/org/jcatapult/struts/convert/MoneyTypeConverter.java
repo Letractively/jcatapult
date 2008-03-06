@@ -29,9 +29,10 @@ import com.opensymphony.xwork2.XWorkException;
  * <p>
  * This class converts the value from a form or parameter into a Money
  * object. The currency code must be provided and there is only one way
- * to provide this to the type covnerter. You must have two parameters
- * of the same name set into the HTTP request. One is the amount and the
- * other is the currency code.Here's an example Struts form:
+ * to provide this to the type covnerter. You must specify an additional
+ * attribute on the form field tag inside the JSP. This attribute must be
+ * named <strong>currencyCode</strong>. Here's an example Struts textfield
+ * tag with the additional attribute:
  * </p>
  *
  * <pre>
@@ -47,16 +48,16 @@ import com.opensymphony.xwork2.XWorkException;
 public class MoneyTypeConverter extends BaseTypeConverter {
     private static final Logger logger = Logger.getLogger(MoneyTypeConverter.class.getName());
 
-    public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-        String fullPropertyName = (String) context.get("current.property.path");
+    public Object convertValue(Map context, Object target, Member member, String propertyName,
+            Object value, Class toType) {
+        String fullPropertyName = getPropertyName(context);
         String currencyCode = (String) getAttributes(context).get("currencyCode");
         if (currencyCode == null) {
             XWorkException exception  = new XWorkException("Attempting to convert a String to a " +
                 "Money on [" + member.getDeclaringClass() + "#" + member.getName() +
                 "] with a propertyName of [" + fullPropertyName + "] but the currency code was not setup " +
-                "using the JCatapult parameter attributes. Consult the JCatapultParametersInterceptor " +
-                "JavaDoc to determine how to use parameter attributes and then pass in a parameter " +
-                "attribute named currencyCode.");
+                "on the form field tag. Consult the JavaDoc for the MoneyTypeConverter class in the " +
+                "jcatapult-commerce library for more information.");
             logger.log(Level.SEVERE, exception.getMessage(), exception);
             throw exception;
         }
