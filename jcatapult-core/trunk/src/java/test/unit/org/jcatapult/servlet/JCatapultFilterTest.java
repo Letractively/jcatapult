@@ -53,11 +53,13 @@ public class JCatapultFilterTest {
 
         // Setup the configuration for the static resource workflow
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        context.setAttribute("environment", "unittesting");
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).andReturn(null);
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-unittesting.xml")).andReturn(null);
         EasyMock.replay(context);
 
         FilterConfig filterConfig = EasyMock.createStrictMock(FilterConfig.class);
+        EasyMock.expect(filterConfig.getServletContext()).andReturn(context);
         EasyMock.replay(filterConfig);
 
         // Initialize JCatapult via the listener first.
@@ -75,6 +77,9 @@ public class JCatapultFilterTest {
         request.setAttribute(JCatapultFilter.ORIGINAL_REQUEST_URI, "/test");
         // StaticResourceWorkflow
         EasyMock.expect(request.getRequestURI()).andReturn("/test");
+        // Error handling
+        EasyMock.expect(request.getAttribute("javax.servlet.error.exception")).andReturn(null);
+        EasyMock.expect(request.getAttribute("javax.servlet.jsp.jspException")).andReturn(null);
         EasyMock.replay(request);
 
         HttpServletResponse response  = EasyMock.createStrictMock(HttpServletResponse.class);

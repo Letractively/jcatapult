@@ -7,7 +7,6 @@
   <constant name="struts.objectFactory" value="jcatapult"/>
 
   <!-- Struts 2 Convention plugin stuff -->
-  <constant name="struts.convention.default.parent.package" value="jcatapult-default"/>
   <package name="jcatapult-default" extends="struts-default">
     <interceptors>
       <interceptor name="jcatapultParameters" class="org.jcatapult.struts.interceptor.JCatapultParametersInterceptor"/>
