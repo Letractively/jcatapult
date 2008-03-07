@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import org.jcatapult.domain.commerce.Money;
 
 import com.opensymphony.xwork2.XWorkException;
+import net.java.lang.StringTools;
 
 /**
  * <p>
@@ -75,6 +76,11 @@ public class MoneyTypeConverter extends BaseTypeConverter {
     }
 
     public Object convertFromString(Member member, String propertyName, String value, String currencyCode) {
+        // Handle the null case
+        if (StringTools.isTrimmedEmpty(value)) {
+            return null;
+        }
+
         Currency currency;
         try {
             currency = Currency.getInstance(currencyCode);
@@ -91,6 +97,11 @@ public class MoneyTypeConverter extends BaseTypeConverter {
     }
 
     public String convertToString(Object value) {
+        // Handle the null case
+        if (value == null) {
+            return null;
+        }
+        
         Money money = (Money) value;
         return money.toNumericString();
     }
