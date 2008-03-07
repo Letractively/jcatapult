@@ -16,17 +16,15 @@
 package org.jcatapult.security.servlet.saved;
 
 import java.io.IOException;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.configuration.Configuration;
-import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.auth.NotLoggedInException;
+import org.jcatapult.security.saved.SavedRequestService;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 import static org.jcatapult.security.servlet.ServletTools.*;
 import org.jcatapult.security.servlet.auth.NotLoggedInHandler;
@@ -71,11 +69,13 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
     public static final String POST_LOGIN_KEY = "org.jcatapult.security.servlet.saved.postLoginSavedHttpRequest";
     private final String notLoggedInURI;
     private final String successfulLoginURI;
+    private final SavedRequestService savedRequestService;
 
     @Inject
-    public SavedRequestWorkflow(Configuration configuration) {
+    public SavedRequestWorkflow(Configuration configuration, SavedRequestService savedRequestService) {
         this.notLoggedInURI = configuration.getString("jcatapult.security.authorization.not-logged-in-uri", "/not-logged-in");
         this.successfulLoginURI = configuration.getString("jcatapult.security.login.success-uri", "/login-success");
+        this.savedRequestService = savedRequestService;
     }
 
     // --------------------- Workflow methods ----------------------
@@ -93,14 +93,7 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
     public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
         // See if there is a saved request
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpSession session = httpRequest.getSession(true);
-        SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(POST_LOGIN_KEY);
-        if (saved != null && SecurityContext.getCurrentUser() != null) {
-            session.removeAttribute(POST_LOGIN_KEY);
-            httpRequest = new FacadeHttpServletRequest(httpRequest, null, saved.parameters);
-        }
-
+        HttpServletRequest httpRequest = savedRequestService.mockSavedRequest((HttpServletRequest) request);
         workflowChain.doWorkflow(httpRequest, response);
     }
 
@@ -125,15 +118,11 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
      */
     public void handle(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
     throws ServletException, IOException {
-        // See if there is a saved request
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        HttpSession session = httpRequest.getSession(true);
-        SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(LOGIN_KEY);
-        if (saved != null) {
-            session.removeAttribute(LOGIN_KEY);
-            session.setAttribute(POST_LOGIN_KEY, saved);
-            httpResponse.sendRedirect(getContextURI(httpRequest, saved.uri));
+        String uri = savedRequestService.processSavedRequest(httpRequest);
+        if (uri != null) {
+            httpResponse.sendRedirect(getContextURI(httpRequest, uri));
         } else {
             FacadeHttpServletRequest facade = new FacadeHttpServletRequest(httpRequest, successfulLoginURI, null);
             workflowChain.doWorkflow(facade, response);
@@ -158,14 +147,7 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
             WorkflowChain workflowChain)
     throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpSession session = httpRequest.getSession(true);
-
-        // Save the request
-        String uri = httpRequest.getRequestURI();
-        Map<String, String[]> requestParameters = httpRequest.getParameterMap();
-        SavedHttpRequest saved = new SavedHttpRequest(uri, requestParameters);
-        session.setAttribute(LOGIN_KEY, saved);
-
+        savedRequestService.saveRequest(httpRequest);
         httpRequest = new FacadeHttpServletRequest(httpRequest, notLoggedInURI, null);
         workflowChain.doWorkflow(httpRequest, response);
     }
