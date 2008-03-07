@@ -45,6 +45,7 @@ import com.opensymphony.xwork2.XWorkException;
  */
 public class DateTimeTypeConverter extends BaseTypeConverter {
     public static final String[] PATTERNS = {
+        "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
         "MM/dd/yy", "MM-dd-yy",
         "MM/dd/yy hh:mm aa", "MM-dd-yy hh:mm aa",
         "MM/dd/yy hh:mm:ss aa", "MM-dd-yy hh:mm:ss aa",
@@ -125,11 +126,8 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
     public String convertToString(Map context, String propertyName, Object value) {
         String format = (String) getAttributes(context).get(DATE_TIME_FORMAT);
         if (format == null) {
-            RuntimeException re = new IllegalArgumentException("Attempting to convert a DateTime to a " +
-                "String from the propertyName [" + propertyName + "] but the format was no longer " +
-                "in the ServletRequest.");
-            logger.log(Level.SEVERE, re.getMessage(), re);
-            throw re;
+            // Assume ISO format
+            format = PATTERNS[0];
         }
 
         String result;
