@@ -25,6 +25,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.opensymphony.xwork2.XWorkException;
+import net.java.lang.StringTools;
 
 /**
  * <p>
@@ -69,6 +70,11 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
 
     @SuppressWarnings("unchecked")
     public Object convertFromString(Map context, Member member, String propertyName, String[] values) {
+        // Handle the null case
+        if (StringTools.isTrimmedEmpty(values[0])) {
+            return null;
+        }
+
         Map<String, Object> attrs = getAttributes(context);
         String format = (String) attrs.get(DATE_TIME_FORMAT);
         DateTime dateTime = null;
@@ -124,6 +130,11 @@ public class DateTimeTypeConverter extends BaseTypeConverter {
     }
 
     public String convertToString(Map context, String propertyName, Object value) {
+        // Handle the null case
+        if (value == null) {
+            return null;
+        }
+
         String format = (String) getAttributes(context).get(DATE_TIME_FORMAT);
         if (format == null) {
             // Assume ISO format
