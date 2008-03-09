@@ -16,8 +16,9 @@
 package org.jcatapult.domain.location;
 
 import java.io.Serializable;
-import javax.persistence.Embeddable;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.MappedSuperclass;
 
 /**
  * <p>
@@ -27,6 +28,7 @@ import javax.persistence.Column;
  * @author Brian Pontarelli
  */
 @Embeddable
+@MappedSuperclass
 public class Address implements Serializable {
     private final static int serialVersionUID = 1;
 
