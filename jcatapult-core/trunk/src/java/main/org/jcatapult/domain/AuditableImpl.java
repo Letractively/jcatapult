@@ -39,10 +39,10 @@ import org.jcatapult.security.SecurityContext;
  */
 @MappedSuperclass
 public abstract class AuditableImpl extends TimeStampableImpl implements Auditable {
-    @Column(name="insert_user")
+    @Column(name = "insert_user", nullable = false)
     private String insertUser;
 
-    @Column(name="update_user")
+    @Column(name = "update_user", nullable = false)
     private String updateUser;
 
     /**

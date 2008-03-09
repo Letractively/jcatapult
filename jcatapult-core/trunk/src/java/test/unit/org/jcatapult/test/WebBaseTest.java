@@ -51,11 +51,21 @@ public abstract class WebBaseTest extends JPABaseTest {
     protected ConfigurationManager configurationManager;
     protected Configuration configuration;
     protected Container container;
+    protected boolean setupStruts = true;
 
     /**
      * Default constructor.
      */
     protected WebBaseTest() {
+    }
+
+    /**
+     * Alternate constructor.
+     *
+     * @param   setupStruts Determines if Struts is setup for testing or not. Defaults to true.
+     */
+    protected WebBaseTest(boolean setupStruts) {
+        this.setupStruts = setupStruts;
     }
 
     /**
@@ -130,22 +140,24 @@ public abstract class WebBaseTest extends JPABaseTest {
      * and ActionContext.
      */
     protected void setUpStruts() {
-        ServletContext servletContext = EasyMock.createNiceMock(ServletContext.class);
-        EasyMock.replay(servletContext);
+        if (setupStruts) {
+            ServletContext servletContext = EasyMock.createNiceMock(ServletContext.class);
+            EasyMock.replay(servletContext);
 
-        Map<String, String> params = new HashMap<String, String>();
-        Dispatcher du = new Dispatcher(servletContext, params);
-        du.init();
-        Dispatcher.setInstance(du);
+            Map<String, String> params = new HashMap<String, String>();
+            Dispatcher du = new Dispatcher(servletContext, params);
+            du.init();
+            Dispatcher.setInstance(du);
 
-        // Reset the value stack
-        ValueStack stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-        stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
-        ActionContext.setContext(new ActionContext(stack.getContext()));
+            // Reset the value stack
+            ValueStack stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+            stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
+            ActionContext.setContext(new ActionContext(stack.getContext()));
 
-        configurationManager = du.getConfigurationManager();
-        configuration = configurationManager.getConfiguration();
-        container = configuration.getContainer();
+            configurationManager = du.getConfigurationManager();
+            configuration = configurationManager.getConfiguration();
+            container = configuration.getContainer();
+        }
     }
 
     /**

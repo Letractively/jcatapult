@@ -15,6 +15,7 @@
  */
 package org.jcatapult.domain;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 /**
@@ -27,6 +28,7 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public abstract class SoftDeletableTimeStampableImpl extends TimeStampableImpl implements SoftDeletable {
+    @Column(nullable = false)
     private boolean deleted = false;
 
     /**
