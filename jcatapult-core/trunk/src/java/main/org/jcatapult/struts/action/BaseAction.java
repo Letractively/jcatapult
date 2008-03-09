@@ -16,6 +16,7 @@
 package org.jcatapult.struts.action;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.struts2.ServletActionContext;
 import org.jcatapult.persistence.PersistenceService;
 
 import com.google.inject.Inject;
@@ -54,5 +55,19 @@ public abstract class BaseAction extends ActionSupport {
      */
     public String getActionName() {
         return ActionContext.getContext().getName();
+    }
+
+    /**
+     * @return  True if the HTTP request is a GET.
+     */
+    public boolean isGet() {
+        return ServletActionContext.getRequest().getMethod().equals("GET");
+    }
+
+    /**
+     * @return  True if the HTTP request is a POST.
+     */
+    public boolean isPost() {
+        return ServletActionContext.getRequest().getMethod().equals("POST");
     }
 }

@@ -65,7 +65,7 @@ public class GuiceObjectFactory extends ObjectFactory {
     public Class getClassInstance(String name) throws ClassNotFoundException {
         Class<?> clazz = super.getClassInstance(name);
         if (clazz.isInterface()) {
-            throw new IllegalArgumentException("Unable to get class intance for interrface [" +
+            throw new IllegalArgumentException("Unable to get class instance for interface [" +
                 clazz.getName() + "]");
         }
 
@@ -82,7 +82,7 @@ public class GuiceObjectFactory extends ObjectFactory {
      */
     public Object buildBean(Class clazz, Map extraContext) {
         if (clazz.isInterface()) {
-            throw new IllegalArgumentException("Unable to build bean intance for interrface [" +
+            throw new IllegalArgumentException("Unable to build bean instance for interface [" +
                 clazz.getName() + "]");
         }
 
@@ -102,7 +102,7 @@ public class GuiceObjectFactory extends ObjectFactory {
         }
 
         if (interceptorClass.isInterface()) {
-            throw new IllegalArgumentException("Unable to build interceptor for interrface [" +
+            throw new IllegalArgumentException("Unable to build interceptor for interface [" +
                 interceptorClass.getName() + "]");
         }
 
