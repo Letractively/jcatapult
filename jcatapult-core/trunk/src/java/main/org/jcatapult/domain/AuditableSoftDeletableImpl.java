@@ -16,6 +16,7 @@
 package org.jcatapult.domain;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Column;
 
 /**
  * <p>
@@ -27,6 +28,7 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public abstract class AuditableSoftDeletableImpl extends AuditableImpl implements SoftDeletable {
+    @Column(nullable = false)
     private boolean deleted = false;
 
     /**
