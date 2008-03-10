@@ -31,3 +31,11 @@ public class SecurityWorkflow implements Workflow {
   }
 }
 }}}
+
+= FreeMarker IDE plugin =
+
+It would be nice to have a plugin for IJ and Eclipse for FreeMarker.
+
+= JCatapult IDE plugin =
+
+It would be nice to provide support for JCatapult actions, JSPs, FTL in IDEs. This would use the actions in the classpath and in the application and determine the values that are available in the page. It would also provide access to the scaffolder. It would also be nice to have a project setup process that would setup Ant, Tomcat, Hibernate/JPA, Database, etc in just one button.
