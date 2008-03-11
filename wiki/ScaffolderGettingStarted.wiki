@@ -4,8 +4,11 @@
 
 This documentation explains how to get the Scaffolder up and running in your project.  As of right now, these docs are written as of version 1.0-M1.  Until version 1.0 is released, assume these docs are milestone quality and are subject to change.
 
+These docs also assume that you've gone through the jCatapult Getting Started documentation
+
 
 = Details =
+1.  Until we release a distribution of the jCatapult Scaffolder, you'll have to check out version 1.0-M1 from source control and build it locally
 
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
