@@ -131,7 +131,7 @@ public class EmailCommandImpl implements EmailCommand {
      */
     public EmailCommand from(String from, String display) {
         email.setFrom(new EmailAddress(from, display));
-        return null;
+        return this;
     }
 
     /**
