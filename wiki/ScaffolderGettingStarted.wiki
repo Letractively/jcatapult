@@ -13,7 +13,7 @@ These docs also assume that you've gone through the [GettingStarted jCatapult Ge
 svn co http://jcatapult.googlecode.com/svn/jcatapult-scaffolder/trunk jcatapult-scaffolder-trunk
 }}}
 
-2. Once you check out the scaffolder, change directory to the project root and build the jar.  This assumes that you've gone through the [GettingStarted jCatapult Getting Started] documentation.
+2. Once you check out the scaffolder, change directory to the jcatapult scaffolder project root and build the jar.  This assumes that you've gone through the [GettingStarted jCatapult Getting Started] documentation so if you haven't done that yet please do.
 {{{
 ant jar
 }}}
