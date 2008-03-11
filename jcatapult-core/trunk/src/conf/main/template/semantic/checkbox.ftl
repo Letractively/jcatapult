@@ -1,6 +1,6 @@
 <#include "/${parameters.templateDir}/semantic/fieldheader.ftl" />
 <input type="checkbox" name="${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
-<#if parameters.nameValue?exists && parameters.nameValue>
+<#if parameters.nameValue?exists && parameters.nameValue || parameters.defaultChecked?exists && parameters.defaultChecked>
  checked="checked"<#rt/>
 </#if>
 <#if parameters.disabled?default(false)>

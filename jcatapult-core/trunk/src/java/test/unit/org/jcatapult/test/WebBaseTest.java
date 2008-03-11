@@ -22,10 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletContext;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.easymock.EasyMock;
 import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.servlet.ServletObjectsHolder;
+import org.jcatapult.test.servlet.MockServletRequest;
 import org.junit.Before;
 import org.junit.Ignore;
 
@@ -52,6 +54,8 @@ public abstract class WebBaseTest extends JPABaseTest {
     protected Configuration configuration;
     protected Container container;
     protected boolean setupStruts = true;
+    protected boolean get = true;
+    protected MockServletRequest request;
 
     /**
      * Default constructor.
@@ -66,6 +70,15 @@ public abstract class WebBaseTest extends JPABaseTest {
      */
     protected WebBaseTest(boolean setupStruts) {
         this.setupStruts = setupStruts;
+    }
+
+    /**
+     * Sets whether or not the current HTTP request is a GET or a POST. This defaults to GET.
+     *
+     * @param   get True if the the request should be a GET, false if it should be a POST.
+     */
+    public void setGet(boolean get) {
+        this.get = get;
     }
 
     /**
@@ -133,6 +146,14 @@ public abstract class WebBaseTest extends JPABaseTest {
         // Setup servlet context
         this.servletContext = EasyMock.createStrictMock(ServletContext.class);
         ServletObjectsHolder.setServletContext(this.servletContext);
+
+        this.request = new MockServletRequest() {
+            @Override
+            public String getMethod() {
+                return get ? "GET" : "POST";
+            }
+        };
+        ServletObjectsHolder.setServletRequest(request);
     }
 
     /**
@@ -157,6 +178,9 @@ public abstract class WebBaseTest extends JPABaseTest {
             configurationManager = du.getConfigurationManager();
             configuration = configurationManager.getConfiguration();
             container = configuration.getContainer();
+
+            ServletActionContext.setServletContext(servletContext);
+            ServletActionContext.setRequest(request);
         }
     }
 

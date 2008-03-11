@@ -34,7 +34,7 @@ import org.joda.time.DateTime;
 @MappedSuperclass
 public abstract class TimeStampableImpl extends IdentifiableImpl implements TimeStampable {
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-    @Column(name = "insert_date", nullable = false)
+    @Column(name = "insert_date", nullable = false, updatable = false)
     private DateTime insertDate;
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
     @Column(name = "update_date", nullable = false)

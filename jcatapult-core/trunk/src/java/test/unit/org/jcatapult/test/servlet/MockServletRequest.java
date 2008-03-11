@@ -15,16 +15,19 @@
  */
 package org.jcatapult.test.servlet;
 
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Locale;
-import java.util.HashMap;
-import java.io.UnsupportedEncodingException;
-import java.io.IOException;
 import java.io.BufferedReader;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.security.Principal;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 
 import net.java.util.IteratorEnumeration;
 
@@ -36,7 +39,7 @@ import net.java.util.IteratorEnumeration;
  *
  * @author  Brian Pontarelli
  */
-public class MockServletRequest implements ServletRequest {
+public class MockServletRequest implements HttpServletRequest {
     private Map<String, String[]> parameters = new HashMap<String, String[]>();
     private Map<String, Object> attributes = new HashMap<String, Object>();
 
@@ -161,5 +164,105 @@ public class MockServletRequest implements ServletRequest {
 
     public int getLocalPort() {
         return 0;
+    }
+
+    public String getAuthType() {
+        return null;
+    }
+
+    public Cookie[] getCookies() {
+        return new Cookie[0];
+    }
+
+    public long getDateHeader(String s) {
+        return 0;
+    }
+
+    public String getHeader(String s) {
+        return null;
+    }
+
+    public Enumeration getHeaders(String s) {
+        return null;
+    }
+
+    public Enumeration getHeaderNames() {
+        return null;
+    }
+
+    public int getIntHeader(String s) {
+        return 0;
+    }
+
+    public String getMethod() {
+        return null;
+    }
+
+    public String getPathInfo() {
+        return null;
+    }
+
+    public String getPathTranslated() {
+        return null;
+    }
+
+    public String getContextPath() {
+        return null;
+    }
+
+    public String getQueryString() {
+        return null;
+    }
+
+    public String getRemoteUser() {
+        return null;
+    }
+
+    public boolean isUserInRole(String s) {
+        return false;
+    }
+
+    public Principal getUserPrincipal() {
+        return null;
+    }
+
+    public String getRequestedSessionId() {
+        return null;
+    }
+
+    public String getRequestURI() {
+        return null;
+    }
+
+    public StringBuffer getRequestURL() {
+        return null;
+    }
+
+    public String getServletPath() {
+        return null;
+    }
+
+    public HttpSession getSession(boolean b) {
+        return null;
+    }
+
+    public HttpSession getSession() {
+        return null;
+    }
+
+    public boolean isRequestedSessionIdValid() {
+        return false;
+    }
+
+    public boolean isRequestedSessionIdFromCookie() {
+        return false;
+    }
+
+    public boolean isRequestedSessionIdFromURL() {
+        return false;
+    }
+
+    public boolean isRequestedSessionIdFromUrl() {
+        return false;
     }
 }

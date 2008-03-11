@@ -51,6 +51,10 @@ public abstract class BaseTypeConverter implements TypeConverter {
         if (componentStack != null) {
             Component component = (Component) componentStack.peek();
             if (component != null && component.getParameters().containsKey("dynamicAttributes")) {
+                // Add all the parameters first because FTL files place dynamic attributes in here
+                attributes.putAll(component.getParameters());
+
+                // Add the dynamic attributes for JSP tags
                 Map<String, Object> dynAttrs = (Map<String, Object>) component.getParameters().get("dynamicAttributes");
                 if (dynAttrs != null) {
                     attributes.putAll(dynAttrs);
