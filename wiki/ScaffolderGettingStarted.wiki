@@ -1,0 +1,13 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+This documentation explains how to get the Scaffolder up and running in your project.  As of right now, these docs are written as of version 1.0-M1.  Until version 1.0 is released, assume these docs are milestone quality and are subject to change.
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
