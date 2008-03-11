@@ -85,6 +85,10 @@
     <input message="Enter the subversion repository password" addproperty="svn-import.password"/>
 
     <delete dir="${user.home}/tmp"/>
+    <delete dir="${svn-import.project.path}/target"/>
+    <delete>
+      <fileset dir="${svn-import.project.path}" includes="*.iws"/>
+    </delete>
 
     <echo>Importing [${svn-import.project.path}] to [${svn-import.url}/${svn-import.project.name}/trunk]...</echo>
     <scm_import url="${svn-import.url}/${svn-import.project.name}/trunk" dir="${svn-import.project.path}" username="${svn-import.username}" password="${svn-import.password}"/>
