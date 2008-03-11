@@ -6,7 +6,7 @@ Here are the various documents for the JCatapult Scaffolder.
 
 
 = Documents =
-
+  * [ScaffolderGettingStarted Getting Started]
   * [ScaffolderUseCases Scaffolder Use Cases]
   * [ScaffolderCommandLine Scaffolder command line]
   * [ScaffolderWriting Writing a custom scaffolder]
