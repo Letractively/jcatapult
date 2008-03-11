@@ -104,4 +104,10 @@
     <artifactcopy todir="${dir.target.web}/WEB-INF/lib" flatten="true" types="compile,run"
         workflow="workflow.project" dependencies="dependencies.project"/>
   </target>
+
+  <target name="copy-test-files" description="Copies the files from src/web/test into the target directory without a full build">
+    <copy todir="${dir.target.web}" failonerror="yes" overwrite="yes">
+      <fileset dir="${dir.src.web.test}" includes="**/*"/>
+    </copy>
+  </target>
 </project>
