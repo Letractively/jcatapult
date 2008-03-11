@@ -51,16 +51,25 @@ public class SecurityContext {
 
     /**
      * @return  The currently logged in user's name or some default. If the provider has not been
-     *          setup, this method will throw a NullPointerException.
+     *          setup, this method returns the String "anonymous". This is done so that applications
+     *          that want to use interfaces such as auditable can do so without requiring an entire
+     *          security framework in order to run correctly and to test.
      */
     public static String getCurrentUsername() {
+        if (provider == null) {
+            return "anonymous";
+        }
         return provider.getCurrentUsername();
     }
 
     /**
-     * @return  The currently logged in user object.
+     * @return  The currently logged in user object. If there is no user logged in or there is no
+     *          security provider, this returns null.
      */
     public static Object getCurrentUser() {
+        if (provider == null) {
+            return null;
+        }
         return provider.getCurrentUser();
     }
 }
