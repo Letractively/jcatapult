@@ -8,9 +8,25 @@ These docs also assume that you've gone through the [GettingStarted jCatapult Ge
 
 
 = Details =
-1.  Until we release a distribution of the jCatapult Scaffolder, you'll have to check out version 1.0-M1 from source control and build it locally
+1.  Unfortunately, until we release a distribution of the jCatapult Scaffolder, you'll have to check out trunk from source control and build it locally.  Use the svn co script below as an example:
+{{{
+svn co http://jcatapult.googlecode.com/svn/jcatapult-scaffolder/trunk jcatapult-scaffolder-trunk
+}}}
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+2. Once you check out the scaffolder, change directory to the project root and build the jar.  This assumes that you've gone through the [GettingStarted jCatapult Getting Started] documentation.
+{{{
+ant jar
+}}}
+
+3. Now that the project is built, change directory to the project you want to run a scaffolder on and execute the following command:
+{{{
+<scaffolder check out directory>/target/dist/bin/scaffold help
+}}}
+
+For example, if I checked out the scaffolder to '~/dev/jcatapult/jcatapult-scaffolder-trunk/' I'd execute the following command inside my jcatapult project:
+
+{{{
+~/dev/jcatapult/jcatapult-scaffolder-trunk/target/dist/bin/scaffold help
+}}}
+
+If you followed the above steps correctly, this should successfully display the help screen of the jCatapult Scaffolder.
