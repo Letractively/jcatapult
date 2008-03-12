@@ -104,23 +104,16 @@ public class JCEPasswordEncryptor implements PasswordEncryptor<Object> {
     }
 
     /**
-     * Used by subclasses to generate a merged password and salt <code>String</code>.
-     *
-     * <P>
-     * The generated password will be in the form of <code>password{salt}</code>.
-     * </p>
      * <p>
-     * A <code>null</code> can be passed to either method, and will be handled correctly. If the
-     * <code>salt</code> is <code>null</code> or empty, the resulting generated password will simply
-     * be the passed <code>password</code>. The <code>toString</code> method of the <code>salt</code>
-     * will be used to represent the salt.
+     * Merges the password and the salt. If the salt is null, this returns just the password. The
+     * format this uses if the salt is not null is <code>password{salt}</code>.
      * </p>
      *
-     * @param password the password to be used (can be <code>null</code>)
-     * @param salt the salt to be used (can be <code>null</code>)
-     * @param strict ensures salt doesn't contain the delimiters
-     * @return a merged password and salt <code>String</code>
-     * @throws IllegalArgumentException if the salt contains '{' or '}' characters.
+     * @param   password (Optional) The password to be used.
+     * @param   salt (Optional) The salt to be used.
+     * @param   strict (Optional) Determines if the salt can contain '{' or '}'.
+     * @return  The merged result.
+     * @throws  IllegalArgumentException If the salt contains '{' or '}'.
      */
     protected String mergePasswordAndSalt(String password, Object salt, boolean strict) {
         if (password == null) {
