@@ -56,9 +56,8 @@ If you need to override the defaults, you can do so within your project's WEB-IN
         <allowed-content-types>image/gif, image/jpg, application/pdf</allowed-content-types>
       </file-upload>
       <file-servlet>
-        <prefix>/files</prefix>
-        <!-- this will create a directory inside the target/tomcat directory context -->
-        <dir>data/uploads</dir>
+        <prefix>/file-downloads</prefix>
+        <dir>${user.home}/files/webapp/uploads</dir>
       </file-servlet>
     </file-mgr>
   </jcatapult>
