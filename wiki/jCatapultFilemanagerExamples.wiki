@@ -47,4 +47,4 @@ This form works fine if, for instance, all it does is upload a file.  However, w
 </html>
 }}}
 
-The major difference between the first and second examples is that the second example uses the 'file-upload' tag that is shipped with the jCatapult Filemanager referenced by prefix 'jcf' at uri 'http://www.jcatapult.org/jcatapult-filemgr/tags'
+The major difference between the first and second examples is that the second example uses the 'file-upload' tag that is shipped with the jCatapult Filemanager (referenced by prefix 'jcf' at uri 'http://www.jcatapult.org/jcatapult-filemgr/tags')
