@@ -9,3 +9,38 @@ This section documents examples of how to use the jCatapult Filemanger inside yo
 
 =Class Examples=
 Please follow the [jCatapultFilemanagerConfiguration Filemanager Configuration and Setup Guide] before contiuing due to the fact that these examples depend on having the Filemanger configured and setup correctly.
+
+*no class examples at this time
+
+# HTML Examples
+As of 1.0-M2, the jCatapult Filemanager comes shipped with a tag library that you can use in your view forms.  The idea behind the tag library was to create a widget that provided CRUD like UI for managing files in your HTML forms.  Specifically, the capability to not only upload, but view, edit, and delete existing files on disk.
+
+Imagine that you have a simple form below:
+
+{{{
+<html>
+  <head>
+    <title>Simple Upload Form</title>
+  </head>
+  <body>
+    <form action="fileUpload" method="post" enctype="multipart/form-data">
+      <input type="file" name="pdf"/>
+    </form>
+  </body>
+</html>
+}}}
+
+This form works fine if, for instance, all it does is upload a file.  However, what if you want to multipurpose this form to also view and delete a previous file that was uploaded?  In other words, maybe this form is actually an edit page that's part of larger CRUD functionality.  Rather than using the form to 'just upload' you can also use the form to view, edit, and delete existing files.  I have modified the HTML form below to help illustrate:
+
+{{{
+<html>
+  <head>
+    <title>Employee Info PDF</title>
+  </head>
+  <body>
+    <form action="editEmployeePdf" method="post" enctype="multipart/form-data">
+      <input type="file" name="pdf"/>
+    </form>
+  </body>
+</html>
+}}}
