@@ -1,4 +1,4 @@
-#summary jCatapult Filemanager Configuration and Setup.
+#summary jCatapult Filemanager Configuration and Setup Guide.
 
 = Introduction =
 
