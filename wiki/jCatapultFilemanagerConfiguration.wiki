@@ -1,0 +1,18 @@
+#summary jCatapult Filemanager Configuration and Setup.
+
+= Introduction =
+
+This section documents what you need to do to get the Filemanager configured and setup within your application.
+
+Configuration and Setup is broken down into 3 separate categories:
+
+1. Dependency management
+2. Web configuration
+3. Application configuration
+
+=Dependency Management=
+jCatapult works a little differently than most open source projects in that there aren't really any distributions that you are required to download and install on your workstations.  The majority of the jCatapult projects can be added by simply adding a new artifact to your dependency list in your savant project.xml file.  The best way to find the most current of version of any project in jCatapult is to browse that project's subversion tag repository.  For jCatapult Filemanager, refer to the url below to see what the most current version available is:
+
+http://jcatapult.googlecode.com/svn/jcatapult-filemgr/tags
+
+At the time these docs were written, only 1.0-M1 had been released, therefore, I'll be using 1.0-M1 as an example for the duration of the Configuration and Setup guide. 
