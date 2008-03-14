@@ -7,12 +7,12 @@ This section documents examples of how to use the jCatapult Filemanger inside yo
   # Class Examples
   # HTML Examples
 
-=Class Examples=
+==Class Examples==
 Please follow the [jCatapultFilemanagerConfiguration Filemanager Configuration and Setup Guide] before contiuing due to the fact that these examples depend on having the Filemanger configured and setup correctly.
 
 *no class examples at this time
 
-# HTML Examples
+==HTML Examples==
 As of 1.0-M2, the jCatapult Filemanager comes shipped with a tag library that you can use in your view forms.  The idea behind the tag library was to create a widget that provided CRUD like UI for managing files in your HTML forms.  Specifically, the capability to not only upload, but view, edit, and delete existing files on disk.
 
 Imagine that you have a simple form below:
