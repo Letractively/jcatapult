@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2008, Your Corporation. All Rights Reserved.
+  -->
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+        version="2.0">
+  <description>The JCatapult File Manager Tags</description>
+  <display-name>JCatapult File Manager Tags</display-name>
+  <tlib-version>1.0</tlib-version>
+  <short-name>jcatapult-filemgr</short-name>
+  <uri>http://www.jcatapult.org/jcatapult-filemgr/tags</uri>
+  <tag>
+    <description><![CDATA[Handles File Upload Markup]]></description>
+    <name>file-upload</name>
+    <tag-class>org.jcatapult.filemgr.jsp.FileUploadTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <description>The Name of the form field</description>
+      <name>name</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>The form field label</description>
+      <name>label</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>The URI to the file</description>
+      <name>fileURI</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description>The URI of the delete action</description>
+      <name>deleteURI</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <dynamic-attributes>true</dynamic-attributes>
+  </tag>
+</taglib>

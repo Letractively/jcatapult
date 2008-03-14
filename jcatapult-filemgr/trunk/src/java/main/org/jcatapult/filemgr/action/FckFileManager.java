@@ -2,6 +2,8 @@ package org.jcatapult.filemgr.action;
 
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.service.FileManagerService;
+import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.convention.annotation.Result;
 
 import com.google.inject.Inject;
 
@@ -13,6 +15,10 @@ import com.google.inject.Inject;
  *
  * @author Brian Pontarelli
  */
+@Results({
+    @Result(name = "error", location = "", params = {"status", "500"}, type = "httpheader"),
+    @Result(name = "success", location = "", params = {"contentType", "text/xml", "inputName", "resultStream"}, type = "stream")
+})
 public class FckFileManager extends FileManager {
     // Output for file upload from the service.
     private Connector connector;
