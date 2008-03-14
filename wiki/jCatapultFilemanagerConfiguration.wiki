@@ -18,6 +18,23 @@ http://jcatapult.googlecode.com/svn/jcatapult-filemgr/tags
 *At the time these docs were written, only 1.0-M1 had been released, therefore, I'll be using 1.0-M1 as an example for the duration of the Configuration and Setup guide.
 
 If I were adding 1.0-M1 to my project's savant project.xml file, it would look like this:
+
 {{{
 <artifact group="jcatapult.org" project="jcatapult-filemgr" name="jcatapult-filemgr" version="1.0-M1" type="jar"/>
+}}}
+
+=Web Configuration=
+Now that you've added the dependency to your project's project.xml file, it's time to add the necessary configuration to your projet's web.xml file.  This is required because the jCatapult Filemanager uses a servlet to serve files via http requests.  Copy and paste the snippet below to add the servlet to your web.xml:
+
+{{{
+  <servlet>
+    <servlet-name>FileServlet</servlet-name>
+    <servlet-class>org.jcatapult.filemgr.servlet.FileServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>FileServlet</servlet-name>
+    <url-pattern>/files/*</url-pattern>
+  </servlet-mapping>
 }}}
