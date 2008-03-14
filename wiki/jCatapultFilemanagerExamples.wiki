@@ -40,7 +40,7 @@ This form works fine if, for instance, all it does is upload a file.  However, w
   </head>
   <body>
     <form action="editEmployeePdf" method="post" enctype="multipart/form-data">
-      <jcf:file-upload name="pdf" labelposition="top" label="Employee Info PDF:" size="50" fileURI="${attorney.pdfURI}" deleteURI="/admin/attorney/deleteFile?type=pdf&id=${attorney.id}"/><br/><br/>
+      <jcf:file-upload name="pdf" labelposition="top" label="Employee Info PDF:" size="50" fileURI="${employee.pdfURI}" deleteURI="deleteFile?id=${employee.id}"/><br/><br/>
       <input type="file" name="pdf"/>
     </form>
   </body>
