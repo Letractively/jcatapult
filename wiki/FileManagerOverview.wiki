@@ -6,6 +6,6 @@ The jCatapult Filemanager is designed to simplify the uploading and downloading 
 
 
 = Details =
-  * [jCatapultFilemanagerConfiguration Configuration and Setup]:  What configuration and setup is needed to get it to work in my webapp?
+  * [jCatapultFilemanagerConfiguration Configuration and Setup Guide]:  What configuration and setup is needed to get it to work in my webapp?
   * [jCatapultFilemanagerExamples Examples]:  Ok, now that it's all setup, show me how to use it!
   * [jCatapultFilemanagerTaglibs Taglibs]:  Are there any tag libraries that can help make my life easier in my view?
