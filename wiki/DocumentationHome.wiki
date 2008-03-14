@@ -73,7 +73,7 @@ Below are links to topics about a specific JCatapult technology, service or API.
 === File manager ===
 
   * [FileManagerOverview Overview]
-  * [FileManagerConfigurationAndSetup Configuration and Setup Guide]
+  * [jCatapultFilemanagerConfiguration Configuration and Setup Guide]
   * [FileManagerAPI XML API]
   * [FileManagerFck FCK editor integration]
 
