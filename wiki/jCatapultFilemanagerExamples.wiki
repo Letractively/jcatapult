@@ -13,38 +13,45 @@ Please follow the [jCatapultFilemanagerConfiguration Filemanager Configuration a
 *no class examples at this time
 
 ==JSP Examples==
-As of 1.0-M2, the jCatapult Filemanager comes shipped with a tag library that you can use in your view forms.  The idea behind the tag library was to create a widget that provided CRUD like UI for managing files in your HTML forms.  Specifically, the capability to not only upload, but view, edit, and delete existing files on disk.
+As of 1.0-M2, the jCatapult Filemanager comes shipped with a tag library that you can use in your struts forms.  The idea behind the tag library was to create a widget that provided CRUD like UI for managing files in your HTML forms.  Specifically, the capability to not only upload, but view, edit, and delete existing files on disk.
 
 Imagine that you have a simple form below:
 
 {{{
 <html>
   <head>
-    <title>Simple Upload Form</title>
+    <title>Simple Employee Edit Form</title>
   </head>
   <body>
-    <form action="fileUpload" method="post" enctype="multipart/form-data">
-      Employee Info PDF: <input type="file" name="pdf"/>
+    <s:form action="save" method="POST" enctype="multipart/form-data">
+      Name: <s:textfield name="employee.name" label="Name:" required="true"/>
+      Employee Image: <s:file name="image" label="Employee Image:" labelposition="top"/>
     </form>
   </body>
 </html>
 }}}
 
-This form works fine if, for instance, all it does is upload a file.  However, what if you want to multipurpose this form to also view and delete a previous file that was uploaded?  In other words, maybe this form is actually an edit page that's part of larger CRUD functionality.  Rather than using the form to 'just upload' you can also use the form to view, edit, and delete existing files.  I have modified the HTML form below to help illustrate:
+This form works fine if, for instance, all it does is upload a file.  However, what if you want to multipurpose this form to also view and delete a previous file that was uploaded?  Rather than using the form to 'just upload' you can also use the form to view, edit, and delete existing files to existing users.  I have modified the form below to help illustrate:
 
 {{{
 <%@ taglib prefix="jcf" uri="http://www.jcatapult.org/jcatapult-filemgr/tags" %>
 <html>
   <head>
-    <title>Employee Info PDF</title>
+    <title>Employee Edit Form</title>
   </head>
   <body>
-    <form action="editEmployeePdf" method="post" enctype="multipart/form-data">
-      <jcf:file-upload name="pdf" labelposition="top" label="Employee Info PDF:" size="50" fileURI="${employee.pdfURI}" deleteURI="deleteFile?id=${employee.id}"/><br/><br/>
-      <input type="file" name="pdf"/>
+    <s:form action="save" method="POST" enctype="multipart/form-data">
+      <s:textfield name="employee.name" label="Name:" required="true"/>
+      <jcf:file-upload name="image" labelposition="top" label="Employee Info PDF:" size="50" fileURI="${employee.imageURI}" deleteURI="deleteImage?id=${employee.id}"/>
     </form>
   </body>
 </html>
+
+
 }}}
 
-The major difference between the first and second examples is that the second example uses the 'file-upload' tag that is shipped with the jCatapult Filemanager (referenced by prefix 'jcf' at uri 'http://www.jcatapult.org/jcatapult-filemgr/tags')
+The major difference between the first and second examples is that the second example uses the 'file-upload' tag that is shipped with the jCatapult Filemanager (referenced by prefix 'jcf' at uri 'http://www.jcatapult.org/jcatapult-filemgr/tags').  The tag library uses the 'fileURI' and 'deleteURI' params to create CRUD like UI for the file upload widget.
+
+  # fileURI:  This param should be set to the location relative to the host where the file you are uploading is accessible via http.  For instance, if I upload a file and it's accessible via http://www.testsomethingxxx.com/files/employeeX.gif, then the fileURI would be set to /files/employeeX.gif
+
+  # deleteURI:  This is the action responsible for deleting the file from disk.  This is implemented by you.  In the example above, the app would have an action called 'deleteImage' which takes an employee id.  This action uses the employee id to load that particular employee from the database and then set the field holding the image uri to null.
