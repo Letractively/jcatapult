@@ -42,7 +42,7 @@ This form works fine if, for instance, all it does is upload a file.  However, w
   <body>
     <s:form action="save" method="POST" enctype="multipart/form-data">
       <s:textfield name="employee.name" label="Name:" required="true"/>
-      <jcf:file-upload name="image" labelposition="top" label="Employee Info PDF:" size="50" fileURI="${employee.imageURI}" deleteURI="deleteImage?id=${employee.id}"/>
+      <jcf:file-upload name="image" labelposition="top" label="Employee Image:" size="50" fileURI="${employee.imageURI}" deleteURI="deleteImage?id=${employee.id}"/>
     </form>
   </body>
 </html>
