@@ -485,7 +485,7 @@
     </LanguageOptions>
   </component>
   <UsedPathMacros>
-    <macro name="TEMPLATE" />
+    <macro name="SAVANT_REPOSITORY" />
   </UsedPathMacros>
 </project>
 

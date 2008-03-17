@@ -31,6 +31,6 @@ import com.google.inject.Provider;
  */
 public class EntityManagerProvider implements Provider<EntityManager> {
     public EntityManager get() {
-        return EntityManagerContext.get();
+        return new EntityManagerProxy();
     }
 }

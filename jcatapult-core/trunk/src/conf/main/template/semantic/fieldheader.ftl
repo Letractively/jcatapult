@@ -1,4 +1,4 @@
-<#include "/${parameters.templateDir}/semantic/dynamicAttributes.ftl"/></#include>
+<#include "/${parameters.templateDir}/semantic/dynamicAttributes.ftl"/>
 <#--
 	Only show message if errors are available.
 	This will be done if ActionSupport is used.

@@ -16,11 +16,10 @@
 package org.jcatapult.guice;
 
 import org.jcatapult.servlet.DefaultWorkflowResolver;
-import org.jcatapult.servlet.WorkflowResolver;
 import org.jcatapult.servlet.ServletObjectsHolder;
+import org.jcatapult.servlet.WorkflowResolver;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -49,6 +48,6 @@ public class WorkflowResolverModule extends AbstractModule {
             return;
         }
 
-        bind(WorkflowResolver.class).to(DefaultWorkflowResolver.class).in(Singleton.class);
+        bind(WorkflowResolver.class).to(DefaultWorkflowResolver.class);
     }
 }
