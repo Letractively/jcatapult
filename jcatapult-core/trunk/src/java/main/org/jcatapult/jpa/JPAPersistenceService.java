@@ -32,7 +32,6 @@ import org.jcatapult.persistence.PersistenceService;
 import org.jcatapult.persistence.Transaction;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * <p>
@@ -47,18 +46,18 @@ import com.google.inject.Provider;
  */
 @SuppressWarnings(value = {"unchecked"})
 public class JPAPersistenceService implements PersistenceService {
-    private Provider<EntityManager> entityManagerProvider;
+    private EntityManager entityManager;
     private boolean verifyEntityClasses = true;
 
     /**
      * Constructs a new JPAPersistenceService that uses the given EntityManager to communicate
      * with the database.
      *
-     * @param   entityManagerProvider The entity manager provider to use.
+     * @param   entityManager The entity manager to use.
      */
     @Inject
-    public JPAPersistenceService(Provider<EntityManager> entityManagerProvider) {
-        this.entityManagerProvider = entityManagerProvider;
+    public JPAPersistenceService(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     public void setVerifyEntityClasses(boolean verifyEntityClasses) {
@@ -69,14 +68,14 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public void clearCache() {
-        entityManagerProvider.get().clear();
+        entityManager.clear();
     }
 
     /**
      * {@inheritDoc}
      */
     public void reload(Object obj) {
-        entityManagerProvider.get().refresh(obj);
+        entityManager.refresh(obj);
     }
 
     /**
@@ -88,7 +87,7 @@ public class JPAPersistenceService implements PersistenceService {
      * @return  The transaction.
      */
     public Transaction startTransaction() {
-        return startTransaction(entityManagerProvider.get());
+        return startTransaction(entityManager);
     }
 
     private Transaction startTransaction(EntityManager em) {
@@ -133,9 +132,9 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public void lock(Object obj, boolean read) {
         if (read) {
-            entityManagerProvider.get().lock(obj, LockModeType.READ);
+            entityManager.lock(obj, LockModeType.READ);
         } else {
-            entityManagerProvider.get().lock(obj, LockModeType.WRITE);
+            entityManager.lock(obj, LockModeType.WRITE);
         }
     }
 
@@ -170,7 +169,7 @@ public class JPAPersistenceService implements PersistenceService {
             queryString.append(" where eb.deleted = false");
         }
 
-        Query q = entityManagerProvider.get().createQuery(queryString.toString());
+        Query q = entityManager.createQuery(queryString.toString());
         return q.getResultList();
     }
 
@@ -205,7 +204,7 @@ public class JPAPersistenceService implements PersistenceService {
             queryString.append(" where eb.deleted = false");
         }
 
-        Query q = entityManagerProvider.get().createQuery(queryString.toString());
+        Query q = entityManager.createQuery(queryString.toString());
         return (Long) q.getSingleResult();
     }
 
@@ -244,7 +243,7 @@ public class JPAPersistenceService implements PersistenceService {
             queryString.append(" where eb.deleted = false");
         }
 
-        Query q = entityManagerProvider.get().createQuery(queryString.toString());
+        Query q = entityManager.createQuery(queryString.toString());
         q.setFirstResult(start);
         q.setMaxResults(number);
         return q.getResultList();
@@ -255,7 +254,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> List<T> queryAll(Class<T> type, String query, Object... params) {
         verify(type);
-        Query q = entityManagerProvider.get().createQuery(query);
+        Query q = entityManager.createQuery(query);
         addParams(q, params);
         return q.getResultList();
     }
@@ -265,7 +264,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> List<T> query(Class<T> type, String query, int start, int number, Object... params) {
         verify(type);
-        Query q = entityManagerProvider.get().createQuery(query);
+        Query q = entityManager.createQuery(query);
         addParams(q, params);
         q.setFirstResult(start);
         q.setMaxResults(number);
@@ -277,7 +276,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> T queryFirst(Class<T> type, String query, Object... params) {
         verify(type);
-        Query q = entityManagerProvider.get().createQuery(query);
+        Query q = entityManager.createQuery(query);
         q.setFirstResult(0);
         q.setMaxResults(1);
         addParams(q, params);
@@ -293,7 +292,7 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public long queryCount(String query, Object... params) {
-        Query q = entityManagerProvider.get().createQuery(query);
+        Query q = entityManager.createQuery(query);
         addParams(q, params);
         return (Long) q.getSingleResult();
     }
@@ -303,7 +302,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> List<T> namedQueryAll(Class<T> type, String query, Object... params) {
         verify(type);
-        Query q = entityManagerProvider.get().createNamedQuery(query);
+        Query q = entityManager.createNamedQuery(query);
         addParams(q, params);
         return q.getResultList();
     }
@@ -313,7 +312,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> List<T> namedQuery(Class<T> type, String query, int start, int number, Object... params) {
         verify(type);
-        Query q = entityManagerProvider.get().createNamedQuery(query);
+        Query q = entityManager.createNamedQuery(query);
         addParams(q, params);
         q.setFirstResult(start);
         q.setMaxResults(number);
@@ -325,7 +324,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public <T> T namedQueryFirst(Class<T> type, String query, Object... params) {
         verify(type);
-        Query q = entityManagerProvider.get().createNamedQuery(query);
+        Query q = entityManager.createNamedQuery(query);
         addParams(q, params);
         List<T> results = q.getResultList();
         if (results.size() > 0) {
@@ -342,7 +341,7 @@ public class JPAPersistenceService implements PersistenceService {
         verify(type);
         T t = null;
         try {
-            t = entityManagerProvider.get().find(type, id);
+            t = entityManager.find(type, id);
         } catch (EntityNotFoundException enfe) {
             // This is okay, just return null
         }
@@ -355,16 +354,15 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public boolean persist(Object obj) {
         // Check for and possibly start a tranasction
-        EntityManager em = entityManagerProvider.get();
-        Transaction transaction = startTransaction(em);
+        Transaction transaction = startTransaction(entityManager);
         boolean uniqueConstraint = false;
         boolean exception = false;
         try {
-            if (em.contains(obj) ||
+            if (entityManager.contains(obj) ||
                     (obj instanceof Identifiable && ((Identifiable) obj).getId() == null)) {
-                em.persist(obj);
+                entityManager.persist(obj);
             } else {
-                em.merge(obj);
+                entityManager.merge(obj);
             }
         } catch (EntityExistsException e) {
             uniqueConstraint = true;
@@ -391,15 +389,14 @@ public class JPAPersistenceService implements PersistenceService {
         T t = findById(type, id);
         if (t != null) {
             // Check for and possibly start a transaction
-            EntityManager em = entityManagerProvider.get();
-            Transaction transaction = startTransaction(em);
+            Transaction transaction = startTransaction(entityManager);
 
             // Remove it for normal entities and soft delete for others
             if (t instanceof SoftDeletable) {
                 ((SoftDeletable) t).setDeleted(true);
-                em.persist(t);
+                entityManager.persist(t);
             } else {
-                em.remove(t);
+                entityManager.remove(t);
             }
 
             // No need for a try-catch block because a call to commit that fails will rollback the
@@ -417,15 +414,14 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public void delete(Object obj) {
         // Check for and possibly start a transaction
-        EntityManager em = entityManagerProvider.get();
-        Transaction transaction = startTransaction(em);
+        Transaction transaction = startTransaction(entityManager);
 
         // Remove it for normal entities and soft delete for others
         if (obj instanceof SoftDeletable) {
             ((SoftDeletable) obj).setDeleted(true);
-            em.persist(obj);
+            entityManager.persist(obj);
         } else {
-            em.remove(obj);
+            entityManager.remove(obj);
         }
 
         // No need for a try-catch block because a call to commit that fails will rollback the

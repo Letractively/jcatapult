@@ -88,6 +88,7 @@ public class JCatapultFilter implements Filter {
      */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
     throws IOException, ServletException {
+        long start = System.currentTimeMillis();
         if (request.getAttribute(ORIGINAL_REQUEST_URI) == null) {
             request.setAttribute(ORIGINAL_REQUEST_URI, ((HttpServletRequest) request).getRequestURI());
         }
@@ -95,7 +96,13 @@ public class JCatapultFilter implements Filter {
         ServletObjectsHolder.setServletRequest(request);
         ServletObjectsHolder.setServletResponse(response);
         try {
+            long injectStart = System.currentTimeMillis();
             WorkflowResolver workflowResolver = GuiceContainer.getInjector().getInstance(WorkflowResolver.class);
+            long injectEnd = System.currentTimeMillis();
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.finest("Time to create workflows [" + (injectEnd - injectStart) + "]");
+            }
+
             List<Workflow> workflows = workflowResolver.resolve();
             if (logger.isLoggable(Level.FINEST)) {
                 logger.finest("Found these workflows: " + workflows);
@@ -104,6 +111,11 @@ public class JCatapultFilter implements Filter {
             DefaultWorkflowChain workflowChain = new DefaultWorkflowChain(workflows, chain);
             workflowChain.doWorkflow(request, response);
         } finally {
+            long end = System.currentTimeMillis();
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.finest("Processing time in JCatapultFilter [" + (end - start) + "]");
+            }
+
             ServletObjectsHolder.clearServletRequest();
             ServletObjectsHolder.clearServletResponse();
 

@@ -28,6 +28,7 @@ import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 /**
@@ -37,8 +38,14 @@ import com.google.inject.name.Named;
  * request.
  * </p>
  *
- * @author Brian Pontarelli
+ * <p>
+ * This is a singleton so that the EntityManagerFactory is only created once,
+ * when the container is loaded.
+ * </p>
+ *
+ * @author  Brian Pontarelli
  */
+@Singleton
 public class JPAWorkflow implements Workflow {
     private static final Logger logger = Logger.getLogger(JPAWorkflow.class.getName());
     private boolean jpaEnabled;
@@ -55,7 +62,7 @@ public class JPAWorkflow implements Workflow {
     public JPAWorkflow(@Named("jcatapult.jpa.enabled") boolean jpaEnabled,
             @Named("jcatapult.jpa.unit") String persistentUnit) {
         logger.fine("JPA is " + (jpaEnabled ? "enabled" : "disabled"));
-        
+
         this.jpaEnabled = jpaEnabled;
         if (jpaEnabled) {
             emf = Persistence.createEntityManagerFactory(persistentUnit);

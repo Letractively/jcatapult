@@ -46,7 +46,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         User user = (User) em.createQuery("select u from User u where u.name = 'Fred'").getSingleResult();
         user.setName("Brian");
 
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
         service.reload(user);
 
         assertEquals("Fred", user.getName());
@@ -65,7 +65,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         user.setName("Brian");
 
         em.clear();
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
         try {
             service.reload(user);
             fail("Should have failed because it is detached");
@@ -89,7 +89,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
             "values (now(), now(), 'George', true)");
 
         // This tests that non-soft delete find all works.
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
         List<User> users = service.findAllByType(User.class);
         assertEquals(2, users.size());
         assertEquals("Fred", users.get(0).getName());
@@ -131,7 +131,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
                 "values (now(), now(), 'Fred" + i + "', " + ((i % 2 == 0) ? "false" : "true") + ")");
         }
 
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
 
         // This tests that we correctly get the paginated results for non-soft delete beans
         for (int i = 0; i < 100; i += 10) {
@@ -184,7 +184,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
             "values (3, now(), now(), 'Alan')");
 
         // This tests that querying by id works
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
         User user = service.findById(User.class, 1);
         assertNotNull(user);
         assertEquals("Fred", user.getName());
@@ -209,7 +209,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
             "values (3, now(), now(), 'Alan')");
 
         // This tests that querying by id works
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
         service.setVerifyEntityClasses(false);
         User user = service.findById(User.class, 1);
         assertNotNull(user);
@@ -235,7 +235,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
             "values (now(), now(), 'Alan')");
 
         // This tests that querying with an orderBy clause works
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
         List<User> users = service.queryAll(User.class, "select user from User user order by user.name");
         assertEquals(3, users.size());
         assertEquals("Alan", users.get(0).getName());
@@ -254,7 +254,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
             "values (now(), now(), 'Alan')");
 
         // This tests that querying with an orderBy clause works
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
         long count = service.queryCount("select count(user) from User user where user.name = ?1", "Alan");
         assertEquals(1, count);
 
@@ -273,7 +273,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         }
 
         // This tests that querying with an orderBy clause works
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
         List<User> users = service.query(User.class, "select user from User user order by user.name", 3, 21);
 //        System.out.println("List is \n" + users);
         assertEquals(21, users.size());
@@ -285,7 +285,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     @Test
     public void testInsert() throws Exception {
         clearTable("User");
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
 
         // Test that the persist works and that it correctly handles the dates using the interceptor
         User user = new User();
@@ -302,7 +302,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         testInsert();
         EntityManagerContext.get().clear();
 
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
 
         // Test that the persist works and that it correctly handles the dates using the interceptor
         User user = service.findAllByType(User.class).get(0);
@@ -320,7 +320,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         testInsert();
         EntityManagerContext.get().clear();
 
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
 
         // Test that the persist works and that it correctly handles the dates using the interceptor
         User user = service.findAllByType(User.class).get(0);
@@ -336,7 +336,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     @Test
     public void testPersistOuterTransaction() throws Exception {
         clearTable("User");
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
 
         EntityManager em = EntityManagerContext.get();
         EntityTransaction et = em.getTransaction();
@@ -400,7 +400,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
     private void doRemove(boolean id, boolean verifyExists) throws Exception {
         clearTable("User");
         clearTable("SoftDeletableUser");
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
 
         User user = new User();
         user.setName("Fred");
@@ -469,7 +469,7 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
 
     @Test
     public void testVerify() {
-        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProvider());
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
         service.setVerifyEntityClasses(true);
         try {
             service.persist(new BadEntity());
