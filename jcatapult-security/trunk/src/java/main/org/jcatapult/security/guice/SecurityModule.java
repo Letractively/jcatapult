@@ -26,8 +26,6 @@ import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
 import org.jcatapult.security.spi.SecurityContextProvider;
 import org.jcatapult.servlet.WorkflowResolver;
 
-import com.google.inject.Singleton;
-
 /**
  * <p>
  * This class is just a helper class that web applications can extend to
@@ -49,7 +47,7 @@ public abstract class SecurityModule extends WorkflowResolverModule {
      */
     protected void configureWorkflow() {
         // Setup the workflow resolver
-        bind(WorkflowResolver.class).to(SecurityWorkflowResolver.class).in(Singleton.class);
+        bind(WorkflowResolver.class).to(SecurityWorkflowResolver.class);
     }
 
     /**
