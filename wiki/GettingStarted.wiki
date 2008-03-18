@@ -26,6 +26,8 @@ svn co http://jcatapult.googlecode.com/svn/jcatapult-ant/trunk/tools tools-jcata
 
 Currently, JCatapult requires the use of Tomcat 5.5 or later for running applications in development. This will change in the future to support Jetty and many other application servers. For now, you will need to download Apache Tomcat from http://tomcat.apache.org. Tomcat requires that you configure the CATALINA_HOME environment variable to point to the Tomcat installation directory and this must also be set to use JCatapult.
 
+*NOTE FOR WINDOWS USERS:* JCatapult requires that you install Tomcat using the non-service based installation. Running Tomcat as a Windows service will not work with JCatapult. You must use the ZIP file installation of Tomcat to work with JCatapult.
+
 = MySQL = 
 
 Currently, JCatapult requires the use of MySQL for projects that use a database. This is currently being worked on to support PostgreSQL and more database will be added soon. For now, you'll need to download and install MySQL 5 or later from http://www.mysql.com.
