@@ -4,11 +4,58 @@
 
 This document shows you how to build JCatapult modules and libraries from source.
 
-= The build properties files =
+= Layout = 
+
+The layout for the JCatapult source repository is different than other projects at Google Code. Rather than containing just a single project, our repository contains many projects. Each project in turn contains the standard *trunk*, *branches* and *tags* sub-directories.  To get a list of the projects in the repository, issue this command:
+
+{{{
+svn list http://jcatapult.googlecode.com/svn
+}}}
+
+This will produce a list such as:
+
+{{{
+examples/
+jcatapult-ant/
+jcatapult-commerce/
+jcatapult-core/
+jcatapult-dbmgr/
+jcatapult-doc-examples/
+jcatapult-email/
+jcatapult-filemgr/
+jcatapult-scaffolder/
+jcatapult-security/
+jcatapult-webservices/
+wiki/
+}}}
+
+= Checking out a project =
+
+If you want to check out one of the JCatapult projects, determine which one you want to check out and then fetch the *trunk* of that project like this:
+
+{{{
+svn co http://jcatapult.googlecode.com/svn/jcatapult-core/trunk jcatapult-core
+}}}
+
+This will check out the project as read-only. If you are a committer, see below.
+
+= Committers =
+
+== Check out ==
+
+Committers can check out projects and submit changes. The command to check out a project as a comitter is:
+
+{{{
+svn --username=<your-username> co http://jcatapult.googlecode.com/svn/jcatapult-core/trunk jcatapult-core
+}}}
+
+You will be prompted for your Google Code password.
+
+== The build properties files ==
 
 There are two files that you will need to create in order to build JCatapult from source. These files are:
 
-== jcatapult-build.properties ==
+=== jcatapult-build.properties ===
 
 This file is used for contributors to provide the SubVersion credentials that contributors will use when releasing JCatapult. 
 
@@ -16,7 +63,7 @@ If you are not a contributor but planning on building JCatapult modules or libra
 
 If you are a contributor, you'll need to place your Google Code SubVersion username and password in this file under the properties `svn.username` and `svn.password`. This is only required if you are developing on Mac OSX or Windows. Linux users do not need these properties and can leave this file blank.
 
-== inversoft-org-release-build.properties ==
+=== inversoft-org-release-build.properties ===
 
 This file is used by contributors to add the JCatapult JAR files, Savant AMD files and source JARs to the SubVersion repository hosted at savant.inversoft.org. This SubVersion repository is checked out on the HTTP server named savant.inversoft.org to provide Savant a location for downloading artifacts.
 
