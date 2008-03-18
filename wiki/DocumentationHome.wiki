@@ -3,14 +3,6 @@
 
 Here are the documentation pages that are available for the JCatapult framework. Some of the documentation has not yet been written. Please check back soon and it should be complete before 1.0 is released. If you are interested in helping build out or fix documentation, please contact Brian Pontarelli at *brian at inversoft.com*
 
-=== Plan ===
-
-  * [1_0ReleasePlan 1.0 Release Plan]
-
-== Future ==
-
-  * [1_1Ideas 1.1 Ideas]
-
 === Introduction ===
 
   * [GettingStarted Getting started]
@@ -102,3 +94,9 @@ Below are links to various documents around JCatapult standard methodologies. Th
   * [BestPracticesGuice Guice dependency injection best practices]
   * [BestPracticesTiers Standard application tiers best practices]
   * [BestPracticesTesting Testing best practices]
+
+= Future =
+
+Plans for the future of JCatapult.
+
+  * [1_1Ideas 1.1 Ideas]
