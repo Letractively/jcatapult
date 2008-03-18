@@ -34,7 +34,7 @@ Currently, JCatapult requires the use of MySQL for projects that use a database.
 
 JCatapult requires a file named build.properties to be created inside your home directory. This file points JCatapult to the location of the JDK for the project. This allows the project to clearly define which JDK it is using, which might be different than JDKs for other applications and the JDK used to run the JCatapult Ant build system. This file should contain entries for each of the JDKs you plan to use. Here is an example:
 
-**nix version*
+*\*nix version*
 {{{
 jdk1.6=/usr/lib/jvm/java-6-sun
 jdk1.5=/usr/lib/jvm/java-1.5.0-sun
