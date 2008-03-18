@@ -18,6 +18,9 @@
   <!-- java jar -->
   <import file="${plugin.dir}/java/1.0/jar.xml"/>
 
+  <!-- javadoc -->
+  <import file="${plugin.dir}/javadoc/1.0/javadoc.xml"/>
+
   <!-- junit -->
   <import file="${plugin.dir}/junit/1.0/junit.xml"/>
 
