@@ -21,7 +21,7 @@ cd %BIN_DIR%
 rem ----------
 rem Calculate the webroot path
 rem ----------
-cd ../../../
+cd ..\..\..
 set PROJECT_ROOT=%cd%
 echo PROJECT_ROOT = %PROJECT_ROOT%
 
