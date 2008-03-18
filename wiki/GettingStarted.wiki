@@ -83,8 +83,14 @@ $ ant clean app
 
 This will build the web application and prepare it to run. Once the build has completed you should be able to run the application using the scripts placed in _target/tomcat/bin_ directory like this:
 
+*Linux/Unix*
 {{{
 $ target/tomcat/bin/tomcat.sh start
+}}}
+
+*Windows*
+{{{
+> target\tomcat\bin\tomcat.bat start
 }}}
 
 Now you should be able to access the newly created application in a browser via http://localhost:8080
