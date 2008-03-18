@@ -372,7 +372,7 @@ public class JPAPersistenceService implements PersistenceService {
             throw pe;
         } finally {
             // Always rollback if the transaction is local
-            if (!exception) {
+            if (!exception && !transaction.getRollbackOnly()) {
                 transaction.commit();
             } else {
                 transaction.rollback();
