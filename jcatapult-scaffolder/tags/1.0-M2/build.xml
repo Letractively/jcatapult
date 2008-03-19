@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<project name="jcatapult-scaffold">
+
+  <property name="plugin.dir" value="${ant.home}/plugins-jcatapult"/>
+
+  <!-- Savant -->
+  <import file="${plugin.dir}/savant/1.0/savant.xml"/>
+
+  <!-- Init -->
+  <import file="${plugin.dir}/init/1.0/init.xml"/>
+
+  <!-- Clean -->
+  <import file="${plugin.dir}/clean/1.0/clean.xml"/>
+
+  <!-- Java -->
+  <import file="${plugin.dir}/java/1.0/compile.xml"/>
+
+  <!-- Java jar -->
+  <import file="${plugin.dir}/java/1.0/jar.xml"/>
+
+  <!-- Javadoc -->
+  <import file="${plugin.dir}/javadoc/1.0/javadoc.xml"/>
+
+  <!-- JUnit -->
+  <import file="${plugin.dir}/junit/1.0/junit-no-db.xml"/>
+  <import file="${plugin.dir}/cobertura/1.0/cobertura.xml"/>
+
+  <!-- SVN -->
+  <import file="${plugin.dir}/svn/1.0/svn.xml"/>
+
+  <!-- Release -->
+  <import file="${plugin.dir}/release-svn/1.0/jar.xml"/>
+  <import file="${plugin.dir}/release-jcatapult/1.0/release-jcatapult.xml"/>
+
+  <!-- IDE -->
+  <import file="${plugin.dir}/ide/1.0/ide.xml"/>
+
+  <!-- Database -->
+  <import file="${plugin.dir}/mysql/1.0/mysql.xml"/>
+
+  <macrodef name="jar-post">
+    <sequential>
+      <copy todir="target/dist/bin">
+        <fileset dir="src/script/main" includes="**/*"/>
+      </copy>
+      <chmod perm="+x" file="target/dist/bin/scaffold"/>
+
+      <copy todir="target/dist/scaffolders">
+        <fileset dir="src/scaffolder/main" includes="**/*"/>
+      </copy>
+
+      <copy todir="target/dist/lib">
+        <fileset dir="target/jars" includes="**/*" excludes="**/*src*"/>
+      </copy>
+      <artifactcopy todir="target/dist/lib" flatten="true" dependencies="dependencies.project"
+          workflow="workflow.project" types="compile,run">
+      </artifactcopy>
+
+      <zip zipfile="${dir.target}/jcatapult-scaffolder-${project.version}.zip">
+        <fileset dir="${dir.target}/dist" includes="**/*"/>
+      </zip>
+    </sequential>
+  </macrodef>
+</project>
