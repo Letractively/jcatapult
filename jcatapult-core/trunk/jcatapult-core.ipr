@@ -484,8 +484,5 @@
       <option name="useAlternate" value="false" />
     </LanguageOptions>
   </component>
-  <UsedPathMacros>
-    <macro name="JWSDP_HOME" />
-  </UsedPathMacros>
 </project>
 
