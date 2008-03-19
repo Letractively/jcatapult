@@ -20,6 +20,7 @@
   <!-- trunk scripts -->
   <target name="rel-patch-tag-trunk-script" depends="-scm-init">
     <echo>Executing tag-only patch release scripts on trunk...</echo>
+    <rel_check_project/>
     <rel_validate_version type="patch"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_check_changelog/>
@@ -30,6 +31,7 @@
 
   <target name="rel-patch-full-trunk-script" depends="-scm-init">
     <echo>Executing full patch release scripts on trunk...</echo>
+    <rel_check_project/>
     <rel_validate_version type="patch"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_check_changelog/>
@@ -43,6 +45,7 @@
   <target name="rel-patch-tag-branch-script" depends="-scm-init">
     <echo>Executing tag-only patch release scripts on branch...</echo>
     <rel_set_branch_version/>
+    <rel_check_project/>
     <rel_validate_version type="patch"/>
     <scm_check_tag_available tag="${project.version}"/>
     <rel_check_changelog/>
@@ -54,6 +57,7 @@
 
   <target name="rel-patch-full-branch-script" depends="-scm-init">
     <echo>Executing full patch release scripts on branch...</echo>
+    <rel_check_project/>
     <rel_set_branch_version/>
     <rel_validate_version type="patch"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
