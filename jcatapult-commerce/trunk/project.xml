@@ -22,7 +22,7 @@
 
   <!-- compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult.core" value="1.0-M2-{integration}"/>
+  <property name="version.jcatapult" value="1.0-M2"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
@@ -33,7 +33,7 @@
       <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
       <artifact group="hibernate.org" project="hibernate" name="hibernate" version="3.2.2" type="jar"/>
       <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.2" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult.core}" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
       <artifact group="joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
       <artifact group="ognl.org" project="ognl" name="ognl" version="2.6.11" type="jar"/>
       <artifact group="opensymphony.com" project="xwork" name="xwork" version="2.0.4" type="jar"/>
@@ -42,7 +42,7 @@
     <artifactGroup type="test-compile">
       <artifact group="easymock.org" project="easymock" name="easymock" version="2.2" type="jar"/>
       <artifact group="hibernate.org" project="hibernate" name="hibernate-annotations" version="3.2.1" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult.core}" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}" type="jar"/>
       <artifact group="junit.org" project="junit" name="junit" version="4.3.1" type="jar"/>
     </artifactGroup>
   </dependencies>
