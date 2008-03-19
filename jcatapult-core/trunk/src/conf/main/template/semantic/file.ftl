@@ -1,3 +1,9 @@
+<#assign fileURI = parameters.dynamicAttributes['fileURI']?default("")/>
+<#assign deleteURI = parameters.dynamicAttributes['deleteURI']?default("")/>
+
+<#include "/${parameters.templateDir}/semantic/fieldheader.ftl" />
+
+<#if fileURI == ''>
 <input type="file"<#rt/>
  name="${parameters.name?default("")?html}"<#rt/>
 <#if parameters.get("size")?exists>
@@ -30,3 +36,6 @@
 <#include "/${parameters.templateDir}/semantic/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/semantic/common-attributes.ftl" />
 />
+<#else>
+  <a href="${fileURI}">Click to View File</a> | <a href="${deleteURI}">DELETE</a>
+</#if>
