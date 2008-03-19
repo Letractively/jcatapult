@@ -15,6 +15,8 @@
  */
 package org.jcatapult.security.saved;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,13 +39,47 @@ public class DefaultSavedRequestService implements SavedRequestService {
      * {@inheritDoc}
      */
     public void saveRequest(HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+        Map<String, String[]> requestParameters = null;
+        String redirectURI;
+        if (request.getMethod().equals("GET")) {
+            try {
+                Map<String, String[]> params = request.getParameterMap();
+                URI uri = new URI(request.getRequestURL().toString() + makeQueryString(params));
+                redirectURI = uri.getPath() + (uri.getQuery() != null ? "?" + uri.getQuery() : "") +
+                    (uri.getFragment() != null ? "#" + uri.getFragment() : "");
+            } catch (URISyntaxException e) {
+                redirectURI = request.getRequestURI();
+            }
+        } else {
+            requestParameters = request.getParameterMap();
+            redirectURI = request.getRequestURI();
+        }
 
         // Save the request
-        String uri = request.getRequestURI();
-        Map<String, String[]> requestParameters = request.getParameterMap();
-        SavedHttpRequest saved = new SavedHttpRequest(uri, requestParameters);
+        SavedHttpRequest saved = new SavedHttpRequest(redirectURI, requestParameters);
+        HttpSession session = request.getSession(true);
         session.setAttribute(LOGIN_KEY, saved);
+    }
+
+    /**
+     * Converts the parameters map into a query string.
+     *
+     * @param   parameters The parameters.
+     * @return  Either an empty String if the parameters is empty or a RFC compliant query String.
+     */
+    private String makeQueryString(Map<String, String[]> parameters) {
+        if (parameters.size() == 0) {
+            return "";
+        }
+
+        StringBuilder build = new StringBuilder("?");
+        for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
+            for (String value : entry.getValue()) {
+                build.append(entry.getKey()).append("=").append(value);
+            }
+        }
+
+        return build.toString();
     }
 
     /**
@@ -55,7 +91,13 @@ public class DefaultSavedRequestService implements SavedRequestService {
         SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(LOGIN_KEY);
         if (saved != null) {
             session.removeAttribute(LOGIN_KEY);
-            session.setAttribute(POST_LOGIN_KEY, saved);
+
+            // Only set a saved request back in if it has some parameters, otherwise it was probably
+            // a GET and we don't need anything special.
+            if (saved.parameters.size() > 0) {
+                session.setAttribute(POST_LOGIN_KEY, saved);
+            }
+
             return saved.uri;
         }
 
