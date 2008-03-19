@@ -69,32 +69,32 @@
 
   <target name="rel-full" depends="-scm-init">
     <echo>Initiating a full release...</echo>
-    <rel-full-pre/>
+    <rel_full_pre/>
 
     <rel-script-executor relType="full"/>
 
-    <rel-full-post/>
+    <rel_full_post/>
     <echo>...full release complete</echo>
   </target>
 
   <target name="rel-deploy" depends="-scm-init">
     <echo>Initiating a deploy/publish release...</echo>
-    <rel-deploy-pre/>
+    <rel_deploy_pre/>
 
     <rel-script-executor relType="deploy"/>
 
-    <rel-deploy-post/>
+    <rel_deploy_post/>
     <echo>...deploy/publish release complete</echo>
   </target>
 
   <target name="rel-tag" depends="-scm-init"
           description="Initiates a tag-only release.  This checks out the project, builds it, tests it, and then tags it only.">
     <echo>Initiating a tag-only release...</echo>
-    <rel-tag-pre/>
+    <rel_tag_pre/>
 
     <rel-script-executor relType="tag"/>
 
-    <rel-tag-post/>
+    <rel_tag_post/>
     <echo>...tag-only release complete</echo>
   </target>
 
@@ -393,27 +393,35 @@
     </sequential>
   </macrodef>
 
-  <macrodef name="rel-deploy-pre">
+  <macrodef name="rel_deploy_pre">
     <sequential/>
   </macrodef>
 
-  <macrodef name="rel-deploy-post">
+  <macrodef name="rel_deploy_post">
     <sequential/>
   </macrodef>
 
-  <macrodef name="rel-tag-pre">
+  <macrodef name="rel_tag_pre">
     <sequential/>
   </macrodef>
 
-  <macrodef name="rel-tag-post">
+  <macrodef name="rel_tag_post">
     <sequential/>
   </macrodef>
 
-  <macrodef name="rel-full-pre">
+  <macrodef name="rel_full_pre">
     <sequential/>
   </macrodef>
 
-  <macrodef name="rel-full-post">
+  <macrodef name="rel_full_post">
+    <sequential/>
+  </macrodef>
+
+  <macrodef name="rel_pre">
+    <sequential/>
+  </macrodef>
+
+  <macrodef name="rel_post">
     <sequential/>
   </macrodef>
 
