@@ -1009,7 +1009,6 @@
   </component>
   <UsedPathMacros>
     <macro name="SAVANT_REPOSITORY" />
-    <macro name="TEMPLATE" />
   </UsedPathMacros>
 </project>
 
