@@ -20,8 +20,8 @@
   <path id="classpath.savant">
     <fileset dir="${dir.plugin.savant}/lib" includes="*.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/java-net-commons-1.4.2.jar"/>
-    <pathelement location="${dir.plugin.savant}/../../libraries/savant-core-2.0-M1.jar"/>
-    <pathelement location="${dir.plugin.savant}/../../libraries/ant-ext-2.0-M1.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/savant-core-2.0-M2.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/ant-ext-2.0-M2.jar"/>
   </path>
 
   <!-- Dependency tasks -->
@@ -38,6 +38,8 @@
   <taskdef name="j2eeclean" classname="net.java.savant.dep.ant.taskdefs.J2EEArtifactCleanTask"
            classpathref="classpath.savant" loaderref="savant"/>
   <taskdef name="publish" classname="net.java.savant.dep.ant.taskdefs.PublishTask" classpathref="classpath.savant"
+           loaderref="savant"/>
+  <taskdef name="checkintegrationbuild" classname="net.java.savant.dep.ant.taskdefs.CheckIntegrationBuildTask" classpathref="classpath.savant"
            loaderref="savant"/>
   <taskdef name="savantinit" classname="net.java.savant.ant.taskdefs.SavantInitTask" classpathref="classpath.savant"
            loaderref="savant"/>

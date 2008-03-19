@@ -281,6 +281,12 @@
     <rel_cleanup/>
   </target>
 
+  <macrodef name="rel_check_project">
+    <sequential>
+      <checkintegrationbuild dependencies="dependencies.project"/>
+    </sequential>
+  </macrodef>
+
   <macrodef name="rel_check_changelog">
     <sequential>
       <echo message="Checking changelog"/>

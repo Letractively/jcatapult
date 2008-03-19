@@ -20,6 +20,7 @@
     <!-- trunk scripts -->
   <target name="rel-snapshot-tag-trunk-script" depends="-scm-init">
     <echo>Executing tag-only snapshot release scripts on trunk...</echo>
+    <rel_check_project/>
     <rel_validate_version type="snapshot"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_check_changelog/>
@@ -30,6 +31,7 @@
 
   <target name="rel-snapshot-full-trunk-script" depends="-scm-init">
     <echo>Executing full snapshot release scripts on trunk...</echo>
+    <rel_check_project/>
     <rel_validate_version type="snapshot"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
     <rel_check_changelog/>
@@ -42,6 +44,7 @@
   <!-- branch scripts -->
   <target name="rel-snapshot-tag-branch-script" depends="-scm-init">
     <echo>Executing tag-only snapshot release scripts on branch...</echo>
+    <rel_check_project/>
     <rel_set_branch_version/>
     <rel_validate_version type="snapshot"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
@@ -53,6 +56,7 @@
 
   <target name="rel-snapshot-full-branch-script" depends="-scm-init">
     <echo>Executing full snapshot release scripts on branch...</echo>
+    <rel_check_project/>
     <rel_set_branch_version/>
     <rel_validate_version type="snapshot"/>
     <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
