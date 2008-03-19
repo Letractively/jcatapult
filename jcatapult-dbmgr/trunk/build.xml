@@ -31,7 +31,12 @@
 
   <!-- Java -->
   <import file="${plugins.dir}/java/1.0/compile.xml"/>
+
+  <!-- Java jar -->
   <import file="${plugins.dir}/java/1.0/jar.xml"/>
+
+  <!-- javadoc -->
+  <import file="${plugins.dir}/javadoc/1.0/javadoc.xml"/>
 
   <!-- JUnit -->
   <import file="${plugins.dir}/junit/1.0/junit.xml"/>
