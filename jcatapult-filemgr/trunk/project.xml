@@ -22,7 +22,7 @@
 
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult.core" value="1.0-M2-{integration}"/>
+  <property name="version.jcatapult.core" value="1.0-M2-IB20080319183430134"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
