@@ -15,12 +15,18 @@
   <!-- Component stuff -->
   <import file="${plugin.dir}/component/1.0/component.xml"/>
 
-  <!-- Java base -->
+  <!-- Java -->
   <import file="${plugin.dir}/java/1.0/compile.xml"/>
+
+  <!-- Java jar -->
   <import file="${plugin.dir}/java/1.0/jar.xml"/>
+
+  <!-- Javadoc -->
+  <import file="${plugin.dir}/javadoc/1.0/javadoc.xml"/>
 
   <!-- Releasing -->
   <import file="${plugin.dir}/release-svn/1.0/jar.xml"/>
+  <import file="${plugin.dir}/release-jcatapult/1.0/release-jcatapult.xml"/>
 
   <!-- Hibernate stuff -->
   <import file="${plugin.dir}/hibernate/1.0/hibernate.xml"/>
