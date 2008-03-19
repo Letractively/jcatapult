@@ -47,6 +47,7 @@
 
   <!-- Release -->
   <import file="${plugins.dir}/release-svn/1.0/jar.xml"/>
+  <import file="${plugins.dir}/release-jcatapult/1.0/release-jcatapult.xml"/>
 
   <!-- IDE -->
   <import file="${plugins.dir}/ide/1.0/ide.xml"/>
