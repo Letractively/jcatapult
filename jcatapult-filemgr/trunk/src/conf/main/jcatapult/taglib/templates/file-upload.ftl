@@ -39,11 +39,11 @@
     class="label"<#t/>
   </#if>
   ><#t/>
-  <#if dynamicAttrs.required?default(false) && dynamicAttrs.requiredposition?default("right") != 'right'>
+  <#if dynamicAttrs.required?default('false') == 'true' && dynamicAttrs.requiredposition?default("right") != 'right'>
   <span class="required">*</span><#t/>
   </#if>
   ${label?html}<#t/>
-  <#if dynamicAttrs.required?default(false) && dynamicAttrs.requiredposition?default("right") == 'right'>
+  <#if dynamicAttrs.required?default('false') == 'true' && dynamicAttrs.requiredposition?default("right") == 'right'>
   <span class="required">*</span><#t/>
   </#if>
   <#if hasFieldErrors>
