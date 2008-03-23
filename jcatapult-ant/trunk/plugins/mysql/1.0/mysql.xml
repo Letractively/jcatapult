@@ -19,7 +19,7 @@
   <dirname property="dir.plugin.mysql" file="${ant.file.mysql}"/>
   <path id="classpath.plugin.mysql">
     <fileset dir="${dir.plugin.mysql}/lib" includes="*.jar"/>
-    <pathelement location="${dir.plugin.mysql}/../../libraries/java-net-commons-1.4.2.jar"/>
+    <pathelement location="${dir.plugin.mysql}/../../libraries/java-net-commons-1.4.4.jar"/>
     <pathelement location="${dir.plugin.mysql}/../../libraries/savant-core-2.0-M2.jar"/>
   </path>
 
