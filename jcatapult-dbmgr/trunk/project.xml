@@ -16,7 +16,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
     name="jcatapult-dbmgr"
     group="jcatapult.org"
-    version="1.0-M2">
+    version="1.0-M3">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
@@ -46,7 +46,7 @@
     <artifactGroup type="run"/>
     <artifactGroup type="compile">
       <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.2" type="jar"/>
+      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
       <artifact group="mysql.com" project="mysql-connector-java" name="mysql-connector-java" version="5.0.7" type="jar"/>
       <artifact group="postgresql.org" project="jdbc3" name="postgresql" version="8.2.506" type="jar"/>
       <artifact group="sun.com" project="jpa" name="jpa" version="1.0" type="jar"/>
