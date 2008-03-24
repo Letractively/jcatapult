@@ -58,7 +58,7 @@ It's highly recommended to create an environment variable that references the My
 
 = The build.properties file =
 == JDK 1.6 Configuration ==
-JCatapult requires a file named build.properties to be created inside your home directory. This file points JCatapult to the location of the JDK for the project. This allows the project to clearly define which JDK it is using, which might be different than JDKs for other applications and the JDK used to run the JCatapult Ant build system. This file should contain entries for each of the JDKs you plan to use. Here is an example:
+jCatapult requires a file named build.properties to be created inside your home directory. This file points jCatapult to the location of the JDK for the project. This allows the project to clearly define which JDK it is using (which might be different for other applications) and the JDK used to run the JCatapult Ant build system. This file should contain entries for each of the JDKs you plan to use. Here is an example:
 
 *Linux/Unix version*
 {{{
@@ -73,7 +73,7 @@ jdk1.6=C:\\Program Files\\Java\\jdk1.6.0_03
 jdk1.5=C:\\Program Files\\Java\\jdk1.5.0_12
 }}}
 
-By default, JCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring JCatapult to use that JDK.
+By default, jCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring jCatapult to use that JDK.
 
 == Database Credential Configuration ==
 In order to successfully create databases for jCatapult projects, jCatapult requires that 2 properties be defined:
