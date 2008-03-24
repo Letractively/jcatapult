@@ -71,7 +71,7 @@ In order to successfully create databases for jCatapult projects, jCatapult requ
   * db.username
   * db.password
 
-Whichever username and password you choose is arbitrary but we recommend that you use the same username as your user home account (using the same username as your home account will make it much easier to access mysql from the shell).  Additionally, you must ensure that the username specified is added to the database and given grant rights over all databases and all tables.
+Whichever username and password you choose is arbitrary but we recommend that you use the same username as your user home account (using the same username as your home account will make it much easier to access mysql from the shell).
 
 Example:  Lets pretend that your user account is 'userX':
 
