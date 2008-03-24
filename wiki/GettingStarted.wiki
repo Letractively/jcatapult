@@ -95,21 +95,7 @@ db.username=userX
 db.password=
 }}}
 
-The last step is to add 'userX' to your mysql database (if they do not yet exist).  You can do this by logging into the mysql client using the default superuser.  The example below uses a default superuser of 'root':
-
-{{{
-mysql -uroot -p mysql
-}}}
-
-the '-p' option tells the mysql client to 'prompt for password' so enter your root password when instructed.  If you don't know it, try empty string.  Some mysql platform distributions ship with a default superuser or 'root' with empty string as password.
-
-Once you log into the client, enter the following sql from the command line to grant all privileges to your userX.
-
-{{{
-mysql> GRANT ALL PRIVILEGES ON *.* TO 'userX'@'localhost' IDENTIFIED BY '' WITH GRANT OPTION;
-
-GRANT ALL PRIVILEGES ON *.* TO 'userX'@'127.0.0.1' IDENTIFIED BY 'some_pass' WITH GRANT OPTION;
-}}}
+The last step is to add 'userX' to your mysql database (if they do not yet exist).  Use the following mysql documentation to help you with adding your new user [ http://dev.mysql.com/doc/refman/5.0/en/adding-users.html Adding New User Accounts to MySQL]
 
 By default, JCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring JCatapult to use that JDK.
 
