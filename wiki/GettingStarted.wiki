@@ -45,7 +45,7 @@ Make sure you provide this implementation after the tomcat plugin import.
 
 = MySQL = 
 
-Currently, JCatapult requires the use of MySQL for projects that use a database. This is currently being worked on to support PostgreSQL and more database will be added soon. For now, you'll need to download and install MySQL 5 or later from http://www.mysql.com.
+Currently, JCatapult requires the use of MySQL for projects that use a database. It's currently in the works to extend this capability to PostfreSQL and more databases will be added soon. For now, you'll need to download and install MySQL 5 or later from http://www.mysql.com.
 
 = The build.properties file =
 
@@ -62,6 +62,53 @@ jdk1.5=/usr/lib/jvm/java-1.5.0-sun
 {{{
 jdk1.6=C:\\Program Files\\Java\\jdk1.6.0_03
 jdk1.5=C:\\Program Files\\Java\\jdk1.5.0_12
+}}}
+
+In order to successfully create databases for jCatapult projects, jCatapult requires that 2 properties be defined:
+
+  * db.username
+  * db.password
+
+Whichever username and password you choose is arbitrary but we recommend that you use the same username as your user home account (using the same username as your home account will make it much easier to access mysql from the shell).  Additionally, you must ensure that the username specified is added to the database and given grant rights over all databases and all tables.
+
+Example:  Lets pretend that your user account is 'userX':
+
+Linux:
+{{{
+/home/userX
+}}}
+
+Mac:
+{{{
+/Users/userX
+}}}
+
+Windows:
+{{{
+C:\Documents and Settings\userX
+}}}
+
+Within your home directory's build.properties file, you'd define db.username and db.password as follows:
+
+{{{
+db.username=userX
+db.password=
+}}}
+
+The last step is to add 'userX' to your mysql database (if they do not yet exist).  You can do this by logging into the mysql client using the default superuser.  The example below uses a default superuser of 'root':
+
+{{{
+mysql -uroot -p mysql
+}}}
+
+the '-p' option tells the mysql client to 'prompt for password' so enter your root password when instructed.  If you don't know it, try empty string.  Some mysql platform distributions ship with a default superuser or 'root' with empty string as password.
+
+Once you log into the client, enter the following sql from the command line to grant all privileges to your userX.
+
+{{{
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'userX'@'localhost' IDENTIFIED BY '' WITH GRANT OPTION;
+
+GRANT ALL PRIVILEGES ON *.* TO 'userX'@'127.0.0.1' IDENTIFIED BY 'some_pass' WITH GRANT OPTION;
 }}}
 
 By default, JCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring JCatapult to use that JDK.
