@@ -3,7 +3,7 @@ package ${servicePackage};
 
 import java.util.List;
 
-import org.jcatapult.test.JPABaseTest;
+import org.jcatapult.test.WebBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ import ${type.fullName};
  *
  * @author Scaffolder
  */
-public class ${type.name}ServiceImplTest extends JPABaseTest {
+public class ${type.name}ServiceImplTest extends WebBaseTest {
     private ${type.name}Service service;
 
     @Inject
