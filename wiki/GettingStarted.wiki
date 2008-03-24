@@ -45,7 +45,7 @@ Make sure you provide this implementation after the tomcat plugin import.
 
 = MySQL = 
 
-Currently, JCatapult requires the use of MySQL for projects that use a database. It's currently in the works to extend this capability to PostfreSQL and more databases will be added soon. For now, you'll need to download and install MySQL 5 or later from http://www.mysql.com.
+Currently, JCatapult requires the use of MySQL for projects that use a database. It's currently in the works to extend this capability to PostgreSQL and more databases will be added soon. For now, you'll need to download and install MySQL 5 or later from http://www.mysql.com.
 
 = The build.properties file =
 
