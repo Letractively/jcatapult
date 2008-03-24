@@ -22,6 +22,7 @@
   <target name="-deploy-local-init"/>
 
   <target name="deploy-local" description="Deploys the application locally" depends="-deploy-local-init">
+    <deploy_local_pre/>
     <copy-config todir="${dir.target.tomcat}" webdir="${dir.web}"/>
 
     <!--
@@ -38,5 +39,6 @@
         <filter token="PASSWORD" value="${db.password}"/>
       </filterset>
     </copy>
+    <deploy_local_post/>
   </target>
 </project>
