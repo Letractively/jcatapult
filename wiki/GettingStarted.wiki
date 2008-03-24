@@ -172,6 +172,20 @@ $ target/tomcat/bin/tomcat.sh start
 
 Now you should be able to access the newly created application in a browser via http://localhost:8080
 
+= IDE Integration =
+
+All jCatapult projects come default with project and module files for both Eclipse and IntelliJ.  This provides the capability for getting projects up and running quickly in either IDE.  To open the 'test-webapp' project, point either Eclipse or IntelliJ to your 'test-webapp' directory and following opening procedures specific to your IDE.
+
+Additionally, When you add new dependencies to your project.xml, all you have to do is type the following command in your project root to have jCatapult refresh your IDE classpath:
+
+{{{
+ant ide
+}}}
+
+After execution, both Eclipse and IntelliJ should prompt you to refresh your project environment.
+
+This feature comes default in every newly created jCatapult project and, specifically, is a script in the jCatapult Ant IDE plugin.
+
 = Next =
 
 Next, we'll cover the [ProjectLayout JCatapult project layout].
