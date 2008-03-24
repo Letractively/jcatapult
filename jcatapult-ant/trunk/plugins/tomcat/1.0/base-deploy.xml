@@ -36,53 +36,61 @@
     </sequential>
   </macrodef>
 
-  <!--<macrodef name="-context-status">-->
-    <!--<attribute name="url"/>-->
-    <!--<attribute name="username"/>-->
-    <!--<attribute name="password"/>-->
-    <!--<attribute name="property"/>-->
-    <!--<sequential>-->
-      <!--<list url="@{url}" outputproperty="@{property}" username="@{username}" password="@{password}"/>-->
+  <macrodef name="deploy_local_pre">
+    <sequential/>
+  </macrodef>
 
-      <!--<condition property="context.running">-->
-        <!--<contains string="${ctx.status}" substring="${project.name}:running"/>-->
-      <!--</condition>-->
-      <!--<condition property="context.stopped">-->
-        <!--<contains string="${ctx.status}" substring="${project.name}:stopped"/>-->
-      <!--</condition>-->
-      <!--<condition property="context.notInstalled">-->
-        <!--<and>-->
-          <!--<isfalse value="${context.running}"/>-->
-          <!--<isfalse value="${context.stopped}"/>-->
-        <!--</and>-->
-      <!--</condition>-->
-      <!--<condition property="context.undeployable">-->
-        <!--<or>-->
-          <!--<istrue value="${context.running}"/>-->
-          <!--<istrue value="${context.stopped}"/>-->
-        <!--</or>-->
-      <!--</condition>-->
-    <!--</sequential>-->
+  <macrodef name="deploy_local_post">
+    <sequential/>
+  </macrodef>
+
+  <!--<macrodef name="-context-status">-->
+  <!--<attribute name="url"/>-->
+  <!--<attribute name="username"/>-->
+  <!--<attribute name="password"/>-->
+  <!--<attribute name="property"/>-->
+  <!--<sequential>-->
+  <!--<list url="@{url}" outputproperty="@{property}" username="@{username}" password="@{password}"/>-->
+
+  <!--<condition property="context.running">-->
+  <!--<contains string="${ctx.status}" substring="${project.name}:running"/>-->
+  <!--</condition>-->
+  <!--<condition property="context.stopped">-->
+  <!--<contains string="${ctx.status}" substring="${project.name}:stopped"/>-->
+  <!--</condition>-->
+  <!--<condition property="context.notInstalled">-->
+  <!--<and>-->
+  <!--<isfalse value="${context.running}"/>-->
+  <!--<isfalse value="${context.stopped}"/>-->
+  <!--</and>-->
+  <!--</condition>-->
+  <!--<condition property="context.undeployable">-->
+  <!--<or>-->
+  <!--<istrue value="${context.running}"/>-->
+  <!--<istrue value="${context.stopped}"/>-->
+  <!--</or>-->
+  <!--</condition>-->
+  <!--</sequential>-->
   <!--</macrodef>-->
 
   <!--<target name="deploy-hot" depends="deploy-local,-context-status"-->
-      <!--description="Hot deploys the application or reloads it">-->
-    <!--<if>-->
-      <!--<equals arg1="${context.running}" arg2="true"/>-->
-      <!--<then>-->
-        <!--<reload url="${mgr.url}" username="tomcat" password="tomcat"-->
-          <!--path="/${ant.project.name}"/>-->
-      <!--</then>-->
-      <!--<else>-->
-        <!--<deploy url="${mgr.url}" username="tomcat" password="tomcat"-->
-          <!--path="/${ant.project.name}" config="${basedir}/target/app/conf/Catalina/localhost/${ant.project.name}.xml"/>-->
-      <!--</else>-->
-    <!--</if>-->
+  <!--description="Hot deploys the application or reloads it">-->
+  <!--<if>-->
+  <!--<equals arg1="${context.running}" arg2="true"/>-->
+  <!--<then>-->
+  <!--<reload url="${mgr.url}" username="tomcat" password="tomcat"-->
+  <!--path="/${ant.project.name}"/>-->
+  <!--</then>-->
+  <!--<else>-->
+  <!--<deploy url="${mgr.url}" username="tomcat" password="tomcat"-->
+  <!--path="/${ant.project.name}" config="${basedir}/target/app/conf/Catalina/localhost/${ant.project.name}.xml"/>-->
+  <!--</else>-->
+  <!--</if>-->
   <!--</target>-->
 
   <!--<target name="undeploy-hot" depends="-context-status" if="context.running"-->
-      <!--description="Hot undeploys the application">-->
-    <!--<undeploy url="${mgr.url}" username="tomcat" password="tomcat"-->
-      <!--path="/${ant.project.name}"/>-->
+  <!--description="Hot undeploys the application">-->
+  <!--<undeploy url="${mgr.url}" username="tomcat" password="tomcat"-->
+  <!--path="/${ant.project.name}"/>-->
   <!--</target>-->
 </project>
