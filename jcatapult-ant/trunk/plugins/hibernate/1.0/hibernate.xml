@@ -46,6 +46,7 @@
 
       <!--<configuration propertyfile="${dir.src.conf.test}/hibernate.properties"/>-->
       <jpaconfiguration persistenceunit="punit"/>
+      <!-- added drop attribute to print out drop sql for tables, indexes, and foriegn keys -->
       <hbm2ddl export="false" outputfilename="tables.sql" format="true" drop="true"/>
     </hibernatetool>
     <table-sql-post/>
