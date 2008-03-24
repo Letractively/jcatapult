@@ -88,7 +88,7 @@ $ $ANT_HOME/tools-jcatapult/makeproject/make-project help
 
 For Windows:
 {{{
-$ %ANT_HOME%/tools-jcatapult/makeproject/make-project help
+$ %ANT_HOME%\tools-jcatapult\makeproject\make-project.bat help
 }}}
 
 Depending on the type of project you are creating, follow the instructions accordingly.  For instance, if you want to create a web application, you'd provide the 'create-webapp' parameter as follows:
@@ -101,7 +101,7 @@ $ $ANT_HOME/tools-jcatapult/makeproject/make-project create-webapp
 
 For Windows:
 {{{
-$ %ANT_HOME%/tools-jcatapult/makeproject/make-project create-webapp
+$ %ANT_HOME%\tools-jcatapult\makeproject\make-project create-webapp
 }}}
 
 This will ask a series of questions. For now, use these responses:
