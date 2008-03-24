@@ -68,15 +68,40 @@ By default, JCatapult uses JDK 6 and therefore we suggest downloading, installin
 
 = Create a project =
 
-In order to test the JCatapult Ant build system and start using JCatapult, create a web application using the create-webapp tool. Here's how:
+jCatapult provides the capability to create 3 different types of jCatapult projects:
+  # Web Application
+  # Library
+  # Component
+
+The jCatapult Ant build system comes standard with a 'make project' tool that uses pre-bundled templates to facilitate the creation of these three types of projects. Below are some basic instructions on how to use the 'make project' tool:
 
   # Change to the directory you want the application created in (i.e $HOME/dev/jcatapult)
-  # Run the create-webapp tool
+  # Run the make-project tool
 
-You don't need to be in the creation directory, but it reduces the typing required. Here is how the create-webapp tool is run:
+You don't need to be in the creation directory, but it reduces the typing required. Here is how to run the make-project tool to access its 'help' screen:
 
+For Unix:
 {{{
-$ ant -f $ANT_HOME/tools-jcatapult/makeproject/build.xml create-webapp
+$ $ANT_HOME/tools-jcatapult/makeproject/make-project.sh help
+}}}
+
+
+For Windows:
+{{{
+$ $ANT_HOME/tools-jcatapult/makeproject/make-project.bat help
+}}}
+
+Depending on the type of project you are creating, follow the instructions accordingly.  For instance, if you want to create a web application, you'd provide the 'create-webapp' parameter as follows:
+
+
+For Unix:
+{{{
+$ $ANT_HOME/tools-jcatapult/makeproject/make-project.sh create-webapp
+}}}
+
+For Windows:
+{{{
+$ $ANT_HOME/tools-jcatapult/makeproject/make-project.bat create-webapp
 }}}
 
 This will ask a series of questions. For now, use these responses:
@@ -84,15 +109,15 @@ This will ask a series of questions. For now, use these responses:
 {{{
     [input] Enter project name
 test-webapp
-    [input] Enter directory to create the project in (the project name will be appended to this directory) [/home/bpontarelli/dev/jcatapult]
-(enter to use default)
+    [input] Enter directory to create the project in or press enter to use the current directory
+(hit enter to create it in the current directory)
     [input] Enter package name that the project will use (i.e. com.example.project)
 org.jcatapult.example.simple
     [input] Enter the group name for the project (i.e. example.com)
 jcatapult.org
 }}}
 
-You should now have JCatapult web application in the current directory named test-webapp. Change into that directory and run the ant build:
+You should now have a JCatapult web application in the current directory named test-webapp. Change into that directory and run the ant build:
 
 {{{
 $ ant clean app
