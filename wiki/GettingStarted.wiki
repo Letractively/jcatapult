@@ -51,8 +51,10 @@ Make sure you provide this implementation after the tomcat plugin import.
 Currently, JCatapult requires the use of MySQL for projects that use a database. It's currently in the works to extend this capability to PostgreSQL and more databases will be added soon. For now, you'll need to download and install MySQL Community or Server version 5 or later from http://www.mysql.com.  It's highly recommended that you use InnoDB for all table schemas but jCatpult supports MyISAM as well.
 
 == Setup and Configuration ==
-  * jCatapult's databasing capabilities currently only work with MySQL's default port setting of 3306.  We recognize that some systems might already have databases configured on this port and, therefore, plan on adding support to configure this setting in the future.
-  * It's also highly recommended to create an environment variable that references the MySQL home directory and adding the mysql home bin directory to your path.  This is optional and not a requirement for jCatapult to function properly but this will make it much easier for you to run the MySQL client from the command line.
+=== Port ===
+jCatapult's databasing capabilities currently only work with MySQL's default port setting of 3306.  We recognize that some systems might already have databases configured on this port and, therefore, plan on adding support to configure this setting in the future.
+=== Environment ===
+It's also highly recommended to create an environment variable that references the MySQL home directory and adding the mysql home bin directory to your path.  This is optional and not a requirement for jCatapult to function properly but this will make it much easier for you to run the MySQL client from the command line.
 
 = The build.properties file =
 == JDK 1.6 Configuration ==
