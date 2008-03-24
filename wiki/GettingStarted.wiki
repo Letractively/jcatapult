@@ -97,7 +97,9 @@ db.username=userX
 db.password=
 }}}
 
-The last step is to add 'userX' to your mysql database (if they do not yet exist).  Use the following mysql documentation to help you with adding your new user [ http://dev.mysql.com/doc/refman/5.0/en/adding-users.html Adding New User Accounts to MySQL]
+The last step is to add 'userX' with password empty string to your mysql database (if they do not yet exist).  Use the following mysql documentation to help you with adding your new user credentials to your mysql datbase [http://dev.mysql.com/doc/refman/5.0/en/adding-users.html Adding New User Accounts to MySQL]
+
+NOTE:  You'll notice that no password (empty string) was specified for our example 'userX'.  Inconjunction with setting your username equal to your user home account, providing empty string as your password will expedite accessing the mysql client from the command line.  Once your user is added, you'll only have to type 'mysql' to access your mysql client rather than having to provide both the username and password. 
 
 = Create a project =
 
