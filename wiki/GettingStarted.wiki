@@ -184,7 +184,7 @@ ant ide
 
 After execution, both Eclipse and IntelliJ should prompt you to refresh your project environment.
 
-To view what other ant targets available to you by default, type the following command from your project root:
+To view what other ant targets are available to you by default, type the following command from your project root:
 
 {{{
 ant -p
