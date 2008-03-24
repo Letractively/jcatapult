@@ -64,6 +64,8 @@ jdk1.6=C:\\Program Files\\Java\\jdk1.6.0_03
 jdk1.5=C:\\Program Files\\Java\\jdk1.5.0_12
 }}}
 
+By default, JCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring JCatapult to use that JDK.
+
 In order to successfully create databases for jCatapult projects, jCatapult requires that 2 properties be defined:
 
   * db.username
@@ -96,8 +98,6 @@ db.password=
 }}}
 
 The last step is to add 'userX' to your mysql database (if they do not yet exist).  Use the following mysql documentation to help you with adding your new user [ http://dev.mysql.com/doc/refman/5.0/en/adding-users.html Adding New User Accounts to MySQL]
-
-By default, JCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring JCatapult to use that JDK.
 
 = Create a project =
 
