@@ -26,7 +26,22 @@ svn co http://jcatapult.googlecode.com/svn/jcatapult-ant/trunk/tools tools-jcata
 
 Currently, JCatapult requires the use of Tomcat 5.5 or later for running applications in development. This will change in the future to support Jetty and many other application servers. For now, you will need to download Apache Tomcat from http://tomcat.apache.org. Tomcat requires that you configure the CATALINA_HOME environment variable to point to the Tomcat installation directory and this must also be set to use JCatapult.
 
+jCatapult assumes your webapp will require the use of SSL and as a result sets the 8443 connector by default in the jCatault Ant Tomcat-plugin server.xml file.  You must run the java keytool app in your user home to create the .keystore file if you haven't yet done so.  Refer to the tomcat [http://tomcat.apache.org/tomcat-5.5-doc/ssl-howto.html SSL Configuration HOW-TO] to create your .keystore file successfully.
+
+If your webapp does not require an SSL connection, then you can override the default server.xml by providing your own in your project without the 8443 connector and implementing the tomcat plugin's deploy_local_post macrodef inside your project's build.xml.  An example implementation has been provided below and assumes you will be overriding the default server.xml with one in your project located at deploy/tomcat/main/conf/server.xml
+
+{{{
+<macrodef name="deploy_local_post">
+    <sequential>
+      <copy file="deploy/tomcat/main/conf/server.xml" todir="${dir.target.tomcat}/conf" overwrite="true"/>
+    </sequential>
+</macrodef>
+}}}
+
+Make sure you provide this implementation after the tomcat plugin import.
+
 *NOTE FOR WINDOWS USERS:* JCatapult requires that you install Tomcat using the non-service based installation. Running Tomcat as a Windows service will not work with JCatapult. You must use the ZIP file installation of Tomcat to work with JCatapult.
+
 
 = MySQL = 
 
