@@ -24,8 +24,10 @@ svn co http://jcatapult.googlecode.com/svn/jcatapult-ant/trunk/tools tools-jcata
 
 = Tomcat =
 
+== Installation ==
 Currently, JCatapult requires the use of Tomcat 5.5 or later for running applications in development. This will change in the future to support Jetty and many other application servers. For now, you will need to download Apache Tomcat from http://tomcat.apache.org. Tomcat requires that you configure the CATALINA_HOME environment variable to point to the Tomcat installation directory and this must also be set to use JCatapult.
 
+== SSL Configuration ==
 jCatapult assumes your webapp will require the use of SSL and as a result sets the 8443 connector by default in the jCatault Ant Tomcat-plugin server.xml file.  You must run the java keytool app in your user home to create the .keystore file if you haven't yet done so.  Refer to the tomcat [http://tomcat.apache.org/tomcat-5.5-doc/ssl-howto.html SSL Configuration HOW-TO] to create your .keystore file successfully.
 
 If your webapp does not require an SSL connection, then you can override the default server.xml by providing your own in your project without the 8443 connector and implementing the tomcat plugin's deploy_local_post macrodef inside your project's build.xml.  An example implementation has been provided below and assumes you will be overriding the default server.xml with one in your project located at deploy/tomcat/main/conf/server.xml
@@ -53,7 +55,7 @@ Currently, JCatapult requires the use of MySQL for projects that use a database.
   * It's also highly recommended to create an environment variable that references the MySQL home directory and adding the mysql home bin directory to your path.  This is optional and not a requirement for jCatapult to function properly but this will make it much easier for you to run the MySQL client from the command line.
 
 = The build.properties file =
-
+== JDK 1.6 Configuration ==
 JCatapult requires a file named build.properties to be created inside your home directory. This file points JCatapult to the location of the JDK for the project. This allows the project to clearly define which JDK it is using, which might be different than JDKs for other applications and the JDK used to run the JCatapult Ant build system. This file should contain entries for each of the JDKs you plan to use. Here is an example:
 
 *Linux/Unix version*
@@ -71,6 +73,7 @@ jdk1.5=C:\\Program Files\\Java\\jdk1.5.0_12
 
 By default, JCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring JCatapult to use that JDK.
 
+== Database Credential Configuration ==
 In order to successfully create databases for jCatapult projects, jCatapult requires that 2 properties be defined:
 
   * db.username
