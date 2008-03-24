@@ -184,7 +184,13 @@ ant ide
 
 After execution, both Eclipse and IntelliJ should prompt you to refresh your project environment.
 
-This feature comes default in every newly created jCatapult project and, specifically, is a script in the jCatapult Ant IDE plugin.
+This feature comes default in every newly created jCatapult project and, specifically, is an Ant target within the jCatapult Ant IDE plugin.
+
+To view what other ant targets available to you by default, type the following command from your project root:
+
+{{{
+ant -p
+}}} 
 
 = Next =
 
