@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# get args
+# get args and count
 args=("$@")
+argsSize=${#args[@]}
 
 # ensure ANT_HOME is defined in environment
 if [ -z $ANT_HOME ]; then
@@ -13,7 +14,7 @@ fi
 dir=$ANT_HOME/tools-jcatapult/makeproject
 
 # ensure arg length is not zero or handle 'help'.  print helpful message
-if [ ${#args[@]} -eq 0 -o ${args[0]} = "help" ]; then
+if [[ $argsSize -eq 0 || ${args[0]} = "help" ]]; then
   echo "info:  make-project is a shell script that provides a convenient execution wrapper to the jCatapult Ant tools makeproject suite."
   echo "usage: make-project <ant target>"
   echo
