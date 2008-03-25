@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deploy xmlns="http://www.jcatapult.org/schemas/deploy"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.jcatapult.org/schemas/deploy deploy.xsd">
+  <server platform="unix" host="demo.jcatapult.org" description="Demo Server" username="jcatapult-demo" password="jcatapult-demo">
+    <environment type="staging">
+      <homeDir>/home/jcatapult-demo</homeDir>
+      <workDir>dev/work</workDir>
+      <fileDir>dev/files</fileDir>
+      <webDir>dev/apache-tomcat-5.5.26/webapps/ROOT</webDir>
+      <dbName>jcatapult-demo</dbName>
+      <dbUsername>jcatapult-demo</dbUsername>
+      <dbPassword>jcatapult-demo</dbPassword>
+    </environment>
+  </server>
+</deploy>
