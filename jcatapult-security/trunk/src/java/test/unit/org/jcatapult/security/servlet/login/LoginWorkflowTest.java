@@ -25,6 +25,7 @@ import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.security.login.InvalidUsernameException;
 import org.jcatapult.security.login.LoginService;
+import org.jcatapult.security.config.DefaultSecurityConfiguration;
 import org.jcatapult.servlet.WorkflowChain;
 import org.junit.Test;
 
@@ -52,7 +53,7 @@ public class LoginWorkflowTest {
         wc.doWorkflow(req, null);
         EasyMock.replay(wc);
 
-        LoginWorkflow lw = new LoginWorkflow(null, c, null, null);
+        LoginWorkflow lw = new LoginWorkflow(null, new DefaultSecurityConfiguration(c), null, null);
         lw.perform(req, null, wc);
 
         EasyMock.verify(c, req, wc);
@@ -86,7 +87,7 @@ public class LoginWorkflowTest {
         plh.handle(req, null, wc);
         EasyMock.replay(plh);
 
-        LoginWorkflow lw = new LoginWorkflow(ls, c, null, plh);
+        LoginWorkflow lw = new LoginWorkflow(ls, new DefaultSecurityConfiguration(c), null, plh);
         lw.perform(req, null, wc);
 
         EasyMock.verify(c, req, wc, ls, plh);
@@ -120,7 +121,7 @@ public class LoginWorkflowTest {
         leh.handle(exception, req, null, wc);
         EasyMock.replay(leh);
 
-        LoginWorkflow lw = new LoginWorkflow(ls, c, leh, null);
+        LoginWorkflow lw = new LoginWorkflow(ls, new DefaultSecurityConfiguration(c), leh, null);
         lw.perform(req, null, wc);
 
         EasyMock.verify(c, req, wc, ls, leh);

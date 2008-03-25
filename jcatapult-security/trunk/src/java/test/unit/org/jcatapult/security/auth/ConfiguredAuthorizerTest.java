@@ -21,6 +21,7 @@ import java.util.Set;
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.security.UserAdapter;
+import org.jcatapult.security.config.DefaultSecurityConfiguration;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class ConfiguredAuthorizerTest {
         Object user2 = new Object();
         UserAdapter ua = makeUserAdapter(user, user2, "admin");
         Configuration c = makeConfiguration("/admin=admin");
-        ConfiguredAuthorizer ca = new ConfiguredAuthorizer(ua, c);
+        ConfiguredAuthorizer ca = new ConfiguredAuthorizer(ua, new DefaultSecurityConfiguration(c));
         ca.authorize(user, "/admin");
         ca.authorize(user, "/admin2"); // not a restricted url
         ca.authorize(user, "/admin/resource"); // not a restricted url
@@ -81,7 +82,7 @@ public class ConfiguredAuthorizerTest {
         Object user2 = new Object();
         UserAdapter ua = makeUserAdapter(user, user2, "admin");
         Configuration c = makeConfiguration("/admin*=admin");
-        ConfiguredAuthorizer ca = new ConfiguredAuthorizer(ua, c);
+        ConfiguredAuthorizer ca = new ConfiguredAuthorizer(ua, new DefaultSecurityConfiguration(c));
         ca.authorize(user, "/admin");
         ca.authorize(user, "/admin2");
         ca.authorize(user, "/admin/resource"); // not restricted
@@ -138,7 +139,7 @@ public class ConfiguredAuthorizerTest {
         Object user2 = new Object();
         UserAdapter ua = makeUserAdapter(user, user2, "admin");
         Configuration c = makeConfiguration("/admin/*=admin");
-        ConfiguredAuthorizer ca = new ConfiguredAuthorizer(ua, c);
+        ConfiguredAuthorizer ca = new ConfiguredAuthorizer(ua, new DefaultSecurityConfiguration(c));
         ca.authorize(user, "/admin"); // Not restricted
         ca.authorize(user, "/admin2"); // Not restricted
         ca.authorize(user, "/admin/resource");
@@ -179,7 +180,7 @@ public class ConfiguredAuthorizerTest {
         Object user2 = new Object();
         UserAdapter ua = makeUserAdapter(user, user2, "admin");
         Configuration c = makeConfiguration("/admin**=admin");
-        ConfiguredAuthorizer ca = new ConfiguredAuthorizer(ua, c);
+        ConfiguredAuthorizer ca = new ConfiguredAuthorizer(ua, new DefaultSecurityConfiguration(c));
         ca.authorize(user, "/admin");
         ca.authorize(user, "/admin2");
         ca.authorize(user, "/admin/resource");

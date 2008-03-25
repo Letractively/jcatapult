@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.security.auth.AuthorizationException;
-import org.jcatapult.security.servlet.login.DefaultLoginExceptionHandler;
+import org.jcatapult.security.config.DefaultSecurityConfiguration;
 import org.jcatapult.servlet.WorkflowChain;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -66,7 +66,7 @@ public class DefaultAuthorizationExceptionHandlerTest {
             }
         };
 
-        DefaultAuthorizationExceptionHandler dleh = new DefaultAuthorizationExceptionHandler(c);
+        DefaultAuthorizationExceptionHandler dleh = new DefaultAuthorizationExceptionHandler(new DefaultSecurityConfiguration(c));
         dleh.handle(exception, req, res, wc);
         assertTrue(called.get());
         EasyMock.verify(c, req, res);

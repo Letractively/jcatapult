@@ -21,8 +21,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.configuration.Configuration;
 import org.jcatapult.security.auth.AuthorizationException;
+import org.jcatapult.security.config.SecurityConfiguration;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 import org.jcatapult.servlet.WorkflowChain;
 
@@ -46,8 +46,8 @@ public class DefaultAuthorizationExceptionHandler implements AuthorizationExcept
     private final String notAuthorizedURL;
 
     @Inject
-    public DefaultAuthorizationExceptionHandler(Configuration configuration) {
-        this.notAuthorizedURL = configuration.getString("jcatapult.security.authorization.restricted-uri", "/not-authorized");
+    public DefaultAuthorizationExceptionHandler(SecurityConfiguration configuration) {
+        this.notAuthorizedURL = configuration.getRestrictedURI();
     }
 
     public void handle(AuthorizationException exception, ServletRequest request, ServletResponse response,
