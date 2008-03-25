@@ -93,7 +93,10 @@
           </exec>
         </then>
         <else>
-          <symlink link="@{link}" resource="@{resource}" overwrite="true"/>
+          <echo message="ln -s @{resource} @{link}"/>
+          <exec executable="ln">
+            <arg line="-s @{resource} @{link}"/>
+          </exec>
         </else>
       </if>
     </sequential>
@@ -115,7 +118,9 @@
           </exec>
         </then>
         <else>
-          <symlink action="delete" link="@{link}" failonerror="@{failonerror}"/>
+          <exec executable="rm">
+            <arg line="@{link}"/>
+          </exec>
         </else>
       </if>
     </sequential>
