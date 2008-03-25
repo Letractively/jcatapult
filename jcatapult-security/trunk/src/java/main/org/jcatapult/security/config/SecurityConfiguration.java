@@ -15,6 +15,8 @@
  */
 package org.jcatapult.security.config;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This interface defines the configuration parameters for the JCatapult Security
@@ -76,6 +78,7 @@ package org.jcatapult.security.config;
  *
  * @author  Brian Pontarelli
  */
+@ImplementedBy(DefaultSecurityConfiguration.class)
 public interface SecurityConfiguration {
     /**
      * @return  The password encryption salt.
