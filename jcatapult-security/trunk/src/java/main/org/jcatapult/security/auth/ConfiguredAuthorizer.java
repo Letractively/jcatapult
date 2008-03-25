@@ -100,7 +100,7 @@ public class ConfiguredAuthorizer implements Authorizer {
                 uri = uri.substring(0, uri.length() - 1);
             }
 
-            String[] roles = parts[1].split(",");
+            String[] roles = parts[1].split(" ");
             ResourceAuth resourceAuth = new ResourceAuth(uri, wildCard, subWildCard, new HashSet<String>(Arrays.asList(roles)));
             resourceAuths.add(resourceAuth);
         }
