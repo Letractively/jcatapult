@@ -23,113 +23,40 @@
   </path>
   <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="classpath.plugin.compile"/>
 
-  <target name="compile" depends="compile-main,compile-test" description="Compiles the main and test Groovy classes"/>
-
-  <target name="-compile-init-main">
-    <mkdir dir="${dir.target.classes.main}"/>
-    <!--
-      Fetch artifacts but DON'T grab transitive dependencies because this should be explicitly the
-      artifacts that are required to compile this project and NOT transitive deps.
-    -->
-    <dependencypath pathid="classpath.compile.main" types="compile-only,compile,domains" transitive="false"
-                    workflow="workflow.project" dependencies="dependencies.project"/>
-  </target>
-
-  <target name="-compile-init-test">
-    <mkdir dir="${dir.target.classes.test}"/>
-    <!--
-      Fetch artifacts but DON'T grab transitive dependencies because this should be explicitly the
-      artifacts that are required to compile this project and NOT transitive deps.
-    -->
-    <dependencypath pathid="classpath.compile.test" types="compile-only,compile,test-compile,domains"
-                    transitive="false" workflow="workflow.project" dependencies="dependencies.project"/>
-  </target>
-
-  <target name="-compile-main-conf" if="dir.src.conf.main">
-    <copy todir="${dir.target.classes.main}" failonerror="false">
-      <fileset dir="${dir.src.conf.main}">
-        <include name="**/*"/>
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="compile-main" depends="-compile-init-main,-compile-main-conf"
-          description="Compiles the main Java and Groovy files">
-    <compile-main-pre/>
-    <javac srcdir="${dir.src.java.main}" destdir="${dir.target.classes.main}" debug="true"
-           deprecation="true" includeantruntime="false" fork="true" executable="${jdk.project}/bin/javac">
-      <classpath>
-        <path refid="classpath.compile.main"/>
-      </classpath>
-    </javac>
-    <groovyc srcdir="${dir.src.groovy.main}" destdir="${dir.target.classes.main}">
-      <classpath>
-        <path refid="classpath.compile.main"/>
-        <path location="${dir.target.classes.main}"/>
-      </classpath>
-    </groovyc>
-    <copy todir="${dir.target.classes.main}">
-      <fileset dir="${dir.src.groovy.main}">
-        <exclude name="**/*.groovy"/>
-      </fileset>
-    </copy>
-    <compile-main-post/>
-  </target>
-
-  <target name="-compile-test-conf" if="dir.src.conf.test">
-    <copy todir="${dir.target.classes.test}" failonerror="false">
-      <fileset dir="${dir.src.conf.test}">
-        <include name="**/*"/>
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="compile-test" depends="-compile-init-test,-compile-test-conf"
-          description="Compiles the test Java files">
-    <compile-test-pre/>
-    <javac srcdir="${dir.src.java.test}" destdir="${dir.target.classes.test}" debug="true"
-           deprecation="true" includeantruntime="false" fork="true" executable="${jdk.project}/bin/javac">
-      <classpath>
-        <path refid="classpath.compile.test"/>
-        <path location="${dir.target.classes.main}"/>
-      </classpath>
-    </javac>
-    <groovyc srcdir="${dir.src.groovy.test}" destdir="${dir.target.classes.test}">
-      <classpath>
-        <path refid="classpath.compile.test"/>
-        <path location="${dir.target.classes.main}"/>
-        <path location="${dir.target.classes.test}"/>
-      </classpath>
-    </groovyc>
-    <copy todir="${dir.target.classes.test}">
-      <fileset dir="${dir.src.groovy.test}">
-        <exclude name="**/*.groovy"/>
-      </fileset>
-    </copy>
-    <compile-test-post/>
-  </target>
-
-  <!-- Pre process for overriding -->
-  <macrodef name="compile-main-pre">
-    <sequential>
-    </sequential>
-  </macrodef>
-
-  <!-- Pre process for overriding -->
-  <macrodef name="compile-test-pre">
-    <sequential>
-    </sequential>
-  </macrodef>
-
-  <!-- Post process for overriding -->
   <macrodef name="compile-main-post">
     <sequential>
+      <groovyc srcdir="${dir.src.groovy.main}" destdir="${dir.target.classes.main}">
+        <classpath>
+          <path refid="classpath.compile.main"/>
+          <path location="${dir.target.classes.main}"/>
+        </classpath>
+      </groovyc>
     </sequential>
   </macrodef>
 
-  <!-- Post process for overriding -->
-  <macrodef name="compile-test-post">
+  <macrodef name="compile-test-unit-post">
     <sequential>
+      <groovyc srcdir="${dir.src.groovy.test.unit}" destdir="${dir.target.classes.test.unit}">
+        <classpath>
+          <path refid="classpath.compile.test"/>
+          <path location="${dir.target.classes.main}"/>
+          <path location="${dir.target.classes.test.unit}"/>
+          <path location="${dir.target.classes.test.integration}"/>
+        </classpath>
+      </groovyc>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="compile-test-integration-post">
+    <sequential>
+      <groovyc srcdir="${dir.src.groovy.test.integration}" destdir="${dir.target.classes.test.integration}">
+        <classpath>
+          <path refid="classpath.compile.test"/>
+          <path location="${dir.target.classes.main}"/>
+          <path location="${dir.target.classes.test.unit}"/>
+          <path location="${dir.target.classes.test.integration}"/>
+        </classpath>
+      </groovyc>
     </sequential>
   </macrodef>
 </project>
