@@ -29,6 +29,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.config.DefaultSecurityConfiguration;
 import org.jcatapult.security.auth.NotLoggedInException;
 import org.jcatapult.security.saved.DefaultSavedRequestService;
 import org.jcatapult.security.saved.SavedHttpRequest;
@@ -71,7 +72,7 @@ public class SavedRequestWorkflowTest {
         wc.doWorkflow(req, res);
         EasyMock.replay(wc);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(c, new DefaultSavedRequestService());
+        SavedRequestWorkflow srw = new SavedRequestWorkflow(new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.perform(req, res, wc);
         EasyMock.verify(c, req, res, session);
     }
@@ -104,7 +105,7 @@ public class SavedRequestWorkflowTest {
         provider.login(new Object());
         SecurityContext.setProvider(provider);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(c, new DefaultSavedRequestService());
+        SavedRequestWorkflow srw = new SavedRequestWorkflow(new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.perform(req, res, wc);
         EasyMock.verify(c, req, res, session);
     }
@@ -138,7 +139,7 @@ public class SavedRequestWorkflowTest {
             }
         };
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(c, new DefaultSavedRequestService());
+        SavedRequestWorkflow srw = new SavedRequestWorkflow(new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.handle(req, res, wc);
         assertTrue(called.get());
         EasyMock.verify(c, req, res, session);
@@ -167,7 +168,7 @@ public class SavedRequestWorkflowTest {
         res.sendRedirect("/context/foo");
         EasyMock.replay(res);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(c, new DefaultSavedRequestService());
+        SavedRequestWorkflow srw = new SavedRequestWorkflow(new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.handle(req, res, null);
         EasyMock.verify(c, req, res, session);
     }
@@ -194,7 +195,7 @@ public class SavedRequestWorkflowTest {
         res.sendRedirect("/context/foo");
         EasyMock.replay(res);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(c, new DefaultSavedRequestService());
+        SavedRequestWorkflow srw = new SavedRequestWorkflow(new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.handle(req, res, null);
         EasyMock.verify(c, req, res, session);
     }
@@ -232,7 +233,7 @@ public class SavedRequestWorkflowTest {
             }
         };
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(c, new DefaultSavedRequestService());
+        SavedRequestWorkflow srw = new SavedRequestWorkflow(new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.handle(new NotLoggedInException(), req, res, wc);
         EasyMock.verify(c, req, res, session);
         assertTrue(called.get());
@@ -271,7 +272,7 @@ public class SavedRequestWorkflowTest {
             }
         };
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(c, new DefaultSavedRequestService());
+        SavedRequestWorkflow srw = new SavedRequestWorkflow(new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.handle(new NotLoggedInException(), req, res, wc);
         EasyMock.verify(c, req, res, session);
         assertTrue(called.get());

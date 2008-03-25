@@ -21,8 +21,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.configuration.Configuration;
 import org.jcatapult.security.JCatapultSecurityException;
+import org.jcatapult.security.config.SecurityConfiguration;
 import org.jcatapult.security.login.LoginService;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
@@ -47,14 +47,14 @@ public class LoginWorkflow implements Workflow {
     private final String passwordParameter;
 
     @Inject
-    public LoginWorkflow(LoginService loginService, Configuration configuration,
+    public LoginWorkflow(LoginService loginService, SecurityConfiguration configuration,
             LoginExceptionHandler exceptionHandler, PostLoginHandler loginHandler) {
         this.loginService = loginService;
         this.exceptionHandler = exceptionHandler;
         this.loginHandler = loginHandler;
-        this.loginURI = configuration.getString("jcatapult.security.login.submit-uri", "/jcatapult-security-check");
-        this.userNameParameter = configuration.getString("jcatapult.security.login.username-parameter", "j_username");
-        this.passwordParameter = configuration.getString("jcatapult.security.login.password-parameter", "j_password");
+        this.loginURI = configuration.getLoginURI();
+        this.userNameParameter = configuration.getUsernameParameter();
+        this.passwordParameter = configuration.getPasswordParameter();
     }
 
     public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)

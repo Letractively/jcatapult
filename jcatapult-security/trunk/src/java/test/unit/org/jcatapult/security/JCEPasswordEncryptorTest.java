@@ -19,6 +19,7 @@ import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.jcatapult.security.config.DefaultSecurityConfiguration;
 
 /**
  * <p>
@@ -39,7 +40,7 @@ public class JCEPasswordEncryptorTest {
         EasyMock.expect(c.getString("jcatapult.security.password-encryptor.algorithm", "MD5")).andReturn("MD5");
         EasyMock.replay(c);
 
-        JCEPasswordEncryptor encryptor = new JCEPasswordEncryptor(ss, c);
+        JCEPasswordEncryptor encryptor = new JCEPasswordEncryptor(ss, new DefaultSecurityConfiguration(c));
         String result = encryptor.encryptPassword("test", null);
         assertEquals("FQZx56X7is5YqqAS3n+bXA==", result);
     }
@@ -56,7 +57,7 @@ public class JCEPasswordEncryptorTest {
         EasyMock.expect(c.getString("jcatapult.security.password-encryptor.algorithm", "MD5")).andReturn("MD5");
         EasyMock.replay(c);
 
-        JCEPasswordEncryptor encryptor = new JCEPasswordEncryptor(ss, c);
+        JCEPasswordEncryptor encryptor = new JCEPasswordEncryptor(ss, new DefaultSecurityConfiguration(c));
         String result = encryptor.encryptPassword("test", user);
         assertEquals("FQZx56X7is5YqqAS3n+bXA==", result);
     }

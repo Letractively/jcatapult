@@ -21,8 +21,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.configuration.Configuration;
 import org.jcatapult.security.JCatapultSecurityException;
+import org.jcatapult.security.config.SecurityConfiguration;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 import org.jcatapult.servlet.WorkflowChain;
 
@@ -51,8 +51,8 @@ public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
     private final String failedLoginURI;
 
     @Inject
-    public DefaultLoginExceptionHandler(Configuration configuration) {
-        this.failedLoginURI = configuration.getString("jcatapult.security.login.failed-uri", "/login-failed");
+    public DefaultLoginExceptionHandler(SecurityConfiguration configuration) {
+        this.failedLoginURI = configuration.getLoginFailedURI();
     }
 
     /**

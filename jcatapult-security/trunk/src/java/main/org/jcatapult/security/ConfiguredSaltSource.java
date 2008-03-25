@@ -15,17 +15,17 @@
  */
 package org.jcatapult.security;
 
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.security.config.SecurityConfiguration;
 
 import com.google.inject.Inject;
 
 /**
  * <p>
  * This class implements the SaltSource interface and provides a simple static
- * salt source using the configuration property named <code>jcatapult.security.saltSource.salt</code>.
+ * salt source using the configuration property named <code>jcatapult.security.salt</code>.
  * If the salt is not configured, this returns <b>jcatapult</b> as a simple salt
  * that can be used during development. You should always change the salt source
  * before going to production.
@@ -40,10 +40,10 @@ import com.google.inject.Inject;
  */
 public class ConfiguredSaltSource implements SaltSource {
     private static final Logger logger = Logger.getLogger(ConfiguredSaltSource.class.getName());
-    private final Configuration configuration;
+    private final SecurityConfiguration configuration;
 
     @Inject
-    public ConfiguredSaltSource(Configuration configuration) {
+    public ConfiguredSaltSource(SecurityConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -51,7 +51,7 @@ public class ConfiguredSaltSource implements SaltSource {
      * {@inheritDoc}
      */
     public String getSalt() {
-        String salt = configuration.getString("jcatapult.security.salt", "jcatapult");
+        String salt = configuration.getSalt();
         if (logger.isLoggable(Level.FINEST)) {
             logger.finest("jCatapult Security using salt source [" + salt + "]");
         }

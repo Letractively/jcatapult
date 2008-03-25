@@ -19,6 +19,7 @@ import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.jcatapult.security.config.DefaultSecurityConfiguration;
 
 /**
  * <p>
@@ -34,7 +35,7 @@ public class ConfiguredSaltSourceTest {
         EasyMock.expect(c.getString("jcatapult.security.salt", "jcatapult")).andReturn("jcatapult");
         EasyMock.replay(c);
 
-        ConfiguredSaltSource ss = new ConfiguredSaltSource(c);
+        ConfiguredSaltSource ss = new ConfiguredSaltSource(new DefaultSecurityConfiguration(c));
         assertEquals("jcatapult", ss.getSalt());
     }
 
@@ -44,7 +45,7 @@ public class ConfiguredSaltSourceTest {
         EasyMock.expect(c.getString("jcatapult.security.salt", "jcatapult")).andReturn("foo");
         EasyMock.replay(c);
 
-        ConfiguredSaltSource ss = new ConfiguredSaltSource(c);
+        ConfiguredSaltSource ss = new ConfiguredSaltSource(new DefaultSecurityConfiguration(c));
         assertEquals("foo", ss.getSalt());
     }
 }

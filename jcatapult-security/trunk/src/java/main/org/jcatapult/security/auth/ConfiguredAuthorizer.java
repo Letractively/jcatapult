@@ -15,15 +15,15 @@
  */
 package org.jcatapult.security.auth;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import org.jcatapult.security.UserAdapter;
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.security.config.SecurityConfiguration;
 
 import com.google.inject.Inject;
 
@@ -36,7 +36,7 @@ import com.google.inject.Inject;
  * </p>
  *
  * <pre>
- * jcatapult.security.authorization
+ * jcatapult.security.authorization.rules
  * </pre>
  *
  * <p>
@@ -80,9 +80,9 @@ public class ConfiguredAuthorizer implements Authorizer {
     private final List<ResourceAuth> resourceAuths = new ArrayList<ResourceAuth>();
 
     @Inject
-    public ConfiguredAuthorizer(UserAdapter userAdapter, Configuration configuration) {
+    public ConfiguredAuthorizer(UserAdapter userAdapter, SecurityConfiguration configuration) {
         this.userAdapter = userAdapter;
-        String[] rules = configuration.getString("jcatapult.security.authorization.rules", "/admin**=admin").trim().split("\n");
+        String[] rules = configuration.getAuthorizationRules().trim().split("\n");
         for (String rule : rules) {
             String[] parts = rule.trim().split("=");
             if (parts.length != 2) {

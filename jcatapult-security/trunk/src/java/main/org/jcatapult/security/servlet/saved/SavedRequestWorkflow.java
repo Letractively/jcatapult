@@ -22,8 +22,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.configuration.Configuration;
 import org.jcatapult.security.auth.NotLoggedInException;
+import org.jcatapult.security.config.SecurityConfiguration;
 import org.jcatapult.security.saved.SavedRequestService;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 import static org.jcatapult.security.servlet.ServletTools.*;
@@ -72,9 +72,9 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
     private final SavedRequestService savedRequestService;
 
     @Inject
-    public SavedRequestWorkflow(Configuration configuration, SavedRequestService savedRequestService) {
-        this.notLoggedInURI = configuration.getString("jcatapult.security.authorization.not-logged-in-uri", "/not-logged-in");
-        this.successfulLoginURI = configuration.getString("jcatapult.security.login.success-uri", "/login-success");
+    public SavedRequestWorkflow(SecurityConfiguration configuration, SavedRequestService savedRequestService) {
+        this.notLoggedInURI = configuration.getNotLoggedInURI();
+        this.successfulLoginURI = configuration.getLoginSuccessURI();
         this.savedRequestService = savedRequestService;
     }
 

@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.security.config.SecurityConfiguration;
 
 import com.google.inject.Inject;
 
@@ -52,10 +52,10 @@ public class JCEPasswordEncryptor implements PasswordEncryptor<Object> {
     private final String algorithm;
 
     @Inject
-    public JCEPasswordEncryptor(SaltSource saltSource, Configuration configuration) {
+    public JCEPasswordEncryptor(SaltSource saltSource, SecurityConfiguration configuration) {
         this.saltSource = saltSource;
-        this.encodeBase64 = configuration.getBoolean("jcatapult.security.password-encryptor.encode-base-64", true);
-        this.algorithm = configuration.getString("jcatapult.security.password-encryptor.algorithm", "MD5");
+        this.encodeBase64 = configuration.isBase64Encoded();
+        this.algorithm = configuration.getAlgorithm();
     }
 
     /**
