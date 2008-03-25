@@ -28,4 +28,31 @@
 
   <!-- IDE -->
   <import file="${plugin.dir}/ide/1.0/ide.xml"/>
+
+  <!-- IDE -->
+  <import file="${plugin.dir}/jaxws/1.0/jaxws.xml"/>
+
+  <target name="xjc-deploy" description="Generates JAXB code from the deploy schema">
+    <xjc destdir="${dir.src.java.main}" schema="src/xsd/deploy.xsd" package="org.jcatapult.deployment.domain.jaxb"/>
+  </target>
+
+  <macrodef name="jar-post">
+    <sequential>
+      <copy todir="target/dist/bin">
+        <fileset dir="src/script/main" includes="**/*"/>
+      </copy>
+      <chmod perm="+x" file="target/dist/bin/deploy"/>
+
+      <copy todir="target/dist/lib">
+        <fileset dir="target/jars" includes="**/*" excludes="**/*src*"/>
+      </copy>
+      <artifactcopy todir="target/dist/lib" flatten="true" dependencies="dependencies.project"
+                    workflow="workflow.project" types="compile,run">
+      </artifactcopy>
+
+      <zip zipfile="${dir.target}/${project.name}-${project.version}.zip">
+        <fileset dir="${dir.target}/dist" includes="**/*"/>
+      </zip>
+    </sequential>
+  </macrodef>
 </project>

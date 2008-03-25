@@ -14,7 +14,17 @@
 
   <dependencies id="dependencies.project">
     <artifactGroup type="run"/>
-    <artifactGroup type="compile"/>
+    <artifactGroup type="compile">
+      <!-- di -->
+      <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
+
+      <!-- jc core -->
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-M2" type="jar"/>
+
+      <!-- cli -->
+      <artifact group="commons.apache.org" project="commons-cli" name="commons-cli" version="1.1" type="jar"/>
+      <artifact group="sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
+    </artifactGroup>
     <artifactGroup type="test-run"/>
     <artifactGroup type="test-compile">
       <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
