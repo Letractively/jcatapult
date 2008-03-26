@@ -36,6 +36,7 @@
 <#include "/${parameters.templateDir}/semantic/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/semantic/common-attributes.ftl" />
 />
+<#include "/${parameters.templateDir}/semantic/fieldfooter.ftl" />
 <#else>
   <a href="${fileURI}">Click to View File</a> | <a href="${deleteURI}">DELETE</a>
 </#if>
