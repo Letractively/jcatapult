@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+<project name="init">
+  <dirname property="dir.plugin.init" file="${ant.file.init}"/>
+  <path id="classpath.init">
+    <fileset dir="${dir.plugin.init}/lib" includes="*.jar"/>
+    <pathelement location="${dir.plugin.init}/../../libraries/java-net-commons-1.4.2.jar"/>
+    <pathelement location="${dir.plugin.init}/../../libraries/groovy-all-1.5.2.jar"/>
+  </path>
+
+  <property environment="env"/>
+
+  <!-- import optional tasks -->
+  <!--<import file="${env.CATALINA_HOME}/bin/catalina-tasks.xml"/>-->
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="classpath.init"/>
+  <typedef resource="org/jcatapult/ant/jcatapult.properties" classpathref="classpath.init"/>
+  <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpathref="classpath.init"/>
+
+  <!-- set the groovy scripts dir property -->
+  <property name="init.dir.scripts.groovy" value="${dir.plugin.init}/scripts/groovy"/>
+
+  <!-- Changes dashes to underscores in the project name -->
+  <groovy src="${init.dir.scripts.groovy}/DashesToUnderscores.groovy"/>
+
+  <property name="dir.jcatapult.cache" value="${user.home}/.jcatapult"/>
+
+  <!-- create the jcatapult cache directory -->
+  <mkdir dir="${dir.jcatapult.cache}"/>
+
+  <property name="dir.deploy.archive" value="${dir.jcatapult.cache}/deploy-archive"/>
+  <property name="dir.src" value="src"/>
+  <property name="dir.web" value="web"/>
+  <property name="dir.src.conf.main" value="${dir.src}/conf/main"/>
+  <property name="dir.src.conf.test.unit" value="${dir.src}/conf/test/unit"/>
+  <property name="dir.src.conf.test.integration" value="${dir.src}/conf/test/integration"/>
+  <property name="dir.src.db.main" value="${dir.src}/db/main"/>
+  <property name="dir.src.db.test" value="${dir.src}/db/test"/>
+  <property name="dir.src.java.main" value="${dir.src}/java/main"/>
+  <property name="dir.src.java.test.unit" value="${dir.src}/java/test/unit"/>
+  <property name="dir.src.java.test.integration" value="${dir.src}/java/test/integration"/>
+  <property name="dir.target" value="target"/>
+  <property name="dir.target.tomcat" value="${dir.target}/tomcat"/>
+  <property name="dir.target.jars" value="${dir.target}/jars"/>
+  <property name="dir.target.report" value="${dir.target}/report"/>
+  <property name="dir.target.javadocs" value="${dir.target}/javadocs"/>
+  <property name="dir.target.classes.main" value="${dir.target}/classes/main"/>
+  <property name="dir.target.classes.test.unit" value="${dir.target}/classes/test/unit"/>
+  <property name="dir.target.classes.test.integration" value="${dir.target}/classes/test/integration"/>
+  <property name="javadoc.project.name" value="${project.name}"/>
+  <property name="list.javadoc.packages" value="*"/>
+  <property name="javadoc.bottom" value="Copyright (c) ${project.group}, 2007, All Rights Reserved"/>
+  <property name="url.javadoc.javase" value="http://java.sun.com/javase/6/docs/api/"/>
+  <property name="url.javadoc.javaee" value="http://java.sun.com/javaee/5/docs/api/"/>
+
+  <!-- Database properties -->
+  <property name="project.needs.database" value="true"/>
+  <property name="project.contains.domain" value="true"/>
+  <property name="project.database" value="${underscored.project.name}"/>
+
+  <!-- This macro provides cross platform symlinking using Windows Junction -->
+  <macrodef name="link">
+    <attribute name="link"/>
+    <attribute name="resource"/>
+    <sequential>
+      <if>
+        <os family="windows"/>
+        <then>
+          <pathconvert property="linkWin">
+            <path location="@{link}"/>
+          </pathconvert>
+          <pathconvert property="resourceWin">
+            <path location="@{resource}"/>
+          </pathconvert>
+
+          <echo message="junction ${linkWin} ${resourceWin}"/>
+          <exec executable="junction">
+            <arg line='"${linkWin}" "${resourceWin}"'/>
+          </exec>
+        </then>
+        <else>
+          <echo message="ln -s @{resource} @{link}"/>
+          <exec executable="ln">
+            <arg line="-s @{resource} @{link}"/>
+          </exec>
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <!-- This macro provides cross platform symlinking using Windows Junction -->
+  <macrodef name="unlink">
+    <attribute name="link"/>
+    <attribute name="failonerror" default="true"/>
+    <sequential>
+      <if>
+        <os family="windows"/>
+        <then>
+          <pathconvert property="linkWin">
+            <path location="@{link}"/>
+          </pathconvert>
+          <exec executable="junction">
+            <arg line='-d "${linkWin}"'/>
+          </exec>
+        </then>
+        <else>
+          <exec executable="rm">
+            <arg line="@{link}"/>
+          </exec>
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+</project>
