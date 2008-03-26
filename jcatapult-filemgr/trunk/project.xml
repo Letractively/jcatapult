@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
          name="jcatapult-filemgr"
          group="jcatapult.org"
-         version="1.0-M2">
+         version="1.0-M3">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -22,7 +22,7 @@
 
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult" value="1.0-M2"/>
+  <property name="version.jcatapult" value="1.0-M3"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
@@ -33,7 +33,7 @@
       <artifact group="apache.org" project="commons-configuration" name="commons-configuration" version="1.3" type="jar"/>
       <artifact group="apache.org" project="struts2" name="struts2-convention-plugin" version="2.1.1-SNAPSHOT" type="jar"/>
       <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4" type="jar"/>
+      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
       <artifact group="opensymphony.com" project="xwork" name="xwork" version="2.1.1-SNAPSHOT" type="jar"/>
       <artifact group="sun.com" project="jpa" name="jpa" version="1.0" type="jar"/>
