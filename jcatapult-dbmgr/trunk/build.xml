@@ -16,41 +16,42 @@
   -->
 <project name="jcatapult-dbmgr">
  
-  <property file="${user.home}/build.properties"/>
+  <!-- <property file="${user.home}/build.properties"/> -->
 
-  <property name="plugins.dir" value="${ant.home}/plugins-jcatapult"/>
+  <property environment="env"/>
+  <property name="plugin.dir" value="${env.JCATAPULT_HOME}/ant/plugins"/>
 
   <!-- Savant -->
-  <import file="${plugins.dir}/savant/1.0/savant.xml"/>
+  <import file="${plugin.dir}/savant/1.0/savant.xml"/>
 
   <!-- Init -->
-  <import file="${plugins.dir}/init/1.0/init.xml"/>
+  <import file="${plugin.dir}/init/1.0/init.xml"/>
 
   <!-- Clean -->
-  <import file="${plugins.dir}/clean/1.0/clean.xml"/>
+  <import file="${plugin.dir}/clean/1.0/clean.xml"/>
 
   <!-- Java -->
-  <import file="${plugins.dir}/java/1.0/compile.xml"/>
+  <import file="${plugin.dir}/java/1.0/compile.xml"/>
 
   <!-- Java jar -->
-  <import file="${plugins.dir}/java/1.0/jar.xml"/>
+  <import file="${plugin.dir}/java/1.0/jar.xml"/>
 
   <!-- javadoc -->
-  <import file="${plugins.dir}/javadoc/1.0/javadoc.xml"/>
+  <import file="${plugin.dir}/javadoc/1.0/javadoc.xml"/>
 
   <!-- JUnit -->
-  <import file="${plugins.dir}/junit/1.0/junit.xml"/>
-  <import file="${plugins.dir}/cobertura/1.0/cobertura.xml"/>
+  <import file="${plugin.dir}/junit/1.0/junit.xml"/>
+  <import file="${plugin.dir}/cobertura/1.0/cobertura.xml"/>
 
   <!-- SVN -->
-  <import file="${plugins.dir}/svn/1.0/svn.xml"/>
+  <import file="${plugin.dir}/svn/1.0/svn.xml"/>
 
   <!-- Release -->
-  <import file="${plugins.dir}/release-svn/1.0/jar.xml"/>
-  <import file="${plugins.dir}/release-jcatapult/1.0/release-jcatapult.xml"/>
+  <import file="${plugin.dir}/release-svn/1.0/jar.xml"/>
+  <import file="${plugin.dir}/release-jcatapult/1.0/release-jcatapult.xml"/>
 
   <!-- IDE -->
-  <import file="${plugins.dir}/ide/1.0/ide.xml"/>
+  <import file="${plugin.dir}/ide/1.0/ide.xml"/>
 
   <macrodef name="compile-main-post">
     <sequential>
