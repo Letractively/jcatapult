@@ -108,8 +108,7 @@ public class StaticResourceWorkflow implements Workflow {
             if (slash == -1 && !uri.endsWith(".class")) {
                 for (String staticPrefix : staticPrefixes) {
                     if (uri.startsWith(staticPrefix)) {
-                        findStaticResource(uri, httpRequest, httpResponse);
-                        handled = true;
+                        handled = findStaticResource(uri, httpRequest, httpResponse);
                     }
                 }
             }
@@ -133,9 +132,12 @@ public class StaticResourceWorkflow implements Workflow {
      * @param   uri The resource uri.
      * @param   request The request
      * @param   response The response
+     * @return  True if the resource was found in the classpath and if it was successfully written
+     *          back to the output stream. Otherwise, this returns false if the resource doesn't
+     *          exist in the classpath.
      * @throws  IOException If anything goes wrong
      */
-    protected void findStaticResource(String uri, HttpServletRequest request, HttpServletResponse response)
+    protected boolean findStaticResource(String uri, HttpServletRequest request, HttpServletResponse response)
     throws IOException {
         // check for if-modified-since, prior to any other headers
         long ifModifiedSince = 0;
@@ -150,13 +152,12 @@ public class StaticResourceWorkflow implements Workflow {
             // not modified, content is not sent - only basic headers and status SC_NOT_MODIFIED
             response.setDateHeader("Expires", Long.MAX_VALUE);
             response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-            return;
+            return true;
         }
 
         InputStream is = findInputStream(uri);
         if (is == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
+            return false;
         }
 
         // Set the content-type header
@@ -190,6 +191,8 @@ public class StaticResourceWorkflow implements Workflow {
         } finally {
             is.close();
         }
+
+        return true;
     }
 
     /**
