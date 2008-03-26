@@ -32,7 +32,7 @@
       tomcat assumes is the default webapp.
     -->
 
-    <copy file="${ant.home}/tools-jcatapult/makeproject/webapp-template/deploy/tomcat/main/conf/context.xml"
+    <copy file="${env.JCATAPULT_HOME}/ant/tools/makeproject/webapp-template/deploy/tomcat/main/conf/context.xml"
         tofile="target/tomcat/conf/Catalina/localhost/ROOT.xml">
       <filterset>
         <filter token="UNDERSCORED_PROJECT_NAME" value="${underscored.project.name}"/>

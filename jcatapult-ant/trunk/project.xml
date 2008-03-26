@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-ant"
          group="jcatapult.org"
-         version="1.0-M1">
+         version="1.0-M3">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -14,7 +14,7 @@
   <dependencies id="dependencies.project">
     <artifactGroup type="compile">
       <artifact group="apache.org" project="ant" name="ant" version="1.7.0" type="jar"/>
-      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.3.18" type="jar"/>
+      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
       <artifact group="jdom.org" project="jdom" name="jdom" version="1.0" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-compile">
