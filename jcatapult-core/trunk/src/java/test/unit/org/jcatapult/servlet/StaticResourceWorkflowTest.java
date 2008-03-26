@@ -120,10 +120,10 @@ public class StaticResourceWorkflowTest {
         EasyMock.replay(req);
 
         HttpServletResponse res = EasyMock.createStrictMock(HttpServletResponse.class);
-        res.sendError(HttpServletResponse.SC_NOT_FOUND);
         EasyMock.replay(res);
 
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
+        wc.doWorkflow(req, res);
         EasyMock.replay(wc);
 
         StaticResourceWorkflow srw = new StaticResourceWorkflow(configuration);
