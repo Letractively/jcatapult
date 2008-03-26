@@ -36,7 +36,7 @@ import org.apache.commons.cli.HelpFormatter;
 public class DeploymentManager {
 
     Injector injector = Guice.createInjector(new DeploymentModule());
-    XmlService<Deploy, File> xmlService = injector.getInstance(Key.get(new TypeLiteral<XmlService<Deploy, File>>(){}));
+    XmlService<Deploy> xmlService = injector.getInstance(Key.get(new TypeLiteral<XmlService<Deploy>>(){}));
     CLIService cliService = injector.getInstance(CLIService.class);
     DeployerService deployerService = injector.getInstance(DeployerService.class);
     BetterSimpleCompletor completor = injector.getInstance(BetterSimpleCompletor.class);
