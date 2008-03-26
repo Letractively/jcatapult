@@ -17,10 +17,10 @@ import com.google.inject.Inject;
  * Date: Mar 25, 2008
  */
 public class JaxbXmlServiceTest extends BaseTest {
-    private XmlService xs;
+    private XmlService<Deploy, File> xs;
 
     @Inject
-    public void setService(XmlService xs) {
+    public void setService(XmlService<Deploy, File> xs) {
         this.xs = xs;
     }
 
@@ -28,7 +28,7 @@ public class JaxbXmlServiceTest extends BaseTest {
     public void testUnmarshall() throws XmlServiceException {
         File file = new File("src/xml/examples/deploy.xml");
         System.out.println(file.getAbsolutePath());
-        Deploy deploy = xs.unmarshallXml(file);
+        Deploy deploy = xs.unmarshall(file);
 
         List<Server> serverEntries = deploy.getServer();
 

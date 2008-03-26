@@ -1,7 +1,5 @@
 package org.jcatapult.deployment.service;
 
-import java.io.File;
-
 import com.google.inject.ImplementedBy;
 
 /**
@@ -10,14 +8,24 @@ import com.google.inject.ImplementedBy;
  * User: jhumphrey
  * Date: Mar 25, 2008
  */
-@ImplementedBy(JaxbXmlService.class)
-public interface XmlService {
+@ImplementedBy(XmlServiceImpl.class)
+public interface XmlService<T, V> {
+
     /**
-     * Unmarshall's an xml file into type T. T is defined by the concrete implementor
+     * Unmarshall's an object V into a type T
      *
-     * @param xmlFile the xml file to unmarshall
-     * @return type T
+     * @param object S the oject to unmarshall
+     * @return type T the type to return after unmarshalling
      * @throws XmlServiceException thrown if there's an error during the xml unmarshalling process
      */
-    public <T> T unmarshallXml(File xmlFile) throws XmlServiceException;
+    public T unmarshall(V object) throws XmlServiceException;
+
+    /**
+     * Marshall's type T into type S
+     *
+     * @param type the type to marshall
+     * @param object the marshalled object
+     * @throws XmlServiceException thrown if there are errors during marshalling
+     */
+    public void marshall(T type, V object) throws XmlServiceException;
 }

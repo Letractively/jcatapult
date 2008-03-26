@@ -16,9 +16,9 @@ public interface CLIService {
      * Called to ask the cli for information
      *
      * @param question the question
-     * @param message the message
-     * @param error the error
-     * @param defaultValue the default value
+     * @param message the message to display after input is received
+     * @param error the error messaged displayed if an invalid option is inputted
+     * @param defaultValue the default value to select if no option is chosen
      * @param completor the completor to use
      * @return the input string
      */

@@ -2,6 +2,7 @@ package org.jcatapult.deployment;
 
 import java.io.IOException;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.TreeSet;
 import java.util.List;
 
@@ -9,14 +10,17 @@ import org.jcatapult.deployment.service.XmlService;
 import org.jcatapult.deployment.service.XmlServiceException;
 import org.jcatapult.deployment.service.CLIService;
 import org.jcatapult.deployment.service.BetterSimpleCompletor;
+import org.jcatapult.deployment.service.DeployerService;
 import org.jcatapult.deployment.domain.jaxb.Deploy;
 import org.jcatapult.deployment.domain.jaxb.Server;
 import org.jcatapult.deployment.domain.jaxb.Environment;
-import static org.jcatapult.deployment.domain.ServerInfo.*;
+import org.jcatapult.deployment.domain.DeployInfo;
 import org.jcatapult.deployment.guice.DeploymentModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -32,7 +36,9 @@ import org.apache.commons.cli.HelpFormatter;
 public class DeploymentManager {
 
     Injector injector = Guice.createInjector(new DeploymentModule());
+    XmlService<Deploy, File> xmlService = injector.getInstance(Key.get(new TypeLiteral<XmlService<Deploy, File>>(){}));
     CLIService cliService = injector.getInstance(CLIService.class);
+    DeployerService deployerService = injector.getInstance(DeployerService.class);
     BetterSimpleCompletor completor = injector.getInstance(BetterSimpleCompletor.class);
 
     /**
@@ -66,8 +72,6 @@ public class DeploymentManager {
         // get the file path of the local project deploy xml file
         File deployConfigFile = new File(args[0]);
 
-        // get the xml service
-        XmlService xs = injector.getInstance(XmlService.class);
 
         // configure command line options.  empty for now
         Options options = new Options();
@@ -92,27 +96,32 @@ public class DeploymentManager {
                 System.out.println(helpMsg);
             } else {
                 // get the available servers
-                Deploy deploy = xs.unmarshallXml(deployConfigFile);
+                Deploy deploy = xmlService.unmarshall(deployConfigFile);
                 List<Server> servers = deploy.getServer();
                 TreeSet<String> serverStrings = new TreeSet<String>();
                 for (Server server : servers) {
                     serverStrings.add(server.getHost());
                 }
 
+                DeployInfo deployInfo = new DeployInfo();
+                deployInfo.setProjectXml(new File("project.xml").getAbsoluteFile());
+                deployInfo.setProjectName(deploy.getProjectName());
+
                 // set server strings into completor
                 completor.setCandidates(serverStrings);
 
                 // get the server host
-                serverHost = cliService.ask("Please select the server host you are deploying to:",
+                String serverHost = cliService.ask("Please select the server host you are deploying to:",
                     "Remote deploying to ", "Invalid server host.  Use tab completion to view available server hosts",
                     serverStrings.first(), completor);
+                deployInfo.setServerHost(serverHost);
 
                 // get the available environments for the selected server
                 List<Environment> envs = null;
                 for (Server server : servers) {
                     if (server.getHost().equals(serverHost)) {
-                        serverUsername = server.getUsername();
-                        serverPassword = server.getPassword();
+                        deployInfo.setServerUsername(server.getUsername());
+                        deployInfo.setServerPassword(server.getPassword());
                         envs = server.getEnvironment();
                     }
                 }
@@ -125,24 +134,63 @@ public class DeploymentManager {
                 completor.setCandidates(envStrings);
 
                 // get the env type
-                envType = cliService.ask("Please select the environment:", "deploy environment set to: ",
+                String envType = cliService.ask("Please select the environment:", "deploy environment set to: ",
                     "Invalid environment type.  Use tab completion to view available environment types",
                     envStrings.first(), completor);
+                deployInfo.setEnvType(envType);
 
                 // loop through environments to get match against chosen environment type
                 for (Environment env : envs) {
                     if (env.getType().equals(envType)) {
-                        homeDir = env.getHomeDir();
-                        workDir = env.getWorkDir();
-                        fileDir = env.getFileDir();
-                        webDir = env.getWorkDir();
-                        dbName = env.getDbName();
-                        dbPassword = env.getDbPassword();
-                        dbUsername = env.getDbUsername();
+                        deployInfo.setHomeDir(env.getHomeDir());
+                        deployInfo.setWorkDir(env.getWorkDir());
+                        deployInfo.setFileDir(env.getFileDir());
+                        deployInfo.setWebDir(env.getWebDir());
+                        deployInfo.setDbName(env.getDbName());
+                        deployInfo.setDbPassword(env.getDbPassword());
+                        deployInfo.setDbUsername(env.getDbUsername());
                     }
                 }
 
-                // todo: now that server info has been collected, do deployment
+                // get versions
+                File deployArchive = new File(System.getProperty("user.home") + "/.jcatapult/deploy-archive");
+                final String projectName = deployInfo.getProjectName();
+                File[] releaseFiles = null;
+                if (deployArchive.exists() && deployArchive.isDirectory()) {
+                     releaseFiles = deployArchive.listFiles(new FilenameFilter() {
+
+                        public boolean accept(File dir, String filename) {
+                            boolean accept = false;
+                            if (filename.contains(projectName)) {
+                                accept = true;
+                            }
+                            return accept;
+                        }
+                    });
+                }
+
+                // if no release versions exists then exit
+                if (releaseFiles == null || releaseFiles.length == 0) {
+                    System.out.println("No release versions exists within [" + deployArchive.getAbsolutePath() +
+                        "] for project [" + projectName + "].  You must run a release prior to running the deployer.");
+                    System.exit(1);
+                }
+
+                // set environment strings into completor
+                TreeSet<String> versionStrings = new TreeSet<String>();
+                for (File releaseFile : releaseFiles) {
+                    versionStrings.add(releaseFile.getName());
+                }
+                completor.setCandidates(versionStrings);
+
+                // get the env type
+                String version = cliService.ask("Please select the version to deploy:", "deploy version set to: ",
+                    "Invalid deploy version.  Use tab completion to view available versions",
+                    versionStrings.first(), completor);
+                deployInfo.setReleaseVersion(version);
+
+                // deploy the resources
+                deployerService.deploy(deployInfo);
             }
         }
     }
