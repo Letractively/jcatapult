@@ -17,10 +17,10 @@ import com.google.inject.Inject;
  * Date: Mar 25, 2008
  */
 public class JaxbXmlServiceTest extends BaseTest {
-    private XmlService<Deploy, File> xs;
+    private XmlService<Deploy> xs;
 
     @Inject
-    public void setService(XmlService<Deploy, File> xs) {
+    public void setService(XmlService<Deploy> xs) {
         this.xs = xs;
     }
 

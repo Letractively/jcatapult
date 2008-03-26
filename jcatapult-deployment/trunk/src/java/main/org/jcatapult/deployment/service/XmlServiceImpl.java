@@ -14,7 +14,7 @@ import org.jcatapult.deployment.domain.jaxb.Deploy;
  * User: jhumphrey
  * Date: Mar 25, 2008
  */
-public class XmlServiceImpl implements XmlService<Deploy, File> {
+public class XmlServiceImpl implements XmlService<Deploy> {
 
     private JAXBContext jaxbContext;
 
@@ -48,11 +48,6 @@ public class XmlServiceImpl implements XmlService<Deploy, File> {
      * {@inheritDoc}
      */
     public void marshall(Deploy deploy, File file) throws XmlServiceException {
-        try {
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.marshal(deploy, file);
-        } catch (JAXBException e) {
-            throw new XmlServiceException(e);
-        }
+        throw new RuntimeException("Not Implemented");
     }
 }
