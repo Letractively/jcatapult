@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deploy xmlns="http://www.jcatapult.org/schemas/deploy"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.jcatapult.org/schemas/deploy deploy.xsd">
+        xsi:schemaLocation="http://www.jcatapult.org/schemas/deploy deploy.xsd"
+        projectName="jcatapult-demo">
   <server platform="unix" host="demo.jcatapult.org" description="Demo Server" username="jcatapult-demo" password="jcatapult-demo">
     <environment type="staging">
       <homeDir>/home/jcatapult-demo</homeDir>

@@ -45,6 +45,7 @@
       <xsd:sequence>
         <xsd:element name="server" type="server" minOccurs="1" maxOccurs="unbounded"/>
       </xsd:sequence>
+      <xsd:attribute name="projectName" type="xsd:string" use="required"/>
     </xsd:complexType>
   </xsd:element>
 </xsd:schema>
