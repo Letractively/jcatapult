@@ -29,11 +29,11 @@
     <classpathentry kind="var" path="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-annotations-3.2.1.jar" sourcepath="/SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-annotations-3.2.1-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-entitymanager-3.2.1.jar" sourcepath="/SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-entitymanager-3.2.1-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/hsqldb.org/hsqldb/hsqldb-1.8.9.jar" sourcepath="/SAVANT_REPOSITORY/hsqldb.org/hsqldb/hsqldb-1.8.9-src.jar" />
-    <classpathentry kind="var" path="SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.jar" sourcepath="/SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.4.jar" sourcepath="/SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/jboss.org/archive-browsing/jboss-archive-browsing-5.0.0-alpha.jar" sourcepath="/SAVANT_REPOSITORY/jboss.org/archive-browsing/jboss-archive-browsing-5.0.0-alpha-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/jboss.org/javassist/javassist-3.4.jar" sourcepath="/SAVANT_REPOSITORY/jboss.org/javassist/javassist-3.4-src.jar" />
-    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M2-IB20080314184916281.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M2-IB20080314184916281-src.jar" />
-    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-test-1.0-M2-IB20080314184916281.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-test-1.0-M2-IB20080314184916281-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M3.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M3-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-test-1.0-M3.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-test-1.0-M3-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4.jar" sourcepath="/SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-hibernate-0.8.jar" sourcepath="/SAVANT_REPOSITORY/joda.org/joda-time/joda-time-hibernate-0.8-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-jsptags-1.0.jar" sourcepath="/SAVANT_REPOSITORY/joda.org/joda-time/joda-time-jsptags-1.0-src.jar" />
