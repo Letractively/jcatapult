@@ -5,13 +5,13 @@ args=("$@")
 argsSize=${#args[@]}
 
 # ensure ANT_HOME is defined in environment
-if [ -z $ANT_HOME ]; then
-  echo "Please set the ANT_HOME environment variable to the ant 1.7.* installation directory"
+if [ -z $JCATAPULT_HOME ]; then
+  echo "Please set the JCATAPULT_HOME environment variable to your jcatapult installation directory"
   exit
 fi
 
 # directory where the ant build script will be executed from
-dir=$ANT_HOME/tools-jcatapult/makeproject
+dir=$JCATAPULT_HOME/ant/tools/makeproject
 
 # ensure arg length is not zero or handle 'help'.  print helpful message
 if [[ $argsSize -eq 0 || ${args[0]} = "help" ]]; then

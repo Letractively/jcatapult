@@ -10,7 +10,8 @@
 <project name="makeproject">
   <dirname property="dir.plugin.makeproject" file="${ant.file.makeproject}"/>
 
-  <property name="plugin.dir" value="${ant.home}/plugins-jcatapult"/>
+  <property environment="env"/>
+  <property name="plugin.dir" value="${env.JCATAPULT_HOME}/ant/plugins"/>
 
   <path id="classpath.makeproject">
     <fileset dir="${dir.plugin.makeproject}/lib" includes="*.jar"/>
