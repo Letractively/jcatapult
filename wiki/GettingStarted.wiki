@@ -4,6 +4,9 @@
 
 This document describes how to get up and running with JCatapult.
 
+= Download Current Distribution =
+
+
 = JCatapult Ant =
 
 JCatapult requires that you are using Apache Ant 1.7.0 or later. You will need to download Apache Ant if you don't already have it installed. The website for Ant is http://ant.apache.org.
