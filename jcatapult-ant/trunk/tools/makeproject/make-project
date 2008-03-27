@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# get args and count
-args=("$@")
-argsSize=${#args[@]}
-
 # ensure ANT_HOME is defined in environment
 if [ -z $JCATAPULT_HOME ]; then
   echo "Please set the JCATAPULT_HOME environment variable to your jcatapult installation directory"
@@ -14,7 +10,7 @@ fi
 dir=$JCATAPULT_HOME/ant/tools/makeproject
 
 # ensure arg length is not zero or handle 'help'.  print helpful message
-if [[ $argsSize -eq 0 || ${args[0]} = "help" ]]; then
+if [[ $# == 0 || $1 == "help" ]]; then
   echo "info:  make-project is a shell script that provides a convenient execution wrapper to the jCatapult Ant tools makeproject suite."
   echo "usage: make-project <ant target>"
   echo
