@@ -31,12 +31,13 @@
     <attribute name="password"/>
     <attribute name="url"/>
     <sequential>
-    <if>
-      <equals arg1="${debug}" arg2="false"/>
-      <then>
-        <scm_copy src="@{url}/trunk" dest="@{url}/tags/@{tag}" operation="Tagging head" username="@{username}" password="@{password}"/>
-      </then>
-    </if>
+      <if>
+        <equals arg1="${debug}" arg2="false"/>
+        <then>
+          <scm_copy src="@{url}/trunk" dest="@{url}/tags/@{tag}" operation="Tagging head" username="@{username}"
+                    password="@{password}"/>
+        </then>
+      </if>
     </sequential>
   </macrodef>
 
@@ -48,12 +49,13 @@
     <attribute name="password"/>
     <attribute name="url"/>
     <sequential>
-    <if>
-      <equals arg1="${debug}" arg2="false"/>
-      <then>
-        <scm_copy src="@{url}/branches/@{branch}" dest="@{url}/tags/@{tag}" operation="Tagging branch" username="@{username}" password="@{password}"/>
-      </then>
-    </if>
+      <if>
+        <equals arg1="${debug}" arg2="false"/>
+        <then>
+          <scm_copy src="@{url}/branches/@{branch}" dest="@{url}/tags/@{tag}" operation="Tagging branch"
+                    username="@{username}" password="@{password}"/>
+        </then>
+      </if>
     </sequential>
   </macrodef>
 
@@ -64,12 +66,13 @@
     <attribute name="password"/>
     <attribute name="url"/>
     <sequential>
-    <if>
-      <equals arg1="${debug}" arg2="false"/>
-      <then>
-        <scm_copy src="@{url}/trunk" dest="@{url}/branches/@{branch}" operation="Branching head" username="@{username}" password="@{password}"/>
-      </then>
-    </if>
+      <if>
+        <equals arg1="${debug}" arg2="false"/>
+        <then>
+          <scm_copy src="@{url}/trunk" dest="@{url}/branches/@{branch}" operation="Branching head"
+                    username="@{username}" password="@{password}"/>
+        </then>
+      </if>
     </sequential>
   </macrodef>
 
@@ -81,12 +84,13 @@
     <attribute name="password"/>
     <attribute name="url"/>
     <sequential>
-    <if>
-      <equals arg1="${debug}" arg2="false"/>
-      <then>
-        <scm_copy src="@{url}/tags/@{tag}" dest="@{url}/branches/@{branch}" operation="Branching tag" username="@{username}" password="@{password}"/>
-      </then>
-    </if>
+      <if>
+        <equals arg1="${debug}" arg2="false"/>
+        <then>
+          <scm_copy src="@{url}/tags/@{tag}" dest="@{url}/branches/@{branch}" operation="Branching tag"
+                    username="@{username}" password="@{password}"/>
+        </then>
+      </if>
     </sequential>
   </macrodef>
 
@@ -162,12 +166,14 @@
 
       <echo message="Checking that tag ${tag.url} is valid"/>
 
-      <condition property="version.exists" value="true">
+      <condition property="version.exists">
         <betterhttp url="${tag.url}" username="@{username}" password="@{password}"/>
       </condition>
 
       <if>
-        <equals arg1="${version.exists}" arg2="false"/>
+        <not>
+          <isset property="version.exists"/>
+        </not>
         <then>
           <fail message="${tag.url} is not a valid tag."/>
         </then>
@@ -208,7 +214,9 @@
       </condition>
 
       <if>
-        <not><equals arg1="${import.url.exists}" arg2="true"/></not>
+        <not>
+          <equals arg1="${import.url.exists}" arg2="true"/>
+        </not>
         <then>
           <svn username="@{username}" password="@{password}">
             <mkdir url="@{url}" message="[JCATAPULT-ANT mkdir] make dir"/>
@@ -246,6 +254,21 @@
 
       <svn username="@{username}" password="@{password}">
         <copy srcUrl="@{src}" destUrl="@{dest}" message="[JCATAPULT-ANT @{operation}] @{src} to @{dest}"/>
+      </svn>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="scm_export" description="Exports a repository.">
+    <attribute name="src" description="The source URL to copy from."/>
+    <attribute name="dest" description="The destintation URL to copy into."/>
+    <attribute name="username" description="The subversion username"/>
+    <attribute name="password" description="The subversion password"/>
+
+    <sequential>
+      <echo message="Exporting @{src} to @{dest}"/>
+
+      <svn username="@{username}" password="@{password}">
+        <export srcUrl="@{src}" destPath="@{dest}"/>
       </svn>
     </sequential>
   </macrodef>
