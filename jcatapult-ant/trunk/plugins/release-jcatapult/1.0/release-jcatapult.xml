@@ -17,7 +17,7 @@
 
     <property file="${user.home}/jcatapult-build.properties"/>
 
-    <property name="dir.jcatapult.release" value="${dir.jcatapult.cache}/jcatault-release"/>
+    <property name="dir.jcatapult.release" value="${dir.jcatapult.cache}/jcatapult-release"/>
 
     <!-- get the version -->
     <input message="Please input release version:" addproperty="release.jcatapult.version"/>
