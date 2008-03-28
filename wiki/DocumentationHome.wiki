@@ -41,6 +41,13 @@ Below are links to topics about a specific JCatapult technology, service or API.
   * [AntCreatingPlugins Creating ant plugins]
   * [AntDependencies Adding and removing project dependencies]
 
+=== Component ===
+
+  * [ComponentGettingStarted Getting started writing components]
+  * [ComponentStaticResources Writing component with static resources]
+  * [ComponentDomain Writing component with domain objects (database/JPA)]
+  * [ComponentAddingComponents Adding pre-built components]
+
 === Scaffolder ===
 
   * [Scaffolder JCatapult Scaffolder]
