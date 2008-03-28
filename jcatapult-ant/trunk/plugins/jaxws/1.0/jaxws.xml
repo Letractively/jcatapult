@@ -25,32 +25,4 @@
   <taskdef name="schemagen" classname="com.sun.tools.jxc.SchemaGenTask" classpathref="classpath.jaxws"/>
   <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport" classpathref="classpath.jaxws"/>
   <taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen" classpathref="classpath.jaxws"/>
-
-  <condition property="jre.endorsed" value="${jdk.project}/lib/endorsed">
-    <os family="mac"/>
-  </condition>
-  <property name="jre.endorsed" value="${jdk.project}/jre/lib/endorsed"/>
-
-  <fileset id="overrides.jaxws" dir="${dir.plugin.jaxws}/lib">
-    <include name="jaxb-api-*.jar"/>
-    <include name="jaxws-api-*.jar"/>
-    <include name="jsr173_api-*.jar"/>
-    <include name="saaj-api-*.jar"/>
-  </fileset>
-
-  <target name="init-jaxws"
-  	   description="Copies the jaxws jar files to the endorsed override directories in the JRE and Tomcat.">
-
-    <!-- copy the jars to the JRE's endorsed dir, creating it if necessary -->
-    <mkdir dir="${jre.endorsed}"/>
-  	<copy todir="${jre.endorsed}" failonerror="yes">
-  		<fileset refid="overrides.jaxws"/>
-    </copy>
-
-    <!-- copy the jars to Tomcat's endorsed dir -->
-  	<copy todir="${env.CATALINA_HOME}/common/endorsed" failonerror="yes">
-  		<fileset refid="overrides.jaxws"/>
-    </copy>
-  </target>
-
 </project>
