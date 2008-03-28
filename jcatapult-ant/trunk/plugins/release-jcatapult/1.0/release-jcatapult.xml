@@ -1,5 +1,11 @@
 <project name="release-jcatapult">
 
+  <dirname property="dir.plugin.release-jcatapult" file="${ant.file.release-jcatapult}"/>
+
+  <path id="classpath.plugin.release-jcatapult">
+    <fileset dir="${dir.plugin.release-jcatapult}/lib" includes="*.jar"/>
+  </path>
+
   <target name="rel-javadoc" description="Releases the JCatapult JavaDoc">
     <rel_post/>
   </target>
@@ -76,9 +82,20 @@
     <delete dir="${dir.export.scaffolder}"/>
 
      <!--tar up the distribution -->
-    <property name="dist.tar.name" value="jcatapult-${release.jcatapult.version}.tar.gz"/>
-    <tar tarfile="${dir.jcatapult.release}/${dist.tar.name}" basedir="${dir.dist}" compression="gzip" longfile="gnu"/>
+    <property name="dist.tarball.name" value="jcatapult-${release.jcatapult.version}.tar.gz"/>
+    <tar tarfile="${dir.jcatapult.release}/${dist.tarball.name}" basedir="${dir.dist}" compression="gzip" longfile="gnu"/>
 
+    <!-- set checksum -->
+    <checksum file="${dir.jcatapult.release}/${dist.tarball.name}" property="dist.tarball.md5"/>
+
+    <echo>Generated Md5 for tarball [${dist.tarball.md5}]</echo>
+
+    <!-- use the ant googlecode task to upload the distribution -->
+    <!-- url for this project: http://ant-googlecode.googlecode.com/svn/trunk/ant-googlecode/ -->
+    <taskdef classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask" classpathref="classpath.plugin.release-jcatapult" name="gcupload"/>
+		<gcupload username="${svn.username}" password="${svn.password}" projectname="jcatapult"
+			      filename="${dir.jcatapult.release}/${dist.tarball.name}" targetfilename="${dist.tarball.name}"
+				  summary="Release distribution for JCatapult version ${release.jcatapult.version} - Md5: ${dist.tarball.md5}" />
   </target>
 
   <!-- These macrodefs publish the JavaDoc for the release -->
