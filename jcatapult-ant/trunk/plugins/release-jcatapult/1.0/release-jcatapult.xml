@@ -1,12 +1,91 @@
 <project name="release-jcatapult">
+
   <target name="rel-javadoc" description="Releases the JCatapult JavaDoc">
     <rel_post/>
+  </target>
+
+  <!-- this target is used to release the jcatapult distrubition -->
+  <target name="rel-jcatapult" description="Releases JCatapult">
+
+    <echo>Testing...</echo>
+
+    <property file="${user.home}/jcatapult-build.properties"/>
+
+    <property name="dir.jcatapult.release" value="${dir.jcatapult.cache}/jcatault-release"/>
+
+    <!-- get the version -->
+    <input message="Please input release version:" addproperty="release.jcatapult.version"/>
+
+    <!-- clean up -->
+    <delete dir="${dir.jcatapult.release}"/>
+
+    <!-- make the release dir -->
+    <mkdir dir="${dir.jcatapult.release}"/>
+
+    <!-- set the distribution directory -->
+    <property name="dir.dist" value="${dir.jcatapult.release}/jcatapult-${release.jcatapult.version}"/>
+    <property name="dir.dist.ant" value="${dir.dist}/ant"/>
+    <property name="dir.dist.scaffolder" value="${dir.dist}/scaffolder"/>
+    <property name="dir.export.scaffolder" value="${dir.dist.scaffolder}/scaffolder-export"/>
+    <property name="dir.dist.savant" value="${dir.dist}/savant"/>
+    <property name="dir.dist.groovy" value="${dir.dist}/groovy"/>
+
+    <!-- make all the necessary dist directories -->
+    <mkdir dir="${dir.dist}"/>
+    <mkdir dir="${dir.dist.ant}"/>
+    <mkdir dir="${dir.dist.scaffolder}"/>
+    <mkdir dir="${dir.dist.savant}"/>
+    <mkdir dir="${dir.dist.groovy}"/>
+
+    <!-- check that tags are available -->
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-scaffolder"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-ant"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-core"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-email"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-security"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-dbmgr"
+                        username="${svn.username}" password="${svn.password}"/>
+
+
+     <!--export ant/plugins -->
+    <scm_export dest="${dir.dist.ant}/plugins" username="${svn.username}" password="${svn.password}"
+                src="https://jcatapult.googlecode.com/svn/jcatapult-ant/tags/${release.jcatapult.version}/plugins"/>
+
+     <!--export ant/tools -->
+    <scm_export dest="${dir.dist.ant}/tools" username="${svn.username}" password="${svn.password}"
+                src="https://jcatapult.googlecode.com/svn/jcatapult-ant/tags/${release.jcatapult.version}/tools"/>
+
+     <!--export scaffolder -->
+    <scm_export dest="${dir.export.scaffolder}" username="${svn.username}" password="${svn.password}"
+                src="https://jcatapult.googlecode.com/svn/jcatapult-scaffolder/tags/${release.jcatapult.version}"/>
+
+     <!--build the scaffolder -->
+    <rel_fork dir="${dir.export.scaffolder}" target="jar"/>
+
+     <!--copy scaffolder dist -->
+    <copy todir="${dir.dist.scaffolder}">
+      <fileset dir="${dir.export.scaffolder}/target/dist"/>
+    </copy>
+
+     <!--delete the export directory -->
+    <delete dir="${dir.export.scaffolder}"/>
+
+     <!--tar up the distribution -->
+    <property name="dist.tar.name" value="jcatapult-${release.jcatapult.version}.tar.gz"/>
+    <tar tarfile="${dir.jcatapult.release}/${dist.tar.name}" basedir="${dir.dist}" compression="gzip" longfile="gnu"/>
+
   </target>
 
   <!-- These macrodefs publish the JavaDoc for the release -->
   <macrodef name="rel_post">
     <sequential>
-      <property name="docURL" value="https://jcatapult.googlecode.com/svn/jcatapult-javadocs/${project.name}/${project.version}"/>
+      <property name="docURL"
+                value="https://jcatapult.googlecode.com/svn/jcatapult-javadocs/${project.name}/${project.version}"/>
 
       <antcall target="javadoc"/>
       <scm_import dir="${dir.target.javadocs}" url="${docURL}" username="${svn.username}" password="${svn.password}"/>
