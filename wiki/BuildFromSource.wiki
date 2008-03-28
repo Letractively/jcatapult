@@ -46,7 +46,7 @@ This will check out the project as read-only. If you are a committer, see below.
 Committers can check out projects and submit changes. The command to check out a project as a comitter is:
 
 {{{
-svn --username=<your-username> co http://jcatapult.googlecode.com/svn/jcatapult-core/trunk jcatapult-core
+svn --username=<your-username> co https://jcatapult.googlecode.com/svn/jcatapult-core/trunk jcatapult-core
 }}}
 
 You will be prompted for your Google Code password.
