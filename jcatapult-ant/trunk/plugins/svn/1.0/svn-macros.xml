@@ -162,12 +162,10 @@
     <attribute name="url"/>
 
     <sequential>
-      <property name="tag.url" value="@{url}/tags/@{tag}"/>
-
-      <echo message="Checking that tag ${tag.url} is valid"/>
+      <echo message="Checking that tag @{url}/tags/@{tag} is valid"/>
 
       <condition property="version.exists">
-        <betterhttp url="${tag.url}" username="@{username}" password="@{password}"/>
+        <betterhttp url="@{url}/tags/@{tag}" username="@{username}" password="@{password}"/>
       </condition>
 
       <if>
@@ -175,7 +173,7 @@
           <isset property="version.exists"/>
         </not>
         <then>
-          <fail message="${tag.url} is not a valid tag."/>
+          <fail message="@{url}/tags/@{tag} is not a valid tag."/>
         </then>
       </if>
     </sequential>
