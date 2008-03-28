@@ -16,7 +16,9 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [TutorialForm Simple form]
   * [TutorialSimpleCrud Simple CRUD]
   * [TutorialSimpleUnitTest Simple unit test]
+  * [TutorialSimpleComponent Simple component]
   * [TutorialLogin Login and security]
+  * [TutorialDatabaseManager Database management (migrations)]
 
 = API docs =
 
