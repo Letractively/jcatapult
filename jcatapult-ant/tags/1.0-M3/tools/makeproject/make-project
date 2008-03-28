@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# ensure ANT_HOME is defined in environment
+if [ -z $JCATAPULT_HOME ]; then
+  echo "Please set the JCATAPULT_HOME environment variable to your jcatapult installation directory"
+  exit
+fi
+
+# directory where the ant build script will be executed from
+dir=$JCATAPULT_HOME/ant/tools/makeproject
+
+# ensure arg length is not zero or handle 'help'.  print helpful message
+if [[ $# == 0 || $1 == "help" ]]; then
+  echo "info:  make-project is a shell script that provides a convenient execution wrapper to the jCatapult Ant tools makeproject suite."
+  echo "usage: make-project <ant target>"
+  echo
+  echo "executing 'ant -p' to display available makeproject ant targets..."
+  echo
+  ant -f ${dir}/build.xml -p
+  exit
+fi
+
+ant -f ${dir}/build.xml $@
