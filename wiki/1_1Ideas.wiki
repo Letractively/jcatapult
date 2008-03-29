@@ -4,17 +4,17 @@
 
 Struts/XWork is lacking in many areas and I want to make a list. We'll need to replace it at some point.
 
-  - Be nice to use the same injector for the MVC as the app
-  - SiteMesh plugin required to localize or use struts tags in decorator
-  - OGNL (eeck)
-  - Groovy support
-  - Better configuration, defaults, conventions, etc.
-  - API freezes with no changes
-  - Better plugin support top to bottom
-  - Better APIs
-  - Ability to override or extend interceptors, actions, anything from components in the application
-  - Better support for wildcard and SEO URLs via conventions
-  - Better type conversion support with support for attributes (currency code, date time format, etc)
+  * Be nice to use the same injector for the MVC as the app
+  * SiteMesh plugin required to localize or use struts tags in decorator
+  * OGNL (eeck)
+  * Groovy support
+  * Better configuration, defaults, conventions, etc.
+  * API freezes with no changes
+  * Better plugin support top to bottom
+  * Better APIs
+  * Ability to override or extend interceptors, actions, anything from components in the application
+  * Better support for wildcard and SEO URLs via conventions
+  * Better type conversion support with support for attributes (currency code, date time format, etc)
 
 = DSL for the database manager =
 
