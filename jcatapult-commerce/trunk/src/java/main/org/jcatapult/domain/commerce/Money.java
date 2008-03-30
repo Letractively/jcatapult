@@ -23,7 +23,7 @@ import java.util.Locale;
 
 /**
  * <p>
- * This class represents an internationalize monetary value.
+ * This class represents an internationalized monetary value.
  * </p>
  *
  * @author  Brian Pontarelli
@@ -35,59 +35,149 @@ public class Money implements Serializable, Comparable<Money> {
     private final Currency currency;
 
     private Money(String amount, Currency currency) {
-        this.amount = new BigDecimal(amount);
-        this.currency = currency;
+        this(new BigDecimal(amount), currency);
     }
 
     private Money(BigDecimal amount, Currency currency) {
+        if (amount == null || currency == null) {
+            throw new NullPointerException("The amount and currency are required for a Money");
+        }
+
         this.amount = amount;
         this.currency = currency;
     }
 
+    /**
+     * Creates a new Money using the numeric value from the given String, which must be in the
+     * correct format to be parsed by the {@link BigDecimal#BigDecimal(String)} constructor.
+     *
+     * @param   amount The amount.
+     * @param   currency The currency.
+     * @return  The Money.
+     * @throws  NullPointerException If the amount or currency are null.
+     */
     public static Money valueOf(String amount, Currency currency) {
         return new Money(amount, currency);
     }
 
+    /**
+     * Creates a new Money using the numeric value from the given BigDecimal. No rounding occurs in
+     * order to maintain precision.
+     *
+     * @param   amount The amount.
+     * @param   currency The currency.
+     * @return  The Money.
+     * @throws  NullPointerException If the amount or currency are null.
+     */
     public static Money valueOf(BigDecimal amount, Currency currency) {
         return new Money(amount, currency);
     }
 
+    /**
+     * @return  The currency of this Money.
+     */
     public Currency getCurrency() {
         return currency;
     }
 
+    /**
+     * Adds the given ammount to this Money and returns the result.
+     *
+     * @param   that The amount to add.
+     * @return  A new Money with the result of the addition.
+     * @throws  IllegalArgumentException If the currencies don't match.
+     */
     public Money plus(Money that) {
+        if (!currency.equals(that.currency)) {
+            throw new IllegalArgumentException("Money currencies [" + currency + " and " + that.currency +
+                "] don't match. Cannot add Monies.");
+        }
+
         return new Money(amount.add(that.amount), currency);
     }
 
+    /**
+     * Subtracts the given ammount to this Money and returns the result.
+     *
+     * @param   that The amount to subtract .
+     * @return  A new Money with the result of the subtraction .
+     * @throws  IllegalArgumentException If the currencies don't match.
+     */
     public Money minus(Money that) {
+        if (!currency.equals(that.currency)) {
+            throw new IllegalArgumentException("Money currencies [" + currency + " and " + that.currency +
+                "] don't match. Cannot subtract Monies.");
+        }
+
         return new Money(amount.subtract(that.amount), currency);
     }
 
-    public Money times(long l) {
-        return new Money(amount.multiply(new BigDecimal(l)), currency);
+    /**
+     * Multiplies this Money by the given long and returns the result in a new Money.
+     *
+     * @param   amount The amount to multiply by.
+     * @return  A new Money with the result of the multiplication.
+     */
+    public Money times(long amount) {
+        return new Money(this.amount.multiply(new BigDecimal(amount)), currency);
     }
 
-    public Money times(Double d) {
-        return new Money(amount.multiply(new BigDecimal(d)), currency);
+    /**
+     * Multiplies this Money by the given Double and returns the result in a new Money.
+     *
+     * @param   amount The amount to multiply by.
+     * @return  A new Money with the result of the multiplication.
+     */
+    public Money times(double amount) {
+        return new Money(this.amount.multiply(new BigDecimal(amount)), currency);
     }
 
-    public Money dividedBy(long l) {
-        return new Money(amount.divide(new BigDecimal(l)), currency);
+    /**
+     * Divides this Money by the given long and returns the result in a new Money.
+     *
+     * @param   amount The amount to divide by.
+     * @return  A new Money with the result of the division.
+     */
+    public Money dividedBy(long amount) {
+        return new Money(this.amount.divide(new BigDecimal(amount)), currency);
     }
 
-    public Money dividedBy(double d) {
-        return new Money(amount.divide(new BigDecimal(d)), currency);
+    /**
+     * Divides this Money by the given double and returns the result in a new Money.
+     *
+     * @param   amount The amount to divide by.
+     * @return  A new Money with the result of the division.
+     */
+    public Money dividedBy(double amount) {
+        return new Money(this.amount.divide(new BigDecimal(amount)), currency);
     }
 
+    /**
+     * Returns the amount of this Money as a long. This is the result of truncating any decimal part
+     * of the amount and returning it.
+     *
+     * @return  The long value of the money.
+     */
     public long longValue() {
         return amount.longValue();
     }
 
+    /**
+     * Returns this Money as a double. This conversion is not precise because it is the conversion
+     * from a BigDecimal to a double, which is lossy. This method should be avoided at all costs.
+     *
+     * @return  The double value of the Money.
+     */
     public double doubleValue() {
         return amount.doubleValue();
     }
 
+    /**
+     * Returns the amount of this Money as a BigDecimal. The is the only precise way to get access
+     * to the amount of this Money.
+     *
+     * @return  The amount of the Money.
+     */
     public BigDecimal toBigDecimal() {
         return amount;
     }
@@ -158,6 +248,26 @@ public class Money implements Serializable, Comparable<Money> {
     public boolean equals(Object obj) {
         throw new AssertionError("Equals is not implemented on Money because of really hairy issues " +
             "with rounding and maintaining transitive/associative properties of this object.");
+    }
+
+    /**
+     * @return  True IFF the amount of this Money, when rounded to the number of fractional digits
+     *          of the currency of the Money, is exactly equal to 0. For example, a Money value of
+     *          <strong>0.003 USD</strong> (three tenths of a percentage of a penny in U.S. dollars)
+     *          will return true because this is less than zero and when rounded up will still be zero.
+     */
+    public boolean isZero() {
+        BigDecimal bd = amount.setScale(currency.getDefaultFractionDigits(), RoundingMode.HALF_UP);
+        return bd.compareTo(new BigDecimal("0")) == 0;
+    }
+
+    /**
+     * @return  True IFF the amount of this Money has a value that is exactly equal to 0. For example,
+     *          a Money value of <strong>0.003 USD</strong> (three tenths of a percentage of a penny
+     *          in U.S. dollars) will return false because this not exactly zero.
+     */
+    public boolean isZeroExact() {
+        return amount.compareTo(new BigDecimal("0")) == 0;
     }
 
     public int compareTo(Money o) {
