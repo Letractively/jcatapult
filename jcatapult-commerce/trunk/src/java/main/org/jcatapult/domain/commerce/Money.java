@@ -29,6 +29,7 @@ import java.util.Locale;
  * @author  Brian Pontarelli
  */
 public class Money implements Serializable, Comparable<Money> {
+    public static final Money ZERO_USD = Money.valueOf("0.0", Currency.getInstance("USD"));
     private final static int serialVersionUID = 1;
 
     private final BigDecimal amount;
@@ -233,7 +234,7 @@ public class Money implements Serializable, Comparable<Money> {
      */
     public boolean equalsExact(Money money) {
         if (this == money) return true;
-        if (!amount.equals(money.amount)) return false;
+        if (amount.compareTo(money.amount) != 0) return false;
         if (!currency.equals(money.currency)) return false;
 
         return true;
