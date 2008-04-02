@@ -14,7 +14,7 @@
   <!-- set to true if this libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="false"/>
 
-  <property name="version.jcatapult" value="1.0-M3"/>
+  <property name="version.jcatapult" value="1.0-M4"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
