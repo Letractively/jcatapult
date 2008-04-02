@@ -19,6 +19,8 @@
   <dirname property="dir.plugin.svn-macros" file="${ant.file.svn-macros}"/>
   <path id="classpath.svn-macros">
     <fileset dir="${dir.plugin.svn-macros}/lib" includes="*.jar"/>
+    <pathelement location="${dir.plugin.svn-macros}/../../libraries/svnkit-1.1.4.jar"/>
+    <pathelement location="${dir.plugin.svn-macros}/../../libraries/ganymed-1.1.4.jar"/>
   </path>
 
   <!-- load the svn task -->

@@ -2,6 +2,7 @@
   <dirname property="dir.plugin.component" file="${ant.file.component-macros}"/>
   <path id="classpath.component">
     <fileset dir="${dir.plugin.component}/lib" includes="*.jar"/>
+    <pathelement location="${dir.plugin.component}/../../libraries/jdom-1.0.jar"/>
   </path>
 
   <property name="component-macros.dir.scripts.groovy" value="${dir.plugin.component}/scripts/groovy"/>
