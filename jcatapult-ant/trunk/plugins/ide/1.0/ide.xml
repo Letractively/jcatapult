@@ -18,7 +18,7 @@
 <project name="ide">
   <dirname property="dir.plugin.ide" file="${ant.file.ide}"/>
   <path id="classpath.ide">
-    <pathelement location="${dir.plugin.ide}/../../libraries/java-net-commons-1.4.2.jar"/>
+    <pathelement location="${dir.plugin.ide}/../../libraries/java-net-commons-1.4.4.jar"/>
   </path>
 
   <!-- set the groovy scripts dir property -->
