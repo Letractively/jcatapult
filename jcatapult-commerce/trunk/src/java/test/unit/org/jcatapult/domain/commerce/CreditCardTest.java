@@ -15,7 +15,9 @@
  */
 package org.jcatapult.domain.commerce;
 
+import org.joda.time.YearMonthDay;
 import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
@@ -72,5 +74,23 @@ public class CreditCardTest {
         Assert.assertTrue(cc.isNumberValid());
         cc.setNumber("3566002020360505");
         Assert.assertTrue(cc.isNumberValid());
+    }
+
+    /**
+     * Test that the leap year code is working properly and that it always grab the last day of the
+     * month.
+     */
+    @Test
+    public void testExpirationDate() {
+        CreditCard cc = new CreditCard();
+        cc.setExpirationMonth(2);
+        cc.setExpirationYear(2009);
+        YearMonthDay ymd = cc.getExpirationDate();
+        assertEquals(28, ymd.getDayOfMonth());
+
+        cc.setExpirationMonth(4);
+        cc.setExpirationYear(2010);
+        ymd = cc.getExpirationDate();
+        assertEquals(30, ymd.getDayOfMonth());
     }
 }

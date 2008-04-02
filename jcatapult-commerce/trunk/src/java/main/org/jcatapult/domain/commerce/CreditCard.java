@@ -110,7 +110,7 @@ public class CreditCard implements Serializable {
      *
      */
     public YearMonthDay getExpirationDate() {
-        int day = Month.getMonthOneBased(expirationMonth).getDays();
+        int day = Month.getMonthOneBased(expirationMonth).getDays(expirationYear);
         return new YearMonthDay(expirationYear, expirationMonth, day);
     }
 
