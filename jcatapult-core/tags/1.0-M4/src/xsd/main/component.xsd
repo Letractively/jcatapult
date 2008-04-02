@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.jcatapult.org/schemas/1.0/component"
+    xmlns:component="http://www.jcatapult.org/schemas/1.0/component"
+    elementFormDefault="unqualified">
+
+  <xsd:complexType name="actionPackageType">
+    <xsd:annotation>
+      <xsd:documentation>
+        This element defines a single action package for the component. This package can also define
+        a namespace prefix that is prepended to the URL for the actions in this and all sub-packages.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="namespace_prefix" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="persistenceType">
+    <xsd:annotation>
+      <xsd:documentation>
+        This element defines a the entity classes for the component.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="class" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="component">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="action_package" type="actionPackageType" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element name="base_result_location" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="parent_package" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="persistence" type="persistenceType" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
