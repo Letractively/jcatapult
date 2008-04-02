@@ -32,14 +32,14 @@
     <property file="${user.home}/jcatapult-build.properties"/>
     <property name="dir.jcatapult.release" value="${dir.jcatapult.cache}/jcatapult-release"/>
 
-    <!-- get the version -->
-    <input message="Please input release version:" addproperty="release.jcatapult.version"/>
-
     <!-- clean up -->
-    <!--<delete dir="${dir.jcatapult.release}"/>-->
+    <delete dir="${dir.jcatapult.release}"/>
 
     <!-- make the release dir -->
     <mkdir dir="${dir.jcatapult.release}"/>
+
+    <!-- get the version -->
+    <input message="Please input release version:" addproperty="release.jcatapult.version"/>
 
     <!-- set the distribution directory -->
     <property name="dir.dist" value="${dir.jcatapult.release}/jcatapult-${release.jcatapult.version}"/>
