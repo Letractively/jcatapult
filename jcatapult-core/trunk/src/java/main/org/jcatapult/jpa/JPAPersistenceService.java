@@ -79,6 +79,13 @@ public class JPAPersistenceService implements PersistenceService {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public boolean contains(Object obj) {
+        return entityManager.contains(obj);
+    }
+
+    /**
      * Starts a new {@link EntityTransaction} if the current {@link EntityManager} doesn't already have
      * an active transaction. If it does have an active transaction, then it still creates a transaction
      * but it is a proxy that will ignore commit and rollback calls since it is effectively an outer

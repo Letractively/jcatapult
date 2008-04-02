@@ -47,6 +47,14 @@ public interface PersistenceService {
     void reload(Object obj);
 
     /**
+     * Determines if the given object is a managed JPA entity inside the current EntityManager context.
+     *
+     * @param   obj The Object to determine if it is managed or not.
+     * @return  True if the Object is managed, false if it is detached.
+     */
+    boolean contains(Object obj);
+
+    /**
      * Starts a transaction and returns a transaction facade.
      *
      * @return  The transaction facade and never null.
