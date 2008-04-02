@@ -30,4 +30,5 @@
 
   <!-- release -->
   <import file="${plugin.dir}/release-svn/1.0/jar.xml"/>
+  <import file="${plugin.dir}/release-jcatapult/1.0/release-jcatapult.xml"/>
 </project>
