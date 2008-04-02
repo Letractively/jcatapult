@@ -25,6 +25,8 @@
     <pathelement location="${dir.plugin.savant}/../../libraries/log4j-1.2.9.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/jdom-1.0.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/jline-0.9.92.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/ganymed-1.1.4.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/svnkit-1.1.4.jar"/>
   </path>
 
   <!-- Dependency tasks -->
