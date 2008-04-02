@@ -16,6 +16,7 @@
    language governing permissions and limitations under the License.
 -->
 <project name="jaxws">
+<!--
   <dirname property="dir.plugin.jaxws" file="${ant.file.jaxws}"/>
   <path id="classpath.jaxws">
     <fileset dir="${dir.plugin.jaxws}/lib" includes="*.jar"/>
@@ -25,4 +26,5 @@
   <taskdef name="schemagen" classname="com.sun.tools.jxc.SchemaGenTask" classpathref="classpath.jaxws"/>
   <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport" classpathref="classpath.jaxws"/>
   <taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen" classpathref="classpath.jaxws"/>
+-->
 </project>

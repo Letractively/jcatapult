@@ -16,9 +16,10 @@
    language governing permissions and limitations under the License.
 -->
 <project name="cobertura">
-  <dirname property="cobertura.dir" file="${ant.file.cobertura}"/>
+  <dirname property="dir.plugin.cobertura" file="${ant.file.cobertura}"/>
   <path id="classpath.coverage">
-    <fileset dir="${cobertura.dir}/lib" includes="*.jar"/>
+    <fileset dir="${dir.plugin.cobertura}/lib" includes="*.jar"/>
+    <pathelement location="${dir.plugin.cobertura}/../../libraries/log4j-1.2.9.jar"/>
   </path>
   <taskdef classpathref="classpath.coverage" resource="tasks.properties"/>
 

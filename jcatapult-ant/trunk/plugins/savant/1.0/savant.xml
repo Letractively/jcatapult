@@ -22,6 +22,9 @@
     <pathelement location="${dir.plugin.savant}/../../libraries/java-net-commons-1.4.2.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/savant-core-2.0-M2.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/ant-ext-2.0-M2.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/log4j-1.2.9.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/jdom-1.0.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/jline-0.9.92.jar"/>
   </path>
 
   <!-- Dependency tasks -->
