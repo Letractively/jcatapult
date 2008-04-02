@@ -18,9 +18,6 @@
   -->
   <properties file="${user.home}/inversoft-org-release-build.properties"/>
 
-  <echo message="svn.release.username = " value="${svn.release.username}"/>
-  <echo message="svn.release.password = " value="${svn.release.password}"/>
-
   <!-- compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
 
