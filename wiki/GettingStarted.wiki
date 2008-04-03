@@ -5,7 +5,7 @@
 This document describes how to get up and running with JCatapult.
 
 = Download Current Distribution =
-
+Download the most current version of the JCatapult Distribution from the [Downloads] page.
 
 = JCatapult Ant =
 
