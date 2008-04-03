@@ -1,0 +1,48 @@
+<project name="project-support">
+  <dirname property="dir.plugin.component" file="${ant.file.project-support}"/>
+  <import file="${dir.plugin.component}/component-macros.xml"/>
+
+  <!-- Adds the component to a project -->
+  <target name="add-component" description="Adds a component to the current project.">
+    <input message="Enter component URL inside a Savant repository. This should point to the project directory and not a specific version since the latest version will be determined (i.e. http://savant.inversoft.org/example.com/user-component)  *NOTE: Trailing slashes are ignored" addproperty="component.url"/>
+    <component_add url="${component.url}"/>
+  </target>
+
+  <target name="add-named-component" description="Adds a component that is named on the command-line using the url property">
+    <component_add url="${url}"/>
+  </target>
+
+  <macrodef name="component_add">
+    <attribute name="url"/>
+    <sequential>
+      <echo message="Checking component URL @{url}"/>
+      <condition property="component.exists" value="true">
+        <http url="@{url}"/>
+      </condition>
+
+      <if>
+        <not>
+          <equals arg1="${component.exists}" arg2="true"/>
+        </not>
+        <then>
+          <fail message="Component @{url} doesn't exist"/>
+        </then>
+      </if>
+
+      <component_project_name url="@{url}"/>
+      <component_determine_version url="@{url}" name="${component.project.name}"/>
+      <component_add_dependency name="${component.project.name}" version="${component.version}"/>
+      <!-- <component_drop_files component="${component.name}" version="${component.version}"/> -->
+
+      <get src="@{url}/${component.project.name}-${component.version}.jar" dest="${java.io.tmpdir}/component.jar"/>
+      <component_add_entities persistenceFile="${dir.src.conf.main}/META-INF/persistence.xml">
+        <componentClasspath>
+          <pathelement location="${java.io.tmpdir}/component.jar"/>
+        </componentClasspath>
+      </component_add_entities>
+
+      <ant target="ide" inheritall="false"/>
+      <ant target="create-main-database" inheritall="false"/>
+    </sequential>
+  </macrodef>
+</project>
