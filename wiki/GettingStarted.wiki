@@ -11,7 +11,7 @@ This document describes how to get up and running with JCatapult.
 
   * Create a JCATAPULT_HOME environment variable and set it to the directory you unzipped the distribution to.
 
-= JCatapult Ant =
+= Ant 1.7 =
 
 JCatapult requires that you are using Apache Ant 1.7.0 or later. You will need to download Apache Ant if you don't already have it installed. The website for Ant is http://ant.apache.org.
 
