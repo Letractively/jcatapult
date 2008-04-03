@@ -4,8 +4,12 @@
 
 This document describes how to get up and running with JCatapult.
 
-= Download Current Distribution =
-Download the most current version of the JCatapult Distribution from the [http://code.google.com/p/jcatapult/downloads/list Downloads] page.
+= JCatapult Distribution Installation =
+  # Download the most current version of the JCatapult Distribution from the [http://code.google.com/p/jcatapult/downloads/list Downloads] page.
+
+  # Unzip the distribution to a directory of your choice (e.g. /usr/share/jcatapult, C:\Program Files\jcatapult)
+
+  # Create a JCATAPULT_HOME environment variable and set it to the directory you unzipped the distribution to.
 
 = JCatapult Ant =
 
