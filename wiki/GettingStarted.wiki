@@ -15,19 +15,7 @@ This document describes how to get up and running with JCatapult.
 
 JCatapult requires that you are using Apache Ant 1.7.0 or later. You will need to download Apache Ant if you don't already have it installed. The website for Ant is http://ant.apache.org.
 
-You first need to install the JCatapult Ant build system. To do this you'll need to check out that module from the SubVersion repository into your Apache Ant installation. This procedure will change once the JCatapult Ant build system has produced a release.
-
-{{{
-cd $ANT_HOME
-svn co http://jcatapult.googlecode.com/svn/jcatapult-ant/trunk/plugins plugins-jcatapult
-}}}
-
-Next, check out the JCatapult Ant build tools, which provide easy ways to bootstrap new JCatapult applications, libraries and components.
-
-{{{
-cd $ANT_HOME
-svn co http://jcatapult.googlecode.com/svn/jcatapult-ant/trunk/tools tools-jcatapult
-}}}
+After you download and install Ant, please create an ANT_HOME environment variable and set it to the location of your Ant installation.
 
 = Tomcat =
 
