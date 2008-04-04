@@ -33,8 +33,9 @@
   -->
   <target name="-init">
     <input message="Enter project name" addproperty="create.project.name"/>
-    <input message="Enter directory to create the project in or press enter to use the current directory (the project name will be appended to this directory)"
+    <input message="Enter directory to create the project in or press enter to use the current directory"
            addproperty="create.project.dir" defaultvalue="${user.dir}"/>
+
     <condition property="bad.project.name">
       <contains string="${create.project.name}" substring="_"/>
     </condition>
@@ -56,6 +57,13 @@
     </groovy>
 
     <input message="Enter the group name for the project (i.e. example.com)" addproperty="create.group.name"/>
+
+    <input message="Really create [${create.project.name}] in [${create.project.dir}/${create.project.name}]?"
+           validargs="y,n" addproperty="do.create"/>
+    <condition property="do.abort">
+      <equals arg1="n" arg2="${do.create}"/>
+    </condition>
+    <fail if="do.abort"/>
   </target>
 
   <!--
@@ -83,23 +91,32 @@
           description="Imports a local project directory into a remote subversion repository.  This target creates the trunk, tags, and branches directory for you.">
 
     <echo>
-svn-import is an interactive tool to help you import a local project directory into a remote subversion repository.
+svn-import is an interactive tool to help you import a local project directory into a remote subversion
+repository. Please ensure that you are NOT in the project directory currently. If you are in the
+project directory this command might fail (on Windows) or you might think you are in the checked
+directory once the command exits, but you won't be.
+
 
 You will be prompted for the following information:
 
-    1. The absolute path to project directory root: The local absolute uri path to where your project lives on your hard drive.  ex: /home/someuser/myprojects/projectX
-    2. The remote subversion repository url:  The URL to where your project directory will be imported to.  ex: https://svn.someuser.com/myprojects/projectX
-    3. The subversion repository username
-    4. The subversion repository password
+    1. The project name as it exists on disk and will exist in the SVN repository.
+    2. The absolute path to where your project lives on your hard drive.
+           ex: /home/someuser/myprojects/projectX
+    3. The URL to where your project directory will be imported to without the project name.
+           ex: https://svn.someuser.com/myprojects
+    4. The subversion repository username
+    5. The subversion repository password
     </echo>
 
+    <input message="Enter the project name" addproperty="svn-import.project.name"/>
     <input message="Enter the absolute path to project directory root" addproperty="svn-import.project.path"
-           defaultvalue="${user.dir}"/>
-    <input message="Enter the remote subversion repository url" addproperty="svn-import.url"/>
+           defaultvalue="${user.dir}/${svn-import.project.name}"/>
+    <input message="Enter the remote subversion repository url (WITHOUT the project name)"
+           addproperty="svn-import.url"/>
     <input message="Enter the subversion repository username" addproperty="svn-import.username"/>
     <input message="Enter the subversion repository password" addproperty="svn-import.password"/>
 
-    <input message="Please confirm that you intend to import [${svn-import.project.path}] to [${svn-import.url}]?"
+    <input message="Really import [${svn-import.project.path}] to [${svn-import.url}/${svn-import.project.name}]?"
            validargs="y,n" addproperty="do.import"/>
     <condition property="do.abort">
       <equals arg1="n" arg2="${do.import}"/>
@@ -112,19 +129,19 @@ You will be prompted for the following information:
       <fileset dir="${svn-import.project.path}" includes="*.iws"/>
     </delete>
 
-    <echo>Importing [${svn-import.project.path}] to [${svn-import.url}/trunk]...</echo>
-    <scm_import url="${svn-import.url}/trunk" dir="${svn-import.project.path}"
+    <echo>Importing [${svn-import.project.path}] to [${svn-import.url}/${svn-import.project.name}/trunk]...</echo>
+    <scm_import url="${svn-import.url}/${svn-import.project.name}/trunk" dir="${svn-import.project.path}"
                 username="${svn-import.username}" password="${svn-import.password}"/>
-    <scm_mkdir url="${svn-import.url}/tags" username="${svn-import.username}"
+    <scm_mkdir url="${svn-import.url}/${svn-import.project.name}/tags" username="${svn-import.username}"
                password="${svn-import.password}"/>
-    <scm_mkdir url="${svn-import.url}/branches" username="${svn-import.username}"
+    <scm_mkdir url="${svn-import.url}/${svn-import.project.name}/branches" username="${svn-import.username}"
                password="${svn-import.password}"/>
 
-    <echo>Backing up project to [${user.home}/tmp]...</echo>
+    <echo>Backing up project to [${user.home}/.jcatapult/project-svn-import]...</echo>
     <move file="${svn-import.project.path}" todir="${user.home}/.jcatapult/project-svn-import"/>
 
     <echo>Checking out trunk to [${svn-import.project.path}]...</echo>
-    <scm_checkout url="${svn-import.url}/trunk" dir="${svn-import.project.path}"
+    <scm_checkout url="${svn-import.url}/${svn-import.project.name}/trunk" dir="${svn-import.project.path}"
                   username="${svn-import.username}" password="${svn-import.password}"/>
   </target>
 
