@@ -33,7 +33,7 @@
   -->
   <target name="-init">
     <input message="Enter project name" addproperty="create.project.name"/>
-    <input message="Enter directory to create the project in or press enter to use the current directory"
+    <input message="Enter directory to create the project in or press enter to use the current directory (the project name will be appended to this directory)"
            addproperty="create.project.dir" defaultvalue="${user.dir}"/>
     <condition property="bad.project.name">
       <contains string="${create.project.name}" substring="_"/>
@@ -87,28 +87,26 @@ svn-import is an interactive tool to help you import a local project directory i
 
 You will be prompted for the following information:
 
-    1. absolute path to project directory root: The local absolute uri path to where your project lives on your hard drive.  ex: /home/someuser/myprojects/projectX
-    2. remote subversion repository url:  The URL to where your project directory will be imported to.  ex: https://svn.someuser.com/myprojects/projectX
-    3. subversion repository username
-    4. subversion repository password
+    1. The absolute path to project directory root: The local absolute uri path to where your project lives on your hard drive.  ex: /home/someuser/myprojects/projectX
+    2. The remote subversion repository url:  The URL to where your project directory will be imported to.  ex: https://svn.someuser.com/myprojects/projectX
+    3. The subversion repository username
+    4. The subversion repository password
     </echo>
 
-    <input message="absolute path to project directory root:" addproperty="svn-import.project.path"/>
-    <input message="remote subversion repository url:" addproperty="svn-import.url"/>
-    <input message="subversion repository username:" addproperty="svn-import.username"/>
-    <input message="subversion repository password:" addproperty="svn-import.password"/>
+    <input message="Enter the absolute path to project directory root" addproperty="svn-import.project.path"
+           defaultvalue="${user.dir}"/>
+    <input message="Enter the remote subversion repository url" addproperty="svn-import.url"/>
+    <input message="Enter the subversion repository username" addproperty="svn-import.username"/>
+    <input message="Enter the subversion repository password" addproperty="svn-import.password"/>
 
-    <input
-      message="Please confirm that you intend to import [${svn-import.project.path}] to [${svn-import.url}]?"
-      validargs="y,n"
-      addproperty="do.import"
-      />
+    <input message="Please confirm that you intend to import [${svn-import.project.path}] to [${svn-import.url}]?"
+           validargs="y,n" addproperty="do.import"/>
     <condition property="do.abort">
       <equals arg1="n" arg2="${do.import}"/>
     </condition>
     <fail if="do.abort"/>
 
-    <delete dir="${user.home}/tmp"/>
+    <delete dir="${user.home}/.jcatapult/project-svn-import"/>
     <delete dir="${svn-import.project.path}/target"/>
     <delete>
       <fileset dir="${svn-import.project.path}" includes="*.iws"/>
@@ -123,7 +121,7 @@ You will be prompted for the following information:
                password="${svn-import.password}"/>
 
     <echo>Backing up project to [${user.home}/tmp]...</echo>
-    <move file="${svn-import.project.path}" todir="${user.home}/tmp"/>
+    <move file="${svn-import.project.path}" todir="${user.home}/.jcatapult/project-svn-import"/>
 
     <echo>Checking out trunk to [${svn-import.project.path}]...</echo>
     <scm_checkout url="${svn-import.url}/trunk" dir="${svn-import.project.path}"
@@ -205,19 +203,19 @@ You will be prompted for the following information:
         def best = null;
         def bestStr = null;
         lines.each {
-        def matcher = (it =~ /&lt;li>&lt;a href="(.*?)\/"/)
-        if (matcher.find()) {
-        def str = matcher[0][1];
-        try {
-        def ver = new Version(str);
-        if (best == null || ver.compareTo(best) > 0) {
-        best = ver;
-        bestStr = str;
-        }
-        } catch (e) {
-        // Smother, this is the .. or something else
-        }
-        }
+          def matcher = (it =~ /&lt;li>&lt;a href="(.*?)\/"/)
+          if (matcher.find()) {
+            def str = matcher[0][1];
+            try {
+              def ver = new Version(str);
+              if (best == null || ver.compareTo(best) > 0) {
+                best = ver;
+                bestStr = str;
+              }
+            } catch (e) {
+              // Smother, this is the .. or something else
+            }
+          }
         }
 
         new File(properties["basedir"] + "/versions.xml").delete();
@@ -225,11 +223,11 @@ You will be prompted for the following information:
         String moduleName = "@{url}";
         String propName = "@{property}";
         if (best != null) {
-        properties[propName] = bestStr;
-        ant.echo("Determined latest ${moduleName} version to be ${bestStr}.");
+          properties[propName] = bestStr;
+          ant.echo("Determined latest ${moduleName} version to be ${bestStr}.");
         } else {
-        properties[propName] = "1.0-M1-{integration}";
-        ant.echo("WARNING: ${moduleName} doesn't have any releases, assuming 1.0-M1-{integration}");
+          properties[propName] = "1.0-M1-{integration}";
+          ant.echo("WARNING: ${moduleName} doesn't have any releases, assuming 1.0-M1-{integration}");
         }
       </groovy>
     </sequential>
