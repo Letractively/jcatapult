@@ -82,7 +82,7 @@ public abstract class AuditableImpl extends TimeStampableImpl implements Auditab
     public void preInsert() {
         super.preInsert();
         insertUser = SecurityContext.getCurrentUsername();
-        preUpdate();
+        updateUser = SecurityContext.getCurrentUsername();
     }
 
     /**
