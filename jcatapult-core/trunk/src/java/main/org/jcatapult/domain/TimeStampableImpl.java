@@ -74,7 +74,7 @@ public abstract class TimeStampableImpl extends IdentifiableImpl implements Time
     @PrePersist
     public void preInsert() {
         insertDate = new DateTime();
-        preUpdate();
+        updateDate = new DateTime();
     }
 
     /**
