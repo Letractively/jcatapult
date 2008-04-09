@@ -5,7 +5,10 @@
 
 The jCatapult Database Manager (*dbmgr* for short) was built to help make managing your databases easier.  It accomplishes this by managing creation, seeding, and patching of your project databases for you.
 
-The dbmgr is coupled tightly with hibernate and, therefore, should only be used if you're using hibernate as your ORM framework of choice.
+Currently, the dbmgr is coupled tightly with hibernate and, therefore, should only be used if you're using hibernate as your ORM framework of choice.
+
+= Project Integration =
+The dbmgr is integrated into projects via the JCatapult Ant Mysql plugin, which is imported in the project's build.xml file.  Databases are created by executing the 'ant create-main-database' target.
 
 = Warnings =
 
