@@ -23,7 +23,8 @@ The Main database is connected to by the webapp via a JNDI entry in the `deploy/
           validationQuery="select 1" testOnBorrow="true" testWhileIdle="true"
           timeBetweenEvictionRunsMillis="30000" minEvictableIdleTimeMillis="60000"
           poolPreparedStatements="true" maxOpenPreparedStatements="30"
-          username="dev" password="dev" driverClassName="com.mysql.jdbc.Driver"           url="jdbc:mysql://localhost:3306/test_webapp?relaxAutoCommit=true&amp;characterEncoding=utf8"/>
+          username="dev" password="dev" driverClassName="com.mysql.jdbc.Driver"
+          url="jdbc:mysql://localhost:3306/test_webapp?relaxAutoCommit=true&amp;characterEncoding=utf8"/>
 }}}
 
 == Creating the database ==
