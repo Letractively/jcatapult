@@ -11,10 +11,10 @@ Currently, the dbmgr is coupled tightly with hibernate and, therefore, should on
 The dbmgr is integrated into projects via the JCatapult Ant Mysql plugin, which is imported in the project's build.xml file.  JCatapult currently only supports MySQL, however, work is currently being done to provide support for PostgreSQL and others.
 == Connectivity ==
 The JCatapult dbmgr uses 2 databases for development:
-  * Main
-  * Test
+  * Main Database
+  * Test Database
 === The Main Database ==
-The Main database is connected to by the webapp via a JNDI entry in the `deploy/tomcat/main/conf/context.xml` file.  An example entry has been provided below:
+The Main database is used by the webapp during runtime and is connected to via a JNDI entry in the `deploy/tomcat/main/conf/context.xml` file.  An example entry has been provided below:
 
 {{{
 <Resource name="jdbc/test_webapp" auth="Container" type="javax.sql.DataSource"
