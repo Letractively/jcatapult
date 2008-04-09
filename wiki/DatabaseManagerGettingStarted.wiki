@@ -41,7 +41,7 @@ ant create-main-database
 ant create-test-database
 }}}
 
-*TIP: Because the test database is only used during unit testing, it's only required to create the test database if you're running unit tests.  Consequently, to make it as simple as possible, the JCatapult testing framework creates your test database for you when you run your unit test suite via the `ant test` target.
+*TIP*: Because the test database is only used during unit testing, it's only required to create the test database if you're running unit tests.  Consequently, to make it as simple as possible, the JCatapult testing framework creates your test database for you when you run your unit test suite via the `ant test` target.
 
 = Warnings =
 
