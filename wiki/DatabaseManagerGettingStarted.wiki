@@ -8,15 +8,16 @@ The jCatapult Database Manager (*dbmgr* for short) was built to help make managi
 Currently, the dbmgr is coupled tightly with hibernate and, therefore, should only be used if you're using hibernate as your ORM framework of choice.
 
 = Project Integration =
-== Creating the database ==
+The dbmgr is integrated into projects via the JCatapult Ant Mysql plugin, which is imported in the project's build.xml file.  JCatapult currently only supports MySQL, however, work is currently being done to provide support for PostgreSQL and others.
+== Connectivity ==
 The JCatapult dbmgr uses 2 databases for development:
   * Main
   * Test
 === The Main Database ==
-The Main database is connected to by the webapp via a JNDI entry in the `deploy/tomcat/main/context.xml`.  An example entry has been provided below:
+The Main database is connected to by the webapp via a JNDI entry in the `deploy/tomcat/main/conf/context.xml` file.  An example entry has been provided below:
 
 {{{
-  <Resource name="jdbc/test_webapp" auth="Container" type="javax.sql.DataSource"
+<Resource name="jdbc/test_webapp" auth="Container" type="javax.sql.DataSource"
             initialSize="2" maxActive="15" maxIdle="5" maxWait="10000"
             removeAbandoned="true" removeAbandonedTimeout="180"
             validationQuery="select 1" testOnBorrow="true" testWhileIdle="true"
@@ -26,7 +27,8 @@ The Main database is connected to by the webapp via a JNDI entry in the `deploy/
             url="jdbc:mysql://localhost:3306/test_webapp?relaxAutoCommit=true&amp;characterEncoding=utf8"/>
 }}}
 
-The dbmgr is integrated into projects via the JCatapult Ant Mysql plugin, which is imported in the project's build.xml file.  Databases are created by executing the following ant target:
+== Creating the database ==
+Databases are created by executing the following ant target:
 
 {{{
 ant create-main-database
