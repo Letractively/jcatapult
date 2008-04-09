@@ -14,7 +14,7 @@ The JCatapult dbmgr uses 2 databases for development:
   * Main Database
   * Test Database
 === The Main Database ==
-The Main database is used by the webapp during runtime and is connected to via a JNDI entry in the `deploy/tomcat/main/conf/context.xml` file.  An example entry has been provided below:
+The Main database is used by the webapp during runtime and is connected to through JNDI via an entry in the `deploy/tomcat/main/conf/context.xml` file.  An example entry has been provided below:
 
 {{{
 <Resource name="jdbc/test_webapp" auth="Container" type="javax.sql.DataSource"
@@ -27,7 +27,10 @@ The Main database is used by the webapp during runtime and is connected to via a
           url="jdbc:mysql://localhost:3306/test_webapp?relaxAutoCommit=true&amp;characterEncoding=utf8"/>
 }}}
 
-== Creating the database ==
+=== Test Database ===
+The Test Database is used only during unit testing and, like the main database, is connected to through JNDI.  Instead of connecting via an entry in the context.xml, however, the test database is connected to programatically within the `org.jcatapult.database.JPABaseTest` contained within the jcatapult-core-test jar (which is a dependency defined within every project's project.xml).  Consequently, in order for your unit test to correctly connect to the database, you must be a sub-class of JPABaseTest.
+
+== Database Creation ==
 Databases are created by executing the following ant target:
 
 {{{
