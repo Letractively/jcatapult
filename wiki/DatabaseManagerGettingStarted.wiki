@@ -28,7 +28,7 @@ The Main database is used by the webapp during runtime and is connected to throu
 }}}
 
 === Test Database ===
-The Test Database is used only during unit testing and, like the main database, is connected to through JNDI.  Instead of connecting via an entry in the context.xml, however, the test database is connected to programatically within the `org.jcatapult.database.JPABaseTest` contained within the jcatapult-core-test jar (which is a dependency defined within every project's project.xml).  Consequently, in order for your unit test to correctly connect to the database, it must be a sub-class of JPABaseTest.
+The Test Database is used only during unit testing and, like the main database, is connected to through JNDI.  Instead of connecting via an entry in the context.xml, however, the test database is connected to programatically within the `org.jcatapult.database.JPABaseTest` contained within the jcatapult-core-test jar (which is a dependency defined within every project's project.xml by default).  Consequently, in order for your unit test to correctly connect to the database, it must be a sub-class of JPABaseTest.
 
 == Database Creation ==
 Both databases can be created by executing the following ant targets for the main and test databases respectively:
