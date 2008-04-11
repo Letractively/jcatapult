@@ -177,6 +177,8 @@ $ target/tomcat/bin/tomcat.sh start
 
 Now you should be able to access the newly created application in a browser via http://localhost:8080
 
+= Creating the project Database =
+
 = IDE Integration =
 
 All jCatapult projects come default with project and module files for both Eclipse and IntelliJ.  This provides the capability for getting projects up and running quickly in either IDE.  To open the 'test-webapp' project, point either Eclipse or IntelliJ to your 'test-webapp' directory and follow the opening procedures specific to your IDE.
