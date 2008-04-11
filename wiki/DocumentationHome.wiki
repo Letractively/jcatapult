@@ -52,7 +52,7 @@ Below are links to topics about a specific JCatapult technology, service or API.
 
   * [Scaffolder JCatapult Scaffolder]
 
-=== Database ===
+=== Database Manager ===
 
   * [Persistence JCatapult persistence API]
   * [DatabaseManager JCatapult Database Manager]
