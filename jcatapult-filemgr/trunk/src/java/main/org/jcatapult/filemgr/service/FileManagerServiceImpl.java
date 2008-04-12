@@ -55,7 +55,15 @@ public class FileManagerServiceImpl implements FileManagerService {
     /**
      * {@inheritDoc}
      */
-    public Connector upload(File file, String fileName, String contentType, String fileType) {
+    public Connector upload(File file, String fileName, String contentType, String fileType, String currentFolder) {
+
+        // set the current folder
+        if (StringTools.isEmpty(currentFolder)) {
+            currentFolder = "";
+        } else {
+            currentFolder = "/" + currentFolder;
+        }
+
         Connector connector = new Connector();
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("Inside upload action and handling fileName [" + fileName + "] with contentType [" +
@@ -69,7 +77,7 @@ public class FileManagerServiceImpl implements FileManagerService {
             return connector;
         }
 
-        String dirName = getFileDir(fileType);
+        String dirName = getFileDir(fileType) + currentFolder;
 
         // Check for relative pathes
         String fullyQualifiedDirName = getFullyQualifiedDir(dirName);

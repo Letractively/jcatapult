@@ -24,6 +24,7 @@ import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.filemgr.service.FileManagerServiceImpl;
 import org.jcatapult.filemgr.service.FileConfigurationImpl;
+import org.jcatapult.filemgr.BaseTest;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +38,7 @@ import net.java.io.FileTools;
  *
  * @author  Brian Pontarelli
  */
-public class FckFileManagerTest {
+public class FckFileManagerTest extends BaseTest {
     @Test
     public void testContentTypeFail() {
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
@@ -60,7 +61,7 @@ public class FckFileManagerTest {
 
     @Test
     public void testRelativeSuccess() throws IOException {
-        FileTools.prune("/tmp/jcatapult-filemgr");
+        FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getStringArray("jcatapult.file-mgr.file-upload.allowed-content-types")).andReturn(null);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
@@ -68,7 +69,7 @@ public class FckFileManagerTest {
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.expect(servletContext.getRealPath("some-dir")).andReturn("/tmp/jcatapult-filemgr/some-dir");
+        EasyMock.expect(servletContext.getRealPath("some-dir")).andReturn(testDir + "/some-dir");
         EasyMock.replay(servletContext);
 
         HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -90,7 +91,7 @@ public class FckFileManagerTest {
         String result = fm.execute();
         Assert.assertEquals("success", result);
 
-        File check = new File("/tmp/jcatapult-filemgr/some-dir", "foo-bar.xml");
+        File check = new File(testDir + "/some-dir", "foo-bar.xml");
         Assert.assertTrue(check.exists() && check.isFile());
         String contents = FileTools.read(check).toString();
         Assert.assertEquals("contents", contents);
