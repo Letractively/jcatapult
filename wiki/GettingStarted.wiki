@@ -239,7 +239,9 @@ Now, during this exercise you might have noticed that `Users` extends `org.jcata
   * SoftDeletable: This interface marks a class as never being deleted permanently from the database. Instead, it is marked as being deleted and can be resurrected.
   * Timestampable: This interface defines an Entity that has time stamp information for when the database record was created and last updated.
 
-All of these interfaces have default implementations provided for you.  Moreover, there are many other Hibernate domain objects located in the `org.jcatapult.domain' package at your disposal.
+All of these interfaces have default implementations provided for you.  Moreover, there are many other Hibernate domain objects located in the org.jcatapult.domain package at your disposal.
+
+For more detailed information on how JCatapult manages databases, refer to the [DatabaseManager JCatapult Database Manager] documentation.
 
 = IDE Integration =
 
