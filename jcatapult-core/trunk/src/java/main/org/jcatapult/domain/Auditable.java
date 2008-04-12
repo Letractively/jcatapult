@@ -17,9 +17,8 @@ package org.jcatapult.domain;
 
 /**
  * <p>
- * This interface marks a class as being auditable where the user and time the
- * class was saved to the database is saved as well as the user and time it was
- * last updated is also saved.
+ * This interface marks a class as being auditable where the user that created the database
+ * record is recorded and the user who last updated the record is recorded.
  * </p>
  *
  * @author  Brian Pontarelli
