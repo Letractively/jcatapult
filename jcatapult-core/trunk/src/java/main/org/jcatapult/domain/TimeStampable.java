@@ -19,8 +19,8 @@ import org.joda.time.DateTime;
 
 /**
  * <p>
- * This interface defines an Entity that has time stamp information for
- * when it was created and last updated.
+ * This interface defines an Entity that has time stamp information
+ * for when the database record was created and last updated.
  * </p>
  *
  * @author Brian Pontarelli
