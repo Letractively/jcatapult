@@ -31,8 +31,7 @@
 
       <component_project_name url="@{url}"/>
       <component_determine_version url="@{url}" name="${component.project.name}"/>
-      <component_add_dependency name="${component.project.name}" version="${component.version}"/>
-      <!-- <component_drop_files component="${component.name}" version="${component.version}"/> -->
+      <component_add_dependency name="${component.project.name}" version="${component.version}" url="@{url}"/>
 
       <get src="@{url}/${component.project.name}-${component.version}.jar" dest="${java.io.tmpdir}/component.jar"/>
       <component_add_entities persistenceFile="${dir.src.conf.main}/META-INF/persistence.xml">
