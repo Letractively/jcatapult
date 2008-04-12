@@ -179,6 +179,68 @@ Now you should be able to access the newly created application in a browser via 
 
 = Creating the project Database =
 
+If you've setup MySQL correctly, you can create your project database by executing the following ant target:
+
+{{{
+ant create-main-database
+}}}
+
+JCatapult uses Hibernate as the persistence framework of choice.  Since your test webapp doesn't yet have any Hibernate Entity objects, executing `create-main-database` doesn't do much but create an empty database.  For tutorial purposes, lets go ahead and add a table to your database by creating a Hibernate Entity object within your project.  Within the `src/java/main/org/jcatapult/example/simple/domain` directory, create the following Hibernate Entity:
+
+{{{
+package org.jcatapult.example.simple.domain;
+
+import javax.persistence.Entity;
+
+import org.jcatapult.domain.IdentifiableImpl;
+
+/**
+ * This entity bean represents the ORM for the Users table in the database
+ */
+@Entity
+public class Users extends IdentifiableImpl {
+    private String firstName;
+    private String lastName;
+    private String email;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}
+
+}}}
+
+After creating the class, recreate your database by executing `ant create-main-database` again.  You should now have a `Users` tables within your database.
+
+Now, during this exercise you might have noticed that `Users` extends `org.jcatapult.domain.IdentifiableImpl`.  IdentifiableImpl is a Hibernate Mapped Superclass and is sub-class of the Identifiable interface.  This is just one of many other Hibernate Mapped Super Classes at your disposal within the `org.jcatapult.domain` package.  Definitions for some of the available interfaces are provided below:
+
+  * Identifiable: This interface marks a class as identifiable using a Integer based primary key or unique identifier.
+  * Auditable: This interface marks a class as being auditable where the user who created the database record is recorded and the user who last updated the record is recorded.
+  * SoftDeletable: This interface marks a class as never being deleted permanently from the database. Instead, it is marked as being deleted and can be resurrected.
+  * Timestampable: This interface defines an Entity that has time stamp information for when the database record was created and last updated.
+
+All of these interfaces have default implementations provided for you.  Moreover, there are many other Hibernate domain objects located in the `org.jcatapult.domain' package at your disposal.
+
 = IDE Integration =
 
 All jCatapult projects come default with project and module files for both Eclipse and IntelliJ.  This provides the capability for getting projects up and running quickly in either IDE.  To open the 'test-webapp' project, point either Eclipse or IntelliJ to your 'test-webapp' directory and follow the opening procedures specific to your IDE.
