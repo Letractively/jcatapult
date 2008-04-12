@@ -207,7 +207,7 @@ public class FileManager extends BaseAction {
      * @return  The result to return from the execute method in order to provide a response.
      */
     protected String doUpload() {
-        Connector connector = fileManagerService.upload(file, fileName, contentType, type);
+        Connector connector = fileManagerService.upload(file, fileName, contentType, type, currentFolder);
         marshal(connector);
         return SUCCESS;
     }

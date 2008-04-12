@@ -34,7 +34,8 @@ public class FckFileManager extends FileManager {
 
     @Override
     protected String doUpload() {
-        connector = fileManagerService.upload(getNewFile(), getNewFileFileName(), getNewFileContentType(), getType());
+        connector = fileManagerService.upload(getNewFile(), getNewFileFileName(), getNewFileContentType(), getType(),
+            getCurrentFolder());
         return SUCCESS;
     }
 }

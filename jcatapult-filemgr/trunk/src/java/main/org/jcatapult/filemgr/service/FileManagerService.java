@@ -109,7 +109,7 @@ public interface FileManagerService {
      *          by the browser/client)
      * @return  The result, which could be an error or a success.
      */
-    Connector upload(File file, String fileName, String contentType, String fileType);
+    Connector upload(File file, String fileName, String contentType, String fileType, String currentFolder);
 
     /**
      * <p>
