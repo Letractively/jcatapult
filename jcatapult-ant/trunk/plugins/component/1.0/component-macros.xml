@@ -97,6 +97,7 @@
   <macrodef name="component_add_dependency">
     <attribute name="name"/>
     <attribute name="version"/>
+    <attribute name="url"/>
     <sequential>
       <groovy>
         <classpath>
@@ -127,7 +128,19 @@
 
         elem = xpath.selectSingleNode(doc.getRootElement());
         Element artifact = new Element("artifact", "http://www.inversoft.com/schemas/savant-2.0/project");
-        artifact.setAttribute("group", "texturemedia.com");
+
+        // extract the group from the url
+        def componentURL = "@{url}";
+        if (componentURL.endsWith("/")) {
+          componentURL = componentURL.substring(0, componentURL.length() - 1);
+        }
+        String[] urlTokens = componentURL.split("/");
+        String group = "ADD GROUP";
+        if (urlTokens.length - 2 > 0) {
+          group = urlTokens[urlTokens.length - 2];
+        }
+
+        artifact.setAttribute("group", group);
         artifact.setAttribute("project", "@{name}");
         artifact.setAttribute("name", "@{name}");
         artifact.setAttribute("version", "@{version}");
