@@ -72,7 +72,7 @@ The only part of the name that is required by JCatapult is the version. The rest
 
 Seed files should contain valid SQL insert, update and/or delete statements that setup the data in database so that it is usable by the application. These files should not change the database structure at all. We cover changing the structure later.
 
-During development, JCatapult locates all seed scripts and executes them in order to setup the database for testing. When you execute either the `ant create-main-database` or `ant create-test-database` command, JCatapult executes the appropriate seed scripts if there are any so that you can correctly unit and functional test the application.
+During development, JCatapult locates all seed scripts and executes them in order to setup the database for testing. When you execute either the `ant create-main-database` or `ant create-test-database` command, JCatapult executes the appropriate seed scripts, if there are any, so that you can correctly unit and functional test the application.
 
 == Step 6: Releasing initial version ==
 
@@ -82,7 +82,13 @@ After you completed the initial version of the application and fully tested it, 
 ant table-sql
 }}}
 
-This command creates or overrides the file located at _src/db/main/base/tables.sql_. *NOTE:* This script should only contain the initial state of your database and after your application has been released, it should never be edited or recreated. If you edit this file you will be in for some major headaches when attempting to migration your application from one environment to another.
+This command creates or overrides the file located at:
+
+{{{ 
+src/db/main/base/tables.sql
+}}}
+
+*NOTE:* This script should only contain the initial state of your database and after your application has been released, it should never be edited or recreated. If you edit this file you will be in for some major headaches when attempting to migration your application from one environment to another.
 
 After you have created the _tables.sql_ file and completed the release of the project, you can then run the database manager tool in the new environment to create the database. The process of running this tool is not yet complete and therefore we don't have any documentation. If you want to figure something out for your project rather than waiting for the JCatapult team, you should look at the JavaDoc for the jcatapult-dbmgr library to learn how the database manager tool can be invoked.
 
@@ -122,7 +128,7 @@ In order to change the database schema, you must first make the appropriate chan
 In the exact same manner as the seed files names are based on the project version, so are the names for the alter files. If your project when next released will be 1.1, you will need to create an SQL script named something like:
 
 {{{
-1.1-alter-tables.sql
+src/db/main/alter/1.1-alter-tables.sql
 }}}
 
 This will tell JCatapult that this file is associated with the 1.1 version of the project. Inside the SQL file you can place any statements that are required to alter the database schema.
@@ -134,7 +140,7 @@ The second part of schema change is updating the entity classes to reflect the n
 In some cases, different versions of an application require different seed data to be present. JCatapult allows you to define seed data for specific versions of the application. Building on the example file name from section 7.1, if you need to modify data in the database for version 1.1 of your project you will need to create a SQL script named something like:
 
 {{{
-1.1-change-some-data.sql
+src/db/main/seed/1.1-change-some-data.sql
 }}}
 
 This script should contain all of the data manipulation statements required for version 1.1 of the application.
