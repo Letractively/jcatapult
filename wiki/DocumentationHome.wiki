@@ -17,6 +17,7 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [GuideWebApp JCatapult WebApps]
 
   * [GuideEntities Domains and entities]
+  * [GuideDatabaseManagement Database management]
   * [GuideActionView Actions and views]
   * [GuideServices Services]
   * [GuideDependencyInjection Dependency Injection]
