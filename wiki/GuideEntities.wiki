@@ -80,7 +80,10 @@ After you define entity classes you must recreate your project's database. This 
 ant create-main-database
 }}}
 
-This command instructs JCatapult to build the project's database using the entity objects you have defined. This command in fact executes the [DatabaseManager database manager] tool that is a highly sophisticated database management and migration tool that is part of JCatapult. For details see that tools documentation.
+This command instructs JCatapult to build the project's database using the entity objects you have defined. This command in fact executes the [DatabaseManager database manager] tool that is a highly sophisticated database management and migration tool that is part of JCatapult. For details see these documents.
+
+  * [GuiceDatabaseManagement Database management guide]
+  * [DatabaseManager Database manager reference]
 
 After running this script you can verify the state of the database and verify that your database now contains a table named `User`.
 
