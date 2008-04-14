@@ -29,3 +29,11 @@ Once the library has been compiled, you can use the library from other applicati
 {{{
 <artifact group="example.com" project="my-library" name="my-library" version="1.0-A1-{integration}" type="jar"/>
 }}}
+
+Once the library has been released you can remove the integration build from the _project.xml_ file like this:
+
+{{{
+<artifact group="example.com" project="my-library" name="my-library" version="1.0-A1" type="jar"/>
+}}}
+
+For more information on Integration builds, please consult the Savant documentation at http://www.inversoft.org
