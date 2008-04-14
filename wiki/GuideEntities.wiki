@@ -106,3 +106,44 @@ IdentifiableImpl is a Hibernate mapped superclass and is sub-class of the Identi
   * AuditableSoftDeletableImpl: Implements Identifiable, Auditable, Timestampable, and SoftDeletable
 
 All of these interfaces and classes are defined in the `org.jcatapult.domain` located in the JCatapult-Core library.
+
+
+= Unit testing =
+
+JCatapult provides support for unit testing entity classes. In order to write a unit test for an entity class you must extend the `org.jcatapult.test.JPABaseTest` class. This class provides support for setting up a connection to the test database, creating a DataSource, mocking out a JNDI tree, adding the DataSource to the JNDI tree and setting up JPA for use.
+
+As with all of JCatapult, unit tests can also be dependency injected using Guice. This makes it simple to use the JCatapult Persistence API when unit testing entity classes. Here is a simple unit test that tests the `User` entity class from above.
+
+{{{
+package org.jcatapult.example.simple.domain;
+
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+import org.jcatapult.persistence.PersistenceService;
+import org.jcatapult.test.JPABaseTest;
+
+import com.google.inject.Inject;
+
+/**
+ * This tests the User class.
+ */
+public class User extends JPABaseTest {
+  private PersistenceService persistenceService;
+
+  @Inject
+  public void setService(PersistenceService persistenceService) {
+    this.persistenceService = persistenceService;
+  }
+
+  @Test
+  public void testInsert() {
+    User user = new User();
+    user.setFirstName("John");
+    user.setLastName("Doe");
+    user.setEmail("john.doe@jcatapult.org");
+
+    assertTrue(persistenceService.persist(user));
+  }
+}
+}}}
