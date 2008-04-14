@@ -1,0 +1,31 @@
+#summary JCatapult Libraries
+
+= Libraries =
+
+JCatapult supports the concept of libraries. Libraries are the best location to put common code that will be used across applications. Libraries might contain these types of classes:
+
+  * Common toolkits
+  * Common services and implementations
+  * Common entity classes including Embeddable and base-classes (avoid putting Entity classes in libraries)
+  * Common actions without views (for example the JCatapult Country action is included in the JCatapult-core library)
+
+
+= Create a library =
+
+Run the _make-project_ script that is located at _JCATAPULT_HOME/tools/makeproject_. You can add that directory to your path. This script has a simple help menu if you don't know how to use it. The syntax for creating a library is:
+
+{{{
+make-project create-library
+}}}
+
+After you answer the questions it asks, you should have a newly created library. This library can be built using the following command:
+
+{{{
+ant clean jar
+}}}
+
+Once the library has been compiled, you can use the library from other applications by adding it as a dependency in the _project.xml_ file. If you haven't released the library as a final version you will need to include the library as an integration build in the application's _project.xml_ file like this:
+
+{{{
+<artifact group="example.com" project="my-library" name="my-library" version="1.0-A1-{integration}" type="jar"/>
+}}}
