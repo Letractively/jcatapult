@@ -13,8 +13,8 @@ Here are the documentation pages that are available for the JCatapult framework.
 = Guides =
 
   * [GuideComponent Creating a component]
-  * [GuideComponent Creating a library]
-  * [GuideComponent Creating a webapp]
+  * [GuideLibrary Creating a library]
+  * [GuideWebApp Creating a webapp]
 
   * [GuideEntities Domains and entities]
   * [GuideActionView Actions and views]
