@@ -1,0 +1,108 @@
+#summary Entities
+
+= Entities = 
+
+JCatapult uses JPA for database persistence. JPA is the Java Persistence API that was released as part of JEE 1.5. This API makes heavy use of annotations for mapping database tables and columns to JavaBean properties. There are a number of resources available online if you are unfamiliar with JPA or Hibernate. JCatapult recommends the Hibernate documentation for JPA:
+
+http://www.hibernate.org/hib_docs/entitymanager/reference/en/html/
+
+http://www.hibernate.org/hib_docs/annotations/reference/en/html/
+
+Hibernate is the JPA implementation that JCatapult uses. Currently, JCatapult doesn't support any other JPA implementations.
+
+= Creating an entity =
+
+Creating an entity is simple for both webapps and components. First, most entity classes should be placed in the _domain_ packages that JCatapult creates for you or packages you created that are named _domain_. This is merely a convention, but will help keep consistency across projects.
+
+== Webapp entities ==
+
+Inside a webapp all that is required is to create the entity class inside the _domain_ package. Here is an example entity class:
+
+{{{
+package org.jcatapult.example.simple.domain;
+
+import javax.persistence.Entity;
+
+import org.jcatapult.domain.IdentifiableImpl;
+
+/**
+ * This entity bean represents the ORM for the Users table in the database
+ */
+@Entity
+public class User extends IdentifiableImpl {
+    private String firstName;
+    private String lastName;
+    private String email;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}
+}}}
+
+== Component entities ==
+
+Inside a component there is an additional step when creating entity classes. First, you create the entity class in the _domain_ package in the same manner as you would for a webapp. Second, you must add the entity to the _component.xml_ file located in the _src/conf/main/META-INF_ directory. This file is used by JCatapult to manage component entity classes. Here is the syntax for adding an entity class to that file:
+
+{{{
+<component name="example-component">
+  <persistence>
+    <class>org.jcatapult.example.simple.domain.User</class>
+  </persistence>
+</component>
+}}}
+
+= Database creation =
+
+After you define entity classes you must recreate your project's database. This is done by executing this command from the project:
+
+{{{
+ant create-main-database
+}}}
+
+This command instructs JCatapult to build the project's database using the entity objects you have defined. This command in fact executes the [DatabaseManager database manager] tool that is a highly sophisticated database management and migration tool that is part of JCatapult. For details see that tools documentation.
+
+After running this script you can verify the state of the database and verify that your database now contains a table named `User`.
+
+= JCatapult persistence =
+
+JCatapult provides a number of different interfaces and base-classes that you can use to not only simplify your development, but also use some of the more advanced features of the JCatapult persistence API. You might have noticed that the `User` class from above extended the `org.jcatapult.domain.IdentifiableImpl` class. This is one of the base classes provided by JCatapult's persistence API. Here is a list of the interfaces and implements you might use:
+
+IdentifiableImpl is a Hibernate mapped superclass and is sub-class of the Identifiable interface.  This is just one of many other Hibernate Mapped Super Classes at your disposal within the `org.jcatapult.domain` package.  Definitions for some of the available interfaces are provided below:
+
+== Interfaces ==
+
+  * Identifiable: This interface marks a class as identifiable using a Integer based primary key or unique identifier.
+  * Timestampable: This interface defines an Entity that has time stamp information for when the database record was created and last updated.
+  * Auditable: This interface marks a class as being auditable where the user who created the database record is recorded and the user who last updated the record is recorded.
+  * SoftDeletable: This interface marks a class as never being deleted permanently from the database. Instead, it is marked as being deleted and can be resurrected.
+
+== Base-classes ==
+
+  * IdentifiableImpl: Implements Identifiable
+  * TimestampableImpl: Implements Identifiable, and Timestampable
+  * AuditableImpl: Implements Identifiable, Auditable, and Timestampable
+  * SoftDeletableImpl: Implements Identifiable, and SoftDeletable
+  * AuditableSoftDeletableImpl: Implements Identifiable, Auditable, Timestampable, and SoftDeletable
+
+All of these interfaces and classes are defined in the `org.jcatapult.domain` located in the JCatapult-Core library.
