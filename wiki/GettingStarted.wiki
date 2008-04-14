@@ -43,16 +43,24 @@ Make sure you provide this implementation after the tomcat plugin import.
 = MySQL = 
 
 == Installation ==
+
 Currently, JCatapult requires the use of MySQL for projects that use a database. It's currently in the works to extend this capability to PostgreSQL and more databases will be added soon. For now, you'll need to download and install MySQL Community or Server version 5 or later from http://www.mysql.com.  It's highly recommended that you use InnoDB for all table schemas but jCatpult supports MyISAM as well.
 
 == Setup and Configuration ==
+
 === Port ===
+
 jCatapult's databasing capabilities currently only work with MySQL's default port setting of 3306.  We recognize that some systems might already have databases configured on this port and, therefore, plan on adding support to configure this setting in the future.
+
 === Environment ===
+
 It's highly recommended to create an environment variable that references the MySQL home directory and adding the mysql home bin directory to your path.  This is optional and not a requirement for jCatapult to function properly but this will make it much easier for you to run the MySQL client from the command line.
 
+
 = The build.properties file =
+
 == JDK 1.6 Configuration ==
+
 jCatapult requires a file named build.properties to be created inside your home directory. This file points jCatapult to the location of the JDK for the project. This allows the project to clearly define which JDK it is using (which might be different for other applications) and the JDK used to run the JCatapult Ant build system. This file should contain entries for each of the JDKs you plan to use. Here is an example:
 
 *Linux/Unix version*
@@ -60,7 +68,6 @@ jCatapult requires a file named build.properties to be created inside your home 
 jdk1.6=/usr/lib/jvm/java-6-sun
 jdk1.5=/usr/lib/jvm/java-1.5.0-sun
 }}}
-
 
 *Windows version*
 {{{
@@ -71,6 +78,7 @@ jdk1.5=C:\\Program Files\\Java\\jdk1.5.0_12
 By default, jCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring jCatapult to use that JDK.
 
 == Database Credential Configuration ==
+
 In order to successfully create databases for jCatapult projects, jCatapult requires that 2 properties be defined:
 
   * db.username
@@ -106,90 +114,13 @@ The last step is to add 'userX' with password empty string to your mysql databas
 
 NOTE:  You'll notice that no password (empty string) was specified for our example 'userX'.  Inconjunction with setting your username equal to your user home account, providing empty string as your password will expedite accessing the mysql client from the command line.  Once your user is added, you'll only have to type 'mysql' to access your mysql client rather than having to provide both the username and password. 
 
-= Creating the project Database =
 
-If you've setup MySQL correctly, you can create your project database by executing the following ant target:
+= Junction =
 
-{{{
-ant create-main-database
-}}}
+*Windows users only*
 
-JCatapult uses Hibernate as the persistence framework of choice.  Since your test webapp doesn't yet have any Hibernate Entity objects, executing `create-main-database` doesn't do much but create an empty database.  For tutorial purposes, lets go ahead and add a table to your database by creating a Hibernate Entity object within your project.  Within the `src/java/main/org/jcatapult/example/simple/domain` directory, create the following Hibernate Entity:
+JCatapult makes use of the Windows _junction point_ support. Windows _junction points_ are identical to Unix/Linux symbolic links. In order to make full use of JCatapult you must install the _junction_ executable. To install _junction_ download the installer from Microsoft at:
 
-{{{
-package org.jcatapult.example.simple.domain;
+http://www.microsoft.com/technet/sysinternals/FileAndDisk/Junction.mspx
 
-import javax.persistence.Entity;
-
-import org.jcatapult.domain.IdentifiableImpl;
-
-/**
- * This entity bean represents the ORM for the Users table in the database
- */
-@Entity
-public class Users extends IdentifiableImpl {
-    private String firstName;
-    private String lastName;
-    private String email;
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-}
-
-}}}
-
-After creating the class, recreate your database by executing `ant create-main-database` again.  You should now have a `Users` tables within your database.
-
-Now, during this exercise you might have noticed that `Users` extends `org.jcatapult.domain.IdentifiableImpl`.  IdentifiableImpl is a Hibernate Mapped Superclass and is sub-class of the Identifiable interface.  This is just one of many other Hibernate Mapped Super Classes at your disposal within the `org.jcatapult.domain` package.  Definitions for some of the available interfaces are provided below:
-
-  * Identifiable: This interface marks a class as identifiable using a Integer based primary key or unique identifier.
-  * Auditable: This interface marks a class as being auditable where the user who created the database record is recorded and the user who last updated the record is recorded.
-  * SoftDeletable: This interface marks a class as never being deleted permanently from the database. Instead, it is marked as being deleted and can be resurrected.
-  * Timestampable: This interface defines an Entity that has time stamp information for when the database record was created and last updated.
-
-All of these interfaces have default implementations provided for you.  Moreover, there are many other Hibernate domain objects located in the org.jcatapult.domain package at your disposal.
-
-For more detailed information on how JCatapult manages databases, refer to the [DatabaseManager JCatapult Database Manager] documentation.
-
-= IDE Integration =
-
-All jCatapult projects come default with project and module files for both Eclipse and IntelliJ.  This provides the capability for getting projects up and running quickly in either IDE.  To open the 'test-webapp' project, point either Eclipse or IntelliJ to your 'test-webapp' directory and follow the opening procedures specific to your IDE.
-
-Additionally, When you add new dependencies to your project.xml, all you have to do is type the following command in your project root to have jCatapult refresh your IDE classpath (This feature comes default in every newly created jCatapult project and, specifically, is an Ant target within the jCatapult Ant IDE plugin.)
-
-{{{
-ant ide
-}}}
-
-After execution, both Eclipse and IntelliJ should prompt you to refresh your project environment.
-
-To view what other ant targets are available to you by default, type the following command from your project root:
-
-{{{
-ant -p
-}}} 
-
-= Next =
-
-Next, we'll cover the [ProjectLayout JCatapult project layout].
+Run the installer and you should be all setup to use _junction points_ within JCatapult.
