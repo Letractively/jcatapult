@@ -9,7 +9,7 @@ At the core of JCatapult is support for building web applications. JCatapult pro
   * Actions
   * Views (JSPs or FreeMarker templates)
 
-= Create a component =
+= Create a web application =
 
 Run the _make-project_ script that is located at _JCATAPULT_HOME/tools/makeproject_. You can add that directory to your path. This script has a simple help menu if you don't know how to use it. The syntax for creating a webapp is:
 
