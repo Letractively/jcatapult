@@ -1,5 +1,23 @@
 #summary Creating a component
 
+= Components =
+
+JCatapult is a highly component based framework. Components are complete working sets of functionality that are able to be plugged into JCatapult web applications. Some examples of components might include:
+
+  * A news component for administration and publishing of news articles as well as RSS feeds and other news widgets
+  * A complete blog system
+  * A content management system
+  * A user administration system
+
+JCatapult components are not like other Java framework components such as JSF and Tapestry components. These components are more like widgets than components. JCatapult components are a complete collection of widgets and all the code that is required to use them. Examples of items that are added to components are:
+
+  * Entity classes
+  * Services
+  * Actions
+  * Views (FreeMarker templates rather than JSPs)
+
+JCatapult provides all of the support for adding components to a web application including support for JPA configuration and much more. JCatapult also provides the ability to override views, services and other items from a component.
+
 = Create a component =
 
 Run the _make-project_ script that is located at _JCATAPULT_HOME/tools/makeproject_. You can add that directory to your path. This script has a simple help menu if you don't know how to use it. The syntax for creating a component is:
