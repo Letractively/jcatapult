@@ -56,6 +56,8 @@ jCatapult's databasing capabilities currently only work with MySQL's default por
 
 It's highly recommended to create an environment variable that references the MySQL home directory and adding the mysql home bin directory to your path.  This is optional and not a requirement for jCatapult to function properly but this will make it much easier for you to run the MySQL client from the command line.
 
+=== MySQL Connector Driver ===
+Because JCatapult uses JNDI to connect to MySQL and this JNDI entry is defined in Tomcat's context.xml, you must place the MySQL connector driver in the the tomcat installation's `common/lib` directory.  Because the version of this driver changes periodically, we recommend that you download the most current version from here -> [http://dev.mysql.com/downloads/connector/j/5.0.html]
 
 = The build.properties file =
 
