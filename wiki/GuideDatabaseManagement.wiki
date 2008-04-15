@@ -10,7 +10,7 @@ In order to understand how JCatapult allows you to accomplish this goal, we'll s
 
 == Step 1: Project creation ==
 
-The first step of any project is its creation. When JCatapult creates a project is creates a number of directories that are important when dealing with the database. These directories are:
+The first step of any project is its creation. When JCatapult creates a project it creates a number of directories that are important when dealing with the database. These directories are:
 
   * src/java/main/<your-package>/domain
   * src/db/main
