@@ -89,9 +89,7 @@ After running this script you can verify the state of the database and verify th
 
 = JCatapult persistence =
 
-JCatapult provides a number of different interfaces and base-classes that you can use to not only simplify your development, but also use some of the more advanced features of the JCatapult persistence API. You might have noticed that the `User` class from above extended the `org.jcatapult.domain.IdentifiableImpl` class. This is one of the base classes provided by JCatapult's persistence API. Here is a list of the interfaces and implements you might use:
-
-IdentifiableImpl is a Hibernate mapped superclass and is sub-class of the Identifiable interface.  This is just one of many other Hibernate Mapped Super Classes at your disposal within the `org.jcatapult.domain` package.  Definitions for some of the available interfaces are provided below:
+JCatapult provides a number of different interfaces and base-classes that you can use to not only simplify your development, but also use some of the more advanced features of the JCatapult persistence API. You might have noticed that the `User` class from above extended the `org.jcatapult.domain.IdentifiableImpl` class. This is one of the base classes provided by JCatapult's persistence API.  IdentifiableImpl is a Hibernate mapped superclass and is sub-class of the Identifiable interface.  This is just one of many other Hibernate Mapped Super Classes at your disposal within the `org.jcatapult.domain` package.  Definitions for some of the available interfaces are provided below:
 
 == Interfaces ==
 
