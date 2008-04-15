@@ -115,7 +115,7 @@
 
         // See if it already has the component
         XPath xpath = XPath.newInstance("//project:artifact[@name='@{name}']");
-        xpath.addNamespace("project", "http://www.inversoft.com/schemas/savant-2.0/project");
+        xpath.addNamespace("project", "http://www.inversoft.org/schemas/savant-2.0/project");
         Element elem = xpath.selectSingleNode(doc.getRootElement());
         if (elem != null) {
           ant.echo("This project already contains the component @{name}.");
@@ -124,10 +124,10 @@
 
         // Find the artifactGroup element to add the dependency to
         xpath = XPath.newInstance("//project:artifactGroup[@type='compile']");
-        xpath.addNamespace("project", "http://www.inversoft.com/schemas/savant-2.0/project");
+        xpath.addNamespace("project", "http://www.inversoft.org/schemas/savant-2.0/project");
 
         elem = xpath.selectSingleNode(doc.getRootElement());
-        Element artifact = new Element("artifact", "http://www.inversoft.com/schemas/savant-2.0/project");
+        Element artifact = new Element("artifact", "http://www.inversoft.org/schemas/savant-2.0/project");
 
         // extract the group from the url
         def componentURL = "@{url}";
