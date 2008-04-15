@@ -31,7 +31,7 @@ JCatapult will use the entity classes that you have added to your project to cre
 ant create-main-database
 }}}
 
-This will create the database that is used by the application when it is run inside Tomcat for development testing. The name of the database is always the same as the name of your project as it is defined in the _project.xml_ file. The only thing that JCatapult does to this name is to replace dashes (-) with underscores (_). You can change the name of your database by setting a property in the _project.xml_ file named _project.database_ like this:
+This will create the database that is used by the application when it is run inside Tomcat for development testing. The name of the database is always the same as the name of your project as it is defined in the _project.xml_ file. The only thing that JCatapult does to this name is to replace dashes (-) with underscores. You can change the name of your database by setting a property in the _project.xml_ file named _project.database_ like this:
 
 {{{
 <property name="project.database" value="foo_bar"/>
