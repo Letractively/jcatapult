@@ -1,0 +1,37 @@
+#summary Action and View Guide
+
+= Actions and Views =
+
+JCatapult currently uses Struts 2 and the Struts 2 Convention Plugin for the MVC layer. These two technologies are used as is without any major changes and therefore, all of the documentation for both of these technologies can be used as reference. However, to provide a simple means to get up and running, we'll cover the basics of writing actions and views for JCatapult. Detailed coverage of topics like annotations and configuration for these technologies will be left to their respective documentation sites:
+
+http://struts.apache.org/2.x/index.html
+
+http://cwiki.apache.org/S2PLUGINS/convention-plugin.html
+
+= Conventions =
+
+JCatapult's MVC is convention based. This means that you don't have to mess around with Struts2 XML configuration files in order to get going. Instead, JCatapult maps incoming request URLs directly to actions and views. This is done using the Struts 2 Convention Plugin. Here is a brief summary of the conventions:
+
+== Action Conventions ==
+
+  * Actions are located by inspecting the classpath for any packages named `action`, `actions`, `struts` or `struts2`.
+  * Packages that are found are called the *base action packages*
+  * These packages are inspected for classes that implement the `com.opensymphony.xwork2.Action` interface or whose name ends with `Action` - for example `UserUpdateAction`. This inspect includes sub-packages.
+  * Any classes found are translated into URLs using the package name and class name.
+
+=== Examples ===
+
+Here are some examples of how actions are mapped to URLs by JCatapult.
+
+== View Conventions ==
+
+=== Examples ===
+
+Here are some examples of how views are mapped to URLs (and vice-versa) by JCatapult.
+
+= WebApp Views = 
+
+If you need to create a view that doesn't have an action behind it, you can accomplish this by simply creating a JSP or FTL (FreeMarker template) file in the correct location. All of the views for JCatapult applications are placed into the `WEB-INF/content` directory regardless of any actions. JCatapult views are located by convention. The convention is that the URL maps directly to the view
+
+
+*NOTE:* This doesn't work inside components. Component views have to have an action associated with them, even if the action is empty and does nothing.
