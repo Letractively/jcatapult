@@ -14,6 +14,8 @@ JCatapult's MVC is convention based. This means that you don't have to mess arou
 
 == Action Conventions ==
 
+Actions are translated into URLs during the application initialization process. This is important because it increases the performance of the application at runtime. Here is the process that JCatapult uses to locate actions and translate them into URLs.
+
   * Actions are located by inspecting the classpath for any packages named `action`, `actions`, `struts` or `struts2`.
   * Packages that are found are called the *base action packages*
   * These packages are inspected for classes that implement the `com.opensymphony.xwork2.Action` interface or whose name ends with `Action` - for example `UserUpdateAction`. This inspect includes sub-packages.
@@ -21,7 +23,7 @@ JCatapult's MVC is convention based. This means that you don't have to mess arou
 
 The action name is translated into a URL using this process:
 
-  * Drop the base package from the fully qualified class name
+  * Drop the *base action package* from the fully qualified class name
   * Replace periods with forward slashes
   * Drop 'Action' from the end of the name (if applicable)
   * Split on camel case
@@ -38,6 +40,8 @@ Here are some examples of how actions are mapped to URLs by JCatapult.
 || com.example.actions.waterProducts.SpeedBoat || /water-products/speed-boat ||
 
 == View Conventions ==
+
+
 
 === Examples ===
 
