@@ -24,10 +24,13 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [GuideActionView Actions and views]
   * [GuideServices Services]
   * [GuideDependencyInjection Dependency Injection]
-  * [GuideScaffolder JCatapult Scaffolder]
 
+  * [GuideEmail Email API]
   * [GuideEnvironment Environment resolution]
   * [GuideConfiguration Configuration]
+  * [GuideCommerce Commerce]
+
+  * [GuideScaffolder Scaffolder]
 
 = Tutorials =
 
@@ -48,7 +51,7 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-scaffolder/1.0-M4/index.html JCatapult-Scaffolder Javadoc]
   * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-security/1.0-M4/index.html JCatapult-Security Javadoc]
 
-= Technologies =
+= Reference / Advanced =
 
 Below are links to topics about a specific JCatapult technology, service or API.
 
@@ -60,7 +63,6 @@ Below are links to topics about a specific JCatapult technology, service or API.
 === Component ===
 
   * [ComponentStaticResources Writing component with static resources]
-  * [ComponentDomain Writing component with domain objects (database/JPA)]
   * [ComponentAddingComponents Adding pre-built components]
 
 === Scaffolder ===
@@ -69,9 +71,7 @@ Below are links to topics about a specific JCatapult technology, service or API.
 
 === Database Manager ===
 
-  * [Persistence JCatapult persistence API]
   * [DatabaseManager JCatapult Database Manager]
-  * [JPA JCatapult JPA integration]
 
 === Struts ===
 
@@ -81,19 +81,6 @@ Below are links to topics about a specific JCatapult technology, service or API.
 === SiteMesh ===
 
   * [SiteMeshDirectories JCatapult standard SiteMesh directories]
-
-=== Email ===
-
-  * [EmailOverview Overview]
-  * [EmailTemplates Templates]
-  * [EmailSending Sending emails from code]
-  * [EmailConfiguration Configuration]
-
-=== Commerce ===
-
-  * [Money]
-  * [ChargingCreditCards Charging credit cards]
-  * [PreAuthCreditCards Pre-auth credit cards]
 
 === File manager ===
 
