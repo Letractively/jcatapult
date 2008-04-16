@@ -77,7 +77,7 @@ and open your browser to http://localhost:8080/hello-world you should see this J
 
 = Webapp Actions =
 
-JCatapult actions are Struts 2 actions and can implement the `com.opensymphony.xwork2.Action` interface (or extend any of the base-classes from XWork or JCatapult) or can be POJOs whose name ends with `Action`. JCatapult provides a common base-class called `import org.jcatapult.struts.action.BaseAction` that provides access to the [EnvironmentAwareConfiguration Configuration] as well as the [PersistenceService persistence service].
+JCatapult actions are Struts 2 actions and can implement the `com.opensymphony.xwork2.Action` interface (or extend any of the base-classes from XWork or JCatapult) or can be POJOs whose name ends with `Action`. JCatapult provides a common base-class called `org.jcatapult.struts.action.BaseAction` that provides access to the [EnvironmentAwareConfiguration Configuration] as well as the [PersistenceService persistence service].
 
 Here is an example of an action that would be associated with the _/hello-world_ URL and also with the view example from above. By associating the action with a view, we can provide dynamic data to the view from the action.
 
