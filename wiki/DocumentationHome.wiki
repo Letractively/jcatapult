@@ -1,4 +1,4 @@
-#summary The documentation home page.
+﻿#summary The documentation home page.
 #labels Featured
 
 Here are the documentation pages that are available for the JCatapult framework. Some of the documentation has not yet been written. Please check back soon and it should be complete before 1.0 is released. If you are interested in helping build out or fix documentation, please contact Brian Pontarelli at *brian at inversoft.com*
@@ -12,8 +12,8 @@ Here are the documentation pages that are available for the JCatapult framework.
 
 = Guides =
 
-  * [AntOverview Overview]
-  * [AntPlugins Ant plugins]
+  * [GuideAntOverview JCatapult Ant overview]
+  * [AntPlugins JCatapult Ant plugins]
 
   * [GuideComponent JCatapult components]
   * [GuideLibrary JCatapult libraries]
@@ -24,10 +24,10 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [GuideActionView Actions and views]
   * [GuideServices Services]
   * [GuideDependencyInjection Dependency Injection]
-  * [Scaffolder JCatapult Scaffolder]
+  * [GuideScaffolder JCatapult Scaffolder]
 
-  * [Environment Environment resolution]
-  * [EnvironmentAwareConfiguration Environment aware configuration]
+  * [GuideEnvironment Environment resolution]
+  * [GuideConfiguration Configuration]
 
 = Tutorials =
 
@@ -54,7 +54,6 @@ Below are links to topics about a specific JCatapult technology, service or API.
 
 === Ant ===
 
-  * [Ant JCatapult Ant home]
   * [AntCreatingPlugins Creating ant plugins]
   * [AntDependencies Adding and removing project dependencies]
 
