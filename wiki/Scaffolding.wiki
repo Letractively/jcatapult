@@ -1,7 +1,0 @@
-#summary JCatapult Scaffolding
-
-= Introduction =
-
-The JCatapult Scaffolding framework is currently an outstanding feature request. If you are interested in helping us develop a kick-ass scaffolding tool, please contact Brian Pontarelli at:
-
-*brian at inversoft.com*.
