@@ -12,6 +12,9 @@ Here are the documentation pages that are available for the JCatapult framework.
 
 = Guides =
 
+  * [AntOverview Overview]
+  * [AntPlugins Ant plugins]
+
   * [GuideComponent JCatapult components]
   * [GuideLibrary JCatapult libraries]
   * [GuideWebApp JCatapult WebApps]
@@ -21,6 +24,10 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [GuideActionView Actions and views]
   * [GuideServices Services]
   * [GuideDependencyInjection Dependency Injection]
+  * [Scaffolder JCatapult Scaffolder]
+
+  * [Environment Environment resolution]
+  * [EnvironmentAwareConfiguration Environment aware configuration]
 
 = Tutorials =
 
@@ -48,21 +55,18 @@ Below are links to topics about a specific JCatapult technology, service or API.
 === Ant ===
 
   * [Ant JCatapult Ant home]
-  * [AntOverview Overview]
-  * [AntPlugins Plugin documentation and reference]
   * [AntCreatingPlugins Creating ant plugins]
   * [AntDependencies Adding and removing project dependencies]
 
 === Component ===
 
-  * [ComponentGettingStarted Getting started writing components]
   * [ComponentStaticResources Writing component with static resources]
   * [ComponentDomain Writing component with domain objects (database/JPA)]
   * [ComponentAddingComponents Adding pre-built components]
 
 === Scaffolder ===
 
-  * [Scaffolder JCatapult Scaffolder]
+  * [ScaffolderCustomScaffolder Writing a custom scaffolder]
 
 === Database Manager ===
 
@@ -99,10 +103,6 @@ Below are links to topics about a specific JCatapult technology, service or API.
   * [FileManagerAPI XML API]
   * [FileManagerFck FCK editor integration]
 
-=== Configuration and environment ===
-
-  * [Environment Environment resolution]
-  * [EnvironmentAwareConfiguration Environment aware configuration]
 
 = Methodologies =
 
