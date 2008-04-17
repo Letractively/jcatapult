@@ -1,0 +1,2 @@
+= JCatapult Email =
+The JCatapult Email library is an extension of the [http://java.sun.com/products/javamail/ JavaMail API] and offers convenience methods for making it easy to send emails from your web applications.
