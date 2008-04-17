@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ensure ANT_HOME is defined in environment
+# ensure JCATAPULT_HOME is defined in environment
 if [ -z $JCATAPULT_HOME ]; then
   echo "Please set the JCATAPULT_HOME environment variable to your jcatapult installation directory"
   exit
