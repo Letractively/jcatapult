@@ -22,11 +22,11 @@
 
   <!-- compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult" value="1.0-M4"/>
+  <property name="version.jcatapult" value="1.0-M5"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile">
-      <artifact group="apache.org" project="commons-configuration" name="commons-configuration" version="1.3" type="jar"/>
+      <artifact group="apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
       <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
