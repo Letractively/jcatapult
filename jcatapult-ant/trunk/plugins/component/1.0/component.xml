@@ -57,6 +57,8 @@
   <import file="${dir.plugin.component}/component-base.xml"/>
   <import file="${dir.plugin.component}/component-macros.xml"/>
 
+  <property name="dir.webapp.template" value="${env.JCATAPULT_HOME}/ant/tools/makeproject/webapp-template"/>
+
   <!-- Pseudo-target -->
   <target name="app" description="Builds a test bed for the component"
           depends="jar,-app-local,-app-dependencies,deploy-local"/>
@@ -67,7 +69,7 @@
 
     <!-- Initial layout of project -->
     <copy todir="${dir.target.web}" failonerror="yes" overwrite="yes" encoding="ISO-8859-1">
-      <fileset dir="${env.JCATAPULT_HOME}/ant/tools/makeproject/webapp-template/web" includes="**/*"/>
+      <fileset dir="${dir.webapp.template}/web" includes="**/*"/>
       <filterset>
         <filter token="DOMAIN_NAME" value="${project.group}"/>
       </filterset>
