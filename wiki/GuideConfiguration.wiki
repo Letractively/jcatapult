@@ -2,7 +2,7 @@
 
 = Introduction =
 
-JCatapult provides an Environment Aware Configuration API that allows applications to control how they are configured for all of the environments they will be deployed to. This API leverages the [EnvironmentResolution JCatapult Environment Resolution System] to determine the current environment.
+JCatapult provides an Environment Aware Configuration API that allows applications to control how they are configured for all of the environments they will be deployed to. This API leverages the [GuideEnvironment JCatapult Environment Resolution System] to determine the current environment.
 
 
 = Commons Configuration =
