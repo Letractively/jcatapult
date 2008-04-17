@@ -437,6 +437,25 @@ public class JPAPersistenceService implements PersistenceService {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public int execute(String statement, Object... params) {
+        // Check for and possibly start a transaction
+        Transaction transaction = startTransaction(entityManager);
+
+        // Create the update and execute it
+        Query query = entityManager.createQuery(statement);
+        addParams(query, params);
+        int results = query.executeUpdate();
+
+        // No need for a try-catch block because a call to commit that fails will rollback the
+        // transaction automatically for us.
+        transaction.commit();
+
+        return results;
+    }
+
+    /**
      * Ensures that the entity class contains the correct annotation to be persisted.
      *
      * @param   type The entity type to check.

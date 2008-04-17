@@ -274,4 +274,15 @@ public interface PersistenceService {
      * @param   obj The Object to remove.
      */
     void delete(Object obj);
+
+    /**
+     * Allows the execution of arbitrary bulk update/delete statements. These are always implementation
+     * dependent, but for JPA these are EJB-QL bulk update and delete statements.
+     *
+     * @param   statement The statement to execute.
+     * @param   params Parameters that are passed to the query. These are 1 based according to JPA
+     *          and must be positional parameters inside the statement.
+     * @return  The number of rows updated or deleted.
+     */
+    int execute(String statement, Object... params);
 }
