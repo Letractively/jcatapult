@@ -1,0 +1,4 @@
+org.jcatapult.commerce
+org.jcatapult.domain.commerce
+org.jcatapult.hibernate
+org.jcatapult.struts.convert
