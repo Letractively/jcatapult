@@ -51,6 +51,7 @@ import org.jcatapult.email.domain.Attachment;
 import org.jcatapult.email.domain.Email;
 
 import com.google.inject.Inject;
+import net.java.lang.StringTools;
 
 /**
  * <p>
@@ -176,6 +177,9 @@ public class JavaMailEmailTransportService implements EmailTransportService {
             // Define message
             Message message = new MimeMessage(session);
             EmailAddress from = email.getFrom();
+            if (from == null) {
+                throw new JCatapultEmailException("email message 'from' not set");
+            }
             message.setFrom(new InternetAddress(from.getAddress(), from.getDisplay(), "UTF-8"));
 
             EmailAddress[] toList = email.getTo();
@@ -193,7 +197,14 @@ public class JavaMailEmailTransportService implements EmailTransportService {
                 message.addRecipient(Message.RecipientType.BCC, new InternetAddress(bcc.getAddress(), bcc.getDisplay(), "UTF-8"));
             }
 
+            if (message.getAllRecipients().length == 0) {
+                throw new JCatapultEmailException("email message must contain at least one recipient");
+            }
+
             String subject = email.getSubject();
+            if (StringTools.isEmpty(subject)) {
+                throw new JCatapultEmailException("email message 'subject' not set");
+            }
             message.setSubject(subject);
 
             // Determine the email content type and if we need to include the text version
