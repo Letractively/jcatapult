@@ -3,8 +3,11 @@ package org.jcatapult.guice;
 import javax.persistence.EntityManager;
 
 import org.jcatapult.jpa.EntityManagerProvider;
+import org.jcatapult.persistence.annotation.Transactional;
+import org.jcatapult.persistence.TransactionMethodInterceptor;
 
 import com.google.inject.AbstractModule;
+import static com.google.inject.matcher.Matchers.*;
 
 /**
  * <p>
@@ -27,9 +30,11 @@ public class JPAModule extends AbstractModule {
     }
 
     /**
-     * Sets up the JPA {@link org.jcatapult.jpa.EntityManagerProvider}.
+     * Sets up the JPA {@link org.jcatapult.jpa.EntityManagerProvider} and also bind the
+     * {@link Transactional} annotation to the {@link org.jcatapult.persistence.TransactionMethodInterceptor}.
      */
     protected void configureJPA() {
         bind(EntityManager.class).toProvider(new EntityManagerProvider());
+        bindInterceptor(any(), annotatedWith(Transactional.class), new TransactionMethodInterceptor());
     }
 }

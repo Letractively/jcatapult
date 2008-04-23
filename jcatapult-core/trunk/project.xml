@@ -34,6 +34,7 @@
       <artifact group="sun.com" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="compile">
+      <artifact group="aopalliance.sourceforge.net" project="aopalliance" name="aopalliance" version="1.0" type="jar"/>
       <artifact group="apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="apache.org" project="commons-lang" name="commons-lang" version="2.3" type="jar"/>
       <artifact group="apache.org" project="struts2" name="struts2-convention-plugin" version="2.1.1-SNAPSHOT" type="jar"/>
