@@ -17,8 +17,11 @@
 package org.jcatapult.persistence;
 
 import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.sql.RowSet;
 
+import org.easymock.EasyMock;
 import org.jcatapult.jpa.User;
 import org.jcatapult.persistence.annotation.Transactional;
 import org.jcatapult.test.JPABaseTest;
@@ -68,6 +71,50 @@ public class TransactionTest extends JPABaseTest {
         rs = executeQuery("select name from User where name = 'TransactionTest-returnValueFailure'");
         assertFalse(rs.next());
         rs.close();
+    }
+
+    @Test
+    public void testMicroResultProcessor() {
+        DefaultTransactionResultProcessor processor = new DefaultTransactionResultProcessor();
+        assertTrue(processor.rollback(null, new Throwable()));
+        assertFalse(processor.rollback(new Object(), null));
+    }
+
+    @Test
+    public void testMicroTransactionManager() {
+        EntityTransaction et = EasyMock.createStrictMock(EntityTransaction.class);
+        EasyMock.expect(et.isActive()).andReturn(false);
+        et.begin();
+        EasyMock.replay(et);
+
+        EntityManager em = EasyMock.createStrictMock(EntityManager.class);
+        EasyMock.expect(em.getTransaction()).andReturn(et);
+        EasyMock.replay(em);
+
+        DefaultTransactionManager manager = new DefaultTransactionManager(em);
+        TransactionState state = manager.startTransaction();
+        assertSame(et, state.transaction());
+        assertFalse(state.embedded());
+
+        EasyMock.verify(et, em);
+    }
+
+    @Test
+    public void testMicroTransactionManagerEmbedded() {
+        EntityTransaction et = EasyMock.createStrictMock(EntityTransaction.class);
+        EasyMock.expect(et.isActive()).andReturn(true);
+        EasyMock.replay(et);
+
+        EntityManager em = EasyMock.createStrictMock(EntityManager.class);
+        EasyMock.expect(em.getTransaction()).andReturn(et);
+        EasyMock.replay(em);
+
+        DefaultTransactionManager manager = new DefaultTransactionManager(em);
+        TransactionState state = manager.startTransaction();
+        assertSame(et, state.transaction());
+        assertTrue(state.embedded());
+
+        EasyMock.verify(et, em);
     }
 
     public static class JPATestService {
