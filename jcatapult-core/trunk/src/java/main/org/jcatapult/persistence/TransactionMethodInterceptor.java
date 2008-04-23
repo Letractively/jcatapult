@@ -43,7 +43,6 @@ public class TransactionMethodInterceptor implements MethodInterceptor {
      * @throws  Throwable Any exception that the method throws.
      */
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-        System.out.println("Here");
         Transactional annotation = methodInvocation.getMethod().getAnnotation(Transactional.class);
         Class<? extends TransactionResultProcessor> processorClass = annotation.processor();
         TransactionResultProcessor processor = processorClass.newInstance();
@@ -58,7 +57,6 @@ public class TransactionMethodInterceptor implements MethodInterceptor {
             t = throwable;
             throw throwable;
         } finally {
-            System.out.println("ending");
             txnManager.endTransaction(result, t, txn, processor);
         }
 
