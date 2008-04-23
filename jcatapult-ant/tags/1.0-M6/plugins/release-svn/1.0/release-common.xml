@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+<project name="release-common">
+  <dirname property="dir.plugin.release-common" file="${ant.file.release-common}"/>
+  <path id="classpath.release-common">
+    <pathelement location="${dir.plugin.release-common}/../../libraries/java-net-commons-1.3.13.jar"/>
+  </path>
+
+  <!-- set the groovy scripts dir property -->
+  <property name="release.dir.scripts.groovy" value="${dir.plugin.release-common}/scripts/groovy"/>
+
+  <target name="rel" description="Initiates either a full, tag-only, or deploy/publish release.">
+    <echo>
+      There are 3 types of releases:
+      1. Full Release: check out, build, test, tag and branch, and deploy/publish.
+      2. Tag-Only Release: check out, build, test, and tag only. No Deployment/Publish will occur.
+      3. Deploy/Publish Only: check out a tag, build, and deploy. No tagging and/or branching will occur.
+    </echo>
+
+    <input message="Please indicate the release type: (1 or f = Full, 2 or t = Tag-Only, 3 or d = Deploy/Publish-only) "
+           addproperty="rel.type"/>
+
+    <if>
+      <or>
+        <equals arg1="${rel.type}" arg2="f"/>
+        <equals arg1="${rel.type}" arg2="1"/>
+      </or>
+      <then>
+        <antcall target="rel-full"/>
+      </then>
+      <elseif>
+        <or>
+          <equals arg1="${rel.type}" arg2="t"/>
+          <equals arg1="${rel.type}" arg2="2"/>
+        </or>
+        <then>
+          <antcall target="rel-tag"/>
+        </then>
+      </elseif>
+      <elseif>
+        <or>
+          <equals arg1="${rel.type}" arg2="d"/>
+          <equals arg1="${rel.type}" arg2="3"/>
+        </or>
+        <then>
+          <antcall target="rel-deploy"/>
+        </then>
+      </elseif>
+      <else>
+        <echo>Only f, t, or d are valid inputs.</echo>
+      </else>
+    </if>
+  </target>
+
+  <target name="rel-full" depends="-scm-init">
+    <echo>Initiating a full release...</echo>
+    <rel_full_pre/>
+
+    <rel-script-executor relType="full"/>
+
+    <rel_full_post/>
+    <echo>...full release complete</echo>
+  </target>
+
+  <target name="rel-deploy" depends="-scm-init">
+    <echo>Initiating a deploy/publish release...</echo>
+    <rel_deploy_pre/>
+
+    <rel-script-executor relType="deploy"/>
+
+    <rel_deploy_post/>
+    <echo>...deploy/publish release complete</echo>
+  </target>
+
+  <target name="rel-tag" depends="-scm-init"
+          description="Initiates a tag-only release.  This checks out the project, builds it, tests it, and then tags it only.">
+    <echo>Initiating a tag-only release...</echo>
+    <rel_tag_pre/>
+
+    <rel-script-executor relType="tag"/>
+
+    <rel_tag_post/>
+    <echo>...tag-only release complete</echo>
+  </target>
+
+  <macrodef name="rel-script-executor">
+    <attribute name="relType"/>
+    <sequential>
+      <!-- if the release type is 'deploy' then execute the deploy only scripts -->
+      <if>
+        <equals arg1="@{relType}" arg2="deploy"/>
+        <then>
+          <input message="Enter tag to deploy or publish (e.g. 1.0):" addproperty="input.tag.version"/>
+
+          <scm_tag_validation tag="${input.tag.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+
+          <!-- check jcatapult cache to see if the deploy archive already exists. -->
+          <!-- If not, then check it out from source control and run the deploy scripts -->
+          <property name="deploy.archive" location="${dir.deploy.archive}/${project.name}-${input.tag.version}.tar.gz"/>
+          <if>
+            <not><available file="${deploy.archive}"/></not>
+            <then>
+              <echo>Deploy archive does not exists at location ${deploy.archive}.  Checking out from source control...</echo>
+              <scm_check_out_tag dir="${dir.checkout}" tag="${input.tag.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+              <rel_fork dir="${dir.checkout}" target="rel-deploy-script"/>
+            </then>
+            <else>
+              <echo>Deploy archive exists at location ${deploy.archive}</echo>
+            </else>
+          </if>
+        </then>
+        <!-- else, execute all other types of version releases -->
+        <else>
+          <!-- groovy script to set the version type (major, minor, patch, snapshot)-->
+          <groovy classpathref="classpath.release-common" src="${release.dir.scripts.groovy}/SetVersionType.groovy"/>
+
+          <!-- print a informative message -->
+          <echo message="Detected ${version.type} version [${project.version}]..."/>
+
+          <!-- if version type is major... -->
+          <if>
+            <equals arg1="${version.type}" arg2="major"/>
+            <then>
+              <!-- check out trunk -->
+              <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+              <if>
+                <equals arg1="@{relType}" arg2="tag"/>
+                <then>
+                  <rel_fork dir="${dir.checkout}" target="rel-tag-major-trunk-script"/>
+                </then>
+                <elseif>
+                  <equals arg1="@{relType}" arg2="full"/>
+                  <then>
+                    <rel_fork dir="${dir.checkout}" target="rel-full-major-trunk-script"/>
+                  </then>
+                </elseif>
+              </if>
+            </then>
+
+            <!-- if version type is minor... -->
+            <elseif>
+              <equals arg1="${version.type}" arg2="minor"/>
+              <then>
+                <if>
+                  <equals arg1="${scm.location}" arg2="trunk"/>
+                  <then>
+                    <!-- check out trunk -->
+                    <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                    <if>
+                      <equals arg1="@{relType}" arg2="tag"/>
+                      <then>
+                        <rel_fork dir="${dir.checkout}" target="rel-minor-tag-trunk-script"/>
+                      </then>
+                      <elseif>
+                        <equals arg1="@{relType}" arg2="full"/>
+                        <then>
+                          <rel_fork dir="${dir.checkout}" target="rel-minor-full-trunk-script"/>
+                        </then>
+                      </elseif>
+                    </if>
+                  </then>
+                  <else>
+                    <echo>Minor releases can only be done on Trunk</echo>
+                  </else>
+                </if>
+              </then>
+            </elseif>
+
+            <!-- if version type is patch... -->
+            <elseif>
+              <equals arg1="${version.type}" arg2="patch"/>
+              <then>
+                <if>
+                  <equals arg1="@{relType}" arg2="tag"/>
+                  <then>
+                    <if>
+                      <equals arg1="${scm.location}" arg2="trunk"/>
+                      <then>
+                        <!-- check out trunk -->
+                        <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                        <rel_fork dir="${dir.checkout}" target="rel-patch-tag-trunk-script"/>
+                      </then>
+                      <else>
+                        <!-- check out branch -->
+                        <rel_set_branch_version/>
+                        <scm_check_out_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                        <rel_fork dir="${dir.checkout}" target="rel-patch-tag-branch-script"/>
+                      </else>
+                    </if>
+                  </then>
+                  <elseif>
+                    <equals arg1="@{relType}" arg2="full"/>
+                    <then>
+                      <if>
+                        <equals arg1="${scm.location}" arg2="trunk"/>
+                        <then>
+                          <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                          <rel_fork dir="${dir.checkout}" target="rel-patch-full-trunk-script"/>
+                        </then>
+                        <else>
+                          <rel_set_branch_version/>
+                          <scm_check_out_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                          <rel_fork dir="${dir.checkout}" target="rel-patch-full-branch-script"/>
+                        </else>
+                      </if>
+                    </then>
+                  </elseif>
+                </if>
+              </then>
+            </elseif>
+
+            <!-- else it must be a snapshot -->
+            <elseif>
+              <equals arg1="${version.type}" arg2="snapshot"/>
+              <then>
+                <if>
+                  <equals arg1="@{relType}" arg2="tag"/>
+                  <then>
+                    <if>
+                      <equals arg1="${scm.location}" arg2="trunk"/>
+                      <then>
+                        <!-- check out trunk -->
+                        <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                        <rel_fork dir="${dir.checkout}" target="rel-snapshot-tag-trunk-script"/>
+                      </then>
+                      <else>
+                        <!-- check out branch -->
+                        <rel_set_branch_version/>
+                        <scm_check_out_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                        <rel_fork dir="${dir.checkout}" target="rel-snapshot-tag-branch-script"/>
+                      </else>
+                    </if>
+                  </then>
+                  <elseif>
+                    <equals arg1="@{relType}" arg2="full"/>
+                    <then>
+                      <if>
+                        <equals arg1="${scm.location}" arg2="trunk"/>
+                        <then>
+                          <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                          <rel_fork dir="${dir.checkout}" target="rel-snapshot-full-trunk-script"/>
+                        </then>
+                        <else>
+                          <rel_set_branch_version/>
+                          <scm_check_out_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                          <rel_fork dir="${dir.checkout}" target="rel-snapshot-full-branch-script"/>
+                        </else>
+                      </if>
+                    </then>
+                  </elseif>
+                </if>
+              </then>
+            </elseif>
+          </if>
+        </else>
+      </if>
+
+    </sequential>
+  </macrodef>
+
+  <target name="rel-deploy-script"
+          description="Initiates a publish-only release process.  This prompts the user for which tag to publish, checks it out, builds, and then publishes">
+    <echo>Executing deploy/publish release scripts...</echo>
+    <antcall target="jar"/>
+    <rel_deploy_remote/>
+    <rel_cleanup/>
+  </target>
+
+  <macrodef name="rel_check_project">
+    <sequential>
+      <checkintegrationbuild dependencies="dependencies.project"/>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="rel_check_changelog">
+    <sequential>
+      <echo message="Checking changelog"/>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="rel_set_branch_version">
+    <sequential>
+      <groovy classpathref="classpath.release-common" src="${release.dir.scripts.groovy}/SetBranchVersion.groovy"/>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="rel_validate_version">
+    <attribute name="type"/>
+    <sequential>
+      <property name="tmp_type" value="@{type}"/>
+      <echo message="Validating that ${project.version} is a valid @{type} version."/>
+      <groovy classpathref="classpath.release-common"
+              src="${release.dir.scripts.groovy}/ValidateProjectVersion.groovy"/>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="rel_fork">
+    <attribute name="dir"/>
+    <attribute name="target"/>
+    <sequential>
+
+      <if>
+        <not>
+          <isset property="debug"/>
+        </not>
+        <then>
+          <property name="debug" value="false"/>
+        </then>
+      </if>
+
+      <if>
+        <not>
+          <isset property="create.db"/>
+        </not>
+        <then>
+          <property name="create.db" value="true"/>
+        </then>
+      </if>
+
+      <if>
+        <not>
+          <isset property="ignore.tests"/>
+        </not>
+        <then>
+          <property name="ignore.tests" value="false"/>
+        </then>
+      </if>
+
+      <if>
+        <not>
+          <isset property="deploy.env"/>
+        </not>
+        <then>
+          <property name="deploy.env" value="default"/>
+        </then>
+      </if>
+
+      <if>
+        <os family="windows"/>
+        <then>
+          <exec executable="${ant.home}\bin\ant.bat" dir="@{dir}">
+            <arg value="-Dcreate.db=${create.db}"/>
+            <arg value="-Dignore.tests=${ignore.tests}"/>
+            <arg value="-Ddebug=${debug}"/>
+            <arg value="-Ddir.checkout=${dir.checkout}"/>
+            <arg value="-Ddeploy.env=${deploy.env}"/>
+            <!--<arg value="-verbose"/>-->
+            <arg value="@{target}"/>
+          </exec>
+        </then>
+        <else>
+          <exec executable="ant" dir="@{dir}">
+            <arg value="-Dcreate.db=${create.db}"/>
+            <arg value="-Dignore.tests=${ignore.tests}"/>
+            <arg value="-Ddebug=${debug}"/>
+            <arg value="-Ddir.checkout=${dir.checkout}"/>
+            <arg value="-Ddeploy.env=${deploy.env}"/>
+            <!--<arg value="-verbose"/>-->
+            <arg value="@{target}"/>
+          </exec>
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="rel_cleanup">
+    <sequential>
+      <!-- delete the directory if not in debug mode -->
+      <if>
+        <equals arg1="${debug}" arg2="true"/>
+        <then>
+          <echo>Debug is ON! Not deleting ${dir.checkout}</echo>
+        </then>
+        <else>
+          <delete dir="${dir.checkout}"/>
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="rel_deploy_pre">
+    <sequential/>
+  </macrodef>
+
+  <macrodef name="rel_deploy_post">
+    <sequential/>
+  </macrodef>
+
+  <macrodef name="rel_tag_pre">
+    <sequential/>
+  </macrodef>
+
+  <macrodef name="rel_tag_post">
+    <sequential/>
+  </macrodef>
+
+  <macrodef name="rel_full_pre">
+    <sequential/>
+  </macrodef>
+
+  <macrodef name="rel_full_post">
+    <sequential/>
+  </macrodef>
+
+  <macrodef name="rel_pre">
+    <sequential/>
+  </macrodef>
+
+  <macrodef name="rel_post">
+    <sequential/>
+  </macrodef>
+
+</project>
