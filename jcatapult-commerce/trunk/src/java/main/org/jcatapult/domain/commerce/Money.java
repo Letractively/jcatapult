@@ -75,6 +75,31 @@ public class Money implements Serializable, Comparable<Money> {
     }
 
     /**
+     * Creates a new Money using the numeric value from the given String, which must be in the
+     * correct format to be parsed by the {@link BigDecimal#BigDecimal(String)} constructor, in
+     * US Dollars.
+     *
+     * @param   amount The amount.
+     * @return  The Money.
+     * @throws  NullPointerException If the amount or currency are null.
+     */
+    public static Money valueOfUSD(String amount) {
+        return new Money(amount, Currency.getInstance("USD"));
+    }
+
+    /**
+     * Creates a new Money using the numeric value from the given BigDecimal in US Dollars. No
+     * rounding occurs in order to maintain precision.
+     *
+     * @param   amount The amount.
+     * @return  The Money.
+     * @throws  NullPointerException If the amount or currency are null.
+     */
+    public static Money valueOfUSD(BigDecimal amount) {
+        return new Money(amount, Currency.getInstance("USD"));
+    }
+
+    /**
      * @return  The currency of this Money.
      */
     public Currency getCurrency() {
@@ -271,12 +296,73 @@ public class Money implements Serializable, Comparable<Money> {
         return amount.compareTo(new BigDecimal("0")) == 0;
     }
 
+    /**
+     * Compares the given Money to this Money. If the currencies are not the same, this throws an
+     * exception.
+     *
+     * @param   o The Money to compare with this Money.
+     * @return  Positive number if this Money is more, negative it if is less, zero if they are equal.
+     * @throws  IllegalArgumentException If the currencies of this Money and the given Money aren't
+     *          the same.
+     */
     public int compareTo(Money o) {
         if (!currency.equals(o.currency)) {
             throw new IllegalArgumentException("Unable to compare monies with different currencies");
         }
 
         return amount.compareTo(o.amount);
+    }
+
+    /**
+     * Determines if the given Money is less than this Money. If the currencies are not the same,
+     * this throws an exception.
+     *
+     * @param   money The Money to compare with this Money.
+     * @return  True if this Money is less than the given Money.
+     * @throws  IllegalArgumentException If the currencies of this Money and the given Money aren't
+     *          the same.
+     */
+    public boolean isLessThan(Money money) {
+        return compareTo(money) < 0;
+    }
+
+    /**
+     * Determines if the given Money is less than or equal to this Money. If the currencies are not
+     * the same, this throws an exception.
+     *
+     * @param   money The Money to compare with this Money.
+     * @return  True if this Money is less than or equal to the given Money.
+     * @throws  IllegalArgumentException If the currencies of this Money and the given Money aren't
+     *          the same.
+     */
+    public boolean isLessThanOrEqualTo(Money money) {
+        return compareTo(money) <= 0;
+    }
+
+    /**
+     * Determines if the given Money is greater than this Money. If the currencies are not the same,
+     * this throws an exception.
+     *
+     * @param   money The Money to compare with this Money.
+     * @return  True if this Money is greater than the given Money.
+     * @throws  IllegalArgumentException If the currencies of this Money and the given Money aren't
+     *          the same.
+     */
+    public boolean isGreaterThan(Money money) {
+        return compareTo(money) > 0;
+    }
+
+    /**
+     * Determines if the given Money is greater than or equal to this Money. If the currencies are
+     * not the same, this throws an exception.
+     *
+     * @param   money The Money to compare with this Money.
+     * @return  True if this Money is greater than or equal to the given Money.
+     * @throws  IllegalArgumentException If the currencies of this Money and the given Money aren't
+     *          the same.
+     */
+    public boolean isGreaterThanOrEqualTo(Money money) {
+        return compareTo(money) >= 0;
     }
 
     public int hashCode() {
