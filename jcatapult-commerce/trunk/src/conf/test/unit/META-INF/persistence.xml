@@ -19,8 +19,8 @@
              version="1.0">
   <persistence-unit name="punit">
     <non-jta-data-source>java:comp/env/jdbc/jcatapult_commerce</non-jta-data-source>
-    <class>org.jcatapult.hibernate.MoneyHolder</class>
-    <class>org.jcatapult.hibernate.MoneyAmountHolder</class>
+    <class>org.jcatapult.commerce.domain.hibernate.MoneyHolder</class>
+    <class>org.jcatapult.commerce.domain.hibernate.MoneyAmountHolder</class>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
       <property name="hibernate.hbm2ddl.auto" value="create"/>

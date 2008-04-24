@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.commerce;
+package org.jcatapult.commerce.service;
 
 /**
  * <p>
@@ -43,31 +43,68 @@ public class ChargeResult {
         this.gatewayAVSCode = gatewayAVSCode;
     }
 
+    /**
+     * @return  The transaction ID, which is generally from the payment gateway.
+     */
     public String getTransactionID() {
         return transactionID;
     }
 
+    /**
+     * @return  The error enumeration, which is normally decoded by the implementations from the
+     *          gateway. This is the normalized result that code can always rely on it being
+     *          consistent between gateway implementations.
+     */
     public CommerceError getError() {
         return error;
     }
 
+    /**
+     * @return  Gateway specific response code.
+     */
     public String getGatewayResponseCode() {
         return gatewayResponseCode;
     }
 
+    /**
+     * @return  Gateway specific approval code or null if the transaction failed.
+     */
     public String getGatewayApprovalCode() {
         return gatewayApprovalCode;
     }
 
+    /**
+     * @return  Gateway specific error code or null if the transaction was successful.
+     */
     public String getGatewayErrorCode() {
         return gatewayErrorCode;
     }
 
+    /**
+     * @return  Gateway specific error message or null if the transaction was successful.
+     */
     public String getGatewayErrorMessage() {
         return gatewayErrorMessage;
     }
 
+    /**
+     * @return  Gateway specific AVS code.
+     */
     public String getGatewayAVSCode() {
         return gatewayAVSCode;
+    }
+
+    /**
+     * Produces a debug String that contains all of the information from this result. Anything that
+     * is null will have the String <code>null</code> inside the return value.
+     *
+     * @return  The debug String.
+     */
+    public String toString() {
+        return "Credit card charge result: Response code [" + gatewayResponseCode +
+            "]. Success info [approval code {" + gatewayApprovalCode + "}, transaction ID {" +
+            transactionID + "}]. Error info [error {" + error + "}, gateway error code {" +
+            gatewayErrorCode + "}, gateway error message{" + gatewayErrorMessage + "}]. AVS code [" +
+            gatewayAVSCode + "]";
     }
 }

@@ -13,30 +13,27 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.commerce;
+package org.jcatapult.commerce.service;
 
 /**
  * <p>
- * This enumeration is a billing error.
+ * This stores the results of a card verification request.
  * </p>
  *
  * @author Brian Pontarelli
  */
-public enum CommerceError {
-    INVALID_CREDIT_CARD_NUMBER,
-    INVALID_CREDIT_CARD,
-    INVALID_CVN,
-    INVALID_ADDRESS,
-    INVALID_EXPIRATION,
-    INVALID_NAME,
-    COMMUNICATION_ERROR,
-    UNKNOWN_ERROR,
-    CREDIT_CARD_EXPIRED,
+public class VerifyResult {
+    private final CommerceError error;
 
-    /**
-     * Indicates that the card is maxed out or has been suspected of fraud or closed or the person
-     * has committed a triple murder and is wanted by the FBI and their bank accounts have been
-     * frozen.
-     */
-    DECLINED;
+    public VerifyResult(CommerceError error) {
+        this.error = error;
+    }
+
+    public CommerceError getError() {
+        return error;
+    }
+
+    public boolean isError() {
+        return error != null;
+    }
 }

@@ -13,13 +13,13 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.hibernate;
+package org.jcatapult.commerce.domain.hibernate;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 
-import org.jcatapult.domain.commerce.Money;
+import org.jcatapult.commerce.domain.Money;
 import org.jcatapult.persistence.PersistenceService;
 import org.jcatapult.test.JPABaseTest;
 import static org.junit.Assert.*;
