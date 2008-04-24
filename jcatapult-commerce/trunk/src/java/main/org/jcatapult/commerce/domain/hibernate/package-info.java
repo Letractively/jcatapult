@@ -4,4 +4,4 @@
  * in order to support Money storage in the database.
  * </p>
  */
-package org.jcatapult.commerce.service.domain;
+package org.jcatapult.commerce.domain.hibernate;
