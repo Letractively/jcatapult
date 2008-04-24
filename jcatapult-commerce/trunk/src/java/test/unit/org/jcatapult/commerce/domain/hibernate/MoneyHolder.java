@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.hibernate;
+package org.jcatapult.commerce.domain.hibernate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +21,7 @@ import javax.persistence.Entity;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.jcatapult.domain.IdentifiableImpl;
-import org.jcatapult.domain.commerce.Money;
+import org.jcatapult.commerce.domain.Money;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ import org.jcatapult.domain.commerce.Money;
  */
 @Entity
 public class MoneyHolder extends IdentifiableImpl {
-    @Type(type = "org.jcatapult.hibernate.MoneyCurrencyType")
+    @Type(type = "org.jcatapult.commerce.domain.hibernate.MoneyCurrencyType")
     @Columns(columns = {
         @Column(name = "amount"),
         @Column(name = "currency")

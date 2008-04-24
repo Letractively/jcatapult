@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.struts.convert;
+package org.jcatapult.commerce.domain.struts;
 
 import java.lang.reflect.Method;
 import java.util.Currency;
@@ -21,7 +21,8 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 
 import org.easymock.EasyMock;
-import org.jcatapult.domain.commerce.Money;
+import org.jcatapult.commerce.domain.Money;
+import org.jcatapult.commerce.domain.struts.MoneyTypeConverter;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import static org.junit.Assert.*;
 import org.junit.Test;

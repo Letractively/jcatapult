@@ -13,31 +13,30 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.hibernate;
-
-import javax.persistence.Entity;
-
-import org.hibernate.annotations.Type;
-import org.jcatapult.domain.IdentifiableImpl;
-import org.jcatapult.domain.commerce.Money;
+package org.jcatapult.commerce.service;
 
 /**
  * <p>
- * This is a test object for money
+ * This enumeration is a billing error.
  * </p>
  *
  * @author Brian Pontarelli
  */
-@Entity
-public class MoneyAmountHolder extends IdentifiableImpl {
-    @Type(type = "org.jcatapult.hibernate.MoneyAmountUSDType")
-    private Money money;
+public enum CommerceError {
+    INVALID_CREDIT_CARD_NUMBER,
+    INVALID_CREDIT_CARD,
+    INVALID_CVN,
+    INVALID_ADDRESS,
+    INVALID_EXPIRATION,
+    INVALID_NAME,
+    COMMUNICATION_ERROR,
+    UNKNOWN_ERROR,
+    CREDIT_CARD_EXPIRED,
 
-    public Money getMoney() {
-        return money;
-    }
-
-    public void setMoney(Money money) {
-        this.money = money;
-    }
+    /**
+     * Indicates that the card is maxed out or has been suspected of fraud or closed or the person
+     * has committed a triple murder and is wanted by the FBI and their bank accounts have been
+     * frozen.
+     */
+    DECLINED;
 }

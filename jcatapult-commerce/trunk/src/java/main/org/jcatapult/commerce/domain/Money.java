@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.domain.commerce;
+package org.jcatapult.commerce.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

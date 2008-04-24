@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.struts.convert;
+package org.jcatapult.commerce.domain.struts;
 
 import java.lang.reflect.Member;
 import java.util.Currency;
@@ -21,7 +21,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jcatapult.domain.commerce.Money;
+import org.jcatapult.commerce.domain.Money;
+import org.jcatapult.struts.convert.BaseTypeConverter;
 
 import com.opensymphony.xwork2.XWorkException;
 import net.java.lang.StringTools;
@@ -101,7 +102,7 @@ public class MoneyTypeConverter extends BaseTypeConverter {
         if (value == null) {
             return null;
         }
-        
+
         Money money = (Money) value;
         return money.toNumericString();
     }

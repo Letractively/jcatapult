@@ -13,12 +13,13 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.domain.commerce;
+package org.jcatapult.commerce.domain;
 
 import org.joda.time.YearMonthDay;
 import org.junit.Assert;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.jcatapult.commerce.domain.CreditCard;
 
 /**
  * <p>

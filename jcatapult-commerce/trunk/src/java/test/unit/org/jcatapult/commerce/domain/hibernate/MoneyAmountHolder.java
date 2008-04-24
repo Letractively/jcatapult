@@ -13,27 +13,31 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.commerce;
+package org.jcatapult.commerce.domain.hibernate;
+
+import javax.persistence.Entity;
+
+import org.hibernate.annotations.Type;
+import org.jcatapult.domain.IdentifiableImpl;
+import org.jcatapult.commerce.domain.Money;
 
 /**
  * <p>
- * This stores the results of a card verification request.
+ * This is a test object for money
  * </p>
  *
  * @author Brian Pontarelli
  */
-public class VerifyResult {
-    private final CommerceError error;
+@Entity
+public class MoneyAmountHolder extends IdentifiableImpl {
+    @Type(type = "org.jcatapult.commerce.domain.hibernate.MoneyAmountUSDType")
+    private Money money;
 
-    public VerifyResult(CommerceError error) {
-        this.error = error;
+    public Money getMoney() {
+        return money;
     }
 
-    public CommerceError getError() {
-        return error;
-    }
-
-    public boolean isError() {
-        return error != null;
+    public void setMoney(Money money) {
+        this.money = money;
     }
 }

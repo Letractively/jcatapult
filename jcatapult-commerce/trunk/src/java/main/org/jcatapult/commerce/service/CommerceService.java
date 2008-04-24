@@ -13,12 +13,12 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.commerce;
+package org.jcatapult.commerce.service;
 
 import java.net.InetAddress;
 
-import org.jcatapult.domain.commerce.CreditCard;
-import org.jcatapult.domain.commerce.Money;
+import org.jcatapult.commerce.domain.CreditCard;
+import org.jcatapult.commerce.domain.Money;
 
 import com.google.inject.ImplementedBy;
 

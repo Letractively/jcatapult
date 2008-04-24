@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.hibernate;
+package org.jcatapult.commerce.domain.hibernate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -26,18 +26,18 @@ import java.util.Currency;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
-import org.jcatapult.domain.commerce.Money;
+import org.jcatapult.commerce.domain.Money;
 
 /**
  * <p>
  * This class is a hibernate type for storing currencies in the database using
- * only a single column for the amount. This always assumes USD for the currency.
+ * two columns, one for the amount and the other for the currency code.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class MoneyAmountUSDType implements UserType {
-    private static final int[] SQL_TYPES = new int[] {Types.DOUBLE};
+public class MoneyCurrencyType implements UserType {
+    private static final int[] SQL_TYPES = new int[] {Types.DOUBLE, Types.VARCHAR};
 
     public int[] sqlTypes() {
         return SQL_TYPES;
@@ -67,27 +67,24 @@ public class MoneyAmountUSDType implements UserType {
 
     public Object nullSafeGet(ResultSet resultSet, String[] strings, Object object)
     throws HibernateException, SQLException {
-        Object value = Hibernate.BIG_DECIMAL.nullSafeGet(resultSet, strings[0]);
-        if (value == null) {
+        Object amount = Hibernate.BIG_DECIMAL.nullSafeGet(resultSet, strings[0]);
+        Object currency = Hibernate.STRING.nullSafeGet(resultSet, strings[1]);
+        if (amount == null || currency == null) {
             return null;
         }
 
-        return Money.valueOf((BigDecimal) value, Currency.getInstance("USD"));
+        return Money.valueOf((BigDecimal) amount, Currency.getInstance((String) currency));
     }
 
     public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index)
     throws HibernateException, SQLException {
         if (value == null) {
             Hibernate.BIG_DECIMAL.nullSafeSet(preparedStatement, null, index);
+            Hibernate.STRING.nullSafeSet(preparedStatement, null, index + 1);
         } else {
             Money money = (Money) value;
-            if (!money.getCurrency().getCurrencyCode().equals("USD")) {
-                throw new HibernateException("The type you specified as the MoneyAmountUSDType but " +
-                    "you passed a money to an object that had a currency code other than USD. The " +
-                    "currency code you supplied was [" + money.getCurrency().getCurrencyCode() + "]");
-            }
-
             Hibernate.BIG_DECIMAL.nullSafeSet(preparedStatement, money.toBigDecimal(), index);
+            Hibernate.STRING.nullSafeSet(preparedStatement, money.getCurrency().getCurrencyCode(), index + 1);
         }
     }
 
@@ -97,12 +94,6 @@ public class MoneyAmountUSDType implements UserType {
         }
 
         Money money = (Money) value;
-        if (!money.getCurrency().getCurrencyCode().equals("USD")) {
-            throw new HibernateException("The type you specified as the MoneyAmountUSDType but " +
-                "you passed a money to an object that had a currency code other than USD. The " +
-                "currency code you supplied was [" + money.getCurrency().getCurrencyCode() + "]");
-        }
-
         return Money.valueOf(money.toBigDecimal(), money.getCurrency());
     }
 
