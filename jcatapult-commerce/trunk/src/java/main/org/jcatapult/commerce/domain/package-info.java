@@ -5,4 +5,4 @@
  * for Hibernate and Struts2.
  * </p>
  */
-package org.jcatapult.commerce.service.domain;
+package org.jcatapult.commerce.domain;
