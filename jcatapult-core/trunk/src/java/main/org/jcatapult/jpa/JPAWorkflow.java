@@ -16,10 +16,7 @@
 package org.jcatapult.jpa;
 
 import java.io.IOException;
-import java.util.logging.Logger;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -29,44 +26,34 @@ import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 /**
  * <p>
- * This class handles setting up JPA in the constructor and then setting up
- * a ThreadLocal EntityManager that can be injected via Guice for each HTTP
- * request.
+ * This class handles setting up the JPA support for each request into the
+ * servlet container. This allows JPA classes to be injected into classes
+ * using a ThreadLocal storage for EntityManagers. This is also the
+ * implementation of the Open-Seesion-In-View pattern.
  * </p>
  *
  * <p>
- * This is a singleton so that the EntityManagerFactory is only created once,
- * when the container is loaded.
+ * The majority of the work is actually performed by the {@link JPAService}
+ * and not this class. This class just delegates to the JPAService and fits
+ * into the JCatapult workflow processing.
+ * </p>
+ *
+ * <p>
+ * This is a singleton for performance.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 @Singleton
 public class JPAWorkflow implements Workflow {
-    private static final Logger logger = Logger.getLogger(JPAWorkflow.class.getName());
-    private boolean jpaEnabled;
-    private EntityManagerFactory emf;
+    private final JPAService service;
 
-    /**
-     * @param   jpaEnabled If true, JPA will be setup, false it will not. A boolean flag controlled
-     *          by the jcatapult configuration property named <strong>jcatapult.jpa.enabled</strong>
-     *          that controls whether or not JPA will be initialized and then setup during each request.
-     * @param   persistentUnit  The name of the JPA persistent unit to use if JPA is being setup.
-     *          This is controlled by the jcatapult configuration property named <strong>jcatapult.jpa.unit</strong>.
-     */
     @Inject
-    public JPAWorkflow(@Named("jcatapult.jpa.enabled") boolean jpaEnabled,
-            @Named("jcatapult.jpa.unit") String persistentUnit) {
-        logger.fine("JPA is " + (jpaEnabled ? "enabled" : "disabled"));
-
-        this.jpaEnabled = jpaEnabled;
-        if (jpaEnabled) {
-            emf = Persistence.createEntityManagerFactory(persistentUnit);
-        }
+    public JPAWorkflow(JPAService service) {
+        this.service = service;
     }
 
     /**
@@ -80,19 +67,15 @@ public class JPAWorkflow implements Workflow {
      */
     public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
-        if (jpaEnabled) {
-            EntityManager entityManager = emf.createEntityManager();
+        EntityManagerFactory emf = service.getFactory();
+        if (emf != null) {
             try {
-                // Grab the EntityManager for this request. This is lightweight so don't freak out that
-                // this will use resources. It doesn't grab a JDBC connection until it has to.
-                EntityManagerContext.set(entityManager);
+                service.setupEntityManager();
 
                 // Proceed down the chain
                 workflowChain.doWorkflow(request, response);
             } finally {
-                // Clear out the context just to be safe.
-                EntityManagerContext.remove();
-                entityManager.close();
+                service.tearDownEntityManager();
             }
         } else {
             workflowChain.doWorkflow(request, response);
@@ -103,8 +86,6 @@ public class JPAWorkflow implements Workflow {
      * Closes the EntityManagerFactory and removes the context from the holder.
      */
     public void destroy() {
-        if (jpaEnabled) {
-            emf.close();
-        }
+        service.closeFactory();
     }
 }

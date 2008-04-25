@@ -23,6 +23,7 @@ import javax.sql.RowSet;
 
 import org.easymock.EasyMock;
 import org.jcatapult.jpa.User;
+import org.jcatapult.jpa.JPATransactionManager;
 import org.jcatapult.persistence.annotation.Transactional;
 import org.jcatapult.test.JPABaseTest;
 import static org.junit.Assert.*;
@@ -91,7 +92,7 @@ public class TransactionTest extends JPABaseTest {
         EasyMock.expect(em.getTransaction()).andReturn(et);
         EasyMock.replay(em);
 
-        DefaultTransactionManager manager = new DefaultTransactionManager(em);
+        JPATransactionManager manager = new JPATransactionManager(em);
         TransactionState state = manager.startTransaction();
         assertSame(et, state.transaction());
         assertFalse(state.embedded());
@@ -109,7 +110,7 @@ public class TransactionTest extends JPABaseTest {
         EasyMock.expect(em.getTransaction()).andReturn(et);
         EasyMock.replay(em);
 
-        DefaultTransactionManager manager = new DefaultTransactionManager(em);
+        JPATransactionManager manager = new JPATransactionManager(em);
         TransactionState state = manager.startTransaction();
         assertSame(et, state.transaction());
         assertTrue(state.embedded());
