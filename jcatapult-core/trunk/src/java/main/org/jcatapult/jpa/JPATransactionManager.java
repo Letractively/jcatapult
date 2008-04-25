@@ -14,12 +14,16 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.persistence;
+package org.jcatapult.jpa;
 
 import javax.persistence.EntityManager;
 
+import org.jcatapult.persistence.DefaultTransactionState;
+import org.jcatapult.persistence.TransactionManager;
+import org.jcatapult.persistence.TransactionResultProcessor;
+import org.jcatapult.persistence.TransactionState;
+
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -31,18 +35,17 @@ import com.google.inject.Singleton;
  * </p>
  *
  * <p>
- * This is a singleton and it uses all of the default implementations
- * in this package.
+ * This is a not a singleton since it gets injected with the
+ * current EntityManager.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@Singleton
-public class DefaultTransactionManager implements TransactionManager {
+public class JPATransactionManager implements TransactionManager {
     private final EntityManager entityManager;
 
     @Inject
-    public DefaultTransactionManager(EntityManager entityManager) {
+    public JPATransactionManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

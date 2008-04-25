@@ -82,7 +82,7 @@ public class JCatapultFilterTest {
         EasyMock.expect(request.getAttribute("javax.servlet.jsp.jspException")).andReturn(null);
         EasyMock.replay(request);
 
-        HttpServletResponse response  = EasyMock.createStrictMock(HttpServletResponse.class);
+        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
         final AtomicBoolean called = new AtomicBoolean(false);

@@ -16,6 +16,8 @@
  */
 package org.jcatapult.persistence;
 
+import org.jcatapult.jpa.JPATransactionManager;
+
 import com.google.inject.ImplementedBy;
 
 /**
@@ -30,7 +32,7 @@ import com.google.inject.ImplementedBy;
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultTransactionManager.class)
+@ImplementedBy(JPATransactionManager.class)
 public interface TransactionManager {
     /**
      * Starts a new transaction or joins an existing transaction.
