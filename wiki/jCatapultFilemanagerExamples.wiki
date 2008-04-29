@@ -51,6 +51,6 @@ This form works fine if, for instance, all it does is upload a file.  However, w
 
 The major difference between the first and second examples is that the second example uses the 'fileURI' and 'deleteURI' attributes.  This flags the file.ftl template located in the JCatapult Core semantic theme to create CRUD like UI for the file upload widget.
 
-  # fileURI:  This param should be set to the location relative to the host where the file you are uploading is accessible via http.  For instance, if I upload a file and it's accessible via http://www.testsomethingxxx.com/files/employeeX.gif, then the fileURI would be set to /files/employeeX.gif
+  * fileURI:  This param should be set to the location relative to the host where the file you are uploading is accessible via http.  For instance, if I upload a file and it's accessible via http://www.testsomethingxxx.com/files/employeeX.gif, then the fileURI would be set to /files/employeeX.gif
 
-  # deleteURI:  This is the action responsible for deleting the file from disk.  This is implemented by you.  In the example above, the app would have an action called 'deleteImage' which takes an employee id.  This action uses the employee id to load that particular employee from the database and then set the field holding the image uri to null.
+  * deleteURI:  This is the action responsible for deleting the file from disk.  This is implemented by you.  In the example above, the app would have an action called 'deleteImage' which takes an employee id.  This action uses the employee id to load that particular employee from the database and then set the field holding the image uri to null.
