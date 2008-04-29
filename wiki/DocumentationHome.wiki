@@ -45,13 +45,8 @@ Here are the documentation pages that are available for the JCatapult framework.
 
 = API docs =
 
-  * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-core/1.0-M6/index.html JCatapult-Core Javadoc]
-  * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-commerce/1.0-M6/index.html JCatapult-Commerce Javadoc]
-  * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-dbmgr/1.0-M6/index.html JCatapult-DBMgr Javadoc]
-  * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-filemgr/1.0-M6/index.html JCatapult-FileMgr Javadoc]
-  * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-scaffolder/1.0-M6/index.html JCatapult-Scaffolder Javadoc]
-  * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-security/1.0-M6/index.html JCatapult-Security Javadoc]
-  * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-security/1.0-M6/index.html JCatapult-Email Javadoc]
+* [JCatapultJavadocs JCatapult Javadocs]
+
 = Reference / Advanced =
 
 Below are links to topics about a specific JCatapult technology, service or API.
