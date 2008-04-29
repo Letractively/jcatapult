@@ -22,6 +22,7 @@ import org.jcatapult.struts.action.annotation.ActionName;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.DefaultActionInvocation;
 
 /**
  * <p>
@@ -56,7 +57,13 @@ public class StrutsModule extends AbstractModule {
         // Bind the servlet context
         bind(String.class).annotatedWith(ActionName.class).toProvider(new Provider<String>() {
             public String get() {
-                return ActionContext.getContext().getName();
+                DefaultActionInvocation invocation = (DefaultActionInvocation) ActionContext.getContext().getActionInvocation();
+                String namespace = invocation.getProxy().getNamespace();
+                String actionName = invocation.getProxy().getActionName();
+                if (actionName == null) {
+                    actionName = "index"; // Struts2 convention that empty action names are index
+                }
+                return namespace + "/" + actionName;
             }
         });
     }
