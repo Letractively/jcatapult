@@ -14,14 +14,4 @@
       <message key="missing.guestBookEntry.comment"/>
     </field-validator>
   </field>
-  <field name="guestBookEntry.updateUser">
-    <field-validator type="requiredstring">
-      <message key="missing.guestBookEntry.updateUser"/>
-    </field-validator>
-  </field>
-  <field name="guestBookEntry.insertUser">
-    <field-validator type="requiredstring">
-      <message key="missing.guestBookEntry.insertUser"/>
-    </field-validator>
-  </field>
 </validators>

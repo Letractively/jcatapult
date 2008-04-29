@@ -41,6 +41,8 @@ public class Edit extends BaseForm {
                 addActionError("That GuestBookEntry has been deleted.");
                 return ERROR;
             }
+
+            return INPUT;
         } else {
             guestBookEntryService.persist(guestBookEntry);
         }

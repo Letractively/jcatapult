@@ -1,23 +1,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
-<head><title>GuestBookEntry | Index</title></head>
+<head><title>Guest Book | Entries</title></head>
 <body>
 <s:form action="delete" method="POST" theme="simple">
   <table id="listing">
     <tr>
       <th id="name-header"><a href="index?sortProperty=name">Name</a></th>
       <th id="comment-header"><a href="index?sortProperty=comment">Comment</a></th>
-      <th id="updateUser-header"><a href="index?sortProperty=updateUser">Update User</a></th>
-      <th id="insertUser-header"><a href="index?sortProperty=insertUser">Insert User</a></th>
+      <th id="insertDate-header"><a href="index?sortProperty=insertDate">Date</a></th>
       <th id="delete-header">Delete</th>
     </tr>
     <c:forEach items="${guestBookEntries}" var="guestBookEntry" varStatus="status">
       <tr>
         <td class="${status.index % 2 == 0 ? 'even' : 'odd'} name-row"><a href="edit?id=${guestBookEntry.id}">${guestBookEntry.name}</a></td>
         <td class="${status.index % 2 == 0 ? 'even' : 'odd'} comment-row">${guestBookEntry.comment}</td>
-        <td class="${status.index % 2 == 0 ? 'even' : 'odd'} updateUser-row">${guestBookEntry.updateUser}</td>
-        <td class="${status.index % 2 == 0 ? 'even' : 'odd'} insertUser-row">${guestBookEntry.insertUser}</td>
+        <td class="${status.index % 2 == 0 ? 'even' : 'odd'} insertDate-row">${guestBookEntry.insertDate}</td>
         <td class="${status.index % 2 == 0 ? 'even' : 'odd'} delete-row"><s:checkbox name="ids" fieldValue="%{#attr.guestBookEntry.id}"/></td>
       </tr>
     </c:forEach>
@@ -28,7 +26,7 @@
     </c:if>
   </table>
   <div id="listing-controls">
-    <a href="add"><button>ADD AN GUESTBOOKENTRY</button></a>
+    <a href="add"><button>ADD</button></a>
     <s:submit type="button" value="DELETE"/>
   </div>
   <c:set var="totalPages" value="${(totalCount / numberPerPage) + (totalCount % numberPerPage > 0 ? 1 : 0)}"/>
