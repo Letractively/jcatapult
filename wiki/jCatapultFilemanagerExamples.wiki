@@ -13,7 +13,7 @@ Please follow the [jCatapultFilemanagerConfiguration Filemanager Configuration a
 *no class examples at this time
 
 ==JSP Examples==
-As of 1.0-M2, the jCatapult Filemanager comes shipped with a tag library that you can use in your struts forms.  The idea behind the tag library was to create a widget that provided CRUD like UI for managing files in your HTML forms.  Specifically, the capability to not only upload, but view, edit, and delete existing files on disk.
+As of 1.0-M6, the jCatapult Core library comes shipped with a struts theme called 'semantic' that you can use in your struts forms.  Within the struts theme's file.ftl template, we have added CRUD like UI widget for managing files in your HTML forms.  Specifically, the capability to not only upload, but view, edit, and delete existing files on disk.
 
 Imagine that you have a simple form below:
 
@@ -31,10 +31,9 @@ Imagine that you have a simple form below:
 </html>
 }}}
 
-This form works fine if, for instance, all it does is upload a file.  However, what if you want to multipurpose this form to also view and delete a previous file that was uploaded?  Rather than using the form to 'just upload' you can also use the form to view, edit, and delete existing files to existing users.  I have modified the form below to help illustrate:
+This form works fine if, for instance, all it does is upload a file.  However, what if you want the form to also provide the capability to view and delete a previous file that was uploaded?  Rather than using the form to 'just upload' you can also use the form to view, edit, and delete existing files to existing users.  I have modified the form below to help illustrate:
 
 {{{
-<%@ taglib prefix="jcf" uri="http://www.jcatapult.org/jcatapult-filemgr/tags" %>
 <html>
   <head>
     <title>Employee Edit Form</title>
@@ -42,7 +41,7 @@ This form works fine if, for instance, all it does is upload a file.  However, w
   <body>
     <s:form action="save" method="POST" enctype="multipart/form-data">
       <s:textfield name="employee.name" label="Name:" required="true"/>
-      <jcf:file-upload name="image" labelposition="top" label="Employee Image:" size="50" fileURI="${employee.imageURI}" deleteURI="deleteImage?id=${employee.id}"/>
+      <s:file-upload name="image" labelposition="top" label="Employee Image:" size="50" fileURI="${employee.imageURI}" deleteURI="deleteImage?id=${employee.id}"/>
     </form>
   </body>
 </html>
@@ -50,7 +49,7 @@ This form works fine if, for instance, all it does is upload a file.  However, w
 
 }}}
 
-The major difference between the first and second examples is that the second example uses the 'file-upload' tag that is shipped with the jCatapult Filemanager (referenced by prefix 'jcf' at uri 'http://www.jcatapult.org/jcatapult-filemgr/tags').  The tag library uses the 'fileURI' and 'deleteURI' params to create CRUD like UI for the file upload widget.
+The major difference between the first and second examples is that the second example uses the 'fileURI' and 'deleteURI' attributes.  This flags the file.ftl template located in the JCatapult Core semantic theme to create CRUD like UI for the file upload widget.
 
   # fileURI:  This param should be set to the location relative to the host where the file you are uploading is accessible via http.  For instance, if I upload a file and it's accessible via http://www.testsomethingxxx.com/files/employeeX.gif, then the fileURI would be set to /files/employeeX.gif
 
