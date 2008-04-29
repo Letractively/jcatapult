@@ -45,7 +45,7 @@ Here are the documentation pages that are available for the JCatapult framework.
 
 = API docs =
 
-* [JCatapultJavadocs JCatapult Javadocs]
+  * [JCatapultJavadocs JCatapult Javadocs]
 
 = Reference / Advanced =
 
