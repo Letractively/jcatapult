@@ -22,9 +22,11 @@ public class Add extends BaseForm {
     @Override
     @Action(results = {@Result(name = "success", location = "index", type = "redirectAction")})
     public String execute() {
-        if (isPost()) {
-            guestBookEntryService.persist(guestBookEntry);
+        if (isGet()) {
+            return INPUT;
         }
+
+        guestBookEntryService.persist(guestBookEntry);
         return SUCCESS;
     }
 }
