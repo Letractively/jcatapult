@@ -16,8 +16,8 @@
 package org.jcatapult.servlet;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -35,8 +35,8 @@ import javax.servlet.ServletResponse;
  */
 public final class ServletObjectsHolder {
     private static ServletContext servletContext;
-    private static ThreadLocal<ServletRequest> request = new ThreadLocal<ServletRequest>();
-    private static ThreadLocal<ServletResponse> response = new ThreadLocal<ServletResponse>();
+    private static ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
+    private static ThreadLocal<HttpServletResponse> response = new ThreadLocal<HttpServletResponse>();
 
     /**
      * Gets the servlet context.
@@ -61,7 +61,7 @@ public final class ServletObjectsHolder {
      *
      * @return   The servlet request for the current thread.
      */
-    public static ServletRequest getServletRequest() {
+    public static HttpServletRequest getServletRequest() {
         return request.get();
     }
 
@@ -70,7 +70,7 @@ public final class ServletObjectsHolder {
      *
      * @param   servletRequest The servlet request for the current thread.
      */
-    public static void setServletRequest(ServletRequest servletRequest) {
+    public static void setServletRequest(HttpServletRequest servletRequest) {
         request.set(servletRequest);
     }
 
@@ -86,7 +86,7 @@ public final class ServletObjectsHolder {
      *
      * @return   The servlet response for the current thread.
      */
-    public static ServletResponse getServletResponse() {
+    public static HttpServletResponse getServletResponse() {
         return response.get();
     }
 
@@ -95,7 +95,7 @@ public final class ServletObjectsHolder {
      *
      * @param   servletResponse The servlet response for the current thread.
      */
-    public static void setServletResponse(ServletResponse servletResponse) {
+    public static void setServletResponse(HttpServletResponse servletResponse) {
         response.set(servletResponse);
     }
 
