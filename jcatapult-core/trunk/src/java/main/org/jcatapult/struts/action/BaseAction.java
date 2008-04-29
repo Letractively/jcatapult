@@ -16,11 +16,11 @@
 package org.jcatapult.struts.action;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.struts2.ServletActionContext;
 import org.jcatapult.persistence.PersistenceService;
+import org.jcatapult.struts.action.annotation.ActionName;
+import org.jcatapult.servlet.annotation.HTTPMethod;
 
 import com.google.inject.Inject;
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -33,6 +33,9 @@ import com.opensymphony.xwork2.ActionSupport;
 public abstract class BaseAction extends ActionSupport {
     protected PersistenceService persistenceService;
     protected Configuration configuration;
+    protected String actionName;
+    protected String method;
+    protected boolean validationClearing = true;
 
     /**
      * Setter to inject services
@@ -54,20 +57,76 @@ public abstract class BaseAction extends ActionSupport {
      *          the same method.
      */
     public String getActionName() {
-        return ActionContext.getContext().getName();
+        return actionName;
     }
 
     /**
-     * @return  True if the HTTP request is a GET.
+     * Sets the action name of the action. This is also injected by JCatapult.
+     *
+     * @param   actionName The action name.
+     */
+    @Inject(optional = true)
+    public void setActionName(@ActionName String actionName) {
+        this.actionName = actionName;
+    }
+
+    /**
+     * @return  True if the HTTP request is a GET. If the method is never set, this will return true.
      */
     public boolean isGet() {
-        return ServletActionContext.getRequest().getMethod().equals("GET");
+        return method == null || method.equals("GET");
     }
 
     /**
-     * @return  True if the HTTP request is a POST.
+     * @return  True if the HTTP request is a POST. If the method is never set, this will return
+     *          false.
      */
     public boolean isPost() {
-        return ServletActionContext.getRequest().getMethod().equals("POST");
+        return method != null && method.equals("POST");
+    }
+
+    /**
+     * Sets the HTTP method header of the request. This is also injected by JCatapult.
+     *
+     * @param   method The HTTP method header.
+     */
+    @Inject(optional = true)
+    public void setMethod(@HTTPMethod String method) {
+        this.method = method;
+    }
+
+    /**
+     * <p>
+     * This method is somewhat a hack. Struts 2 does validation during any type of request, including
+     * GET requests. Therefore, if you want to use the same action to present a form and to handle
+     * form submission, you need to ensure that validation is turned off for GET requests. This method
+     * clears out any validation errors during a GET request. You can still add errors inside your
+     * action method.
+     * </p>
+     *
+     * <p>
+     * You can turn off this behavior by calling the {@link #disableValidationClearing()} method and
+     * turn it back on by calling the {@link #enableValidationClearing()} method.
+     * </p>
+     */
+    @Override
+    public void validate() {
+        if (validationClearing && isGet()) {
+            clearErrors();
+        }
+    }
+
+    /**
+     * Disables clearing of validation error messages when the request is a GET.
+     */
+    public void disableValidationClearing() {
+        this.validationClearing = false;
+    }
+
+    /**
+     * Enables clearing of validation error messages when the request is a GET.
+     */
+    public void enableValidationClearing() {
+        this.validationClearing = true;
     }
 }

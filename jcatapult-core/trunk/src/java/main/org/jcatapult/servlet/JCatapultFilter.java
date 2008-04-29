@@ -26,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.guice.GuiceContainer;
@@ -93,8 +94,8 @@ public class JCatapultFilter implements Filter {
             request.setAttribute(ORIGINAL_REQUEST_URI, ((HttpServletRequest) request).getRequestURI());
         }
 
-        ServletObjectsHolder.setServletRequest(request);
-        ServletObjectsHolder.setServletResponse(response);
+        ServletObjectsHolder.setServletRequest((HttpServletRequest) request);
+        ServletObjectsHolder.setServletResponse((HttpServletResponse) response);
         try {
             long injectStart = System.currentTimeMillis();
             WorkflowResolver workflowResolver = GuiceContainer.getInjector().getInstance(WorkflowResolver.class);

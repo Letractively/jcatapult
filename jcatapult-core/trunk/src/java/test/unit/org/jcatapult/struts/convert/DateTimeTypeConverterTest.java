@@ -17,6 +17,7 @@ package org.jcatapult.struts.convert;
 
 import java.util.Map;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import org.jcatapult.servlet.ServletObjectsHolder;
@@ -41,7 +42,7 @@ public class DateTimeTypeConverterTest {
         EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("dateTimeFormat", "MM/dd/yyyy hh:mm aa"));
         request.setAttribute(EasyMock.eq("foo.bar#attributes"), EasyMock.eq(mapNV("dateTimeFormat", "MM/dd/yyyy hh:mm aa")));
         EasyMock.replay(request);
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.setServletRequest((HttpServletRequest) request);
 
         String[] values = {"10/20/2006 10:30 PM"};
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
@@ -56,7 +57,7 @@ public class DateTimeTypeConverterTest {
     @Test
     public void testFormatStylePattern() {
         ServletRequest request = new MockServletRequest();
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.setServletRequest((HttpServletRequest) request);
 
         String values = "10-20-2006 10:30:00 PM";
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
@@ -72,7 +73,7 @@ public class DateTimeTypeConverterTest {
     @Test
     public void testFormatStylePatternPartial() {
         ServletRequest request = new MockServletRequest();
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.setServletRequest((HttpServletRequest) request);
 
         String values = "10-20-06";
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
@@ -88,7 +89,7 @@ public class DateTimeTypeConverterTest {
     public void testOutput() {
         ServletRequest request = new MockServletRequest();
         request.setAttribute("foo.bar#attributes", mapNV("dateTimeFormat", "MM/dd/yyyy hh:mm aa"));
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.setServletRequest((HttpServletRequest) request);
 
         DateTime now = new DateTime(2006, 10, 20, 22, 30, 0, 0);
         DateTimeTypeConverter converter = new DateTimeTypeConverter();

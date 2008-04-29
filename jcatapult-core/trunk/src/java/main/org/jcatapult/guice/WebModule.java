@@ -16,10 +16,13 @@
 package org.jcatapult.guice;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.config.EnvironmentAwareConfiguration;
 import org.jcatapult.servlet.ServletObjectsHolder;
+import org.jcatapult.servlet.annotation.HTTPMethod;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
@@ -48,7 +51,7 @@ public class WebModule extends AbstractModule {
      *
      * <ol>
      * <li>{@link #configureConfiguration()}</li>
-     * <li>{@link #configureServletContext()}</li>
+     * <li>{@link #configureServletObjects()}</li>
      * </ol>
      */
     @Override
@@ -56,21 +59,42 @@ public class WebModule extends AbstractModule {
         if (ServletObjectsHolder.getServletContext() == null) {
             return;
         }
-        
+
         configureConfiguration();
-        configureServletContext();
+        configureServletObjects();
     }
 
     /**
-     * Configures the servlet context for injection.
+     * Configures the servlet objects and the method header for injection.
      */
-    protected void configureServletContext() {
+    protected void configureServletObjects() {
         // Bind the servlet context
         bind(ServletContext.class).toProvider(new Provider<ServletContext>() {
             public ServletContext get() {
                 return ServletObjectsHolder.getServletContext();
             }
         }).in(Singleton.class);
+
+        // Bind the servlet request
+        bind(HttpServletRequest.class).toProvider(new Provider<HttpServletRequest>() {
+            public HttpServletRequest get() {
+                return ServletObjectsHolder.getServletRequest();
+            }
+        });
+
+        // Bind the servlet response
+        bind(HttpServletResponse.class).toProvider(new Provider<HttpServletResponse>() {
+            public HttpServletResponse get() {
+                return ServletObjectsHolder.getServletResponse();
+            }
+        });
+
+        // Bind the HTTP method
+        bind(String.class).annotatedWith(HTTPMethod.class).toProvider(new Provider<String>() {
+            public String get() {
+                return ServletObjectsHolder.getServletRequest().getMethod();
+            }
+        });
     }
 
     /**
