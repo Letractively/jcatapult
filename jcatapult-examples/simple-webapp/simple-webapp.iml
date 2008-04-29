@@ -21,15 +21,29 @@
           <setting name="RUN_JASPER_VALIDATION" value="true" />
           <setting name="BUILD_ONLY_WEB_RESOURCES" value="false" />
         </building>
+        <packaging>
+          <containerElement type="module" name="simple-webapp">
+            <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/classes" />
+          </containerElement>
+        </packaging>
       </configuration>
     </facet>
     <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
-        <datasource-mapping />
+        <setting name="provider-name" value="" />
+        <datasource-mapping>
+          <factory-entry name="punit" />
+        </datasource-mapping>
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/conf/main/META-INF/persistence.xml" optional="false" version="1.0" />
       </configuration>
     </facet>
+  </component>
+  <component name="copyright">
+    <Base>
+      <setting name="state" value="2" />
+    </Base>
   </component>
 </module>
 
