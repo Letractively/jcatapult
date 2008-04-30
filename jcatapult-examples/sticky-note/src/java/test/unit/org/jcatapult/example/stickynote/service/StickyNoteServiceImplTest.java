@@ -1,14 +1,14 @@
 package org.jcatapult.example.stickynote.service;
 
-import java.util.List;
 import java.sql.SQLException;
+import java.util.List;
 
+import org.jcatapult.example.stickynote.domain.StickyNote;
 import org.jcatapult.test.WebBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.google.inject.Inject;
-import org.jcatapult.example.stickynote.domain.StickyNote;
 
 /**
  * <p>
@@ -79,5 +79,6 @@ public class StickyNoteServiceImplTest extends WebBaseTest {
      * @param   stickyNote The test StickyNote.
      */
     private void verify(StickyNote stickyNote) {
+        assertEquals("Note", stickyNote.getNote());
     }
 }
