@@ -1,55 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-<classpathentry kind="src" path="src/java/main"/>
-<classpathentry kind="src" path="src/conf/main"/>
-<classpathentry kind="src" path="src/java/test/unit" output="target/classes/test/unit"/>
-<classpathentry kind="src" path="src/java/test/integration" output="target/classes/test/integration"/>
-<classpathentry kind="src" path="src/conf/test/unit" output="target/classes/test/unit"/>
-<classpathentry kind="src" path="src/conf/test/integration" output="target/classes/test/integration"/>
-<classpathentry kind="output" path="target/classes/main"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/antlr.org/antlr/antlr-2.7.6.jar" sourcepath="SAVANT_REPOSITORY/antlr.org/antlr/antlr-2.7.6-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/aopalliance.sourceforge.net/aopalliance/aopalliance-1.0.jar" sourcepath="SAVANT_REPOSITORY/aopalliance.sourceforge.net/aopalliance/aopalliance-1.0-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-beanutils/commons-beanutils-1.6.jar" sourcepath="SAVANT_REPOSITORY/apache.org/commons-beanutils/commons-beanutils-1.6-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-chain/commons-chain-1.1.jar" sourcepath="SAVANT_REPOSITORY/apache.org/commons-chain/commons-chain-1.1-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-collections/commons-collections-3.1.jar" sourcepath="SAVANT_REPOSITORY/apache.org/commons-collections/commons-collections-3.1-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-configuration/commons-configuration-1.4.jar" sourcepath="SAVANT_REPOSITORY/apache.org/commons-configuration/commons-configuration-1.4-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-fileupload/commons-fileupload-1.2.jar" sourcepath="SAVANT_REPOSITORY/apache.org/commons-fileupload/commons-fileupload-1.2-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-io/commons-io-1.3.2.jar" sourcepath="SAVANT_REPOSITORY/apache.org/commons-io/commons-io-1.3.2-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-lang/commons-lang-2.3.jar" sourcepath="SAVANT_REPOSITORY/apache.org/commons-lang/commons-lang-2.3-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-logging/commons-logging-1.0.4.jar" sourcepath="SAVANT_REPOSITORY/apache.org/commons-logging/commons-logging-1.0.4-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-validator/commons-validator-1.3.0.jar" sourcepath="SAVANT_REPOSITORY/apache.org/commons-validator/commons-validator-1.3.0-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/oro/oro-2.0.8.jar" sourcepath="SAVANT_REPOSITORY/apache.org/oro/oro-2.0.8-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/struts2/struts2-convention-plugin-2.1.1-SNAPSHOT.jar" sourcepath="SAVANT_REPOSITORY/apache.org/struts2/struts2-convention-plugin-2.1.1-SNAPSHOT-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/struts2/struts2-core-2.1.1-SNAPSHOT.jar" sourcepath="SAVANT_REPOSITORY/apache.org/struts2/struts2-core-2.1.1-SNAPSHOT-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/taglibs/standard-1.1.2.jar" sourcepath="SAVANT_REPOSITORY/apache.org/taglibs/standard-1.1.2-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/dom4j.org/dom4j/dom4j-1.6.1.jar" sourcepath="SAVANT_REPOSITORY/dom4j.org/dom4j/dom4j-1.6.1-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/easymock.org/easymock/easymock-2.2.jar" sourcepath="SAVANT_REPOSITORY/easymock.org/easymock/easymock-2.2-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/google.com/google-guice/guice-1.0.jar" sourcepath="SAVANT_REPOSITORY/google.com/google-guice/guice-1.0-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/google.com/google-guice/guice-servlet-1.0.jar" sourcepath="SAVANT_REPOSITORY/google.com/google-guice/guice-servlet-1.0-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-3.2.2.jar" sourcepath="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-3.2.2-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-annotations-3.2.1.jar" sourcepath="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-annotations-3.2.1-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-entitymanager-3.2.1.jar" sourcepath="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-entitymanager-3.2.1-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/hsqldb.org/hsqldb/hsqldb-1.8.9.jar" sourcepath="SAVANT_REPOSITORY/hsqldb.org/hsqldb/hsqldb-1.8.9-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.4.jar" sourcepath="SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.4-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/jboss.org/archive-browsing/jboss-archive-browsing-5.0.0-alpha.jar" sourcepath="SAVANT_REPOSITORY/jboss.org/archive-browsing/jboss-archive-browsing-5.0.0-alpha-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/jboss.org/javassist/javassist-3.4.jar" sourcepath="SAVANT_REPOSITORY/jboss.org/javassist/javassist-3.4-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M6.jar" sourcepath="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M6-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-test-1.0-M6.jar" sourcepath="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-test-1.0-M6-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4.jar" sourcepath="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-hibernate-1.0.jar" sourcepath="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-hibernate-1.0-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/junit.org/junit/junit-4.4.jar" sourcepath="SAVANT_REPOSITORY/junit.org/junit/junit-4.4-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/mysql.com/mysql-connector-java/mysql-connector-java-5.0.7.jar" sourcepath="SAVANT_REPOSITORY/mysql.com/mysql-connector-java/mysql-connector-java-5.0.7-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/objectweb.org/asm/asm-1.3.4.jar" sourcepath="SAVANT_REPOSITORY/objectweb.org/asm/asm-1.3.4-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/objectweb.org/asm/asm-attrs-1.3.4.jar" sourcepath="SAVANT_REPOSITORY/objectweb.org/asm/asm-attrs-1.3.4-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/ognl.org/ognl/ognl-2.6.11.jar" sourcepath="SAVANT_REPOSITORY/ognl.org/ognl/ognl-2.6.11-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/opensymphony.com/sitemesh/sitemesh-2.3.jar" sourcepath="SAVANT_REPOSITORY/opensymphony.com/sitemesh/sitemesh-2.3-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/opensymphony.com/xwork/xwork-2.1.1-SNAPSHOT.jar" sourcepath="SAVANT_REPOSITORY/opensymphony.com/xwork/xwork-2.1.1-SNAPSHOT-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/sourceforge.net/cglib/cglib-2.1.3.jar" sourcepath="SAVANT_REPOSITORY/sourceforge.net/cglib/cglib-2.1.3-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/sourceforge.net/freemarker/freemarker-2.3.12.jar" sourcepath="SAVANT_REPOSITORY/sourceforge.net/freemarker/freemarker-2.3.12-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/jpa/jpa-1.0.jar" sourcepath="SAVANT_REPOSITORY/sun.com/jpa/jpa-1.0-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/jsp-api/jsp-api-2.0.jar" sourcepath="SAVANT_REPOSITORY/sun.com/jsp-api/jsp-api-2.0-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/jstl/jstl-1.1.jar" sourcepath="SAVANT_REPOSITORY/sun.com/jstl/jstl-1.1-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/jta/jta-1.0.1B.jar" sourcepath="SAVANT_REPOSITORY/sun.com/jta/jta-1.0.1B-src.jar"/>
-<classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/servlet-api/servlet-api-2.4.jar" sourcepath="SAVANT_REPOSITORY/sun.com/servlet-api/servlet-api-2.4-src.jar"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+    <classpathentry kind="src" path="src/conf/main" />
+    <classpathentry kind="src" path="src/conf/test/integration" output="target/classes/test/integration" />
+    <classpathentry kind="src" path="src/conf/test/unit" output="target/classes/test/unit" />
+    <classpathentry kind="src" path="src/java/main" />
+    <classpathentry kind="src" path="src/java/test/integration" output="target/classes/test/integration" />
+    <classpathentry kind="src" path="src/java/test/unit" output="target/classes/test/unit" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/antlr.org/antlr/antlr-2.7.6.jar" sourcepath="/SAVANT_REPOSITORY/antlr.org/antlr/antlr-2.7.6-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/aopalliance.sourceforge.net/aopalliance/aopalliance-1.0.jar" sourcepath="/SAVANT_REPOSITORY/aopalliance.sourceforge.net/aopalliance/aopalliance-1.0-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-beanutils/commons-beanutils-1.6.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/commons-beanutils/commons-beanutils-1.6-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-chain/commons-chain-1.1.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/commons-chain/commons-chain-1.1-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-collections/commons-collections-3.1.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/commons-collections/commons-collections-3.1-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-configuration/commons-configuration-1.4.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/commons-configuration/commons-configuration-1.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-fileupload/commons-fileupload-1.2.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/commons-fileupload/commons-fileupload-1.2-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-io/commons-io-1.3.2.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/commons-io/commons-io-1.3.2-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-lang/commons-lang-2.3.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/commons-lang/commons-lang-2.3-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-logging/commons-logging-1.0.4.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/commons-logging/commons-logging-1.0.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/commons-validator/commons-validator-1.3.0.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/commons-validator/commons-validator-1.3.0-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/oro/oro-2.0.8.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/oro/oro-2.0.8-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/struts2/struts2-convention-plugin-2.1.1-SNAPSHOT.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/struts2/struts2-convention-plugin-2.1.1-SNAPSHOT-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/struts2/struts2-core-2.1.1-SNAPSHOT.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/struts2/struts2-core-2.1.1-SNAPSHOT-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/apache.org/taglibs/standard-1.1.2.jar" sourcepath="/SAVANT_REPOSITORY/apache.org/taglibs/standard-1.1.2-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/dom4j.org/dom4j/dom4j-1.6.1.jar" sourcepath="/SAVANT_REPOSITORY/dom4j.org/dom4j/dom4j-1.6.1-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/easymock.org/easymock/easymock-2.2.jar" sourcepath="/SAVANT_REPOSITORY/easymock.org/easymock/easymock-2.2-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/google.com/google-guice/guice-1.0.jar" sourcepath="/SAVANT_REPOSITORY/google.com/google-guice/guice-1.0-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/google.com/google-guice/guice-servlet-1.0.jar" sourcepath="/SAVANT_REPOSITORY/google.com/google-guice/guice-servlet-1.0-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-3.2.2.jar" sourcepath="/SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-3.2.2-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-annotations-3.2.1.jar" sourcepath="/SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-annotations-3.2.1-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-entitymanager-3.2.1.jar" sourcepath="/SAVANT_REPOSITORY/hibernate.org/hibernate/hibernate-entitymanager-3.2.1-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/hsqldb.org/hsqldb/hsqldb-1.8.9.jar" sourcepath="/SAVANT_REPOSITORY/hsqldb.org/hsqldb/hsqldb-1.8.9-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.4.jar" sourcepath="/SAVANT_REPOSITORY/java.net/java-net-commons/java-net-commons-1.4.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/jboss.org/archive-browsing/jboss-archive-browsing-5.0.0-alpha.jar" sourcepath="/SAVANT_REPOSITORY/jboss.org/archive-browsing/jboss-archive-browsing-5.0.0-alpha-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/jboss.org/javassist/javassist-3.4.jar" sourcepath="/SAVANT_REPOSITORY/jboss.org/javassist/javassist-3.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M6.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-1.0-M6-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-test-1.0-M6.jar" sourcepath="/SAVANT_REPOSITORY/jcatapult.org/jcatapult-core/jcatapult-core-test-1.0-M6-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4.jar" sourcepath="/SAVANT_REPOSITORY/joda.org/joda-time/joda-time-1.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/joda.org/joda-time/joda-time-hibernate-1.0.jar" sourcepath="/SAVANT_REPOSITORY/joda.org/joda-time/joda-time-hibernate-1.0-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/junit.org/junit/junit-4.4.jar" sourcepath="/SAVANT_REPOSITORY/junit.org/junit/junit-4.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/mysql.com/mysql-connector-java/mysql-connector-java-5.0.7.jar" sourcepath="/SAVANT_REPOSITORY/mysql.com/mysql-connector-java/mysql-connector-java-5.0.7-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/objectweb.org/asm/asm-1.3.4.jar" sourcepath="/SAVANT_REPOSITORY/objectweb.org/asm/asm-1.3.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/objectweb.org/asm/asm-attrs-1.3.4.jar" sourcepath="/SAVANT_REPOSITORY/objectweb.org/asm/asm-attrs-1.3.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/ognl.org/ognl/ognl-2.6.11.jar" sourcepath="/SAVANT_REPOSITORY/ognl.org/ognl/ognl-2.6.11-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/opensymphony.com/sitemesh/sitemesh-2.3.jar" sourcepath="/SAVANT_REPOSITORY/opensymphony.com/sitemesh/sitemesh-2.3-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/opensymphony.com/xwork/xwork-2.1.1-SNAPSHOT.jar" sourcepath="/SAVANT_REPOSITORY/opensymphony.com/xwork/xwork-2.1.1-SNAPSHOT-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/sourceforge.net/cglib/cglib-2.1.3.jar" sourcepath="/SAVANT_REPOSITORY/sourceforge.net/cglib/cglib-2.1.3-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/sourceforge.net/freemarker/freemarker-2.3.12.jar" sourcepath="/SAVANT_REPOSITORY/sourceforge.net/freemarker/freemarker-2.3.12-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/jpa/jpa-1.0.jar" sourcepath="/SAVANT_REPOSITORY/sun.com/jpa/jpa-1.0-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/jsp-api/jsp-api-2.0.jar" sourcepath="/SAVANT_REPOSITORY/sun.com/jsp-api/jsp-api-2.0-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/jstl/jstl-1.1.jar" sourcepath="/SAVANT_REPOSITORY/sun.com/jstl/jstl-1.1-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/jta/jta-1.0.1B.jar" sourcepath="/SAVANT_REPOSITORY/sun.com/jta/jta-1.0.1B-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/sun.com/servlet-api/servlet-api-2.4.jar" sourcepath="/SAVANT_REPOSITORY/sun.com/servlet-api/servlet-api-2.4-src.jar" />
+    <classpathentry kind="output" path="target/classes/main" />
 </classpath>
+
