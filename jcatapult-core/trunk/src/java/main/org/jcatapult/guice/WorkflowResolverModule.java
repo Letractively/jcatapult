@@ -24,9 +24,9 @@ import com.google.inject.AbstractModule;
 /**
  * <p>
  * This module is the default module that sets up the {@link WorkflowResolver}
- * to use the {@link DefaultWorkflowResolver}. If an application or component
+ * to use the {@link DefaultWorkflowResolver}. If an application or module
  * needs to change the workflow process in anyway, it must sub-class this.
- * Problems will arise when more than one component sub-classes this and tries
+ * Problems will arise when more than one module sub-classes this and tries
  * to install multiple workflow resolvers. We don't have a good solution
  * for this issue yet. If you come up with something let us know.
  * </p>

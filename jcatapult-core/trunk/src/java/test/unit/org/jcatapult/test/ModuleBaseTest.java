@@ -12,25 +12,29 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
+ *
  */
 package org.jcatapult.test;
 
 import org.junit.Ignore;
 
 /**
- * @deprecated  Use ModuleBaseTest
+ * <p>
+ * This class can be used for testing module classes.
+ * </p>
+ *
+ * @author  Brian Pontarelli
  */
 @Ignore
-@Deprecated
-public abstract class ComponentBaseTest extends WebBaseTest {
+public abstract class ModuleBaseTest extends WebBaseTest {
 
     /**
-     * Returns the directory of the web root for a component which is currently the
+     * Returns the directory of the web root for a module which is currently the
      * <code>src/web/test</code> directory. This is done since the <code>src/web/main</code>
      * directory really only contains FreeMarker templates and the test directory might contain
      * configuration files used for testing.
      *
-     * @return  The component web root directory.
+     * @return  The module web root directory.
      */
     protected String getWebRootDir() {
         return "src/web/test";
