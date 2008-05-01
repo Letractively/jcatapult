@@ -22,11 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
-import org.jcatapult.filemgr.service.FileManagerServiceImpl;
-import org.jcatapult.filemgr.service.FileConfigurationImpl;
 import org.jcatapult.filemgr.BaseTest;
+import org.jcatapult.filemgr.service.FileConfigurationImpl;
+import org.jcatapult.filemgr.service.FileManagerServiceImpl;
 import org.jcatapult.servlet.ServletObjectsHolder;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.java.io.FileTools;
@@ -53,8 +53,8 @@ public class FckFileManagerTest extends BaseTest {
         fm.setCommand(FileManagerCommand.FileUpload);
         fm.setNewFileContentType("application/active-x");
         String result = fm.execute();
-        Assert.assertEquals("success", result);
-        Assert.assertEquals(1, fm.getConnector().getError().getNumber());
+        assertEquals("success", result);
+        assertEquals(1, fm.getConnector().getError().getNumber());
 
         EasyMock.verify(servletContext, configuration);
     }
@@ -89,15 +89,16 @@ public class FckFileManagerTest extends BaseTest {
         fm.setNewFile(temp);
 
         String result = fm.execute();
-        Assert.assertEquals("success", result);
+        assertEquals("success", result);
 
         File check = new File(testDir + "/some-dir", "foo-bar.xml");
-        Assert.assertTrue(check.exists() && check.isFile());
+        assertTrue(check.exists());
+        assertTrue(check.isFile());
         String contents = FileTools.read(check).toString();
-        Assert.assertEquals("contents", contents);
+        assertEquals("contents", contents);
 
-        Assert.assertEquals("/foo/some-dir/foo-bar.xml", fm.getConnector().getUploadResult().getFileURL());
-        Assert.assertEquals(0, fm.getConnector().getUploadResult().getResultCode());
+        assertEquals("/foo/some-dir/foo-bar.xml", fm.getConnector().getUploadResult().getFileURL());
+        assertEquals(0, fm.getConnector().getUploadResult().getResultCode());
 
         EasyMock.verify(httpRequest, servletContext, configuration);
     }

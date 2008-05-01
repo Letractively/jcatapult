@@ -108,6 +108,8 @@ public class FileManagerServiceImpl implements FileManagerService {
         }
 
         if (!file.renameTo(newFileLocation)) {
+            logger.fine("Error renaming file [" + file.getAbsolutePath() + "] to [" +
+                newFileLocation.getAbsolutePath() + "]");
             connector.setError(new Error(1, "Unable to complete the file upload. Please try again later."));
             return connector;
         }
