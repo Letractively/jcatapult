@@ -39,7 +39,7 @@ import net.java.io.FileTools;
  *
  * @author  Brian Pontarelli
  */
-public class FileManagerServiceImplTest extends BaseTest {
+public class DefaultFileManagerServiceTest extends BaseTest {
     @Test
     public void testContentTypeFail() {
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
@@ -49,9 +49,9 @@ public class FileManagerServiceImplTest extends BaseTest {
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
-        Connector connector = service.upload(null, null, "application/active-x", null, null);
+        Connector connector = service.upload(new File("project.xml"), "foo.xml", "application/active-x", null, null);
         Assert.assertTrue(connector.isError());
         Assert.assertNotNull(connector.getError().getMessage());
         Assert.assertEquals(1, connector.getError().getNumber());
@@ -70,10 +70,10 @@ public class FileManagerServiceImplTest extends BaseTest {
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         try {
-            service.upload(null, null, "image/gif", null, null);
+            service.upload(new File("project.xml"), "foo.xml", "image/gif", null, null);
             Assert.fail("Should have failed");
         } catch (Exception e) {
             Assert.assertTrue(e.getMessage().contains("file-mgr.file-servlet.dir"));
@@ -94,10 +94,10 @@ public class FileManagerServiceImplTest extends BaseTest {
         EasyMock.expect(servletContext.getRealPath("some-dir")).andReturn(null);
         EasyMock.replay(servletContext);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         try {
-            service.upload(null, null, "image/gif", null, null);
+            service.upload(new File("project.xml"), "foo.xml", "image/gif", null, null);
             Assert.fail("Should have failed");
         } catch (Exception e) {
             Assert.assertTrue(e.getMessage().contains("file-mgr.file-servlet.dir"));
@@ -129,7 +129,7 @@ public class FileManagerServiceImplTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         Connector connector = service.upload(temp, "foo-bar.xml", "image/gif", null, "");
         Assert.assertFalse(connector.isError());
@@ -166,7 +166,7 @@ public class FileManagerServiceImplTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         Connector connector = service.upload(temp, "foo-bar.xml", "image/gif", "image", "");
         Assert.assertFalse(connector.isError());
@@ -204,7 +204,7 @@ public class FileManagerServiceImplTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         try {
             service.upload(temp, "foo-bar.xml", "image/gif", null, "");
@@ -235,7 +235,7 @@ public class FileManagerServiceImplTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration), servletContext);
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext);
         Connector connector = service.upload(temp, "foo-bar.xml", "image/gif", null, "");
 
         Assert.assertFalse(connector.isError());
@@ -272,7 +272,7 @@ public class FileManagerServiceImplTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         Connector connector = service.upload(temp, "foo-bar.xml", "image/gif", "image", "");
 
@@ -310,7 +310,7 @@ public class FileManagerServiceImplTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         Connector connector = service.upload(temp, "foo-bar.xml", "image/gif", "image", "");
 
@@ -343,7 +343,7 @@ public class FileManagerServiceImplTest extends BaseTest {
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         Connector connector = service.createFolder("", "test", null);
         Assert.assertEquals("CreateFolder", connector.getCommand());
@@ -373,7 +373,7 @@ public class FileManagerServiceImplTest extends BaseTest {
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         Connector connector = service.createFolder("/deep/dir/", "test", "Images");
         Assert.assertEquals("CreateFolder", connector.getCommand());
@@ -406,7 +406,7 @@ public class FileManagerServiceImplTest extends BaseTest {
         EasyMock.replay(httpRequest);
         ServletObjectsHolder.setServletRequest(httpRequest);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         Connector connector = service.getFolders("", null);
         Assert.assertEquals("GetFolders", connector.getCommand());
@@ -444,7 +444,7 @@ public class FileManagerServiceImplTest extends BaseTest {
         EasyMock.replay(httpRequest);
         ServletObjectsHolder.setServletRequest(httpRequest);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
         Connector connector = service.getFoldersAndFiles("", null);
         Assert.assertEquals("GetFoldersAndFiles", connector.getCommand());

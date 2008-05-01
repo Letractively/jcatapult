@@ -24,7 +24,7 @@ import com.google.inject.ImplementedBy;
  *
  * @author Brian Pontarelli
  */
-@ImplementedBy(FileConfigurationImpl.class)
+@ImplementedBy(DefaultFileConfiguration.class)
 public interface FileConfiguration {
     /**
      * @return  The configuration parameter named <code>jcatapult.file-mgr.file-servlet.dir</code> or the default value

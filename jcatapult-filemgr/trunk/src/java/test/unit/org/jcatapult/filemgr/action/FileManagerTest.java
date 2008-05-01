@@ -25,8 +25,8 @@ import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.domain.Folder;
-import org.jcatapult.filemgr.service.FileConfigurationImpl;
-import org.jcatapult.filemgr.service.FileManagerServiceImpl;
+import org.jcatapult.filemgr.service.DefaultFileConfiguration;
+import org.jcatapult.filemgr.service.DefaultFileManagerService;
 import org.jcatapult.filemgr.BaseTest;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.junit.Assert;
@@ -60,7 +60,7 @@ public class FileManagerTest extends BaseTest {
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        FileManager fm = new FileManager(new FileManagerServiceImpl(new FileConfigurationImpl(configuration), servletContext));
+        FileManager fm = new FileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext));
         fm.setCommand(FileManagerCommand.CreateFolder);
         fm.setCurrentFolder("/deep/dir/");
         fm.setNewFolderName("test");
@@ -96,7 +96,7 @@ public class FileManagerTest extends BaseTest {
         EasyMock.replay(httpRequest);
         ServletObjectsHolder.setServletRequest(httpRequest);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration), servletContext);
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext);
         Connector connector = service.getFolders("", null);
         Assert.assertEquals("GetFolders", connector.getCommand());
         Assert.assertEquals("/servlet-context/files/", connector.getCurrentFolder().getUrl());
@@ -133,7 +133,7 @@ public class FileManagerTest extends BaseTest {
         EasyMock.replay(httpRequest);
         ServletObjectsHolder.setServletRequest(httpRequest);
 
-        FileManagerServiceImpl service = new FileManagerServiceImpl(new FileConfigurationImpl(configuration), servletContext);
+        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext);
         Connector connector = service.getFoldersAndFiles("", null);
         Assert.assertEquals("GetFoldersAndFiles", connector.getCommand());
         Assert.assertEquals("/servlet-context/files/", connector.getCurrentFolder().getUrl());
