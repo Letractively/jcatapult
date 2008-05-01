@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.filemgr.BaseTest;
-import org.jcatapult.filemgr.service.FileConfigurationImpl;
-import org.jcatapult.filemgr.service.FileManagerServiceImpl;
+import org.jcatapult.filemgr.service.DefaultFileConfiguration;
+import org.jcatapult.filemgr.service.DefaultFileManagerService;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -48,9 +48,10 @@ public class FckFileManagerTest extends BaseTest {
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        FckFileManager fm = new FckFileManager(new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        FckFileManager fm = new FckFileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext));
         fm.setCommand(FileManagerCommand.FileUpload);
+        fm.setNewFile(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"));
         fm.setNewFileContentType("application/active-x");
         String result = fm.execute();
         assertEquals("success", result);
@@ -77,7 +78,7 @@ public class FckFileManagerTest extends BaseTest {
         EasyMock.replay(httpRequest);
         ServletObjectsHolder.setServletRequest(httpRequest);
 
-        FckFileManager fm = new FckFileManager(new FileManagerServiceImpl(new FileConfigurationImpl(configuration),
+        FckFileManager fm = new FckFileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext));
         fm.setCommand(FileManagerCommand.FileUpload);
         fm.setNewFileContentType("image/gif");
@@ -91,14 +92,15 @@ public class FckFileManagerTest extends BaseTest {
         String result = fm.execute();
         assertEquals("success", result);
 
+        assertNull(fm.getConnector().getError());
+        assertEquals(0, fm.getConnector().getUploadResult().getResultCode());
+        assertEquals("/foo/some-dir/foo-bar.xml", fm.getConnector().getUploadResult().getFileURL());
+
         File check = new File(testDir + "/some-dir", "foo-bar.xml");
         assertTrue(check.exists());
         assertTrue(check.isFile());
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
-
-        assertEquals("/foo/some-dir/foo-bar.xml", fm.getConnector().getUploadResult().getFileURL());
-        assertEquals(0, fm.getConnector().getUploadResult().getResultCode());
 
         EasyMock.verify(httpRequest, servletContext, configuration);
     }

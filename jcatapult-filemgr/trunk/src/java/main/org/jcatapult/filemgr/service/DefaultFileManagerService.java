@@ -16,6 +16,7 @@
 package org.jcatapult.filemgr.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +31,7 @@ import org.jcatapult.filemgr.domain.UploadResult;
 import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;
+import net.java.io.FileTools;
 import net.java.lang.StringTools;
 
 /**
@@ -39,14 +41,14 @@ import net.java.lang.StringTools;
  *
  * @author Brian Pontarelli
  */
-public class FileManagerServiceImpl implements FileManagerService {
-    private static final Logger logger = Logger.getLogger(FileManagerServiceImpl.class.getName());
+public class DefaultFileManagerService implements FileManagerService {
+    private static final Logger logger = Logger.getLogger(DefaultFileManagerService.class.getName());
     private final FileConfiguration configuration;
     private final ServletContext servletContext;
     private String[] allowedContentTypes;
 
     @Inject
-    public FileManagerServiceImpl(FileConfiguration configuration, ServletContext servletContext) {
+    public DefaultFileManagerService(FileConfiguration configuration, ServletContext servletContext) {
         this.configuration = configuration;
         this.servletContext = servletContext;
         this.allowedContentTypes = configuration.getFileUploadAllowedContentTypes();
@@ -55,16 +57,22 @@ public class FileManagerServiceImpl implements FileManagerService {
     /**
      * {@inheritDoc}
      */
-    public Connector upload(File file, String fileName, String contentType, String fileType, String currentFolder) {
-
-        // set the current folder
-        if (StringTools.isEmpty(currentFolder)) {
-            currentFolder = "";
-        } else {
-            currentFolder = "/" + currentFolder;
+    public Connector upload(File file, String fileName, String contentType, String fileType,
+            String directory) {
+        Connector connector = new Connector();
+        if (!file.exists() || file.isDirectory()) {
+            logger.severe("The uploaded file [" + file.getAbsolutePath() + "] disappeared.");
+            connector.setError(new Error(1, "File uplaod failed."));
+            return connector;
         }
 
-        Connector connector = new Connector();
+        // Set the directory
+        if (StringTools.isEmpty(directory)) {
+            directory = "";
+        } else {
+            directory = "/" + directory;
+        }
+
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("Inside upload action and handling fileName [" + fileName + "] with contentType [" +
                 contentType + "]. The file was saved to [" + file.getAbsolutePath() + "]");
@@ -77,13 +85,21 @@ public class FileManagerServiceImpl implements FileManagerService {
             return connector;
         }
 
-        String dirName = getFileDir(fileType) + currentFolder;
+        String dirName = getFileDir(fileType) + directory;
 
         // Check for relative pathes
         String fullyQualifiedDirName = getFullyQualifiedDir(dirName);
         File dir = new File(fullyQualifiedDirName);
         if (!dir.exists()) {
-            dir.mkdirs();
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("Making directory [" + dir.getAbsolutePath() + "]");
+            }
+
+            if (!dir.mkdirs()) {
+                logger.severe("Unable to create upload directory [" + dir.getAbsolutePath() + "]");
+                connector.setError(new Error(1, "Unable to complete the file upload. Please try again later."));
+                return connector;
+            }
         }
 
         // Dissect the file into pieces.
@@ -93,7 +109,9 @@ public class FileManagerServiceImpl implements FileManagerService {
         if (dot >= 0) {
             fileNameWithoutExt = fileName.substring(0, dot);
             ext = fileName.substring(dot + 1);
-            logger.fine("Determined file name [" + fileNameWithoutExt + "] and extenstion [" + ext + "]");
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("Determined file name [" + fileNameWithoutExt + "] and extenstion [" + ext + "]");
+            }
         }
 
         // Figure out the new name in case that name is already taken. This adds the windows standard
@@ -107,9 +125,11 @@ public class FileManagerServiceImpl implements FileManagerService {
             counter++;
         }
 
-        if (!file.renameTo(newFileLocation)) {
-            logger.fine("Error renaming file [" + file.getAbsolutePath() + "] to [" +
-                newFileLocation.getAbsolutePath() + "]");
+        try {
+            FileTools.copy(file, newFileLocation);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error copying file [" + file.getAbsolutePath() + "] to [" +
+                newFileLocation.getAbsolutePath() + "]", e);
             connector.setError(new Error(1, "Unable to complete the file upload. Please try again later."));
             return connector;
         }

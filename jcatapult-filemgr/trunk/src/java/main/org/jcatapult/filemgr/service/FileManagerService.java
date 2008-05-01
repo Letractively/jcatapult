@@ -28,7 +28,7 @@ import com.google.inject.ImplementedBy;
  *
  * @author Brian Pontarelli
  */
-@ImplementedBy(FileManagerServiceImpl.class)
+@ImplementedBy(DefaultFileManagerService.class)
 public interface FileManagerService {
     /**
      * <p>
@@ -107,9 +107,11 @@ public interface FileManagerService {
      * @param   contentType The content type that was determined from the browser or server.
      * @param   fileType The type of file that the user is uploading (if this is specified
      *          by the browser/client)
+     * @param   directory The name of the directory to place the uploaded file. This is appeneded
+     *          to the configured upload directory.
      * @return  The result, which could be an error or a success.
      */
-    Connector upload(File file, String fileName, String contentType, String fileType, String currentFolder);
+    Connector upload(File file, String fileName, String contentType, String fileType, String directory);
 
     /**
      * <p>

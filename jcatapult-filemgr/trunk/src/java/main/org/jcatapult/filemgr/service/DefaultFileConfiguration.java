@@ -29,11 +29,11 @@ import com.google.inject.Inject;
  *
  * @author Brian Pontarelli
  */
-public class FileConfigurationImpl implements FileConfiguration {
+public class DefaultFileConfiguration implements FileConfiguration {
     private Configuration configuration;
 
     @Inject
-    public FileConfigurationImpl(Configuration configuration) {
+    public DefaultFileConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
 
