@@ -1,2 +1,2 @@
-@org.apache.struts2.convention.annotation.ResultPath("/WEB-INF/component/${componentName}/content/${url}")
+@org.apache.struts2.convention.annotation.ResultPath("/WEB-INF/module/${moduleName}/content/${url}")
 package ${actionPackage};

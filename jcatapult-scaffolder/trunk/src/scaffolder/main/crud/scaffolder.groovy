@@ -12,7 +12,7 @@ import org.jcatapult.scaffolder.annotation.LongDescription;
 @ShortDescription("Creates a CRUD operation for a single domain object")
 @LongDescription(
 """Creates a CRUD operation for a single domain object. If the project that the scaffolder
-is being run on is a webapp, it creates JSPs for the view. If the project is a component,
+is being run on is a webapp, it creates JSPs for the view. If the project is a module,
 FreeMarker templates are created.
 
   This scaffolder asks the following questions:
@@ -58,13 +58,6 @@ public class CrudScaffolder extends AbstractScaffolder {
         "Scaffolding action package ", "Invalid action package", defaultActionPackage);
 
     // Get the service package
-    String baseActionPackage = null;
-    if (actionPackage.endsWith(url.replace("/", "."))) {
-      baseActionPackage = actionPackage.substring(0, actionPackage.length() - url.length());
-    } else {
-      baseActionPackage = actionPackage;
-    }
-
     String defaultServicePackage = getFirstPackage("service");
     String servicePackage = ask("Enter the service package",
         "Scaffolding service package ", "Invalid service package", defaultServicePackage);
@@ -96,11 +89,11 @@ public class CrudScaffolder extends AbstractScaffolder {
 
   private void executeTemplates(String simpleClassName, String servicePackage, String actionPackage,
                                 String url, Type type) {
-    boolean component = !new File("web").exists();
+    boolean module = !new File("web").exists();
 
     // Create the index action
     def params = [actionPackage: actionPackage, servicePackage: servicePackage, url: url, type: type,
-            component: component];
+            module: module];
 
     // Make the directory for all the actions
     String actionDirName = "src/java/main/" + actionPackage.replace(".", "/") + "/";
@@ -108,7 +101,6 @@ public class CrudScaffolder extends AbstractScaffolder {
     actionsDir.mkdirs();
 
     // Create the actions
-    String scriptPath = dir.getAbsolutePath();
     executeFreemarkerTemplate("/actions/add.ftl", actionDirName + "Add.java", params);
     executeFreemarkerTemplate("/actions/index.ftl", actionDirName + "Index.java", params);
     executeFreemarkerTemplate("/actions/edit.ftl", actionDirName + "Edit.java", params);
@@ -133,7 +125,7 @@ public class CrudScaffolder extends AbstractScaffolder {
     executeFreemarkerTemplate("/service/service-impl.ftl", serviceDirName + simpleClassName + "ServiceImpl.java", params);
 
     // Create the JSPs or FreeMarker templates
-    if (component) {
+    if (module) {
       // Make the directory for the FTLs
       String webDirName = "src/web/main" + url + "/";
       File webDir = new File(webDirName);
