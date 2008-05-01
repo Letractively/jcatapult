@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
   ~
@@ -13,26 +14,12 @@
   ~ either express or implied. See the License for the specific
   ~ language governing permissions and limitations under the License.
   -->
-<project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://www.inversoft.com/schemas/savant-2.0/project http://www.inversoft.com/schemas/savant-2.0/project/project.xsd"
-         name="project5" version="1.0" group="Example">
-
-  <!-- simple project that has no module dependencies -->
-
-  <dependencies id="project.deps">
-    <artifactGroup type="run">
+<artifact-meta-data>
+  <dependencies>
+    <artifactGroup type="compile">
+      <artifact group="group" project="proj" name="module2" version="1.1" type="jar"/>
       <artifact group="group" project="proj" name="dependency1" version="1.0" type="jar"/>
       <artifact group="group" project="proj" name="dependency2" version="1.0" type="jar"/>
     </artifactGroup>
   </dependencies>
-
-  <workflow>
-    <fetchWorkflow>
-      <process type="libDirFetchProcess" location="target/jars"/>
-    </fetchWorkflow>
-    <publishWorkflow>
-      <process type="localCachePublishProcess"/>
-    </publishWorkflow>
-  </workflow>
-</project>
+</artifact-meta-data>

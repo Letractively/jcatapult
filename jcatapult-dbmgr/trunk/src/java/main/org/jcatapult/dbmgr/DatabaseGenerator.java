@@ -26,21 +26,21 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.jcatapult.dbmgr.domain.ComponentContext;
-import org.jcatapult.dbmgr.domain.ComponentJar;
+import org.jcatapult.dbmgr.domain.ModuleContext;
+import org.jcatapult.dbmgr.domain.ModuleJar;
 import org.jcatapult.dbmgr.domain.ProjectContext;
 import org.jcatapult.dbmgr.domain.Artifact;
 import org.jcatapult.dbmgr.service.ArtifactScriptVersionSortStrategyImpl;
 import org.jcatapult.dbmgr.service.ArtifactService;
-import org.jcatapult.dbmgr.service.ComponentArtifactService;
+import org.jcatapult.dbmgr.service.ModuleArtifactService;
 import org.jcatapult.dbmgr.service.ProjectArtifactService;
-import org.jcatapult.dbmgr.service.ComponentJarService;
+import org.jcatapult.dbmgr.service.ModuleJarService;
 import org.jcatapult.dbmgr.service.ArtifactScriptVersionSortStrategy;
 
 import net.java.util.Version;
 
 /**
- * Mediator for generating a project database from local project and component jar resources
+ * Mediator for generating a project database from local project and module jar resources
  *
  * User: jhumphrey
  * Date: Dec 12, 2007
@@ -49,10 +49,10 @@ public class DatabaseGenerator {
     private static final Logger logger = Logger.getLogger(DatabaseGenerator.class.getName());
 
     private Connection connection;
-    private List<ComponentJar> componentJars;
+    private List<ModuleJar> moduleJars;
     private Map<String, Version> databaseVersions;
     private ProjectContext pCtx;
-    private ComponentJarService cjs;
+    private ModuleJarService cjs;
     private boolean seedOnly = false;
 
     /**
@@ -63,15 +63,15 @@ public class DatabaseGenerator {
      *          If the project doesn't have any domain objects than we must assume that all the domain
      *          objects come from the classpath. If this is true, than we can check to see if there
      *          are create scripts in the path.
-     * @param componentJars a list of all component jars
+     * @param moduleJars a list of all module jars
      * @param databaseVersions the versions of all componenets current stored in the database
      * @param pCtx {@link ProjectContext} object that contains information related to the project
-     * @param cjs {@link org.jcatapult.dbmgr.service.ComponentJarService}
+     * @param cjs {@link org.jcatapult.dbmgr.service.ModuleJarService}
      */
-    public DatabaseGenerator(Connection connection, List<ComponentJar> componentJars,
-        Map<String, Version> databaseVersions, ProjectContext pCtx, ComponentJarService cjs) {
+    public DatabaseGenerator(Connection connection, List<ModuleJar> moduleJars,
+        Map<String, Version> databaseVersions, ProjectContext pCtx, ModuleJarService cjs) {
         this.connection = connection;
-        this.componentJars = componentJars;
+        this.moduleJars = moduleJars;
         this.databaseVersions = databaseVersions;
         this.pCtx = pCtx;
         this.cjs = cjs;
@@ -85,12 +85,12 @@ public class DatabaseGenerator {
         // then we can't use Hibernate and must be sql scripts to create the database
         File tablesSqlFile = new File(pCtx.getBaseDir(), "tables.sql");
         if (tablesSqlFile.exists()) {
-            createComponentTables();
+            createModuleTables();
             createProjectTables();
         } else {
-            // if the project doesn't contain a domain, then we can't use Hibernate to create component tables
+            // if the project doesn't contain a domain, then we can't use Hibernate to create module tables
             if (!pCtx.containsDomain()) {
-                createComponentTables();
+                createModuleTables();
                 created = true;
             }
 
@@ -106,23 +106,23 @@ public class DatabaseGenerator {
 
                 seedOnly = true;
 
-                createComponentTables();
+                createModuleTables();
                 createProjectTables();
             }
         }
     }
 
     /**
-     * Creates components tables
+     * Creates modules tables
      *
      * @throws IOException if there's a problem during table generation
      */
-    private void createComponentTables() throws IOException {
-        for (ComponentJar componentJar : componentJars) {
-            logger.info("Creating database schema for component [" + componentJar.getComponentName() + "]");
-            ComponentContext cCtx = new ComponentContext(componentJar,
-                databaseVersions.get(componentJar.getComponentName()));
-            generateTable(new ComponentArtifactService(cCtx, cjs));
+    private void createModuleTables() throws IOException {
+        for (ModuleJar moduleJar : moduleJars) {
+            logger.info("Creating database schema for module [" + moduleJar.getModuleName() + "]");
+            ModuleContext cCtx = new ModuleContext(moduleJar,
+                databaseVersions.get(moduleJar.getModuleName()));
+            generateTable(new ModuleArtifactService(cCtx, cjs));
         }
     }
 

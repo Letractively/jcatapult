@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jcatapult.dbmgr.domain.ComponentJar;
+import org.jcatapult.dbmgr.domain.ModuleJar;
 import org.jcatapult.dbmgr.domain.ProjectContext;
-import org.jcatapult.dbmgr.service.ComponentJarService;
+import org.jcatapult.dbmgr.service.ModuleJarService;
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -36,15 +36,15 @@ import net.java.util.Version;
  */
 public class DatabaseGeneratorTest extends BaseTest {
 
-    ComponentJarService cjs;
+    ModuleJarService cjs;
 
     @Inject
-    public void setComponentResolve(ComponentJarService cjs) {
+    public void setModuleResolve(ModuleJarService cjs) {
         this.cjs = cjs;
     }
 
     /**
-     * Simple test of a project that has no component dependencies
+     * Simple test of a project that has no module dependencies
      *
      * @throws java.io.IOException on exception
      */
@@ -62,7 +62,7 @@ public class DatabaseGeneratorTest extends BaseTest {
     }
 
     /**
-     * Simple test of a project that has one component dependency
+     * Simple test of a project that has one module dependency
      *
      * @throws java.io.IOException on exception
      */
@@ -77,11 +77,11 @@ public class DatabaseGeneratorTest extends BaseTest {
 
         Assert.assertEquals(2, databaseVersions.size());
         Assert.assertEquals(new Version("1.0"), databaseVersions.get(projectName));
-        Assert.assertEquals(new Version("1.2"), databaseVersions.get("component1"));
+        Assert.assertEquals(new Version("1.2"), databaseVersions.get("module1"));
     }
 
     /**
-     * Complex project with many components and all depend on each other with complex foreign key relationships
+     * Complex project with many modules and all depend on each other with complex foreign key relationships
      *
      * @throws java.io.IOException on exception
      */
@@ -96,10 +96,10 @@ public class DatabaseGeneratorTest extends BaseTest {
 
         Assert.assertEquals(5, databaseVersions.size());
         Assert.assertEquals(new Version("1.0"), databaseVersions.get(projectName));
-        Assert.assertEquals(new Version("1.2"), databaseVersions.get("component1"));
-        Assert.assertEquals(new Version("1.1"), databaseVersions.get("component2"));
-        Assert.assertEquals(new Version("2.1"), databaseVersions.get("component3"));
-        Assert.assertEquals(new Version("1.0"), databaseVersions.get("component4"));
+        Assert.assertEquals(new Version("1.2"), databaseVersions.get("module1"));
+        Assert.assertEquals(new Version("1.1"), databaseVersions.get("module2"));
+        Assert.assertEquals(new Version("2.1"), databaseVersions.get("module3"));
+        Assert.assertEquals(new Version("1.0"), databaseVersions.get("module4"));
     }
 
     /**
@@ -115,7 +115,7 @@ public class DatabaseGeneratorTest extends BaseTest {
     DatabaseGenerator getDbGen(String projectName, String depsId, Map<String, Version> databaseVersions,
         Version projectCurrentVersion, Version projectDatabaseVersion) {
 
-        List<ComponentJar> componentJars = cjs.resolveJars(new File("test/" + projectName + "/project.xml"), depsId);
+        List<ModuleJar> moduleJars = cjs.resolveJars(new File("test/" + projectName + "/project.xml"), depsId);
 
         ProjectContext pCtx = new ProjectContext(projectName, projectCurrentVersion, projectDatabaseVersion);
         pCtx.setAlterDir(new File("test/" + projectName + "/db/alter"));
@@ -124,6 +124,6 @@ public class DatabaseGeneratorTest extends BaseTest {
 
         String dbName = "database_generator_test_" + projectName;
 
-        return new DatabaseGenerator(getMySQL5Connection(dbName), componentJars, databaseVersions, pCtx, cjs);
+        return new DatabaseGenerator(getMySQL5Connection(dbName), moduleJars, databaseVersions, pCtx, cjs);
     }
 }

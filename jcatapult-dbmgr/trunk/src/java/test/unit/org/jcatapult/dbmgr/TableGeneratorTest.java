@@ -20,7 +20,7 @@ import java.sql.Connection;
 
 import org.jcatapult.dbmgr.database.DatabaseProviderFactory;
 import org.jcatapult.dbmgr.service.ArtifactScriptVersionSortStrategyImpl;
-import org.jcatapult.dbmgr.service.ComponentJarService;
+import org.jcatapult.dbmgr.service.ModuleJarService;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -31,10 +31,10 @@ import com.google.inject.Inject;
  */
 public class TableGeneratorTest extends BaseTest {
 
-    protected ComponentJarService cjs;
+    protected ModuleJarService cjs;
 
     @Inject
-    public void setComponentJarService(ComponentJarService cjs) {
+    public void setModuleJarService(ModuleJarService cjs) {
         this.cjs = cjs;
     }
 
@@ -46,15 +46,15 @@ public class TableGeneratorTest extends BaseTest {
     }
 
     @Test
-    public void testTableComponent1() throws IOException {
+    public void testTableModule1() throws IOException {
 
-        String dbURL = "jdbc:mysql://localhost:3306/table_generator_test_component1" + "?user=dev&password=dev";
+        String dbURL = "jdbc:mysql://localhost:3306/table_generator_test_module1" + "?user=dev&password=dev";
         String dbType = "mysql5";
 
         Connection c = DatabaseProviderFactory.getProvider(dbType, dbURL).getConnection();
 
         TableGenerator tg = new TableGenerator(new ArtifactScriptVersionSortStrategyImpl(),
-            getComponentArtifact("component1", "1.2", null, cjs), c);
+            getModuleArtifact("module1", "1.2", null, cjs), c);
         tg.generate(false);
     }
 }
