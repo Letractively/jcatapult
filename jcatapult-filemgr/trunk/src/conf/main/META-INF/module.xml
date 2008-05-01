@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<component name="jcatapult-filemgr">
+<module name="jcatapult-filemgr">
   <persistence>
   </persistence>
-</component>
+</module>
