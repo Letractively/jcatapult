@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-   Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+   Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,16 +19,16 @@
 <!--
   This build file is quite complex so I'll document it here.
 
-  First off, this overrides the app and jar targets because components
+  First off, this overrides the app and jar targets because modules
   have special requirements. These requirements are:
 
-  1. The component needs a web application constructed from scratch
+  1. The module needs a web application constructed from scratch
      because it only contains JSPs and classes. It doesn't contain
      the web.xml and all the other web files necessary to run a web
      application in Tomcat.
-  2. The component doesn't contain a persistence.xml file. This is
-     done so that the components can define everything in a single
-     file called component.xml. If the component had a persistence.xml
+  2. The module doesn't contain a persistence.xml file. This is
+     done so that the modules can define everything in a single
+     file called module.xml. If the module had a persistence.xml
      file it could never end up in the classpath, otherwise it might
      override an applications file.
 
@@ -42,9 +42,9 @@
   1. Copy the persistence.xml from this plugin directories files/META-INF
      directory to a tmp dir. This file is token replaced so that the
      JNDI name of the JDBC connection pool is correctly setup for testing.
-  2. The entity classes from the component.xml file are appended to
-     the persistence.xml file using a macro named component_add_entities
-     that is define in the component-macros.xml file.
+  2. The entity classes from the module.xml file are appended to
+     the persistence.xml file using a macro named module_add_entities
+     that is define in the module-macros.xml file.
   3. The test JAR file is then created containing only the persistence.xml
      file that was created.
 
@@ -52,15 +52,15 @@
   is created. This allows the testing web application to run with the
   correct JPA configuration.
 -->
-<project name="component">
-  <dirname property="dir.plugin.component" file="${ant.file.component}"/>
-  <import file="${dir.plugin.component}/component-base.xml"/>
-  <import file="${dir.plugin.component}/component-macros.xml"/>
+<project name="module">
+  <dirname property="dir.plugin.module" file="${ant.file.module}"/>
+  <import file="${dir.plugin.module}/module-base.xml"/>
+  <import file="${dir.plugin.module}/module-macros.xml"/>
 
   <property name="dir.webapp.template" value="${env.JCATAPULT_HOME}/ant/tools/makeproject/webapp-template"/>
 
   <!-- Pseudo-target -->
-  <target name="app" description="Builds a test bed for the component"
+  <target name="app" description="Builds a test bed for the module"
           depends="jar,-app-local,-app-dependencies,deploy-local"/>
 
   <target name="-app-local">
@@ -89,9 +89,9 @@
     <link link="${dir.target.web}/WEB-INF/classes/WEB-INF/content" resource="${basedir}/${dir.src.web.main}"/>
 
     <!-- Link the static resources -->
-    <mkdir dir="${dir.target.web}/component/${project.name}"/>
-    <unlink link="${dir.target.web}/component/${project.name}/${project.version}" failonerror="false"/>
-    <link link="${dir.target.web}/component/${project.name}/${project.version}" resource="${basedir}/${dir.src.static.main}"/>
+    <mkdir dir="${dir.target.web}/module/${project.name}"/>
+    <unlink link="${dir.target.web}/module/${project.name}/${project.version}" failonerror="false"/>
+    <link link="${dir.target.web}/module/${project.name}/${project.version}" resource="${basedir}/${dir.src.static.main}"/>
 
     <!-- Finally, overlay any testing stuff from web/test -->
     <copy todir="${dir.target.web}" failonerror="yes" overwrite="yes">

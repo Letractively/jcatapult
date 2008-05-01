@@ -6,6 +6,7 @@
     <pattern>/images/*</pattern>
     <pattern>/js/*</pattern>
     <pattern>/struts/*</pattern>
+    <pattern>/module/*</pattern>
     <pattern>/component/*</pattern>
     <pattern>/video/*</pattern>
     <pattern>/*ajax*</pattern>
