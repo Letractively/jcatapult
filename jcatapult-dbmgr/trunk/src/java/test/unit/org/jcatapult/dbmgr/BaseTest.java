@@ -22,14 +22,14 @@ import java.util.jar.JarFile;
 
 import org.jcatapult.dbmgr.database.DatabaseProviderFactory;
 import org.jcatapult.dbmgr.domain.Artifact;
-import org.jcatapult.dbmgr.domain.ComponentContext;
-import org.jcatapult.dbmgr.domain.ComponentJar;
+import org.jcatapult.dbmgr.domain.ModuleContext;
+import org.jcatapult.dbmgr.domain.ModuleJar;
 import org.jcatapult.dbmgr.domain.ProjectContext;
 import org.jcatapult.dbmgr.service.ArtifactService;
-import org.jcatapult.dbmgr.service.ComponentArtifactService;
+import org.jcatapult.dbmgr.service.ModuleArtifactService;
 import org.jcatapult.dbmgr.service.ProjectArtifactService;
-import org.jcatapult.dbmgr.service.ComponentJarService;
-import org.jcatapult.dbmgr.component.ComponentJarTools;
+import org.jcatapult.dbmgr.service.ModuleJarService;
+import org.jcatapult.dbmgr.module.ModuleJarTools;
 import org.junit.Before;
 import org.junit.Ignore;
 
@@ -56,22 +56,22 @@ public abstract class BaseTest {
     }
 
     /**
-     * Helper method to return an artifact for component1
+     * Helper method to return an artifact for module1
      *
-     * @param componentName component name
-     * @param componentVersion component version
+     * @param moduleName module name
+     * @param moduleVersion module version
      * @param dbVersion the database version
-     * @param cjs {@link org.jcatapult.dbmgr.service.ComponentJarService}
+     * @param cjs {@link org.jcatapult.dbmgr.service.ModuleJarService}
      * @return artifact
      * @throws java.io.IOException on exception
      */
-    protected Artifact getComponentArtifact(String componentName, String componentVersion, Version dbVersion, ComponentJarService cjs)
+    protected Artifact getModuleArtifact(String moduleName, String moduleVersion, Version dbVersion, ModuleJarService cjs)
         throws IOException {
-        File file = new File("target/jars/" + componentName + "-" + componentVersion + ".jar");
-        ComponentJar cj = new ComponentJar(componentName, file, ComponentJarTools.getVersionFromJarFilename(file.getName()), new JarFile(file));
-        ComponentContext cCtx = new ComponentContext(cj, dbVersion);
+        File file = new File("target/jars/" + moduleName + "-" + moduleVersion + ".jar");
+        ModuleJar cj = new ModuleJar(moduleName, file, ModuleJarTools.getVersionFromJarFilename(file.getName()), new JarFile(file));
+        ModuleContext cCtx = new ModuleContext(cj, dbVersion);
 
-        ArtifactService as = new ComponentArtifactService(cCtx, cjs);
+        ArtifactService as = new ModuleArtifactService(cCtx, cjs);
 
         return as.getArtifact();
     }

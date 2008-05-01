@@ -1,2 +1,0 @@
-# contains no data.  this file is used for testing to insure that it's not included during
-# retrieval of patch files as jar entries.  See test ComponentTools.testGettingDirectoryEntries()

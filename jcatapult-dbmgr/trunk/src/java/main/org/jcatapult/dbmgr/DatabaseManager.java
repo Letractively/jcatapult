@@ -24,17 +24,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.jcatapult.dbmgr.database.DatabaseProvider;
 import org.jcatapult.dbmgr.database.DatabaseProviderFactory;
-import org.jcatapult.dbmgr.service.ComponentJarServiceImpl;
-import org.jcatapult.dbmgr.service.ComponentJarService;
-import org.jcatapult.dbmgr.domain.ComponentJar;
+import org.jcatapult.dbmgr.domain.ModuleJar;
 import org.jcatapult.dbmgr.domain.ProjectContext;
+import org.jcatapult.dbmgr.service.ModuleJarService;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -56,8 +55,8 @@ import net.java.util.Version;
  * when the domain for an application is changing rapidly. During this phase of
  * development, the database migrator uses Hibernate to construct the database
  * using the JPA configuration file (persistence.xml). This doesn't use any of
- * the SQL files from any of the components but does use seed files from both
- * the project and from the components.
+ * the SQL files from any of the modules but does use seed files from both
+ * the project and from the modules.
  * </p>
  *
  * <h3>Production</h3>
@@ -71,7 +70,7 @@ import net.java.util.Version;
  * initial development stage into the production stage, Hibernate is no longer
  * used. In order to tell the JCatapult Database migrator to stop using Hibernate
  * the application needs to generate a table SQL file that constructs only the
- * tables for the current application and not for any components.
+ * tables for the current application and not for any modules.
  * </p>
  *
  * <h3>Changing stages</h3>
@@ -84,7 +83,7 @@ import net.java.util.Version;
  * <h2>Directories</h2>
  * <p>
  * The migrator uses a specific directory structure for both the current
- * application as well components. Based on this structure the migrator
+ * application as well modules. Based on this structure the migrator
  * can determine which files to execute.
  * </p>
  *
@@ -98,18 +97,18 @@ import net.java.util.Version;
  *
  * <pre>
  * dir
- *  |-create
- *  |-patch
+ *  |-base
+ *  |-alter
  *  |-seed
  * </pre>
  *
  * <p>
- * The create directory should contain a single file named tables.sql. This
+ * The <strong>base</strong> directory should contain a single file named tables.sql. This
  * file contains the commands that construct the tables for this application.
- * The patch directory and the seed directory should contain any number of
- * files that contain patch and seed commands. These files must have a specific
- * naming convention in order for the migrator to correctly determine which to
- * run. The format is:
+ * The <strong>alter</strong> directory and the <strong>seed</strong> directory
+ * should contain any number of files that contain patch and seed commands. These
+ * files must have a specific naming convention in order for the migrator to correctly
+ * determine which to run. The format is:
  * </p>
  *
  * <pre>
@@ -138,18 +137,17 @@ import net.java.util.Version;
  * readability and isn't used by the migrator.
  * </p>
  *
- * <h3>Components</h3>
+ * <h3>Modules</h3>
  * <p>
- * The migrator is highly componentized such that a component can define
+ * The migrator is highly modularized such that a module can define
  * any number of entities that it provides to an application as well as
- * manage the creation, patching and seeding of the database tables. This
- * allows a highly reusable component model.
+ * manage the creation, altering and seeding of the database tables. This
+ * allows a highly reusable module model.
  * </p>
  *
  * <p>
- * Components that wish to participate in the dbmgr process must
- * supplying SQL files in a specific location within the component JAR
- * files. This location is:
+ * Modules that wish to participate in the dbmgr process must supplying SQL files
+ * in a specific location within the module JAR files. This location is:
  * </p>
  *
  * <pre>
@@ -157,29 +155,29 @@ import net.java.util.Version;
  * </pre>
  *
  * <p>
- * Inside this directory within the component JAR file, the component
+ * Inside this directory within the module JAR file, the module
  * should contain the same three directories as described above in the
  * application section. Likewise, the same files should exist in these
  * directories and they are used in the same manner as those from the
  * application are used.
  * </p>
  *
- * <h3>Component names</h3>
+ * <h3>Module names</h3>
  * <p>
- * Any component that wants to participate in the database dbmgr
- * must define a component.xml file in the <b>META-INF</b> directory
- * inside the component JAR file. This XML file must contain a root
- * element named component with a name attribute like this:
+ * Any module that wants to participate in the database dbmgr
+ * must define a module.xml file in the <b>META-INF</b> directory
+ * inside the module JAR file. This XML file must contain a root
+ * element named module with a name attribute like this:
  * </p>
  *
  * <pre>
- * &lt;component name="foo">
+ * &lt;module name="foo">
  * </pre>
  *
  * <p>
  * This name will be used to determine the current version of the
- * component in the database and is used to figure out which SQL files
- * from the component to execute.
+ * module in the database and is used to figure out which SQL files
+ * from the module to execute.
  * </p>
  *
  * <h2>Workflow</h2>
@@ -191,16 +189,16 @@ import net.java.util.Version;
  * </p>
  *
  * <ol>
- * <li>Check to see if the <b>databaseVersions</b> table exists in the datbase.
+ * <li>Check to see if the <b>JCATAPULT_VERSIONS</b> table exists in the datbase.
  * If it does, set production mode, skip the table creation process and skip to
  * the patching and seeing process steps.
  * </li>
- * <li>Load up the versions from the <b>databaseVersions</b> table if it exists.</li>
+ * <li>Load up the versions from the <b>JCATAPULT_VERSIONS</b> table if it exists.</li>
  * <li>Table creation process
  *  <ol>
  *  <li>If the project doesn't contain any entities (this is specified on the
  *  command-line as a parameter to the migrator), look in the classpath for
- *  tables.sql files in components. If there aren't any, assume development mode.
+ *  tables.sql files in modules. If there aren't any, assume development mode.
  *  </li>
  *  <li>If the project contains any entities, look in SQL directory of the project
  *  and look for a tables.sql file. If there isn't one, assume development mode.
@@ -209,37 +207,37 @@ import net.java.util.Version;
  *  the seeding step.
  *  </li>
  *  <li>If production mode, execute the tables.sql from the application's SQL
- *  directory first and then execute the tables.sql from the components in the
+ *  directory first and then execute the tables.sql from the modules in the
  *  classpath.
  *  </li>
  *  </ol>
  * </li>
  * <li>Pathcing process
  *  <ol>
- *  <li>Based on the version for the application and each component in the
- *  <b>databaseVersions</b> table, execute all the patch scripts for the
- *  application and each component whose version number is greater than the
+ *  <li>Based on the version for the application and each module in the
+ *  <b>JCATAPULT_VERSIONS</b> table, execute all the patch scripts for the
+ *  application and each module whose version number is greater than the
  *  version number in the table. The name of the application is passed to the
  *  migrator on the command-line and that is used to find the current version
- *  of the application and the name of the components is specified in the
- *  component.xml files in the META-INF directory.
+ *  of the application and the name of the modules is specified in the
+ *  module.xml files in the META-INF directory.
  *  </li>
- *  <li>Update the versions in the <b>databaseVersions</b> table based on the
+ *  <li>Update the versions in the <b>JCATAPULT_VERSIONS</b> table based on the
  *  SQL scripts that were just executed.
  *  </li>
  *  </ol>
  * </li>
  * <li>Seeding process
  *  <ol>
- *  <li>Based on the version for the application and each component in the
- *  <b>databaseVersions</b> table, execute all the seed scripts for the
- *  application and each component whose version number is greater than the
+ *  <li>Based on the version for the application and each module in the
+ *  <b>JCATAPULT_MODULE_VERSIONS</b> table, execute all the seed scripts for the
+ *  application and each module whose version number is greater than the
  *  version number in the table. The name of the application is passed to the
  *  migrator on the command-line and that is used to find the current version
- *  of the application and the name of the components is specified in the
- *  component.xml files in the META-INF directory.
+ *  of the application and the name of the modules is specified in the
+ *  module.xml files in the META-INF directory.
  *  </li>
- *  <li>Update the versions in the <b>databaseVersions</b> table based on the
+ *  <li>Update the versions in the <b>JCATAPULT_MODULE_VERSIONS</b> table based on the
  *  SQL scripts that were just executed.
  *  </li>
  *  </ol>
@@ -252,21 +250,31 @@ import net.java.util.Version;
  * </p>
  *
  * <pre>
- * Usage: DatabaseMigrator [--no-domain] &lt;persistence-unit> &lt;db-url> &lt;application-name> &lt;sql-dir>");
+ * Usage: DatabaseMigrator [--no-domain] &lt;persistence-unit> &lt;db-url> &lt;application-name> &lt;sql-dir> &lt;db-type> &lt;jndi-name> &lt;project-xml-path> &lt;dependencies-id> &lt;version>
  *
- *      --no-domain: Tells the DatabaseMigrator that the current application doesn't");
- *                   contain any domain objects and that it should only check for component");
- *                   tables.sql files.");
+ *      --no-domain: Tells the DatabaseMigrator that the current application doesn't
+ *                   contain any domain objects and that it should only check for module
+ *                   tables.sql files.
  *
- * persistence-unit: The name of the persistence unit to use when in development mode.");
+ * persistence-unit: The name of the persistence unit to use when in development mode.
  *
- *           db-url: The full JDBC URL to the database.");
+ *           db-url: The full JDBC URL to the database.
  *
- * application-name: The name of the current application, which is used to find the current");
- *                   version of the application in the databaseVersions table.");
+ * application-name: The name of the current application, which is used to find the current
+ *                   version of the application in the databaseVersions table.
  *
- *          sql-dir: The directory that contains the SQL files for this project. This can");
- *                   be a bogus directory if the project doesn't contain any SQL files.");
+ *          sql-dir: The directory that contains the SQL files for this project. This can
+ *                   be a bogus directory if the project doesn't contain any SQL files.
+ *
+ *          db-type: The database type to connect to.
+ *
+ *        jndi-name: The jndi name name that maps to the datasource.
+ *
+ * project-xml-path: The path to the project.xml file.
+ *
+ *  dependencies-id: The dependencies id defined within the project.xml.
+ *
+ *          version: The version of the project.
  * </pre>
  *
  * @author James Humphrey and Brian Pontarelli
@@ -274,7 +282,7 @@ import net.java.util.Version;
 public class DatabaseManager {
     private static final Logger logger = Logger.getLogger("DatabaseManager");
 
-    public static final String VERSION_TABLE = "JCATAPULT_ARTIFACT_VERSIONS";
+    public static final String VERSION_TABLE = "JCATAPULT_VERSIONS";
 
     private final String persistenceUnit;
     private final Connection connection;
@@ -320,19 +328,28 @@ public class DatabaseManager {
             errMsg.append("Invalid arguments: ").append(Arrays.asList(args)).append("\n");
             errMsg.append("Usage: DatabaseMigrator [--no-domain] <persistence-unit> <db-url> <application-name> <sql-dir> <db-type> <jndi-name> <project-xml-path> <dependencies-id> <version>");
             errMsg.append("\n\n");
-            errMsg.append("--no-domain: Tells the DatabaseMigrator that the current application doesn't");
-            errMsg.append("contain any domain objects and that it should only check for component");
-            errMsg.append(" tables.sql files.\n");
+            errMsg.append("--no-domain: Tells the DatabaseMigrator that the current application doesn't\n");
+            errMsg.append("             contain any domain objects and that it should only check for module\n");
+            errMsg.append("             tables.sql files.\n");
+            errMsg.append("\n");
             errMsg.append("persistence-unit: The name of the persistence unit to use when in development mode.\n");
+            errMsg.append("\n");
             errMsg.append("db-url: The full JDBC URL to the database.").append("\n");
-            errMsg.append("application-name: The name of the current application, which is used to find the current");
-            errMsg.append(" version of the application in the databaseVersions table.\n");
-            errMsg.append("sql-dir: The directory that contains the SQL files to create the database from. This can");
-            errMsg.append(" be a bogus directory if the project doesn't contain any SQL files.\n");
+            errMsg.append("\n");
+            errMsg.append("application-name: The name of the current application, which is used to find the current\n");
+            errMsg.append("                  version of the application in the databaseVersions table.\n");
+            errMsg.append("\n");
+            errMsg.append("sql-dir: The directory that contains the SQL files to create the database from. This can\n");
+            errMsg.append("         be a bogus directory if the project doesn't contain any SQL files.\n");
+            errMsg.append("\n");
             errMsg.append("db-type: The database type to connect to.\n");
+            errMsg.append("\n");
             errMsg.append("jndi-name: The jndi name name that maps to the datasource.\n");
+            errMsg.append("\n");
             errMsg.append("project-xml-path: the path to the project.xml file.\n");
+            errMsg.append("\n");
             errMsg.append("dependencies-id: the dependencies id defined within the project.xml.\n");
+            errMsg.append("\n");
             errMsg.append("version: The version of the project.");
             System.err.println(errMsg);
             System.exit(1);
@@ -373,12 +390,11 @@ public class DatabaseManager {
     }
 
     public void manage() throws SQLException, IOException {
+        // Resolve modules for project
+        ModuleJarService cjs = injector.getInstance(ModuleJarService.class);
+        List<ModuleJar> moduleJars = cjs.resolveJars(projectXml, dependenciesId);
 
-        // resolve components for project
-        ComponentJarService cjs = injector.getInstance(ComponentJarServiceImpl.class);
-        List<ComponentJar> componentJars = cjs.resolveJars(projectXml, dependenciesId);
-
-        // Load up the component and project versions from the database.
+        // Load up the module and project versions from the database.
         loadDatabaseVersions();
 
         // Build project context
@@ -399,19 +415,8 @@ public class DatabaseManager {
             pCtx.setPersistenceUnit(persistenceUnit);
         }
 
-
-        DatabaseGenerator gen = new DatabaseGenerator(connection, componentJars, databaseVersions, pCtx, cjs);
+        DatabaseGenerator gen = new DatabaseGenerator(connection, moduleJars, databaseVersions, pCtx, cjs);
         gen.generate();
-
-//        if (!productionMode) {
-//            TableCreator creator = new TableCreator(persistenceUnit, connection, containsDomain, baseDir,
-//                cr.getComponents());
-//            productionMode = creator.create();
-//        }
-//
-//        PatcherSeeder patcherSeeder = new PatcherSeeder(connection, projectName, alterDir, seedDir,
-//            productionMode, databaseVersions, cr.getComponents());
-//        patcherSeeder.patchSeed();
 
         // Update with the stuff we did
         updateVersions();
@@ -454,25 +459,26 @@ public class DatabaseManager {
     private void updateVersions() throws SQLException {
         // Update the jcatapult artifact version in the database using the
         // highest that we found on this entire patch/seed run
-        Set<String> componentNames = databaseVersions.keySet();
-        for (String componentName : componentNames) {
-            PreparedStatement statement = connection.prepareStatement("update " + VERSION_TABLE + " set version = ? where artifact_name = ?");
-            Version version = databaseVersions.get(componentName);
-            statement.setString(1, componentName);
+        Set<String> moduleNames = databaseVersions.keySet();
+        for (String moduleName : moduleNames) {
+            PreparedStatement statement = connection.prepareStatement("update " + VERSION_TABLE +
+                " set version = ? where artifact_name = ?");
+            Version version = databaseVersions.get(moduleName);
+            statement.setString(1, moduleName);
             statement.setString(2, version.toString());
             int results = statement.executeUpdate();
             if (results == 0) {
-                logger.info("Set version for [" + componentName + "] to [" + version + "]");
+                logger.info("Set version for [" + moduleName + "] to [" + version + "]");
                 statement = connection.prepareStatement("insert into " + VERSION_TABLE + " values (?,?)");
-                statement.setString(1, componentName);
+                statement.setString(1, moduleName);
                 statement.setString(2, version.toString());
                 results = statement.executeUpdate();
                 if (results == 0) {
                     throw new RuntimeException("Unable to insert or update to table [" + VERSION_TABLE +
-                        "] for column name [" + componentName + "] and column version [" + version + "]");
+                        "] for column name [" + moduleName + "] and column version [" + version + "]");
                 }
             } else {
-                logger.info("Updated version for [" + componentName + "] to [" + version + "]");
+                logger.info("Updated version for [" + moduleName + "] to [" + version + "]");
             }
         }
     }

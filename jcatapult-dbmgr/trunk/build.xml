@@ -15,7 +15,7 @@
   ~ language governing permissions and limitations under the License.
   -->
 <project name="jcatapult-dbmgr">
- 
+
   <!-- <property file="${user.home}/build.properties"/> -->
 
   <property environment="env"/>
@@ -62,20 +62,20 @@
     </sequential>
   </macrodef>
 
-  <!-- implemented to jar up the test components -->
+  <!-- implemented to jar up the test modules -->
   <macrodef name="jar-post">
     <sequential>
-      <jar destfile="${dir.target.jars}/component1-1.2.jar">
-        <fileset dir="test/component1" includes="**/*"/>
+      <jar destfile="${dir.target.jars}/module1-1.2.jar">
+        <fileset dir="test/module1" includes="**/*"/>
       </jar>
-      <jar destfile="${dir.target.jars}/component2-1.1.jar">
-        <fileset dir="test/component2" includes="**/*"/>
+      <jar destfile="${dir.target.jars}/module2-1.1.jar">
+        <fileset dir="test/module2" includes="**/*"/>
       </jar>
-      <jar destfile="${dir.target.jars}/component3-2.1.jar">
-        <fileset dir="test/component3" includes="**/*"/>
+      <jar destfile="${dir.target.jars}/module3-2.1.jar">
+        <fileset dir="test/module3" includes="**/*"/>
       </jar>
-      <jar destfile="${dir.target.jars}/component4-1.0.jar">
-        <fileset dir="test/component4" includes="**/*"/>
+      <jar destfile="${dir.target.jars}/module4-1.0.jar">
+        <fileset dir="test/module4" includes="**/*"/>
       </jar>
       <jar destfile="${dir.target.jars}/dependency1-1.0.jar">
         <fileset dir="test/dependency1" includes="**/*"/>
@@ -89,10 +89,10 @@
   <!-- implemented to copy amd files over to amd -->
   <macrodef name="test-unit-pre">
     <sequential>
-      <copy file="test/component1/component1-1.2.jar.amd" todir="${dir.target.jars}"/>
-      <copy file="test/component2/component2-1.1.jar.amd" todir="${dir.target.jars}"/>
-      <copy file="test/component3/component3-2.1.jar.amd" todir="${dir.target.jars}"/>
-      <copy file="test/component4/component4-1.0.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/module1/module1-1.2.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/module2/module2-1.1.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/module3/module3-2.1.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/module4/module4-1.0.jar.amd" todir="${dir.target.jars}"/>
     </sequential>
   </macrodef>
 
@@ -114,10 +114,10 @@
       GRANT ALL PRIVILEGES on table_generator_test_project5.* to 'dev'@'localhost' identified by 'dev';
       GRANT ALL PRIVILEGES on table_generator_test_project5.* to 'dev'@'127.0.0.1' identified by 'dev';
 
-      DROP DATABASE IF EXISTS table_generator_test_component1;
-      CREATE DATABASE table_generator_test_component1;
-      GRANT ALL PRIVILEGES on table_generator_test_component1.* to 'dev'@'localhost' identified by 'dev';
-      GRANT ALL PRIVILEGES on table_generator_test_component1.* to 'dev'@'127.0.0.1' identified by 'dev';
+      DROP DATABASE IF EXISTS table_generator_test_module1;
+      CREATE DATABASE table_generator_test_module1;
+      GRANT ALL PRIVILEGES on table_generator_test_module1.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on table_generator_test_module1.* to 'dev'@'127.0.0.1' identified by 'dev';
 
       DROP DATABASE IF EXISTS database_generator_test_project5;
       CREATE DATABASE database_generator_test_project5;

@@ -18,12 +18,12 @@
          xsi:schemaLocation="http://www.inversoft.com/schemas/savant-2.0/project http://www.inversoft.com/schemas/savant-2.0/project/project.xsd"
          name="project4" version="1.0" group="Example">
 
-  <!-- this project is simple because it just depends on dependency1 and component1 -->
+  <!-- this project is simple because it just depends on dependency1 and module1 -->
 
   <dependencies id="project.deps">
     <artifactGroup type="run">
       <artifact group="group" project="proj" name="dependency1" version="1.0" type="jar"/>
-      <artifact group="group" project="proj" name="component1" version="1.2" type="jar"/>
+      <artifact group="group" project="proj" name="module1" version="1.2" type="jar"/>
     </artifactGroup>
   </dependencies>
 
