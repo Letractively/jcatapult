@@ -1,43 +1,60 @@
-<project name="component-macros">
-  <dirname property="dir.plugin.component" file="${ant.file.component-macros}"/>
-  <path id="classpath.component">
-    <fileset dir="${dir.plugin.component}/lib" includes="*.jar"/>
-    <pathelement location="${dir.plugin.component}/../../libraries/jdom-1.0.jar"/>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+<project name="module-macros">
+  <dirname property="dir.plugin.module" file="${ant.file.module-macros}"/>
+  <path id="classpath.module">
+    <fileset dir="${dir.plugin.module}/lib" includes="*.jar"/>
+    <pathelement location="${dir.plugin.module}/../../libraries/jdom-1.0.jar"/>
   </path>
 
-  <property name="component-macros.dir.scripts.groovy" value="${dir.plugin.component}/scripts/groovy"/>
+  <property name="module-macros.dir.scripts.groovy" value="${dir.plugin.module}/scripts/groovy"/>
 
-  <macrodef name="component_project_name">
+  <macrodef name="module_project_name">
     <attribute name="url"/>
     <sequential>
       <groovy>
         // First figure out the project name
-        def componentURL = "@{url}";
-        if (componentURL.endsWith("/")) {
-          componentURL = componentURL.substring(0, componentURL.length() - 1);
+        def moduleURL = "@{url}";
+        if (moduleURL.endsWith("/")) {
+          moduleURL = moduleURL.substring(0, moduleURL.length() - 1);
         }
-        def componentProjectName = componentURL.substring(componentURL.lastIndexOf("/") + 1);
-        properties["component.project.name"] = componentProjectName;
+        def moduleProjectName = moduleURL.substring(moduleURL.lastIndexOf("/") + 1);
+        properties["module.project.name"] = moduleProjectName;
       </groovy>
-      <echo message="Determined component project name to be ${component.project.name}"/>
+      <echo message="Determined module project name to be ${module.project.name}"/>
     </sequential>
   </macrodef>
 
   <!--
-    This determines the version of the component using the url to the component within a Savant repsitory.
+    This determines the version of the module using the url to the module within a Savant repsitory.
 
     This is making a very large and somewhat annoying assumption to keep me from having to parse out file
     names to determine version numbers. Instead I'm assuming that there is a JAR with the same name as the
     project. So, since the URL points to the Savant project directory I can grab the last part of that String
     and then look for a JAR with the same name and the version on the end.
 
-    For example, if the project name is user-component:
+    For example, if the project name is user-module:
 
-      user-component-1.0-RC1.jar
+      user-module-1.0-RC1.jar
 
-    I can grab everything after "user-component-" and up to the .jar extension.
+    I can grab everything after "user-module-" and up to the .jar extension.
   -->
-  <macrodef name="component_determine_version">
+  <macrodef name="module_determine_version">
     <attribute name="url"/>
     <attribute name="name"/>
 
@@ -53,7 +70,7 @@
 
         // Find the best and then store it in a variable if it was found. If there are no releases
         // this will fail.
-        def componentProjectName = "@{name}";
+        def moduleProjectName = "@{name}";
 
         def best = null;
         def bestStr = null;
@@ -62,12 +79,12 @@
           if (matcher.find()) {
             def str = matcher[0][1];
 
-            // Ensure that the file name has the component project name in it, and it is the JAR file, and it is not
+            // Ensure that the file name has the module project name in it, and it is the JAR file, and it is not
             // the source JAR file.
-            if (str.startsWith(componentProjectName + "-") && str.endsWith(".jar") && !str.contains("-src")) {
+            if (str.startsWith(moduleProjectName + "-") && str.endsWith(".jar") && !str.contains("-src")) {
 
               // Trim off the project name and the .jar extension
-              def version = str.substring(componentProjectName.length() + 1, str.lastIndexOf(".jar"));
+              def version = str.substring(moduleProjectName.length() + 1, str.lastIndexOf(".jar"));
               try {
                 def ver = new Version(version);
                 if (best == null || ver.compareTo(best) > 0) {
@@ -84,24 +101,24 @@
         new File("versions.xml").delete();
 
         if (best != null) {
-          properties["component.version"] = bestStr;
-          ant.echo("Determined latest component version to be ${bestStr}.");
+          properties["module.version"] = bestStr;
+          ant.echo("Determined latest module version to be ${bestStr}.");
         } else {
-          ant.fail("Component doesn't have any releases yet.");
+          ant.fail("Module doesn't have any releases yet.");
         }
         ]]>
       </groovy>
     </sequential>
   </macrodef>
 
-  <macrodef name="component_add_dependency">
+  <macrodef name="module_add_dependency">
     <attribute name="name"/>
     <attribute name="version"/>
     <attribute name="url"/>
     <sequential>
       <groovy>
         <classpath>
-          <path refid="classpath.component"/>
+          <path refid="classpath.module"/>
         </classpath>
         <![CDATA[
         import org.jdom.*;
@@ -113,13 +130,13 @@
         // Read it in
         Document doc = new SAXBuilder().build(new File("project.xml"));
 
-        // See if it already has the component
+        // See if it already has the module
         XPath xpath = XPath.newInstance("//project:artifact[@name='@{name}']");
         xpath.addNamespace("project", "http://www.inversoft.org/schemas/savant-2.0/project");
         Element elem = xpath.selectSingleNode(doc.getRootElement());
         if (elem != null) {
-          ant.echo("This project already contains the component @{name}.");
-          ant.fail("This project already contains the component @{name}.");
+          ant.echo("This project already contains the module @{name}.");
+          ant.fail("This project already contains the module @{name}.");
         }
 
         // Find the artifactGroup element to add the dependency to
@@ -130,11 +147,11 @@
         Element artifact = new Element("artifact", "http://www.inversoft.org/schemas/savant-2.0/project");
 
         // extract the group from the url
-        def componentURL = "@{url}";
-        if (componentURL.endsWith("/")) {
-          componentURL = componentURL.substring(0, componentURL.length() - 1);
+        def moduleURL = "@{url}";
+        if (moduleURL.endsWith("/")) {
+          moduleURL = moduleURL.substring(0, moduleURL.length() - 1);
         }
-        String[] urlTokens = componentURL.split("/");
+        String[] urlTokens = moduleURL.split("/");
         String group = "ADD GROUP";
         if (urlTokens.length - 2 > 0) {
           group = urlTokens[urlTokens.length - 2];
@@ -163,7 +180,7 @@
     </sequential>
   </macrodef>
 
-  <macrodef name="component_drop_files">
+  <macrodef name="module_drop_files">
     <attribute name="url"/>
     <attribute name="name"/>
     <attribute name="version"/>
@@ -180,15 +197,15 @@
     </sequential>
   </macrodef>
 
-  <macrodef name="component_add_entities">
+  <macrodef name="module_add_entities">
     <attribute name="persistenceFile"/>
-    <element name="componentClasspath"/>
+    <element name="moduleClasspath"/>
     <sequential>
       <property name="tmp_persistence_file" value="@{persistenceFile}"/>
       <groovy>
         <classpath>
-          <path refid="classpath.component"/>
-          <componentClasspath/>
+          <path refid="classpath.module"/>
+          <moduleClasspath/>
         </classpath>
         <![CDATA[
         import org.jdom.*;
@@ -199,8 +216,8 @@
         SAXBuilder builder = new SAXBuilder();
         String persistenceFileName = properties["tmp_persistence_file"];
 
-        // Search in the classloader for all the component.xml files
-        Enumeration urls = this.getClass().getClassLoader().getResources("META-INF/component.xml");
+        // Search in the classloader for all the module.xml files
+        Enumeration urls = this.getClass().getClassLoader().getResources("META-INF/module.xml");
         SortedSet set = new TreeSet();
         while (urls.hasMoreElements()) {
           def url = urls.nextElement();
@@ -208,16 +225,16 @@
           ant.echo("Adding persistence classes from [${url}] to [${persistenceFileName}]");
 
           // Read it in
-          Document componentDoc = builder.build(url);
-          Element persistenceElem = componentDoc.getRootElement().getChild("persistence");
+          Document moduleDoc = builder.build(url);
+          Element persistenceElem = moduleDoc.getRootElement().getChild("persistence");
           if (persistenceElem == null) {
-            ant.echo("Project doesn't define a <persistence> element in the component.xml file. Skipping entity management");
+            ant.echo("Project doesn't define a <persistence> element in the module.xml file. Skipping entity management");
             continue;
           }
 
           List classElems = persistenceElem.getChildren("class");
           if (classElems == null) {
-            ant.echo("Project doesn't define any persistence classes in the component.xml file. Skipping entity management");
+            ant.echo("Project doesn't define any persistence classes in the module.xml file. Skipping entity management");
             continue;
           }
 
@@ -253,26 +270,26 @@
     </sequential>
   </macrodef>
 
-  <macrodef name="component_create_persistence">
-    <attribute name="componentFile"/>
+  <macrodef name="module_create_persistence">
+    <attribute name="moduleFile"/>
     <attribute name="persistenceDir"/>
     <sequential>
       <copy todir="@{persistenceDir}" failonerror="yes" overwrite="yes">
-        <fileset dir="${dir.plugin.component}/files" includes="**/*"/>
+        <fileset dir="${dir.plugin.module}/files" includes="**/*"/>
         <filterset>
           <filter token="PROJECT_NAME" value="${underscored.project.name}"/>
         </filterset>
       </copy>
       <dependencypath pathid="classpath.project" workflow="workflow.project"
                       dependencies="dependencies.project"/>
-      <component_add_entities persistenceFile="@{persistenceDir}/META-INF/persistence.xml">
-        <componentClasspath>
+      <module_add_entities persistenceFile="@{persistenceDir}/META-INF/persistence.xml">
+        <moduleClasspath>
           <path refid="classpath.project"/>
           <path>
             <fileset dir="${dir.target.jars}" includes="*.jar"/>
           </path>
-        </componentClasspath>
-      </component_add_entities>
+        </moduleClasspath>
+      </module_add_entities>
     </sequential>
   </macrodef>
 </project>

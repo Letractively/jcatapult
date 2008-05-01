@@ -25,8 +25,8 @@
   <import file="${plugin.dir}/junit/1.0/junit.xml"/>
   <import file="${plugin.dir}/cobertura/1.0/cobertura.xml"/>
 
-  <!-- Component support -->
-  <import file="${plugin.dir}/component/1.0/project-support.xml"/>
+  <!-- Module support -->
+  <import file="${plugin.dir}/module/1.0/project-support.xml"/>
 
   <!-- subversion -->
   <import file="${plugin.dir}/svn/1.0/svn.xml"/>

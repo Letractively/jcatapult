@@ -81,10 +81,10 @@
   </target>
 
   <!--
-    Creates a component module.
+    Creates a module.
   -->
-  <target name="create-component" depends="-init" description="Creates a new component project">
-    <create-project template="component-template" jcatapult="true"/>
+  <target name="create-module" depends="-init" description="Creates a new module project">
+    <create-project template="module-template" jcatapult="true"/>
   </target>
 
   <target name="svn-import"
