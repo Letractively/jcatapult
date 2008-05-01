@@ -18,11 +18,10 @@ package org.jcatapult.commerce.domain.struts;
 import java.lang.reflect.Method;
 import java.util.Currency;
 import java.util.Map;
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import org.jcatapult.commerce.domain.Money;
-import org.jcatapult.commerce.domain.struts.MoneyTypeConverter;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -40,7 +39,7 @@ import static net.java.util.CollectionTools.*;
 public class MoneyTypeConverterTest {
     @Test
     public void testToMoney() {
-        ServletRequest request = EasyMock.createNiceMock(ServletRequest.class);
+        HttpServletRequest request = EasyMock.createNiceMock(HttpServletRequest.class);
         EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("currencyCode", "USD"));
         EasyMock.replay(request);
         ServletObjectsHolder.setServletRequest(request);
@@ -56,7 +55,7 @@ public class MoneyTypeConverterTest {
 
     @Test
     public void testToMoneyFailureSingleParameter() throws NoSuchMethodException {
-        ServletRequest request = EasyMock.createNiceMock(ServletRequest.class);
+        HttpServletRequest request = EasyMock.createNiceMock(HttpServletRequest.class);
         EasyMock.replay(request);
         ServletObjectsHolder.setServletRequest(request);
 
@@ -74,7 +73,7 @@ public class MoneyTypeConverterTest {
 
     @Test
     public void testToMoneyFailureNoLength3() throws NoSuchMethodException {
-        ServletRequest request = EasyMock.createNiceMock(ServletRequest.class);
+        HttpServletRequest request = EasyMock.createNiceMock(HttpServletRequest.class);
         EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("currencyCode", "US"));
         EasyMock.replay(request);
         ServletObjectsHolder.setServletRequest(request);
@@ -93,7 +92,7 @@ public class MoneyTypeConverterTest {
 
     @Test
     public void testToMoneyFailureBadCurrencyCode() throws NoSuchMethodException {
-        ServletRequest request = EasyMock.createNiceMock(ServletRequest.class);
+        HttpServletRequest request = EasyMock.createNiceMock(HttpServletRequest.class);
         EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("currencyCode", "BAD"));
         EasyMock.replay(request);
         ServletObjectsHolder.setServletRequest(request);
