@@ -45,6 +45,7 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
  * </p>
  *
  * <pre>
+ * /module
  * /component
  * /jcatapult
  * /static
@@ -77,7 +78,7 @@ public class StaticResourceWorkflow implements Workflow {
     private String[] getPrefixes(Configuration configuration) {
         String[] prefixes = configuration.getStringArray("jcatapult.static-resource.prefixes");
         if (prefixes == null || prefixes.length == 0) {
-            prefixes = new String[]{"/component", "/static", "/jcatapult"};
+            prefixes = new String[]{"/module", "/component", "/static", "/jcatapult"};
         }
         return prefixes;
     }

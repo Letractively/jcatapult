@@ -111,7 +111,7 @@ public abstract class WebBaseTest extends JPABaseTest {
     public void setUpWeb() {
         final String webRootDir = getWebRootDir();
         if (new File(webRootDir).exists()) {
-            logger.info("Project is a web project or a component.  Setting up web test support.");
+            logger.info("Project is a web project or a module.  Setting up web test support.");
             modules.add(new AbstractModule() {
                 protected void configure() {
                     bind(ContainerResolver.class).toInstance(new ContainerResolver() {
