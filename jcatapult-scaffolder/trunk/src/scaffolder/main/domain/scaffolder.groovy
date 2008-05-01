@@ -13,14 +13,14 @@ import org.jdom.output.XMLOutputter
 @ShortDescription("Creates a single domain object.")
 @LongDescription(
 """Creates a single domain object. This also handles a number of additional operations
-that are critical for components, but it can also be used for webapps.
+that are critical for modules, but it can also be used for webapps.
 
   This scaffolder asks the following questions:
     1. The package to put the domain class into (tab completion available)
     2. The name of the domain class
 
-  This scaffolder creates the domain class and for components adds the domain class
-  to the component.xml file in src/conf/main/META-INF.
+  This scaffolder creates the domain class and for modules adds the domain class
+  to the module.xml file in src/conf/main/META-INF.
 """)
 public class DomainScaffolder extends AbstractScaffolder {
   public void execute() {
@@ -65,25 +65,24 @@ public class DomainScaffolder extends AbstractScaffolder {
     new File(testDirName).mkdirs();
 
     // Create the actions
-    String scriptPath = dir.getAbsolutePath();
     executeFreemarkerTemplate("/domain.ftl", mainDirName + className + ".java", params);
     executeFreemarkerTemplate("/test.ftl", testDirName + className + "Test.java", params);
 
-    // Create this is a component
-    File componentFile = new File("src/conf/main/META-INF/component.xml");
-    if (componentFile.exists()) {
+    // Create this is a module
+    File moduleFile = new File("src/conf/main/META-INF/module.xml");
+    if (moduleFile.exists()) {
       SortedSet set = new TreeSet();
       set.add(pkgName + "." + className);
 
-      // Add existing from component.xml
-      Node persistence = new XmlParser().parse(componentFile).persistence[0];
+      // Add existing from module.xml
+      Node persistence = new XmlParser().parse(moduleFile).persistence[0];
       persistence.children().each { set.add(it.text()) }
 
       // Use JDOM to add the new ones and save it out
-      Document componentDoc = new SAXBuilder().build(componentFile);
-      Element persistenceElem = componentDoc.getRootElement().getChild("persistence");
+      Document moduleDoc = new SAXBuilder().build(moduleFile);
+      Element persistenceElem = moduleDoc.getRootElement().getChild("persistence");
       if (persistenceElem == null) {
-        println("Project doesn't define a <persistence> element in the component.xml file. Skipping entity management");
+        println("Project doesn't define a <persistence> element in the module.xml file. Skipping entity management");
         return;
       }
 
@@ -98,8 +97,8 @@ public class DomainScaffolder extends AbstractScaffolder {
       Format format = Format.getPrettyFormat();
       format.setLineSeparator("\n");
       XMLOutputter output = new XMLOutputter(format);
-      FileOutputStream fos = new FileOutputStream(componentFile);
-      output.output(componentDoc, fos);
+      FileOutputStream fos = new FileOutputStream(moduleFile);
+      output.output(moduleDoc, fos);
       fos.close();
     }
   }

@@ -20,7 +20,7 @@ import ${servicePackage}.${type.name}Service;
  *
  * @author  Scaffolder
  */
-@Result(name = "error", location = "index.<#if component>ftl<#else>jsp</#if>")
+@Result(name = "error", location = "index.<#if module>ftl<#else>jsp</#if>")
 public class Edit extends BaseAction {
     private final ${type.name}Service ${type.fieldName}Service;
     private Integer id;
