@@ -31,6 +31,9 @@ public class ModuleJar {
     // path to the module.xml
     public static final String PATH_MODULE_XML = DIR_ROOT + "/module.xml";
 
+    @Deprecated
+    public static final String PATH_COMPONENT_XML = DIR_ROOT + "/component.xml";
+
     // directories to sql files
     public static final String DIR_BASE = DIR_ROOT + "/sql/base";
     public static final String DIR_ALTER = DIR_ROOT + "/sql/alter";

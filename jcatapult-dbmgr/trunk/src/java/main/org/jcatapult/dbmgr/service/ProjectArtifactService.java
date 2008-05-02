@@ -35,13 +35,12 @@ import static org.jcatapult.dbmgr.domain.SQLScriptType.*;
  * Date: Dec 12, 2007
  */
 public class ProjectArtifactService extends BaseArtifactService {
-
     private static final Logger logger = Logger.getLogger(ProjectArtifactService.class.getName());
 
-    private ProjectContext pCtx;
+    private ProjectContext projectContext;
 
-    public ProjectArtifactService(ProjectContext pCtx) {
-        this.pCtx = pCtx;
+    public ProjectArtifactService(ProjectContext projectContext) {
+        this.projectContext = projectContext;
     }
 
     /**
@@ -50,12 +49,12 @@ public class ProjectArtifactService extends BaseArtifactService {
     public Artifact getArtifact() {
 
         Artifact a = new Artifact();
-        a.setCurrentVersion(pCtx.getCurrentVersion());
-        a.setDatabaseVersion(pCtx.getDatabaseVersion());
-        a.setName(pCtx.getProjectName());
-        a.setBaseScripts(getScripts(pCtx.getBaseDir(), BASE));
-        a.setAlterScripts(getScripts(pCtx.getAlterDir(), ALTER));
-        a.setSeedScripts(getScripts(pCtx.getSeedDir(), SEED));
+        a.setCurrentVersion(projectContext.getCurrentVersion());
+        a.setDatabaseVersion(projectContext.getDatabaseVersion());
+        a.setName(projectContext.getProjectName());
+        a.setBaseScripts(getScripts(projectContext.getBaseDir(), BASE));
+        a.setAlterScripts(getScripts(projectContext.getAlterDir(), ALTER));
+        a.setSeedScripts(getScripts(projectContext.getSeedDir(), SEED));
 
         return a;
     }
@@ -100,10 +99,10 @@ public class ProjectArtifactService extends BaseArtifactService {
         }
 
         if (sqlScripts.isEmpty()) {
-            logger.finest("Found no scripts of type [" + type + "] for artifact [" + pCtx.getProjectName() + "] - " +
+            logger.finest("Found no scripts of type [" + type + "] for artifact [" + projectContext.getProjectName() + "] - " +
                 sqlScripts);
         } else {
-            logger.finest("Found the following [" + type + "] scripts in artifact [" + pCtx.getProjectName() + "] - " +
+            logger.finest("Found the following [" + type + "] scripts in artifact [" + projectContext.getProjectName() + "] - " +
                 sqlScripts);
         }
 

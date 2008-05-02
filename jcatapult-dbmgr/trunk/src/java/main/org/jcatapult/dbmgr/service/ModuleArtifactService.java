@@ -39,21 +39,21 @@ public class ModuleArtifactService extends BaseArtifactService {
 
     private static final Logger logger = Logger.getLogger(ModuleArtifactService.class.getName());
 
-    private ModuleContext cCtx;
-    private ModuleJarService cjs;
+    private ModuleContext moduleContext;
+    private ModuleJarService moduleJarService;
 
-    public ModuleArtifactService(ModuleContext cCtx, ModuleJarService cjs) {
-        this.cCtx = cCtx;
-        this.cjs = cjs;
+    public ModuleArtifactService(ModuleContext moduleContext, ModuleJarService moduleJarService) {
+        this.moduleContext = moduleContext;
+        this.moduleJarService = moduleJarService;
     }
 
     public Artifact getArtifact() {
 
         // create an artifact
         Artifact a = new Artifact();
-        a.setName(cCtx.getModuleJar().getModuleName());
-        a.setCurrentVersion(cCtx.getModuleJar().getVersion());
-        a.setDatabaseVersion(cCtx.getDatabaseVersion());
+        a.setName(moduleContext.getModuleJar().getModuleName());
+        a.setCurrentVersion(moduleContext.getModuleJar().getVersion());
+        a.setDatabaseVersion(moduleContext.getDatabaseVersion());
         a.setBaseScripts(getScripts(ModuleJar.DIR_BASE, BASE));
         a.setAlterScripts(getScripts(ModuleJar.DIR_ALTER, ALTER));
         a.setSeedScripts(getScripts(ModuleJar.DIR_SEED, SEED));
@@ -72,17 +72,17 @@ public class ModuleArtifactService extends BaseArtifactService {
         SortedSet<SQLScript> sqlScripts = new TreeSet<SQLScript>();
 
         // iterate through all the module jar entries to create sql scripts
-        List<JarEntry> jarEntries = cjs.getJarDirectorySQLEntries(cCtx.getModuleJar(), dirPath);
+        List<JarEntry> jarEntries = moduleJarService.getJarDirectorySQLEntries(moduleContext.getModuleJar(), dirPath);
         for (JarEntry jarEntry : jarEntries) {
             SQLScript sqlScript = new SQLScript();
 
             // set the input stream.  if this throws an exception,
             // treat this as a critical error and throw a runtime exception.
             try {
-                sqlScript.setInputStream(cCtx.getModuleJar().getJarFile().getInputStream(jarEntry));
+                sqlScript.setInputStream(moduleContext.getModuleJar().getJarFile().getInputStream(jarEntry));
             } catch (IOException e) {
                 logger.severe("Unable to open input stream for module jar [" +
-                    cCtx.getModuleJar().getFile().getAbsolutePath() + "] jar entry [" + jarEntry + "]");
+                    moduleContext.getModuleJar().getFile().getAbsolutePath() + "] jar entry [" + jarEntry + "]");
                 throw new RuntimeException(e);
             }
 
@@ -99,10 +99,10 @@ public class ModuleArtifactService extends BaseArtifactService {
 
         if (sqlScripts.isEmpty()) {
             logger.finest("Found no scripts of type [" + type + "] for artifact [" +
-                cCtx.getModuleJar().getModuleName() + "]");
+                moduleContext.getModuleJar().getModuleName() + "]");
         } else {
             logger.finest("Found the following [" + type + "] scripts in artifact [" +
-                cCtx.getModuleJar().getModuleName() + "] - " + sqlScripts);
+                moduleContext.getModuleJar().getModuleName() + "] - " + sqlScripts);
         }
 
         return sqlScripts;

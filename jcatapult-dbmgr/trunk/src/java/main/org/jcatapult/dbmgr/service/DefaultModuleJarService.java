@@ -125,7 +125,8 @@ public class DefaultModuleJarService implements ModuleJarService {
 
         // throw a runtime exception if deps can't get resolved
         if (!depsResolved) {
-            throw new RuntimeException("Unable to resolve dependencies.  Set 'net.java.savant.level=FINEST' in log file for detailed logging");
+            throw new RuntimeException("Unable to resolve dependencies.  Set 'net.java.savant.level=FINEST' " +
+                "in log file for detailed logging");
         }
 
         // get all the Savant Artifact objects oredered depth-first
@@ -163,8 +164,11 @@ public class DefaultModuleJarService implements ModuleJarService {
                 // check for module.xml file
                 JarEntry moduleXmlEntry = jf.getJarEntry(ModuleJar.PATH_MODULE_XML);
                 if (moduleXmlEntry == null) {
-                    throw new RuntimeException("jar file [" + artFile +
-                        "] does not contain a " + ModuleJar.PATH_MODULE_XML + " file");
+                    moduleXmlEntry = jf.getJarEntry(ModuleJar.PATH_COMPONENT_XML);
+                    if (moduleXmlEntry == null) {
+                        throw new RuntimeException("jar file [" + artFile +
+                            "] does not contain a " + ModuleJar.PATH_MODULE_XML + " file");
+                    }
                 }
 
                 // if module.xml exists, make sure it contains the 'name' attribute.  This is needed because
