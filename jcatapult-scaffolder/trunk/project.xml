@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
     name="jcatapult-scaffolder"
     group="jcatapult.org"
-    version="1.0-M6">
+    version="1.0-RC1">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -11,7 +11,7 @@
       svn.username=<username>
       svn.password=<password>
   -->
-  <properties file="${user.home}/jcatapult-build.properties"/>
+  <properties file="${user.home}/google-code-build.properties"/>
 
   <!--
     inversoft-org-release-build.properties must contain the following:
@@ -29,18 +29,18 @@
   <dependencies id="dependencies.project">
     <artifactGroup type="compile">
       <artifact group="commons.apache.org" project="commons-cli" name="commons-cli" version="1.1" type="jar"/>
-      <artifact group="codehaus.org" project="groovy" name="groovy-all" version="1.5.4" type="jar"/>
-      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
-      <artifact group="jdom.org" project="jdom" name="jdom" version="1.0" type="jar"/>
-      <artifact group="sourceforge.net" project="freemarker" name="freemarker" version="2.3.10" type="jar"/>
-      <artifact group="sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
+      <artifact group="groovy.codehaus.org" project="groovy" name="groovy-all" version="1.5.4" type="jar"/>
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
+      <artifact group="jdom.org" project="jdom" name="jdom" version="1.1" type="jar"/>
+      <artifact group="freemarker.org" project="freemarker" name="freemarker" version="2.3.12" type="jar"/>
+      <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
     </artifactGroup>
     <artifactGroup type="run">
-      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-M1" type="jar"/>
+      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-M3" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-compile">
       <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
-      <artifact group="sun.com" project="jpa" name="jpa" version="1.0" type="jar"/>
+      <artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-run"/>
   </dependencies>
@@ -56,11 +56,11 @@
   -->
   <workflow id="workflow.project">
     <fetchWorkflow>
-      <process type="localCacheFetchProcess"/>
-      <process type="savantInternetFetchProcess" url="http://savant.inversoft.org/"/>
+      <process type="unifiedLocalCache"/>
+      <process type="unified" url="http://savant.inversoft.org/"/>
     </fetchWorkflow>
     <publishWorkflow>
-      <process type="localCachePublishProcess"/>
+      <process type="unifiedLocalCache"/>
     </publishWorkflow>
   </workflow>
 
@@ -74,7 +74,7 @@
     releases locally.
   -->
   <publishWorkflow id="workflow.publish.local">
-    <process type="localCachePublishProcess"/>
+    <process type="unifiedLocalCache"/>
   </publishWorkflow>
 
   <!--
@@ -85,7 +85,7 @@
     another project.
   -->
   <publishWorkflow id="workflow.publish.remote">
-    <process type="SVNPublishProcess" repository="https://svn.inversoft.org/savant-deps"
+    <process type="unifiedSVN" repository="https://svn.inversoft.org/savant-deps"
              username="${svn.release.username}" password="${svn.release.password}"/>
   </publishWorkflow>
 </project>
