@@ -13,9 +13,7 @@
   ~ either express or implied. See the License for the specific
   ~ language governing permissions and limitations under the License.
   -->
-<project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://www.inversoft.com/schemas/savant-2.0/project http://www.inversoft.com/schemas/savant-2.0/project/project.xsd"
+<project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="project1" version="1.0" group="Example">
 
   <dependencies id="project.deps">

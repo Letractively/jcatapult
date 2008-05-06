@@ -20,19 +20,22 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.jar.JarFile;
 
+import org.inversoft.savant.context.ProjectConfigBuilder;
+import org.inversoft.savant.context.xml.DefaultProjectConfigBuilder;
 import org.jcatapult.dbmgr.database.DatabaseProviderFactory;
 import org.jcatapult.dbmgr.domain.Artifact;
 import org.jcatapult.dbmgr.domain.ModuleContext;
 import org.jcatapult.dbmgr.domain.ModuleJar;
 import org.jcatapult.dbmgr.domain.ProjectContext;
+import org.jcatapult.dbmgr.module.ModuleJarTools;
 import org.jcatapult.dbmgr.service.ArtifactService;
 import org.jcatapult.dbmgr.service.ModuleArtifactService;
-import org.jcatapult.dbmgr.service.ProjectArtifactService;
 import org.jcatapult.dbmgr.service.ModuleJarService;
-import org.jcatapult.dbmgr.module.ModuleJarTools;
+import org.jcatapult.dbmgr.service.ProjectArtifactService;
 import org.junit.Before;
 import org.junit.Ignore;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import net.java.util.Version;
@@ -51,7 +54,11 @@ public abstract class BaseTest {
 
     @Before
     public void setupGuice() {
-        injector = Guice.createInjector();
+        injector = Guice.createInjector(new AbstractModule() {
+            protected void configure() {
+                bind(ProjectConfigBuilder.class).to(DefaultProjectConfigBuilder.class);
+            }
+        });
         injector.injectMembers(this);
     }
 

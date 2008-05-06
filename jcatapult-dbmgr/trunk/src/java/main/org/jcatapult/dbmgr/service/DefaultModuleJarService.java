@@ -26,16 +26,15 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
+import org.inversoft.savant.context.SavantContext;
+import org.inversoft.savant.context.SavantContextBuilder;
+import org.inversoft.savant.dep.Artifact;
+import org.inversoft.savant.dep.DependencyResolveMediator;
 import org.jcatapult.dbmgr.domain.ModuleJar;
-import static org.jcatapult.dbmgr.module.ModuleJarTools.getVersionFromJarFilename;
-import static org.jcatapult.dbmgr.module.ModuleJarTools.parseModuleName;
+import static org.jcatapult.dbmgr.module.ModuleJarTools.*;
 
 import com.google.inject.Inject;
 import net.java.lang.StringTools;
-import net.java.savant.SavantRuntime;
-import net.java.savant.context.SavantContext;
-import net.java.savant.context.SavantContextBuilder;
-import net.java.savant.dep.Artifact;
 
 /**
  * <p>
@@ -100,11 +99,11 @@ import net.java.savant.dep.Artifact;
 public class DefaultModuleJarService implements ModuleJarService {
     private static final Logger logger = Logger.getLogger(DefaultModuleJarService.class.getName());
 
-    private SavantContextBuilder scb = null;
+    private SavantContextBuilder savantContextBuilder = null;
 
     @Inject
-    public DefaultModuleJarService(SavantContextBuilder scb) {
-        this.scb = scb;
+    public DefaultModuleJarService(SavantContextBuilder savantContextBuilder) {
+        this.savantContextBuilder = savantContextBuilder;
     }
 
     /**
@@ -117,15 +116,15 @@ public class DefaultModuleJarService implements ModuleJarService {
     public LinkedList<ModuleJar> resolveJars(File projectXml, String dependenciesId) {
 
         // init savant runtime and context
-        SavantRuntime sr = new SavantRuntime(projectXml.getParentFile());
-        SavantContext sc = scb.build(sr, projectXml.getAbsolutePath());
+        SavantContext sc = savantContextBuilder.build(projectXml);
 
         // resolve deps
-        boolean depsResolved = sc.resolveDependencies(null, null, null, true);
+        DependencyResolveMediator mediator = new DependencyResolveMediator();
+        boolean depsResolved = mediator.mediate(sc, null, null, null, true);
 
         // throw a runtime exception if deps can't get resolved
         if (!depsResolved) {
-            throw new RuntimeException("Unable to resolve dependencies.  Set 'net.java.savant.level=FINEST' " +
+            throw new RuntimeException("Unable to resolve dependencies.  Set 'org.inversoft.savant.level=FINEST' " +
                 "in log file for detailed logging");
         }
 

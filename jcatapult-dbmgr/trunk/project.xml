@@ -26,7 +26,7 @@
     svn.username=<username>
     svn.password=<password>
   -->
-  <properties file="${user.home}/jcatapult-build.properties"/>
+  <properties file="${user.home}/google-code-build.properties"/>
 
   <!--
     inversoft-org-release-build.properties must contain the following:
@@ -45,12 +45,12 @@
   <dependencies id="dependencies.project">
     <artifactGroup type="run"/>
     <artifactGroup type="compile">
-      <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
-      <artifact group="mysql.com" project="mysql-connector-java" name="mysql-connector-java" version="5.0.7" type="jar"/>
-      <artifact group="postgresql.org" project="jdbc3" name="postgresql" version="8.2.506" type="jar"/>
-      <artifact group="sun.com" project="jpa" name="jpa" version="1.0" type="jar"/>
-      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-M1" type="jar"/>
+      <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
+      <artifact group="mysql.com" project="mysql-connector-java" name="mysql-connector-java" version="5.1.6" type="jar"/>
+      <!--<artifact group="postgresql.org" project="jdbc3" name="postgresql" version="8.2.506" type="jar"/>-->
+      <artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>
+      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-M3" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-run">
       <artifact group="hsqldb.org" project="hsqldb" name="hsqldb" version="1.8.9" type="jar"/>
@@ -71,11 +71,11 @@
   -->
   <workflow id="workflow.project">
     <fetchWorkflow>
-      <process type="localCacheFetchProcess"/>
-      <process type="savantInternetFetchProcess" url="http://savant.inversoft.org/"/>
+      <process type="unifiedLocalCache"/>
+      <process type="unified" url="http://savant.inversoft.org/"/>
     </fetchWorkflow>
     <publishWorkflow>
-      <process type="localCachePublishProcess"/>
+      <process type="unifiedLocalCache"/>
     </publishWorkflow>
   </workflow>
 
@@ -89,7 +89,7 @@
     releases locally.
   -->
   <publishWorkflow id="workflow.publish.local">
-    <process type="localCachePublishProcess"/>
+    <process type="unifiedLocalCache"/>
   </publishWorkflow>
 
   <!--
@@ -100,7 +100,7 @@
     another project.
   -->
   <publishWorkflow id="workflow.publish.remote">
-    <process type="SVNPublishProcess" repository="https://svn.inversoft.org/savant-deps"
+    <process type="unifiedSVN" repository="https://svn.inversoft.org/savant-deps"
              username="${svn.release.username}" password="${svn.release.password}"/>
   </publishWorkflow>
 </project>

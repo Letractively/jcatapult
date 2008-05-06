@@ -36,11 +36,11 @@ import net.java.util.Version;
  */
 public class DatabaseGeneratorTest extends BaseTest {
 
-    ModuleJarService cjs;
+    ModuleJarService moduleJarService;
 
     @Inject
     public void setModuleResolve(ModuleJarService cjs) {
-        this.cjs = cjs;
+        this.moduleJarService = cjs;
     }
 
     /**
@@ -87,7 +87,6 @@ public class DatabaseGeneratorTest extends BaseTest {
      */
     @Test
     public void testGenerateProject1() throws IOException {
-
         String projectName = "project1";
 
         Map<String, Version> databaseVersions = new HashMap<String, Version>();
@@ -115,7 +114,7 @@ public class DatabaseGeneratorTest extends BaseTest {
     DatabaseGenerator getDbGen(String projectName, String depsId, Map<String, Version> databaseVersions,
         Version projectCurrentVersion, Version projectDatabaseVersion) {
 
-        List<ModuleJar> moduleJars = cjs.resolveJars(new File("test/" + projectName + "/project.xml"), depsId);
+        List<ModuleJar> moduleJars = moduleJarService.resolveJars(new File("test/" + projectName + "/project.xml"), depsId);
 
         ProjectContext pCtx = new ProjectContext(projectName, projectCurrentVersion, projectDatabaseVersion);
         pCtx.setAlterDir(new File("test/" + projectName + "/db/alter"));
@@ -124,6 +123,6 @@ public class DatabaseGeneratorTest extends BaseTest {
 
         String dbName = "database_generator_test_" + projectName;
 
-        return new DatabaseGenerator(getMySQL5Connection(dbName), moduleJars, databaseVersions, pCtx, cjs);
+        return new DatabaseGenerator(getMySQL5Connection(dbName), moduleJars, databaseVersions, pCtx, moduleJarService);
     }
 }
