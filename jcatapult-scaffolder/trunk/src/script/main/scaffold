@@ -22,7 +22,7 @@ done
 
 # Grab the deps and transitive deps for the project
 echo "Using Savant to determine project classpath"
-project_classpath=$(java -cp $classpath net.java.savant.dep.DependencyPathMain)
+project_classpath=$(java -cp $classpath org.inversoft.savant.dep.DependencyPathMain)
 
 java -cp $classpath:$local_classpath:$project_classpath -Dscaffolder.home=$dir/.. \
   org.jcatapult.scaffolder.Main $@

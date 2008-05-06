@@ -37,7 +37,7 @@ endlocal & set LOCAL_CLASSPATH=%cp%
 ::
 echo Using Savant to determine project classpath
 set PROJECT_CLASSPATH=
-FOR /F "delims==" %%G IN ('java -cp "%RUN_CLASSPATH%" net.java.savant.dep.DependencyPathMain') DO set PROJECT_CLASSPATH=%%G
+FOR /F "delims==" %%G IN ('java -cp "%RUN_CLASSPATH%" org.inversoft.savant.dep.DependencyPathMain') DO set PROJECT_CLASSPATH=%%G
 :: echo Savant classpath is %PROJECT_CLASSPATH%
 
 ::
