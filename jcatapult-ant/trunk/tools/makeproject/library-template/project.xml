@@ -32,11 +32,11 @@
   -->
   <workflow id="workflow.project">
     <fetchWorkflow>
-      <process type="localCacheFetchProcess"/>
-      <process type="savantInternetFetchProcess" url="http://savant.inversoft.org/"/>
+      <process type="unifiedLocalCache"/>
+      <process type="unified" url="http://savant.inversoft.org/"/>
     </fetchWorkflow>
     <publishWorkflow>
-      <process type="localCachePublishProcess"/>
+      <process type="unifiedLocalCache"/>
     </publishWorkflow>
   </workflow>
 
@@ -50,7 +50,7 @@
     releases locally.
   -->
   <publishWorkflow id="workflow.publish.local">
-    <process type="localCachePublishProcess"/>
+    <process type="unifiedLocalCache"/>
   </publishWorkflow>
 
   <!--
