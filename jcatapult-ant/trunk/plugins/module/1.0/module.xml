@@ -100,7 +100,7 @@
   </target>
 
   <target name="-app-dependencies">
-    <artifactcopy todir="${dir.target.web}/WEB-INF/lib" flatten="true" types="compile,run"
+    <artifactcopy todir="${dir.target.web}/WEB-INF/lib" flatten="true" types="compile,run,test-run"
         workflow="workflow.project" dependencies="dependencies.project"/>
   </target>
 
