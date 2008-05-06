@@ -19,32 +19,24 @@
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
-      <artifact group="sun.com" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
+      <!-- Most applications don't need the servlet-api, but if you must, uncomment it here -->
+      <!--<artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>-->
     </artifactGroup>
     <artifactGroup type="compile">
-      <!-- struts 2 -->
-      <artifact group="apache.org" project="struts2" name="struts2-convention-plugin" version="2.1.1-SNAPSHOT" type="jar"/>
-      <artifact group="opensymphony.com" project="xwork" name="xwork" version="2.1.1-SNAPSHOT" type="jar"/>
-
-      <!-- apache commons -->
-      <artifact group="apache.org" project="commons-configuration" name="commons-configuration" version="1.3" type="jar"/>
-
-      <!-- google guice -->
-      <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
-
-      <!-- persistence -->
-      <artifact group="hibernate.org" project="hibernate" name="hibernate-annotations" version="3.2.1" type="jar" />
-      <artifact group="sun.com" project="jpa" name="jpa" version="1.0" type="jar"/>
-
-      <!-- jcatapult core-->
+      <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.3" type="jar"/>
+      <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
+      <artifact group="hibernate.org" project="hibernate-annotations" name="hibernate-annotations" version="3.3.1" type="jar" />
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult.core}" type="jar"/>
+      <artifact group="opensymphony.com" project="xwork" name="xwork" version="2.1.1" type="jar"/>
+      <artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>
+      <artifact group="struts.apache.org" project="struts2-convention-plugin" name="struts2-convention-plugin" version="2.1.3" type="jar"/>
     </artifactGroup>
     <artifactGroup type="run">
-      <artifact group="apache.org" project="struts2" name="struts2-core" version="2.1.1-SNAPSHOT" type="jar"/>
-      <artifact group="apache.org" project="taglibs" name="standard" version="1.1.2" type="jar"/>
-      <artifact group="hibernate.org" project="hibernate" name="hibernate-entitymanager" version="3.2.1" type="jar"/>
+      <artifact group="hibernate.org" project="hibernate-entitymanager" name="hibernate-entitymanager" version="3.3.2" type="jar"/>
+      <artifact group="taglibs.jakarta.apache.org" project="standard" name="standard" version="1.1.2" type="jar"/>
       <artifact group="opensymphony.com" project="sitemesh" name="sitemesh" version="2.3" type="jar"/>
-      <artifact group="sun.com" project="jstl" name="jstl" version="1.1" type="jar"/>
+      <artifact group="servlet.javax" project="jstl" name="jstl" version="1.1" type="jar"/>
+      <artifact group="struts.apache.org" project="struts2-core" name="struts2-core" version="2.1.3" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-run"/>
     <artifactGroup type="test-compile">
@@ -65,11 +57,11 @@
   -->
   <workflow id="workflow.project">
     <fetchWorkflow>
-      <process type="localCacheFetchProcess"/>
-      <process type="savantInternetFetchProcess" url="http://savant.inversoft.org/"/>
+      <process type="unifiedLocalCache"/>
+      <process type="unified" url="http://savant.inversoft.org/"/>
     </fetchWorkflow>
     <publishWorkflow>
-      <process type="localCachePublishProcess"/>
+      <process type="unifiedLocalCache"/>
     </publishWorkflow>
   </workflow>
 
@@ -83,8 +75,7 @@
     releases locally.
   -->
   <publishWorkflow id="workflow.publish.local">
-    <process type="localCachePublishProcess"/>
-    <process type="localMavenPublishProcess"/>
+    <process type="unifiedLocalCache"/>
   </publishWorkflow>
 
   <!--
