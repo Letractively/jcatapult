@@ -43,13 +43,13 @@ public class TableGenerator {
     /**
      * Constructor
      *
-     * @param artifactScriptVersionSortStrategy {@link org.jcatapult.dbmgr.service.ArtifactScriptVersionSortStrategy} strategy to be used to
-     * sort artifact scripts
-     * @param artifact {@link org.jcatapult.dbmgr.domain.Artifact} to generate tables for
-     * @param connection connection to the database to execute the scripts in
+     * @param   artifactScriptVersionSortStrategy The {@link ArtifactScriptVersionSortStrategy}
+     *          to be used to sort artifact scripts
+     * @param   artifact An {@link Artifact} to generate tables for
+     * @param   connection connection to the database to execute the scripts in
      */
-    public TableGenerator(ArtifactScriptVersionSortStrategy artifactScriptVersionSortStrategy, Artifact artifact,
-        Connection connection) {
+    public TableGenerator(ArtifactScriptVersionSortStrategy artifactScriptVersionSortStrategy,
+            Artifact artifact, Connection connection) {
         this.versionSortStrat = artifactScriptVersionSortStrategy;
         this.artifact = artifact;
         this.connection = connection;

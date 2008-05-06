@@ -69,7 +69,7 @@ public class DatabaseGenerator {
      * @param cjs {@link org.jcatapult.dbmgr.service.ModuleJarService}
      */
     public DatabaseGenerator(Connection connection, List<ModuleJar> moduleJars,
-        Map<String, Version> databaseVersions, ProjectContext pCtx, ModuleJarService cjs) {
+            Map<String, Version> databaseVersions, ProjectContext pCtx, ModuleJarService cjs) {
         this.connection = connection;
         this.moduleJars = moduleJars;
         this.databaseVersions = databaseVersions;
