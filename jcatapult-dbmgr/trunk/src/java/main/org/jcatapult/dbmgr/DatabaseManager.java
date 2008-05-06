@@ -34,12 +34,9 @@ import org.jcatapult.dbmgr.database.DatabaseProviderFactory;
 import org.jcatapult.dbmgr.domain.ModuleJar;
 import org.jcatapult.dbmgr.domain.ProjectContext;
 import org.jcatapult.dbmgr.service.ModuleJarService;
-import org.inversoft.savant.context.ProjectConfigBuilder;
-import org.inversoft.savant.context.xml.DefaultProjectConfigBuilder;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.AbstractModule;
 import net.java.naming.MockJNDI;
 import net.java.util.Version;
 
@@ -300,11 +297,7 @@ public class DatabaseManager {
 
     private final Map<String, Version> databaseVersions = new HashMap<String, Version>();
 
-    private Injector injector = Guice.createInjector(new AbstractModule() {
-            protected void configure() {
-                bind(ProjectConfigBuilder.class).to(DefaultProjectConfigBuilder.class);
-            }
-        });
+    private Injector injector = Guice.createInjector();
 
     public DatabaseManager(String persistenceUnit, Connection connection, String projectName,
             boolean containsDomain, File baseDir, File alterDir, File seedDir, File projectXml,
