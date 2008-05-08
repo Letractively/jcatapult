@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+<project name="release-jcatapult">
+  <dirname property="dir.plugin.release-jcatapult" file="${ant.file.release-jcatapult}"/>
+  <path id="classpath.plugin.release-jcatapult">
+    <fileset dir="${dir.plugin.release-jcatapult}/lib" includes="*.jar"/>
+  </path>
+
+  <target name="rel-javadoc" description="Releases the JCatapult JavaDoc">
+    <rel_post/>
+  </target>
+
+  <!-- this target is used to release the jcatapult distrubition -->
+  <target name="rel-jcatapult" description="Releases JCatapult">
+
+    <property file="${user.home}/jcatapult-build.properties"/>
+    <property name="dir.jcatapult.release" value="${dir.jcatapult.cache}/jcatapult-release"/>
+
+    <!-- clean up -->
+    <delete dir="${dir.jcatapult.release}"/>
+
+    <!-- make the release dir -->
+    <mkdir dir="${dir.jcatapult.release}"/>
+
+    <!-- get the version -->
+    <input message="Please input release version:" addproperty="release.jcatapult.version"/>
+
+    <!-- set the distribution directory -->
+    <property name="dir.dist" value="${dir.jcatapult.release}/jcatapult-${release.jcatapult.version}"/>
+    <property name="dir.dist.ant" value="${dir.dist}/ant"/>
+    <property name="dir.dist.scaffolder" value="${dir.dist}/scaffolder"/>
+    <property name="dir.export.scaffolder" value="${dir.dist.scaffolder}/scaffolder-export"/>
+    <property name="dir.dist.savant" value="${dir.dist}/savant"/>
+    <property name="dir.dist.groovy" value="${dir.dist}/groovy"/>
+
+    <!-- make all the necessary dist directories -->
+    <mkdir dir="${dir.dist}"/>
+    <mkdir dir="${dir.dist.ant}"/>
+    <mkdir dir="${dir.dist.scaffolder}"/>
+    <mkdir dir="${dir.dist.savant}"/>
+    <mkdir dir="${dir.dist.groovy}"/>
+
+    <!-- check that tags are available -->
+    <scm_tag_validation tag="${release.jcatapult.version}"
+                        url="https://jcatapult.googlecode.com/svn/jcatapult-scaffolder"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-ant"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-core"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-email"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-security"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-dbmgr"
+                        username="${svn.username}" password="${svn.password}"/>
+
+
+    <!--export ant/plugins -->
+    <scm_export dest="${dir.dist.ant}/plugins" username="${svn.username}" password="${svn.password}"
+                src="https://jcatapult.googlecode.com/svn/jcatapult-ant/tags/${release.jcatapult.version}/plugins"/>
+
+    <!--export ant/tools -->
+    <scm_export dest="${dir.dist.ant}/tools" username="${svn.username}" password="${svn.password}"
+                src="https://jcatapult.googlecode.com/svn/jcatapult-ant/tags/${release.jcatapult.version}/tools"/>
+
+    <!--export scaffolder -->
+    <scm_export dest="${dir.export.scaffolder}" username="${svn.username}" password="${svn.password}"
+                src="https://jcatapult.googlecode.com/svn/jcatapult-scaffolder/tags/${release.jcatapult.version}"/>
+
+    <!--build the scaffolder -->
+    <rel_fork dir="${dir.export.scaffolder}" target="jar"/>
+
+    <!--copy scaffolder dist -->
+    <copy todir="${dir.dist.scaffolder}">
+      <fileset dir="${dir.export.scaffolder}/target/dist"/>
+    </copy>
+
+    <!--delete the export directory -->
+    <delete dir="${dir.export.scaffolder}"/>
+
+    <!--tar up the distribution -->
+    <property name="dist.tarball.name" value="jcatapult-${release.jcatapult.version}.tar.gz"/>
+    <tar tarfile="${dir.jcatapult.release}/${dist.tarball.name}" basedir="${dir.jcatapult.release}" compression="gzip"
+         longfile="gnu"/>
+
+    <!-- set checksum -->
+    <checksum file="${dir.jcatapult.release}/${dist.tarball.name}" property="dist.tarball.md5"/>
+
+    <echo>Generated Md5 for tarball [${dist.tarball.md5}]</echo>
+
+    <!-- use the ant googlecode task to upload the distribution -->
+    <!-- url for this project: http://ant-googlecode.googlecode.com/ -->
+    <taskdef classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask"
+             classpathref="classpath.plugin.release-jcatapult" name="gcupload"/>
+    <gcupload username="${svn.username}" password="${svn.password}" projectname="jcatapult"
+              filename="${dir.jcatapult.release}/${dist.tarball.name}" targetfilename="${dist.tarball.name}"
+              summary="Release distribution for JCatapult version ${release.jcatapult.version} - Md5: ${dist.tarball.md5}" />
+  </target>
+
+  <!-- These macrodefs publish the JavaDoc for the release -->
+  <macrodef name="rel_post">
+    <sequential>
+      <property name="docURL"
+                value="https://jcatapult.googlecode.com/svn/jcatapult-javadocs/${project.name}/${project.version}"/>
+
+      <antcall target="javadoc"/>
+      <scm_import dir="${dir.target.javadocs}" url="${docURL}" username="${svn.username}" password="${svn.password}"/>
+
+      <delete dir="${dir.target.javadocs}"/>
+      <svn username="${svn.username}" password="${svn.password}">
+        <checkout url="${docURL}" destPath="${dir.target.javadocs}"/>
+      </svn>
+      <svn username="${svn.username}" password="${svn.password}">
+        <propset path="${dir.target.javadocs}" name="svn:mime-type" value="text/html" recurse="true"/>
+      </svn>
+      <svn username="${svn.username}" password="${svn.password}">
+        <commit dir="${dir.target.javadocs}" message="[JCATAPULT-ANT JavaDoc] Setting mime-type property"/>
+      </svn>
+    </sequential>
+  </macrodef>
+</project>
