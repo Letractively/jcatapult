@@ -50,7 +50,7 @@
       <module_determine_version url="@{url}" name="${module.project.name}"/>
       <module_add_dependency name="${module.project.name}" version="${module.version}" url="@{url}"/>
 
-      <get src="@{url}/${module.project.name}-${module.version}.jar" dest="${java.io.tmpdir}/module.jar"/>
+      <get src="@{url}/${module.version}/${module.project.name}-${module.version}.jar" dest="${java.io.tmpdir}/module.jar"/>
       <module_add_entities persistenceFile="${dir.src.conf.main}/META-INF/persistence.xml">
         <moduleClasspath>
           <pathelement location="${java.io.tmpdir}/module.jar"/>
