@@ -64,35 +64,31 @@
         <![CDATA[
         import net.java.io.FileTools;
         import net.java.util.Version;
+        import java.util.List;
+        import java.util.ArrayList;
+        import java.util.Collections;
+        import java.util.Map;
+        import java.util.HashMap;
 
         // Read it in
         def lines = FileTools.read("versions.xml").toString().split("\n");
 
-        // Find the best and then store it in a variable if it was found. If there are no releases
-        // this will fail.
-        def moduleProjectName = "@{name}";
+        // map:  key is Version, value is dir
+        Map<Version, String> versions = new HashMap<Version, String>();
 
-        def best = null;
-        def bestStr = null;
         lines.each {
           def matcher = (it =~ /a href="(.*?)"/)
           if (matcher.find()) {
             def str = matcher[0][1];
+            if (str.endsWith("/")) {
+              def dir = str.substring(0, str.length() - 1);
 
-            // Ensure that the file name has the module project name in it, and it is the JAR file, and it is not
-            // the source JAR file.
-            if (str.startsWith(moduleProjectName + "-") && str.endsWith(".jar") && !str.contains("-src")) {
-
-              // Trim off the project name and the .jar extension
-              def version = str.substring(moduleProjectName.length() + 1, str.lastIndexOf(".jar"));
+              // try to create a Version object.
+              // if an exception is thrown, it's not a proper Version
               try {
-                def ver = new Version(version);
-                if (best == null || ver.compareTo(best) > 0) {
-                  best = ver;
-                  bestStr = version;
-                }
-              } catch (e) {
-                // Smother, this is the .. or something else
+                  versions.put(new Version(dir), dir);
+              } catch (IllegalArgumentException e) {
+                  // not a valid version, don't worry about it
               }
             }
           }
@@ -100,9 +96,16 @@
 
         new File("versions.xml").delete();
 
-        if (best != null) {
-          properties["module.version"] = bestStr;
-          ant.echo("Determined latest module version to be ${bestStr}.");
+        // sort the versions to get the highest
+        List<Version> versionKeys = new ArrayList<Version>(versions.keySet());
+        Collections.sort(versionKeys);
+
+        // get the highest
+        String highest = versions.get(versionKeys.get(versionKeys.size() - 1));
+
+        if (highest != null) {
+          properties["module.version"] = highest;
+          ant.echo("Determined latest module version to be ${highest}.");
         } else {
           ant.fail("Module doesn't have any releases yet.");
         }
@@ -126,6 +129,8 @@
         import org.jdom.output.Format;
         import org.jdom.output.XMLOutputter;
         import org.jdom.xpath.XPath;
+        import java.net.URL;
+        import java.net.MalformedURLException;
 
         // Read it in
         Document doc = new SAXBuilder().build(new File("project.xml"));
@@ -147,15 +152,32 @@
         Element artifact = new Element("artifact", "http://www.inversoft.org/schemas/savant-2.0/project");
 
         // extract the group from the url
-        def moduleURL = "@{url}";
-        if (moduleURL.endsWith("/")) {
-          moduleURL = moduleURL.substring(0, moduleURL.length() - 1);
+        URL moduleURL = null;
+        try {
+          moduleURL = new URL("@{url}");
+        } catch (MalformedURLException e) {
+          ant.fail("@{url} is not a valid URL path");
         }
-        String[] urlTokens = moduleURL.split("/");
-        String group = "ADD GROUP";
-        if (urlTokens.length - 2 > 0) {
-          group = urlTokens[urlTokens.length - 2];
+
+
+        // break the URL down into the context path
+        String path = moduleURL.getPath();
+
+        // parse the context path to reverse it and delimit the tokens with a period
+        String[] urlPathTokens = path.split("/");
+        StringBuffer groupBuffer = new StringBuffer();
+        if (urlPathTokens.length > 0) {
+            for (int i = urlPathTokens.length - 1; i > -1 ; i--) {
+                if (!urlPathTokens[i].equals("@{name}")) {
+                  groupBuffer.append(urlPathTokens[i]);
+                  if (i > 1) {
+                      groupBuffer.append(".");
+                  }
+                }
+            }
         }
+
+        String group = groupBuffer.toString();
 
         artifact.setAttribute("group", group);
         artifact.setAttribute("project", "@{name}");
@@ -175,6 +197,8 @@
         FileOutputStream fos = new FileOutputStream("project.xml");
         output.output(doc, fos);
         fos.close();
+
+        ant.echo("Added entry [" + artifact.getAttributes().toString() + "] to project.xml");
         ]]>
       </groovy>
     </sequential>
