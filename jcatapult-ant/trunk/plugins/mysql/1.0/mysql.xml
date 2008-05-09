@@ -123,15 +123,15 @@
     <attribute name="url"/>
     <attribute name="database"/>
     <sequential>
-      <echo>Creating database @{database}...</echo>
+      <echo>Creating database `@{database}`...</echo>
       <echo message="-- Dropping db"/>
       <sql driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/mysql"
            userid="${db.username}" password="${db.password}" autocommit="true" expandproperties="true"
            classpathref="classpath.plugin.mysql">
-        DROP DATABASE IF EXISTS @{database};
-        CREATE DATABASE @{database} CHARSET utf8 COLLATE utf8_bin;
-        GRANT ALL PRIVILEGES on @{database}.* to 'dev'@'localhost' identified by 'dev';
-        GRANT ALL PRIVILEGES on @{database}.* to 'dev'@'127.0.0.1' identified by 'dev';
+        DROP DATABASE IF EXISTS `@{database}`;
+        CREATE DATABASE `@{database}` CHARSET utf8 COLLATE utf8_bin;
+        GRANT ALL PRIVILEGES on `@{database}`.* to 'dev'@'localhost' identified by 'dev';
+        GRANT ALL PRIVILEGES on `@{database}`.* to 'dev'@'127.0.0.1' identified by 'dev';
       </sql>
 
       <database_manager url="@{url}"/>
