@@ -58,8 +58,8 @@ Below are links to topics about a specific JCatapult technology, service or API.
 
 === Component ===
 
-  * [ComponentStaticResources Writing component with static resources]
-  * [ComponentAddingComponents Adding pre-built components]
+  * [ModuleStaticResources Writing modules with static resources]
+  * [ModuleAddingComponents Adding pre-built modules]
 
 === Scaffolder ===
 
