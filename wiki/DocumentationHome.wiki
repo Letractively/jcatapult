@@ -27,7 +27,7 @@ Here are the documentation pages that are available for the JCatapult framework.
 
   * [GuideEmail Email API]
   * [GuideEnvironment Environment resolution]
-  * [GuideConfiguration Configuration]
+  * [GuideModule Configuration]
   * [GuideCommerce Commerce]
   * [GuideSecurity Security]
 
