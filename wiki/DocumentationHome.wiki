@@ -15,7 +15,7 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [GuideAntOverview JCatapult Ant overview]
   * [AntPlugins JCatapult Ant plugins]
 
-  * [GuideModule JCatapult components]
+  * [GuideModule JCatapult modules]
   * [GuideLibrary JCatapult libraries]
   * [GuideWebApp JCatapult WebApps]
 
