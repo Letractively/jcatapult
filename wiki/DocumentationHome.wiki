@@ -56,7 +56,7 @@ Below are links to topics about a specific JCatapult technology, service or API.
   * [AntCreatingPlugins Creating ant plugins]
   * [AntDependencies Adding and removing project dependencies]
 
-=== Component ===
+=== Module ===
 
   * [ModuleStaticResources Writing modules with static resources]
   * [ModuleAddingComponents Adding pre-built modules]
