@@ -5,7 +5,7 @@
 JCatapult projects fall into three types:
 
   * Web applications
-  * Components
+  * Modules
   * Libraries
 
 Each project type has different project layouts and those layouts are as follows:
@@ -17,14 +17,14 @@ Here is the web application project layout
 {{{
 deploy                           <- J2EE container deployment files
  |- tomcat
- |   |- main                     
- |   |   |- conf  
+ |   |- main
+ |   |   |- conf
  |   |   |   |- context.xml      <- The Tomcat context configuration file for development
  |
 src
  |- java
  |   |- main                     <- Main Java source files
- |   |   |- org  
+ |   |   |- org
  |   |   |   |- ...
  |   |
  |   |- test
@@ -85,7 +85,7 @@ Here is the library project layout
 src
  |- java
  |   |- main                     <- Main Java source files
- |   |   |- org  
+ |   |   |- org
  |   |   |   |- ...
  |   |
  |   |- test
@@ -111,15 +111,15 @@ src
  |
 }}}
 
-= Components =
+= Modules =
 
-Here is the component project layout
+Here is the module project layout
 
 {{{
 src
  |- java
  |   |- main                     <- Main Java source files
- |   |   |- org  
+ |   |   |- org
  |   |   |   |- ...
  |   |
  |   |- test

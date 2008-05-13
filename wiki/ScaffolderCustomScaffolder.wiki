@@ -6,7 +6,7 @@ This document covers how to write a custom scaffolder by covering the scaffold A
 
 = API =
 
-The JCatapult scaffolder API provides developers with the ability to create custom scaffolders quickly. Scaffolders are written in the Groovy programming language and you should have a good understanding of Groovy before trying to write a scaffolder. 
+The JCatapult scaffolder API provides developers with the ability to create custom scaffolders quickly. Scaffolders are written in the Groovy programming language and you should have a good understanding of Groovy before trying to write a scaffolder.
 
 There are two ways to write a custom scaffolder. The first method is to implement the org.jcatapult.scaffold.Scaffolder interface in a Groovy file named `scaffolder.groovy`. This interface defines a single method named `execute` and has this signature:
 
@@ -54,11 +54,11 @@ Scaffolders are simply directories that are placed into a directory called `scaf
       | - scaffolders
       |       |- crud
       |       |    |- ...
-      |       |- component-crud
+      |       |- module-crud
       |       |    |- ...
 }}}
 
-This layout means that there are two scaffolders available for use, a scaffolder named *crud* and a scaffolder named *component-crud*.
+This layout means that there are two scaffolders available for use, a scaffolder named *crud* and a scaffolder named *module-crud*.
 
 == Scaffolder layout ==
 

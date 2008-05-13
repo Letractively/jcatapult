@@ -12,7 +12,7 @@ Struts/XWork is lacking in many areas and I want to make a list. We'll need to r
   * API freezes with no changes
   * Better plugin support top to bottom
   * Better APIs
-  * Ability to override or extend interceptors, actions, anything from components in the application
+  * Ability to override or extend interceptors, actions, anything from modules in the application
   * Better support for wildcard and SEO URLs via conventions
   * Better type conversion support with support for attributes (currency code, date time format, etc)
 

@@ -6,7 +6,7 @@ This plugin provides applications with the ability to run JUnit tests.
 
 This plugin contains two different XML files:
 
-|| *junit.xml* || Used for projects that require a database for testing. Usually components and web applications. ||
+|| *junit.xml* || Used for projects that require a database for testing. Usually modules and web applications. ||
 || *junit-no-db.xml* || Used for projects that don't require a database for testing. Usually libraries. ||
 
 Only one of these two files needs to be imported like this:

@@ -2,19 +2,19 @@
 
 = Introduction =
 
-This plugin provides applications with the ability to run web applications and components inside Tomcat.
+This plugin provides applications with the ability to run web applications and modules inside Tomcat.
 
 This plugin contains two different XML files:
 
 || *webapp-deploy.xml* || Used by web applications ||
-|| *component-deploy.xml || Used by components ||
+|| *module-deploy.xml || Used by modules ||
 
 Only one these XML files should be imported like this:
 
 {{{
 <import file="${ant.home}/plugins-jcatapult/tomcat/1.0/webapp-deploy.xml"/>
 or
-<import file="${ant.home}/plugins-jcatapult/tomcat/1.0/component-deploy.xml"/>
+<import file="${ant.home}/plugins-jcatapult/tomcat/1.0/module-deploy.xml"/>
 }}}
 
 = Targets =

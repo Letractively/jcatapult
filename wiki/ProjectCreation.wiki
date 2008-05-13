@@ -8,7 +8,7 @@ There are three types of projects that can be created with JCatapult:
 
   * Web application
   * Library
-  * Component
+  * Module
 
 If you are interested in learning more about the layout for each project type check out the [ProjectLayout Project layout] document.
 
@@ -36,12 +36,12 @@ C:\> ant %ANT_HOME%\tools-jcatapult\makeproject\build.xml create-library
 }}}
 
 
-=== Component ===
+=== Module ===
 
 {{{
 *nix:
-$ ant $ANT_HOME/tools-jcatapult/makeproject/build.xml create-component
+$ ant $ANT_HOME/tools-jcatapult/makeproject/build.xml create-module
 
 Windows:
-C:\> ant %ANT_HOME%\tools-jcatapult\makeproject\build.xml create-component
+C:\> ant %ANT_HOME%\tools-jcatapult\makeproject\build.xml create-module
 }}}

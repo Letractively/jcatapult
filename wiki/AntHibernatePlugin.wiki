@@ -18,4 +18,4 @@ The plugin provides these targets:
 
 Generates the table creation SQL script that contains the tables for the current project based on the JPA configuration for the project (_src/conf/main/META-INF/persistence.xml_). The output from this script is placed into the _src/db/main/create/tables.sql_ file.
 
-*NOTE:* This generates table creation statements for ALL entities defined in the persistence.xml. In some cases you might be using components that contain entities and those components will define their own SQL scripts that the JCatapult Migrator will use. Therefore, you might need to modify the output from this target to only contain the projects entities.
+*NOTE:* This generates table creation statements for ALL entities defined in the persistence.xml. In some cases you might be using modules that contain entities and those modules will define their own SQL scripts that the JCatapult Migrator will use. Therefore, you might need to modify the output from this target to only contain the projects entities.

@@ -6,14 +6,14 @@ This plugin provides applications with the ability to create a release of a proj
 
 This plugin contains two XML files:
 
-|| *jar.xml* || Used for libraries and components. ||
+|| *jar.xml* || Used for libraries and modules. ||
 || *webapp.xml* || Used for web applications. ||
 
 One of these two files should be imported like this:
 
 {{{
 <import file="${ant.home}/plugins-jcatapult/release-svn/1.0/jar.xml"/>
-or 
+or
 <import file="${ant.home}/plugins-jcatapult/release-svn/1.0/webapp.xml"/>
 }}}
 

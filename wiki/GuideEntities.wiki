@@ -1,6 +1,6 @@
 #summary Entities
 
-= Entities = 
+= Entities =
 
 JCatapult uses JPA for database persistence. JPA is the Java Persistence API that was released as part of JEE 1.5. This API makes heavy use of annotations for mapping database tables and columns to JavaBean properties. There are a number of resources available online if you are unfamiliar with JPA or Hibernate. JCatapult recommends the Hibernate documentation for JPA:
 
@@ -12,7 +12,7 @@ Hibernate is the JPA implementation that JCatapult uses. Currently, JCatapult do
 
 = Creating an entity =
 
-Creating an entity is simple for both webapps and components. First, most entity classes should be placed in the _domain_ packages that JCatapult creates for you or packages you created that are named _domain_. This is merely a convention, but will help keep consistency across projects.
+Creating an entity is simple for both webapps and modules. First, most entity classes should be placed in the _domain_ packages that JCatapult creates for you or packages you created that are named _domain_. This is merely a convention, but will help keep consistency across projects.
 
 == Webapp entities ==
 
@@ -60,16 +60,16 @@ public class User extends IdentifiableImpl {
 }
 }}}
 
-== Component entities ==
+== Module entities ==
 
-Inside a component there is an additional step when creating entity classes. First, you create the entity class in the _domain_ package in the same manner as you would for a webapp. Second, you must add the entity to the _component.xml_ file located in the _src/conf/main/META-INF_ directory. This file is used by JCatapult to manage component entity classes. Here is the syntax for adding an entity class to that file:
+Inside a module there is an additional step when creating entity classes. First, you create the entity class in the _domain_ package in the same manner as you would for a webapp. Second, you must add the entity to the _module.xml_ file located in the _src/conf/main/META-INF_ directory. This file is used by JCatapult to manage module entity classes. Here is the syntax for adding an entity class to that file:
 
 {{{
-<component name="example-component">
+<module name="example-module">
   <persistence>
     <class>org.jcatapult.example.simple.domain.User</class>
   </persistence>
-</component>
+</module>
 }}}
 
 = Database creation =
