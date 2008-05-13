@@ -64,10 +64,10 @@ delete_data "table_name", "where"
 
 == Dependencies ==
 
-Need a method for managing dependencies on components within dependency scripts. When a project adds a new dependency on a component, an deps script needs to be created and the dependency inserted like this:
+Need a method for managing dependencies on modules within dependency scripts. When a project adds a new dependency on a module, an deps script needs to be created and the dependency inserted like this:
 
 */src/db/deps/1.1-deps.db*
 
 {{{
-add_dependency "component_name", "version"
+add_dependency "module_name", "version"
 }}}

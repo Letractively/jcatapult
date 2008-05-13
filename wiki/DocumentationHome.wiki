@@ -39,7 +39,7 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [TutorialForm Simple form]
   * [TutorialSimpleCrud Simple CRUD]
   * [TutorialSimpleUnitTest Simple unit test]
-  * [TutorialSimpleComponent Simple component]
+  * [TutorialSimpleModule Simple module]
   * [TutorialLogin Login and security]
   * [TutorialDatabaseManager Database management (migrations)]
 
@@ -59,7 +59,7 @@ Below are links to topics about a specific JCatapult technology, service or API.
 === Module ===
 
   * [ModuleStaticResources Writing modules with static resources]
-  * [ModuleAddingComponents Adding pre-built modules]
+  * [ModuleAddingModules Adding pre-built modules]
 
 === Scaffolder ===
 
@@ -97,7 +97,7 @@ Below are links to various documents around JCatapult standard methodologies. Th
   * [UnitTesting Unit testing]
   * [IntegrationTestsing Integration testing]
   * [RunningAWebapp Running a web application]
-  * [RunningAComponent Running a component]
+  * [RunningAModule Running a module]
   * [Releasing Releasing a version]
 
 === Best Practices ===

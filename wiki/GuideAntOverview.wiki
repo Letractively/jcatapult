@@ -8,11 +8,11 @@ This document covers the architecture of the JCatapult Ant build system and the 
 
 JCatapult uses Apache Ant because it is extremely flexible and doesn't force any restrictions that otherwise make development difficult. In addition, Apache Ant is the most widely used build system and therefore using it with JCatapult means that developers don't have to learn something new to get up and running.
 
-We considered using Maven, but JCatapult requires some heavy duty dependency management especially when working with JCatapult components and therefore we needed complete control of the dependency management tool. The developers at Inversoft (http://www.inversoft.com) provided JCatapult with access to the Savant dependency management tool source code and this partnership provides JCatapult with the tools it needed and the ability to change and add new features to Savant when necessary.
+We considered using Maven, but JCatapult requires some heavy duty dependency management especially when working with JCatapult modules and therefore we needed complete control of the dependency management tool. The developers at Inversoft (http://www.inversoft.com) provided JCatapult with access to the Savant dependency management tool source code and this partnership provides JCatapult with the tools it needed and the ability to change and add new features to Savant when necessary.
 
 = How it works =
 
-JCatapult Ant is merely a collection of plugins for Apache Ant. These plugins provide reusable functionality that is generally the same between all projects. However, each plugin provides the ability to be overridden and extended. 
+JCatapult Ant is merely a collection of plugins for Apache Ant. These plugins provide reusable functionality that is generally the same between all projects. However, each plugin provides the ability to be overridden and extended.
 
 == Plugins ==
 

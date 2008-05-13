@@ -15,15 +15,15 @@ The frameworks that JCatapult is currently constructed on top of are:
 || JPA via Hibernate || ORM || No ||
 || ACEGI || Security || No ||
 || JavaMail || Email || No ||
-|| FreeMarker || Email and componentization || No || 
+|| FreeMarker || Email and moduleization || No ||
 || SiteMesh || Template engine || No ||
 || Commons configuration || Configuration || Yes ||
 || Joda || Date time || Yes ||
 || JUnit || Unit testing || No ||
 
-= Components =
+= Modules =
 
-One of the major features of JCatapult is that it provides a component methodology that allows pieces of functionality to be written in separate projects and then incorporated into JCatapult web applications seamlessly. This component architecture allows components to define this types of objects:
+One of the major features of JCatapult is that it provides a module methodology that allows pieces of functionality to be written in separate projects and then incorporated into JCatapult web applications seamlessly. This module architecture allows modules to define this types of objects:
 
   * Entities
   * Actions (MVC/URL actions handlers)
@@ -32,9 +32,9 @@ One of the major features of JCatapult is that it provides a component methodolo
   * Static resources (CSS, HTML, images, JavaScript, etc)
   * Database migration scripts
 
-The beauty of this type of componentization is that it is very simple to define functionality and reuse it across multiple applications. 
+The beauty of this type of moduleization is that it is very simple to define functionality and reuse it across multiple applications.
 
-An example of a component might be a _user_ component. This component might provide these pieces of functionality:
+An example of a module might be a _user_ module. This module might provide these pieces of functionality:
 
   * User and contact information entity
   * User services for managing and manipulating the entities
@@ -44,9 +44,9 @@ An example of a component might be a _user_ component. This component might prov
   * AJAX action handlers for AJAX login and logout
   * Administration interface to managing users via CRUD operations (a search page, list page, add/edit form and delete page)
 
-This component can then be added to an existing web application project using a simple ant target and no additional configuration.
+This module can then be added to an existing web application project using a simple ant target and no additional configuration.
 
-Besides support for stand-alone components, JCatapult also support components which depend on other components. For example, there might be a news component that allows admins to add news to a website. This component might use the *User* class from the user component. JCatapult will handle this dependency and do all the work of database creation, migration, and dependency management.
+Besides support for stand-alone modules, JCatapult also support modules which depend on other modules. For example, there might be a news module that allows admins to add news to a website. This module might use the *User* class from the user module. JCatapult will handle this dependency and do all the work of database creation, migration, and dependency management.
 
 = Conventions =
 

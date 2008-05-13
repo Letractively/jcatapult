@@ -52,7 +52,7 @@ Here are some examples of how views are mapped to URLs (and vice-versa) by JCata
 || /user/list || WEB-INF/content/user/list.jsp ||
 || /water-products/speed-boat || WEB-INF/content/water-products/speed-boat.jsp ||
 
-= Webapp Views Without Actions = 
+= Webapp Views Without Actions =
 
 If you need to create a view that doesn't have an action behind it, you can accomplish this by simply creating a JSP or FTL (FreeMarker template) file in the correct location as described above. Here is an example of a JSP without an action:
 
@@ -73,7 +73,7 @@ ant app
 
 and open your browser to http://localhost:8080/hello-world you should see this JSP.
 
-*NOTE:* This doesn't work inside components. Component views have to have an action associated with them, even if the action is empty and does nothing.
+*NOTE:* This doesn't work inside modules. Module views have to have an action associated with them, even if the action is empty and does nothing.
 
 = Webapp Actions =
 

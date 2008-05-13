@@ -2,11 +2,11 @@
 
 = Database Management =
 
-JCatapult has a robust set of tools that allow you to manage project databases. Since JCatapult is also highly componentized, it also provides the ability to manage all of the tables and data required by components. This support is called the JCatapult Database Management system.
+JCatapult has a robust set of tools that allow you to manage project databases. Since JCatapult is also highly moduleized, it also provides the ability to manage all of the tables and data required by modules. This support is called the JCatapult Database Management system.
 
-During the course of development, components and web applications go through various stages with respect to the database. Like all other project assets, the database is a versioned resource that is used by the application. Therefore, it is important to be able to manage the database effectively as a versioned resource.
+During the course of development, modules and web applications go through various stages with respect to the database. Like all other project assets, the database is a versioned resource that is used by the application. Therefore, it is important to be able to manage the database effectively as a versioned resource.
 
-In order to understand how JCatapult allows you to accomplish this goal, we'll step through the standard life-cycle of a project starting with a web application. Later we will cover the same life-cycle for a component.
+In order to understand how JCatapult allows you to accomplish this goal, we'll step through the standard life-cycle of a project starting with a web application. Later we will cover the same life-cycle for a module.
 
 == Step 1: Project creation ==
 
@@ -15,7 +15,7 @@ The first step of any project is its creation. When JCatapult creates a project 
   * src/java/main/<your-package>/domain
   * src/db/main
 
-The first of these directories is where your projects entity classes are put. Entity classes are JPA annotated classes that map directly to database tables. 
+The first of these directories is where your projects entity classes are put. Entity classes are JPA annotated classes that map directly to database tables.
 
 The second of these directories is the location of the management scripts, which are used by JCatapult to version your databases.
 
@@ -60,7 +60,7 @@ ant create-test-database
 
 == Step 5: Seeding data ==
 
-Most applications will need some amount of initial data put into tables prior to the application being deployed. This also holds true in development. In order to seed the tables of your application, you need to create seed files. 
+Most applications will need some amount of initial data put into tables prior to the application being deployed. This also holds true in development. In order to seed the tables of your application, you need to create seed files.
 
 Seed files are placed into the _src/db/main/seed_ directory. The seed files themselves are versioned and must match the version of the project. This means that if the project's current version is 1.0, you should put all of the seed data for that version into a file named something like:
 
@@ -84,7 +84,7 @@ ant table-sql
 
 This command creates or overrides the file located at:
 
-{{{ 
+{{{
 src/db/main/base/tables.sql
 }}}
 
@@ -94,9 +94,9 @@ After you have created the _tables.sql_ file and completed the release of the pr
 
 === The headache ===
 
-One of the current, major headaches with JCatapult is how it uses Hibernate for script and database creation. As mentioned above, JCatapult provides the capability to add components to a project easily and these components will generally have entity classes of their own. In order to correctly add a component to a web application you will need to add the entity classes for the component to the _src/conf/main/META-INF/persistence.xml_ file. When you run the `ant tables-sql` command, Hibernate generates a SQL script that creates tables for all entity classes within your project domain and all component entities that are defined in the persistence.xml file.  What this means is that the _tables.sql_ file will contain entities that are not only defined in your project domain but also entities defined in component domains.
+One of the current, major headaches with JCatapult is how it uses Hibernate for script and database creation. As mentioned above, JCatapult provides the capability to add modules to a project easily and these modules will generally have entity classes of their own. In order to correctly add a module to a web application you will need to add the entity classes for the module to the _src/conf/main/META-INF/persistence.xml_ file. When you run the `ant tables-sql` command, Hibernate generates a SQL script that creates tables for all entity classes within your project domain and all module entities that are defined in the persistence.xml file.  What this means is that the _tables.sql_ file will contain entities that are not only defined in your project domain but also entities defined in module domains.
 
-Therefore, after executing `ant table-sql` you will need to edit the _tables.sql_ file that is created and remove all of the table definitions for any components your application uses.
+Therefore, after executing `ant table-sql` you will need to edit the _tables.sql_ file that is created and remove all of the table definitions for any modules your application uses.
 
 === Immutable files ===
 
@@ -123,7 +123,7 @@ JCatapult provides support for both of these activites. After the project's init
 
 === Step 7.1: Changing the database schema ===
 
-In order to change the database schema, you must first make the appropriate changes to the database itself. This is accomplished using JCatapult alter SQL files. These files reside in the _src/db/main/alter_ directory. 
+In order to change the database schema, you must first make the appropriate changes to the database itself. This is accomplished using JCatapult alter SQL files. These files reside in the _src/db/main/alter_ directory.
 
 Alter files follow the exact same naming format as seed files in that both are based on project verion. If the next released project version will be 1.1, you will need to create a SQL script named something like:
 
@@ -153,7 +153,7 @@ Okay, you've completed updating your database in the alter and seed SQL files an
 src
  |--db
      |--main
-         |--base 
+         |--base
          |   |--tables.sql
          |
          |--seed
@@ -182,7 +182,7 @@ When you execute the `ant create-main-database` command in development, Jcatapul
 
 == Step 8: Next release ==
 
-After you have finished updating all of the code, database scripts, and completed your testing, it will be time again to release the project to the production or testing environment. This process involves the execution of the Database Manager tool in order to migrate the database from one version to the next. This tool inspects the database to determine what version it is currently at and then figures out which files to execute in order to update it. This process uses a special table inside the database to determine the current version of the database. This table is called `JCATAPULT_ARTIFACT_VERSIONS` and exists specifically to store the version of the database schema for your project and all of the components your project uses.
+After you have finished updating all of the code, database scripts, and completed your testing, it will be time again to release the project to the production or testing environment. This process involves the execution of the Database Manager tool in order to migrate the database from one version to the next. This tool inspects the database to determine what version it is currently at and then figures out which files to execute in order to update it. This process uses a special table inside the database to determine the current version of the database. This table is called `JCATAPULT_ARTIFACT_VERSIONS` and exists specifically to store the version of the database schema for your project and all of the modules your project uses.
 
 Building on our example above, since we initially released version 1.0 of the application to production, the `JCATAPULT_ARTIFACT_VERSIONS` table would contain a row for the project and the 1.0 version as follows:
 
@@ -191,7 +191,7 @@ mysql> select * from JCATAPULT_ARTIFACT_VERSIONS;
 +------------------+---------------------------+
 | artifact_name    | version                   |
 +------------------+---------------------------+
-| foo-bar          | 1.0                       | 
+| foo-bar          | 1.0                       |
 +------------------+---------------------------+
 }}}
 

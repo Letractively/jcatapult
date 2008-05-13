@@ -3,5 +3,5 @@
 = Table of contents =
 
   * [DatabaseManagerGettingStarted Getting Started]
-  * [DatabaseManagerComponents Components]
+  * [DatabaseManagerModules Modules]
   * [DatabaseManagerDsl Database Manager DSL]

@@ -12,4 +12,4 @@ Developers usually fall into two camps, the test first or test second schools of
 
 = Project templates =
 
-All of the project templates that are used by JCatapult during [ProjectCreation project creation] use JUnit 4.4 and the web application and component templates by default include EasyMock 2.2. These are dependencies that are defined in the Savant project.xml file and can be modified or easily removed from there.
+All of the project templates that are used by JCatapult during [ProjectCreation project creation] use JUnit 4.4 and the web application and module templates by default include EasyMock 2.2. These are dependencies that are defined in the Savant project.xml file and can be modified or easily removed from there.
