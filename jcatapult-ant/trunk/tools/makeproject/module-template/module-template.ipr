@@ -813,7 +813,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/component-template.iml" filepath="$PROJECT_DIR$/component-template.iml" />
+      <module fileurl="file://$PROJECT_DIR$/module-template.iml" filepath="$PROJECT_DIR$/module-template.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
