@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<deploy xmlns="http://www.jcatapult.org/schemas/deploy"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.jcatapult.org/schemas/deploy deploy.xsd"
-        projectName="jcatapult-demo">
-  <server platform="unix" host="demo.jcatapult.org" description="Demo Server" username="jcatapult-demo" password="jcatapult-demo">
-    <environment type="staging">
-      <homeDir>/home/jcatapult-demo</homeDir>
-      <workDir>dev/work</workDir>
-      <fileDir>dev/files</fileDir>
-      <webDir>dev/apache-tomcat-5.5.26/webapps/ROOT</webDir>
-      <dbName>jcatapult-demo</dbName>
-      <dbUsername>jcatapult-demo</dbUsername>
-      <dbPassword>jcatapult-demo</dbPassword>
-    </environment>
-  </server>
+<deploy type="domain1">
+  <environment>
+    <type>staging</type>
+    <host>demo.jcatapult.org</host>
+    <host-username>demo</host-username>
+    <host-password>demo</host-password>
+    <db-name>demo</db-name>
+    <db-username>demo</db-username>
+    <db-password>demo</db-password>
+  </environment>
+<!--Deploy.scp(server, username, password, "tarball", workDir);-->
+<!--Deploy.scp(server, username, password, "scripts/*", workDir + "/scripts");-->
+<!--Deploy.sshExec(server, username, password, workdir + "/cleanOld.sh");-->
 </deploy>

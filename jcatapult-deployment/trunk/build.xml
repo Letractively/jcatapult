@@ -33,10 +33,6 @@
   <!-- IDE -->
   <import file="${plugin.dir}/jaxws/1.0/jaxws.xml"/>
 
-  <target name="xjc" description="Generates JAXB code from the deploy schema">
-    <xjc destdir="${dir.src.java.main}" schema="src/xsd/deploy.xsd" package="org.jcatapult.deployment.domain.jaxb"/>
-  </target>
-
   <macrodef name="jar-post">
     <sequential>
       <copy todir="target/dist/bin">
