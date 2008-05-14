@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
-    name="jcatapult-deployment"
-    group="jcatapult.org"
-    version="1.0-A1">
+         name="jcatapult-deployment"
+         group="jcatapult.org"
+         version="1.0-A1">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
@@ -12,18 +12,32 @@
   <!-- set to true if this libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="false"/>
 
+  <!--
+    google-code-build.properties must contain the following:
+      svn.username=<username>
+      svn.password=<password>
+  -->
+  <properties file="${user.home}/google-code-build.properties"/>
+
+  <!--
+    inversoft-org-release-build.properties must contain the following:
+      svn.release.username=<username>
+      svn.release.password=<password>
+  -->
+  <properties file="${user.home}/inversoft-org-release-build.properties"/>
+
   <dependencies id="dependencies.project">
     <artifactGroup type="run"/>
     <artifactGroup type="compile">
       <!-- di -->
-      <artifact group="google.com" project="google-guice" name="guice" version="1.0" type="jar"/>
+      <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
 
       <!-- jc core -->
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-M3" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-RC1" type="jar"/>
 
       <!-- cli -->
       <artifact group="commons.apache.org" project="commons-cli" name="commons-cli" version="1.1" type="jar"/>
-      <artifact group="sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
+      <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-run"/>
     <artifactGroup type="test-compile">
@@ -42,11 +56,11 @@
   -->
   <workflow id="workflow.project">
     <fetchWorkflow>
-      <process type="localCacheFetchProcess"/>
-      <process type="savantInternetFetchProcess" url="http://savant.inversoft.org/"/>
+      <process type="unifiedLocalCache"/>
+      <process type="unified" url="http://savant.inversoft.org/"/>
     </fetchWorkflow>
     <publishWorkflow>
-      <process type="localCachePublishProcess"/>
+      <process type="unifiedLocalCache"/>
     </publishWorkflow>
   </workflow>
 
@@ -60,7 +74,7 @@
     releases locally.
   -->
   <publishWorkflow id="workflow.publish.local">
-    <process type="localCachePublishProcess"/>
+    <process type="unifiedLocalCache"/>
   </publishWorkflow>
 
   <!--
@@ -71,6 +85,6 @@
     another project.
   -->
   <publishWorkflow id="workflow.publish.remote">
-    <!-- Please setup your publishing processes -->
+    <process type="unifiedSVN" repository="https://svn.inversoft.org/savant-deps" username="${svn.release.username}" password="${svn.release.password}"/>
   </publishWorkflow>
 </project>

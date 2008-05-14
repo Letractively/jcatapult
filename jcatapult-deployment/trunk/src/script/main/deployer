@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Build up the scaffolding classpath
+# Build up the deployer classpath
 dir=$(dirname $0)
 classpath=
 for f in $(ls $dir/../lib); do
