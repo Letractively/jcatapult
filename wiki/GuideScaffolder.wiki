@@ -1,32 +1,47 @@
-#summary Getting started with the jCatapult Scaffolder.
+﻿= JCatapult Scaffolder =
 
-= Introduction =
+The JCatapult Scaffolder is a scaffolding framework that uses Java's APT (annotation processing tool) and Groovy to provide an easy way to build new scaffolders that can generate code for an application. The scaffolder comes out of the box with a few scaffolders for you to use. If you are interested in building a custom scaffolder, consult the CustomScaffolder document.
 
-This documentation explains how to get the Scaffolder up and running in your project.  As of right now, these docs are written as of version 1.0-M1.  Until version 1.0 is released, assume these docs are milestone quality and are subject to change.
+= Setup =
 
-These docs also assume that you've gone through the [GettingStarted jCatapult Getting Started] documentation
+This document assumes you have completed the instructions in the GettingStarted document.
 
+The scaffolder comes with a Linux/Unix shell script and a Windows batch file that allow you to invoke the tool from the command-line. In order to use the tool, the scaffolder must be correctly installed and the executable must be in your path or must be executed using the fully-qualified location to the executable. The scaffolder installation is part of the JCatapult installation and is located in the _JCATAPULT_HOME/scaffolder_ directory. If you would like to add the scaffolder to your path, append this to your PATH environment variable:
 
-= Details =
-1.  Unfortunately, until we release a distribution of the jCatapult Scaffolder, you'll have to check out trunk from source control and build it locally.  Use the svn co script below as an example:
+*Windows*
 {{{
-svn co http://jcatapult.googlecode.com/svn/jcatapult-scaffolder/trunk jcatapult-scaffolder-trunk
+%JCATAPULT_HOME%\scaffolder\bin
 }}}
 
-2. Once you check out the scaffolder, change directory to the jcatapult scaffolder project root and build the jar.  This assumes that you've gone through the [GettingStarted jCatapult Getting Started] documentation so if you haven't done that yet please do.
+*Linux/Unix*
 {{{
-ant jar
+$JCATAPULT_HOME/scaffolder/bin
 }}}
 
-3. Now that the project is built, change directory to the project you want to run a scaffolder on and execute the following command:
-{{{
-<scaffolder check out directory>/target/dist/bin/scaffold help
-}}}
+= Invoking =
 
-For example, if I checked out the scaffolder to '~/dev/jcatapult/jcatapult-scaffolder-trunk/' I'd execute the following command inside my jcatapult project:
+To invoke the scaffolder, simply type:
 
 {{{
-~/dev/jcatapult/jcatapult-scaffolder-trunk/target/dist/bin/scaffold help
+scaffold help
 }}}
 
-If you followed the above steps correctly, this should successfully display the help screen of the jCatapult Scaffolder.
+This command will tell the scaffolder to display help about the installed scaffolders. If you want to invoke a particular scaffolder, simply pass the name of the scaffolder to the executable like this:
+
+{{{
+scaffold crud
+}}}
+
+= Interactive =
+
+The scaffolder tool is highly interactive for ease of use. Most of the scaffolders provide tab completion for classes and other information. Whenever you are asked a question by the scaffolder you can usually hit the tab key twice to get a list of some of the possible responses.
+
+= CRUD =
+
+The JCatapult scaffolder comes with a scaffolder for quickly creating CRUD operations. This scaffolder generates all of the necessary code, views, services and tests for a CRUD operation on a single JPA entity class. This scaffolder asks you for the name of the entity class, action package, service package and URI for the CRUD. After it has completed the application will contain everything needed to add, edit, delete and list the entity classes.
+
+This scaffolder generates JSPs for WebApps and FTLs for Modules.
+
+= Domain =
+
+The JCatapult scaffolder comes with a scaffolder for quickly creating JPA entity domain classes. This scaffolder creates the entity class with the correct annotations and also adds the class to either the persistence.xml or module.xml file (depending on whether or not the scaffolder is run on a WebApp or a Module).
