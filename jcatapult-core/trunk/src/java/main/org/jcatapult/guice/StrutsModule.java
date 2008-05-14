@@ -54,10 +54,19 @@ public class StrutsModule extends AbstractModule {
      * Configures the action name.
      */
     protected void configureActionName() {
-        // Bind the servlet context
         bind(String.class).annotatedWith(ActionName.class).toProvider(new Provider<String>() {
             public String get() {
                 DefaultActionInvocation invocation = (DefaultActionInvocation) ActionContext.getContext().getActionInvocation();
+
+                // if the invocation object is null and the action context name is
+                // null then return string 'null'. this should only ever be null in a unit test
+                if (invocation == null) {
+                    if (ActionContext.getContext().getName() == null) {
+                        return "null";
+                    } else {
+                        return ActionContext.getContext().getName();
+                    }
+                }
                 String namespace = invocation.getProxy().getNamespace();
                 String actionName = invocation.getProxy().getActionName();
                 if (actionName == null) {

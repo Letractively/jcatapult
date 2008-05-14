@@ -173,7 +173,9 @@ public abstract class WebBaseTest extends JPABaseTest {
             // Reset the value stack
             ValueStack stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
             stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
-            ActionContext.setContext(new ActionContext(stack.getContext()));
+            ActionContext ac = new ActionContext(stack.getContext());
+            ac.setName(getActionName());
+            ActionContext.setContext(ac);
 
             configurationManager = du.getConfigurationManager();
             configuration = configurationManager.getConfiguration();
@@ -182,6 +184,18 @@ public abstract class WebBaseTest extends JPABaseTest {
             ServletActionContext.setServletContext(servletContext);
             ServletActionContext.setRequest(request);
         }
+    }
+
+    /**
+     * Returns the action name. This defaults to the string 'null' but
+     * should be overridden by concrete base tests to return the name of the action
+     * being tested.  This method was not made abstract because I didn't want to assume that
+     * all unit tests sub-classing WebBaseTest would necessarily be testing an Action.
+     *
+     * @return the name of the action
+     */
+    protected String getActionName() {
+        return "null";
     }
 
     /**
