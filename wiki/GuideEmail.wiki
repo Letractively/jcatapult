@@ -1,2 +1,3 @@
-= JCatapult Email =
-The JCatapult Email library is an extension of the [http://java.sun.com/products/javamail/ JavaMail API] and offers convenience methods for making it easy to send emails from your web applications.
+﻿= JCatapult Email =
+
+JCatapult provides a set of services to easily create and send emails from an application. This library uses FreeMarker templates to create the emails and JavaMail to send the emails 
