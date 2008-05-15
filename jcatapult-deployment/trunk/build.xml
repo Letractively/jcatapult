@@ -38,7 +38,7 @@
       <copy todir="target/dist/bin">
         <fileset dir="src/script/main" includes="**/*"/>
       </copy>
-      <chmod perm="+x" file="target/dist/bin/deploy"/>
+      <chmod perm="+x" file="target/dist/bin/deployer"/>
 
       <copy todir="target/dist/lib">
         <fileset dir="target/jars" includes="**/*" excludes="**/*src*"/>

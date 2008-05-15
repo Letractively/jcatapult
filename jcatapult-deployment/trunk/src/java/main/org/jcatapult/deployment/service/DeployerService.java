@@ -1,6 +1,6 @@
 package org.jcatapult.deployment.service;
 
-import org.jcatapult.deployment.domain.DeployInfo;
+import org.jcatapult.deployment.domain.DeploymentInfo;
 
 import com.google.inject.ImplementedBy;
 
@@ -13,7 +13,7 @@ public interface DeployerService {
     /**
      * Called to deploy the resources to the remote server
      *
-     * @param deployInfo {@link DeployInfo}
+     * @param deploymentInfo {@link org.jcatapult.deployment.domain.DeploymentInfo}
      */
-    public void deploy(DeployInfo deployInfo);
+    public void deploy(DeploymentInfo deploymentInfo);
 }

@@ -9,7 +9,7 @@ import jline.Completor;
  * User: jhumphrey
  * Date: Mar 25, 2008
  */
-@ImplementedBy(JLineCLIService.class)
+@ImplementedBy(CLIServiceImpl.class)
 public interface CLIService {
 
     /**

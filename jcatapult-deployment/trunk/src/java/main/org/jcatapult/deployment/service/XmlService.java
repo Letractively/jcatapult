@@ -10,7 +10,6 @@ import com.google.inject.ImplementedBy;
  * User: jhumphrey
  * Date: Mar 25, 2008
  */
-@ImplementedBy(XmlServiceImpl.class)
 public interface XmlService<T> {
 
     /**
@@ -21,13 +20,4 @@ public interface XmlService<T> {
      * @throws XmlServiceException thrown if there's an error during the xml unmarshalling process
      */
     public T unmarshall(File file) throws XmlServiceException;
-
-    /**
-     * Marshall's type T into a File object
-     *
-     * @param type the type to marshall
-     * @param object the marshalled object
-     * @throws XmlServiceException thrown if there are errors during marshalling
-     */
-    public void marshall(T type, File object) throws XmlServiceException;
 }

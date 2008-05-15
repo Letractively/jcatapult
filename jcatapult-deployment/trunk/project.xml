@@ -35,9 +35,16 @@
       <!-- jc core -->
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-RC1" type="jar"/>
 
+      <!-- config -->
+      <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
+      <artifact group="commons.apache.org" project="commons-lang" name="commons-lang" version="2.3" type="jar"/>
+
       <!-- cli -->
       <artifact group="commons.apache.org" project="commons-cli" name="commons-cli" version="1.1" type="jar"/>
       <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
+
+      <!-- utils -->
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-run"/>
     <artifactGroup type="test-compile">
