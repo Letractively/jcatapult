@@ -1,7 +1,7 @@
 package org.jcatapult.deployment.service;
 
-import jline.Completor;
 import com.google.inject.ImplementedBy;
+import jline.Completor;
 
 /**
  * Interface service for command line interaction

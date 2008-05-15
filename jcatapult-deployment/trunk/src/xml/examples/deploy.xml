@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<deploy type="domain1">
-  <environment>
-    <type>staging</type>
-    <host>demo.jcatapult.org</host>
-    <host-username>demo</host-username>
-    <host-password>demo</host-password>
-    <db-name>demo</db-name>
-    <db-username>demo</db-username>
-    <db-password>demo</db-password>
-  </environment>
-<!--Deploy.scp(server, username, password, "tarball", workDir);-->
-<!--Deploy.scp(server, username, password, "scripts/*", workDir + "/scripts");-->
-<!--Deploy.sshExec(server, username, password, workdir + "/cleanOld.sh");-->
-</deploy>
+<deployment-properties>
+  <deploy domain="domain1">
+    <environment type="staging">
+      <host>staging.jcatapult.org</host>
+      <host-username>staging.host.username</host-username>
+      <host-password>staging.host.password</host-password>
+      <db-name>staging.db.name</db-name>
+      <db-username>staging.db.username</db-username>
+      <db-password>staging.db.password</db-password>
+    </environment>
+  </deploy>
+  <deploy domain="domain2">
+    <environment type="qa">
+      <host>qa.jcatapult.org</host>
+      <host-username>qa.host.username</host-username>
+      <host-password>qa.host.password</host-password>
+      <db-name>qa.db.name</db-name>
+      <db-username>qa.db.username</db-username>
+      <db-password>qa.db.password</db-password>
+    </environment>
+    <environment type="prod">
+      <host>prod.jcatapult.org</host>
+      <host-username>prod.host.username</host-username>
+      <host-password>prod.host.password</host-password>
+      <db-name>prod.db.name</db-name>
+      <db-username>prod.db.username</db-username>
+      <db-password>prod.db.password</db-password>
+    </environment>
+  </deploy>
+</deployment-properties>
