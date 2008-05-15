@@ -1,33 +1,29 @@
 package org.jcatapult.deployment;
 
-import java.io.IOException;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.TreeSet;
-import java.util.List;
 
-import org.jcatapult.deployment.service.XmlService;
-import org.jcatapult.deployment.service.XmlServiceException;
-import org.jcatapult.deployment.service.CLIService;
-import org.jcatapult.deployment.service.BetterSimpleCompletor;
-import org.jcatapult.deployment.service.DeployerService;
-import org.jcatapult.deployment.domain.jaxb.Deploy;
-import org.jcatapult.deployment.domain.jaxb.Server;
-import org.jcatapult.deployment.domain.jaxb.Environment;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.PosixParser;
+import org.apache.commons.configuration.Configuration;
 import org.jcatapult.deployment.domain.DeployInfo;
 import org.jcatapult.deployment.guice.DeploymentModule;
+import org.jcatapult.deployment.service.BetterSimpleCompletor;
+import org.jcatapult.deployment.service.CLIService;
+import org.jcatapult.deployment.service.DeployerService;
+import org.jcatapult.deployment.service.XmlService;
+import org.jcatapult.deployment.service.XmlServiceException;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
-import org.apache.commons.cli.HelpFormatter;
 
 /**
  * User: jhumphrey
@@ -36,7 +32,7 @@ import org.apache.commons.cli.HelpFormatter;
 public class DeploymentManager {
 
     Injector injector = Guice.createInjector(new DeploymentModule());
-    XmlService<Deploy> xmlService = injector.getInstance(Key.get(new TypeLiteral<XmlService<Deploy>>(){}));
+    XmlService<Configuration> xmlService = injector.getInstance(Key.get(new TypeLiteral<XmlService<Configuration>>(){}));
     CLIService cliService = injector.getInstance(CLIService.class);
     DeployerService deployerService = injector.getInstance(DeployerService.class);
     BetterSimpleCompletor completor = injector.getInstance(BetterSimpleCompletor.class);
@@ -96,16 +92,16 @@ public class DeploymentManager {
                 System.out.println(helpMsg);
             } else {
                 // get the available servers
-                Deploy deploy = xmlService.unmarshall(deployConfigFile);
-                List<Server> servers = deploy.getServer();
+                Configuration config = xmlService.unmarshall(deployConfigFile);
+//                List<Server> servers = deploy.getServer();
                 TreeSet<String> serverStrings = new TreeSet<String>();
-                for (Server server : servers) {
-                    serverStrings.add(server.getHost());
-                }
+//                for (Server server : servers) {
+//                    serverStrings.add(server.getHost());
+//                }
 
                 DeployInfo deployInfo = new DeployInfo();
                 deployInfo.setProjectXml(new File("project.xml").getAbsoluteFile());
-                deployInfo.setProjectName(deploy.getProjectName());
+//                deployInfo.setProjectName(deploy.getProjectName());
 
                 // set server strings into completor
                 completor.setCandidates(serverStrings);
@@ -117,18 +113,18 @@ public class DeploymentManager {
                 deployInfo.setServerHost(serverHost);
 
                 // get the available environments for the selected server
-                List<Environment> envs = null;
-                for (Server server : servers) {
-                    if (server.getHost().equals(serverHost)) {
-                        deployInfo.setServerUsername(server.getUsername());
-                        deployInfo.setServerPassword(server.getPassword());
-                        envs = server.getEnvironment();
-                    }
-                }
+//                List<Environment> envs = null;
+//                for (Server server : servers) {
+//                    if (server.getHost().equals(serverHost)) {
+//                        deployInfo.setServerUsername(server.getUsername());
+//                        deployInfo.setServerPassword(server.getPassword());
+//                        envs = server.getEnvironment();
+//                    }
+//                }
                 TreeSet<String> envStrings = new TreeSet<String>();
-                for (Environment env : envs) {
-                    envStrings.add(env.getType());
-                }
+//                for (Environment env : envs) {
+//                    envStrings.add(env.getType());
+//                }
 
                 // set environment strings into completor
                 completor.setCandidates(envStrings);
@@ -140,17 +136,17 @@ public class DeploymentManager {
                 deployInfo.setEnvType(envType);
 
                 // loop through environments to get match against chosen environment type
-                for (Environment env : envs) {
-                    if (env.getType().equals(envType)) {
-                        deployInfo.setHomeDir(env.getHomeDir());
-                        deployInfo.setWorkDir(env.getWorkDir());
-                        deployInfo.setFileDir(env.getFileDir());
-                        deployInfo.setWebDir(env.getWebDir());
-                        deployInfo.setDbName(env.getDbName());
-                        deployInfo.setDbPassword(env.getDbPassword());
-                        deployInfo.setDbUsername(env.getDbUsername());
-                    }
-                }
+//                for (Environment env : envs) {
+//                    if (env.getType().equals(envType)) {
+//                        deployInfo.setHomeDir(env.getHomeDir());
+//                        deployInfo.setWorkDir(env.getWorkDir());
+//                        deployInfo.setFileDir(env.getFileDir());
+//                        deployInfo.setWebDir(env.getWebDir());
+//                        deployInfo.setDbName(env.getDbName());
+//                        deployInfo.setDbPassword(env.getDbPassword());
+//                        deployInfo.setDbUsername(env.getDbUsername());
+//                    }
+//                }
 
                 // get versions
                 File deployArchive = new File(System.getProperty("user.home") + "/.jcatapult/deploy-archive");

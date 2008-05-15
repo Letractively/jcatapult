@@ -2,9 +2,9 @@ package org.jcatapult.deployment.service;
 
 import java.io.IOException;
 
+import jline.ANSIBuffer;
 import jline.Completor;
 import jline.ConsoleReader;
-import jline.ANSIBuffer;
 
 /**
  * User: jhumphrey

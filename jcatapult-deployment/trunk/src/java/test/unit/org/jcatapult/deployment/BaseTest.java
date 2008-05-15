@@ -1,12 +1,10 @@
 package org.jcatapult.deployment;
 
-import org.jcatapult.test.JCatapultBaseTest;
 import org.junit.Before;
 import org.junit.Ignore;
 
-import com.google.inject.Injector;
-import com.google.inject.Module;
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 /**
  * User: jhumphrey
