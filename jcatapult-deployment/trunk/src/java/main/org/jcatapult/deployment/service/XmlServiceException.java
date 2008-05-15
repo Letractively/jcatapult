@@ -1,6 +1,8 @@
 package org.jcatapult.deployment.service;
 
 /**
+ * Thrown from the XmlService if there's an error during xml unmarshalling
+ *
  * User: jhumphrey
  * Date: Mar 25, 2008
  */

@@ -7,11 +7,13 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
+ * Base test that sets up guice for dependency injection capability in concrete unit tests.
+ *
  * User: jhumphrey
  * Date: Mar 25, 2008
  */
 @Ignore
-public class BaseTest {
+public class DeploymentBaseTest {
     protected Injector injector;
 
         /**

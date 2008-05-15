@@ -10,7 +10,7 @@ import jline.ConsoleReader;
  * User: jhumphrey
  * Date: Mar 25, 2008
  */
-public class JLineCLIService implements CLIService {
+public class CLIServiceImpl implements CLIService {
 
     /**
      * Continues to ask the user a question until it gets a good answer. This uses the JLine command line

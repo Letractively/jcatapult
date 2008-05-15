@@ -1,6 +1,6 @@
 package org.jcatapult.deployment.service;
 
-import org.jcatapult.deployment.domain.DeployInfo;
+import org.jcatapult.deployment.domain.DeploymentInfo;
 
 /**
  * User: jhumphrey
@@ -10,14 +10,13 @@ public class DeployerServiceImpl implements DeployerService {
     /**
      * {@inheritDoc}
      */
-    public void deploy(DeployInfo deployInfo) {
-        printHeader(deployInfo);
+    public void deploy(DeploymentInfo deploymentInfo) {
+        printHeader(deploymentInfo);
 
     }
 
-    private void printHeader(DeployInfo deployInfo) {
-        System.out.println("Deploying resource [" + deployInfo.getReleaseVersion() + "] with the following information:");
-        System.out.println("- Server Host:" + deployInfo.getServerHost());
-        System.out.println("- Home Dir:" + deployInfo.getHomeDir());
+    private void printHeader(DeploymentInfo deploymentInfo) {
+        System.out.println("Deploying resource version [" + deploymentInfo.getDeployVersion() + "] with the following information:");
+        System.out.println("- Server Host:" + deploymentInfo.getEnv().getHost());
     }
 }
