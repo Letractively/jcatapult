@@ -101,6 +101,7 @@ public class FreeMarkerEmailService implements EmailService {
     private EmailTransportService emailTransportService;
     private Configuration configuration;
     private freemarker.template.Configuration freeMarkerConfiguration = new freemarker.template.Configuration();
+    private String templatesLocation;
 
     /**
      * Constructs a FreeMarkerEmailService. The transport given is used to send the emails and the
@@ -122,7 +123,7 @@ public class FreeMarkerEmailService implements EmailService {
         this.configuration = configuration;
 
         // Setup FreeMarker
-        String templatesLocation = configuration.getString("jcatapult.email.templates.location");
+        templatesLocation = configuration.getString("jcatapult.email.templates.location");
         if (templatesLocation == null) {
             templatesLocation = defaultLocation;
         }
@@ -218,6 +219,12 @@ public class FreeMarkerEmailService implements EmailService {
             email.setHtml(html);
         }
 
+        if (text == null && html == null) {
+            throw new EmailException("Missing email template for [" + template +
+                "]. Either add a file named [" + template + "-text.ftl] or a file named [" +
+                template + "-html.ftl] to the [" + templatesLocation + "] directory.");
+        }
+
         return emailTransportService.sendEmail(email);
     }
 
@@ -254,5 +261,4 @@ public class FreeMarkerEmailService implements EmailService {
             throw new EmailException("Unable to process FreeMarker template [" + templateName + "]", e);
         }
     }
-
 }
