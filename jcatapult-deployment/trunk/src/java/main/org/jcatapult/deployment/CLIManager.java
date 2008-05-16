@@ -101,8 +101,8 @@ public class CLIManager {
         }
         completor.setCandidates(versionStrings);
 
-        return cliService.ask("Please select the version to deploy:", "Deploy version set to: ",
-            "Invalid deploy version.  Use tab to view available versions",
+        return cliService.ask("Please select the jar version to deploy:", "Deploy jar version set to: ",
+            "Invalid deploy jar version.  Use tab to view available versions",
             versionStrings.first(), completor);
     }
 

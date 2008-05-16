@@ -18,7 +18,7 @@ public class ProjectXmlService extends CommonsConfigurationXmlService<Project> {
 
         Project project = new Project();
         project.setName(getConfig().getString("[@name]"));
-        project.setDir(new File("."));
+        project.setDir(file.getParentFile());
 
         return project;
     }

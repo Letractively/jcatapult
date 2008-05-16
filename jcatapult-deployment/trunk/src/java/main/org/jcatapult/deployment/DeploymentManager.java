@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
@@ -25,13 +24,14 @@ import groovy.lang.GroovyClassLoader;
 import net.java.lang.StringTools;
 
 /**
- * <p>Main entry point to the JCatapult Deployment framework.  The main method must be provided
- * 1 argument, which is the location of the deploy.xml file.
+ * <p>Main entry point to the JCatapult Deployment framework.
  *
- * The JCatapult distribution ships with a deployer installation that provides a deploy script for convenience.
- * The deploy script assumes that your deploy.xml file is located in the following project context path:</p>
+ * <p>Usage:</p>
  *
- * <p>/deploy/remote/deploy.xml</p>
+ * DeploymentManager project-dir-path deploy-config-path
+ *
+ * <p>The JCatapult distribution ships with a deployer installation that provides a deploy script for convenience.
+ * The deploy script assumes that you are executing the deployer from the root of a jcatapult project:</p>
  *
  * User: jhumphrey
  * Date: Mar 25, 2008
@@ -60,17 +60,20 @@ public class DeploymentManager {
 
         System.out.println("Executing JCatapult Deployment Manager");
 
-        if (! (JCATAPULT_CACHE_DIR.exists() && JCATAPULT_CACHE_DIR.isDirectory()) ) {
+        // check that deploy cache dir exists
+        if (!(JCATAPULT_CACHE_DIR.exists() && JCATAPULT_CACHE_DIR.isDirectory())) {
             System.err.println("The JCatapult cache dir does not exist [" + JCATAPULT_CACHE_DIR.getAbsolutePath() + "]");
             System.exit(1);
         }
 
-        if (! (DEPLOYMENT_ROOT_DIR.exists() && DEPLOYMENT_ROOT_DIR.isDirectory()) ) {
+        // check that deployment root dir exists
+        if (!(DEPLOYMENT_ROOT_DIR.exists() && DEPLOYMENT_ROOT_DIR.isDirectory())) {
             System.err.println("The deployment root dir does not exist [" + DEPLOYMENT_ROOT_DIR.getAbsolutePath() + "]");
             System.exit(1);
         }
 
-        if (! (DEPLOY_ARCHIVE_DIR.exists() && DEPLOY_ARCHIVE_DIR.isDirectory()) ) {
+        // check that the deploy archive exist
+        if (!(DEPLOY_ARCHIVE_DIR.exists() && DEPLOY_ARCHIVE_DIR.isDirectory())) {
             System.err.println("The deploy archive dir does not exist [" + DEPLOY_ARCHIVE_DIR.getAbsolutePath() +
                 "]. Please run a release prior to running the deployer");
             System.exit(1);
@@ -80,7 +83,6 @@ public class DeploymentManager {
             new DeploymentManager().manage(args);
         } catch (DeploymentException e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
             System.exit(1);
         }
     }
@@ -92,10 +94,6 @@ public class DeploymentManager {
      * @throws DeploymentException Runtime exception thrown if there's an issue during deployment.
      */
     private void manage(String... args) throws DeploymentException {
-        String helpMsg = "Usage: DeploymentManager <deploy xml file path>";
-
-        // get the file path of the local project deploy xml file
-        File deployXmlFile = new File(args[0]);
 
         // configure command line options.  empty for now
         Options options = new Options();
@@ -111,62 +109,101 @@ public class DeploymentManager {
         }
 
         String[] commands = line.getArgs();
-        if (commands.length == 0 && !commands[0].equals("help")) {
-            HelpFormatter help = new HelpFormatter();
-            help.printHelp("Usage: deploy <path to deploy config file>", options);
-            System.exit(1);
-        } else if (commands.length == 1) {
-            if (commands[0].equals("help")) {
-                System.out.println(helpMsg);
-            } else {
-                // get the deployment properties
-                DeploymentProperties props;
-                try {
-                    props = deployXmlService.unmarshall(deployXmlFile);
-                } catch (XmlServiceException e) {
-                    throw new DeploymentException(e);
-                }
+        if (commands.length == 0 || (commands[0].equals("help") || commands[0].equals("usage")) || commands.length > 2) {
+            System.out.println(getHelpMsg());
+        } else if (commands.length == 2) {
 
-                // validate the deploy props.  throw runtime exception if there are validation errors
-                String deployErrors = deployValidationService.validate(props);
-                if (!StringTools.isEmpty(deployErrors)) {
-                    throw new DeploymentException(deployErrors);
-                }
+            // Create a project bean and store the name of the project and the version that is getting deployed into it
+            Project project = unmarshallProjectXml(commands[0]);
 
-                // Create a project bean and store the name of the project and the version that is getting deployed into it
-                Project project;
-                try {
-                    project = projectXmlService.unmarshall(new File("project.xml").getAbsoluteFile());
-                } catch (XmlServiceException e) {
-                    throw new DeploymentException(e);
-                }
+            // get the deployment properties
+            DeploymentProperties props = unmarshallDeploymentsProps(commands[1]);
 
-                // validate project bean
-                String projectErrors = projectValidationService.validate(project);
-                if (!StringTools.isEmpty(projectErrors)) {
-                    throw new DeploymentException(projectErrors);
-                }
+            // query user for input
+            DeploymentInfo deploymentInfo = cliManager.manage(props, project);
 
-                // query user for input
-                DeploymentInfo deploymentInfo = cliManager.manage(props, project);
-
-                // validate that the deployment domain dir exists
-                File deploymentDomainDir = new File(DEPLOYMENT_ROOT_DIR, deploymentInfo.getDeployDomain());
-                if (! (deploymentDomainDir.exists() && deploymentDomainDir.isDirectory()) ) {
-                    throw new DeploymentException("The deployment domain dir does not exist [" + deploymentDomainDir + "]");
-                }
-
-                // set dirs
-                deploymentInfo.setDeploymentDomainDir(deploymentDomainDir);
-                deploymentInfo.setJcatapultCacheDir(JCATAPULT_CACHE_DIR);
-                deploymentInfo.setDeployArchiveDir(DEPLOY_ARCHIVE_DIR);
-
-
-                // load the deploy
-                Deployer deployer = loadDeployer(deploymentInfo.getDeployDomain());
-                deployer.deploy(deploymentInfo);
+            // validate that the deployment domain dir exists
+            File deploymentDomainDir = new File(DEPLOYMENT_ROOT_DIR, deploymentInfo.getDeployDomain());
+            if (!(deploymentDomainDir.exists() && deploymentDomainDir.isDirectory())) {
+                throw new DeploymentException("The deployment domain dir does not exist [" + deploymentDomainDir + "]");
             }
+
+            // set dirs
+            deploymentInfo.setDeploymentDomainDir(deploymentDomainDir);
+            deploymentInfo.setJcatapultCacheDir(JCATAPULT_CACHE_DIR);
+            deploymentInfo.setDeployArchiveDir(DEPLOY_ARCHIVE_DIR);
+
+            // load the deploy
+            Deployer deployer = loadDeployer(deploymentInfo.getDeployDomain());
+            deployer.deploy(deploymentInfo);
         }
+    }
+
+    /**
+     * Helper method to build the help msg
+     *
+     * @return the help msg
+     */
+    private String getHelpMsg() {
+        return "\nDeployer Usage: DeploymentManager [help|usage] <project dir path> <deploy xml path>\n\n" +
+            "If you are running the deployer from the jcatapult installation then execute the following command from the shell:\n\n" +
+            "Windows:\n" +
+            "%JCATAPULT_HOME%\\deployer\\bin\\deploy.bat [help|usage]\n\n" +
+            "Linux/Unix/Mac:\n" +
+            "$JCATAPULT_HOME/deployer/bin/deploy [help|usage]";
+    }
+
+    /**
+     * Helper method for unmarshalling the project.xml file
+     *
+     * @param projectDirPath the path to the project
+     * @return {@link org.jcatapult.deployment.domain.Project} bean
+     */
+    private Project unmarshallProjectXml(String projectDirPath) {
+        Project project;
+        try {
+            File projectDir = new File(projectDirPath).getAbsoluteFile();
+            if (!(projectDir.exists() && projectDir.isDirectory())) {
+                throw new DeploymentException("The project directory path does not exist [" + projectDir.getAbsolutePath() + "]");
+            }
+            File projectXml = new File(projectDir, "project.xml");
+            if (!(projectXml.exists() && projectXml.isFile())) {
+                throw new DeploymentException("Could not locate project.xml file located at [" + projectXml.getAbsolutePath() + "]");
+            }
+            project = projectXmlService.unmarshall(projectXml);
+        } catch (XmlServiceException e) {
+            throw new DeploymentException(e);
+        }
+
+        // validate project bean
+        String projectErrors = projectValidationService.validate(project);
+        if (!StringTools.isEmpty(projectErrors)) {
+            throw new DeploymentException(projectErrors);
+        }
+
+        return project;
+    }
+
+    private DeploymentProperties unmarshallDeploymentsProps(String deployXmlPath) {
+        DeploymentProperties props;
+        try {
+            File deployXmlFile = new File(deployXmlPath);
+            if (!(deployXmlFile.exists() && deployXmlFile.isFile())) {
+                throw new DeploymentException("The deploy xml configuration file does not yet exist at the path specified [" +
+                    deployXmlFile.getAbsolutePath() + "]");
+            }
+            props = deployXmlService.unmarshall(deployXmlFile);
+        } catch (XmlServiceException e) {
+            throw new DeploymentException(e);
+        }
+
+        // validate the deploy props.  throw runtime exception if there are validation errors
+        String deployErrors = deployValidationService.validate(props);
+        if (!StringTools.isEmpty(deployErrors)) {
+            throw new DeploymentException(deployErrors);
+        }
+
+        return props;
     }
 
     /**
