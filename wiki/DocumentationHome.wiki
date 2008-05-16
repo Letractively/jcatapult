@@ -32,6 +32,7 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [GuideSecurity Security]
 
   * [GuideScaffolder Scaffolder]
+  * [GuideDeployer Deployer]
 
 = Tutorials =
 
