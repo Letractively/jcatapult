@@ -125,6 +125,8 @@ You will be prompted for the following information:
 
     <delete dir="${user.home}/.jcatapult/project-svn-import"/>
     <delete dir="${svn-import.project.path}/target"/>
+    <delete dir="${svn-import.project.path}/web/WEB-INF/lib"/>
+    <delete dir="${svn-import.project.path}/web/WEB-INF/classes"/>
     <delete>
       <fileset dir="${svn-import.project.path}" includes="*.iws"/>
     </delete>
