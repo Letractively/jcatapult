@@ -197,7 +197,7 @@ public class JavaMailEmailTransportService implements EmailTransportService {
                 message.addRecipient(Message.RecipientType.BCC, new InternetAddress(bcc.getAddress(), bcc.getDisplay(), "UTF-8"));
             }
 
-            if (message.getAllRecipients().length == 0) {
+            if (message.getAllRecipients() == null || message.getAllRecipients().length == 0) {
                 throw new JCatapultEmailException("email message must contain at least one recipient");
             }
 
