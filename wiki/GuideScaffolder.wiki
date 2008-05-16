@@ -1,6 +1,6 @@
 ﻿= JCatapult Scaffolder =
 
-The JCatapult Scaffolder is a scaffolding framework that uses Java's APT (annotation processing tool) and Groovy to provide an easy way to build new scaffolders that can generate code for an application. The scaffolder comes out of the box with a few scaffolders for you to use. If you are interested in building a custom scaffolder, consult the ScaffolderCustomScaffolder document.
+The JCatapult Scaffolder is a scaffolding framework that uses Java's APT (annotation processing tool) and Groovy to provide an easy way to build new scaffolders that can generate code for an application. The scaffolder comes out of the box with a few scaffolders for you to use. If you are interested in building a custom scaffolder, consult the [ScaffolderCustomScaffolder Custom Scaffolder] document.
 
 = Setup =
 
