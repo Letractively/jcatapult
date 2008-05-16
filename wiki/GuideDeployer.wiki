@@ -28,8 +28,10 @@ deploy help
 
 This command will tell the deployer to display the help screen.
 
+Both the batch and shell scripts assume that you are executing them from within your jcatapult project root directory.  If you do not execute them from within your jcatapult project root, then you will be prompted by an error screen informing you of such.
+
 = Configuration =
-The deployer is configured via an xml file and, by convention (if you're running the deployer via the scripts provided in the jcatapult distribution) expects the path of this configuration file to be relative to the project root at the following location:
+The deployer is configured via an xml file and, by convention, script execution expects the path of this configuration file to be relative to the project root at the following location:
 
 {{{
 deploy/remote/deploy.xml
