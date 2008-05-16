@@ -1,12 +1,12 @@
 = JCatapult Deployment Manager =
 
-As of 1.0-RC1, JCatapult ships with the JCatapult Deployment Manager (`deployer` for short), which is a deployment framework that uses Apache Commons Configuration, Java Secure CHannel (JSCH), and Groovy to provide an easy way to deploy webapps to remote environments.
+As of 1.0-RC2, JCatapult ships with the JCatapult Deployment Manager (`deployer` for short), which is a deployment framework that uses Apache Commons Configuration, Java Secure CHannel (JSCH), and Groovy to provide an easy way to deploy webapps to remote environments.
 
 = Setup =
 
-This document assumes you have completed the instructions in the GettingStarted document.
+(This document assumes you have completed the instructions in the GettingStarted document.)
 
-The deployer comes with a Linux/Unix/Mac shell script and a Windows batch file that allow you to invoke the tool from the command-line. In order to use the tool, the deployer must be correctly installed and the executable must be in your path or must be executed using the fully-qualified location to the executable. The deployer installation is part of the JCatapult installation and is located in the _JCATAPULT_HOME/deployer_ directory. If you would like to add the deployer to your path, append this to your PATH environment variable:
+The deployer comes with a Linux/Unix/Mac shell script and a Windows batch file that provides the capability to invoke the tool from the command-line. In order to use the tool, the deployer must be correctly installed and the executable must be in your path or must be executed using the fully-qualified location to the executable. The deployer installation is part of the JCatapult distribution and is located in the _JCATAPULT_HOME/deployer_ directory. If you would like to add the deployer to your path, append this to your PATH environment variable:
 
 *Windows*
 {{{
@@ -23,10 +23,17 @@ $JCATAPULT_HOME/deployer/bin
 To invoke the deployer, simply type:
 
 {{{
-scaffold help
+deploy help
 }}}
 
 This command will tell the deployer to display the help screen.
+
+= Configuration =
+The deployer is configured via an xml file and, by convention (if you're running the deployer via the scripts provided in the jcatapult distribution) expects the path of this configuration file to be relative to the project root at the following location:
+
+{{{
+deploy/remote/deploy.xml
+}}}
 
 = Interactive =
 
