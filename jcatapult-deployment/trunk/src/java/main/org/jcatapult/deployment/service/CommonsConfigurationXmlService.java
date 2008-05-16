@@ -1,13 +1,9 @@
 package org.jcatapult.deployment.service;
 
 import java.io.File;
-import java.util.List;
 
-import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.jcatapult.deployment.domain.Project;
-import org.jcatapult.deployment.domain.Deploy;
-import org.jcatapult.deployment.domain.Environment;
+import org.apache.commons.configuration.XMLConfiguration;
 
 /**
  * Abstract interface for processing xml documents using apache commons configuration

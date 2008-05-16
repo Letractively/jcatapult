@@ -2,8 +2,6 @@ package org.jcatapult.deployment.service;
 
 import java.io.File;
 
-import com.google.inject.ImplementedBy;
-
 /**
  * Interface service for unmarshalling xml
  *

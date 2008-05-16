@@ -5,6 +5,7 @@ import java.io.FilenameFilter;
 import java.util.List;
 import java.util.TreeSet;
 
+import static org.jcatapult.deployment.DeploymentManager.DEPLOY_ARCHIVE_DIR;
 import org.jcatapult.deployment.domain.Deploy;
 import org.jcatapult.deployment.domain.DeploymentInfo;
 import org.jcatapult.deployment.domain.DeploymentProperties;
@@ -14,10 +15,8 @@ import org.jcatapult.deployment.service.BetterSimpleCompletor;
 import org.jcatapult.deployment.service.CLIService;
 import org.jcatapult.deployment.service.ProjectXmlService;
 import org.jcatapult.deployment.service.ValidationService;
-import org.jcatapult.deployment.service.XmlServiceException;
 
 import com.google.inject.Inject;
-import net.java.lang.StringTools;
 
 /**
  * User: jhumphrey
@@ -27,7 +26,6 @@ public class CLIManager {
 
     private BetterSimpleCompletor completor;
     private CLIService cliService;
-    private ProjectXmlService projectXmlService;
     ValidationService<Project> validationService;
 
     @Inject
@@ -35,10 +33,17 @@ public class CLIManager {
         ValidationService<Project> validationService) {
         this.completor = completor;
         this.cliService = cliService;
-        this.projectXmlService = projectXmlService;
         this.validationService = validationService;
     }
 
+    /**
+     * Manages collecting data from user input to populate the {@link org.jcatapult.deployment.domain.DeploymentInfo} bean
+     *
+     * @param props the {@link org.jcatapult.deployment.domain.DeploymentProperties} bean
+     * @param project the {@link org.jcatapult.deployment.domain.Project} bean
+     * @return returns a {@link org.jcatapult.deployment.domain.DeploymentInfo} bean, which contains the information
+     * for performing artifact deployment
+     */
     public DeploymentInfo manage(DeploymentProperties props, Project project) {
 
         // deployment info stores all the data necessary to process the deployment
@@ -48,7 +53,6 @@ public class CLIManager {
         Deploy deploy = getDeploy(props.getDeploys());
         deploymentInfo.setDeployDomain(deploy.getDomain());
 
-
         // get the deploy environment and set it into the deployment info
         Environment env = getDeployEnv(deploy.getEnvs());
         deploymentInfo.setEnv(env);
@@ -56,36 +60,38 @@ public class CLIManager {
         // set the project into the deployment info
         deploymentInfo.setProject(project);
 
-        // get the version to be deployed and set it into the deployment info
-        String deployVersion = getDeployVersion(project.getName());
-        deploymentInfo.setDeployVersion(deployVersion);
+        // get the jar to be deployed
+        String deployJar = getDeployJar(project.getName());
+        deploymentInfo.setDeployJar(deployJar);
 
         return deploymentInfo;
     }
 
-    private String getDeployVersion(final String projectName) {
+    /**
+     * queries the user to provide the jar to deploy
+     *
+     * @param projectName the project name
+     * @return returns the jar to deploy
+     */
+    private String getDeployJar(final String projectName) {
 
         // load from deploy archive
-        File deployArchive = new File(System.getProperty("user.home") + "/.jcatapult/deploy-archive");
         File[] releaseFiles = null;
-        if (deployArchive.exists() && deployArchive.isDirectory()) {
-            releaseFiles = deployArchive.listFiles(new FilenameFilter() {
+        releaseFiles = DEPLOY_ARCHIVE_DIR.listFiles(new FilenameFilter() {
 
-                public boolean accept(File dir, String filename) {
-                    boolean accept = false;
-                    if (filename.contains(projectName)) {
-                        accept = true;
-                    }
-                    return accept;
+            public boolean accept(File dir, String filename) {
+                boolean accept = false;
+                if (filename.contains(projectName)) {
+                    accept = true;
                 }
-            });
-        }
+                return accept;
+            }
+        });
 
         // if no release versions exists then exit
         if (releaseFiles == null || releaseFiles.length == 0) {
-            System.out.println("No release versions exists within [" + deployArchive.getAbsolutePath() +
+            throw new DeploymentException("No release versions exists within [" + DEPLOY_ARCHIVE_DIR.getAbsolutePath() +
                 "] for project [" + projectName + "].  You must run a release prior to running the deployer.");
-            System.exit(1);
         }
 
         // set version strings into completor
@@ -95,7 +101,7 @@ public class CLIManager {
         }
         completor.setCandidates(versionStrings);
 
-        return cliService.ask("Please select the version to deploy:", "deploy version set to: ",
+        return cliService.ask("Please select the version to deploy:", "Deploy version set to: ",
             "Invalid deploy version.  Use tab to view available versions",
             versionStrings.first(), completor);
     }
@@ -112,7 +118,7 @@ public class CLIManager {
 
         // this block populates a tree set to be used for tab completion in the cli service.
         // this only gets interpreted if there are more than one deploy descriptor defined
-        String msgFrag = "Remote deploying to ";
+        String msgFrag = "Deploying to domain: ";
         if (deploys.size() > 1) {
             TreeSet<String> domains = new TreeSet<String>();
             for (Deploy deploy : deploys) {
@@ -150,7 +156,7 @@ public class CLIManager {
 
         // this block populates a tree set to be used for tab completion in the cli service.
         // this only gets interpreted if there are more than one environment descriptor defined
-        String msgFrag = "Remote deploying to environment ";
+        String msgFrag = "Deploying to environment: ";
         if (envs.size() > 1) {
             TreeSet<String> envTypes = new TreeSet<String>();
             for (Environment env : envs) {

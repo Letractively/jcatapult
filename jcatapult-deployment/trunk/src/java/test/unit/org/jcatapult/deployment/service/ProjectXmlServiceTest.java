@@ -2,8 +2,8 @@ package org.jcatapult.deployment.service;
 
 import java.io.File;
 
-import org.jcatapult.deployment.domain.Project;
 import org.jcatapult.deployment.DeploymentBaseTest;
+import org.jcatapult.deployment.domain.Project;
 import org.junit.Assert;
 import org.junit.Test;
 

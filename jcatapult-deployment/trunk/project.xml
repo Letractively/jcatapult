@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-deployment"
          group="jcatapult.org"
-         version="1.0-A1">
+         version="1.0-RC2">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
@@ -32,6 +32,9 @@
       <!-- di -->
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
 
+      <!-- groovy -->
+      <artifact group="groovy.codehaus.org" project="groovy" name="groovy-all" version="1.5.4" type="jar"/>
+
       <!-- jc core -->
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-RC1" type="jar"/>
 
@@ -45,6 +48,9 @@
 
       <!-- utils -->
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
+
+      <!-- jsch -->
+      <artifact group="jsch.jcraft.com" project="jsch" name="jsch" version="0.1.31" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-run"/>
     <artifactGroup type="test-compile">

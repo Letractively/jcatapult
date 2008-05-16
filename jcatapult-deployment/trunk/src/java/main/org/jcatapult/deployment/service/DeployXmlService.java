@@ -3,8 +3,6 @@ package org.jcatapult.deployment.service;
 import java.io.File;
 import java.util.List;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.XMLConfiguration;
 import org.jcatapult.deployment.domain.Deploy;
 import org.jcatapult.deployment.domain.DeploymentProperties;
 import org.jcatapult.deployment.domain.Environment;
