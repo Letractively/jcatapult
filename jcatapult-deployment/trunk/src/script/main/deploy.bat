@@ -14,9 +14,9 @@ for %%f in (%DIR%..\lib\*.jar) do set cp=!cp!;%%f
 endlocal & set RUN_CLASSPATH=%cp%
 :: echo deployer classpath is %RUN_CLASSPATH%
 
-set deployXml=deploy\remote\deploy.xml
+set deployXml=
 
 ::
 :: Execute the deployer
 ::
-java -cp "%JAVA_HOME%\lib\tools.jar;%RUN_CLASSPATH%" org.jcatapult.deployment.DeploymentManager %deployXml%
+java -cp "%JAVA_HOME%\lib\tools.jar;%RUN_CLASSPATH%" org.jcatapult.deployment.DeploymentManager %1 .\ deploy\remote\deploy.xml

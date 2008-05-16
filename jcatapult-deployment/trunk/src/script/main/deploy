@@ -7,6 +7,4 @@ for f in $(ls $dir/../lib); do
   classpath=$dir/../lib/$f:$classpath
 done
 
-deployXml=deploy/remote/deploy.xml
-
-java -cp $classpath org.jcatapult.deployment.DeploymentManager $deployXml
+java -cp $classpath org.jcatapult.deployment.DeploymentManager $1 ./ deploy/remote/deploy.xml
