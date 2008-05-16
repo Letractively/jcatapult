@@ -1,6 +1,14 @@
 = JCatapult Deployment Manager =
 
-As of 1.0-RC2, JCatapult ships with the JCatapult Deployment Manager (`deployer` for short), which is a deployment framework that uses Apache Commons Configuration, Java Secure CHannel (JSCH), and Groovy to provide an easy way to deploy webapps to remote environments.
+As of 1.0-RC2, JCatapult ships with the JCatapult Deployment Manager (`deployer` for short), which is a deployment framework that uses Apache Commons Configuration, Java Secure CHannel (JSCH), and Groovy to provide an easy way to deploy webapps to remote servers.
+
+To understand the deployer better, there are 2 main concepts that you should be familiar with:
+
+  * domain
+  * environment
+
+= Domain =
+The domain is intended to represent a server or group of servers where there are one or more environments that you host your webservers from.
 
 = Setup =
 
@@ -36,6 +44,47 @@ The deployer is configured via an xml file and, by convention, script execution 
 {{{
 deploy/remote/deploy.xml
 }}}
+
+An example deploy xml configuration file is included below:
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-properties>
+  <deploy domain="domain1">
+    <environment type="staging">
+      <host>staging.jcatapult.org</host>
+      <host-username>staging.host.username</host-username>
+      <host-password>staging.host.password</host-password>
+      <db-name>staging.db.name</db-name>
+      <db-username>staging.db.username</db-username>
+      <db-password>staging.db.password</db-password>
+    </environment>
+  </deploy>
+  <deploy domain="domain2">
+    <environment type="qa">
+      <host>qa.jcatapult.org</host>
+      <host-username>qa.host.username</host-username>
+      <host-password>qa.host.password</host-password>
+      <db-name>qa.db.name</db-name>
+      <db-username>qa.db.username</db-username>
+      <db-password>qa.db.password</db-password>
+    </environment>
+    <environment type="prod">
+      <host>prod.jcatapult.org</host>
+      <host-username>prod.host.username</host-username>
+      <host-password>prod.host.password</host-password>
+      <db-name>prod.db.name</db-name>
+      <db-username>prod.db.username</db-username>
+      <db-password>prod.db.password</db-password>
+    </environment>
+  </deploy>
+</deployment-properties>
+}}}
+
+The configuration schema is defined by one or more `deploy` descriptors and each deploy descriptor contains one or more `environment` descriptors.
+
+== Deploy Descriptor ==
+The overarching concept behind the scaffolder is to deploy 
 
 = Interactive =
 
