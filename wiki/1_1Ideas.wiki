@@ -27,7 +27,7 @@ Here is some working ideas:
   * Validation annotation on action method @Validation(file = "foo.xml", type = Foo.class). Validation in code, annotations on beans and in XML.
   * Form preparation via an annotation @Page(Foo.class) or @Form(Foo.class). Also support preparing form once if desired using scope of @ActionSession for prepared values
   * FreeMarker for views to start
-  * Some type of UEL but something that supports type conversion.
+  * Some type of UEL but something that supports type conversion. If the views are FreeMarker, then perhaps all other evaluation can be done using FreeMarker as well. This would unify it. @Result(location="foo.jsp?id=${id}")
 
 = DSL for the database manager =
 
