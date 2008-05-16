@@ -1,7 +1,6 @@
 package org.jcatapult.deployment.service;
 
 import com.google.inject.ImplementedBy;
-import net.java.error.ErrorList;
 
 /**
  * Service Interface for validating beans of type T

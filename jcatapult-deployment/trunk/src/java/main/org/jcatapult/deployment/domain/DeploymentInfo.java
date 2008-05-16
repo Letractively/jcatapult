@@ -12,7 +12,10 @@ public class DeploymentInfo {
     private String deployDomain;
     private Environment env;
     private Project project;
-    private String deployVersion;
+    private String deployJar;
+    private File jatapultCacheDir;
+    private File deployArchiveDir;
+    private File deploymentDomainDir;
 
     public String getDeployDomain() {
         return deployDomain;
@@ -38,11 +41,35 @@ public class DeploymentInfo {
         this.project = project;
     }
 
-    public String getDeployVersion() {
-        return deployVersion;
+    public String getDeployJar() {
+        return deployJar;
     }
 
-    public void setDeployVersion(String deployVersion) {
-        this.deployVersion = deployVersion;
+    public void setDeployJar(String deployJar) {
+        this.deployJar = deployJar;
+    }
+
+    public File getJatapultCacheDir() {
+        return jatapultCacheDir;
+    }
+
+    public void setJcatapultCacheDir(File jcatapultCacheDir) {
+        this.jatapultCacheDir = jcatapultCacheDir;
+    }
+
+    public File getDeployArchiveDir() {
+        return deployArchiveDir;
+    }
+
+    public void setDeployArchiveDir(File deployArchiveDir) {
+        this.deployArchiveDir = deployArchiveDir;
+    }
+
+    public File getDeploymentDomainDir() {
+        return deploymentDomainDir;
+    }
+
+    public void setDeploymentDomainDir(File deploymentDomainDir) {
+        this.deploymentDomainDir = deploymentDomainDir;
     }
 }

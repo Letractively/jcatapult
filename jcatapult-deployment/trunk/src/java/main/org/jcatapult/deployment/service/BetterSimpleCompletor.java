@@ -12,6 +12,8 @@ import java.util.TreeSet;
 import jline.Completor;
 
 /**
+ * Used for tab completion
+ *
  * User: jhumphrey
  * Date: Mar 25, 2008
  */

@@ -7,6 +7,8 @@ import jline.Completor;
 import jline.ConsoleReader;
 
 /**
+ * JLine Implementation of the {@link org.jcatapult.deployment.service.CLIService}
+ *
  * User: jhumphrey
  * Date: Mar 25, 2008
  */

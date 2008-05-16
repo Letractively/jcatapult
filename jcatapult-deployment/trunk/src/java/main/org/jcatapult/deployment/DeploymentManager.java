@@ -12,19 +12,27 @@ import org.jcatapult.deployment.domain.DeploymentInfo;
 import org.jcatapult.deployment.domain.DeploymentProperties;
 import org.jcatapult.deployment.domain.Project;
 import org.jcatapult.deployment.guice.DeploymentModule;
-import org.jcatapult.deployment.service.DeployerService;
-import org.jcatapult.deployment.service.XmlServiceException;
 import org.jcatapult.deployment.service.DeployXmlService;
 import org.jcatapult.deployment.service.ProjectXmlService;
 import org.jcatapult.deployment.service.ValidationService;
+import org.jcatapult.deployment.service.XmlServiceException;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
+import groovy.lang.GroovyClassLoader;
 import net.java.lang.StringTools;
 
 /**
+ * <p>Main entry point to the JCatapult Deployment framework.  The main method must be provided
+ * 1 argument, which is the location of the deploy.xml file.
+ *
+ * The JCatapult distribution ships with a deployer installation that provides a deploy script for convenience.
+ * The deploy script assumes that your deploy.xml file is located in the following project context path:</p>
+ *
+ * <p>/deploy/remote/deploy.xml</p>
+ *
  * User: jhumphrey
  * Date: Mar 25, 2008
  */
@@ -34,10 +42,14 @@ public class DeploymentManager {
     DeployXmlService deployXmlService = injector.getInstance(DeployXmlService.class);
     ProjectXmlService projectXmlService = injector.getInstance(ProjectXmlService.class);
     CLIManager cliManager = injector.getInstance(CLIManager.class);
-    DeployerService deployerService = injector.getInstance(DeployerService.class);
-    ValidationService<DeploymentProperties> deployValidationService = injector.getInstance(Key.get(new TypeLiteral<ValidationService<DeploymentProperties>>() {}));
-    ValidationService<Project> projectValidationService = injector.getInstance(Key.get(new TypeLiteral<ValidationService<Project>>() {}));
+    ValidationService<DeploymentProperties> deployValidationService = injector.getInstance(Key.get(new TypeLiteral<ValidationService<DeploymentProperties>>() {
+    }));
+    ValidationService<Project> projectValidationService = injector.getInstance(Key.get(new TypeLiteral<ValidationService<Project>>() {
+    }));
 
+    public static final File JCATAPULT_CACHE_DIR = new File(System.getProperty("user.home"), ".jcatapult");
+    public static final File DEPLOYMENT_ROOT_DIR = new File(JCATAPULT_CACHE_DIR, "deployment");
+    public static final File DEPLOY_ARCHIVE_DIR = new File(JCATAPULT_CACHE_DIR, "deploy-archive");
 
     /**
      * Main point of entry into the deployment manager api
@@ -45,15 +57,32 @@ public class DeploymentManager {
      * @param args arguments
      */
     public static void main(String[] args) {
-        String deployerHome = System.getProperty("deployer.home");
-        if (deployerHome == null) {
-            System.err.println("You must provide the deployer.home Java property");
+
+        System.out.println("Executing JCatapult Deployment Manager");
+
+        if (! (JCATAPULT_CACHE_DIR.exists() && JCATAPULT_CACHE_DIR.isDirectory()) ) {
+            System.err.println("The JCatapult cache dir does not exist [" + JCATAPULT_CACHE_DIR.getAbsolutePath() + "]");
             System.exit(1);
-        } else {
-            System.out.println("Using jCatapult Deployment Manager [" + deployerHome + "]");
         }
 
-        new DeploymentManager().manage(args);
+        if (! (DEPLOYMENT_ROOT_DIR.exists() && DEPLOYMENT_ROOT_DIR.isDirectory()) ) {
+            System.err.println("The deployment root dir does not exist [" + DEPLOYMENT_ROOT_DIR.getAbsolutePath() + "]");
+            System.exit(1);
+        }
+
+        if (! (DEPLOY_ARCHIVE_DIR.exists() && DEPLOY_ARCHIVE_DIR.isDirectory()) ) {
+            System.err.println("The deploy archive dir does not exist [" + DEPLOY_ARCHIVE_DIR.getAbsolutePath() +
+                "]. Please run a release prior to running the deployer");
+            System.exit(1);
+        }
+
+        try {
+            new DeploymentManager().manage(args);
+        } catch (DeploymentException e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     /**
@@ -121,9 +150,46 @@ public class DeploymentManager {
                 // query user for input
                 DeploymentInfo deploymentInfo = cliManager.manage(props, project);
 
-                // deploy the resources
-                deployerService.deploy(deploymentInfo);
+                // validate that the deployment domain dir exists
+                File deploymentDomainDir = new File(DEPLOYMENT_ROOT_DIR, deploymentInfo.getDeployDomain());
+                if (! (deploymentDomainDir.exists() && deploymentDomainDir.isDirectory()) ) {
+                    throw new DeploymentException("The deployment domain dir does not exist [" + deploymentDomainDir + "]");
+                }
+
+                // set dirs
+                deploymentInfo.setDeploymentDomainDir(deploymentDomainDir);
+                deploymentInfo.setJcatapultCacheDir(JCATAPULT_CACHE_DIR);
+                deploymentInfo.setDeployArchiveDir(DEPLOY_ARCHIVE_DIR);
+
+
+                // load the deploy
+                Deployer deployer = loadDeployer(deploymentInfo.getDeployDomain());
+                deployer.deploy(deploymentInfo);
             }
         }
     }
+
+    /**
+     * Helper method to load the deployer.groovy file from disk
+     *
+     * @param deployDomain the domain.  this maps directly to the directory within .jcatapult/deployment
+     * @return {@link Deployer} object
+     */
+    private Deployer loadDeployer(String deployDomain) {
+        File deployerFile = new File(DEPLOYMENT_ROOT_DIR, deployDomain + "/deployer.groovy");
+        if (!deployerFile.exists()) {
+            throw new DeploymentException(deployerFile.getAbsolutePath() + " does not exist");
+        }
+
+        GroovyClassLoader gcl = new GroovyClassLoader();
+
+        try {
+            Class clazz = gcl.parseClass(deployerFile);
+            return (Deployer) clazz.newInstance();
+        } catch (Exception e) {
+            throw new DeploymentException("Unable to execute deployer", e);
+        }
+    }
+
+
 }

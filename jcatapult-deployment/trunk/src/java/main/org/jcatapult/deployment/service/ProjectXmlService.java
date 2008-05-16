@@ -1,14 +1,8 @@
 package org.jcatapult.deployment.service;
 
 import java.io.File;
-import java.util.List;
 
 import org.jcatapult.deployment.domain.Project;
-import org.jcatapult.deployment.domain.DeploymentProperties;
-import org.jcatapult.deployment.domain.Deploy;
-import org.jcatapult.deployment.domain.Environment;
-import org.apache.commons.configuration.XMLConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
 
 /**
  * User: jhumphrey
@@ -24,6 +18,7 @@ public class ProjectXmlService extends CommonsConfigurationXmlService<Project> {
 
         Project project = new Project();
         project.setName(getConfig().getString("[@name]"));
+        project.setDir(new File("."));
 
         return project;
     }

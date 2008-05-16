@@ -6,7 +6,7 @@ import com.google.inject.AbstractModule;
 import jline.Completor;
 
 /**
- * Simple guice module
+ * Simple guice module for performing project binds for dependency injection
  *
  * User: jhumphrey
  * Date: Mar 25, 2008
