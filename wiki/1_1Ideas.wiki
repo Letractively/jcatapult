@@ -16,6 +16,19 @@ Struts/XWork is lacking in many areas and I want to make a list. We'll need to r
   * Better support for wildcard and SEO URLs via conventions
   * Better type conversion support with support for attributes (currency code, date time format, etc)
 
+Here is some working ideas:
+
+  * Provide support in the configuration system for defining interceptor chains using a list of classes and a name for the chain. Actions can then denote which chain they want to use if not the default.
+  * Have an ObjectFactory that creates the Actions and the Interceptors. Default will use the GuiceContainer from core.
+  * Fields can have getter/setters or just be public member variables of an action
+  * Provide scopes for fields @Request, @Session, @Application, @ActionSession, @Flash
+  * Be nice to provide error handling support without extension. Toolkit method maybe? This would require a ThreadLocal which kinda sucks. Optional argument to the action method? Convention based fields for action and field errors (private Map<String, String> fieldErrors and private List<String> actionErrors)
+  * Localization should be hierarchy. First check for bundle next to the view (/WEB-INF/content/foo.properties). Then check for class and parent-classes.
+  * Validation annotation on action method @Validation(file = "foo.xml", type = Foo.class). Validation in code, annotations on beans and in XML.
+  * Form preparation via an annotation @Page(Foo.class) or @Form(Foo.class). Also support preparing form once if desired using scope of @ActionSession for prepared values
+  * FreeMarker for views to start
+  * Some type of UEL but something that supports type conversion.
+
 = DSL for the database manager =
 
 There are a number of pages for this brain storm under the DatabaseManager documentation.
