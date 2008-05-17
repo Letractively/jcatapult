@@ -54,4 +54,4 @@ This definition would place the web application into the development environment
 
 = Custom Resolution =
 
-In order to provide a custom `EnvironmentResolver`, you must implement the `org.jcatapult.environment.EnvironmentResolver` interface and bind your implementation into Guice using your applications Guice Module (see the [http://code.google.com/p/google-guice/ Guice documentation] and the [JCatapult Guice integration docs GuideDependencyInjection] for more information).
+In order to provide a custom `EnvironmentResolver`, you must implement the `org.jcatapult.environment.EnvironmentResolver` interface and bind your implementation into Guice using your applications Guice Module (see the [http://code.google.com/p/google-guice/ Guice documentation] and the [GuideDependencyInjection JCatapult Guice integration docs] for more information).
