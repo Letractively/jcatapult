@@ -58,17 +58,17 @@ As suggested by the name, the `FreeMarkerEmailService` is an implementation of t
 
   * jcatapult.email.templates.location:
     * Description: The location on disk of the email templates. This only works when the web application is deployed in exploded form. Otherwise the FreeMarker templates are searched for via the classpath.
-  ** Optional: Yes
-  ** default value: /WEB-INF/email
+    * Optional: Yes
+    * default value: /WEB-INF/email
   
   * jcatapult.email.templates.cache
-  ** Description: A boolean that determines if the email templates should be cached by FreeMarker.
-  ** Optional: Yes
-  ** Default: false
+    * Description: A boolean that determines if the email templates should be cached by FreeMarker.
+    * Optional: Yes
+    * Default: false
   
   * jcatapult.email.templates.check-interval
-  ** Description: The number of seconds to check if the FreeMarker template has been modified. If caching is turned off this value is ignored.
-  ** Optional: Yes
-  ** Default: N/A
+    * Description: The number of seconds to check if the FreeMarker template has been modified. If caching is turned off this value is ignored.
+    * Optional: Yes
+    * Default: N/A
 
   * 
