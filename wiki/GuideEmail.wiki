@@ -84,7 +84,7 @@ To override the defaults, you would include these in your webapp's configuration
   <jcatapult>
     <email>
       <templates>
-        <location>/WEB-INF/email-templates/2008</location>
+        <location>/WEB-INF/email-templates/sweepstakes/2008</location>
         <cache>true</cache>
         <check-interval>3600</check-interval>
       </templates>
@@ -93,7 +93,7 @@ To override the defaults, you would include these in your webapp's configuration
 </config>
 }}}
 
-The above example configures the `FreeMarkerEmailService` to load the email templates from the location `/WEB-INF/email-templates/2008` and cache the templates in memory for 1 hour (3600 seconds).
+The above example configures the `FreeMarkerEmailService` to load the email templates from the directory location `/WEB-INF/email-templates/sweepstakes/2008` and cache the templates in memory for 1 hour (3600 seconds).
 
 =====Loading Template Files=====
 The template files themselves represent the body of the email message and, by default, are loaded from the `WEB-INF/email` directory (this default value is actually configured within the jcatapult-default.properties file, which is contained within the jcatapult-core jar). Moreover, as mentioned above, this value can be overridden by adding the following configuration param to the webapp configuration files:
@@ -122,4 +122,18 @@ In order for the `FreeMarkerEmailService` to actually find your files in the con
 The `html` and `text` conventionally inform the `FreeMarkerEmailService` to send either a text or HTML email.  If both `text` and `html` template exist, then the service will use the html template as the default.
 
 ==== Email Processing ====
-In addition to configuring how FreeMarker should process the templates, the `FreeMarkerEmailService` can also set the email message from, from-display, to, bcc, and cc for you by pulling configuration data from [GuideConfiguration JCatapult Configuration] config files.
+In addition to configuring how FreeMarker should process the templates, the `FreeMarkerEmailService` can also automatically set the email's from, from-display, to, bcc, and cc for you by getting configuration data from [GuideConfiguration JCatapult Configuration] files.  It accomplishes this by pulling configuration data using the template-name as follows:
+
+  * jcatapult.email.<template-name>.from
+  * jcatapult.email.<template-name>.from-display
+  * jcatapult.email.<template-name>.to
+  * jcatapult.email.<template-name>.cc
+  * jcatapult.email.<template-name>.bcc
+
+For instance, if my template-name is 'sweepstakes', the service will look for the from, from-display, to, cc, and bcc by trying to load the following from the configuration files:
+
+  * jcatapult.email.sweepstakes.from
+  * jcatapult.email.sweepstakes.from-display
+  * jcatapult.email.sweepstakes.to
+  * jcatapult.email.sweepstakes.cc
+  * jcatapult.email.sweepstakes.bcc
