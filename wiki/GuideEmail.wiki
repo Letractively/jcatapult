@@ -1,3 +1,74 @@
-﻿= JCatapult Email =
+﻿= JCatapult Email Library (JCEL) =
 
-JCatapult provides a set of services to easily create and send emails from an application. This library uses FreeMarker templates to create the emails and JavaMail to send the emails 
+Built on [http://freemarker.sourceforge.net/ FreeMarker] and [http://java.sun.com/products/javamail/ JavaMail], the JCatapult Email library (JCEL for short) provides a set of APIs to easily create and send emails from an application. JCEL is primarily built on 2 main interface APIs that are used together to build and send emails:
+
+  * Email Service - Builds the email
+  * Email Transport Service - Sends the mail
+
+= Email Service =
+The Email Service is an interface that is used to construct emails in a simple and templatized manner.  The API itself consists of one method, `sendEmail`, the javadoc for which has been pasted below for illustration:
+
+{{{
+    /**
+     * Called to build the email using the specified template as the email body, configure the
+     * email using the returned {@link EmailCommand} object and then send the email using the returned
+     * {@link EmailCommand} object.
+     *
+     * Here's an example using the template below named 'hello':
+     *
+     * <pre>
+     * Hello ${name},
+     *
+     * Thanks for buying all that cool stuff.
+     * </pre>
+     *
+     * <p>
+     * You would call this method like this:
+     * </p>
+     *
+     * <pre>
+     * sendEmail("hello").withTemplateParam("name", "Joe Blow").to("joe@blow.com").from("info@example.com").now();
+     * </pre>
+     *
+     * @param   template (Required) The name of the template. The implementation will dictate the type
+     *          of template and how they are stored.
+     * @return  The name value pair chain.
+     * @throws JCatapultEmailException Runtime exception thrown if the from and/or subject are null and also
+     * if the email message contains zero recipients
+     */
+    EmailCommand sendEmail(String template) throws JCatapultEmailException ;
+}}}
+
+== Email Command ==
+As indicated above, the `sendEmail` method returns an `EmailCommand` object.  The `EmailCommand` API attempts to conceptualize email construction through semantics by giving commands (calling methods) that make sense.
+
+Example:
+Maybe you want to send an email to john@doe.com and have it be from 'jane@doe.com'.  Using the `EmailService` interface, you'd construct this email using the `sendEmail` method by issuing commands via the `EmailCommand` API as follows:
+
+{{{
+sendEmail("hello").to("john@doe.com").from("jane@doe.com").now();
+}}}
+
+
+For your convenience, JCEL provides a default implementation of the `EmailCommand` interface, which is dependency injected automatically for you (you can read more about JCatapult Dependency Injection implementation [GuideDependencyInjection here]) 
+
+
+== FreeMarker Email Service ==
+As suggested by the name, the `FreeMarkerEmailService` is an implementation of the `Email Service` that uses the FreeMarker templating engine to build emails.  The `FreemarkerEmailService` uses [GuideConfiguration JCatapult Configuration] for configuring information about how emails will be constructed. There are a number of configuration parameters that can be specified to control the behavior of the FreeMarker Email Service. Specifically, these include:
+
+  * jcatapult.email.templates.location:
+    * Description: The location on disk of the email templates. This only works when the web application is deployed in exploded form. Otherwise the FreeMarker templates are searched for via the classpath.
+  ** Optional: Yes
+  ** default value: /WEB-INF/email
+  
+  * jcatapult.email.templates.cache
+  ** Description: A boolean that determines if the email templates should be cached by FreeMarker.
+  ** Optional: Yes
+  ** Default: false
+  
+  * jcatapult.email.templates.check-interval
+  ** Description: The number of seconds to check if the FreeMarker template has been modified. If caching is turned off this value is ignored.
+  ** Optional: Yes
+  ** Default: N/A
+
+  * 
