@@ -103,7 +103,7 @@ The template files themselves represent the body of the email message and, by de
   <jcatapult>
     <email>
       <templates>
-        <location>/WEB-INF/email-templates/2008</location>
+        <location>/WEB-INF/email-templates/sweepstakes/2008</location>
       </templates>
     </email>
   </jcatapult>
@@ -137,3 +137,27 @@ For instance, if my template-name is 'sweepstakes', the service will look for th
   * jcatapult.email.sweepstakes.to
   * jcatapult.email.sweepstakes.cc
   * jcatapult.email.sweepstakes.bcc
+
+= Examples =
+To sum it all up, lets pretend that your website had a 2008 sweepstakes and the winner of your sweepstakes was john@doe.com and you want to notify them via email that they've won.
+
+== Template Location ==
+The first thing you'll want to do is figure out where you want to store your template files.  Since it's a '2008 sweepstakes' we'll store them in 'WEB-INF/email-templates/sweepstakes/2008' by configuring the location in the webapp config file as follows:
+
+{{{
+<config>
+  <jcatapult>
+    <email>
+      <templates>
+        <location>/WEB-INF/email-templates/sweepstakes/2008</location>
+      </templates>
+    </email>
+  </jcatapult>
+</config>
+}}}
+
+== Template Name ==
+The next thing you'll want to do is come up with a name for your email template.  Since this email will contain details on winning the sweepstakes, lets called call choose 'you-won' as our template name.
+
+== Creating Template Files ==
+The first thing that you'll want to do is construct your email body and whether or not you want it to be a text or html email.
