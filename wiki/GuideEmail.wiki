@@ -1,6 +1,6 @@
 ﻿= JCatapult Email Library (JCEL) =
 
-Built on [http://freemarker.sourceforge.net/ FreeMarker] and [http://java.sun.com/products/javamail/ JavaMail], the JCatapult Email library (JCEL for short) provides a set of APIs to easily create and send emails from an application. JCEL is primarily built on 2 main interface APIs that are used to build and send emails respectively:
+Built on [http://freemarker.sourceforge.net/ FreeMarker] and [http://java.sun.com/products/javamail/ JavaMail], the JCatapult Email library (JCEL for short) provides a set of APIs to easily create and send emails from an application. JCEL is designed primarily around two main interface APIs:
 
   * Email Service - Builds the email
   * Email Transport Service - Sends the mail
