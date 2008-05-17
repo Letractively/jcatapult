@@ -157,7 +157,7 @@ The first thing you'll want to do is figure out where you want to store your tem
 }}}
 
 == Template Name ==
-The next thing you'll want to do is come up with a name for your email template.  Since this email will contain details on winning the sweepstakes, lets called call choose 'you-won' as our template name.
+The next thing you'll want to do is come up with a name for your email template.  Since this email will contain details on winning the sweepstakes, lets choose 'winner' as the template name.
 
 == Creating Template Files ==
-The first thing that you'll want to do is construct your email body and whether or not you want it to be a text or html email.
+The first thing that you'll want to do is construct your email body and decide whether or not you want it to be a text or html email.
