@@ -2,7 +2,7 @@
 
 = Introduction =
 
-JCatapult provides applications with the ability to determine the environment they are running in and use that information however they might need. The key behind the JCatapult Environment Resolution system is that it allows applications to be migrated from one environment to another with requiring a build or configuration step. Instead, the application can discover the environment it is running in and take actions based on that. 
+JCatapult provides applications with the ability to determine the environment they are running in and use that information however they might need. The key behind the JCatapult Environment Resolution system is that it allows applications to be migrated from one environment to another without requiring a build or configuration step. Instead, the application can discover the environment it is running in and take actions based on that. 
 
 For example, the [EnvironmentAwareConfiguration Environment Aware Configuration] system allows applications to define a hierarchy of configuration files, and configuration files for each environment. This allows the application to load different configuration based on the environment.
 
