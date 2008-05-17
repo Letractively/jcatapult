@@ -43,7 +43,7 @@ The Email Service is an interface that is used to construct emails in a simple a
 As indicated above, the `sendEmail` method returns an `EmailCommand` object.  The `EmailCommand` API attempts to conceptualize email construction through semantics by giving commands (calling methods) that make sense.
 
 Example:
-Maybe you want to send an email to john@doe.com and have it be from 'jane@doe.com'.  Using the `EmailService` interface, you'd construct this email using the `sendEmail` method by issuing commands via the `EmailCommand` API as follows:
+Maybe you want to send an email to john@doe.com and have it be from 'jane@doe.com' and you want to send the email now.  Using the `EmailService` interface, you'd construct this email using the `sendEmail` method by issuing commands via the `EmailCommand` API as follows:
 
 {{{
 sendEmail("hello").to("john@doe.com").from("jane@doe.com").now();
@@ -54,7 +54,7 @@ For your convenience, JCEL provides a default implementation of the `EmailComman
 
 
 == FreeMarker Email Service ==
-As suggested by the name, the `FreeMarkerEmailService` is an implementation of the `Email Service` that uses the FreeMarker templating engine to build emails.
+As suggested by the name, the `FreeMarkerEmailService` is an implementation of the `EmailService` that uses the FreeMarker templating engine to build emails.
 
 === Configuration ===
 The `FreemarkerEmailService` uses [GuideConfiguration JCatapult Configuration] for configuring both the FreeMarker Template and Email processing behaviour.
@@ -94,6 +94,29 @@ To override the defaults, you would include these in your webapp's configuration
 }}}
 
 The above example configures the `FreeMarkerEmailService` to load the email templates from the location `/WEB-INF/email-templates/2008` and cache the templates in memory for 1 hour (3600 seconds).
+
+=====Loading Template Files=====
+By default, the `FreeMarkerEmailService` loads templates from the `WEB-INF/email` directory (this default value is actually configured within the jcatapult.properties file, which is contained within the jcatapult-core jar). Moreover, as mentioned above, this value can be overridden by adding the following configuration param to the webapp configuration files:
+
+{{{
+<config>
+  <jcatapult>
+    <email>
+      <templates>
+        <location>/WEB-INF/email-templates/2008</location>
+      </templates>
+    </email>
+  </jcatapult>
+</config>
+}}}
+
+However, in order for the `FreeMarkerEmailService` to actually find your files in the configured location, the files must conform to the following naming convention format:
+
+<template-name>-[html|text].ftl
+
+WHERE <template-name> is an arbitrary name given to the template.
+
+The `html` and `text` conventionally inform the `FreeMarkerEmailService` to send either a text or HTML email.  If both `text` and `html` template exist, then the service will use the html template as the default body content.
 
 ==== Email Processing ====
 In addition to configuring how FreeMarker should process the templates, the `FreeMarkerEmailService` can also set the email message from, from-display, to, bcc, and cc for you by pulling configuration data from [GuideConfiguration JCatapult Configuration] config files.
