@@ -198,7 +198,7 @@ public class JavaMailEmailTransportService implements EmailTransportService {
             }
 
             if (message.getAllRecipients() == null || message.getAllRecipients().length == 0) {
-                throw new JCatapultEmailException("email message must contain at least one recipient");
+                throw new JCatapultEmailException("email message must contain at least one CC, BCC, or To recipient");
             }
 
             String subject = email.getSubject();
