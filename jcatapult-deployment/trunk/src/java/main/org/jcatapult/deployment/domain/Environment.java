@@ -5,13 +5,13 @@ import net.java.lang.StringTools;
 import net.java.validate.Validatable;
 
 /**
- * Bean that represents the environment descriptor in the deploy.xml file
+ * Bean that models the environment descriptor in defined in the deploy xml configuration file
  *
  * User: jhumphrey
  * Date: May 15, 2008
  */
 public class Environment implements Validatable {
-    private String type;
+    private String name;
     private String host;
     private String hostUsername;
     private String hostPassword;
@@ -22,35 +22,35 @@ public class Environment implements Validatable {
     public ErrorList validate() {
         ErrorList errorList = new ErrorList();
 
-        if (StringTools.isEmpty(type)) {
-            errorList.addError("The deploy.xml 'environment' descriptor must define an attribute 'type' with the value of the environment you " +
-                "wish to deploy to.\nex: <environment type=\"staging\">");
+        if (StringTools.isEmpty(name)) {
+            errorList.addError("The deploy xml configuration file 'environment' descriptor must define an attribute 'name' with the value of the environment you " +
+                "wish to deploy to.\nex: <environment name=\"staging\">");
         }
 
         if (StringTools.isEmpty(host)) {
-            errorList.addError("The deploy.xml 'environment' descriptor content must contain a 'host' descriptor with the content set to the host" +
+            errorList.addError("The deploy xml configuration file 'environment' descriptor content must contain a 'host' descriptor with the content set to the host" +
                 "you are deploying to.\nex: <host>staging.jatapult.org</host>");
         }
 
         if (StringTools.isEmpty(hostUsername)) {
-            errorList.addError("The deploy.xml 'environment' descriptor content must contain a 'host-username' descriptor with the content set to the username" +
+            errorList.addError("The deploy xml configuration file 'environment' descriptor content must contain a 'host-username' descriptor with the content set to the username" +
                 "of the host you are deploying to.\nex: <host-username>staging-username</host-username>");
         }
 
         if (StringTools.isEmpty(hostPassword)) {
-            errorList.addError("The deploy.xml 'environment' descriptor content must contain a 'host-password' descriptor with the content set to the password" +
+            errorList.addError("The deploy xml configuration file 'environment' descriptor content must contain a 'host-password' descriptor with the content set to the password" +
                 "of the host-username.\nex: <host-password>staging-password</host-password>");
         }
 
         return errorList;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getHost() {

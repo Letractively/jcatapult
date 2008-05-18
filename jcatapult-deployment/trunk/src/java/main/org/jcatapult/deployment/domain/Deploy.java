@@ -4,52 +4,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.java.error.ErrorList;
-import net.java.lang.StringTools;
 import net.java.validate.Validatable;
 
 /**
- * Bean that represents a deploy descriptor in the deploy.xml file
+ * Bean to model deployment properties defined in the deploy xml configuration file
  *
  * User: jhumphrey
  * Date: May 15, 2008
  */
 public class Deploy implements Validatable {
-    private String domain;
+    List<Domain> domains = new ArrayList<Domain>();
 
-    private List<Environment> envs = new ArrayList<Environment>();
-
-    public String getDomain() {
-        return domain;
+    public List<Domain> getDomains() {
+        return domains;
     }
 
-    public void setDomain(String domain) {
-        this.domain = domain;
+    public void setDomains(List<Domain> domains) {
+        this.domains = domains;
     }
 
-    public List<Environment> getEnvs() {
-        return envs;
+    /**
+     * Adds one {@link Domain} to the deploys list
+     *
+     * @param domain {@link Domain}
+     */
+    public void addDomain(Domain domain) {
+        this.domains.add(domain);
     }
 
-    public void setEnvs(List<Environment> envs) {
-        this.envs = envs;
-    }
-
-    public void addEnv(Environment env) {
-        this.envs.add(env);
-    }
-
+    /**
+     * Called to validate bean properties.  returns a list of errors or empty list
+     *
+     * @return an error list.  empty if no errors exist
+     */
     public ErrorList validate() {
         ErrorList errorList = new ErrorList();
-
-        if (StringTools.isEmpty(domain)) {
-            errorList.addError("The deploy.xml 'deploy' descriptor must define an attribute 'domain' with the value of the domain you wish to deploy to.\nex: <deploy domain=\"jcatapult\">");
-        }
-
-        if (envs.size() == 0) {
-            errorList.addError("The deploy.xml 'deploy' descriptor content must contain at least one 'environment' descriptor.\nex: <environment type=\"staging\">");
+        if (domains.size() == 0) {
+            errorList.addError("The deploy xml configuration file must contain at least one 'domain' descriptor.\nex: <domain name=\"jcatapult\">");
         } else {
-            for (Environment env : envs) {
-                errorList.addAllErrors(env.validate());
+            for (Domain domain : domains) {
+                errorList.addAllErrors(domain.validate());
             }
         }
 

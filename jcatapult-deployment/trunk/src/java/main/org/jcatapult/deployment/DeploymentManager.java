@@ -8,7 +8,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.jcatapult.deployment.domain.DeploymentInfo;
-import org.jcatapult.deployment.domain.DeploymentProperties;
+import org.jcatapult.deployment.domain.Deploy;
 import org.jcatapult.deployment.domain.Project;
 import org.jcatapult.deployment.guice.DeploymentModule;
 import org.jcatapult.deployment.service.DeployXmlService;
@@ -42,7 +42,7 @@ public class DeploymentManager {
     DeployXmlService deployXmlService = injector.getInstance(DeployXmlService.class);
     ProjectXmlService projectXmlService = injector.getInstance(ProjectXmlService.class);
     CLIManager cliManager = injector.getInstance(CLIManager.class);
-    ValidationService<DeploymentProperties> deployValidationService = injector.getInstance(Key.get(new TypeLiteral<ValidationService<DeploymentProperties>>() {
+    ValidationService<Deploy> deployValidationService = injector.getInstance(Key.get(new TypeLiteral<ValidationService<Deploy>>() {
     }));
     ValidationService<Project> projectValidationService = injector.getInstance(Key.get(new TypeLiteral<ValidationService<Project>>() {
     }));
@@ -117,7 +117,7 @@ public class DeploymentManager {
             Project project = unmarshallProjectXml(commands[0]);
 
             // get the deployment properties
-            DeploymentProperties props = unmarshallDeploymentsProps(commands[1]);
+            Deploy props = unmarshallDeploymentsProps(commands[1]);
 
             // query user for input
             DeploymentInfo deploymentInfo = cliManager.manage(props, project);
@@ -184,8 +184,8 @@ public class DeploymentManager {
         return project;
     }
 
-    private DeploymentProperties unmarshallDeploymentsProps(String deployXmlPath) {
-        DeploymentProperties props;
+    private Deploy unmarshallDeploymentsProps(String deployXmlPath) {
+        Deploy props;
         try {
             File deployXmlFile = new File(deployXmlPath);
             if (!(deployXmlFile.exists() && deployXmlFile.isFile())) {
