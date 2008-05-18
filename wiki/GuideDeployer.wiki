@@ -40,7 +40,7 @@ To configure the deployer, there are 2 main concepts that you should be familiar
 The domain represents a server or group of servers where there are one or more environments where you host your web applications from.
 
 == Environment ==
-The environment represents a specific location within a domain where your web application is running from.  Each environment is uniquely identified by the environment type where the type is an arbitrary value.  Example environment types are:  development, internal-qa, external-qa, staging, production.
+The environment represents a specific location within a domain where your web application is running from.  Each environment is uniquely identified by its name, which is an arbitrary value, however, suggested environment names are:  development, internal-qa, external-qa, staging, production.
 
 Both the Domain and Environment information are configured via an xml file and, by convention, script execution expects the path of this configuration file to be relative to the project root at the following location:
 
@@ -51,41 +51,44 @@ deploy/remote/deploy.xml
 An example deploy xml configuration file is included below:
 
 {{{
-<?xml version="1.0" encoding="UTF-8"?>
+  <?xml version="1.0" encoding="UTF-8"?>
 <deployment-properties>
-  <deploy domain="domain1">
-    <environment type="internal-qa">
+  <domain name="domain1">
+    <environment name="internal-qa">
       <host>staging.jcatapult.org</host>
       <host-username>staging.host.username</host-username>
       <host-password>staging.host.password</host-password>
     </environment>
-  </deploy>
-  <deploy domain="domain2">
-    <environment type="external-qa">
+  </domain>
+  <domain name="domain2">
+    <environment name="external-qa">
       <host>qa.jcatapult.org</host>
       <host-username>qa.host.username</host-username>
       <host-password>qa.host.password</host-password>
     </environment>
-    <environment type="staging">
+    <environment name="staging">
       <host>staging.jcatapult.org</host>
       <host-username>staging.host.username</host-username>
       <host-password>staging.host.password</host-password>
     </environment>
-  </deploy>
-  <deploy domain="domain3">
-    <environment type="production">
+  </domain>
+  <domain name="domain3">
+    <environment name="production">
       <host>production.jcatapult.org</host>
       <host-username>production.host.username</host-username>
       <host-password>production.host.password</host-password>
     </environment>
-  </deploy>
+  </domain>
 </deployment-properties>
 }}}
 
-The configuration schema is defined by one or more `deploy` descriptors and each deploy descriptor contains one or more `environment` descriptors.  You must define at least one deploy descriptor and at least one environment descriptor.  The deploy 'domain', environment 'type', host, host-username, and host-password are all required fields.  The xml is validated so if you forget to define any of these fields the tool will notify you of such.
+The configuration schema is defined by one or more `domain` descriptors and each domain descriptor contains one or more `environment` descriptors.  You must define at least one domain and at least one environment descriptor.  The domain 'name', environment 'name', host, host-username, and host-password are all required fields.  The xml is validated so if you forget to define any of these fields the tool will notify you of such.
 
 = Interactive =
 The deployer tool is highly interactive in that it provides tab completion for ease of use.  Whenever you are asked a question by the deployer you can usually hit the tab key twice to get possible responses.
 
 == Domain Option ==
 The first question the deployer will ask is which domain you are deploying to.  These values are taken directly from the xml configuration file.
+
+== Environment Options ==
+Once you select your domain option, you will be asked for which environment within that domain you're deploying to.  Again, the environment options are taken directly from the xml configuration file.
