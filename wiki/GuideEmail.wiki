@@ -84,7 +84,7 @@ To override the defaults, you would include these in your webapp's configuration
   <jcatapult>
     <email>
       <templates>
-        <location>/WEB-INF/email-templates/sweepstakes/2008</location>
+        <location>/WEB-INF/email-templates</location>
         <cache>true</cache>
         <check-interval>3600</check-interval>
       </templates>
@@ -93,7 +93,7 @@ To override the defaults, you would include these in your webapp's configuration
 </config>
 }}}
 
-The above example configures the `FreeMarkerEmailService` to load the email templates from the directory location `/WEB-INF/email-templates/sweepstakes/2008` and cache the templates in memory for 1 hour (3600 seconds).
+The above example configures the `FreeMarkerEmailService` to load the email templates from the directory location `/WEB-INF/email-templates` and cache the templates in memory for 1 hour (3600 seconds).
 
 =====Loading Template Files=====
 The template files themselves represent the body of the email message and, by default, are loaded from the `WEB-INF/email` directory (this default value is actually configured within the jcatapult-default.properties file, which is contained within the jcatapult-core jar). Moreover, as mentioned above, this value can be overridden by adding the following configuration param to the webapp configuration files:
@@ -103,7 +103,7 @@ The template files themselves represent the body of the email message and, by de
   <jcatapult>
     <email>
       <templates>
-        <location>/WEB-INF/email-templates/sweepstakes/2008</location>
+        <location>/WEB-INF/email-templates</location>
       </templates>
     </email>
   </jcatapult>
@@ -116,10 +116,16 @@ In order for the `FreeMarkerEmailService` to actually find your files in the con
 <template-name>-[html|text].ftl
 }}}
 
-  * <template-name>: arbitrary name given to the template (e.g. contact-us, sweepstakes, etc).
-  * [html|text]: This token informs the service that the email message is a text or html email.
+  * <template-name>: arbitrary name given to the template (e.g. sweepstakes).
+  * [html|text]: html or text.  This token informs the service that the email message is a text or html email.
 
-The `html` and `text` conventionally inform the `FreeMarkerEmailService` to send either a text or HTML email.  If both `text` and `html` template exist, then the service will use the html template as the default.
+ex:
+{{{
+contact-text.ftl
+contact-html.ftl
+}}}
+
+*If both `text` and `html` templates exist, then the service will use the html template as the default.*
 
 ==== Email Processing ====
 In addition to configuring how FreeMarker should process the templates, the `FreeMarkerEmailService` can also automatically set the email's from, from-display, to, bcc, and cc for you by getting configuration data from [GuideConfiguration JCatapult Configuration] files.  It accomplishes this by pulling configuration data using the template-name as follows:
@@ -130,26 +136,42 @@ In addition to configuring how FreeMarker should process the templates, the `Fre
   * jcatapult.email.<template-name>.cc
   * jcatapult.email.<template-name>.bcc
 
-For instance, if my template-name is 'sweepstakes', the service will look for the from, from-display, to, cc, and bcc by trying to load the following from the configuration files:
+For instance, if my template-name is 'contact', the service will look for the from, from-display, to, cc, and bcc by trying to load the following from the configuration files:
 
-  * jcatapult.email.sweepstakes.from
-  * jcatapult.email.sweepstakes.from-display
-  * jcatapult.email.sweepstakes.to
-  * jcatapult.email.sweepstakes.cc
-  * jcatapult.email.sweepstakes.bcc
+  * jcatapult.email.contact.from
+  * jcatapult.email.contact.from-display
+  * jcatapult.email.contact.to
+  * jcatapult.email.contact.cc
+  * jcatapult.email.contact.bcc
+
+The configuration xml would look as follows:
+
+{{{
+<config>
+  <jcatapult>
+    <email>
+      <contact>
+        <from>jane@doe.com</from>
+        <from-display>Jane Doe</from-display>
+        <to>joe@doe.com</to>
+      </contact>
+    </email>
+  </jcatapult>
+</config>
+}}}
 
 = Examples =
-To sum it all up, lets pretend that your website had a 2008 sweepstakes and the winner of your sweepstakes was john@doe.com and you want to notify them via email that they've won.
+To sum it all up, lets pretend that your website has a contact us form and on submission you want to send an email to john@doe.com.
 
 == Template Location ==
-The first thing you'll want to do is figure out where you want to store your template files.  Since it's a '2008 sweepstakes' we'll store them in 'WEB-INF/email-templates/sweepstakes/2008' by configuring the location in the webapp config file as follows:
+The first thing you'll want to do is decide where you want to store your template files.  For this example, lets pretend that you don't like the default location `WEB-INF/email` and you want to change it to `WEB-INF/email-templates`.  As illustrated above, you'd change this by specifying a new template location in the configuration files as follows:
 
 {{{
 <config>
   <jcatapult>
     <email>
       <templates>
-        <location>/WEB-INF/email-templates/sweepstakes/2008</location>
+        <location>/WEB-INF/email-templates</location>
       </templates>
     </email>
   </jcatapult>
@@ -157,7 +179,92 @@ The first thing you'll want to do is figure out where you want to store your tem
 }}}
 
 == Template Name ==
-The next thing you'll want to do is come up with a name for your email template.  Since this email will contain details on winning the sweepstakes, lets choose 'winner' as the template name.
+The next thing you'll want to do is come up with a name for your email template.  Since this email will contain details on who submitted the contact form, lets choose 'contact' as the template name.
 
 == Creating Template Files ==
-The first thing that you'll want to do is construct your email body and decide whether or not you want it to be a text or html email.
+After you decide on a template name, the next thing you should do is construct your email body and decide whether or not you want it to be a text or html email.  Lets send an html email with the following body:
+
+{{{
+<html>
+  <body>
+    <p>The website contact us form has been submitted with the following information:</p>
+    <ul>
+      <li>Name: ${name}</li>
+      <li>Email: ${email}</li>
+      <li>Message: ${message}</li>
+    </ul>
+  </body>
+</html>
+}}}
+
+Since we've chosen `contact` as our template name and we're sending an HTML email, we'll create the following template file containing the above HTML in the WEB-INF/email-templates directory:
+
+{{{
+contact-html.ftl
+}}}
+
+== Sending the email ==
+Using the `FreeMarkerEmailService`, you'd send the email by calling the `sendEmail` method, issuing the appropriate commands to build the email.  I have provided an example struts2 action below to help illustrate
+
+{{{
+package org.jcatapult.test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.jcatapult.email.service.EmailService;
+import org.jcatapult.struts.action.BaseAction;
+
+import com.google.inject.Inject;
+
+/**
+ * Example struts2 action that processes the contact us form
+ */
+public class Test extends BaseAction {
+    private String name;
+    private String email;
+    private String message;
+    private EmailService emailService;
+
+    @Inject
+    public Test(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+    @Override
+    public String execute() throws Exception {
+        Map<String, Object> templateParams = new HashMap<String, Object>();
+        templateParams.put("name", name);
+        templateParams.put("email", email);
+        templateParams.put("message", message);
+        emailService.sendEmail("contact").withSubject("Contact Us Form Submission").to("john@doe.com").from(email).withTemplateParams(templateParams).now();
+
+        return SUCCESS;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}
+
+}}}
