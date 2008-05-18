@@ -25,7 +25,7 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [GuideServices Services]
   * [GuideDependencyInjection Dependency Injection]
 
-  * [GuideEmail Email API]
+  * [GuideEmail JCatapult Email]
   * [GuideEnvironment Environment resolution]
   * [GuideConfiguration Configuration]
   * [GuideCommerce Commerce]
