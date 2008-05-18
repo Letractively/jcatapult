@@ -54,7 +54,7 @@ An example deploy xml configuration file is included below:
 <?xml version="1.0" encoding="UTF-8"?>
 <deployment-properties>
   <deploy domain="domain1">
-    <environment type="staging">
+    <environment type="internal-qa">
       <host>staging.jcatapult.org</host>
       <host-username>staging.host.username</host-username>
       <host-password>staging.host.password</host-password>
@@ -64,7 +64,7 @@ An example deploy xml configuration file is included below:
     </environment>
   </deploy>
   <deploy domain="domain2">
-    <environment type="qa">
+    <environment type="external-qa">
       <host>qa.jcatapult.org</host>
       <host-username>qa.host.username</host-username>
       <host-password>qa.host.password</host-password>
@@ -72,13 +72,33 @@ An example deploy xml configuration file is included below:
       <db-username>qa.db.username</db-username>
       <db-password>qa.db.password</db-password>
     </environment>
-    <environment type="prod">
-      <host>prod.jcatapult.org</host>
-      <host-username>prod.host.username</host-username>
-      <host-password>prod.host.password</host-password>
-      <db-name>prod.db.name</db-name>
-      <db-username>prod.db.username</db-username>
-      <db-password>prod.db.password</db-password>
+    <environment type="staging">
+      <host>staging.jcatapult.org</host>
+      <host-username>staging.host.username</host-username>
+      <host-password>staging.host.password</host-password>
+      <db-name>staging.db.name</db-name>
+      <db-username>staging.db.username</db-username>
+      <db-password>staging.db.password</db-password>
+    </environment>
+  </deploy>
+  <deploy domain="domain3">
+    <environment type="production">
+      <host>production.jcatapult.org</host>
+      <host-username>production.host.username</host-username>
+      <host-password>production.host.password</host-password>
+      <db-name>production.db.name</db-name>
+      <db-username>production.db.username</db-username>
+      <db-password>production.db.password</db-password>
+    </environment>
+  </deploy>
+  <deploy domain="domain1">
+    <environment type="internal-qa">
+      <host>staging.jcatapult.org</host>
+      <host-username>staging.host.username</host-username>
+      <host-password>staging.host.password</host-password>
+      <db-name>staging.db.name</db-name>
+      <db-username>staging.db.username</db-username>
+      <db-password>staging.db.password</db-password>
     </environment>
   </deploy>
 </deployment-properties>
@@ -86,13 +106,8 @@ An example deploy xml configuration file is included below:
 
 The configuration schema is defined by one or more `deploy` descriptors and each deploy descriptor contains one or more `environment` descriptors.
 
-== Deploy Descriptor ==
-The overarching concept behind the scaffolder is to deploy 
-
 = Interactive =
+The deployer tool is highly interactive in that it provides tab completion for ease of use.  Whenever you are asked a question by the deployer you can usually hit the tab key twice to get a list of some of the possible responses.
 
-The deployer tool is highly interactive in that it provides tab completion for ease of use. 
-
-= Domain =
-
-= Environment =
+== Domain Option ==
+The first question the deployer will ask is which domain you are deploying to.
