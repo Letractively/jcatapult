@@ -1,8 +1,8 @@
 package org.jcatapult.deployment.service;
 
 import org.jcatapult.deployment.DeploymentBaseTest;
+import org.jcatapult.deployment.domain.Domain;
 import org.jcatapult.deployment.domain.Deploy;
-import org.jcatapult.deployment.domain.DeploymentProperties;
 import org.jcatapult.deployment.domain.Environment;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,16 +15,16 @@ import net.java.error.ErrorList;
  * Date: May 15, 2008
  */
 public class ValidationServiceImplTest extends DeploymentBaseTest {
-    private ValidationService<DeploymentProperties> vs;
+    private ValidationService<Deploy> vs;
 
     @Inject
-    public void setService(ValidationService<DeploymentProperties> vs) {
+    public void setService(ValidationService<Deploy> vs) {
         this.vs = vs;
     }
 
     @Test
     public void testServiceValidation() {
-        DeploymentProperties props = new DeploymentProperties();
+        Deploy props = new Deploy();
         String errorMsg = vs.validate(props);
         Assert.assertNotNull(errorMsg);
         testOutput(errorMsg);
@@ -32,7 +32,7 @@ public class ValidationServiceImplTest extends DeploymentBaseTest {
 
     @Test
     public void testNoDeployFailure() {
-        DeploymentProperties props = new DeploymentProperties();
+        Deploy props = new Deploy();
 
         ErrorList errorList = props.validate();
 
@@ -43,9 +43,9 @@ public class ValidationServiceImplTest extends DeploymentBaseTest {
 
     @Test
     public void testInvalidDeployFailure1() {
-        DeploymentProperties props = new DeploymentProperties();
-        Deploy deploy = new Deploy();
-        props.addDeploy(deploy);
+        Deploy props = new Deploy();
+        Domain domain = new Domain();
+        props.addDomain(domain);
 
         ErrorList errorList = props.validate();
 
@@ -56,10 +56,10 @@ public class ValidationServiceImplTest extends DeploymentBaseTest {
 
     @Test
     public void testInvalidDeployFailure2() {
-        DeploymentProperties props = new DeploymentProperties();
-        Deploy deploy = new Deploy();
-        deploy.setDomain("test domain");
-        props.addDeploy(deploy);
+        Deploy props = new Deploy();
+        Domain domain = new Domain();
+        domain.setName("test domain");
+        props.addDomain(domain);
 
         ErrorList errorList = props.validate();
 
@@ -70,12 +70,12 @@ public class ValidationServiceImplTest extends DeploymentBaseTest {
 
     @Test
     public void testEnvironmentFailure1() {
-        DeploymentProperties props = new DeploymentProperties();
-        Deploy deploy = new Deploy();
-        deploy.setDomain("test domain");
+        Deploy props = new Deploy();
+        Domain domain = new Domain();
+        domain.setName("test domain");
         Environment env = new Environment();
-        deploy.addEnv(env);
-        props.addDeploy(deploy);
+        domain.addEnv(env);
+        props.addDomain(domain);
 
         ErrorList errorList = props.validate();
 
@@ -86,13 +86,13 @@ public class ValidationServiceImplTest extends DeploymentBaseTest {
 
     @Test
     public void testEnvironmentFailure2() {
-        DeploymentProperties props = new DeploymentProperties();
-        Deploy deploy = new Deploy();
-        deploy.setDomain("test domain");
+        Deploy props = new Deploy();
+        Domain domain = new Domain();
+        domain.setName("test domain");
         Environment env = new Environment();
-        env.setType("test env");
-        deploy.addEnv(env);
-        props.addDeploy(deploy);
+        env.setName("test env");
+        domain.addEnv(env);
+        props.addDomain(domain);
 
         ErrorList errorList = props.validate();
 

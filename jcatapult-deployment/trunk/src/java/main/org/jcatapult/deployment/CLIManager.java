@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.TreeSet;
 
 import static org.jcatapult.deployment.DeploymentManager.DEPLOY_ARCHIVE_DIR;
-import org.jcatapult.deployment.domain.Deploy;
+import org.jcatapult.deployment.domain.Domain;
 import org.jcatapult.deployment.domain.DeploymentInfo;
-import org.jcatapult.deployment.domain.DeploymentProperties;
+import org.jcatapult.deployment.domain.Deploy;
 import org.jcatapult.deployment.domain.Environment;
 import org.jcatapult.deployment.domain.Project;
 import org.jcatapult.deployment.service.BetterSimpleCompletor;
@@ -39,22 +39,22 @@ public class CLIManager {
     /**
      * Manages collecting data from user input to populate the {@link org.jcatapult.deployment.domain.DeploymentInfo} bean
      *
-     * @param props the {@link org.jcatapult.deployment.domain.DeploymentProperties} bean
+     * @param props the {@link org.jcatapult.deployment.domain.Deploy} bean
      * @param project the {@link org.jcatapult.deployment.domain.Project} bean
      * @return returns a {@link org.jcatapult.deployment.domain.DeploymentInfo} bean, which contains the information
      * for performing artifact deployment
      */
-    public DeploymentInfo manage(DeploymentProperties props, Project project) {
+    public DeploymentInfo manage(Deploy props, Project project) {
 
         // deployment info stores all the data necessary to process the deployment
         DeploymentInfo deploymentInfo = new DeploymentInfo();
 
         // get deploy and set deploy domain into the deployment info
-        Deploy deploy = getDeploy(props.getDeploys());
-        deploymentInfo.setDeployDomain(deploy.getDomain());
+        Domain domain = getDomain(props.getDomains());
+        deploymentInfo.setDeployDomain(domain.getName());
 
         // get the deploy environment and set it into the deployment info
-        Environment env = getDeployEnv(deploy.getEnvs());
+        Environment env = getDeployEnv(domain.getEnvs());
         deploymentInfo.setEnv(env);
 
         // set the project into the deployment info
@@ -109,39 +109,39 @@ public class CLIManager {
     /**
      * Gets deploy domain input from the CLI if there's more than one deploy domain descriptor defined in the deploy.xml
      *
-     * @param deploys the list of {@link org.jcatapult.deployment.domain.Deploy} objects
-     * @return the {@link org.jcatapult.deployment.domain.Deploy} object
+     * @param domains the list of {@link org.jcatapult.deployment.domain.Domain} objects
+     * @return the {@link org.jcatapult.deployment.domain.Domain} object
      */
-    private Deploy getDeploy(List<Deploy> deploys) {
+    private Domain getDomain(List<Domain> domains) {
 
-        String domain = deploys.get(0).getDomain();
+        String domainString = domains.get(0).getName();
 
         // this block populates a tree set to be used for tab completion in the cli service.
         // this only gets interpreted if there are more than one deploy descriptor defined
         String msgFrag = "Deploying to domain: ";
-        if (deploys.size() > 1) {
-            TreeSet<String> domains = new TreeSet<String>();
-            for (Deploy deploy : deploys) {
-                domains.add(deploy.getDomain());
+        if (domains.size() > 1) {
+            TreeSet<String> domainNames = new TreeSet<String>();
+            for (Domain domain : domains) {
+                domainNames.add(domain.getName());
             }
 
-            completor.setCandidates(domains);
+            completor.setCandidates(domainNames);
 
-            domain = cliService.ask("Please select the domain you are deploying to:",
+            domainString = cliService.ask("Please select the domain you are deploying to:",
                 msgFrag, "Invalid domain.  Use tab to view available domains",
-                domains.first(), completor);
+                domainNames.first(), completor);
         } else {
-            System.out.println(msgFrag + domain);
+            System.out.println(msgFrag + domainString);
         }
 
-        Deploy deploy = null;
-        for (Deploy d : deploys) {
-            if (d.getDomain().equals(domain)) {
-                deploy = d;
+        Domain domain = null;
+        for (Domain d : domains) {
+            if (d.getName().equals(domainString)) {
+                domain = d;
             }
         }
 
-        return deploy;
+        return domain;
     }
 
     /**
@@ -152,7 +152,7 @@ public class CLIManager {
      */
     private Environment getDeployEnv(List<Environment> envs) {
 
-        String envType = envs.get(0).getType();
+        String envType = envs.get(0).getName();
 
         // this block populates a tree set to be used for tab completion in the cli service.
         // this only gets interpreted if there are more than one environment descriptor defined
@@ -160,7 +160,7 @@ public class CLIManager {
         if (envs.size() > 1) {
             TreeSet<String> envTypes = new TreeSet<String>();
             for (Environment env : envs) {
-                envTypes.add(env.getType());
+                envTypes.add(env.getName());
             }
 
             completor.setCandidates(envTypes);
@@ -174,7 +174,7 @@ public class CLIManager {
 
         Environment env = null;
         for (Environment e : envs) {
-            if (e.getType().equals(envType)) {
+            if (e.getName().equals(envType)) {
                 env = e;
             }
         }

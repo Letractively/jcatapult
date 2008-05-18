@@ -4,8 +4,8 @@ import java.io.File;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.jcatapult.deployment.DeploymentBaseTest;
+import org.jcatapult.deployment.domain.Domain;
 import org.jcatapult.deployment.domain.Deploy;
-import org.jcatapult.deployment.domain.DeploymentProperties;
 import org.jcatapult.deployment.domain.Environment;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,12 +27,12 @@ public class DeployXmlServiceTest extends DeploymentBaseTest {
     @Test
     public void testUnmarshallingMultipleDomains() throws XmlServiceException, ConfigurationException {
         File file = new File("src/xml/examples/deploy-multiple-domains.xml");
-        DeploymentProperties dProps = xs.unmarshall(file);
+        Deploy dProps = xs.unmarshall(file);
 
-        Assert.assertEquals(2, dProps.getDeploys().size());
+        Assert.assertEquals(2, dProps.getDomains().size());
 
-        Deploy domain1 = dProps.getDeploys().get(0);
-        Assert.assertEquals("domain1", domain1.getDomain());
+        Domain domain1 = dProps.getDomains().get(0);
+        Assert.assertEquals("domain1", domain1.getName());
 
         Assert.assertEquals(1, domain1.getEnvs().size());
 
@@ -46,8 +46,8 @@ public class DeployXmlServiceTest extends DeploymentBaseTest {
             Assert.assertEquals("staging.db.password", env.getDbPassword());
         }
 
-        Deploy domain2 = dProps.getDeploys().get(1);
-        Assert.assertEquals("domain2", domain2.getDomain());
+        Domain domain2 = dProps.getDomains().get(1);
+        Assert.assertEquals("domain2", domain2.getName());
 
         Assert.assertEquals(2, domain2.getEnvs().size());
 
