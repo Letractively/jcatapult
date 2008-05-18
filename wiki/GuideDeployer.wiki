@@ -118,4 +118,45 @@ jcatapult-1.0.jar
 }}}
 
 === Jar Creation ===
-A deployable jar resource contains all files that should be deployed to the selected domain enviroment.  The jar file itself can be created manually or created via the JCatapult Release scripts.  For more information on how to create it using the JCatapult Release scripts, please reference the [GuideRelease JCatapult Release]).
+A deployable jar resource contains all files that should be deployed to the selected domain enviroment.  The jar file itself can be created manually or created via the JCatapult Release scripts.  For more information on how to create it using the JCatapult Release scripts, please reference the [GuideRelease JCatapult Release] guide.
+
+= Deployment =
+Once the deployer collects the domain, environment, and jar resource information it looks for a `deployer.groovy` script in the .jcatapult/deployment/<domain> directory where the <domain> is equal to the domain you are deploying to.
+
+== deployer.goovy ==
+The deployer.groovy script must extend the `Deployer` interface and implement the `deploy` method.  The javadoc for the Deploy interface has been provided below:
+
+{{{
+package org.jcatapult.deployment;
+
+import org.jcatapult.deployment.domain.DeploymentInfo;
+
+/**
+ * Interface for perfoming deployments
+ *
+ * This interface must be implemented by a deploy.groovy script
+ * located in the following directory context:
+ *
+ * .jcatapult/deployment/<domain>
+ *
+ * where <domain> is equal to the domain you are deploying to.
+ * This domain is the same domain configured in the deploy xml configuration file
+ *
+ * User: jhumphrey
+ * Date: May 15, 2008
+ */
+public interface Deployer {
+
+    /**
+     * Called to deploy
+     *
+     * @param deploymentInfo {@link DeploymentInfo} provided to groovy scripts.  This bean contains all the necessary information
+     * for deploying artifacts to remote servers
+     */
+    public void deploy(DeploymentInfo deploymentInfo);
+}
+
+}}}
+
+== Deployment Info ==
+The `DeploymentInfo` object passed to the `deploy` method contains information the deploy.groovy can use to successfully deploy the jar resource to the domain environment specified.
