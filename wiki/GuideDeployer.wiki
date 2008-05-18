@@ -8,10 +8,10 @@ To understand the deployer better, there are 2 main concepts that you should be 
   * Environment
 
 = Domain =
-The domain represents a server or group of servers where there are one or more environments that you host your web applications.
+The domain represents a server or group of servers where there are one or more environments where you host your web applications from.
 
 = Environment =
-The environment represents the location where your web application is running from.  Each environment is uniquely identified by the environment type where the type is an arbitrary value.  Typical environment types are:  development, internal-qa, external-qa, staging, production.
+The environment represents a location where your web application is running from.  Each environment is uniquely identified by the environment type where the type is an arbitrary value.  Example environment types are:  development, internal-qa, external-qa, staging, production.
 
 = Setup =
 
