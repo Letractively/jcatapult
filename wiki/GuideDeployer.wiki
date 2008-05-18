@@ -2,17 +2,6 @@
 
 As of 1.0-RC2, JCatapult ships with the JCatapult Deployment Manager (`deployer` for short), which is a deployment framework that uses Apache Commons Configuration, Java Secure CHannel (JSCH), and Groovy to provide an easy way to deploy webapps to remote servers.
 
-To understand the deployer better, there are 2 main concepts that you should be familiar with:
-
-  * Domain
-  * Environment
-
-= Domain =
-The domain represents a server or group of servers where there are one or more environments where you host your web applications from.
-
-= Environment =
-The environment represents a location where your web application is running from.  Each environment is uniquely identified by the environment type where the type is an arbitrary value.  Example environment types are:  development, internal-qa, external-qa, staging, production.
-
 = Setup =
 
 (This document assumes you have completed the instructions in the GettingStarted document.)
@@ -42,7 +31,18 @@ This command will tell the deployer to display the help screen.
 Both the batch and shell scripts assume that you are executing them from within your jcatapult project root directory.  If you do not execute them from within your jcatapult project root, then you will be prompted by an error screen informing you of such.
 
 = Configuration =
-The deployer is configured via an xml file and, by convention, script execution expects the path of this configuration file to be relative to the project root at the following location:
+To configure the deployer, there are 2 main concepts that you should be familiar with:
+
+  * Domain
+  * Environment
+
+== Domain ==
+The domain represents a server or group of servers where there are one or more environments where you host your web applications from.
+
+== Environment ==
+The environment represents a specific location within a domain where your web application is running from.  Each environment is uniquely identified by the environment type where the type is an arbitrary value.  Example environment types are:  development, internal-qa, external-qa, staging, production.
+
+Both the Domain and Environment information are configured via an xml file and, by convention, script execution expects the path of this configuration file to be relative to the project root at the following location:
 
 {{{
 deploy/remote/deploy.xml
