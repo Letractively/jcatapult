@@ -101,7 +101,7 @@ In order for the `FreeMarkerEmailService` to actually find your files in the con
 <template-name>-[html|text].ftl
 }}}
 
-  * <template-name>: arbitrary name given to the template (e.g. sweepstakes).
+  * <template-name>: arbitrary name given to the template (e.g. contact).
   * [html|text]: html or text.  This token informs the service that the email message is a text or html email.
 
 ex:
