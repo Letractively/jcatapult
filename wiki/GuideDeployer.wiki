@@ -52,7 +52,7 @@ An example deploy xml configuration file is included below:
 
 {{{
   <?xml version="1.0" encoding="UTF-8"?>
-<deployment-properties>
+<deployment-configuration>
   <domain name="domain1">
     <environment name="internal-qa">
       <host>staging.jcatapult.org</host>
@@ -79,10 +79,10 @@ An example deploy xml configuration file is included below:
       <host-password>production.host.password</host-password>
     </environment>
   </domain>
-</deployment-properties>
+</deployment-configuration>
 }}}
 
-The configuration schema is defined by one or more `domain` descriptors and each domain descriptor contains one or more `environment` descriptors.  You must define at least one domain and at least one environment descriptor.  The domain 'name', environment 'name', host, host-username, and host-password are all required fields.  The xml is validated so if you forget to define any of these fields the tool will notify you of such.
+The deployment configuration schema is defined by one or more `domain` descriptors and each domain descriptor contains one or more `environment` descriptors.  The domain attribute 'name', environment attribute 'name', host, host-username, and host-password descriptors are all required fields.  The xml is validated so if you forget to define any of these fields the tool will notify you of such.
 
 = Interactive =
 The deployer tool is highly interactive in that it provides tab completion for ease of use.  Whenever you are asked a question by the deployer you can usually hit the tab key twice to get possible responses.
