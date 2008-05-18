@@ -101,7 +101,7 @@ Once you select your domain, you will be asked for which environment within that
 The next question prompts for the jar resource you'd like to deploy to the selected domain environment. By convention, the deployer looks within the `.jcatapult/deploy-archive` directory for available jar resources.
 
 === Jar Naming Convention ===
-Each jar resource must conform to the following naming convention format in order for the deployer to load them successfully:
+Each jar resource within the `.jcatapult/deploy-archive` must conform to the following naming convention format in order for the deployer to load them successfully:
 
 {{{
 <project-name>-<version>.jar
@@ -118,7 +118,7 @@ jcatapult-1.0.jar
 }}}
 
 === Jar Creation ===
-A deployable jar resource contains all files that should be deployed to the selected domain enviroment.  The jar file itself can be created manually or created via the JCatapult Release scripts.  For more information on how to create it using the JCatapult Release scripts, please reference the [GuideRelease JCatapult Release] guide.
+A deployable jar resource contains all files that should be deployed to the selected domain enviroment.  The jar file itself can be created manually or via the JCatapult Release scripts.  For more information on how to create it using the JCatapult Release scripts, please reference the [GuideRelease JCatapult Release] guide.
 
 = Deployment =
 Once the deployer collects the domain, environment, and jar resource information it looks for a `deployer.groovy` script in the .jcatapult/deployment/<domain> directory where the <domain> is equal to the domain you are deploying to.
