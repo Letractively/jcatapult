@@ -228,9 +228,9 @@ public class Test extends BaseAction {
                      withSubject("Contact Us Form Submission").
                      to("john@doe.com").
                      from(email).
-                     addTemplateParam("name", name).
-                     addTemplateParam("email", email).
-                     addTemplateParam("message", message).
+                     withTemplateParam("name", name).
+                     withTemplateParam("email", email).
+                     withTemplateParam("message", message).
                      now();
 
         return SUCCESS;
