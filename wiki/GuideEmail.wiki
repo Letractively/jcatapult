@@ -2,11 +2,76 @@
 
 Built on [http://freemarker.sourceforge.net/ FreeMarker] and [http://java.sun.com/products/javamail/ JavaMail], the JCatapult Email library (JCEL for short) provides a set of APIs to easily create and send emails from an application. JCEL is designed primarily around two main interface APIs:
 
-  * Email Service - Builds the email
   * Email Transport Service - Sends the mail
+  * Email Service - Builds the email
+
+= Email Transport Service =
+The `EmailTransportService` is an interface that defines a transport mechanism for sending email messages.  The API itself consists of one method, `sendEmail`, the javadoc for which has been included below for illustration:
+
+{{{
+    /**
+     * Sends an email using some SMTP transport mechanism. An implementation might decide to make the
+     * sending be asynchronous or it might choose to send the email immediately. If it decides to send
+     * the email immediately, this method will return null.
+     *
+     * @param   email The email to send.
+     * @return  A Future for implementations that send email asynchronously.
+     */
+    Future<Email> sendEmail(Email email);
+}}}
+
+== Java Mail Email Transport Service ==
+As suggested by the name, the `JavaMailEmailTransportService` is an implementation of the `EmailTransportService` that uses [http://java.sun.com/products/javamail/ JavaMail] as the SMTP transport mechansism.
+
+=== Configuration ===
+The `JavaMailEmailTransportService` uses [GuideConfiguration JCatapult Configuration] for configuring the [http://java.sun.com/products/javamail/ JavaMail] Session.  In order to create the session, the configuration is used to load up the username and password for the SMTP server as well as any other possible JavaMail configuration. Here are the configuration keys that can be used.
+
+  * jcatapult.email.username
+    * Description: The user name for the SMTP server
+    * Optional: false
+    * Default: N/A
+
+  * jcatapult.email.password
+    * Description: The password for the SMTP server.
+    * Optional: false
+    * Default: N/A
+
+  * jcatapult.email.smtp-host
+    * Description: The SMTP host.
+    * Optional: true
+    * Default: localhost
+
+  * jcatapult.email.thread-pool.core-size
+    * Description: The initial size of the thread pool for asynchronous handling of the email sending.
+    * Optional: true
+    * Default: 1
+
+  * jcatapult.email.thread-pool.maximum-size
+    * Description: The maximum size of the thread pool for asynchronous handling of the email sending.
+    * Optional: true
+    * Default: 5
+
+  * jcatapult.email.thread-pool.keep-alive
+    * The keep alive time (in milliseconds) to have threads stick around being idle prior to being thrown out.
+    * Optional: true
+    * Default: 500 milliseconds
+
+Besides the above properties, you can also specify any other properties that are supported by the JavaMail specification. However, these properties need to be prepended with `mail` in order to be loaded. For example, if you want to specify a default 'from' address, you would add a property to the configuration files like this:
+
+{{{
+<config>
+  <jcatapult>
+    <email>
+      <mail>
+        <from>fred@example.com</from>
+      </mail>
+    </email>
+  </jcatapult>
+</config>
+}}}
 
 = Email Service =
-The Email Service is an interface that is used to construct emails in a simple and templatized manner.  The API itself consists of one method, `sendEmail`, the javadoc for which has been pasted below for illustration:
+The Email Service is an interface that is used to construct emails in a simple and templatized manner.  The API itself consists of one method, `sendEmail`, the javadoc for which has been included below for illustration:
 
 {{{
     /**
