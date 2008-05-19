@@ -1,5 +1,5 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
-         name="jcatapult-deployment"
+         name="jcatapult-deployer"
          group="jcatapult.org"
          version="1.0-RC2">
 
@@ -36,7 +36,7 @@
       <artifact group="groovy.codehaus.org" project="groovy" name="groovy-all" version="1.5.4" type="jar"/>
 
       <!-- jc core -->
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-RC1" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-RC2" type="jar"/>
 
       <!-- config -->
       <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
