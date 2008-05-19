@@ -18,6 +18,8 @@ package org.jcatapult.deployer.domain;
 
 import java.io.File;
 
+import org.apache.commons.configuration.Configuration;
+
 import net.java.error.ErrorList;
 import net.java.lang.StringTools;
 import net.java.validate.Validatable;
@@ -30,6 +32,8 @@ import net.java.validate.Validatable;
 public class Project implements Validatable {
     private String name;
     private File dir;
+    private String version;
+    private Configuration config;
 
     /**
      * <p>Returns the project name.  This is extracted from the project's project.xml file
@@ -60,12 +64,49 @@ public class Project implements Validatable {
     }
 
     /**
-     * Sets the project root directory
+     * <p>Sets the project root directory</p>
      *
      * @param dir the project root directory
      */
     public void setDir(File dir) {
         this.dir = dir;
+    }
+
+    /**
+     * <p>Gets the current project version</p>
+     *
+     * @return the current project version
+     */
+    public String getVersion() {
+        return version;
+    }
+
+    /**
+     * <p>Sets the project version number</p>
+     *
+     * @param version the project version number
+     */
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    /**
+     * <p>Returns the apache commons configuration object.  This object can be used to access
+     * any additional information from the project.xml file</p>
+     *
+     * @return apache commons configuration object.
+     */
+    public Configuration getConfig() {
+        return config;
+    }
+
+    /**
+     * <p>Sets the apache commons configuration object</p>
+     *
+     * @param config the apache commons configuration object
+     */
+    public void setConfig(Configuration config) {
+        this.config = config;
     }
 
     /**

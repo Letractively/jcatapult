@@ -52,7 +52,9 @@ public class ProjectXmlService {
 
         Project project = new Project();
         project.setName(config.getString("[@name]"));
+        project.setVersion(config.getString("[@version]"));
         project.setDir(file.getParentFile());
+        project.setConfig(config);
 
         return project;
     }

@@ -78,7 +78,7 @@ public class CLIManager {
 
         // get the jar to be deployed
         String deployJar = getDeployJar(project.getName());
-        deploymentInfo.setDeployJar(deployJar);
+        deploymentInfo.setDeployArchive(deployJar);
 
         return deploymentInfo;
     }

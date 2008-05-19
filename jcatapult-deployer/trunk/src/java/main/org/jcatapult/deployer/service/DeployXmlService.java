@@ -32,34 +32,34 @@ import org.jcatapult.deployer.domain.Environment;
  * <p>The service expects xml to be in the following format:</p>
  *
  * <pre>
- * <deployment-configuration>
- * <domain name="domain1">
- *   <environment name="internal-qa">
- *     <host>staging.jcatapult.org</host>
- *     <host-username>staging.host.username</host-username>
- *     <host-password>staging.host.password</host-password>
- *   </environment>
- * </domain>
- * <domain name="domain2">
- *   <environment name="external-qa">
- *     <host>qa.jcatapult.org</host>
- *     <host-username>qa.host.username</host-username>
- *     <host-password>qa.host.password</host-password>
- *   </environment>
- *    <environment name="staging">
- *      <host>staging.jcatapult.org</host>
- *     <host-username>staging.host.username</host-username>
- *      <host-password>staging.host.password</host-password>
- *    </environment>
- *  </domain>
- *  <domain name="domain3">
- *    <environment name="production">
- *      <host>production.jcatapult.org</host>
- *      <host-username>production.host.username</host-username>
- *      <host-password>production.host.password</host-password>
- *    </environment>
- *  </domain>
- * </deployment-configuration>
+ * &lt;deployment-configuration>
+ * &lt;domain name="domain1">
+ *   &lt;environment name="internal-qa">
+ *     &lt;host>staging.jcatapult.org&lt;/host>
+ *     &lt;host-username>staging.host.username&lt;/host-username>
+ *     &lt;host-password>staging.host.password&lt;/host-password>
+ *   &lt;/environment>
+ * &lt;/domain>
+ * &lt;domain name="domain2">
+ *   &lt;environment name="external-qa">
+ *     &lt;host>qa.jcatapult.org&lt;/host>
+ *     &lt;host-username>qa.host.username&lt;/host-username>
+ *     &lt;host-password>qa.host.password&lt;/host-password>
+ *   &lt;/environment>
+ *    &lt;environment name="staging">
+ *      &lt;host>staging.jcatapult.org&lt;/host>
+ *     &lt;host-username>staging.host.username&lt;/host-username>
+ *      &lt;host-password>staging.host.password&lt;/host-password>
+ *    &lt;/environment>
+ *  &lt;/domain>
+ *  &lt;domain name="domain3">
+ *    &lt;environment name="production">
+ *      &lt;host>production.jcatapult.org&lt;/host>
+ *      &lt;host-username>production.host.username&lt;/host-username>
+ *      &lt;host-password>production.host.password&lt;/host-password>
+ *    &lt;/environment>
+ *  &lt;/domain>
+ * &lt;/deployment-configuration>
  * </pre>
  *
  * <p>required fields:</p>
@@ -95,7 +95,8 @@ public class DeployXmlService {
             throw new XmlServiceException(cex);
         }
 
-        Deploy props = new Deploy();
+        Deploy deploy = new Deploy();
+        deploy.setConfig(config);
 
         List<String> domainList = config.getList("domain.[@name]");
 
@@ -117,9 +118,9 @@ public class DeployXmlService {
                 env.setDbPassword(config.getString(envKey + ".db-password"));
                 domain.addEnv(env);
             }
-            props.addDomain(domain);
+            deploy.addDomain(domain);
         }
 
-        return props;
+        return deploy;
     }
 }
