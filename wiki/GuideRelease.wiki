@@ -1,0 +1,2 @@
+= JCatapult Release Scripts =
+JCatapult provides a mechanism for releasing projects.
