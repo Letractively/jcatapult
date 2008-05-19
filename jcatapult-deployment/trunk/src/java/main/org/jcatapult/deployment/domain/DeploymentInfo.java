@@ -3,7 +3,8 @@ package org.jcatapult.deployment.domain;
 import java.io.File;
 
 /**
- * Bean that contains the information needed to deploy to the remote server
+ * Bean that contains the information needed by the deploy.groovy script
+ * to deploy the jar resource to the selected domain environemnt
  *
  * User: jhumphrey
  * Date: Mar 25, 2008
