@@ -5,3 +5,4 @@
   * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-scaffolder/1.0-RC2/index.html JCatapult-Scaffolder Javadoc]
   * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-security/1.0-RC2/index.html JCatapult-Security Javadoc]
   * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-email/1.0-RC2/index.html JCatapult-Email Javadoc]
+  * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-deployer/1.0-RC2/index.html JCatapult-Deployer Javadoc]
