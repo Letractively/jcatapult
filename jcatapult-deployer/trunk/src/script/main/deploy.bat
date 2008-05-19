@@ -19,4 +19,4 @@ set deployXml=
 ::
 :: Execute the deployer
 ::
-java -cp "%JAVA_HOME%\lib\tools.jar;%RUN_CLASSPATH%" org.jcatapult.deployment.DeploymentManager %1 .\ deploy\remote\deploy.xml
+java -cp "%JAVA_HOME%\lib\tools.jar;%RUN_CLASSPATH%" org.jcatapult.deployer.DeploymentManager %1 .\ deploy\remote\deploy.xml
