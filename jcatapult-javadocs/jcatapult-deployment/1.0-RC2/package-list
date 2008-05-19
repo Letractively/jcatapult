@@ -1,0 +1,5 @@
+org.jcatapult.deployment
+org.jcatapult.deployment.domain
+org.jcatapult.deployment.guice
+org.jcatapult.deployment.net
+org.jcatapult.deployment.service
