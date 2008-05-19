@@ -3,7 +3,15 @@ package org.jcatapult.deployment;
 import org.jcatapult.deployment.domain.DeploymentInfo;
 
 /**
- * Interface implemented by deploy.groovy scripts to perform deployment
+ * Interface for perfoming deployments
+ *
+ * This interface must be implemented by a deploy.groovy script
+ * located in the following directory context:
+ *
+ * .jcatapult/deployment/&lt;domain>
+ *
+ * where &lt;domain> is equal to the domain you are deploying to.
+ * This domain is the same domain configured in the deploy xml configuration file
  *
  * User: jhumphrey
  * Date: May 15, 2008
