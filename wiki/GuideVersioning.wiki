@@ -3,7 +3,9 @@
 JCatapult follows a very strict numbering scheme. Your JCatapult web applications, libraries, and modules should also try to adhere to this scheme so that everything is consistent. The versioning numbers are all conform to this format:
 
 {{{
-[0-9].[0-9](.[0-9])(-[A|B|M|RC][0-9])
+version := number '.' number ('.' number) ('-' snapshot)
+number := [0-9]+
+snapshot := [A|B|M|RC][0-9]+
 }}}
 
 This format is also the primary format that is used by [http://code.google.com/p/savant-build Savant], the dependency management tool used by JCatapult. Using this format allows Savant to determine compatibility between versions of a project. Here are some examples of the format:
