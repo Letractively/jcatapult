@@ -23,4 +23,4 @@ The plugin provides these targets regardless of which import is used:
 
 == rel ==
 
-This target is an interactive target that will assist in the release process. The documentation for doing JCatapult releases is contained in the [Releasing] documentation.
+This target is an interactive target that will assist in the release process. The documentation for doing JCatapult releases is contained in the [GuideRelease JCatapult Release] documentation.
