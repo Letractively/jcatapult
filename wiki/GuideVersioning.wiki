@@ -1,6 +1,6 @@
 = JCatapult Versioning Specification =
 
-All JCatapult projects follow a very strict numbering scheme. JCatapult projects should also try to adhere to this scheme so that all JCatapult libraries, webapps and modules are consistent. The versioning numbers are all conform to this format:
+JCatapult follows a very strict numbering scheme. Your JCatapult web applications, libraries, and modules should also try to adhere to this scheme so that everything is consistent. The versioning numbers are all conform to this format:
 
 {{{
 [0-9].[0-9](.[0-9])(-[A|B|M|RC][0-9])
