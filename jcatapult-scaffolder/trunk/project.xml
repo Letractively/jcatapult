@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
     name="jcatapult-scaffolder"
     group="jcatapult.org"
-    version="1.0-RC1">
+    version="1.0-RC2">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -28,11 +28,23 @@
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile">
+      <!-- apache commons -->
+      <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="commons.apache.org" project="commons-cli" name="commons-cli" version="1.1" type="jar"/>
+
+      <!-- groovy -->
       <artifact group="groovy.codehaus.org" project="groovy" name="groovy-all" version="1.5.4" type="jar"/>
+
+      <!-- java net commons -->
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
+
+      <!-- jdom -->
       <artifact group="jdom.org" project="jdom" name="jdom" version="1.1" type="jar"/>
+
+      <!-- freemarker -->
       <artifact group="freemarker.org" project="freemarker" name="freemarker" version="2.3.12" type="jar"/>
+
+      <!-- jline -->
       <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
     </artifactGroup>
     <artifactGroup type="run">
