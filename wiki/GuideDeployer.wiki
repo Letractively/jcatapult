@@ -1,6 +1,6 @@
-= JCatapult Deployment Manager =
+= JCatapult Deployer =
 
-As of 1.0-RC2, JCatapult ships with the JCatapult Deployment Manager (`deployer` for short), which is a deployment framework that uses Apache Commons Configuration, Java Secure CHannel (JSCH), and Groovy to provide an easy way to deploy webapps to remote servers. 
+As of 1.0-RC2, JCatapult ships with the JCatapult Deployer, which is a deployment framework that uses Apache Commons Configuration, Java Secure CHannel (JSCH), and Groovy to provide an easy way to deploy webapps to remote servers. 
 
 = Setup =
 
