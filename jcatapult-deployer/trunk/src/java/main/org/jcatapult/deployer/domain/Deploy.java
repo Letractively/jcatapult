@@ -19,6 +19,8 @@ package org.jcatapult.deployer.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.configuration.Configuration;
+
 import net.java.error.ErrorList;
 import net.java.validate.Validatable;
 
@@ -28,7 +30,9 @@ import net.java.validate.Validatable;
  * @author jhumphrey
  */
 public class Deploy implements Validatable {
-    List<Domain> domains = new ArrayList<Domain>();
+    private List<Domain> domains = new ArrayList<Domain>();
+
+    private Configuration config;
 
     public List<Domain> getDomains() {
         return domains;
@@ -45,6 +49,25 @@ public class Deploy implements Validatable {
      */
     public void addDomain(Domain domain) {
         this.domains.add(domain);
+    }
+
+    /**
+     * <p>Returns the apache commons configuration object.  This object can be used to access
+     * any additional information from the project.xml file</p>
+     *
+     * @return apache commons configuration object.
+     */
+    public Configuration getConfig() {
+        return config;
+    }
+
+    /**
+     * <p>Sets the apache commons configuration object</p>
+     *
+     * @param config the apache commons configuration object
+     */
+    public void setConfig(Configuration config) {
+        this.config = config;
     }
 
     /**

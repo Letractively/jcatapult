@@ -28,10 +28,11 @@ public class DeploymentInfo {
     private String deployDomain;
     private Environment env;
     private Project project;
-    private String deployJar;
+    private String deployArchive;
     private File jatapultCacheDir;
     private File deployArchiveDir;
     private File deploymentDomainDir;
+    private Deploy deploy;
 
     /**
      * <p>The domain being deployed to</p>
@@ -88,21 +89,21 @@ public class DeploymentInfo {
     }
 
     /**
-     * <p>Gets the deploy jar resource</p>
+     * <p>Gets the deploy archive resource</p>
      *
      * @return the deploy jar resource
      */
-    public String getDeployJar() {
-        return deployJar;
+    public String getDeployArchive() {
+        return deployArchive;
     }
 
     /**
-     * <p>Sets the deploy jar resource</p>
+     * <p>Sets the deploy archive resource</p>
      *
-     * @param deployJar the deploy jar resource
+     * @param deployArchive the deploy jar resource
      */
-    public void setDeployJar(String deployJar) {
-        this.deployJar = deployJar;
+    public void setDeployArchive(String deployArchive) {
+        this.deployArchive = deployArchive;
     }
 
     /**
@@ -158,5 +159,23 @@ public class DeploymentInfo {
      */
     public void setDeploymentDomainDir(File deploymentDomainDir) {
         this.deploymentDomainDir = deploymentDomainDir;
+    }
+
+    /**
+     * <p>Returns the {@link Deploy} bean.</p>
+     *
+     * @return the {@link org.jcatapult.deployer.domain.Deploy} bean
+     */
+    public Deploy getDeploy() {
+        return deploy;
+    }
+
+    /**
+     * <p>Sets the {@link org.jcatapult.deployer.domain.Deploy} bean</p>
+     *
+     * @param deploy the deploy bean
+     */
+    public void setDeploy(Deploy deploy) {
+        this.deploy = deploy;
     }
 }
