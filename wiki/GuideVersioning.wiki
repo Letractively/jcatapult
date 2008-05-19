@@ -1,0 +1,15 @@
+= JCatapult Versioning Specification =
+All JCatapult projects follow the major, minor, sub-minor (patch), and snapshot version numbering system that conforms to the following format:
+
+{{{
+[0-9].[0-9](.[0-9)(-[A|B|M|RC][0-9])
+}}}
+
+Examples:
+  * 1.0 - Major version one, minor version zero
+  * 1.1 - Major version one, minor version one
+  * 1.1.1 - Major version one, minor version one, patch version one
+  * 2.0-A1 - Major version two, minor version zero, snapshot version alpha one
+  * 2.0-B1 - Major version two, minor version zero, snapshot version beta one
+  * 2.0-M1 - Major version two, minor version zero, snapshot version milestone one
+  * 2.0-RC1 - Major version two, minor version zero, snapshot version release candidate one
