@@ -43,5 +43,5 @@ If you haven't read the [http://code.google.com/p/savant-build Savant] documenta
 
 JCatapult projects use the Savant *minor* compatibility type. This means that JCatapult releases are only compatible across minor versions. Anytime you see two versions of JCatapult that have different major numbers, these versions are not compatible. Here are a few examples:
 
-JCatapult 1.0 is compatible with JCatapult 1.1
-Jcatapult 1.3 is *NOT* compatible with JCatapult 2.0
+  * JCatapult 1.0 is compatible with JCatapult 1.1
+  * Jcatapult 1.3 is *NOT* compatible with JCatapult 2.0
