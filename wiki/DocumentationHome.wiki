@@ -33,6 +33,7 @@ Here are the documentation pages that are available for the JCatapult framework.
 
   * [GuideScaffolder Scaffolder]
   * [GuideDeployer Deployer]
+  * [GuideRelease Releasing JCatapult Projects]
 
 = Tutorials =
 
