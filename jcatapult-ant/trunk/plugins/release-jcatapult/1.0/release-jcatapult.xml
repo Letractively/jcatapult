@@ -28,7 +28,7 @@
   <!-- this target is used to release the jcatapult distrubition -->
   <target name="rel-jcatapult" description="Releases JCatapult">
 
-    <property file="${user.home}/jcatapult-build.properties"/>
+    <property file="${user.home}/google-code-build.properties"/>
     <property name="dir.jcatapult.release" value="${dir.jcatapult.cache}/jcatapult-release"/>
 
     <!-- clean up -->
@@ -40,24 +40,26 @@
     <!-- get the version -->
     <input message="Please input release version:" addproperty="release.jcatapult.version"/>
 
-    <!-- set the distribution directory -->
+    <!-- set directory props -->
     <property name="dir.dist" value="${dir.jcatapult.release}/jcatapult-${release.jcatapult.version}"/>
     <property name="dir.dist.ant" value="${dir.dist}/ant"/>
     <property name="dir.dist.scaffolder" value="${dir.dist}/scaffolder"/>
     <property name="dir.export.scaffolder" value="${dir.dist.scaffolder}/scaffolder-export"/>
+    <property name="dir.dist.deployer" value="${dir.dist}/deployer"/>
+    <property name="dir.export.deployer" value="${dir.dist.deployer}/deployer-export"/>
     <property name="dir.dist.savant" value="${dir.dist}/savant"/>
     <property name="dir.dist.groovy" value="${dir.dist}/groovy"/>
 
-    <!-- make all the necessary dist directories -->
+    <!-- make all the directories -->
     <mkdir dir="${dir.dist}"/>
     <mkdir dir="${dir.dist.ant}"/>
     <mkdir dir="${dir.dist.scaffolder}"/>
+    <mkdir dir="${dir.dist.deployer}"/>
     <mkdir dir="${dir.dist.savant}"/>
     <mkdir dir="${dir.dist.groovy}"/>
 
     <!-- check that tags are available -->
-    <scm_tag_validation tag="${release.jcatapult.version}"
-                        url="https://jcatapult.googlecode.com/svn/jcatapult-scaffolder"
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-scaffolder"
                         username="${svn.username}" password="${svn.password}"/>
     <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-ant"
                         username="${svn.username}" password="${svn.password}"/>
@@ -69,7 +71,12 @@
                         username="${svn.username}" password="${svn.password}"/>
     <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-dbmgr"
                         username="${svn.username}" password="${svn.password}"/>
-
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-filemgr"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-commerce"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-deployer"
+                        username="${svn.username}" password="${svn.password}"/>
 
     <!--export ant/plugins -->
     <scm_export dest="${dir.dist.ant}/plugins" username="${svn.username}" password="${svn.password}"
@@ -82,6 +89,10 @@
     <!--export scaffolder -->
     <scm_export dest="${dir.export.scaffolder}" username="${svn.username}" password="${svn.password}"
                 src="https://jcatapult.googlecode.com/svn/jcatapult-scaffolder/tags/${release.jcatapult.version}"/>
+    
+    <!--export deployer -->
+    <scm_export dest="${dir.export.deployer}" username="${svn.username}" password="${svn.password}"
+                src="https://jcatapult.googlecode.com/svn/jcatapult-deployer/tags/${release.jcatapult.version}"/>
 
     <!--build the scaffolder -->
     <rel_fork dir="${dir.export.scaffolder}" target="jar"/>
@@ -91,8 +102,19 @@
       <fileset dir="${dir.export.scaffolder}/target/dist"/>
     </copy>
 
-    <!--delete the export directory -->
+    <!--delete the scaffolder export directory -->
     <delete dir="${dir.export.scaffolder}"/>
+
+    <!--build the deployer -->
+    <rel_fork dir="${dir.export.deployer}" target="jar"/>
+
+    <!--copy deployer dist -->
+    <copy todir="${dir.dist.deployer}">
+      <fileset dir="${dir.export.deployer}/target/dist"/>
+    </copy>
+
+    <!--delete the deployer export directory -->
+    <delete dir="${dir.export.deployer}"/>
 
     <!--tar up the distribution -->
     <property name="dist.tarball.name" value="jcatapult-${release.jcatapult.version}.tar.gz"/>
