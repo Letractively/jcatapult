@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-configuration>
+  <domain name="domain1">
+    <environment name="staging">
+      <host>staging.jcatapult.org</host>
+      <host-username>staging.host.username</host-username>
+      <host-password>staging.host.password</host-password>
+      <db-name>staging.db.name</db-name>
+      <db-username>staging.db.username</db-username>
+      <db-password>staging.db.password</db-password>
+    </environment>
+  </domain>
+  <domain name="domain2">
+    <environment name="qa">
+      <host>qa.jcatapult.org</host>
+      <host-username>qa.host.username</host-username>
+      <host-password>qa.host.password</host-password>
+      <db-name>qa.db.name</db-name>
+      <db-username>qa.db.username</db-username>
+      <db-password>qa.db.password</db-password>
+    </environment>
+    <environment name="prod">
+      <host>prod.jcatapult.org</host>
+      <host-username>prod.host.username</host-username>
+      <host-password>prod.host.password</host-password>
+      <db-name>prod.db.name</db-name>
+      <db-username>prod.db.username</db-username>
+      <db-password>prod.db.password</db-password>
+    </environment>
+  </domain>
+</deployment-configuration>
