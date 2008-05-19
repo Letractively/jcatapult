@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<deployment-properties>
-  <deploy domain="domain1">
-    <environment type="staging">
+<deployment-configuration>
+  <domain name="domain1">
+    <environment name="staging">
       <host>staging.jcatapult.org</host>
       <host-username>staging.host.username</host-username>
       <host-password>staging.host.password</host-password>
@@ -9,5 +9,5 @@
       <db-username>staging.db.username</db-username>
       <db-password>staging.db.password</db-password>
     </environment>
-  </deploy>
-</deployment-properties>
+  </domain>
+</deployment-configuration>
