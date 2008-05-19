@@ -1,2 +1,2 @@
 = JCatapult Release Scripts =
-JCatapult provides a mechanism for releasing projects.
+JCatapult provides a mechanism for releasing projects via ant scripts located in the [AntReleaseSvnPlugin JCatapult Ant Release Plugin].
