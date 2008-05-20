@@ -21,13 +21,13 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.domain.CurrentFolder;
 import org.jcatapult.filemgr.domain.Error;
 import org.jcatapult.filemgr.domain.Folder;
 import org.jcatapult.filemgr.domain.UploadResult;
+import org.jcatapult.filemgr.action.FileManagerCommand;
 import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;
@@ -69,8 +69,6 @@ public class DefaultFileManagerService implements FileManagerService {
         // Set the directory
         if (StringTools.isEmpty(directory)) {
             directory = "";
-        } else {
-            directory = "/" + directory;
         }
 
         if (logger.isLoggable(Level.FINE)) {
@@ -139,12 +137,13 @@ public class DefaultFileManagerService implements FileManagerService {
         logger.fine("Returning fileURL [" + fileURL + "]");
 
         connector.setUploadResult(new UploadResult(modifiedFileName, fileURL, !modifiedFileName.equals(fileName)));
+        connector.setCommand(FileManagerCommand.FileUpload.name());
         return connector;
     }
 
     public Connector createFolder(String currentFolder, String newFolderName, String fileType) {
         Connector connector = new Connector();
-        connector.setCommand("CreateFolder");
+        connector.setCommand(FileManagerCommand.CreateFolder.name());
         connector.setResourceType(fileType);
 
         CurrentFolder folder = new CurrentFolder();
@@ -257,7 +256,7 @@ public class DefaultFileManagerService implements FileManagerService {
         String fileURL;
         boolean relative = !fileDir.startsWith("/");
         if (relative) {
-            fileURL = ((HttpServletRequest) ServletObjectsHolder.getServletRequest()).getContextPath() + fileDir;
+            fileURL = ServletObjectsHolder.getServletRequest().getContextPath() + fileDir;
         } else {
             String fileServletPrefix = configuration.getFileServletPrefix();
             if (fileServletPrefix == null) {
@@ -285,7 +284,7 @@ public class DefaultFileManagerService implements FileManagerService {
      */
     private Connector getListing(String currentFolder, String fileType, boolean includeFiles) {
         Connector connector = new Connector();
-        connector.setCommand(includeFiles ? "GetFoldersAndFiles" : "GetFolders");
+        connector.setCommand(includeFiles ? FileManagerCommand.GetFoldersAndFiles.name() : FileManagerCommand.GetFolders.name());
         connector.setResourceType(fileType);
 
         CurrentFolder folder = new CurrentFolder();

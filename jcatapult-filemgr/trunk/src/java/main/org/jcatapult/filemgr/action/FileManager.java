@@ -97,7 +97,7 @@ import com.google.inject.Inject;
  */
 @Results({
     @Result(name = "error", location = "", params = {"status", "500"}, type = "httpheader"),
-    @Result(name = "success", location = "", params = {"contentType", "text/xml", "inputName", "resultStream"}, type = "stream")
+    @Result(name = "success", location = "", params = {"contentType", "text/xml"}, type = "stream")
 })
 public class FileManager extends BaseAction {
     // Service
@@ -175,7 +175,7 @@ public class FileManager extends BaseAction {
         this.newFolderName = newFolderName;
     }
 
-    public InputStream getResultStream() {
+    public InputStream getInputStream() {
         return inputStream;
     }
 
@@ -213,8 +213,7 @@ public class FileManager extends BaseAction {
     }
 
     /**
-     * Marshals the Connector instance into an InputStream that is accessible via the property named
-     * {@link #getResultStream()}.
+     * Marshals the Connector instance into an InputStream that is accessible via the property named {@link #getInputStream()}.
      *
      * @param   connector The connector to marshal.
      */

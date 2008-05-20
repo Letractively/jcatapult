@@ -68,7 +68,7 @@ public class FileManagerTest extends BaseTest {
         String result = fm.execute();
         Assert.assertEquals("success", result);
 
-        System.out.println("XML is " + IOTools.read(fm.getResultStream(), "UTF-8"));
+        System.out.println("XML is " + IOTools.read(fm.getInputStream(), "UTF-8"));
 
         File dir = new File(testDir + "/some-dir/Images/deep/dir/test");
         Assert.assertTrue(dir.isDirectory());
