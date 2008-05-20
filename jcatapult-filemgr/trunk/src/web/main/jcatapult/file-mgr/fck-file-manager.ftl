@@ -1,10 +1,7 @@
-[#flt/]
+[#ftl/]
+
 [#if connector.error]
-  <script type="text/javascript">
-  window.parent.frames['frmUpload'].OnUploadCompleted(1, '', '', '${connector.error.message}');
-  </script>
+    window.parent.OnUploadCompleted(1, "fileUrl", "fileName", "${connector.error.message}" );
 [#else]
-  <script type="text/javascript">
-  window.parent.frames['frmUpload'].OnUploadCompleted(${connector.uploadResult.resultCode}, '${result.modifiedFileName!}');
-  </script>
+    window.parent.OnUploadCompleted(${connector.uploadResult.resultCode}, "fileUrl", "${result.modifiedFileName!}", "" );
 [#/if]
