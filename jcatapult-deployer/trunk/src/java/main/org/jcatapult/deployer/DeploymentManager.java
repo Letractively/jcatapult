@@ -50,12 +50,15 @@ import net.java.lang.StringTools;
  * <p>The JCatapult distribution ships with a deployer installation that provides a deploy script for convenience.
  * The deploy script assumes that you are executing the deployer from the root of a jcatapult project:</p>
  *
+ * <p>Please reference the <a href="http://code.google.com/p/jcatapult/wiki/GuideDeployer">Deployer Guide</a>
+ * for more information on the JCatapult Deployer</p>
+ *
  * @author jhumphrey
  */
 public class DeploymentManager {
 
     /**
-     * <p>The jcatapult cache directory.  This is set to ${user.home}/.jcatapult</p>
+     * <p>The jcatapult cache directory.  This is set to System.getProperty("user.home")/.jcatapult</p>
      */
     public static final File JCATAPULT_CACHE_DIR = new File(System.getProperty("user.home"), ".jcatapult");
 
@@ -80,11 +83,13 @@ public class DeploymentManager {
     /**
      * <p>Constructor.  All arguments are dependency injected by Guice</p>
      *
-     * @param deployXmlService the {@link org.jcatapult.deployer.service.DeployXmlService}
-     * @param projectXmlService the {@link org.jcatapult.deployer.service.ProjectXmlService}
-     * @param cliManager the {@link CLIManager}
-     * @param deployValidationService the deploy {@link org.jcatapult.deployer.service.ValidationService}
-     * @param projectValidationService the project {@link org.jcatapult.deployer.service.ValidationService}
+     * @param deployXmlService the {@link org.jcatapult.deployer.service.DeployXmlService} used for unmarshalling the deploy confguration xml file
+     * @param projectXmlService the {@link org.jcatapult.deployer.service.ProjectXmlService} used for unmarshalling the project.xml
+     * @param cliManager the {@link CLIManager} Manger for command line interpretation
+     * @param deployValidationService the deploy {@link org.jcatapult.deployer.service.ValidationService} verifies that the information
+     * unmarshalled into the Deploy domain bean is valid
+     * @param projectValidationService the project {@link org.jcatapult.deployer.service.ValidationService} verifies that the information
+     * unmarshalled into the Project domain bean is valid
      */
     @Inject
     public DeploymentManager(DeployXmlService deployXmlService, ProjectXmlService projectXmlService,
@@ -137,7 +142,8 @@ public class DeploymentManager {
     }
 
     /**
-     * Manages the deployment process
+     * Helper method handle argument validation, project and deploy xml services for
+     * unmarshalling, setting up the {@link DeploymentInfo} object and calling the deploy.groovy script deploy method
      *
      * @param args args from main method
      * @throws DeploymentException Runtime exception thrown if there's an issue during deployment.
