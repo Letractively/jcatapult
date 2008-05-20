@@ -1,3 +1,4 @@
+#labels Featured
   * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-core/1.0-RC2/index.html JCatapult-Core Javadoc]
   * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-commerce/1.0-RC2/index.html JCatapult-Commerce Javadoc]
   * [http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-dbmgr/1.0-RC2/index.html JCatapult-DBMgr Javadoc]
