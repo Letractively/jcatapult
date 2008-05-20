@@ -1,4 +1,5 @@
 #summary Getting start using JCatapult
+#labels Featured
 
 = Introduction =
 
