@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * <p>
  * This class stores the result of an invocation to the
- * {@link org.jcatapult.filemgr.service.FileManagerService#upload(java.io.File,String,String,String)} method.
+ * {@link org.jcatapult.filemgr.service.FileManagerService#upload(java.io.File, String, String, String, String)} method.
  * </p>
  *
  * @author  Brian Pontarelli
