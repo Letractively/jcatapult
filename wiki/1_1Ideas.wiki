@@ -29,6 +29,26 @@ Here is some working ideas:
   * FreeMarker for views to start
   * Some type of UEL but something that supports type conversion. If the views are FreeMarker, then perhaps all other evaluation can be done using FreeMarker as well. This would unify it. @Result(location="foo.jsp?id=${id}")
 
+Here is some design thoughts
+
+Leverage the Workflow system of JCatapult. The MVC would have a WorkflowChain that would probably have this type of ordering:
+
+  * parameters
+  * validation
+  * action invocation
+  * result handling
+
+The parameters and validation could be flipped.
+
+Here is some ideas for configuration:
+
+  * MVC is loaded via GuiceContainer as a eager singleton
+  * First thing is to find all the actions using Struts2 convention handling
+  * Create FolderConfig and ActionConfig objects that are stored in the MVC singleton
+
+Parameters needs to support generics, and type conversions, which means that OGNL, JUEL and the like might not work at all. 
+
+
 = DSL for the database manager =
 
 There are a number of pages for this brain storm under the DatabaseManager documentation.
