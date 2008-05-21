@@ -36,7 +36,7 @@ import org.jcatapult.deployer.domain.DeploymentInfo;
 public interface Deployer {
 
     /**
-     * <p>Called to deploy the jar resource to a particular domain environment</p>
+     * <p>Called to deploy the archive resource to a particular domain environment</p>
      *
      * @param deploymentInfo {@link DeploymentInfo} provided to groovy scripts.  This bean contains all the necessary information
      * for deploying artifacts to remote servers

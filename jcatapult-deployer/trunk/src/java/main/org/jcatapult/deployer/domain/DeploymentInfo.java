@@ -20,7 +20,7 @@ import java.io.File;
 
 /**
  * <p>Bean that contains the information needed by the deploy.groovy script
- * to deploy the jar resource to the selected domain environemnt</p>
+ * to deploy the archive resource to the selected domain environemnt</p>
  *
  * @author jhumphrey
  */
@@ -91,7 +91,7 @@ public class DeploymentInfo {
     /**
      * <p>Gets the deploy archive resource</p>
      *
-     * @return the deploy jar resource
+     * @return the deploy archive resource
      */
     public String getDeployArchive() {
         return deployArchive;
@@ -100,7 +100,7 @@ public class DeploymentInfo {
     /**
      * <p>Sets the deploy archive resource</p>
      *
-     * @param deployArchive the deploy jar resource
+     * @param deployArchive the deploy archive resource
      */
     public void setDeployArchive(String deployArchive) {
         this.deployArchive = deployArchive;
