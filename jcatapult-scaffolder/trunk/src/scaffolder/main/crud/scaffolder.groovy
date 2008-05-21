@@ -45,14 +45,14 @@ public class CrudScaffolder extends AbstractScaffolder {
     }
 
     // Get the URL
-    String defaultURL = "/admin/" + simplePluralPropertyName;
+    String defaultURL = "/admin/" + makeURL(simpleClassName);
     String url = ask("Enter the URL prefix of the CRUD", "Scaffolding URL prefix ",
         "Invalid URL prefix", defaultURL, new URLPrefixCompletor());
 
     // Get the action package
     String defaultActionPackage = getFirstPackage("action");
     if (defaultActionPackage != null) {
-      defaultActionPackage = defaultActionPackage + url.replace("/", ".");
+      defaultActionPackage = defaultActionPackage + makePackageName(url.replace("/", "."));
     }
     String actionPackage = ask("Enter the action package",
         "Scaffolding action package ", "Invalid action package", defaultActionPackage);
