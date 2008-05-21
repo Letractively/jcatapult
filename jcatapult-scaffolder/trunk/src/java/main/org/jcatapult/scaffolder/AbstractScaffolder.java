@@ -144,7 +144,7 @@ public abstract class AbstractScaffolder implements Scaffolder {
             File file = queue.remove();
             if (file.getName().equals(token)) {
                 return file.getAbsolutePath().substring(main.getAbsolutePath().length() + 1).replace("/", ".").
-                    replace("\\\\", ".");
+                    replace("\\", ".");
             }
 
             File[] files = file.listFiles();
@@ -235,5 +235,49 @@ public abstract class AbstractScaffolder implements Scaffolder {
      */
     protected String makePropertyName(String simpleClassName) {
         return "" + Character.toLowerCase(simpleClassName.charAt(0)) + simpleClassName.substring(1);
+    }
+
+    /**
+     * Based on the simple class name, this creates a URL that is the same convention as the SEO URL
+     * generation from the Struts2 convention plugin. This breaks on camel case, inserts dashes and
+     * lower cases everything.
+     *
+     * @param   simpleClassName The simple class name, without the package.
+     * @return  The URL.
+     */
+    protected String makeURL(String simpleClassName) {
+        char[] ca = simpleClassName.toCharArray();
+        StringBuilder build = new StringBuilder();
+        boolean upper = false;
+        for (int i = 0; i < ca.length; i++) {
+            if (i != 0 && !upper && Character.isUpperCase(ca[i])) {
+                build.append("-");
+                upper = true;
+            } else if (Character.isLowerCase(ca[i])) {
+                upper = false;
+            }
+            build.append(Character.toLowerCase(ca[i]));
+        }
+
+        return build.toString();
+    }
+
+    /**
+     * Based on the simple class name, this creates a URL that is the same convention as the SEO URL
+     * generation from the Struts2 convention plugin. This breaks on camel case, inserts dashes and
+     * lower cases everything.
+     *
+     * @param   dashedURL The simple class name, without the package.
+     * @return  The URL.
+     */
+    protected String makePackageName(String dashedURL) {
+        String[] parts = dashedURL.split("-");
+        StringBuilder build = new StringBuilder(parts[0]);
+        for (int i = 1; i < parts.length; i++) {
+            String part = parts[i];
+            build.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1));
+        }
+
+        return build.toString();
     }
 }
