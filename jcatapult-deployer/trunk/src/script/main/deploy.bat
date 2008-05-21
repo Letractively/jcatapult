@@ -14,8 +14,6 @@ for %%f in (%DIR%..\lib\*.jar) do set cp=!cp!;%%f
 endlocal & set RUN_CLASSPATH=%cp%
 :: echo deployer classpath is %RUN_CLASSPATH%
 
-set deployXml=
-
 ::
 :: Execute the deployer
 ::

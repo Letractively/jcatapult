@@ -77,8 +77,8 @@ public class CLIManager {
         deploymentInfo.setProject(project);
 
         // get the jar to be deployed
-        String deployJar = getDeployJar(project.getName());
-        deploymentInfo.setDeployArchive(deployJar);
+        String deployArchive = getDeployArchive(project.getName());
+        deploymentInfo.setDeployArchive(deployArchive);
 
         return deploymentInfo;
     }
@@ -89,7 +89,7 @@ public class CLIManager {
      * @param projectName the project name
      * @return returns the jar to deploy
      */
-    private String getDeployJar(final String projectName) {
+    private String getDeployArchive(final String projectName) {
 
         // load from deploy archive
         File[] releaseFiles;
