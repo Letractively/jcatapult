@@ -54,7 +54,7 @@ public class FckFileManagerTest extends BaseTest {
         fm.setNewFile(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"));
         fm.setNewFileContentType("application/active-x");
         String result = fm.execute();
-        assertEquals("success", result);
+        assertEquals("upload", result);
         assertEquals(1, fm.getConnector().getError().getNumber());
 
         EasyMock.verify(servletContext, configuration);
@@ -90,7 +90,7 @@ public class FckFileManagerTest extends BaseTest {
         fm.setNewFile(temp);
 
         String result = fm.execute();
-        assertEquals("success", result);
+        assertEquals("upload", result);
 
         assertNull(fm.getConnector().getError());
         assertEquals(0, fm.getConnector().getUploadResult().getResultCode());
