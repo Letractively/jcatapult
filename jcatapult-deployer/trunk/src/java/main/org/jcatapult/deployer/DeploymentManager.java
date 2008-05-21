@@ -33,8 +33,8 @@ import org.jcatapult.deployer.service.ValidationService;
 import org.jcatapult.deployer.service.XmlServiceException;
 
 import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import groovy.lang.GroovyClassLoader;
 import net.java.lang.StringTools;
 

@@ -1,8 +1,8 @@
 package org.jcatapult.deployer.service;
 
 import org.jcatapult.deployer.DeploymentBaseTest;
-import org.jcatapult.deployer.domain.Domain;
 import org.jcatapult.deployer.domain.Deploy;
+import org.jcatapult.deployer.domain.Domain;
 import org.jcatapult.deployer.domain.Environment;
 import org.junit.Assert;
 import org.junit.Test;

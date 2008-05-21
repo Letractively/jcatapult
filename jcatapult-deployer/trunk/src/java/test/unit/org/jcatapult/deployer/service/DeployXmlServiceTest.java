@@ -4,8 +4,8 @@ import java.io.File;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.jcatapult.deployer.DeploymentBaseTest;
-import org.jcatapult.deployer.domain.Domain;
 import org.jcatapult.deployer.domain.Deploy;
+import org.jcatapult.deployer.domain.Domain;
 import org.jcatapult.deployer.domain.Environment;
 import org.junit.Assert;
 import org.junit.Test;

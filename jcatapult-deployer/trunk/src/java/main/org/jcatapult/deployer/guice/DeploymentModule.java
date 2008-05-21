@@ -17,8 +17,6 @@
 package org.jcatapult.deployer.guice;
 
 import org.jcatapult.deployer.service.BetterSimpleCompletor;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.XMLConfiguration;
 
 import com.google.inject.AbstractModule;
 import jline.Completor;
