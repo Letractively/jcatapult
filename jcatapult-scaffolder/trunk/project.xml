@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
     name="jcatapult-scaffolder"
     group="jcatapult.org"
-    version="1.0-RC2">
+    version="1.0-RC3">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -45,7 +45,7 @@
       <artifact group="freemarker.org" project="freemarker" name="freemarker" version="2.3.12" type="jar"/>
 
       <!-- jline -->
-      <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
+      <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.94" type="jar"/>
     </artifactGroup>
     <artifactGroup type="run">
       <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-M3" type="jar"/>
