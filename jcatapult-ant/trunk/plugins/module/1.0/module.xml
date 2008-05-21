@@ -83,14 +83,14 @@
       <fileset dir="${dir.src.conf.test.unit}" includes="**/*"/>
     </copy>
 
-    <!-- Copy the content -->
+    <!-- symlink the web web-inf/classes/web-inf/content to src/web/main content -->
     <mkdir dir="${dir.target.web}/WEB-INF/classes/WEB-INF"/>
     <unlink link="${dir.target.web}/WEB-INF/classes/WEB-INF/content" failonerror="false"/>
     <link link="${dir.target.web}/WEB-INF/classes/WEB-INF/content" resource="${basedir}/${dir.src.web.main}"/>
 
-    <!-- Link the static resources -->
+    <!-- symlink the static resources -->
     <mkdir dir="${dir.target.web}/module/${project.name}"/>
-    <unlink link="${dir.target.web}/module/${project.name}/${project.version}" failonerror="false"/>
+    <unlinkall dir="${dir.target.web}/module/${project.name}"/>
     <link link="${dir.target.web}/module/${project.name}/${project.version}" resource="${basedir}/${dir.src.static.main}"/>
 
     <!-- Finally, overlay any testing stuff from web/test -->
