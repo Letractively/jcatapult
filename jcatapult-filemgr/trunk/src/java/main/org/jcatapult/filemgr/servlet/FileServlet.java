@@ -18,6 +18,7 @@ package org.jcatapult.filemgr.servlet;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -89,6 +90,8 @@ public class FileServlet extends HttpServlet {
         if (uri.startsWith("/")) {
             uri = uri.substring(1);
         }
+
+        uri = URLDecoder.decode(uri, "UTF-8");
 
         File file = new File(location, uri);
         if (!file.exists()) {
