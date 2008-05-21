@@ -102,7 +102,7 @@
     </sequential>
   </macrodef>
 
-  <!-- This macro provides cross platform symlinking using Windows Junction -->
+  <!-- This macro provides cross platform unlinking using Windows Junction -->
   <macrodef name="unlink">
     <attribute name="link"/>
     <attribute name="failonerror" default="true"/>
@@ -123,6 +123,29 @@
           </exec>
         </else>
       </if>
+    </sequential>
+  </macrodef>
+
+  <!-- This macro deletes files only in a particular directory -->
+  <macrodef name="unlinkall">
+    <attribute name="dir"/>
+    <sequential>
+      <groovy>
+        <![CDATA[
+        import java.io.File;
+
+        File dir = new File("@{dir}");
+        if (dir.exists()) {
+          File canonicalParent = dir.getCanonicalFile();
+          File[] files = canonicalParent.listFiles();
+          files.each { f ->
+            if (!f.getAbsolutePath().equals(f.getCanonicalPath())) {
+              f.delete();
+            }
+          }
+        }
+        ]]>
+      </groovy>
     </sequential>
   </macrodef>
 </project>
