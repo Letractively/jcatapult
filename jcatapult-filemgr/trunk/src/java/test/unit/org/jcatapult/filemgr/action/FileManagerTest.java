@@ -23,11 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
+import org.jcatapult.filemgr.BaseTest;
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.domain.Folder;
 import org.jcatapult.filemgr.service.DefaultFileConfiguration;
 import org.jcatapult.filemgr.service.DefaultFileManagerService;
-import org.jcatapult.filemgr.BaseTest;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.junit.Assert;
 import org.junit.Test;

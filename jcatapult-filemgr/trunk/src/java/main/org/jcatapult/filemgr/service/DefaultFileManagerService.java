@@ -22,12 +22,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 
+import org.jcatapult.filemgr.action.FileManagerCommand;
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.domain.CurrentFolder;
 import org.jcatapult.filemgr.domain.Error;
 import org.jcatapult.filemgr.domain.Folder;
 import org.jcatapult.filemgr.domain.UploadResult;
-import org.jcatapult.filemgr.action.FileManagerCommand;
 import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;

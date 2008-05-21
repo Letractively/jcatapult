@@ -1,14 +1,11 @@
 package org.jcatapult.filemgr.action;
 
-import java.io.InputStream;
-
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.service.FileManagerService;
-import org.apache.struts2.convention.annotation.Results;
-import org.apache.struts2.convention.annotation.Result;
 
 import com.google.inject.Inject;
-import net.java.lang.StringTools;
 
 /**
  * <p>
