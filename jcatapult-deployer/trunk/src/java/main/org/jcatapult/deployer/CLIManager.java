@@ -106,8 +106,10 @@ public class CLIManager {
 
         // if no release versions exists then exit
         if (releaseFiles == null || releaseFiles.length == 0) {
-            throw new DeploymentException("No release versions exists within [" + DEPLOY_ARCHIVE_DIR.getAbsolutePath() +
-                "] for project [" + projectName + "].  You must run a release prior to running the deployer.");
+            throw new DeploymentException("No release archives exists within [" + DEPLOY_ARCHIVE_DIR.getAbsolutePath() +
+                "] for project [" + projectName + "].  Please create a deploy archive prior executing the deployer.  For " +
+                "more information on creating deployable archives, please reference the JCatapult Deployer ducmentation " +
+                "at http://code.google.com/p/jcatapult/wiki/GuideDeployer");
         }
 
         // set version strings into completor
@@ -117,8 +119,8 @@ public class CLIManager {
         }
         completor.setCandidates(versionStrings);
 
-        return cliService.ask("Please select the jar version to deploy:", "Deploy jar version set to: ",
-            "Invalid deploy jar version.  Use tab to view available versions",
+        return cliService.ask("Please select the archive to deploy:", "Deploy archive set to: ",
+            "Invalid archive.  Use tab to view available archives",
             versionStrings.first(), completor);
     }
 
