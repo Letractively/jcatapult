@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-deployer"
          group="jcatapult.org"
-         version="1.0-RC2">
+         version="1.0-RC3">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
@@ -41,7 +41,7 @@
 
       <!-- cli -->
       <artifact group="commons.apache.org" project="commons-cli" name="commons-cli" version="1.1" type="jar"/>
-      <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.92" type="jar"/>
+      <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.94" type="jar"/>
 
       <!-- utils -->
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
