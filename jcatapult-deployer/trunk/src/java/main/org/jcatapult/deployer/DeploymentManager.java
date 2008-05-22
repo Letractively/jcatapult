@@ -114,28 +114,27 @@ public class DeploymentManager {
         Injector injector = Guice.createInjector(new DeploymentModule());
         DeploymentManager dm = injector.getInstance(DeploymentManager.class);
 
-        // check that deploy cache dir exists
-        if (!(JCATAPULT_CACHE_DIR.exists() && JCATAPULT_CACHE_DIR.isDirectory())) {
-            System.err.println("The JCatapult cache dir does not exist [" + JCATAPULT_CACHE_DIR.getAbsolutePath() + "]");
-            System.exit(1);
-        }
-
-        // check that deployer root dir exists
-        if (!(DEPLOY_ROOT_DIR.exists() && DEPLOY_ROOT_DIR.isDirectory())) {
-            System.err.println("The deployer root dir does not exist [" + DEPLOY_ROOT_DIR.getAbsolutePath() + "]");
-            System.exit(1);
-        }
-
-        // check that the deploy archive exist
-        if (!(DEPLOY_ARCHIVE_DIR.exists() && DEPLOY_ARCHIVE_DIR.isDirectory())) {
-            System.err.println("The deploy archive dir does not exist [" + DEPLOY_ARCHIVE_DIR.getAbsolutePath() +
-                "]. Please run a release prior to running the deployer");
-            System.exit(1);
-        }
-
         try {
+
+            // check that deploy cache dir exists
+            if (!(JCATAPULT_CACHE_DIR.exists() && JCATAPULT_CACHE_DIR.isDirectory())) {
+                throw new DeploymentException("The JCatapult cache dir does not exist [" + JCATAPULT_CACHE_DIR.getAbsolutePath() + "]");
+            }
+
+            // check that deployer root dir exists
+            if (!(DEPLOY_ROOT_DIR.exists() && DEPLOY_ROOT_DIR.isDirectory())) {
+                throw new DeploymentException("The deployer root dir does not exist [" + DEPLOY_ROOT_DIR.getAbsolutePath() + "]");
+            }
+
+            // check that the deploy archive exist
+            if (!(DEPLOY_ARCHIVE_DIR.exists() && DEPLOY_ARCHIVE_DIR.isDirectory())) {
+                throw new DeploymentException("The deploy archive dir does not exist [" + DEPLOY_ARCHIVE_DIR.getAbsolutePath() +
+                    "]. Please run a release prior to running the deployer");
+            }
+
             dm.manage(args);
         } catch (DeploymentException e) {
+            System.err.println("JCatapult Deplyer reference docs: http://code.google.com/p/jcatapult/wiki/GuideDeployer");
             e.printStackTrace();
             System.exit(1);
         }
