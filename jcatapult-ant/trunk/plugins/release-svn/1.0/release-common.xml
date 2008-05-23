@@ -387,7 +387,7 @@
           <echo>Debug is ON! Not deleting ${dir.checkout}</echo>
         </then>
         <else>
-          <delete dir="${dir.checkout}"/>
+          <delete dir="${dir.checkout}" deleteonexit="true"/>
         </else>
       </if>
     </sequential>
