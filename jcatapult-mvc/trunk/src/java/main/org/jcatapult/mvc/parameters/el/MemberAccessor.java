@@ -31,7 +31,7 @@ import java.beans.Introspector;
  * This
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 public class MemberAccessor extends Accessor {
     private static final Map<String, MethodVerifier> verifiers = new HashMap<String, MethodVerifier>();
