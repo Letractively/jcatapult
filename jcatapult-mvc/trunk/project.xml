@@ -15,7 +15,7 @@
   <dependencies id="dependencies.project">
     <artifactGroup type="run"/>
     <artifactGroup type="compile">
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5-{integration}" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-run"/>
     <artifactGroup type="test-compile">

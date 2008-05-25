@@ -65,19 +65,19 @@ public class ConverterRegistry {
         converters.put(Character.class, obj);
         converters.put(Character.TYPE, obj);
 
-        try {
-            obj = (Converter) ReflectionTools.instantiate("net.java.convert.converters.StringConverter");
-            converters.put(String.class, obj);
-        } catch (ReflectionException re) {
-            System.err.println("WARNING - String type converter not found");
-        }
-
-        try {
-            obj = (Converter) ReflectionTools.instantiate("net.java.convert.converters.FileConverter");
-            converters.put(File.class, obj);
-        } catch (ReflectionException re) {
-            System.err.println("WARNING - File type converter not found");
-        }
+//        try {
+//            obj = (Converter) ReflectionTools.instantiate("net.java.convert.converters.StringConverter");
+//            converters.put(String.class, obj);
+//        } catch (ReflectionException re) {
+//            System.err.println("WARNING - String type converter not found");
+//        }
+//
+//        try {
+//            obj = (Converter) ReflectionTools.instantiate("net.java.convert.converters.FileConverter");
+//            converters.put(File.class, obj);
+//        } catch (ReflectionException re) {
+//            System.err.println("WARNING - File type converter not found");
+//        }
     }
 
     /** Static class */

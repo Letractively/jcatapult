@@ -16,21 +16,22 @@
  */
 package org.jcatapult.mvc.parameters.el;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * <p>
- * This is a test action.
+ * This is a test user with fields.
  * </p>
  *
  * @author Brian Pontarelli
  */
-public class Action {
-    private User user;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User value) {
-        this.user = value;
-    }
+public class UserField {
+    public String name;
+    public Integer age;
+    public Map<String, AddressField> addresses = new HashMap<String, AddressField>();
+    public List<UserField> siblings = new ArrayList<UserField>();
+    public String[] securityQuestions;
 }

@@ -18,6 +18,8 @@ package org.jcatapult.mvc.parameters.el;
 
 import java.lang.reflect.Method;
 
+import static net.java.lang.reflect.ReflectionTools.*;
+
 /**
  * <p>
  * This models a indexed property that takes a single parameter for the
@@ -44,12 +46,12 @@ public class IndexedAccessor extends MemberAccessor {
     }
 
     public Object get(Object object) {
-        Method getter = bpi.methods.get("get");
+        Method getter = propertyInfo.getMethods().get("get");
         return invokeMethod(getter, object, index);
     }
 
     public void set(Object object, Object value) {
-        Method setter = bpi.methods.get("set");
+        Method setter = propertyInfo.getMethods().get("set");
         invokeMethod(setter, object, index, convert(value));
     }
 }

@@ -16,25 +16,27 @@
  */
 package org.jcatapult.mvc.parameters.el;
 
-import java.lang.reflect.Type;
 import java.lang.reflect.Array;
 import java.lang.reflect.ParameterizedType;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.Deque;
+import java.lang.reflect.Type;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.jcatapult.mvc.parameters.convert.ConversionException;
 import org.jcatapult.mvc.parameters.convert.Converter;
 import org.jcatapult.mvc.parameters.convert.ConverterRegistry;
+
+import static net.java.lang.reflect.ReflectionTools.*;
 
 /**
  * <p>

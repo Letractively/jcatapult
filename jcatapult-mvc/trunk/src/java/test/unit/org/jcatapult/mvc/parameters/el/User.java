@@ -17,11 +17,13 @@
 package org.jcatapult.mvc.parameters.el;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * <p>
- * This
+ * This is a test user.
  * </p>
  *
  * @author Brian Pontarelli
@@ -30,6 +32,8 @@ public class User {
     private String name;
     private Integer age;
     private Map<String, Address> addresses = new HashMap<String, Address>();
+    private List<User> siblings = new ArrayList<User>();
+    private String[] securityQuestions;
 
     public String getName() {
         return name;
@@ -51,7 +55,39 @@ public class User {
         return addresses;
     }
 
+    public Address getAddress(String type) {
+        return addresses.get(type);
+    }
+
     public void setAddresses(Map<String, Address> addresses) {
         this.addresses = addresses;
+    }
+
+    public void setAddress(String type, Address address) {
+        this.addresses.put(type, address);
+    }
+
+    public List<User> getSiblings() {
+        return siblings;
+    }
+
+    public User getSibling(int index) {
+        return siblings.get(index);
+    }
+
+    public void setSiblings(List<User> siblings) {
+        this.siblings = siblings;
+    }
+
+    public void setSibling(int index, User sibling) {
+        this.siblings.set(index, sibling);
+    }
+
+    public String[] getSecurityQuestions() {
+        return securityQuestions;
+    }
+
+    public void setSecurityQuestions(String[] securityQuestions) {
+        this.securityQuestions = securityQuestions;
     }
 }
