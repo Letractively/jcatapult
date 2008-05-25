@@ -18,19 +18,14 @@ package org.jcatapult.mvc.parameters.el;
 
 /**
  * <p>
- * This is a test action.
+ * This is a test address with fields.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class Action {
-    private User user;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User value) {
-        this.user = value;
-    }
+public class AddressField {
+    public String street;
+    public String city;
+    public String state;
+    public String zipcode;
 }

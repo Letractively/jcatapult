@@ -16,11 +16,13 @@
  */
 package org.jcatapult.mvc.parameters.el;
 
-import java.lang.reflect.Type;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.GenericArrayType;
-import java.util.Map;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Map;
+
+import static net.java.lang.ObjectTools.*;
 
 /**
  * <p>
@@ -42,9 +44,9 @@ public class CollectionAccessor extends Accessor {
         if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
             Class<?> rawType = (Class<?>) parameterizedType.getRawType();
-            if (Map.class == rawType) {
+            if (Map.class.isAssignableFrom(rawType)) {
                 return parameterizedType.getActualTypeArguments()[1];
-            } else if (Collection.class == rawType) {
+            } else if (Collection.class.isAssignableFrom(rawType)) {
                 return parameterizedType.getActualTypeArguments()[0];
             } else {
                 throw new ExpressionException("Unknown collection type [" + type + "]");

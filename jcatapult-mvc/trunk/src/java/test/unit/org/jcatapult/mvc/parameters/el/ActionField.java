@@ -18,19 +18,11 @@ package org.jcatapult.mvc.parameters.el;
 
 /**
  * <p>
- * This is a test action.
+ * This is a test action with fields.
  * </p>
  *
  * @author Brian Pontarelli
  */
-public class Action {
-    private User user;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User value) {
-        this.user = value;
-    }
+public class ActionField {
+    public UserField user;
 }

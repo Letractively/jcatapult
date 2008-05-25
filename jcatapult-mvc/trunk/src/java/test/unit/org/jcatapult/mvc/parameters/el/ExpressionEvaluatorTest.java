@@ -16,337 +16,114 @@
  */
 package org.jcatapult.mvc.parameters.el;
 
+import static org.junit.Assert.*;
 import org.junit.Test;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import net.java.beans.BeanException;
-import net.java.convert.ConversionException;
 
 /**
- * This class contains all the tests for the JavaBean class.
- * This should not directly test any other class.
+ * <p>
+ * This class contains tests for the expression evaluator.
+ * </p>
  *
  * @author  Brian Pontarelli
  */
 public class ExpressionEvaluatorTest {
     /**
-     * Tests getting of local bean properties
+     * Tests getting of bean properties
      */
     @Test
-    public void testLocalGetting() {
+    public void testPropertyGetting() {
         // Test local property null
         Action action = new Action();
         assertNull(ExpressionEvaluator.getValue("user", action));
 
         // Test local property get
-        action = new Action();
         User user = new User();
         action.setUser(user);
-        assertSame(action, ExpressionEvaluator.getValue("user", user));
+        assertSame(user, ExpressionEvaluator.getValue("user", action));
+
+        // Test nested property get
+        action.getUser().setAge(32);
+        action.getUser().setName("Brian");
+        assertEquals(32, ExpressionEvaluator.getValue("user.age", action));
+        assertEquals("Brian", ExpressionEvaluator.getValue("user.name", action));
+
+        // Test collection property gets
+        Address address = new Address();
+        address.setCity("Broomfield");
+        address.setState("CO");
+        address.setStreet("Test");
+        address.setZipcode("80020");
+        action.getUser().getAddresses().put("home", address);
+        assertNull(ExpressionEvaluator.getValue("user.addresses['work']", action));
+        assertEquals("Broomfield", ExpressionEvaluator.getValue("user.addresses['home'].city", action));
+        assertEquals("CO", ExpressionEvaluator.getValue("user.addresses['home'].state", action));
+        assertEquals("Test", ExpressionEvaluator.getValue("user.addresses['home'].street", action));
+        assertEquals("80020", ExpressionEvaluator.getValue("user.addresses['home'].zipcode", action));
+
+        User brother = new User();
+        brother.setName("Brett");
+        brother.setAge(34);
+        user.getSiblings().add(brother);
+        assertEquals(34, ExpressionEvaluator.getValue("user.siblings[0].age", action));
+        assertEquals("Brett", ExpressionEvaluator.getValue("user.siblings[0].name", action));
+
+        user.setSecurityQuestions(new String[]{"What is your pet's name?", "What is your home town?"});
+        assertEquals("What is your pet's name?", ExpressionEvaluator.getValue("user.securityQuestions[0]", action));
+        assertEquals("What is your home town?", ExpressionEvaluator.getValue("user.securityQuestions[1]", action));
+
+        // Test indexed collection property gets (using the indexed property methoods)
+        assertNull(ExpressionEvaluator.getValue("user.address['work']", action));
+        assertEquals("Broomfield", ExpressionEvaluator.getValue("user.address['home'].city", action));
+        assertEquals("CO", ExpressionEvaluator.getValue("user.address['home'].state", action));
+        assertEquals("Test", ExpressionEvaluator.getValue("user.address['home'].street", action));
+        assertEquals("80020", ExpressionEvaluator.getValue("user.address['home'].zipcode", action));
+
+        assertEquals(34, ExpressionEvaluator.getValue("user.sibling[0].age", action));
+        assertEquals("Brett", ExpressionEvaluator.getValue("user.sibling[0].name", action));
     }
 
     /**
-     * Tests getting of nested bean properties
+     * Tests getting of fields
      */
     @Test
-    public void testNestedGetting() {
-        Action action = new Action();
-        assertNull(ExpressionEvaluator.getValue("property1.property2.property3", bean));
+    public void testFieldGetting() {
+        // Test local property null
+        ActionField action = new ActionField();
+        assertNull(ExpressionEvaluator.getValue("user", action));
 
-        bean = new Action();
-        bean.setBean2(new Action());
-        bean.getBean2().setBean3(new User());
-        bean.getBean2().getBean3().setName("foo");
-        Object obj = ExpressionEvaluator.getValue("property1.property2", bean);
-        assertTrue("Should be a User instance prepopulated ", obj instanceof User);
-        assertEquals("foo", ExpressionEvaluator.getValue("property1.property2.property3", bean));
-    }
+        // Test local property get
+        UserField user = new UserField();
+        action.user = user;
+        assertSame(user, ExpressionEvaluator.getValue("user", action));
 
-    /**
-     * Tests the setting of nested bean properties
-     */
-    @Test
-    public void testLocalSetting() {
-        // Test local set null
-        Action action = new Action();
-        bean.setBean2(new Action());
-        ExpressionEvaluator.setValue("property1", bean, null);
-        assertNull(bean.getBean2());
+        // Test nested property get
+        action.user.age = 32;
+        action.user.name = "Brian";
+        assertEquals(32, ExpressionEvaluator.getValue("user.age", action));
+        assertEquals("Brian", ExpressionEvaluator.getValue("user.name", action));
 
-        // Test local set success
-        bean = new Action();
-        Action action = new Action();
-        ExpressionEvaluator.setValue("property1", bean, action);
-        assertSame(action, bean.getBean2());
-    }
+        // Test collection property gets
+        AddressField address = new AddressField();
+        address.city = "Broomfield";
+        address.state = "CO";
+        address.street = "Test";
+        address.zipcode = "80020";
+        action.user.addresses.put("home", address);
+        assertNull(ExpressionEvaluator.getValue("user.addresses['work']", action));
+        assertEquals("Broomfield", ExpressionEvaluator.getValue("user.addresses['home'].city", action));
+        assertEquals("CO", ExpressionEvaluator.getValue("user.addresses['home'].state", action));
+        assertEquals("Test", ExpressionEvaluator.getValue("user.addresses['home'].street", action));
+        assertEquals("80020", ExpressionEvaluator.getValue("user.addresses['home'].zipcode", action));
 
-    /**
-     * Tests the setting of nested bean properties
-     */
-    @Test
-    public void testNestedSetting() {
-        // Test nested set failure
-        Action action = new Action();
-        ExpressionEvaluator.setValue("property1.property2.property3", bean, "foo");
-        assertEquals("foo", bean.getBean2().getBean3().getName());
+        UserField brother = new UserField();
+        brother.name = "Brett";
+        brother.age = 34;
+        user.siblings.add(brother);
+        assertEquals(34, ExpressionEvaluator.getValue("user.siblings[0].age", action));
+        assertEquals("Brett", ExpressionEvaluator.getValue("user.siblings[0].name", action));
 
-        bean = new Action();
-        ExpressionEvaluator.setValue("property1", bean, new Action());
-        assertNotNull("Should have a bean2", bean.getBean2());
-        assertNull("Should not have a bean3", bean.getBean2().getBean3());
-    }
-
-    /**
-     * Tests the getting of indexed properties
-     */
-    @Test
-    public void testGettingIndexed() {
-        // Test a simple local property
-        Action action = new Action();
-        Action action = new Action();
-        bean.setIndexed(0, action);
-        assertSame(action, ExpressionEvaluator.getValue("indexed[0]", bean));
-
-        // Test a indexed property
-        bean = new Action();
-        bean.setIndexed(0, new Action());
-        bean.getIndexed(0).setName("foo");
-        assertEquals("foo", ExpressionEvaluator.getValue("indexed[0].name", bean));
-
-        bean = new Action();
-        bean.setIndexed(0, new Action());
-        bean.getIndexed(0).setName("foo");
-        assertNull(ExpressionEvaluator.getValue("indexed[1].name", bean));
-
-        bean = new Action();
-        bean.setIndexed(0, new Action());
-        bean.getIndexed(0).setBean3(new User());
-        bean.getIndexed(0).getBean3().setName("foo");
-        assertEquals("foo", ExpressionEvaluator.getValue("indexed[0].property2.property3", bean));
-    }
-
-    /**
-     * Tests the setting of indexed properties
-     */
-    @Test
-    public void testSettingIndexed() {
-        // Test a local set
-        Action action = new Action();
-        Action action = new Action();
-        ExpressionEvaluator.setValue("indexed[0]", bean, action);
-        assertSame(action, bean.getIndexed(0));
-
-        // Test a nested indexed set
-        bean = new Action();
-        ExpressionEvaluator.setValue("indexed[0].name", bean, "foo");
-        assertEquals("foo", bean.getIndexed(0).getName());
-
-        // Test conversions
-        bean = new Action();
-        ExpressionEvaluator.setValue("indexed[0].property2.integer3", bean, "16");
-        assertEquals(16, (int) bean.getIndexed(0).getBean3().getAge());
-    }
-
-    /**
-     * Tests single array retrieval locally and nested
-     */
-    @Test
-    public void testSingleArrayGet() {
-        Action Action = new Action();
-        Action action = new Action();
-        Action.getSingleArray()[0] = action;
-        assertSame(action, ExpressionEvaluator.getValue("singleArray[0]", Action));
-
-        Action = new Action();
-        action = new Action();
-        Action.getSingleArray()[0] = action;
-        action.setName("fred");
-        assertEquals("fred", ExpressionEvaluator.getValue("singleArray[0].name", Action));
-
-        Action = new Action();
-        assertNull(ExpressionEvaluator.getValue("singleArray[0].name", Action));
-
-        Action = new Action();
-        action = new Action();
-        Action.getSingleArray()[0] = action;
-        assertNull(ExpressionEvaluator.getValue("singleArray[0].name", Action));
-
-        Action = new Action();
-        action = new Action();
-        Action.getSingleArray()[0] = action;
-        action.setName("Fred");
-        assertEquals("Fred", ExpressionEvaluator.getValue("singleArray[0].name", Action));
-    }
-
-    /**
-     * Tests single array setting locally and nested
-     */
-    @Test
-    public void testSingleArraySet() {
-        Action Action = new Action();
-        Action action = new Action();
-        ExpressionEvaluator.setValue("singleArray[0]", Action, action);
-        assertSame(action, Action.getSingleArray()[0]);
-
-        Action = new Action();
-        action = new Action();
-        Action.getSingleArray()[0] = action;
-        ExpressionEvaluator.setValue("singleArray[0].name", Action, "fred");
-        assertEquals("fred", Action.getSingleArray()[0].getName());
-
-        // Test creation of the array
-        Action = new Action();
-        Action.setSingleArray(null);
-        ExpressionEvaluator.setValue("singleArray[2].name", Action, "fred");
-        assertEquals(3, Action.getSingleArray().length);
-        assertNotNull(Action.getSingleArray()[2]);
-        assertEquals("fred", Action.getSingleArray()[2].getName());
-
-        // Test creation of the array using Object
-        Action = new Action();
-        action = new Action();
-        Action.setSingleArrayObject(null);
-        ExpressionEvaluator.setValue("singleArrayObject[2]", Action, action);
-        assertEquals(3, Action.getSingleArrayObject().length);
-        assertNotNull(Action.getSingleArrayObject()[2]);
-        assertTrue(Action.getSingleArrayObject()[2] instanceof Action);
-        assertSame(action, Action.getSingleArrayObject()[2]);
-
-        // Test Object failure
-        try {
-            Action = new Action();
-            action = new Action();
-            Action.setSingleArrayObject(null);
-            ExpressionEvaluator.setValue("singleArrayObject[2].name", Action, action);
-            fail("Should have failed");
-        } catch (Exception e) {
-            // expected
-        }
-    }
-
-    /**
-     * Tests multi array retrieval locally and nested
-     */
-    @Test
-    public void testMultiArrayGet() {
-        Action Action = new Action();
-        Action action = new Action();
-        Action.setMultiArray(new Action[1][2][3]);
-        Action.getMultiArray()[0][1][2] = action;
-        assertSame(action, ExpressionEvaluator.getValue("multiArray[0][1][2]", Action));
-
-        Action = new Action();
-        action = new Action();
-        Action.setMultiArray(new Action[1][2][5]);
-        Action.getMultiArray()[0][1][4] = action;
-        action.setName("fred");
-        assertEquals("fred", ExpressionEvaluator.getValue("multiArray[0][1][4].name", Action));
-
-        Action = new Action();
-        assertNull(ExpressionEvaluator.getValue("multiArray[0][1][1].name", Action));
-
-        Action = new Action();
-        action = new Action();
-        Action.setMultiArray(new Action[3][1][6]);
-        Action.getMultiArray()[2][0][5] = action;
-        assertNull(ExpressionEvaluator.getValue("multiArray[2][0][5].name", Action));
-    }
-
-    /**
-     * Tests single array setting locally and nested
-     */
-    @Test
-    public void testMultiArraySet() {
-        Action Action = new Action();
-        Action action = new Action();
-        Action.setMultiArray(new Action[1][4][2]);
-        ExpressionEvaluator.setValue("multiArray[0][3][1]", Action, action);
-        assertSame(action, Action.getMultiArray()[0][3][1]);
-
-        Action = new Action();
-        action = new Action();
-        Action.setMultiArray(new Action[1][3][5]);
-        Action.getMultiArray()[0][2][4] = action;
-        ExpressionEvaluator.setValue("multiArray[0][2][4].name", Action, "fred");
-        assertEquals("fred", Action.getMultiArray()[0][2][4].getName());
-
-        // Test creation of the array
-        Action = new Action();
-        Action.setMultiArray(null);
-        ExpressionEvaluator.setValue("multiArray[2][0][3].name", Action, "fred");
-        assertEquals(3, Action.getMultiArray().length);
-        assertNotNull(Action.getMultiArray()[2][0][3]);
-        assertEquals("fred", Action.getMultiArray()[2][0][3].getName());
-
-        // Test Object multi array
-        Action = new Action();
-        action = new Action();
-        Action.setMultiArrayObject(null);
-        ExpressionEvaluator.setValue("multiArrayObject[2][3][1]", Action, action);
-        assertEquals(3, Action.getMultiArrayObject().length);
-        assertNotNull(Action.getMultiArrayObject()[2][3][1]);
-        assertSame(action, Action.getMultiArrayObject()[2][3][1]);
-
-        // Test Object multi array
-        try{
-            Action = new Action();
-            action = new Action();
-            Action.setMultiArrayObject(null);
-            ExpressionEvaluator.setValue("multiArrayObject[2][3]", Action, action);
-            fail("should have failed because not correct type");
-        } catch (BeanException be) {
-            fail("Should be a type conversion exception");
-        } catch (ConversionException tce) {
-            // Expected
-        }
-    }
-
-    /**
-     * Tests Collection usage
-     */
-    @Test
-    public void testCollection() {
-        User user = new User();
-        Action action = new Action();
-        user.getCollection().add(action);
-        action.setName("fred");
-        try {
-            assertEquals("fred", ExpressionEvaluator.getValue("collection[0].name", user));
-            fail("Non-generic collection should fail.");
-        } catch (Exception e) {
-            // Expected
-        }
-    }
-
-    /**
-     * Tests Map usage
-     */
-    @Test
-    public void testMap() {
-        User user = new User();
-        Action action = new Action();
-        user.getMap().put("b2", action);
-        action.setName("fred");
-        try {
-            assertNotNull("Should have Action", ExpressionEvaluator.getValue("map[b2]", user));
-            fail("Non-generic map should fail.");
-        } catch (Exception e) {
-            // expected
-        }
-
-        Action Action = new Action();
-        ExpressionEvaluator.setValue("genericMap['home'].name", Action, "fred");
-        assertEquals("fred", Action.getGenericMap().get("home").getName());
-        assertEquals("fred", ExpressionEvaluator.getValue("genericMap['home'].name", Action));
-
-        Action = new Action();
-        ExpressionEvaluator.setValue("genericMapIndexed['home'].name", Action, "fred");
-        assertEquals("fred", Action.getGenericMapIndexed("home").getName());
-        assertEquals("fred", ExpressionEvaluator.getValue("genericMapIndexed['home'].name", Action));
+        user.securityQuestions = new String[]{"What is your pet's name?", "What is your home town?"};
+        assertEquals("What is your pet's name?", ExpressionEvaluator.getValue("user.securityQuestions[0]", action));
+        assertEquals("What is your home town?", ExpressionEvaluator.getValue("user.securityQuestions[1]", action));
     }
 }

@@ -16,6 +16,7 @@
  */
 package org.jcatapult.mvc.parameters.el;
 
+import java.beans.Introspector;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -24,7 +25,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.beans.Introspector;
+
+import static net.java.lang.reflect.ReflectionTools.*;
 
 /**
  * <p>
@@ -50,8 +52,8 @@ public class MemberAccessor extends Accessor {
         verifiers.put("set", new SetMethodVerifier());
     }
 
-    private final Field field;
-    private final PropertyInfo propertyInfo;
+    final Field field;
+    final PropertyInfo propertyInfo;
 
     public MemberAccessor(MemberAccessor accessor) {
         super(accessor);
