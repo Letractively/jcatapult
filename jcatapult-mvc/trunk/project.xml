@@ -18,6 +18,7 @@
     </artifactGroup>
     <artifactGroup type="compile">
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5-{integration}" type="jar"/>
+      <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
     </artifactGroup>
     <artifactGroup type="run"/>
     <artifactGroup type="test-compile">

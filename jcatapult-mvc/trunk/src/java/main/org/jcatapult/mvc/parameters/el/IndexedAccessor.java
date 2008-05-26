@@ -50,8 +50,12 @@ public class IndexedAccessor extends MemberAccessor {
         return invokeMethod(getter, this.object, index);
     }
 
+    public void set(String[] values, Context context) {
+        set(convert(values, context), context);
+    }
+
     public void set(Object value, Context context) {
         Method setter = propertyInfo.getMethods().get("set");
-        invokeMethod(setter, object, index, convert(value, context));
+        invokeMethod(setter, object, index, value);
     }
 }

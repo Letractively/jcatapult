@@ -58,7 +58,7 @@ public class ExpressionEvaluator {
     }
 
     @SuppressWarnings("unchecked")
-    public static void setValue(String expression, Object bean, Object value, HttpServletRequest request,
+    public static void setValue(String expression, Object bean, String[] values, HttpServletRequest request,
             HttpServletResponse response, Locale locale, Map<String, String> attributes) {
         List<Atom> atoms = parse(expression);
         Context context = new Context(atoms, request, response, locale, attributes);
@@ -76,7 +76,7 @@ public class ExpressionEvaluator {
             }
 
             if (!context.hasNext()) {
-                context.setCurrentValue(value);
+                context.setCurrentValue(values);
             } else {
                 Object nextValue = context.getCurrentValue();
                 if (nextValue == null) {

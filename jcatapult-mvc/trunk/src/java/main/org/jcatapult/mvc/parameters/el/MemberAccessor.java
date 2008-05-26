@@ -97,6 +97,19 @@ public class MemberAccessor extends Accessor {
         return getField(field, this.object);
     }
 
+    public void set(String[] values, Context context) {
+        if (propertyInfo != null) {
+            Method setter = propertyInfo.getMethods().get("set");
+            if (setter == null) {
+                throw new ExpressionException("Missing setter for property [" + propertyInfo.getName() +
+                    "] in class [" + declaringClass + "]");
+            }
+            invokeMethod(setter, object, convert(values, context));
+        } else {
+            setField(field, object, convert(values, context));
+        }
+    }
+
     public void set(Object value, Context context) {
         if (propertyInfo != null) {
             Method setter = propertyInfo.getMethods().get("set");
@@ -104,9 +117,9 @@ public class MemberAccessor extends Accessor {
                 throw new ExpressionException("Missing setter for property [" + propertyInfo.getName() +
                     "] in class [" + declaringClass + "]");
             }
-            invokeMethod(setter, object, convert(value, context));
+            invokeMethod(setter, object, value);
         } else {
-            setField(field, object, convert(value, context));
+            setField(field, object, value);
         }
     }
 

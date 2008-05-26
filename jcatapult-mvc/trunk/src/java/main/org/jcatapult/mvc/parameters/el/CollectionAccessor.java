@@ -94,9 +94,13 @@ public class CollectionAccessor extends Accessor {
         }
     }
 
+    public void set(String[] values, Context context) {
+        set(convert(values, context), context);
+    }
+
     public void set(Object value, Context context) {
         object = pad(object, context);
-        setValueIntoCollection(object, index, convert(value, context));
+        setValueIntoCollection(object, index, value);
     }
 
     /**
