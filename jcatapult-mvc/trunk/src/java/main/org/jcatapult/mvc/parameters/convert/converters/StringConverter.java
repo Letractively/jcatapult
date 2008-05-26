@@ -40,10 +40,10 @@ import static net.java.util.CollectionTools.array;
 @SuppressWarnings("unchecked")
 @Singleton
 public class StringConverter extends AbstractConverter {
-    private boolean emptyIsNull;
+    private boolean emptyIsNull = true;
 
-    @Inject
-    public StringConverter(@Named("jcatapult.mvc.emptyStringIsNull") boolean emptyIsNull) {
+    @Inject(optional = true)
+    public void setEmptyStringIsNull(@Named("jcatapult.mvc.emptyStringIsNull") boolean emptyIsNull) {
         this.emptyIsNull = emptyIsNull;
     }
 
