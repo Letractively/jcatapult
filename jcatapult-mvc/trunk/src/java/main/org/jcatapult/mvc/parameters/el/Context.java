@@ -37,6 +37,7 @@ public class Context {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final Map<String, String> attributes;
+    private final Locale locale;
 
     private Class<?> type;
     private Object object;
@@ -48,6 +49,7 @@ public class Context {
         this.atoms = atoms;
         this.request = request;
         this.response = response;
+        this.locale = locale;
         this.attributes = attributes;
     }
 
@@ -75,8 +77,8 @@ public class Context {
         return accessor.get(object, this);
     }
 
-    public void setCurrentValue(Object value) {
-        accessor.set(object, value, this);
+    public void setCurrentValue(String[] values) {
+        accessor.set(object, values, this);
     }
 
     public Object createValue() {
@@ -125,5 +127,9 @@ public class Context {
 
     public int getIndex() {
         return index;
+    }
+
+    public Locale getLocale() {
+        return locale;
     }
 }

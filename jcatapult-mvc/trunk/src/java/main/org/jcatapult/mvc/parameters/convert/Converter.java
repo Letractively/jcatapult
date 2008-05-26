@@ -170,4 +170,9 @@ public interface Converter {
     <T> String convertToString(T value, Class<T> convertFrom, HttpServletRequest request,
             HttpServletResponse response, Locale locale, Map<String, String> attributes)
     throws ConversionException;
+
+    /**
+     * @return  The list of supported types for this converter. This should not contain array types.
+     */
+    Class<?>[] supportedTypes();
 }

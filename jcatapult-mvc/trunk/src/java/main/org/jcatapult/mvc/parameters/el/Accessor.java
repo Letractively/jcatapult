@@ -62,11 +62,18 @@ public abstract class Accessor {
 
     protected abstract Object get(Context context);
 
+    protected abstract void set(String[] values, Context context);
+
     protected abstract void set(Object value, Context context);
 
     public final Object get(Object object, Context context) {
         this.object = object;
         return get(context);
+    }
+
+    public final void set(Object object, String[] values, Context context) {
+        this.object = object;
+        set(values, context);
     }
 
     public final void set(Object object, Object value, Context context) {
@@ -77,7 +84,7 @@ public abstract class Accessor {
     /**
      * <p>
      * After the object is originally get or set, this method can be called to update the value.
-     * This method should only work if the {@link #set(Object, Object, Context)} or
+     * This method should only work if the {@link #set(Object, String[], Context)} or
      * {@link #get(Object, Context)} method was called first.
      * </p>
      *
@@ -163,23 +170,24 @@ public abstract class Accessor {
      * However, this method short circuits and returns the value unchanged if value is runtime
      * assignable to the type of this BaseBeanProperty.
      *
-     * @param   value The value object to convert.
+     * @param   values The String values to convert.
      * @param   context The current context.
      * @return  The value parameter converted to the correct type.
      * @throws  ConversionException If there was a problem converting the parameter.
      */
-    protected Object convert(final Object value, Context context) throws ConversionException {
-        Object newValue = value;
+    protected Object convert(final String[] values, Context context) throws ConversionException {
+        Object newValue = values;
 
         // The converter does this, but pre-emptively checking these conditions will speed up conversion times
         Class<?> typeClass = typeToClass(type);
-        if (value != null && !typeClass.isInstance(value)) {
+        if (values != null && !typeClass.isInstance(values)) {
             Converter converter = ConverterRegistry.lookup(typeClass);
             if (converter == null) {
                 throw new ConversionException("No type converter found for the type [" + typeClass.getName() + "]");
             }
 
-            newValue = converter.convert(value, typeClass, null, null);
+            newValue = converter.convertFromStrings(values, typeClass, context.getRequest(),
+                context.getResponse(), context.getLocale(), context.getAttributes());
         }
 
         return newValue;

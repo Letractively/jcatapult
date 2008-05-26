@@ -16,17 +16,22 @@
  */
 package org.jcatapult.mvc.parameters.convert;
 
-import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import javax.management.ReflectionException;
 
-import net.java.lang.reflect.ReflectionTools;
+import com.google.inject.Binding;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Provider;
+import com.google.inject.TypeLiteral;
 
 /**
  * <p>
  * This class is the manager for all the TypeConverters. It loads the
- * type converters using a number of different mechanisms:
+ * type converters from Guice. Therefore, if you want to supply a custom
+ * type converter, just add it to a Guice module and place it in your
+ * classpath. JCatapult will discover the module and load it up.
  * </p>
  *
  * <p>
@@ -41,43 +46,21 @@ import net.java.lang.reflect.ReflectionTools;
  * </p>
  *
  * @author  Brian Pontarelli
- * @since   1.0
  */
 public class ConverterRegistry {
     private static Map<Class<?>, Converter> converters = new HashMap<Class<?>, Converter>();
 
-    // Initialize the basic type converters including Number, String and Boolean
-    static {
-        Converter obj = new BooleanConverter();
-        converters.put(Boolean.class, obj);
-        converters.put(Boolean.TYPE, obj);
-
-        obj = new NumberConverter();
-        converters.put(Number.class, obj);
-        converters.put(Byte.TYPE, obj);
-        converters.put(Double.TYPE, obj);
-        converters.put(Float.TYPE, obj);
-        converters.put(Integer.TYPE, obj);
-        converters.put(Long.TYPE, obj);
-        converters.put(Short.TYPE, obj);
-
-        obj = new CharacterConverter();
-        converters.put(Character.class, obj);
-        converters.put(Character.TYPE, obj);
-
-//        try {
-//            obj = (Converter) ReflectionTools.instantiate("net.java.convert.converters.StringConverter");
-//            converters.put(String.class, obj);
-//        } catch (ReflectionException re) {
-//            System.err.println("WARNING - String type converter not found");
-//        }
-//
-//        try {
-//            obj = (Converter) ReflectionTools.instantiate("net.java.convert.converters.FileConverter");
-//            converters.put(File.class, obj);
-//        } catch (ReflectionException re) {
-//            System.err.println("WARNING - File type converter not found");
-//        }
+    @Inject
+    public static void initialize(Injector injector) {
+        List<Binding<Converter>> bindings = injector.findBindingsByType(new TypeLiteral<Converter>(){});
+        for (Binding<Converter> binding : bindings) {
+            Provider<Converter> provider = binding.getProvider();
+            Converter converter = provider.get();
+            Class<?>[] types = converter.supportedTypes();
+            for (Class<?> type : types) {
+                converters.put(type, converter);
+            }
+        }
     }
 
     /** Static class */
@@ -149,29 +132,5 @@ public class ConverterRegistry {
         */
 
         return converter;
-    }
-
-    /**
-     * Registers the given converter with the given type
-     *
-     * @param   type The type to register the converter for
-     * @param   converter The convert to register with the given type
-     * @return  The converter that was already registered with the given type
-     *          or null if this is the first converter being registered for
-     *          that type
-     */
-    public static Converter register(Class<?> type, Converter converter) {
-        return converters.put(type, converter);
-    }
-
-    /**
-     * Unregisters the given converter with the given type
-     *
-     * @param   type The type to unregister the converter
-     * @return  The converter that was registered with the given type or null
-     *          if no converter was registered for the given type
-     */
-    public static Converter unregister(Class<?> type) {
-        return converters.remove(type);
     }
 }
