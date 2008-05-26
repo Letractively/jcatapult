@@ -45,13 +45,13 @@ public class IndexedAccessor extends MemberAccessor {
         return false;
     }
 
-    public Object get(Object object) {
+    public Object get(Context context) {
         Method getter = propertyInfo.getMethods().get("get");
-        return invokeMethod(getter, object, index);
+        return invokeMethod(getter, this.object, index);
     }
 
-    public void set(Object object, Object value) {
+    public void set(Object value, Context context) {
         Method setter = propertyInfo.getMethods().get("set");
-        invokeMethod(setter, object, index, convert(value));
+        invokeMethod(setter, object, index, convert(value, context));
     }
 }

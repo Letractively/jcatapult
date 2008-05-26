@@ -18,27 +18,27 @@ package org.jcatapult.mvc.parameters.convert;
 
 /**
  * <p>
- * This is a runtime exception thrown when type conversion fails. This
- * is normally NOT fatal and is caused by the user of the application
- * putting the wrong information into a form.
+ * This is a runtime exception thrown when the state of the current
+ * conversion is such that conversion can never proceed. This is
+ * normally fatal and requires developer correction.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class ConversionException extends RuntimeException {
-    public ConversionException() {
+public class ConverterStateException extends RuntimeException {
+    public ConverterStateException() {
         super();
     }
 
-    public ConversionException(String message) {
+    public ConverterStateException(String message) {
         super(message);
     }
 
-    public ConversionException(String message, Throwable cause) {
+    public ConverterStateException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ConversionException(Throwable cause) {
+    public ConverterStateException(Throwable cause) {
         super(cause);
     }
 }

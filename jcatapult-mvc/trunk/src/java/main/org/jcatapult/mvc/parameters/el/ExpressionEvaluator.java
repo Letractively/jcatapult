@@ -18,7 +18,11 @@ package org.jcatapult.mvc.parameters.el;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -29,9 +33,10 @@ import java.util.StringTokenizer;
  */
 public class ExpressionEvaluator {
     @SuppressWarnings("unchecked")
-    public static <T> T getValue(String expression, Object bean) {
+    public static <T> T getValue(String expression, Object bean, HttpServletRequest request,
+            HttpServletResponse response, Locale locale, Map<String, String> attributes) {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(atoms);
+        Context context = new Context(atoms, request, response, locale, attributes);
         context.init(bean);
         while (context.hasNext()) {
             Atom atom = context.next();
@@ -53,9 +58,10 @@ public class ExpressionEvaluator {
     }
 
     @SuppressWarnings("unchecked")
-    public static void setValue(String expression, Object bean, Object value) {
+    public static void setValue(String expression, Object bean, Object value, HttpServletRequest request,
+            HttpServletResponse response, Locale locale, Map<String, String> attributes) {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(atoms);
+        Context context = new Context(atoms, request, response, locale, attributes);
         context.init(bean);
         while (context.hasNext()) {
             Atom atom = context.next();

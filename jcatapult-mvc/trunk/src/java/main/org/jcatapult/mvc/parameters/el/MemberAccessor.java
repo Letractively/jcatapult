@@ -84,30 +84,37 @@ public class MemberAccessor extends Accessor {
         return propertyInfo != null && propertyInfo.isIndexed();
     }
 
-    public Object get(Object object) {
+    public Object get(Context context) {
         if (propertyInfo != null) {
             Method getter = propertyInfo.getMethods().get("get");
             if (getter == null) {
                 throw new ExpressionException("Missing getter for property [" + propertyInfo.getName() +
                     "] in class [" + declaringClass + "]");
             }
-            return invokeMethod(getter, object);
+            return invokeMethod(getter, this.object);
         }
 
-        return getField(field, object);
+        return getField(field, this.object);
     }
 
-    public void set(Object object, Object value) {
+    public void set(Object value, Context context) {
         if (propertyInfo != null) {
             Method setter = propertyInfo.getMethods().get("set");
             if (setter == null) {
                 throw new ExpressionException("Missing setter for property [" + propertyInfo.getName() +
                     "] in class [" + declaringClass + "]");
             }
-            invokeMethod(setter, object, convert(value));
+            invokeMethod(setter, object, convert(value, context));
         } else {
-            setField(field, object, convert(value));
+            setField(field, object, convert(value, context));
         }
+    }
+
+    /**
+     * @return  Returns this.
+     */
+    public MemberAccessor getMemberAccessor() {
+        return this;
     }
 
     public String toString() {

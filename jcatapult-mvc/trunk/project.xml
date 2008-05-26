@@ -13,14 +13,17 @@
   <property name="project.requires.database" value="false"/>
 
   <dependencies id="dependencies.project">
-    <artifactGroup type="run"/>
+    <artifactGroup type="compile-only">
+      <artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
+    </artifactGroup>
     <artifactGroup type="compile">
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5-{integration}" type="jar"/>
     </artifactGroup>
-    <artifactGroup type="test-run"/>
+    <artifactGroup type="run"/>
     <artifactGroup type="test-compile">
       <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
     </artifactGroup>
+    <artifactGroup type="test-run"/>
   </dependencies>
 
   <!--

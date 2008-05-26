@@ -72,6 +72,10 @@ public class User {
     }
 
     public User getSibling(int index) {
+        if (index >= this.siblings.size()) {
+            return null;
+        }
+        
         return siblings.get(index);
     }
 
@@ -80,6 +84,11 @@ public class User {
     }
 
     public void setSibling(int index, User sibling) {
+        if (index >= this.siblings.size()) {
+            for (int i = this.siblings.size(); i <= index; i++) {
+                this.siblings.add(null);
+            }
+        }
         this.siblings.set(index, sibling);
     }
 
