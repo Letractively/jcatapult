@@ -36,8 +36,10 @@ public abstract class AbstractPrimitiveConverter extends AbstractConverter {
     protected <T> T stringToObject(String value, Class<T> convertTo, HttpServletRequest request,
             HttpServletResponse response, Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
-        if (value == null) {
+        if (value == null && convertTo.isPrimitive()) {
             return defaultPrimitive(convertTo, request, response, locale, attributes);
+        } else if (value == null) {
+            return null;
         }
 
         return stringToPrimitive(value, convertTo, request, response, locale, attributes);

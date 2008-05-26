@@ -43,7 +43,8 @@ public class FileConverter extends AbstractConverter {
     /**
      * Returns null if the value is null, otherwise this returns a new File of the value.
      *
-     * @param   attributes Can contain the parent.dir parameter described in class comment.
+     * @param   attributes Can contain the parentDir attribute which if the String is relative will
+     *          be the parent directory.
      */
     protected <T> T stringToObject(String value, Class<T> convertTo, HttpServletRequest request,
             HttpServletResponse response, Locale locale, Map<String, String> attributes)
@@ -57,7 +58,7 @@ public class FileConverter extends AbstractConverter {
         }
 
         if (attributes != null) {
-            String parent = attributes.get("parent.dir");
+            String parent = attributes.get("parentDir");
             if (parent != null) {
                 return (T) new File(parent, value);
             }
