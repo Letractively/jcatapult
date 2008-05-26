@@ -16,15 +16,16 @@
  */
 package org.jcatapult.mvc.parameters.convert;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.inject.Binding;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Provider;
-import com.google.inject.TypeLiteral;
+import com.google.inject.Key;
 
 /**
  * <p>
@@ -48,17 +49,24 @@ import com.google.inject.TypeLiteral;
  * @author  Brian Pontarelli
  */
 public class ConverterRegistry {
+    private static final Logger logger = Logger.getLogger(ConverterRegistry.class.getName());
     private static Map<Class<?>, Converter> converters = new HashMap<Class<?>, Converter>();
 
     @Inject
     public static void initialize(Injector injector) {
-        List<Binding<Converter>> bindings = injector.findBindingsByType(new TypeLiteral<Converter>(){});
-        for (Binding<Converter> binding : bindings) {
-            Provider<Converter> provider = binding.getProvider();
-            Converter converter = provider.get();
-            Class<?>[] types = converter.supportedTypes();
-            for (Class<?> type : types) {
-                converters.put(type, converter);
+        Map<Key<?>, Binding<?>> bindings = injector.getBindings();
+        for (Key<?> key : bindings.keySet()) {
+            Type bindingType = key.getTypeLiteral().getType();
+            if (bindingType instanceof Class && Converter.class.isAssignableFrom((Class<?>) bindingType)) {
+                Converter converter = (Converter) bindings.get(key).getProvider().get();
+                Class<?>[] types = converter.supportedTypes();
+                for (Class<?> type : types) {
+                    if (logger.isLoggable(Level.FINE)) {
+                        logger.fine("Registering converter class [" + converter.getClass() + "] for type [" + type + "]");
+                    }
+
+                    converters.put(type, converter);
+                }
             }
         }
     }
