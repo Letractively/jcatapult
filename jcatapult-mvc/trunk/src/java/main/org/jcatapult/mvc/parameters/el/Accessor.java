@@ -46,8 +46,9 @@ import static net.java.lang.reflect.ReflectionTools.*;
  * @author Brian Pontarelli
  */
 public abstract class Accessor {
-    Type type;
-    Class<?> declaringClass;
+    protected Type type;
+    protected Class<?> declaringClass;
+    protected Object object;
 
     protected Accessor() {
     }
@@ -59,18 +60,60 @@ public abstract class Accessor {
 
     public abstract boolean isIndexed();
 
-    public abstract Object get(Object object);
+    protected abstract Object get(Context context);
 
-    public abstract void set(Object object, Object value);
+    protected abstract void set(Object value, Context context);
+
+    public final Object get(Object object, Context context) {
+        this.object = object;
+        return get(context);
+    }
+
+    public final void set(Object object, Object value, Context context) {
+        this.object = object;
+        set(value, context);
+    }
+
+    /**
+     * <p>
+     * After the object is originally get or set, this method can be called to update the value.
+     * This method should only work if the {@link #set(Object, Object, Context)} or
+     * {@link #get(Object, Context)} method was called first.
+     * </p>
+     *
+     * <p>
+     * <strong>NOTE:</strong> Accessors are not thread safe and need not be because a new one is
+     * created for each atom.
+     * </p>
+     *
+     * @param   value The value to update the accessor with.
+     * @param   context The current context.
+     */
+    public void update(Object value, Context context) {
+        if (object == null) {
+            throw new IllegalStateException("The object is null, unable to update.");
+        }
+
+        set(object, value, context);
+    }
+
+    /**
+     * @return  Returns the member accessor that is closest to the current atom in the expression.
+     *          If the current atom is a member, this should just return <strong>this</strong>.
+     *          If the current atom is a collection for example, this would return the member that
+     *          the collection was retrieved from.
+     */
+    public abstract MemberAccessor getMemberAccessor();
 
     /**
      * Creates a new instance of the current type.
      *
      * @param   key This is only used when creating arrays. It is the next atom, which is always
      *          the size of the array.
+     * @param   context The current context.
      * @return  The new value.
      */
-    protected Object createValue(Object key) {
+    protected Object createValue(Object key, Context context) {
         Class<?> typeClass = typeToClass(type);
         Object value;
         if (Map.class == typeClass) {
@@ -121,10 +164,11 @@ public abstract class Accessor {
      * assignable to the type of this BaseBeanProperty.
      *
      * @param   value The value object to convert.
+     * @param   context The current context.
      * @return  The value parameter converted to the correct type.
-     * @throws org.jcatapult.mvc.parameters.convert.ConversionException If there was a problem converting the parameter.
+     * @throws  ConversionException If there was a problem converting the parameter.
      */
-    protected Object convert(final Object value) throws ConversionException {
+    protected Object convert(final Object value, Context context) throws ConversionException {
         Object newValue = value;
 
         // The converter does this, but pre-emptively checking these conditions will speed up conversion times

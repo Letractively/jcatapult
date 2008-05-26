@@ -19,8 +19,10 @@ package org.jcatapult.mvc.parameters.el;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
+import java.util.List;
 
 import static net.java.lang.ObjectTools.*;
 
@@ -33,11 +35,20 @@ import static net.java.lang.ObjectTools.*;
  */
 public class CollectionAccessor extends Accessor {
     String index;
+    MemberAccessor memberAccessor;
 
-    public CollectionAccessor(Accessor accessor, String index) {
+    public CollectionAccessor(Accessor accessor, String index, MemberAccessor memberAccessor) {
         super(accessor);
         this.index = index;
         super.type = componentType(super.type);
+        this.memberAccessor = memberAccessor;
+    }
+
+    /**
+     * @return  The memberAccessor member variable.
+     */
+    public MemberAccessor getMemberAccessor() {
+        return memberAccessor;
     }
 
     protected Type componentType(Type type) {
@@ -75,11 +86,51 @@ public class CollectionAccessor extends Accessor {
         return false;
     }
 
-    public Object get(Object object) {
-        return getValueFromCollection(object, index);
+    public Object get(Context context) {
+        try {
+            return getValueFromCollection(this.object, index);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
-    public void set(Object object, Object value) {
-        setValueIntoCollection(object, index, convert(value));
+    public void set(Object value, Context context) {
+        object = pad(object, context);
+        setValueIntoCollection(object, index, convert(value, context));
+    }
+
+    /**
+     * Adds padding to the array or list so that it can hold the item being inserted.
+     *
+     * @param   object The object to pad. If this isn't a List or an array, this method does nothing
+     *          and just returns the Object.
+     * @param   context The current context.
+     * @return  The padded list or array.
+     */
+    private Object pad(Object object, Context context) {
+        if (object instanceof List) {
+            List list = ((List) object);
+            int length = list.size();
+            int indexInt = Integer.parseInt(index);
+            if (length <= indexInt) {
+                for (int i = length; i <= indexInt; i++) {
+                    list.add(null);
+                }
+            }
+        } else if (isArray(object)) {
+            int length = Array.getLength(object);
+            int indexInt = Integer.parseInt(index);
+            if (length <= indexInt) {
+                System.out.println("Padding " + length + " to " + indexInt);
+                Object newArray = Array.newInstance(object.getClass().getComponentType(), indexInt + 1);
+                System.arraycopy(object, 0, newArray, 0, length);
+                object = newArray;
+
+                // Set the new array into the member
+                memberAccessor.update(newArray, context);
+            }
+        }
+
+        return object;
     }
 }

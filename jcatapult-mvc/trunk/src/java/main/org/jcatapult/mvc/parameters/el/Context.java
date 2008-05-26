@@ -17,6 +17,11 @@
 package org.jcatapult.mvc.parameters.el;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.java.lang.ObjectTools;
 
@@ -29,14 +34,21 @@ import net.java.lang.ObjectTools;
  */
 public class Context {
     private final List<Atom> atoms;
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
+    private final Map<String, String> attributes;
 
     private Class<?> type;
     private Object object;
     private Accessor accessor;
     private int index;
 
-    public Context(List<Atom> atoms) {
+    public Context(List<Atom> atoms, HttpServletRequest request, HttpServletResponse response,
+        Locale locale, Map<String, String> attributes) {
         this.atoms = atoms;
+        this.request = request;
+        this.response = response;
+        this.attributes = attributes;
     }
 
     public void init(Object object) {
@@ -53,25 +65,25 @@ public class Context {
         if (accessor != null && accessor.isIndexed()) {
             accessor = new IndexedAccessor((MemberAccessor) accessor, name);
         } else if (ObjectTools.isCollection(object) || object.getClass().isArray()) {
-            accessor = new CollectionAccessor(accessor, name);
+            accessor = new CollectionAccessor(accessor, name, accessor.getMemberAccessor());
         } else {
             accessor = new MemberAccessor(type, name);
         }
     }
 
     public Object getCurrentValue() {
-        return accessor.get(object);
+        return accessor.get(object, this);
     }
 
     public void setCurrentValue(Object value) {
-        accessor.set(object, value);
+        accessor.set(object, value, this);
     }
 
     public Object createValue() {
         // Peek at the next atom, in case this is an array
         Object key = hasNext() ? peek().getName(): null;
-        Object value = accessor.createValue(key);
-        accessor.set(object, value);
+        Object value = accessor.createValue(key, this);
+        accessor.set(object, value, this);
         return value;
     }
 
@@ -85,6 +97,18 @@ public class Context {
 
     public boolean hasNext() {
         return index < atoms.size();
+    }
+
+    public HttpServletRequest getRequest() {
+        return request;
+    }
+
+    public HttpServletResponse getResponse() {
+        return response;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
     }
 
     public Class<?> getType() {
