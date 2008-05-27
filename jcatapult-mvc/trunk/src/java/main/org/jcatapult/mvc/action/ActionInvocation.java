@@ -14,26 +14,23 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.parameters;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package org.jcatapult.mvc.action;
 
 /**
  * <p>
- * This interface defines the mechanism that the JCatapult MVC uses to
- * pull HTTP request parameters and set them into actions.
+ * This interface defines the information about an action invocation.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public interface ParameterService {
+public interface ActionInvocation {
     /**
-     * Processes the HTTP request parameters and setting the values into the action.
-     *
-     * @param   request The request to pull the parameters from.
-     * @param   response The response (rarely needed).
-     * @param   action The action.
+     * @return  The action object.
      */
-    void process(HttpServletRequest request, HttpServletResponse response, Object action);
+    Object action();
+
+    /**
+     * @return  The action URI that maps to the action object.
+     */
+    String actionURI();
 }

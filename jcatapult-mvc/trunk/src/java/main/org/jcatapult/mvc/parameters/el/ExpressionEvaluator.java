@@ -24,6 +24,9 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jcatapult.mvc.parameters.convert.ConversionException;
+import org.jcatapult.mvc.parameters.convert.ConverterStateException;
+
 /**
  * <p>
  * This
@@ -59,7 +62,8 @@ public class ExpressionEvaluator {
 
     @SuppressWarnings("unchecked")
     public static void setValue(String expression, Object bean, String[] values, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes) {
+            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+    throws ConversionException, ConverterStateException, ExpressionException {
         List<Atom> atoms = parse(expression);
         Context context = new Context(atoms, request, response, locale, attributes);
         context.init(bean);
