@@ -16,65 +16,19 @@
  */
 package org.jcatapult.mvc.parameters.convert;
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.google.inject.Binding;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Key;
+import com.google.inject.ImplementedBy;
+import com.google.inject.Singleton;
 
 /**
  * <p>
- * This class is the manager for all the TypeConverters. It loads the
- * type converters from Guice. Therefore, if you want to supply a custom
- * type converter, just add it to a Guice module and place it in your
- * classpath. JCatapult will discover the module and load it up.
- * </p>
- *
- * <p>
- * A converter for a given type will be retrieved when the manager
- * is queried for that type and all sub class of that type, unless
- * another converter is registered for a sub class of the type. For
- * example, registering a convert for the type Number would ensure
- * that Integer, Double, Float, etc. used that converter for
- * conversions. If a converter was registered for Number and another
- * converter for Double, the converter for Number would handle all
- * sub-class of Number (Integer, etc.) except Double.
+ * This interface defines the method of getting Converters.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class ConverterRegistry {
-    private static final Logger logger = Logger.getLogger(ConverterRegistry.class.getName());
-    private static Map<Class<?>, Converter> converters = new HashMap<Class<?>, Converter>();
-
-    @Inject
-    public static void initialize(Injector injector) {
-        Map<Key<?>, Binding<?>> bindings = injector.getBindings();
-        for (Key<?> key : bindings.keySet()) {
-            Type bindingType = key.getTypeLiteral().getType();
-            if (bindingType instanceof Class && Converter.class.isAssignableFrom((Class<?>) bindingType)) {
-                Converter converter = (Converter) bindings.get(key).getProvider().get();
-                Class<?>[] types = converter.supportedTypes();
-                for (Class<?> type : types) {
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.fine("Registering converter class [" + converter.getClass() + "] for type [" + type + "]");
-                    }
-
-                    converters.put(type, converter);
-                }
-            }
-        }
-    }
-
-    /** Static class */
-    private ConverterRegistry() {
-    }
-
+@ImplementedBy(DefaultConverterRegistry.class)
+@Singleton
+public interface ConverterRegistry {
     /**
      * <p>
      * Returns the type converter for the given type. This converter is either
@@ -103,42 +57,5 @@ public class ConverterRegistry {
      * @param   type The type to start with when looking for converters
      * @return  The converter or null if one was not found
      */
-    public static Converter lookup(Class<?> type) {
-        Class localType = type;
-        Converter converter = null;
-
-        // If it is an array, just use the component type because TypeConverters
-        // can convert to arrays
-        while (localType.isArray()) {
-            localType = localType.getComponentType();
-        }
-
-        // The local type becomes null when it is an interface or a primitive and the
-        // super class is asked for
-        while (localType != null && localType != Object.class) {
-            converter = converters.get(localType);
-            if (converter == null) {
-                localType = localType.getSuperclass();
-            } else {
-                break;
-            }
-        }
-
-        // I'm not sure about this yet
-        /*
-        if (converter == null) {
-            Class [] interfaces = type.getInterfaces();
-            Converter interfaceConverter;
-
-            for (int i = 0; i < interfaces.length; i++) {
-                interfaceConverter = getTypeConverter(interfaces[i]);
-                if (interfaceConverter != null) {
-                    break;
-                }
-            }
-        }
-        */
-
-        return converter;
-    }
+    Converter lookup(Class<?> type);
 }

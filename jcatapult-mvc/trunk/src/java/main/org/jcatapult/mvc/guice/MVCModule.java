@@ -16,7 +16,8 @@
  */
 package org.jcatapult.mvc.guice;
 
-import org.jcatapult.mvc.parameters.convert.ConverterRegistry;
+import org.jcatapult.mvc.action.result.ForwardResult;
+import org.jcatapult.mvc.action.result.RedirectResult;
 import org.jcatapult.mvc.parameters.convert.converters.BooleanConverter;
 import org.jcatapult.mvc.parameters.convert.converters.CharacterConverter;
 import org.jcatapult.mvc.parameters.convert.converters.FileConverter;
@@ -36,7 +37,7 @@ import com.google.inject.AbstractModule;
 public class MVCModule extends AbstractModule {
     protected void configure() {
         configureConverters();
-        configureConverterRegistry();
+        configureResults();
     }
 
     /**
@@ -51,9 +52,10 @@ public class MVCModule extends AbstractModule {
     }
 
     /**
-     * Requests static injection of the converter registry.
+     * Binds all the default results.
      */
-    protected void configureConverterRegistry() {
-        requestStaticInjection(ConverterRegistry.class);
+    protected void configureResults() {
+        bind(ForwardResult.class);
+        bind(RedirectResult.class);
     }
 }

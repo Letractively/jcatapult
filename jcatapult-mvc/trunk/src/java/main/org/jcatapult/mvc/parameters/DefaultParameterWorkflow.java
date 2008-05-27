@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionWorkflow;
+import org.jcatapult.mvc.action.ActionMappingWorkflow;
 import org.jcatapult.mvc.errors.ErrorHandler;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
 import org.jcatapult.mvc.parameters.convert.ConversionException;
@@ -52,15 +52,15 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     public static final String PARAMETERS_KEY = "__jcatapult_parameters_key";
 
     private final LocaleWorkflow localeWorkflow;
-    private final ActionWorkflow actionWorkflow;
+    private final ActionMappingWorkflow actionMappingWorkflow;
     private final ErrorHandler errorHandler;
     private final ExpressionEvaluator expressionEvaluator;
 
     @Inject
-    public DefaultParameterWorkflow(LocaleWorkflow localeWorkflow, ActionWorkflow actionWorkflow,
+    public DefaultParameterWorkflow(LocaleWorkflow localeWorkflow, ActionMappingWorkflow actionMappingWorkflow,
             ErrorHandler errorHandler, ExpressionEvaluator expressionEvaluator) {
         this.localeWorkflow = localeWorkflow;
-        this.actionWorkflow = actionWorkflow;
+        this.actionMappingWorkflow = actionMappingWorkflow;
         this.errorHandler = errorHandler;
         this.expressionEvaluator = expressionEvaluator;
     }
@@ -74,7 +74,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
      */
     public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
     throws IOException, ServletException {
-        ActionInvocation actionInvocation = actionWorkflow.fetch(request);
+        ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
         Locale locale = localeWorkflow.getLocale(request, response);
 
         // First grab the structs and then save them to the request

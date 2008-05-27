@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionWorkflow;
+import org.jcatapult.mvc.action.ActionMappingWorkflow;
 import org.jcatapult.mvc.errors.ErrorHandler;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
 import org.jcatapult.mvc.parameters.convert.ConversionException;
@@ -82,9 +82,9 @@ public class DefaultParameterWorkflowTest {
         EasyMock.expect(invocation.action()).andReturn(action);
         EasyMock.replay(invocation);
 
-        ActionWorkflow actionWorkflow = EasyMock.createStrictMock(ActionWorkflow.class);
-        EasyMock.expect(actionWorkflow.fetch(request)).andReturn(invocation);
-        EasyMock.replay(actionWorkflow);
+        ActionMappingWorkflow actionMappingWorkflow = EasyMock.createStrictMock(ActionMappingWorkflow.class);
+        EasyMock.expect(actionMappingWorkflow.fetch(request)).andReturn(invocation);
+        EasyMock.replay(actionMappingWorkflow);
 
         ErrorHandler errorHandler = EasyMock.createStrictMock(ErrorHandler.class);
         errorHandler.addConversionError(eq("user.inches"), aryEq(array("tall")), same(Locale.US), eq(new HashMap<String, String>()));
@@ -94,9 +94,9 @@ public class DefaultParameterWorkflowTest {
         chain.doWorkflow(request, null);
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeWorkflow, actionWorkflow, errorHandler, expressionEvaluator);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeWorkflow, actionMappingWorkflow, errorHandler, expressionEvaluator);
         workflow.perform(request, null, chain);
 
-        EasyMock.verify(request, expressionEvaluator, localeWorkflow, invocation, actionWorkflow, errorHandler, chain);
+        EasyMock.verify(request, expressionEvaluator, localeWorkflow, invocation, actionMappingWorkflow, errorHandler, chain);
     }
 }

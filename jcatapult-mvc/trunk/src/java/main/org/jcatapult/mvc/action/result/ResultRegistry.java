@@ -14,30 +14,30 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.action;
+package org.jcatapult.mvc.action.result;
 
-import org.jcatapult.mvc.action.config.ActionConfiguration;
+import java.lang.annotation.Annotation;
+
+import com.google.inject.ImplementedBy;
+import com.google.inject.Singleton;
 
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This interface defines the registry that stores Results.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface ActionInvocation {
+@ImplementedBy(DefaultResultRegistry.class)
+@Singleton
+public interface ResultRegistry {
     /**
-     * @return  The action object.
+     * <p>
+     * Returns the result for the given annotation.
+     * </p>
+     *
+     * @param   annotation The annotation.
+     * @return  The Result or null if one was not found
      */
-    Object action();
-
-    /**
-     * @return  The action URI that maps to the action object.
-     */
-    String actionURI();
-
-    /**
-     * @return  The action configuration for this invocation.
-     */
-    ActionConfiguration configuration();
+    Result lookup(Class<? extends Annotation> annotation);
 }

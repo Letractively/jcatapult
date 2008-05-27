@@ -46,14 +46,17 @@ import static net.java.lang.reflect.ReflectionTools.*;
  * @author Brian Pontarelli
  */
 public abstract class Accessor {
+    protected final ConverterRegistry converterRegistry;
     protected Type type;
     protected Class<?> declaringClass;
     protected Object object;
 
-    protected Accessor() {
+    protected Accessor(ConverterRegistry converterRegistry) {
+        this.converterRegistry = converterRegistry;
     }
 
-    public Accessor(Accessor accessor) {
+    public Accessor(ConverterRegistry converterRegistry, Accessor accessor) {
+        this.converterRegistry = converterRegistry;
         this.type = accessor.type;
         this.declaringClass = accessor.declaringClass;
     }
@@ -181,7 +184,7 @@ public abstract class Accessor {
         // The converter does this, but pre-emptively checking these conditions will speed up conversion times
         Class<?> typeClass = typeToClass(type);
         if (values != null && !typeClass.isInstance(values)) {
-            Converter converter = ConverterRegistry.lookup(typeClass);
+            Converter converter = converterRegistry.lookup(typeClass);
             if (converter == null) {
                 throw new ConversionException("No type converter found for the type [" + typeClass.getName() + "]");
             }

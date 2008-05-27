@@ -14,30 +14,22 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.action;
-
-import org.jcatapult.mvc.action.config.ActionConfiguration;
+package org.jcatapult.mvc.action.config;
 
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This interface defines how a package and class name are converted into
+ * a URI.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface ActionInvocation {
+public interface ActionURIBuilder {
     /**
-     * @return  The action object.
+     * Converts the action class name into a URI.
+     *
+     * @param   actionClass The action class to convert to a URI.
+     * @return  The URI.
      */
-    Object action();
-
-    /**
-     * @return  The action URI that maps to the action object.
-     */
-    String actionURI();
-
-    /**
-     * @return  The action configuration for this invocation.
-     */
-    ActionConfiguration configuration();
+    String build(Class<?> actionClass);
 }

@@ -23,6 +23,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jcatapult.mvc.parameters.convert.ConverterRegistry;
+
 import net.java.lang.ObjectTools;
 
 /**
@@ -38,19 +40,21 @@ public class Context {
     private final HttpServletResponse response;
     private final Map<String, String> attributes;
     private final Locale locale;
+    private final ConverterRegistry converterRegistry;
 
     private Class<?> type;
     private Object object;
     private Accessor accessor;
     private int index;
 
-    public Context(List<Atom> atoms, HttpServletRequest request, HttpServletResponse response,
-        Locale locale, Map<String, String> attributes) {
+    public Context(ConverterRegistry converterRegistry, List<Atom> atoms, HttpServletRequest request,
+            HttpServletResponse response, Locale locale, Map<String, String> attributes) {
         this.atoms = atoms;
         this.request = request;
         this.response = response;
         this.locale = locale;
         this.attributes = attributes;
+        this.converterRegistry = converterRegistry;
     }
 
     public void init(Object object) {
@@ -65,11 +69,11 @@ public class Context {
     public void initAccessor(String name) {
         // This is the indexed case, so the name is the index to the method
         if (accessor != null && accessor.isIndexed()) {
-            accessor = new IndexedAccessor((MemberAccessor) accessor, name);
+            accessor = new IndexedAccessor(converterRegistry, (MemberAccessor) accessor, name);
         } else if (ObjectTools.isCollection(object) || object.getClass().isArray()) {
-            accessor = new CollectionAccessor(accessor, name, accessor.getMemberAccessor());
+            accessor = new CollectionAccessor(converterRegistry, accessor, name, accessor.getMemberAccessor());
         } else {
-            accessor = new MemberAccessor(type, name);
+            accessor = new MemberAccessor(converterRegistry, type, name);
         }
     }
 

@@ -14,30 +14,31 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.action;
+package org.jcatapult.mvc.action.result;
 
-import org.jcatapult.mvc.action.config.ActionConfiguration;
+import java.lang.annotation.Annotation;
 
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This class models the information necessary to invoke a result.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface ActionInvocation {
+public interface ResultInvocation {
     /**
-     * @return  The action object.
+     * @return  The annotation for the result. This is always non-null so that the annotation type
+     *          can be used to locate the correct {@link Result} instance.
      */
-    Object action();
+    Annotation annotation();
 
     /**
-     * @return  The action URI that maps to the action object.
+     * @return  The URI for this result invocation.
      */
-    String actionURI();
+    String uri();
 
     /**
-     * @return  The action configuration for this invocation.
+     * @return  The result code from the action invocation or <em>null</em> if there is not action.
      */
-    ActionConfiguration configuration();
+    String resultCode();
 }

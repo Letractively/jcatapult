@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.servlet.Workflow;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This class defines the mechanism used to locate actions to invoke and
@@ -31,15 +33,15 @@ import org.jcatapult.servlet.Workflow;
  *
  * @author  Brian Pontarelli
  */
-public interface ActionWorkflow extends Workflow {
+@ImplementedBy(DefaultActionMappingWorkflow.class)
+public interface ActionMappingWorkflow extends Workflow {
     /**
      * Grabs the action invocation information from the HTTP request. This might have already been
      * fetched as part of the workflow process and reside inside the HTTP request as an attribute,
      * or this method might parse determine the action invocation based on the HTTP request.
      *
      * @param   request The request.
-     * @return  The ActionInvocation.
-     * @throws  MissingActionInvocationException If the action invocation could not be located.
+     * @return  The ActionInvocation or null if there isn't an action to invoke.
      */
-    ActionInvocation fetch(HttpServletRequest request) throws MissingActionInvocationException;
+    ActionInvocation fetch(HttpServletRequest request);
 }

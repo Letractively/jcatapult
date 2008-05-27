@@ -14,30 +14,25 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.action;
+package org.jcatapult.mvc.action.config;
 
-import org.jcatapult.mvc.action.config.ActionConfiguration;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This class tests the default action URI builder.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface ActionInvocation {
+public class DefaultActionURIBuilderTest {
     /**
-     * @return  The action object.
+     * Tests the URI builder. 
      */
-    Object action();
-
-    /**
-     * @return  The action URI that maps to the action object.
-     */
-    String actionURI();
-
-    /**
-     * @return  The action configuration for this invocation.
-     */
-    ActionConfiguration configuration();
+    @Test
+    public void testBuild() {
+        DefaultActionURIBuilder builder = new DefaultActionURIBuilder();
+        assertEquals("/config/default-action-uri-builder-test", builder.build(this.getClass()));
+    }
 }

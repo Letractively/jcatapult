@@ -20,13 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameters.convert.ConversionException;
+import org.jcatapult.mvc.parameters.convert.ConverterRegistry;
 import org.jcatapult.mvc.parameters.convert.ConverterStateException;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -45,11 +48,18 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class DefaultExpressionEvaluator implements ExpressionEvaluator {
+    private final ConverterRegistry converterRegistry;
+
+    @Inject
+    public DefaultExpressionEvaluator(ConverterRegistry converterRegistry) {
+        this.converterRegistry = converterRegistry;
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T getValue(String expression, Object bean, HttpServletRequest request,
             HttpServletResponse response, Locale locale, Map<String, String> attributes) {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(atoms, request, response, locale, attributes);
+        Context context = new Context(converterRegistry, atoms, request, response, locale, attributes);
         context.init(bean);
         while (context.hasNext()) {
             Atom atom = context.next();
@@ -75,7 +85,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
             HttpServletResponse response, Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException, ExpressionException {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(atoms, request, response, locale, attributes);
+        Context context = new Context(converterRegistry, atoms, request, response, locale, attributes);
         context.init(bean);
         while (context.hasNext()) {
             Atom atom = context.next();
@@ -100,6 +110,13 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
                 context.init(nextValue);
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Set<String> getAllMembers(Class<?> klass) {
+        return MemberAccessor.getAllMembers(klass);
     }
 
     /**
@@ -162,7 +179,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 
                 atoms.add(new Atom(indexStr.substring(1, length - 1)));
             } else {
-                    atoms.add(new Atom(indexStr));
+                atoms.add(new Atom(indexStr));
             }
 
             bracet = expression.indexOf('[', bracetTwo);

@@ -14,32 +14,34 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.parameters;
+package org.jcatapult.mvc.action.config;
 
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-
-import org.jcatapult.servlet.Workflow;
 
 import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This interface marks a class as the parameter handling part of the MVC
- * workflow. This part is how the JCatapult MVC pulls HTTP request
- * parameters and set them into actions.
+ * This interface defines the mechanism used to load and cache action
+ * configuration. This should be flexible enough to support new actions
+ * being added, actions being updated and actions being removed during
+ * development.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultParameterWorkflow.class)
-public interface ParameterWorkflow extends Workflow {
+@ImplementedBy(DefaultActionConfigurationProvider.class)
+public interface ActionConfigurationProvider {
     /**
-     * Pulls the attributes for the given parameter out of the request.
+     * Locates the action configuration for the given URI.
      *
-     * @param   request The request.
-     * @param   parameter The name of the parameter.
-     * @return  The attributes or an empty Map if the parameter has no attributes.
+     * @param   uri The URI.
+     * @return  The action configuration for the URI or null if nothing could be found or inferred.
      */
-    Map<String, String> fetchAttributes(HttpServletRequest request, String parameter);
+    ActionConfiguration lookup(String uri);
+
+    /**
+     * @return  The current set of known configuration.
+     */
+    Map<String, ActionConfiguration> knownConfiguration();
 }

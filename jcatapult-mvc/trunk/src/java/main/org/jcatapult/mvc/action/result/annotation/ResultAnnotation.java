@@ -14,30 +14,23 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.action;
+package org.jcatapult.mvc.action.result.annotation;
 
-import org.jcatapult.mvc.action.config.ActionConfiguration;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This annotation is a marker that is used to mark custom result annotations
+ * so that JCatapult can determine which annotations on an action class are
+ * results annotations.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface ActionInvocation {
-    /**
-     * @return  The action object.
-     */
-    Object action();
-
-    /**
-     * @return  The action URI that maps to the action object.
-     */
-    String actionURI();
-
-    /**
-     * @return  The action configuration for this invocation.
-     */
-    ActionConfiguration configuration();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.ANNOTATION_TYPE)
+public @interface ResultAnnotation {
 }

@@ -16,28 +16,18 @@
  */
 package org.jcatapult.mvc.action;
 
-import org.jcatapult.mvc.action.config.ActionConfiguration;
+import org.junit.Test;
 
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This class tests the default action mapping workflow.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public interface ActionInvocation {
-    /**
-     * @return  The action object.
-     */
-    Object action();
+public class DefaultActionMappingWorkflowTest {
+    @Test
+    public void testMap() {
 
-    /**
-     * @return  The action URI that maps to the action object.
-     */
-    String actionURI();
-
-    /**
-     * @return  The action configuration for this invocation.
-     */
-    ActionConfiguration configuration();
+    }
 }

@@ -16,28 +16,18 @@
  */
 package org.jcatapult.mvc.action;
 
+import org.jcatapult.servlet.Workflow;
+
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
- * This exception is thrown when the action invocation cannot be
- * determined from the incoming HTTP request.
+ * This interface defines how actions are invoked by the JCatapult
+ * MVC.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class MissingActionInvocationException extends RuntimeException {
-    public MissingActionInvocationException() {
-        super();
-    }
-
-    public MissingActionInvocationException(String message) {
-        super(message);
-    }
-
-    public MissingActionInvocationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public MissingActionInvocationException(Throwable cause) {
-        super(cause);
-    }
+@ImplementedBy(DefaultActionInvocationWorkflow.class)
+public interface ActionInvocationWorkflow extends Workflow {
 }

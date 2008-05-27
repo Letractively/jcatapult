@@ -18,6 +18,7 @@ package org.jcatapult.mvc.parameters.el;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,4 +43,5 @@ public interface ExpressionEvaluator {
             HttpServletResponse response, Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException, ExpressionException;
 
+    Set<String> getAllMembers(Class<?> klass);
 }
