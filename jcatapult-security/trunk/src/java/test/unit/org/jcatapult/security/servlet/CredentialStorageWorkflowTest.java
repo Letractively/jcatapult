@@ -18,13 +18,12 @@ package org.jcatapult.security.servlet;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
-import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.SecurityContext;
 import org.jcatapult.servlet.WorkflowChain;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class CredentialStorageWorkflowTest {
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(ServletRequest request, ServletResponse response) {
+            public void doWorkflow(HttpServletRequest request, HttpServletResponse response) {
                 assertNotNull(SecurityContext.getCurrentUser());
                 called.set(true);
             }
@@ -81,7 +80,7 @@ public class CredentialStorageWorkflowTest {
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(ServletRequest request, ServletResponse response) {
+            public void doWorkflow(HttpServletRequest request, HttpServletResponse response) {
                 assertNull(SecurityContext.getCurrentUser());
                 EnhancedSecurityContext.login(user);
                 called.set(true);
@@ -111,7 +110,7 @@ public class CredentialStorageWorkflowTest {
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(ServletRequest request, ServletResponse response) {
+            public void doWorkflow(HttpServletRequest request, HttpServletResponse response) {
                 assertNotNull(EnhancedSecurityContext.getCurrentUser());
                 EnhancedSecurityContext.logout();
                 called.set(true);

@@ -15,12 +15,11 @@
  */
 package org.jcatapult.security.servlet;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jcatapult.servlet.DefaultWorkflowResolver;
 import org.jcatapult.servlet.Workflow;
-import org.jcatapult.jpa.JPAWorkflow;
 
 import com.google.inject.Inject;
 

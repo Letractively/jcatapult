@@ -17,12 +17,12 @@ package org.jcatapult.security.servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
-import org.jcatapult.security.EnhancedSecurityContext;
 
 import com.google.inject.Inject;
 
@@ -51,11 +51,11 @@ public class CredentialStorageWorkflow implements Workflow {
      *
      * @param   request The request.
      * @param   response The response.
-     * @param   workflowChain The workflow chain.
+     * @param   chain The workflow chain.
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
-    public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
+    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
     throws IOException, ServletException {
         Object userObject = credentialStorage.locate(request);
         boolean existing = (userObject != null);
@@ -64,7 +64,7 @@ public class CredentialStorageWorkflow implements Workflow {
         }
 
         try {
-            workflowChain.doWorkflow(request, response);
+            chain.doWorkflow(request, response);
         } finally {
             // If the user didn't exist before and now it does, store it.
             if (!existing && EnhancedSecurityContext.getCurrentUser() != null) {

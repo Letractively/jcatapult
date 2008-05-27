@@ -17,9 +17,8 @@ package org.jcatapult.security.servlet.login;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.JCatapultSecurityException;
 import org.jcatapult.security.config.SecurityConfiguration;
@@ -57,11 +56,9 @@ public class LoginWorkflow implements Workflow {
         this.passwordParameter = configuration.getPasswordParameter();
     }
 
-    public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
+    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
     throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-
-        if (httpRequest.getRequestURI().equals(loginURI)) {
+        if (request.getRequestURI().equals(loginURI)) {
             String userName = request.getParameter(userNameParameter);
             String password = request.getParameter(passwordParameter);
             if (userName == null || password == null) {
@@ -71,12 +68,12 @@ public class LoginWorkflow implements Workflow {
 
             try {
                 loginService.login(userName, password, request.getParameterMap());
-                loginHandler.handle(request, response, workflowChain);
+                loginHandler.handle(request, response, chain);
             } catch (JCatapultSecurityException e) {
-                exceptionHandler.handle(e, request, response, workflowChain);
+                exceptionHandler.handle(e, request, response, chain);
             }
         } else {
-            workflowChain.doWorkflow(request, response);
+            chain.doWorkflow(request, response);
         }
     }
 

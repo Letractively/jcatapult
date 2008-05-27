@@ -18,16 +18,14 @@ package org.jcatapult.security.servlet.login;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
-import org.jcatapult.security.login.InvalidUsernameException;
 import org.jcatapult.security.config.DefaultSecurityConfiguration;
+import org.jcatapult.security.login.InvalidUsernameException;
 import org.jcatapult.servlet.WorkflowChain;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -57,11 +55,12 @@ public class DefaultLoginExceptionHandlerTest {
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+            public void doWorkflow(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
                 assertNotNull(request);
                 assertNotNull(response);
                 assertTrue(request instanceof HttpServletRequestWrapper);
-                assertEquals("/login-failed", ((HttpServletRequest) request).getRequestURI());
+                assertEquals("/login-failed", request.getRequestURI());
                 called.set(true);
             }
         };

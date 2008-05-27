@@ -17,14 +17,13 @@ package org.jcatapult.security.servlet.auth;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.security.auth.Authorizer;
 import org.jcatapult.security.auth.NotLoggedInException;
-import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 
@@ -90,10 +89,9 @@ public class AuthorizationWorkflow implements Workflow {
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
-    public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
+    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String uri = httpRequest.getRequestURI();
+        String uri = request.getRequestURI();
         Object user = EnhancedSecurityContext.getCurrentUser();
 
         try {

@@ -17,9 +17,8 @@ package org.jcatapult.security.servlet.login;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.JCatapultSecurityException;
 import org.jcatapult.security.config.SecurityConfiguration;
@@ -58,12 +57,12 @@ public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
     /**
      * {@inheritDoc}
      */
-    public void handle(JCatapultSecurityException exception, ServletRequest request,
-            ServletResponse response, WorkflowChain workflowChain)
+    public void handle(JCatapultSecurityException exception, HttpServletRequest request,
+            HttpServletResponse response, WorkflowChain chain)
     throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         FacadeHttpServletRequest wrapper = new FacadeHttpServletRequest(httpRequest, failedLoginURI, null);
         httpRequest.setAttribute(EXCEPTION_KEY, exception);
-        workflowChain.doWorkflow(wrapper, response);
+        chain.doWorkflow(wrapper, response);
     }
 }

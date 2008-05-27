@@ -17,8 +17,8 @@ package org.jcatapult.security.servlet.login;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.servlet.saved.SavedRequestWorkflow;
 import org.jcatapult.servlet.WorkflowChain;
@@ -40,11 +40,11 @@ public interface PostLoginHandler {
      *
      * @param   request The HTTP servlet request.
      * @param   response The HTTP servlet response.
-     * @param   workflowChain The workflow chain if the implementation wants to continue down the
+     * @param   chain The workflow chain if the implementation wants to continue down the
      *          workflow chain.
      * @throws  ServletException If the a servlet error occurs.
      * @throws  IOException If an IO error occurs.
      */
-    void handle(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
+    void handle(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
     throws ServletException, IOException;
 }
