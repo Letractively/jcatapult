@@ -16,15 +16,15 @@
  */
 package org.jcatapult.mvc.parameters;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.io.IOException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionWorkflow;
@@ -32,7 +32,6 @@ import org.jcatapult.mvc.errors.ErrorHandler;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
 import org.jcatapult.mvc.parameters.convert.ConversionException;
 import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
-import static org.jcatapult.mvc.parameters.el.ExpressionEvaluator.*;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -55,13 +54,15 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     private final LocaleWorkflow localeWorkflow;
     private final ActionWorkflow actionWorkflow;
     private final ErrorHandler errorHandler;
+    private final ExpressionEvaluator expressionEvaluator;
 
     @Inject
     public DefaultParameterWorkflow(LocaleWorkflow localeWorkflow, ActionWorkflow actionWorkflow,
-            ErrorHandler errorHandler) {
+            ErrorHandler errorHandler, ExpressionEvaluator expressionEvaluator) {
         this.localeWorkflow = localeWorkflow;
         this.actionWorkflow = actionWorkflow;
         this.errorHandler = errorHandler;
+        this.expressionEvaluator = expressionEvaluator;
     }
 
     /**
@@ -81,10 +82,11 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         request.setAttribute(PARAMETERS_KEY, structs);
 
         // Next, process them
+        Object action = actionInvocation.action();
         for (String key : structs.keySet()) {
             Struct struct = structs.get(key);
             try {
-                setValue(key, actionInvocation.action(), struct.values, request, response, locale, struct.attributes);
+                expressionEvaluator.setValue(key, action, struct.values, request, response, locale, struct.attributes);
             } catch (ConversionException ce) {
                 errorHandler.addConversionError(key, struct.values, locale, struct.attributes);
             }
