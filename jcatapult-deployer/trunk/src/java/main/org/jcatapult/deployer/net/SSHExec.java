@@ -68,7 +68,15 @@ public class SSHExec {
 
             Session session = jsch.getSession(options.username, options.host, options.port);
             session.setUserInfo(new BaseUserInfo(options.password, options.passphrase, options.trust));
+            if (session.isConnected()) {
+                session.disconnect();
+            }
             session.connect();
+            try {
+                session.sendKeepAliveMsg();
+            } catch (Exception e) {
+                throw new DeploymentException(e);
+            }
 
             final ChannelExec exec = (ChannelExec) session.openChannel("exec");
             exec.setCommand(command);
