@@ -23,6 +23,7 @@ import org.jcatapult.mvc.test.junit.WebBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -33,7 +34,12 @@ import static net.java.util.CollectionTools.*;
  * @author  Brian Pontarelli
  */
 public class DefaultExpressionEvaluatorTest extends WebBaseTest {
-    DefaultExpressionEvaluator evaluator = new DefaultExpressionEvaluator();
+    DefaultExpressionEvaluator evaluator;
+
+    @Inject
+    public void setEvaluator(DefaultExpressionEvaluator evaluator) {
+        this.evaluator = evaluator;
+    }
 
     /**
      * Tests getting of bean properties

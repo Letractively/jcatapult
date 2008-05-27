@@ -14,30 +14,25 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.action;
+package org.jcatapult.mvc;
 
-import org.jcatapult.mvc.action.config.ActionConfiguration;
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This interface defines how objects that are required by the MVC are
+ * created.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface ActionInvocation {
+@ImplementedBy(GuiceObjectFactory.class)
+public interface ObjectFactory {
     /**
-     * @return  The action object.
+     * Creates the class given. If the object cannot be created, a RuntimeException is thrown.
+     *
+     * @param   klass The class.
+     * @return  The Object and never null.
      */
-    Object action();
-
-    /**
-     * @return  The action URI that maps to the action object.
-     */
-    String actionURI();
-
-    /**
-     * @return  The action configuration for this invocation.
-     */
-    ActionConfiguration configuration();
+    Object create(Class<?> klass);
 }

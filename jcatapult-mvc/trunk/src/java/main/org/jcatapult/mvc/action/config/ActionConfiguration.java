@@ -14,30 +14,24 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.action;
-
-import org.jcatapult.mvc.action.config.ActionConfiguration;
+package org.jcatapult.mvc.action.config;
 
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This interface defines the public API that describes an action
+ * configuration.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface ActionInvocation {
+public interface ActionConfiguration {
     /**
-     * @return  The action object.
+     * @return  The action class or null if the configuration is for an class-less action.
      */
-    Object action();
+    Class<?> actionClass();
 
     /**
-     * @return  The action URI that maps to the action object.
+     * @return  The URI that the action is mapped to.
      */
-    String actionURI();
-
-    /**
-     * @return  The action configuration for this invocation.
-     */
-    ActionConfiguration configuration();
+    String uri();
 }

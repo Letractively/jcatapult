@@ -14,30 +14,26 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.action;
+package org.jcatapult.mvc;
 
-import org.jcatapult.mvc.action.config.ActionConfiguration;
+import org.jcatapult.guice.GuiceContainer;
 
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This is the default implementation of the ObjectFactory that uses Guice
+ * via the {@link GuiceContainer} to create classes.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface ActionInvocation {
+public class GuiceObjectFactory implements ObjectFactory {
     /**
-     * @return  The action object.
+     * Creates the class using Guice from the {@link GuiceContainer}.
+     *
+     * @param   klass The class to create.
+     * @return  The Object and never null.
      */
-    Object action();
-
-    /**
-     * @return  The action URI that maps to the action object.
-     */
-    String actionURI();
-
-    /**
-     * @return  The action configuration for this invocation.
-     */
-    ActionConfiguration configuration();
+    public Object create(Class<?> klass) {
+        return GuiceContainer.getInjector().getInstance(klass);
+    }
 }

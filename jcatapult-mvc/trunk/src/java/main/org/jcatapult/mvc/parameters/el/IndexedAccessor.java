@@ -18,6 +18,8 @@ package org.jcatapult.mvc.parameters.el;
 
 import java.lang.reflect.Method;
 
+import org.jcatapult.mvc.parameters.convert.ConverterRegistry;
+
 import static net.java.lang.reflect.ReflectionTools.*;
 
 /**
@@ -32,8 +34,8 @@ import static net.java.lang.reflect.ReflectionTools.*;
 public class IndexedAccessor extends MemberAccessor {
     String index;
 
-    public IndexedAccessor(MemberAccessor accessor, String index) {
-        super(accessor);
+    public IndexedAccessor(ConverterRegistry converterRegistry, MemberAccessor accessor, String index) {
+        super(converterRegistry, accessor);
         this.index = index;
     }
 

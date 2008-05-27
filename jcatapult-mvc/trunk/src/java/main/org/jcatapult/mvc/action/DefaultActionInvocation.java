@@ -16,6 +16,8 @@
  */
 package org.jcatapult.mvc.action;
 
+import org.jcatapult.mvc.action.config.ActionConfiguration;
+
 /**
  * <p>
  * This class is the default action invocation implementation.
@@ -28,10 +30,12 @@ package org.jcatapult.mvc.action;
 public class DefaultActionInvocation implements ActionInvocation {
     private final Object action;
     private final String uri;
+    private final ActionConfiguration configuration;
 
-    public DefaultActionInvocation(Object action, String uri) {
+    public DefaultActionInvocation(Object action, String uri, ActionConfiguration configuration) {
         this.action = action;
         this.uri = uri;
+        this.configuration = configuration;
     }
 
     public Object action() {
@@ -40,5 +44,9 @@ public class DefaultActionInvocation implements ActionInvocation {
 
     public String actionURI() {
         return uri;
+    }
+
+    public ActionConfiguration configuration() {
+        return configuration;
     }
 }

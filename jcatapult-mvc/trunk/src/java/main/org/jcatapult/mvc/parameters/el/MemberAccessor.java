@@ -21,10 +21,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+
+import org.jcatapult.mvc.parameters.convert.ConverterRegistry;
 
 import static net.java.lang.reflect.ReflectionTools.*;
 
@@ -52,16 +55,37 @@ public class MemberAccessor extends Accessor {
         verifiers.put("set", new SetMethodVerifier());
     }
 
+    /**
+     * Pulls all of the fields and java bean properties from the given klass and returns the names.
+     *
+     * @param   klass The klass to pull the names from.
+     * @return  The names of all the fields and java bean properties.
+     */
+    public static Set<String> getAllMembers(Class<?> klass) {
+        Field[] fields = klass.getFields();
+        Map<String, PropertyInfo> map = getPropMap(klass);
+
+        // Favor properties
+        Set<String> names = new HashSet<String>();
+        for (Field field : fields) {
+            names.add(field.getName());
+        }
+
+        names.addAll(map.keySet());
+        return names;
+    }
+
     final Field field;
     final PropertyInfo propertyInfo;
 
-    public MemberAccessor(MemberAccessor accessor) {
-        super(accessor);
+    public MemberAccessor(ConverterRegistry converterRegistry, MemberAccessor accessor) {
+        super(converterRegistry, accessor);
         this.field = accessor.field;
         this.propertyInfo = accessor.propertyInfo;
     }
 
-    public MemberAccessor(Class<?> declaringClass, String name) {
+    public MemberAccessor(ConverterRegistry converterRegistry, Class<?> declaringClass, String name) {
+        super(converterRegistry);
         Map<String, PropertyInfo> map = getPropMap(declaringClass);
         PropertyInfo bpi = map.get(name);
         if (bpi == null || bpi.getMethods().get("get") == null) {
@@ -142,7 +166,7 @@ public class MemberAccessor extends Accessor {
      * @param   beanClass The bean class to grab the property map from.
      * @return  The Map or null if there were no properties.
      */
-    private Map<String, PropertyInfo> getPropMap(Class<?> beanClass) {
+    private static Map<String, PropertyInfo> getPropMap(Class<?> beanClass) {
         Map<String, PropertyInfo> propMap;
         synchronized (cache) {
             // Otherwise look for the property Map or create and store
@@ -246,7 +270,7 @@ public class MemberAccessor extends Accessor {
      * @param   method The method to translate.
      * @return  The property names or null if this was not a valid property Method.
      */
-    private PropertyName getPropertyNames(Method method) {
+    private static PropertyName getPropertyNames(Method method) {
         String name = method.getName();
         char[] ca = name.toCharArray();
         int startIndex = -1;

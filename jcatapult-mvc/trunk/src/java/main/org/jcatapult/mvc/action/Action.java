@@ -16,28 +16,13 @@
  */
 package org.jcatapult.mvc.action;
 
-import org.jcatapult.mvc.action.config.ActionConfiguration;
-
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This interface marks a class as an MVC action.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface ActionInvocation {
-    /**
-     * @return  The action object.
-     */
-    Object action();
-
-    /**
-     * @return  The action URI that maps to the action object.
-     */
-    String actionURI();
-
-    /**
-     * @return  The action configuration for this invocation.
-     */
-    ActionConfiguration configuration();
+public interface Action {
+    String execute() throws Throwable;
 }
