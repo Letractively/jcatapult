@@ -27,6 +27,6 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Brian Pontarelli
  */
-public interface LocaleService {
+public interface LocaleWorkflow {
     Locale getLocale(HttpServletRequest request, HttpServletResponse response);
 }

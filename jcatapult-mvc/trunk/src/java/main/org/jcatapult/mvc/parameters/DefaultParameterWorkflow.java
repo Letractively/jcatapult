@@ -21,12 +21,19 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 
-import org.jcatapult.mvc.locale.LocaleService;
+import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionWorkflow;
+import org.jcatapult.mvc.errors.ErrorHandler;
+import org.jcatapult.mvc.locale.LocaleWorkflow;
+import org.jcatapult.mvc.parameters.convert.ConversionException;
 import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
 import static org.jcatapult.mvc.parameters.el.ExpressionEvaluator.*;
+import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
 
@@ -39,15 +46,22 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultParameterService implements ParameterService {
-    private static final String CHECKBOX_PREFIX = "__jc_cb";
-    private static final String RADIOBUTTON_PREFIX = "__jc_rb";
-    private static final String ACTION_PREFIX = "__jc_a";
-    private final LocaleService localeService;
+public class DefaultParameterWorkflow implements ParameterWorkflow {
+    public static final String CHECKBOX_PREFIX = "__jc_cb";
+    public static final String RADIOBUTTON_PREFIX = "__jc_rb";
+    public static final String ACTION_PREFIX = "__jc_a";
+    public static final String PARAMETERS_KEY = "__jcatapult_parameters_key";
+
+    private final LocaleWorkflow localeWorkflow;
+    private final ActionWorkflow actionWorkflow;
+    private final ErrorHandler errorHandler;
 
     @Inject
-    public DefaultParameterService(LocaleService localeService) {
-        this.localeService = localeService;
+    public DefaultParameterWorkflow(LocaleWorkflow localeWorkflow, ActionWorkflow actionWorkflow,
+            ErrorHandler errorHandler) {
+        this.localeWorkflow = localeWorkflow;
+        this.actionWorkflow = actionWorkflow;
+        this.errorHandler = errorHandler;
     }
 
     /**
@@ -55,16 +69,55 @@ public class DefaultParameterService implements ParameterService {
      *
      * @param   request The request.
      * @param   response The response.
-     * @param   action The action to set the values onto.
+     * @param   chain The workflow chain.
      */
-    public void process(HttpServletRequest request, HttpServletResponse response, Object action) {
-        Locale locale = localeService.getLocale(request, response);
+    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
+    throws IOException, ServletException {
+        ActionInvocation actionInvocation = actionWorkflow.fetch(request);
+        Locale locale = localeWorkflow.getLocale(request, response);
 
+        // First grab the structs and then save them to the request
         Map<String, Struct> structs = getValuesToSet(request);
+        request.setAttribute(PARAMETERS_KEY, structs);
+
+        // Next, process them
         for (String key : structs.keySet()) {
             Struct struct = structs.get(key);
-            setValue(key, action, struct.values, request, response, locale, struct.attributes);
+            try {
+                setValue(key, actionInvocation.action(), struct.values, request, response, locale, struct.attributes);
+            } catch (ConversionException ce) {
+                errorHandler.addConversionError(key, struct.values, locale, struct.attributes);
+            }
         }
+
+        chain.doWorkflow(request, response);
+    }
+
+    /**
+     * Does nothing.
+     */
+    public void destroy() {
+    }
+
+    /**
+     * Pulls the attributes for the given parameter out of the request. The Structs that are setup
+     * by the perform method are stored in the request under the key {@code __jcatapult_parameters_key}.
+     * The Strut for the given parameter is then pulled out and the attributes from the Struct are
+     * returned.
+     *
+     * @param   request The request.
+     * @param   parameter The name of the parameter.
+     * @return  The attributes or an empty Map if the parameter has no attributes.
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String, String> fetchAttributes(HttpServletRequest request, String parameter) {
+        Map<String, Struct> structs = (Map<String, Struct>) request.getAttribute(PARAMETERS_KEY);
+        if (structs == null) {
+            throw new AssertionError("The parameters structs are missing from the request.");
+        }
+
+        Struct struct = structs.get(parameter);
+        return struct == null ? new HashMap<String, String>() : struct.attributes;
     }
 
     /**
