@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -29,8 +27,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.security.SecurityContext;
-import org.jcatapult.security.config.DefaultSecurityConfiguration;
 import org.jcatapult.security.auth.NotLoggedInException;
+import org.jcatapult.security.config.DefaultSecurityConfiguration;
 import org.jcatapult.security.saved.DefaultSavedRequestService;
 import org.jcatapult.security.saved.SavedHttpRequest;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
@@ -130,11 +128,12 @@ public class SavedRequestWorkflowTest {
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+            public void doWorkflow(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
                 assertNotNull(request);
                 assertNotNull(response);
                 assertTrue(request instanceof FacadeHttpServletRequest);
-                assertEquals("/login-success", ((HttpServletRequest) request).getRequestURI());
+                assertEquals("/login-success", request.getRequestURI());
                 called.set(true);
             }
         };
@@ -224,11 +223,12 @@ public class SavedRequestWorkflowTest {
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+            public void doWorkflow(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
                 assertNotNull(request);
                 assertNotNull(response);
                 assertTrue(request instanceof FacadeHttpServletRequest);
-                assertEquals("/not-logged-in", ((HttpServletRequest) request).getRequestURI());
+                assertEquals("/not-logged-in", request.getRequestURI());
                 called.set(true);
             }
         };
@@ -263,11 +263,12 @@ public class SavedRequestWorkflowTest {
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+            public void doWorkflow(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
                 assertNotNull(request);
                 assertNotNull(response);
                 assertTrue(request instanceof FacadeHttpServletRequest);
-                assertEquals("/not-logged-in", ((HttpServletRequest) request).getRequestURI());
+                assertEquals("/not-logged-in", request.getRequestURI());
                 called.set(true);
             }
         };

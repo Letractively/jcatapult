@@ -17,9 +17,8 @@ package org.jcatapult.security.servlet.auth;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.security.config.SecurityConfiguration;
@@ -50,12 +49,11 @@ public class DefaultAuthorizationExceptionHandler implements AuthorizationExcept
         this.notAuthorizedURL = configuration.getRestrictedURI();
     }
 
-    public void handle(AuthorizationException exception, ServletRequest request, ServletResponse response,
-        WorkflowChain workflowChain)
+    public void handle(AuthorizationException exception, HttpServletRequest request, HttpServletResponse response,
+            WorkflowChain chain)
     throws ServletException, IOException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        FacadeHttpServletRequest wrapper = new FacadeHttpServletRequest(httpRequest, notAuthorizedURL, null);
-        httpRequest.setAttribute(EXCEPTION_KEY, exception);
-        workflowChain.doWorkflow(wrapper, response);
+        FacadeHttpServletRequest wrapper = new FacadeHttpServletRequest(request, notAuthorizedURL, null);
+        request.setAttribute(EXCEPTION_KEY, exception);
+        chain.doWorkflow(wrapper, response);
     }
 }

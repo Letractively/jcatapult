@@ -18,8 +18,6 @@ package org.jcatapult.security.servlet.auth;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -57,11 +55,12 @@ public class DefaultAuthorizationExceptionHandlerTest {
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+            public void doWorkflow(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
                 assertNotNull(request);
                 assertNotNull(response);
                 assertTrue(request instanceof HttpServletRequestWrapper);
-                assertEquals("/not-authorized", ((HttpServletRequest) request).getRequestURI());
+                assertEquals("/not-authorized", request.getRequestURI());
                 called.set(true);
             }
         };

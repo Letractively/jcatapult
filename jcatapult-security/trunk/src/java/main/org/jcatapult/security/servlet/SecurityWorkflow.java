@@ -18,8 +18,8 @@ package org.jcatapult.security.servlet;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
 import org.jcatapult.security.servlet.login.LoginWorkflow;
@@ -73,15 +73,15 @@ public class SecurityWorkflow implements Workflow {
      *
      * @param   request The request which is passed to the sub-workflow chain.
      * @param   response The response which is passed to the sub-workflow chain.
-     * @param   workflowChain The workflow chain, which is the end point of the sub-workflow chain.
+     * @param   chain The workflow chain, which is the end point of the sub-workflow chain.
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
-    public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
+    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
     throws IOException, ServletException {
-        SubWorkflowChain chain = new SubWorkflowChain(Arrays.asList(credentialStorageWorkflow, savedRequestWorkflow,
-            loginWorkflow, authorizationWorkflow), workflowChain);
-        chain.doWorkflow(request, response);
+        SubWorkflowChain subChain = new SubWorkflowChain(Arrays.asList(credentialStorageWorkflow, savedRequestWorkflow,
+            loginWorkflow, authorizationWorkflow), chain);
+        subChain.doWorkflow(request, response);
     }
 
     public void destroy() {

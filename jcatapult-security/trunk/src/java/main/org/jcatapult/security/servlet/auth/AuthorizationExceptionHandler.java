@@ -17,8 +17,8 @@ package org.jcatapult.security.servlet.auth;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.servlet.WorkflowChain;
@@ -41,12 +41,12 @@ public interface AuthorizationExceptionHandler {
      * @param   exception The exception that was thrown.
      * @param   request The request for forwarding and including.
      * @param   response The response for redirects, forwarding and including.
-     * @param   workflowChain The workflow chain in case the implementation wants to keep going down
+     * @param   chain The workflow chain in case the implementation wants to keep going down
      *          the chain.
      * @throws  ServletException If something goes wrong during the exception handling.
      * @throws  IOException If something goes wrong during the exception handling.
      */
-    void handle(AuthorizationException exception, ServletRequest request, ServletResponse response,
-            WorkflowChain workflowChain)
+    void handle(AuthorizationException exception, HttpServletRequest request, HttpServletResponse response,
+            WorkflowChain chain)
     throws ServletException, IOException;
 }
