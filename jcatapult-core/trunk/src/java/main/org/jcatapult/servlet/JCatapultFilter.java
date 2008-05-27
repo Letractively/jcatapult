@@ -110,7 +110,7 @@ public class JCatapultFilter implements Filter {
             }
 
             DefaultWorkflowChain workflowChain = new DefaultWorkflowChain(workflows, chain);
-            workflowChain.doWorkflow(request, response);
+            workflowChain.doWorkflow((HttpServletRequest) request, (HttpServletResponse) response);
         } finally {
             long end = System.currentTimeMillis();
             if (logger.isLoggable(Level.FINEST)) {

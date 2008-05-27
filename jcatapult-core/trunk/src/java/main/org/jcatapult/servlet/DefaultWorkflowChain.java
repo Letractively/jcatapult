@@ -15,13 +15,13 @@
  */
 package org.jcatapult.servlet;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.io.IOException;
 import javax.servlet.FilterChain;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -43,7 +43,8 @@ public class DefaultWorkflowChain implements WorkflowChain {
         this.filterChain = filterChain;
     }
 
-    public void doWorkflow(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+    public void doWorkflow(HttpServletRequest request, HttpServletResponse response)
+    throws IOException, ServletException {
         if (workflows.hasNext()) {
             Workflow workflow = workflows.next();
             workflow.perform(request, response, this);

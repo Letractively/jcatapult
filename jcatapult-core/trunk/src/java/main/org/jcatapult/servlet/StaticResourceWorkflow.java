@@ -22,8 +22,6 @@ import java.util.Calendar;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -95,12 +93,10 @@ public class StaticResourceWorkflow implements Workflow {
      * @throws  ServletException If the chain throws.
      */
     @Override
-    public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
-        throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
+    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain workflowChain)
+    throws IOException, ServletException {
 
-        String uri = httpRequest.getRequestURI();
+        String uri = request.getRequestURI();
         boolean handled = false;
         if (enabled) {
             // Ensure that this is a request for a resource like foo.jpg
@@ -109,7 +105,7 @@ public class StaticResourceWorkflow implements Workflow {
             if (slash == -1 && !uri.endsWith(".class")) {
                 for (String staticPrefix : staticPrefixes) {
                     if (uri.startsWith(staticPrefix)) {
-                        handled = findStaticResource(uri, httpRequest, httpResponse);
+                        handled = findStaticResource(uri, request, response);
                     }
                 }
             }

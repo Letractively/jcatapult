@@ -16,9 +16,9 @@
 package org.jcatapult.servlet;
 
 import java.io.IOException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -39,5 +39,5 @@ public interface WorkflowChain {
      * @throws  IOException If the workflows or filters throw IOException.
      * @throws  ServletException If the workflows or filters throw ServletException.
      */
-    void doWorkflow(ServletRequest request, ServletResponse response) throws IOException, ServletException;
+    void doWorkflow(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
 }
