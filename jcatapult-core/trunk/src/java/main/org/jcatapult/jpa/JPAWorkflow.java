@@ -18,8 +18,8 @@ package org.jcatapult.jpa;
 import java.io.IOException;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
@@ -65,7 +65,7 @@ public class JPAWorkflow implements Workflow {
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
-    public void perform(ServletRequest request, ServletResponse response, WorkflowChain workflowChain)
+    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain workflowChain)
     throws IOException, ServletException {
         EntityManagerFactory emf = service.getFactory();
         if (emf != null) {
