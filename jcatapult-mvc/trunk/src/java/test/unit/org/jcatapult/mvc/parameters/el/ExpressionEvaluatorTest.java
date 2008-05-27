@@ -159,6 +159,10 @@ public class ExpressionEvaluatorTest extends WebBaseTest {
         assertEquals("Test", action.getUser().getAddresses().get("home").getStreet());
         assertEquals("80020", action.getUser().getAddresses().get("home").getZipcode());
 
+        // Test empty is null
+        ExpressionEvaluator.setValue("user.addresses['home'].zipcode", action, array(""), null, null, null, null);
+        assertNull(action.getUser().getAddresses().get("home").getZipcode());
+
         action.getUser().setSiblings(null);
         ExpressionEvaluator.setValue("user.siblings[0].age", action, array("34"), null, null, null, null);
         ExpressionEvaluator.setValue("user.siblings[0].name", action, array("Brett"), null, null, null, null);
