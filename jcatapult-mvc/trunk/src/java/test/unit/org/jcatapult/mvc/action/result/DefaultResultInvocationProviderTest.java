@@ -22,6 +22,7 @@ import javax.servlet.ServletContext;
 
 import org.easymock.EasyMock;
 import org.jcatapult.mvc.action.result.annotation.Forward;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -46,6 +47,22 @@ public class DefaultResultInvocationProviderTest {
         ResultInvocation invocation = provider.lookup("/foo/bar");
         assertNotNull(invocation);
         assertNull(invocation.resultCode());
+        assertEquals("/foo/bar", invocation.uri());
+        assertNull(((Forward) invocation.annotation()).code());
+        assertEquals("/WEB-INF/content/foo/bar/index.ftl", ((Forward) invocation.annotation()).page());
+
+        EasyMock.verify(context);
+    }
+
+    public void testActionAnnotation() {
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.replay(context);
+
+        TestAction action = new TestAction();
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(context);
+        ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null), "/foo/bar", "success");
+        assertNotNull(invocation);
+        assertEquals("success", invocation.resultCode());
         assertEquals("/foo/bar", invocation.uri());
         assertNull(((Forward) invocation.annotation()).code());
         assertEquals("/WEB-INF/content/foo/bar/index.ftl", ((Forward) invocation.annotation()).page());
