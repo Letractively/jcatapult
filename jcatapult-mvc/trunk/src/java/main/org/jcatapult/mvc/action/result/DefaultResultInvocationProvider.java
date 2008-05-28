@@ -80,7 +80,7 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
             throw new RuntimeException("Unable to locate default result for URI [" + uri + "]");
         }
 
-        return new DefaultResultInvocation(new ForwardImpl(DIR + uri, null), uri, null);
+        return new DefaultResultInvocation(forward, uri, null);
     }
 
     /**
