@@ -25,7 +25,7 @@ package org.jcatapult.persistence;
  *
  * @author  Brian Pontarelli
  */
-public interface TransactionResultProcessor {
+public interface TransactionResultProcessor<T> {
     /**
      * Determines if the transaction should be rolled back based on the return value  of a method
      * invocation or the exception that the method threw.
@@ -35,5 +35,5 @@ public interface TransactionResultProcessor {
      *          invoked didn't throw an exception.
      * @return  True if the transaction should be rolled back, false otherwise.
      */
-    boolean rollback(Object result, Throwable throwable);
+    boolean rollback(T result, Throwable throwable);
 }
