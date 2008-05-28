@@ -77,7 +77,8 @@ public class TransactionTest extends JPABaseTest {
     @Test
     public void testMicroResultProcessor() {
         DefaultTransactionResultProcessor processor = new DefaultTransactionResultProcessor();
-        assertTrue(processor.rollback(null, new Throwable()));
+        assertFalse(processor.rollback(null, new Throwable()));
+        assertTrue(processor.rollback(null, new RuntimeException()));
         assertFalse(processor.rollback(new Object(), null));
     }
 

@@ -19,7 +19,7 @@ package org.jcatapult.persistence;
 /**
  * <p>
  * This class is the default processor and returns true if the exception is not
- * null.
+ * null and a runtime exception.
  * </p>
  *
  * @author  Brian Pontarelli
