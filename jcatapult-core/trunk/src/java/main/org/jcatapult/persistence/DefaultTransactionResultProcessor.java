@@ -24,7 +24,7 @@ package org.jcatapult.persistence;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultTransactionResultProcessor implements TransactionResultProcessor {
+public class DefaultTransactionResultProcessor<T> implements TransactionResultProcessor<T> {
     /**
      * Returns true if the throwable parameter is not null.
      *
@@ -32,7 +32,7 @@ public class DefaultTransactionResultProcessor implements TransactionResultProce
      * @param   throwable The exception thrown from the method.
      * @return  True if {@code throwable} is not null.
      */
-    public boolean rollback(Object result, Throwable throwable) {
-        return throwable != null;
+    public boolean rollback(T result, Throwable throwable) {
+        return throwable != null && throwable instanceof RuntimeException;
     }
 }

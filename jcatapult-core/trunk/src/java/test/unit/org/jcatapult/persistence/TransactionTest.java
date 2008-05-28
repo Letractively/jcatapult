@@ -158,10 +158,10 @@ public class TransactionTest extends JPABaseTest {
         }
     }
 
-    public static class UserProcessor extends DefaultTransactionResultProcessor {
+    public static class UserProcessor extends DefaultTransactionResultProcessor<User> {
         @Override
-        public boolean rollback(Object result, Throwable throwable) {
-            return ((User) result).getName().equals("TransactionTest-returnValueFailure") ||
+        public boolean rollback(User result, Throwable throwable) {
+            return result.getName().equals("TransactionTest-returnValueFailure") ||
                 super.rollback(result, throwable);
         }
     }
