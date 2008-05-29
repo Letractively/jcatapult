@@ -29,6 +29,7 @@ public class DeploymentInfo {
     private Environment env;
     private Project project;
     private String deployArchive;
+    private String deployArchiveVersion;
     private File jatapultCacheDir;
     private File deployArchiveDir;
     private File deploymentDomainDir;
@@ -104,6 +105,24 @@ public class DeploymentInfo {
      */
     public void setDeployArchive(String deployArchive) {
         this.deployArchive = deployArchive;
+    }
+
+    /**
+     * <p>Gets the deploy archive version</p>
+     *
+     * @return the deploy archive version
+     */
+    public String getDeployArchiveVersion() {
+        return deployArchiveVersion;
+    }
+
+    /**
+     * <p>Sets the deploy archive version</p>
+     *
+     * @param deployArchiveVersion the deploy archive version
+     */
+    public void setDeployArchiveVersion(String deployArchiveVersion) {
+        this.deployArchiveVersion = deployArchiveVersion;
     }
 
     /**
