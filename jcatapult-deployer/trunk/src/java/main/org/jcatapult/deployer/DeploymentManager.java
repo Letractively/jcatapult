@@ -31,6 +31,7 @@ import org.jcatapult.deployer.service.DeployXmlService;
 import org.jcatapult.deployer.service.ProjectXmlService;
 import org.jcatapult.deployer.service.ValidationService;
 import org.jcatapult.deployer.service.XmlServiceException;
+import org.jcatapult.deployer.utils.ArchiveUtils;
 
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -186,6 +187,8 @@ public class DeploymentManager {
             deploymentInfo.setDeploymentDomainDir(deploymentDomainDir);
             deploymentInfo.setJcatapultCacheDir(JCATAPULT_CACHE_DIR);
             deploymentInfo.setDeployArchiveDir(DEPLOY_ARCHIVE_DIR);
+
+            deploymentInfo.setDeployArchiveVersion(ArchiveUtils.getVersionFromArchive(deploymentInfo.getDeployArchive()));
 
             // load the deploy
             Deployer deployer = loadDeployer(deploymentInfo.getDeployDomain());
