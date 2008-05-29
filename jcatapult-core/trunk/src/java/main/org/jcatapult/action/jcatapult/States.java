@@ -1,4 +1,4 @@
-package org.jcatapult.action;
+package org.jcatapult.action.jcatapult;
 
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -85,8 +85,8 @@ public class States implements Action {
         Map<String, String> alphaStates = new TreeMap<String, String>();
 
         ResourceBundle stateResourceBundle = includeTerritories ?
-            ResourceBundle.getBundle("org.jcatapult.action.states-territories") :
-            ResourceBundle.getBundle("org.jcatapult.action.states");
+            ResourceBundle.getBundle("org.jcatapult.action.jcatapult.states-territories") :
+            ResourceBundle.getBundle("org.jcatapult.action.jcatapult.states");
 
         Enumeration stateEnum = stateResourceBundle.getKeys();
         while (stateEnum.hasMoreElements()) {
