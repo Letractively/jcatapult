@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.jcatapult.action.jcatapult.States;
 
 /**
  * <p>
@@ -36,7 +37,7 @@ public class StatesTest {
         States stateAction = new States();
         stateAction.execute();
 
-        ResourceBundle rb = ResourceBundle.getBundle("org.jcatapult.action.states");
+        ResourceBundle rb = ResourceBundle.getBundle("org.jcatapult.action.jcatapult.states");
         Assert.assertEquals(rb.keySet().size(), stateAction.getStates().size());
     }
 
@@ -46,7 +47,7 @@ public class StatesTest {
         stateAction.setIncludeTerritories(true);
         stateAction.execute();
 
-        ResourceBundle rb = ResourceBundle.getBundle("org.jcatapult.action.states-territories");
+        ResourceBundle rb = ResourceBundle.getBundle("org.jcatapult.action.jcatapult.states-territories");
         Assert.assertEquals(rb.keySet().size(), stateAction.getStates().size());
     }
 
@@ -58,7 +59,7 @@ public class StatesTest {
         stateAction.setBlankValue(blankValue);
         stateAction.execute();
 
-        ResourceBundle rb = ResourceBundle.getBundle("org.jcatapult.action.states");
+        ResourceBundle rb = ResourceBundle.getBundle("org.jcatapult.action.jcatapult.states");
         Assert.assertEquals(rb.keySet().size() + 1, stateAction.getStates().size());
 
         List<String> states = new ArrayList<String>(stateAction.getStates().keySet());
@@ -75,7 +76,7 @@ public class StatesTest {
         stateAction.setPreferredStates("CA");
         stateAction.execute();
 
-        ResourceBundle rb = ResourceBundle.getBundle("org.jcatapult.action.states");
+        ResourceBundle rb = ResourceBundle.getBundle("org.jcatapult.action.jcatapult.states");
         Assert.assertEquals(rb.keySet().size() + 1, stateAction.getStates().size());
 
         List<String> states = new ArrayList<String>(stateAction.getStates().keySet());
