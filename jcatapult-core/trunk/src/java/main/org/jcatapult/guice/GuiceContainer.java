@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.io.IOException;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -191,8 +192,14 @@ public class GuiceContainer {
 
     private static void addFromClasspath(Set<Class<? extends Module>> modules) {
         ClassClassLoaderResolver<Module> resolver = new ClassClassLoaderResolver<Module>();
-        Set<Class<Module>> moduleClasses = resolver.findByLocators(new ClassClassLoaderResolver.IsA(Module.class), false,
-            GuiceContainer.guiceExcludeModules, "guice");
+        Set<Class<Module>> moduleClasses;
+        try {
+            moduleClasses = resolver.findByLocators(new ClassClassLoaderResolver.IsA(Module.class), false,
+                GuiceContainer.guiceExcludeModules, "guice");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         Set<Class<Module>> matches = new HashSet<Class<Module>>(moduleClasses);
 
         for (Class<Module> moduleClass : moduleClasses) {
