@@ -11,7 +11,7 @@ goto end
   rem echo Found JCATAPULT_HOME = %JCATAPULT_HOME%
 
 rem Define directory where the ant build script will be executed from
-set dir=%JCATAPULT_HOME%\tools\makeproject
+set dir=%JCATAPULT_HOME%\ant\tools\makeproject
 rem echo dir=%dir%
 
 if "%1" == "help" goto displayUsageMessage
