@@ -42,6 +42,10 @@ public class ForwardResult implements Result<Forward> {
     throws IOException, ServletException {
         String page = forward.page();
         if (page.endsWith(".jsp")) {
+            if (!page.startsWith("/")) {
+                page = DefaultResultInvocationProvider.DIR + "/" + invocation.actionURI() + "/" + page;
+            }
+            
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(page);
             requestDispatcher.forward(request, response);
         } else {

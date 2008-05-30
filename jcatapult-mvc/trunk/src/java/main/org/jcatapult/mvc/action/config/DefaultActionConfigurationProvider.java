@@ -16,12 +16,13 @@
  */
 package org.jcatapult.mvc.action.config;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashMap;
 import javax.servlet.ServletContext;
 
-import org.jcatapult.mvc.action.Action;
+import org.jcatapult.mvc.action.annotation.Action;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -49,13 +50,18 @@ public class DefaultActionConfigurationProvider implements ActionConfigurationPr
         this.context = context;
 
         ClassClassLoaderResolver resolver = new ClassClassLoaderResolver();
-        Set<Class<? extends Action>> results = resolver.findByLocators(new ActionClassTest(), true,
-            array("org.jcatapult.*", "org.hibernate.*"), "action");
+        Set<Class<?>> actionClassses;
+        try {
+            actionClassses = resolver.findByLocators(new ClassClassLoaderResolver.AnnotatedWith(Action.class),
+                true, array("org.jcatapult.*", "org.hibernate.*"), "action");
+        } catch (IOException e) {
+            throw new RuntimeException("Error discovering action classes", e);
+        }
 
         Map<String, ActionConfiguration> configuration = new HashMap<String, ActionConfiguration>();
-        for (Class<? extends Action> result : results) {
-            String uri = actionURIBuilder.build(result);
-            ActionConfiguration actionConfiguration = new DefaultActionConfiguration(result, uri);
+        for (Class<?> actionClass : actionClassses) {
+            String uri = actionURIBuilder.build(actionClass);
+            ActionConfiguration actionConfiguration = new DefaultActionConfiguration(actionClass, uri);
             configuration.put(uri, actionConfiguration);
         }
 
@@ -79,14 +85,5 @@ public class DefaultActionConfigurationProvider implements ActionConfigurationPr
      */
     public Map<String, ActionConfiguration> knownConfiguration() {
         return (Map<String, ActionConfiguration>) context.getAttribute(ACTION_CONFIGURATION_KEY);
-    }
-
-    /**
-     * A simple test class for scanning.
-     */
-    private static class ActionClassTest implements ClassClassLoaderResolver.Test<Class<? extends Action>> {
-        public boolean test(Class<? extends Action> type) {
-            return Action.class.isAssignableFrom(type);
-        }
     }
 }

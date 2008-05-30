@@ -16,7 +16,7 @@
  */
 package org.example.action.user;
 
-import org.jcatapult.mvc.action.Action;
+import org.jcatapult.mvc.action.annotation.Action;
 
 /**
  * <p>
@@ -25,7 +25,8 @@ import org.jcatapult.mvc.action.Action;
  *
  * @author Brian Pontarelli
  */
-public class Index implements Action {
+@Action
+public class Index {
     public String execute() {
         return null;
     }

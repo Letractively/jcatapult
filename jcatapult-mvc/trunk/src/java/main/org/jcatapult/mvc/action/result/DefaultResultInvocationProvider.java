@@ -113,7 +113,7 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
         Object action = invocation.action();
         Annotation[] annotations = action.getClass().getAnnotations();
         for (Annotation annotation : annotations) {
-            if (annotation.getClass().getAnnotation(ResultAnnotation.class) != null) {
+            if (annotation.annotationType().isAnnotationPresent(ResultAnnotation.class)) {
                 try {
                     String code = (String) invokeMethod("code", annotation);
                     if (code.equals(resultCode)) {

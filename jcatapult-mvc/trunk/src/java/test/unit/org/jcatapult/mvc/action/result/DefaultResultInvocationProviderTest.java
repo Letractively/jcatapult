@@ -54,6 +54,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.verify(context);
     }
 
+    @Test
     public void testActionAnnotation() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(context);
@@ -64,8 +65,8 @@ public class DefaultResultInvocationProviderTest {
         assertNotNull(invocation);
         assertEquals("success", invocation.resultCode());
         assertEquals("/foo/bar", invocation.uri());
-        assertNull(((Forward) invocation.annotation()).code());
-        assertEquals("/WEB-INF/content/foo/bar/index.ftl", ((Forward) invocation.annotation()).page());
+        assertEquals("success", ((Forward) invocation.annotation()).code());
+        assertEquals("foo.jsp", ((Forward) invocation.annotation()).page());
 
         EasyMock.verify(context);
     }

@@ -14,15 +14,22 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.action;
+package org.jcatapult.mvc.action.annotation;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * <p>
- * This interface marks a class as an MVC action.
+ * This annotation is used to mark a class as being a JCatapult
+ * MVC action.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface Action {
-    String execute() throws Throwable;
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Action {
 }

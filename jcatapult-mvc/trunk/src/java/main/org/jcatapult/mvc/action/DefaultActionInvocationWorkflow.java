@@ -29,6 +29,8 @@ import org.jcatapult.mvc.action.result.ResultRegistry;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
+import net.java.lang.reflect.ReflectionException;
+import static net.java.lang.reflect.ReflectionTools.*;
 
 /**
  * <p>
@@ -90,15 +92,21 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
                 return;
             }
         } else {
-            Action action = (Action) invocation.action();
+            Object action = invocation.action();
             try {
-                String resultCode = action.execute();
+                String resultCode = (String) invokeMethod("execute", action);
                 resultInvocation = resultInvocationProvider.lookup(invocation, invocation.actionURI(), resultCode);
                 if (resultInvocation == null) {
                     throw new RuntimeException("Missing result for action class [" +
                         invocation.configuration().actionClass() + "] uri [" + invocation.actionURI() +
                         "] and result code [" + resultCode + "]");
                 }
+            } catch (ReflectionException re) {
+                throw new ServletException("Invalid action class [" + action.getClass() +
+                    "]. Action classes must define a [public String execute()] method.");
+            } catch (ClassCastException cce) {
+                throw new ServletException("Invalid action class [" + action.getClass() +
+                    "]. Action classes must define a [public String execute()] method.");
             } catch (Throwable throwable) {
                 // For now, blow chunks
                 // TODO handle exceptions some how.
