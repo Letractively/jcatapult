@@ -43,7 +43,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.expect(context.getResource("/WEB-INF/content/foo/bar/index.ftl")).andReturn(new URL("http://google.com"));
         EasyMock.replay(context);
 
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(context);
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(context));
         ResultInvocation invocation = provider.lookup("/foo/bar");
         assertNotNull(invocation);
         assertNull(invocation.resultCode());
@@ -60,13 +60,36 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         TestAction action = new TestAction();
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(context);
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(context));
         ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null), "/foo/bar", "success");
         assertNotNull(invocation);
         assertEquals("success", invocation.resultCode());
         assertEquals("/foo/bar", invocation.uri());
         assertEquals("success", ((Forward) invocation.annotation()).code());
         assertEquals("foo.jsp", ((Forward) invocation.annotation()).page());
+
+        EasyMock.verify(context);
+    }
+
+    @Test
+    public void testActionNoAnnotation() throws MalformedURLException {
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(context.getResource("/WEB-INF/content/foo/bar-error.jsp")).andReturn(null);
+        EasyMock.expect(context.getResource("/WEB-INF/content/foo/bar-error.ftl")).andReturn(null);
+        EasyMock.expect(context.getResource("/WEB-INF/content/foo/bar.jsp")).andReturn(null);
+        EasyMock.expect(context.getResource("/WEB-INF/content/foo/bar.ftl")).andReturn(null);
+        EasyMock.expect(context.getResource("/WEB-INF/content/foo/bar/index.jsp")).andReturn(null);
+        EasyMock.expect(context.getResource("/WEB-INF/content/foo/bar/index.ftl")).andReturn(new URL("http://google.com"));
+        EasyMock.replay(context);
+
+        TestAction action = new TestAction();
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(context));
+        ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null), "/foo/bar", "error");
+        assertNotNull(invocation);
+        assertEquals("error", invocation.resultCode());
+        assertEquals("/foo/bar", invocation.uri());
+        assertEquals("error", ((Forward) invocation.annotation()).code());
+        assertEquals("/WEB-INF/content/foo/bar/index.ftl", ((Forward) invocation.annotation()).page());
 
         EasyMock.verify(context);
     }
