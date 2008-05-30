@@ -42,7 +42,7 @@
       <artifact group="freemarker.org" project="freemarker" name="freemarker" version="2.3.12" type="jar"/>
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
       <artifact group="hibernate.org" project="hibernate-annotations" name="hibernate-annotations" version="3.3.1" type="jar"/>
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5-{integration}" type="jar"/>
       <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
       <artifact group="mysql.com" project="mysql-connector-java" name="mysql-connector-java" version="5.1.6" type="jar"/>
       <artifact group="ognl.org" project="ognl" name="ognl" version="2.6.11" type="jar"/>
