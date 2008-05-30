@@ -17,14 +17,7 @@ At the core of JCatapult is support for building web applications. JCatapult pro
 == `make-project script' ==
 Depending on your operating system, run the appropriate _make-project_ script below to create a new webapp. 
 
-*NOTE: Linux and Mac users might be required to give execute permissions to the make-project script.  An example command has been given below that should appropriately set the execute flag for the user.
-
-{{{
-chmod u+x $JCATAPULT_HOME/ant/tools/makeproject/make-project
-}}}
-
 Creating a webapp on Windows:
-
 {{{
 %JCATAPULT_HOME%\ant\tools\makeproject\make-project.bat create-webapp
 }}}
@@ -48,6 +41,13 @@ Windows:
 Linux/Mac
 {{{
 $JCATAPULT_HOME/ant/tools/makeproject/make-project help
+}}}
+
+
+*NOTE: Linux and Mac users might be required to set execute permissions to the make-project script.  An example command has been given below that should appropriately set the execute flag for the user if necessary.
+
+{{{
+chmod u+x $JCATAPULT_HOME/ant/tools/makeproject/make-project
 }}}
 
 == Interaction ==
