@@ -85,8 +85,8 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
         ActionInvocation invocation = actionMappingWorkflow.fetch(request);
         ResultInvocation resultInvocation;
         if (invocation == null) {
-            // Try a result mapping
-            resultInvocation = resultInvocationProvider.lookup(invocation, request.getRequestURI(), "success");
+            // Try a default result mapping just for the URI
+            resultInvocation = resultInvocationProvider.lookup(request.getRequestURI());
             if (resultInvocation == null) {
                 chain.doWorkflow(request, response);
                 return;
@@ -97,7 +97,8 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
                 String resultCode = (String) invokeMethod("execute", action);
                 resultInvocation = resultInvocationProvider.lookup(invocation, invocation.actionURI(), resultCode);
                 if (resultInvocation == null) {
-                    throw new RuntimeException("Missing result for action class [" +
+                    response.setStatus(404);
+                    throw new ServletException("Missing result for action class [" +
                         invocation.configuration().actionClass() + "] uri [" + invocation.actionURI() +
                         "] and result code [" + resultCode + "]");
                 }
@@ -117,7 +118,9 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
         Annotation annotation = resultInvocation.annotation();
         Result result = resultRegistry.lookup(annotation.getClass());
         if (result == null) {
-            throw new ServletException("Unknown result annotation [" + annotation.getClass() + "]");
+            throw new ServletException("Unmapped result annotation [" + annotation.getClass() +
+                "]. You probably need to define a Result implementation that maps to this annotation " +
+                "and then add that Result implementation to your Guice Module.");
         }
 
         result.execute(annotation, invocation, request, response);
