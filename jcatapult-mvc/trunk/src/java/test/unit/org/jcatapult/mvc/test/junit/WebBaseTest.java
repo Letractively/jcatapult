@@ -16,7 +16,11 @@
  */
 package org.jcatapult.mvc.test.junit;
 
+import javax.servlet.ServletContext;
+
+import org.easymock.EasyMock;
 import org.jcatapult.guice.GuiceContainer;
+import org.jcatapult.servlet.ServletObjectsHolder;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -30,11 +34,33 @@ import org.junit.Ignore;
  */
 @Ignore
 public class WebBaseTest {
+    protected static ServletContext context;
+
     /**
-     * A @BeforeClass method that sets up the GuiceContainer.
+     * A @BeforeClass method that sets up the ServletContext and GuiceContainer.
      */
     @BeforeClass
-    public static void setupGuiceContainer() {
+    public static void setupClass() {
+        setupServletContext();
+        setupGuice();
+    }
+
+    /**
+     * Called as a BeforeClass JUnit setup. Also can be invoked directly from tests cases to reset
+     * the ServletContext. This setups up the ServletContext as an EasyMock nice mock.
+     *
+     * @return  The ServletContext.
+     */
+    protected static ServletContext setupServletContext() {
+        context = EasyMock.createNiceMock(ServletContext.class);
+        ServletObjectsHolder.setServletContext(context);
+        return context;
+    }
+
+    /**
+     * Called as a BeforeClass JUnit setup to setup the GuiceContainer.
+     */
+    protected static void setupGuice() {
         GuiceContainer.inject();
         GuiceContainer.initialize();
     }

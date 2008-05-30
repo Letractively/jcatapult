@@ -75,6 +75,10 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
     public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
     throws IOException, ServletException {
         String uri = request.getRequestURI();
+        if (!uri.startsWith("/")) {
+            uri = "/" + uri;
+        }
+        
         ActionConfiguration actionConfiguration = actionConfigurationProvider.lookup(uri);
         if (actionConfiguration != null) {
             Object action = objectFactory.create(actionConfiguration.actionClass());

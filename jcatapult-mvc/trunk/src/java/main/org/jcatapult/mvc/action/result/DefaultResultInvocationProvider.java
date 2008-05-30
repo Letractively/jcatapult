@@ -17,8 +17,6 @@
 package org.jcatapult.mvc.action.result;
 
 import java.lang.annotation.Annotation;
-import java.net.MalformedURLException;
-import javax.servlet.ServletContext;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
@@ -36,28 +34,16 @@ import static net.java.lang.reflect.ReflectionTools.*;
  * @author  Brian Pontarelli
  */
 public class DefaultResultInvocationProvider implements ResultInvocationProvider {
-    public static final String DIR = "/WEB-INF/content";
-    private final ServletContext servletContext;
+    private final ForwardResult forwardResult;
 
     @Inject
-    public DefaultResultInvocationProvider(ServletContext servletContext) {
-        this.servletContext = servletContext;
+    public DefaultResultInvocationProvider(ForwardResult forwardResult) {
+        this.forwardResult = forwardResult;
     }
 
     /**
      * <p>
-     * Checks for results using this search order:
-     * </p>
-     *
-     * <ol>
-     * <li>/WEB-INF/content/&lt;uri>.jsp</li>
-     * <li>/WEB-INF/content/&lt;uri>.ftl</li>
-     * <li>/WEB-INF/content/&lt;uri>/index.jsp</li>
-     * <li>/WEB-INF/content/&lt;uri>/index.ftl</li>
-     * </ol>
-     *
-     * <p>
-     * If nothing is found this bombs out.
+     * Delegates to the {@link ForwardResult#defaultForward(String)} method.
      * </p>
      *
      * @param   uri The URI to append to the page.
@@ -65,21 +51,7 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
      */
     public ResultInvocation lookup(final String uri) {
         // This is always a forward
-        Forward forward = findResult(DIR + uri + ".jsp", null);
-        if (forward == null) {
-            forward = findResult(DIR + uri + ".ftl", null);
-        }
-        if (forward == null) {
-            forward = findResult(DIR + uri + "/index.jsp", null);
-        }
-        if (forward == null) {
-            forward = findResult(DIR + uri + "/index.ftl", null);
-        }
-
-        if (forward == null) {
-            throw new RuntimeException("Unable to locate default result for URI [" + uri + "]");
-        }
-
+        Forward forward = forwardResult.defaultForward(uri);
         return new DefaultResultInvocation(forward, uri, null);
     }
 
@@ -91,17 +63,8 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
      * <ol>
      * <li>Action annotations that are {@link ResultAnnotation}s, have a code method whose return
      *  value matches the result code</li>
-     * <li>/WEB-INF/content/&lt;uri>-&lt;resultCode>.jsp</li>
-     * <li>/WEB-INF/content/&lt;uri>-&lt;resultCode>.ftl</li>
-     * <li>/WEB-INF/content/&lt;uri>.jsp</li>
-     * <li>/WEB-INF/content/&lt;uri>.ftl</li>
-     * <li>/WEB-INF/content/&lt;uri>/index.jsp</li>
-     * <li>/WEB-INF/content/&lt;uri>/index.ftl</li>
+     * <li>Delegates to the {@link ForwardResult#defaultForward(String, String)} method. </li>
      * </ol>
-     *
-     * <p>
-     * If nothing is found this bombs out.
-     * </p>
      *
      * @param   invocation The action invocation used to look for annotations.
      * @param   uri The URI to append to the page.
@@ -126,63 +89,7 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
             }
         }
 
-        // Look for JSP and FTL results to forward to
-        Forward forward = findResult(DIR + uri + "-" + resultCode + ".jsp", resultCode);
-        if (forward == null) {
-            forward = findResult(DIR + uri + "-" + resultCode + ".ftl", resultCode);
-        }
-        if (forward == null) {
-            forward = findResult(DIR + uri + ".jsp", resultCode);
-        }
-        if (forward == null) {
-            forward = findResult(DIR + uri + ".ftl", resultCode);
-        }
-        if (forward == null) {
-            forward = findResult(DIR + uri + "/index.jsp", resultCode);
-        }
-        if (forward == null) {
-            forward = findResult(DIR + uri + "/index.ftl", resultCode);
-        }
-
-        if (forward == null) {
-            throw new RuntimeException("Unable to locate result for URI [" + uri + "] and result code [" +
-                resultCode + "]");
-        }
-
+        Forward forward = forwardResult.defaultForward(uri, resultCode);
         return new DefaultResultInvocation(forward, uri, resultCode);
-    }
-
-    protected Forward findResult(String path, String resultCode) {
-        try {
-            String classLoaderPath = path.startsWith("/") ? path.substring(1, path.length()) : path;
-            if (servletContext.getResource(path) != null || getClass().getResource(classLoaderPath) != null) {
-                return new ForwardImpl(path, resultCode);
-            }
-        } catch (MalformedURLException e) {
-        }
-
-        return null;
-    }
-
-    public static class ForwardImpl implements Forward {
-        private final String uri;
-        private final String code;
-
-        public ForwardImpl(String uri, String code) {
-            this.uri = uri;
-            this.code = code;
-        }
-
-        public String code() {
-            return code;
-        }
-
-        public String page() {
-            return  uri;
-        }
-
-        public Class<? extends Annotation> annotationType() {
-            return Forward.class;
-        }
     }
 }
