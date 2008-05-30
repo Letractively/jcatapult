@@ -20,7 +20,7 @@ import org.jcatapult.mvc.action.result.annotation.Forward;
 
 /**
  * <p>
- * This
+ * This is a test action with an annotation.
  * </p>
  *
  * @author Brian Pontarelli
