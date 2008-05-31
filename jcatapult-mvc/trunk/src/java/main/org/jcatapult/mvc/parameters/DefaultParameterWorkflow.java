@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.errors.ErrorHandler;
+import org.jcatapult.mvc.messages.MessageStore;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
 import org.jcatapult.mvc.parameters.convert.ConversionException;
 import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
@@ -53,15 +53,15 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
 
     private final LocaleWorkflow localeWorkflow;
     private final ActionMappingWorkflow actionMappingWorkflow;
-    private final ErrorHandler errorHandler;
+    private final MessageStore messageStore;
     private final ExpressionEvaluator expressionEvaluator;
 
     @Inject
     public DefaultParameterWorkflow(LocaleWorkflow localeWorkflow, ActionMappingWorkflow actionMappingWorkflow,
-            ErrorHandler errorHandler, ExpressionEvaluator expressionEvaluator) {
+            MessageStore messageStore, ExpressionEvaluator expressionEvaluator) {
         this.localeWorkflow = localeWorkflow;
         this.actionMappingWorkflow = actionMappingWorkflow;
-        this.errorHandler = errorHandler;
+        this.messageStore = messageStore;
         this.expressionEvaluator = expressionEvaluator;
     }
 
@@ -75,7 +75,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
     throws IOException, ServletException {
         ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
-        Locale locale = localeWorkflow.getLocale(request, response);
+        Locale locale = localeWorkflow.getLocale(request);
 
         // First grab the structs and then save them to the request
         Map<String, Struct> structs = getValuesToSet(request);
@@ -88,7 +88,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
             try {
                 expressionEvaluator.setValue(key, action, struct.values, request, response, locale, struct.attributes);
             } catch (ConversionException ce) {
-                errorHandler.addConversionError(key, struct.values, locale, struct.attributes);
+                messageStore.addConversionError(key, struct.values, locale, struct.attributes);
             }
         }
 

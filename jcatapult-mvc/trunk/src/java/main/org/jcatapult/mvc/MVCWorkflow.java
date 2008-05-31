@@ -17,14 +17,15 @@
 package org.jcatapult.mvc;
 
 import java.io.IOException;
+import static java.util.Arrays.*;
 import java.util.List;
-import static java.util.Arrays.asList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocationWorkflow;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
+import org.jcatapult.mvc.locale.LocaleWorkflow;
 import org.jcatapult.mvc.parameters.ParameterWorkflow;
 import org.jcatapult.servlet.SubWorkflowChain;
 import org.jcatapult.servlet.Workflow;
@@ -44,9 +45,10 @@ public class MVCWorkflow implements Workflow {
     private List<Workflow> workflows;
 
     @Inject
-    public MVCWorkflow(ActionMappingWorkflow actionMappingWorkflow, ParameterWorkflow parameterWorkflow,
-            /* ValidationWorkflow validationWorkflow,*/ ActionInvocationWorkflow actionInvocationWorkflow) {
-        workflows = asList(actionMappingWorkflow, parameterWorkflow, actionInvocationWorkflow);
+    public MVCWorkflow(LocaleWorkflow localeWorkflow, ActionMappingWorkflow actionMappingWorkflow,
+            ParameterWorkflow parameterWorkflow, /* ValidationWorkflow validationWorkflow,*/
+            ActionInvocationWorkflow actionInvocationWorkflow) {
+        workflows = asList(localeWorkflow, actionMappingWorkflow, parameterWorkflow, actionInvocationWorkflow);
     }
 
     /**

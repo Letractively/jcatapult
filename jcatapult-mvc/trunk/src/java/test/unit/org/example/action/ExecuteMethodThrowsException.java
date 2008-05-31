@@ -26,8 +26,8 @@ import org.jcatapult.mvc.action.annotation.Action;
  * @author Brian Pontarelli
  */
 @Action
-public class Simple {
+public class ExecuteMethodThrowsException {
     public String execute() {
-        return "success";
+        throw new RuntimeException();
     }
 }

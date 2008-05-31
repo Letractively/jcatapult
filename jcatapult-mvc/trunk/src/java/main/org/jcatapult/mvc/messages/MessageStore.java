@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.mvc.errors;
+package org.jcatapult.mvc.messages;
 
 import java.util.Locale;
 import java.util.Map;
@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * @author Brian Pontarelli
  */
-public interface ErrorHandler {
+public interface MessageStore {
     /**
      * Usually called by the {@link org.jcatapult.mvc.parameters.ParameterWorkflow}, this method adds
      * a conversion error for the given parameter. The values can be token replaced within the localized

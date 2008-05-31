@@ -28,7 +28,7 @@ import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.errors.ErrorHandler;
+import org.jcatapult.mvc.messages.MessageStore;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
 import org.jcatapult.mvc.parameters.convert.ConversionException;
 import org.jcatapult.mvc.parameters.el.Action;
@@ -75,7 +75,7 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(expressionEvaluator);
 
         LocaleWorkflow localeWorkflow = EasyMock.createStrictMock(LocaleWorkflow.class);
-        EasyMock.expect(localeWorkflow.getLocale(request, null)).andReturn(Locale.US);
+        EasyMock.expect(localeWorkflow.getLocale(request)).andReturn(Locale.US);
         EasyMock.replay(localeWorkflow);
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
@@ -86,17 +86,17 @@ public class DefaultParameterWorkflowTest {
         EasyMock.expect(actionMappingWorkflow.fetch(request)).andReturn(invocation);
         EasyMock.replay(actionMappingWorkflow);
 
-        ErrorHandler errorHandler = EasyMock.createStrictMock(ErrorHandler.class);
-        errorHandler.addConversionError(eq("user.inches"), aryEq(array("tall")), same(Locale.US), eq(new HashMap<String, String>()));
-        EasyMock.replay(errorHandler);
+        MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
+        messageStore.addConversionError(eq("user.inches"), aryEq(array("tall")), same(Locale.US), eq(new HashMap<String, String>()));
+        EasyMock.replay(messageStore);
 
         WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
         chain.doWorkflow(request, null);
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeWorkflow, actionMappingWorkflow, errorHandler, expressionEvaluator);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeWorkflow, actionMappingWorkflow, messageStore, expressionEvaluator);
         workflow.perform(request, null, chain);
 
-        EasyMock.verify(request, expressionEvaluator, localeWorkflow, invocation, actionMappingWorkflow, errorHandler, chain);
+        EasyMock.verify(request, expressionEvaluator, localeWorkflow, invocation, actionMappingWorkflow, messageStore, chain);
     }
 }

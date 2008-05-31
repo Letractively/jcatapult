@@ -18,6 +18,8 @@ package org.jcatapult.mvc.action;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,8 +31,6 @@ import org.jcatapult.mvc.action.result.ResultRegistry;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
-import net.java.lang.reflect.ReflectionException;
-import static net.java.lang.reflect.ReflectionTools.*;
 
 /**
  * <p>
@@ -86,37 +86,30 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
         ResultInvocation resultInvocation;
         if (invocation == null) {
             // Try a default result mapping just for the URI
-            resultInvocation = resultInvocationProvider.lookup(request.getRequestURI());
+            String uri = request.getRequestURI();
+            if (!uri.startsWith("/")) {
+                uri = "/" + uri;
+            }
+
+            resultInvocation = resultInvocationProvider.lookup(uri);
             if (resultInvocation == null) {
                 chain.doWorkflow(request, response);
                 return;
             }
         } else {
             Object action = invocation.action();
-            try {
-                String resultCode = (String) invokeMethod("execute", action);
-                resultInvocation = resultInvocationProvider.lookup(invocation, invocation.actionURI(), resultCode);
-                if (resultInvocation == null) {
-                    response.setStatus(404);
-                    throw new ServletException("Missing result for action class [" +
-                        invocation.configuration().actionClass() + "] uri [" + invocation.actionURI() +
-                        "] and result code [" + resultCode + "]");
-                }
-            } catch (ReflectionException re) {
-                throw new ServletException("Invalid action class [" + action.getClass() +
-                    "]. Action classes must define a [public String execute()] method.");
-            } catch (ClassCastException cce) {
-                throw new ServletException("Invalid action class [" + action.getClass() +
-                    "]. Action classes must define a [public String execute()] method.");
-            } catch (Throwable throwable) {
-                // For now, blow chunks
-                // TODO handle exceptions some how.
-                throw new ServletException(throwable);
+            String resultCode = execute(action);
+            resultInvocation = resultInvocationProvider.lookup(invocation, invocation.actionURI(), resultCode);
+            if (resultInvocation == null) {
+                response.setStatus(404);
+                throw new ServletException("Missing result for action class [" +
+                    invocation.configuration().actionClass() + "] uri [" + invocation.actionURI() +
+                    "] and result code [" + resultCode + "]");
             }
         }
 
         Annotation annotation = resultInvocation.annotation();
-        Result result = resultRegistry.lookup(annotation.getClass());
+        Result result = resultRegistry.lookup(annotation.annotationType());
         if (result == null) {
             throw new ServletException("Unmapped result annotation [" + annotation.getClass() +
                 "]. You probably need to define a Result implementation that maps to this annotation " +
@@ -130,5 +123,42 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
      * Does nothing.
      */
     public void destroy() {
+    }
+
+    /**
+     * Invokes the execute method on the action.
+     *
+     * @param   action The action.
+     * @return  The result code from the execute method and never null.
+     * @throws  ServletException If the execute method doesn't exist, has the wrong signature, couldn't
+     *          be invoked, threw an exception or returned null.
+     */
+    protected String execute(Object action) throws ServletException {
+        try {
+            Method method = action.getClass().getMethod("execute");
+            if (method.getReturnType() != String.class) {
+                throw new ServletException("The action class [" + action.getClass() +
+                    "] has defined an execute method that is invalid. Execute methods must match the " +
+                    "signature [public String execute()].");
+            }
+
+            String result = (String) method.invoke(action);
+            if (result == null) {
+                throw new ServletException("The action class [" + action.getClass() + "] returned " +
+                    "null for the result code. Execute methods must never return null.");
+            }
+
+            return result;
+        } catch (NoSuchMethodException e) {
+            throw new ServletException("The action class [" + action.getClass() +
+                "] is missing a valid execute method with the signature [public String " +
+                "execute()].");
+        } catch (InvocationTargetException e) {
+            throw new ServletException("The action class [" + action.getClass() + "] threw an exception.",
+                e.getTargetException());
+        } catch (IllegalAccessException e) {
+            throw new ServletException("The action class [" + action.getClass() + "] has defined an " +
+                "execute method that is not invalid because it cannot be accessed.", e);
+        }
     }
 }
