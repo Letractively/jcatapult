@@ -14,20 +14,14 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.example.action;
-
-import org.jcatapult.mvc.action.annotation.Action;
+package org.jcatapult.mvc.messages;
 
 /**
  * <p>
- * This is a simple test action.
+ * This
  * </p>
  *
  * @author Brian Pontarelli
  */
-@Action
-public class Simple {
-    public String execute() {
-        return "success";
-    }
+public interface MessageWrokflow {
 }

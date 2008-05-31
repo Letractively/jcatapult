@@ -57,7 +57,7 @@ public abstract class AbstractResult<U extends Annotation> implements Result<U> 
     protected HttpServletRequest wrapRequest(ActionInvocation invocation, HttpServletRequest request,
             HttpServletResponse response) {
         if (invocation != null) {
-            Locale locale = localeWorkflow.getLocale(request, response);
+            Locale locale = localeWorkflow.getLocale(request);
             return new ResultHttpServletRequest(request, response, invocation.action(), locale, expressionEvaluator);
         }
 

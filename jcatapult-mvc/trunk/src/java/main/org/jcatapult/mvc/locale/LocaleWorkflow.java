@@ -18,15 +18,32 @@ package org.jcatapult.mvc.locale;
 
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
+import org.jcatapult.servlet.Workflow;
 
 /**
  * <p>
- * This
+ * This is a workflow that handles Locale information. The user might
+ * select a new Locale from the browser, the application might change the
+ * Locale, or the Locale might already be persisted in the users session.
  * </p>
  *
  * @author Brian Pontarelli
  */
-public interface LocaleWorkflow {
-    Locale getLocale(HttpServletRequest request, HttpServletResponse response);
+public interface LocaleWorkflow extends Workflow {
+    /**
+     * Locates the current locale. This should only be a user defined Locale and NEVER the default.
+     *
+     * @param   request The request.
+     * @return  The Locale or null if there hasn't been a Locale setup for the user.
+     */
+    Locale getLocale(HttpServletRequest request);
+
+    /**
+     * Stores a new Locale.
+     *
+     * @param   request The request.
+     * @param   locale The new Locale.
+     */
+    void setLocale(HttpServletRequest request, Locale locale);
 }

@@ -26,8 +26,7 @@ import org.jcatapult.mvc.action.annotation.Action;
  * @author Brian Pontarelli
  */
 @Action
-public class Simple {
-    public String execute() {
-        return "success";
+public class InvalidExecuteMethod {
+    public void execute() {
     }
 }
