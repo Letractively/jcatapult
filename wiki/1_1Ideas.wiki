@@ -46,7 +46,14 @@ Here is some ideas for configuration:
   * First thing is to find all the actions using Struts2 convention handling
   * Create FolderConfig and ActionConfig objects that are stored in the MVC singleton
 
-Parameters needs to support generics, and type conversions, which means that OGNL, JUEL and the like might not work at all. 
+Parameters needs to support generics, and type conversions, which means that OGNL, JUEL and the like might not work at all.
+
+Another thing that needs to be in there is support for CRUD, particularly fetching complex object models from the database, updating them and then saving them. However, there are a number of considerations:
+
+  * The model has been deleted and can't be fetched prior to setting the parameters into it
+  * The validation fails and the object should be rolled back. This could be tricky since JPA is stateful and if you touch an entity, your changes might be saved to the database when you don't want them to be
+  * Form preparation (discussed above)
+  * Using the same action for GET and POST. GET renders the form, POST handles submission
 
 
 = DSL for the database manager =
