@@ -25,6 +25,8 @@ import javax.servlet.http.HttpSession;
 
 import org.jcatapult.servlet.WorkflowChain;
 
+import com.google.inject.Singleton;
+
 /**
  * <p>
  * This is the default LocaleWorkflow implementation.
@@ -32,6 +34,7 @@ import org.jcatapult.servlet.WorkflowChain;
  *
  * @author Brian Pontarelli
  */
+@Singleton
 public class DefaultLocaleWorkflow implements LocaleWorkflow {
     public static final String LOCALE_KEY = "__jcatapult_locale";
 

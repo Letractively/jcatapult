@@ -28,13 +28,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.messages.MessageStore;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
+import org.jcatapult.mvc.messages.MessageStore;
 import org.jcatapult.mvc.parameters.convert.ConversionException;
 import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 /**
  * <p>
@@ -45,6 +47,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
+@Singleton
 public class DefaultParameterWorkflow implements ParameterWorkflow {
     public static final String CHECKBOX_PREFIX = "__jc_cb";
     public static final String RADIOBUTTON_PREFIX = "__jc_rb";
@@ -55,6 +58,12 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     private final ActionMappingWorkflow actionMappingWorkflow;
     private final MessageStore messageStore;
     private final ExpressionEvaluator expressionEvaluator;
+    private boolean ignoreEmptyParameters = true;
+
+    @Inject(optional = true)
+    public void setIgnoreEmptyParamaters(@Named("jcatapult.mvc.ignoreEmptyParameters") boolean ignoreEmptyParameters) {
+        this.ignoreEmptyParameters = ignoreEmptyParameters;
+    }
 
     @Inject
     public DefaultParameterWorkflow(LocaleWorkflow localeWorkflow, ActionMappingWorkflow actionMappingWorkflow,
@@ -88,7 +97,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
             try {
                 expressionEvaluator.setValue(key, action, struct.values, request, response, locale, struct.attributes);
             } catch (ConversionException ce) {
-                messageStore.addConversionError(key, struct.values, locale, struct.attributes);
+                messageStore.addConversionError(key, locale, struct.attributes, struct.values);
             }
         }
 
@@ -159,7 +168,12 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
                 if (index > 0) {
                     s.attributes.put(key.substring(index + 1), parameters.get(key)[0]);
                 } else {
-                    s.values = parameters.get(parameter);
+                    // Only add the values if there is something in them. Otherwise, they are worthless
+                    // empty text fields.
+                    String[] values = parameters.get(parameter);
+                    if (!ignoreEmptyParameters || !empty(values)) {
+                        s.values = values;
+                    }
                 }
             }
         }
@@ -183,6 +197,18 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         }
 
         return structs;
+    }
+
+    private boolean empty(String[] values) {
+        if (values != null && values.length > 0) {
+            for (String value : values) {
+                if (!value.equals("")) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private class Struct {

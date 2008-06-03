@@ -33,10 +33,11 @@ public interface MessageStore {
      * error message.
      *
      * @param   field The name of the field that the conversion error failed for.
-     * @param   values The values attempting to be set into the field.
      * @param   locale The locale used for localization.
      * @param   attributes The parameter attributes, which might be useful for error messaging stuff
-     *          like dates (format).
+     * @param   values The values attempting to be set into the field.
+     * @throws  MissingMessageException If the conversion message is missing.
      */
-    void addConversionError(String field, String[] values, Locale locale, Map<String, String> attributes);
+    void addConversionError(String field, Locale locale, Map<String, String> attributes, String... values)
+    throws MissingMessageException ;
 }

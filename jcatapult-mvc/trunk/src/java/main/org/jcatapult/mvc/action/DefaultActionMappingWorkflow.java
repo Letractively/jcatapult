@@ -27,6 +27,7 @@ import org.jcatapult.mvc.action.config.ActionConfigurationProvider;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -39,6 +40,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
+@Singleton
 public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
     public static final String ACTION_INVOCATION_KEY = "__jcatapult_action_invocation";
 
@@ -78,7 +80,7 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
         if (!uri.startsWith("/")) {
             uri = "/" + uri;
         }
-        
+
         ActionConfiguration actionConfiguration = actionConfigurationProvider.lookup(uri);
         if (actionConfiguration != null) {
             Object action = objectFactory.create(actionConfiguration.actionClass());
