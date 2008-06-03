@@ -30,6 +30,7 @@ public class UploadResult implements Serializable {
     private String modifiedFileName;
     private String fileURL;
     private int resultCode;
+    private java.io.File file;
 
     public UploadResult() {
     }
@@ -40,10 +41,11 @@ public class UploadResult implements Serializable {
         this.resultCode = resultCode;
     }
 
-    public UploadResult(String modifiedFileName, String fileURL, boolean fileNameModified) {
+    public UploadResult(String modifiedFileName, String fileURL, boolean fileNameModified, java.io.File file) {
         this.modifiedFileName = modifiedFileName;
         this.fileURL = fileURL;
         this.resultCode = fileNameModified ? 201 : 0;
+        this.file = file;
     }
 
     public String getModifiedFileName() {
@@ -68,5 +70,13 @@ public class UploadResult implements Serializable {
 
     public void setResultCode(int resultCode) {
         this.resultCode = resultCode;
+    }
+
+    public java.io.File getFile() {
+        return file;
+    }
+
+    public void setFile(java.io.File file) {
+        this.file = file;
     }
 }
