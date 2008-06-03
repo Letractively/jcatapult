@@ -101,7 +101,7 @@ import com.google.inject.Inject;
 })
 public class FileManager extends BaseAction {
     // Service
-    final FileManagerService fileManagerService;
+    final protected FileManagerService fileManagerService;
 
     private FileManagerCommand command;
     private String currentFolder;
