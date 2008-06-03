@@ -57,7 +57,7 @@
   <!-- runs unit tests -->
   <target name="test"
           description="Runs unit and integration tests.  This target ignores testing if -Dignore.test=true."
-          depends="-test-init-params,clean,jar,-test-init">
+          depends="-test-init-params,jar,-test-init">
     <test-pre/>
 
     <test-unit-pre/>
@@ -76,7 +76,7 @@
   <!-- target for running unit tests -->
   <target name="test-unit"
           description="Runs the unit tests.  Specify '-Dtest=Foo' to run a single unit test only.  This target ignores testing if -Dignore.test=true."
-          depends="-test-init-params,clean,jar,-test-init">
+          depends="-test-init-params,jar,-test-init">
     <test-unit-pre/>
     <echo>Executing unit tests...</echo>
     <test-script type="unit"/>
@@ -86,7 +86,7 @@
   <!-- target for running integration tests -->
   <target name="test-integration"
           description="Runs the integration tests.  Specify '-Dtest=Foo' to run a single integration test only.  This target ignores testing if -Dignore.test=true."
-          depends="-test-init-params,clean,jar,-test-init">
+          depends="-test-init-params,jar,-test-init">
     <test-integration-pre/>
     <echo>Executing integration tests...</echo>
     <test-script type="integration"/>
