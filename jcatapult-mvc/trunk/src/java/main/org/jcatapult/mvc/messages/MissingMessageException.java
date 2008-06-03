@@ -16,17 +16,27 @@
  */
 package org.jcatapult.mvc.messages;
 
-import org.jcatapult.servlet.Workflow;
-
 /**
  * <p>
- * This interface defines the workflow process that handles messages.
- * The most common processing is for the flash scope. Messages in the
- * flash scope usually need to be transfered into the request during
- * request processing.
+ * This exception is thrown when error messages are missing.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public interface MessageWrokflow extends Workflow {
+public class MissingMessageException extends RuntimeException {
+    public MissingMessageException() {
+        super();
+    }
+
+    public MissingMessageException(String message) {
+        super(message);
+    }
+
+    public MissingMessageException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public MissingMessageException(Throwable cause) {
+        super(cause);
+    }
 }

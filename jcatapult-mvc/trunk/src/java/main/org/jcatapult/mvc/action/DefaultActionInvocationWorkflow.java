@@ -31,6 +31,7 @@ import org.jcatapult.mvc.action.result.ResultRegistry;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -41,6 +42,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
+@Singleton
 public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow {
     private final ActionMappingWorkflow actionMappingWorkflow;
     private final ResultInvocationProvider resultInvocationProvider;
