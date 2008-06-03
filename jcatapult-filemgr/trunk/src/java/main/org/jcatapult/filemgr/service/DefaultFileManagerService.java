@@ -136,7 +136,7 @@ public class DefaultFileManagerService implements FileManagerService {
 
         logger.fine("Returning fileURL [" + fileURL + "]");
 
-        connector.setUploadResult(new UploadResult(modifiedFileName, fileURL, !modifiedFileName.equals(fileName)));
+        connector.setUploadResult(new UploadResult(modifiedFileName, fileURL, !modifiedFileName.equals(fileName), newFileLocation));
         connector.setCommand(FileManagerCommand.FileUpload.name());
         return connector;
     }
