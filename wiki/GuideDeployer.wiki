@@ -253,7 +253,7 @@ Furthermore, the above deployer.groovy script uploads a `deploy.sh` shell script
 To deploy the test-webapp, execute the `deployer` script from your project root (assuming you have the `deployer` in your path as mentioned earlier)
 
 {{{
-deployer
+deploy
 }}}
 
 === Domain Selection ===
