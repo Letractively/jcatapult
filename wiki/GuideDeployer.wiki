@@ -20,15 +20,13 @@ $JCATAPULT_HOME/deployer/bin
 
 = Invoking =
 
-To invoke the deployer, simply type:
+To invoke the deployer, simply execute the following from the root of any JCatapult project:
 
 {{{
 deploy help
 }}}
 
 This command will tell the deployer to display the help screen.
-
-Both the batch and shell scripts assume that you are executing them from within your jcatapult project root directory.  If you do not execute them from within your jcatapult project root, then you will be prompted by an error screen informing you of such.
 
 = Configuration =
 To configure the deployer, there are 2 main concepts that you should be familiar with:
