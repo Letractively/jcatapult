@@ -133,10 +133,10 @@ src
  |
  |- db                           <- Database migrator files
  |   |- main
- |   |   |- create
+ |   |   |- base
  |   |   |   |- ...
  |   |   |
- |   |   |- patch
+ |   |   |- alter
  |   |   |   |- ...
  |   |   |
  |   |   |- seed
