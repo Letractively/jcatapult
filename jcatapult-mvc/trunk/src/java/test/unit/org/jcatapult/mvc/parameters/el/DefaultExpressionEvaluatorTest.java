@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.parameters.el;
 
@@ -48,18 +47,18 @@ public class DefaultExpressionEvaluatorTest extends WebBaseTest {
     public void testPropertyGetting() {
         // Test local property null
         Action action = new Action();
-        assertNull(evaluator.getValue("user", action, null, null, null, null));
+        assertNull(evaluator.getValue("user", action));
 
         // Test local property get
         User user = new User();
         action.setUser(user);
-        assertSame(user, evaluator.getValue("user", action, null, null, null, null));
+        assertSame(user, evaluator.getValue("user", action));
 
         // Test nested property get
         action.getUser().setAge(32);
         action.getUser().setName("Brian");
-        assertEquals(32, evaluator.getValue("user.age", action, null, null, null, null));
-        assertEquals("Brian", evaluator.getValue("user.name", action, null, null, null, null));
+        assertEquals(32, evaluator.getValue("user.age", action));
+        assertEquals("Brian", evaluator.getValue("user.name", action));
 
         // Test collection property gets
         Address address = new Address();
@@ -68,32 +67,32 @@ public class DefaultExpressionEvaluatorTest extends WebBaseTest {
         address.setStreet("Test");
         address.setZipcode("80020");
         action.getUser().getAddresses().put("home", address);
-        assertNull(evaluator.getValue("user.addresses['work']", action, null, null, null, null));
-        assertEquals("Broomfield", evaluator.getValue("user.addresses['home'].city", action, null, null, null, null));
-        assertEquals("CO", evaluator.getValue("user.addresses['home'].state", action, null, null, null, null));
-        assertEquals("Test", evaluator.getValue("user.addresses['home'].street", action, null, null, null, null));
-        assertEquals("80020", evaluator.getValue("user.addresses['home'].zipcode", action, null, null, null, null));
+        assertNull(evaluator.getValue("user.addresses['work']", action));
+        assertEquals("Broomfield", evaluator.getValue("user.addresses['home'].city", action));
+        assertEquals("CO", evaluator.getValue("user.addresses['home'].state", action));
+        assertEquals("Test", evaluator.getValue("user.addresses['home'].street", action));
+        assertEquals("80020", evaluator.getValue("user.addresses['home'].zipcode", action));
 
         User brother = new User();
         brother.setName("Brett");
         brother.setAge(34);
         user.getSiblings().add(brother);
-        assertEquals(34, evaluator.getValue("user.siblings[0].age", action, null, null, null, null));
-        assertEquals("Brett", evaluator.getValue("user.siblings[0].name", action, null, null, null, null));
+        assertEquals(34, evaluator.getValue("user.siblings[0].age", action));
+        assertEquals("Brett", evaluator.getValue("user.siblings[0].name", action));
 
         user.setSecurityQuestions(new String[]{"What is your pet's name?", "What is your home town?"});
-        assertEquals("What is your pet's name?", evaluator.getValue("user.securityQuestions[0]", action, null, null, null, null));
-        assertEquals("What is your home town?", evaluator.getValue("user.securityQuestions[1]", action, null, null, null, null));
+        assertEquals("What is your pet's name?", evaluator.getValue("user.securityQuestions[0]", action));
+        assertEquals("What is your home town?", evaluator.getValue("user.securityQuestions[1]", action));
 
         // Test indexed collection property gets (using the indexed property methoods)
-        assertNull(evaluator.getValue("user.address['work']", action, null, null, null, null));
-        assertEquals("Broomfield", evaluator.getValue("user.address['home'].city", action, null, null, null, null));
-        assertEquals("CO", evaluator.getValue("user.address['home'].state", action, null, null, null, null));
-        assertEquals("Test", evaluator.getValue("user.address['home'].street", action, null, null, null, null));
-        assertEquals("80020", evaluator.getValue("user.address['home'].zipcode", action, null, null, null, null));
+        assertNull(evaluator.getValue("user.address['work']", action));
+        assertEquals("Broomfield", evaluator.getValue("user.address['home'].city", action));
+        assertEquals("CO", evaluator.getValue("user.address['home'].state", action));
+        assertEquals("Test", evaluator.getValue("user.address['home'].street", action));
+        assertEquals("80020", evaluator.getValue("user.address['home'].zipcode", action));
 
-        assertEquals(34, evaluator.getValue("user.sibling[0].age", action, null, null, null, null));
-        assertEquals("Brett", evaluator.getValue("user.sibling[0].name", action, null, null, null, null));
+        assertEquals(34, evaluator.getValue("user.sibling[0].age", action));
+        assertEquals("Brett", evaluator.getValue("user.sibling[0].name", action));
     }
 
     /**
@@ -103,18 +102,18 @@ public class DefaultExpressionEvaluatorTest extends WebBaseTest {
     public void testFieldGetting() {
         // Test local property null
         ActionField action = new ActionField();
-        assertNull(evaluator.getValue("user", action, null, null, null, null));
+        assertNull(evaluator.getValue("user", action));
 
         // Test local property get
         UserField user = new UserField();
         action.user = user;
-        assertSame(user, evaluator.getValue("user", action, null, null, null, null));
+        assertSame(user, evaluator.getValue("user", action));
 
         // Test nested property get
         action.user.age = 32;
         action.user.name = "Brian";
-        assertEquals(32, evaluator.getValue("user.age", action, null, null, null, null));
-        assertEquals("Brian", evaluator.getValue("user.name", action, null, null, null, null));
+        assertEquals(32, evaluator.getValue("user.age", action));
+        assertEquals("Brian", evaluator.getValue("user.name", action));
 
         // Test collection property gets
         AddressField address = new AddressField();
@@ -123,22 +122,22 @@ public class DefaultExpressionEvaluatorTest extends WebBaseTest {
         address.street = "Test";
         address.zipcode = "80020";
         action.user.addresses.put("home", address);
-        assertNull(evaluator.getValue("user.addresses['work']", action, null, null, null, null));
-        assertEquals("Broomfield", evaluator.getValue("user.addresses['home'].city", action, null, null, null, null));
-        assertEquals("CO", evaluator.getValue("user.addresses['home'].state", action, null, null, null, null));
-        assertEquals("Test", evaluator.getValue("user.addresses['home'].street", action, null, null, null, null));
-        assertEquals("80020", evaluator.getValue("user.addresses['home'].zipcode", action, null, null, null, null));
+        assertNull(evaluator.getValue("user.addresses['work']", action));
+        assertEquals("Broomfield", evaluator.getValue("user.addresses['home'].city", action));
+        assertEquals("CO", evaluator.getValue("user.addresses['home'].state", action));
+        assertEquals("Test", evaluator.getValue("user.addresses['home'].street", action));
+        assertEquals("80020", evaluator.getValue("user.addresses['home'].zipcode", action));
 
         UserField brother = new UserField();
         brother.name = "Brett";
         brother.age = 34;
         user.siblings.add(brother);
-        assertEquals(34, evaluator.getValue("user.siblings[0].age", action, null, null, null, null));
-        assertEquals("Brett", evaluator.getValue("user.siblings[0].name", action, null, null, null, null));
+        assertEquals(34, evaluator.getValue("user.siblings[0].age", action));
+        assertEquals("Brett", evaluator.getValue("user.siblings[0].name", action));
 
         user.securityQuestions = new String[]{"What is your pet's name?", "What is your home town?"};
-        assertEquals("What is your pet's name?", evaluator.getValue("user.securityQuestions[0]", action, null, null, null, null));
-        assertEquals("What is your home town?", evaluator.getValue("user.securityQuestions[1]", action, null, null, null, null));
+        assertEquals("What is your pet's name?", evaluator.getValue("user.securityQuestions[0]", action));
+        assertEquals("What is your home town?", evaluator.getValue("user.securityQuestions[1]", action));
     }
 
     /**

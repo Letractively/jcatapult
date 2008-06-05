@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.guice;
 
@@ -23,6 +22,10 @@ import org.jcatapult.mvc.parameters.convert.converters.CharacterConverter;
 import org.jcatapult.mvc.parameters.convert.converters.FileConverter;
 import org.jcatapult.mvc.parameters.convert.converters.NumberConverter;
 import org.jcatapult.mvc.parameters.convert.converters.StringConverter;
+import org.jcatapult.mvc.scope.ContextScope;
+import org.jcatapult.mvc.scope.FlashScope;
+import org.jcatapult.mvc.scope.RequestScope;
+import org.jcatapult.mvc.scope.SessionScope;
 
 import com.google.inject.AbstractModule;
 
@@ -38,6 +41,7 @@ public class MVCModule extends AbstractModule {
     protected void configure() {
         configureConverters();
         configureResults();
+        configureScopes();
     }
 
     /**
@@ -57,5 +61,16 @@ public class MVCModule extends AbstractModule {
     protected void configureResults() {
         bind(ForwardResult.class);
         bind(RedirectResult.class);
+    }
+
+    /**
+     * Binds all the default scopes.
+     */
+    protected void configureScopes() {
+        bind(RequestScope.class);
+        bind(SessionScope.class);
+        bind(ActionSessionScope.class);
+        bind(FlashScope.class);
+        bind(ContextScope.class);
     }
 }

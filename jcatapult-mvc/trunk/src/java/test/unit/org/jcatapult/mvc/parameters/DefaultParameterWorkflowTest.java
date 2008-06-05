@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.parameters;
 
@@ -43,7 +42,7 @@ import static net.java.util.CollectionTools.*;
  * This tests the default parameters workflow.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 public class DefaultParameterWorkflowTest {
     /**
@@ -95,7 +94,7 @@ public class DefaultParameterWorkflowTest {
         chain.doWorkflow(request, null);
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeWorkflow, actionMappingWorkflow, messageStore, expressionEvaluator);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeWorkflow, actionMappingWorkflow, messageStore, expressionEvaluator, flashScope, scopeRegistry);
         workflow.perform(request, null, chain);
 
         EasyMock.verify(request, expressionEvaluator, localeWorkflow, invocation, actionMappingWorkflow, messageStore, chain);

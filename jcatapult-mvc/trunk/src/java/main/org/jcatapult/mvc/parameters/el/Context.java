@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.parameters.el;
 
@@ -57,6 +56,10 @@ public class Context {
         this.converterRegistry = converterRegistry;
     }
 
+    public Context(ConverterRegistry converterRegistry, List<Atom> atoms) {
+        this(converterRegistry, atoms, null, null, null, null);
+    }
+
     public void init(Object object) {
         this.object = object;
         this.type = object.getClass();
@@ -83,6 +86,10 @@ public class Context {
 
     public void setCurrentValue(String[] values) {
         accessor.set(object, values, this);
+    }
+
+    public void setCurrentValue(Object value) {
+        accessor.set(object, value, this);
     }
 
     public Object createValue() {

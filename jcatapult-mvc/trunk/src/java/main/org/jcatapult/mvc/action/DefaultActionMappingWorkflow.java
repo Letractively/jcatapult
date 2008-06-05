@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.action;
 
@@ -82,11 +81,13 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
         }
 
         ActionConfiguration actionConfiguration = actionConfigurationProvider.lookup(uri);
+        Object action = null;
         if (actionConfiguration != null) {
-            Object action = objectFactory.create(actionConfiguration.actionClass());
-            ActionInvocation invocation = new DefaultActionInvocation(action, uri, actionConfiguration);
-            request.setAttribute(ACTION_INVOCATION_KEY, invocation);
+            action = objectFactory.create(actionConfiguration.actionClass());
         }
+
+        ActionInvocation invocation = new DefaultActionInvocation(action, uri, actionConfiguration);
+        request.setAttribute(ACTION_INVOCATION_KEY, invocation);
 
         chain.doWorkflow(request, response);
     }

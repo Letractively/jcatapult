@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.action.result;
 
@@ -48,5 +47,5 @@ public interface Result<T extends Annotation> {
     /**
      * @return  The annotation that this result handles.
      */
-    Class<T> annotation();
+    Class<T> annotationType();
 }

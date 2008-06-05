@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.locale;
 
@@ -32,7 +31,7 @@ import com.google.inject.Singleton;
  * This is the default LocaleWorkflow implementation.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 @Singleton
 public class DefaultLocaleWorkflow implements LocaleWorkflow {
@@ -100,6 +99,9 @@ public class DefaultLocaleWorkflow implements LocaleWorkflow {
         chain.doWorkflow(request, response);
     }
 
+    /**
+     * Does nothing.
+     */
     public void destroy() {
     }
 }

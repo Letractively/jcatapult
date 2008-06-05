@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc;
 
@@ -27,6 +26,7 @@ import org.jcatapult.mvc.action.ActionInvocationWorkflow;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
 import org.jcatapult.mvc.parameters.ParameterWorkflow;
+import org.jcatapult.mvc.scope.ScopeWorkflow;
 import org.jcatapult.servlet.SubWorkflowChain;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
@@ -46,9 +46,9 @@ public class MVCWorkflow implements Workflow {
 
     @Inject
     public MVCWorkflow(LocaleWorkflow localeWorkflow, ActionMappingWorkflow actionMappingWorkflow,
-            ParameterWorkflow parameterWorkflow, /* ValidationWorkflow validationWorkflow,*/
+            ScopeWorkflow scopeWorkflow, ParameterWorkflow parameterWorkflow, /* ValidationWorkflow validationWorkflow,*/
             ActionInvocationWorkflow actionInvocationWorkflow) {
-        workflows = asList(localeWorkflow, actionMappingWorkflow, parameterWorkflow, actionInvocationWorkflow);
+        workflows = asList(localeWorkflow, actionMappingWorkflow, scopeWorkflow, parameterWorkflow, actionInvocationWorkflow);
     }
 
     /**

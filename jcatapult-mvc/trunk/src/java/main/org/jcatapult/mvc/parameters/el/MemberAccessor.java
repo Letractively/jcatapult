@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.parameters.el;
 
@@ -122,16 +121,7 @@ public class MemberAccessor extends Accessor {
     }
 
     public void set(String[] values, Context context) {
-        if (propertyInfo != null) {
-            Method setter = propertyInfo.getMethods().get("set");
-            if (setter == null) {
-                throw new ExpressionException("Missing setter for property [" + propertyInfo.getName() +
-                    "] in class [" + declaringClass + "]");
-            }
-            invokeMethod(setter, object, convert(values, context));
-        } else {
-            setField(field, object, convert(values, context));
-        }
+        set(convert(values, context), context);
     }
 
     public void set(Object value, Context context) {

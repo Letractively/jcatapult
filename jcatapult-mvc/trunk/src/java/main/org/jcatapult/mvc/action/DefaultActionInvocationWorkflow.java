@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.action;
 
@@ -113,8 +112,8 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
         Annotation annotation = resultInvocation.annotation();
         Result result = resultRegistry.lookup(annotation.annotationType());
         if (result == null) {
-            throw new ServletException("Unmapped result annotation [" + annotation.getClass() +
-                "]. You probably need to define a Result implementation that maps to this annotation " +
+            throw new ServletException("Unmapped result annotationType [" + annotation.getClass() +
+                "]. You probably need to define a Result implementation that maps to this annotationType " +
                 "and then add that Result implementation to your Guice Module.");
         }
 

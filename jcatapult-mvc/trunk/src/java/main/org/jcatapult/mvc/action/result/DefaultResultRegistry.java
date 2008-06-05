@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.action.result;
 
@@ -53,9 +52,9 @@ public class DefaultResultRegistry implements ResultRegistry {
             Type bindingType = key.getTypeLiteral().getType();
             if (bindingType instanceof Class && Result.class.isAssignableFrom((Class<?>) bindingType)) {
                 Result result = (Result) bindings.get(key).getProvider().get();
-                Class<? extends Annotation> annotation = result.annotation();
+                Class<? extends Annotation> annotation = result.annotationType();
                 if (logger.isLoggable(Level.FINE)) {
-                    logger.fine("Registering result class [" + result.getClass() + "] for annotation [" + annotation + "]");
+                    logger.fine("Registering result class [" + result.getClass() + "] for annotationType [" + annotation + "]");
                 }
 
                 results.put(annotation, result);
