@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.locale;
 
@@ -21,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.servlet.Workflow;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This is a workflow that handles Locale information. The user might
@@ -28,8 +29,9 @@ import org.jcatapult.servlet.Workflow;
  * Locale, or the Locale might already be persisted in the users session.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
+@ImplementedBy(DefaultLocaleWorkflow.class)
 public interface LocaleWorkflow extends Workflow {
     /**
      * Locates the current locale. This should only be a user defined Locale and NEVER the default.

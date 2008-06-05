@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.action.result;
 
@@ -66,7 +65,7 @@ public class ResultHttpServletRequest extends HttpServletRequestWrapper {
     public Object getAttribute(String name) {
         Object value;
         try {
-            value = expressionEvaluator.getValue(name, action, this, response, locale, ATTRIBUTES);
+            value = expressionEvaluator.getValue(name, action);
         } catch (ExpressionException e) {
             value = super.getAttribute(name);
         }

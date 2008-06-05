@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.parameters;
 
@@ -60,11 +59,6 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     private final ExpressionEvaluator expressionEvaluator;
     private boolean ignoreEmptyParameters = true;
 
-    @Inject(optional = true)
-    public void setIgnoreEmptyParamaters(@Named("jcatapult.mvc.ignoreEmptyParameters") boolean ignoreEmptyParameters) {
-        this.ignoreEmptyParameters = ignoreEmptyParameters;
-    }
-
     @Inject
     public DefaultParameterWorkflow(LocaleWorkflow localeWorkflow, ActionMappingWorkflow actionMappingWorkflow,
             MessageStore messageStore, ExpressionEvaluator expressionEvaluator) {
@@ -72,6 +66,11 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         this.actionMappingWorkflow = actionMappingWorkflow;
         this.messageStore = messageStore;
         this.expressionEvaluator = expressionEvaluator;
+    }
+
+    @Inject(optional = true)
+    public void setIgnoreEmptyParamaters(@Named("jcatapult.mvc.ignoreEmptyParameters") boolean ignoreEmptyParameters) {
+        this.ignoreEmptyParameters = ignoreEmptyParameters;
     }
 
     /**
@@ -84,20 +83,22 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
     throws IOException, ServletException {
         ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
-        Locale locale = localeWorkflow.getLocale(request);
-
-        // First grab the structs and then save them to the request
-        Map<String, Struct> structs = getValuesToSet(request);
-        request.setAttribute(PARAMETERS_KEY, structs);
-
-        // Next, process them
         Object action = actionInvocation.action();
-        for (String key : structs.keySet()) {
-            Struct struct = structs.get(key);
-            try {
-                expressionEvaluator.setValue(key, action, struct.values, request, response, locale, struct.attributes);
-            } catch (ConversionException ce) {
-                messageStore.addConversionError(key, locale, struct.attributes, struct.values);
+
+        if (action != null) {
+            // First grab the structs and then save them to the request
+            Map<String, Struct> structs = getValuesToSet(request);
+            request.setAttribute(PARAMETERS_KEY, structs);
+
+            // Next, process them
+            Locale locale = localeWorkflow.getLocale(request);
+            for (String key : structs.keySet()) {
+                Struct struct = structs.get(key);
+                try {
+                    expressionEvaluator.setValue(key, action, struct.values, request, response, locale, struct.attributes);
+                } catch (ConversionException ce) {
+                    messageStore.addConversionError(key, locale, struct.attributes, struct.values);
+                }
             }
         }
 

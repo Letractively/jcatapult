@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.messages;
 
@@ -39,7 +38,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultMessageStore implements MessageWrokflow, MessageStore {
+public class DefaultMessageStore implements MessageWorkflow, MessageStore {
     public static final String FIELD_MESSAGE_KEY = "__jcatapult_messages_field";
     public static final String FLASH_KEY = "__jcatapult_messages_flash";
     private final MessageProvider messageProvider;

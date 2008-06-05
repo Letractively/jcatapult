@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.parameters.el;
 
@@ -26,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameters.convert.ConversionException;
+import org.jcatapult.mvc.parameters.convert.Converter;
 import org.jcatapult.mvc.parameters.convert.ConverterRegistry;
 import org.jcatapult.mvc.parameters.convert.ConverterStateException;
 
@@ -47,6 +47,7 @@ import com.google.inject.Singleton;
  * @author  Brian Pontarelli
  */
 @Singleton
+@SuppressWarnings("unchecked")
 public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     private final ConverterRegistry converterRegistry;
 
@@ -55,12 +56,14 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
         this.converterRegistry = converterRegistry;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getValue(String expression, Object bean, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> T getValue(String expression, Object object) throws ExpressionException {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(converterRegistry, atoms, request, response, locale, attributes);
-        context.init(bean);
+        Context context = new Context(converterRegistry, atoms);
+        context.init(object);
         while (context.hasNext()) {
             Atom atom = context.next();
             context.initAccessor(atom.getName());
@@ -80,13 +83,71 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
         return (T) context.getObject();
     }
 
-    @SuppressWarnings("unchecked")
-    public void setValue(String expression, Object bean, String[] values, HttpServletRequest request,
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getValue(String expression, Object object, HttpServletRequest request,
+            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+    throws ExpressionException {
+        Object value = getValue(expression, object);
+        if (value == null) {
+            return "";
+        }
+
+        Class<?> type = value.getClass();
+        Converter converter = converterRegistry.lookup(type);
+        if (converter == null) {
+            throw new ConverterStateException("No type converter found for the type [" + type + "]");
+        }
+
+        return converter.convertToString(value, (Class<Object>) type, request, response, locale, attributes);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+
+    public void setValue(String expression, Object object, Object value) throws ExpressionException {
+        List<Atom> atoms = parse(expression);
+        Context context = new Context(converterRegistry, atoms);
+        context.init(object);
+        while (context.hasNext()) {
+            Atom atom = context.next();
+            context.initAccessor(atom.getName());
+            if (context.skip()) {
+                if (!context.hasNext()) {
+                    throw new ExpressionException("Encountered an indexed property without an index in the " +
+                        "expression [" + expression + "]");
+                }
+
+                continue;
+            }
+
+            if (!context.hasNext()) {
+                context.setCurrentValue(value);
+            } else {
+                Object nextValue = context.getCurrentValue();
+                if (nextValue == null) {
+                    nextValue = context.createValue();
+                }
+
+                context.init(nextValue);
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setValue(String expression, Object object, String[] values, HttpServletRequest request,
             HttpServletResponse response, Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException, ExpressionException {
         List<Atom> atoms = parse(expression);
         Context context = new Context(converterRegistry, atoms, request, response, locale, attributes);
-        context.init(bean);
+        context.init(object);
         while (context.hasNext()) {
             Atom atom = context.next();
             context.initAccessor(atom.getName());

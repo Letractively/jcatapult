@@ -12,16 +12,24 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
-package org.jcatapult.mvc.action.result.annotation;
+package org.jcatapult.mvc.scope.annotation;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * <p>
- * This
+ * This annotation should be used to mark member fields of actions that should be
+ * fetched and stored in the HttpServletRequest.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public @interface Result {
+@Retention(RetentionPolicy.RUNTIME)
+@ScopeAnnotation
+@Target(ElementType.FIELD)
+public @interface Request {
 }

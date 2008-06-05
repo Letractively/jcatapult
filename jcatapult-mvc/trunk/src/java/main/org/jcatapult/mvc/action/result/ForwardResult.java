@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.action.result;
 
@@ -69,7 +68,7 @@ public class ForwardResult implements Result<Forward> {
     /**
      * {@inheritDoc}
      */
-    public Class<Forward> annotation() {
+    public Class<Forward> annotationType() {
         return Forward.class;
     }
 

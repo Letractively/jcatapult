@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.messages;
 
@@ -24,7 +23,7 @@ import java.util.Map;
  * This interface defines the mechanism by which errors are added and fetched.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 public interface MessageStore {
     /**
@@ -38,6 +37,6 @@ public interface MessageStore {
      * @param   values The values attempting to be set into the field.
      * @throws  MissingMessageException If the conversion message is missing.
      */
-    void addConversionError(String field, Locale locale, Map<String, String> attributes, String... values)
+    void addConversionError(String bundle, String field, Locale locale, Map<String, String> attributes, String... values)
     throws MissingMessageException ;
 }

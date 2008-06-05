@@ -12,21 +12,24 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
-package org.jcatapult.mvc.messages;
+package org.jcatapult.mvc.scope.annotation;
 
-import org.jcatapult.servlet.Workflow;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * <p>
- * This interface defines the workflow process that handles messages.
- * The most common processing is for the flash scope. Messages in the
- * flash scope usually need to be transfered into the request during
- * request processing.
+ * This annotation should be used to mark member fields of actions that should be
+ * fetched and stored in the HttpSession but only accessible by the current action.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public interface MessageWrokflow extends Workflow {
+@Retention(RetentionPolicy.RUNTIME)
+@ScopeAnnotation
+@Target(ElementType.FIELD)
+public @interface ActionSession {
 }

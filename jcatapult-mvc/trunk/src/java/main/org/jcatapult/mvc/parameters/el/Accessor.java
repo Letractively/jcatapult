@@ -12,7 +12,6 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.mvc.parameters.el;
 
@@ -35,6 +34,7 @@ import java.util.TreeSet;
 import org.jcatapult.mvc.parameters.convert.ConversionException;
 import org.jcatapult.mvc.parameters.convert.Converter;
 import org.jcatapult.mvc.parameters.convert.ConverterRegistry;
+import org.jcatapult.mvc.parameters.convert.ConverterStateException;
 
 import static net.java.lang.reflect.ReflectionTools.*;
 
@@ -186,7 +186,7 @@ public abstract class Accessor {
         if (values != null && !typeClass.isInstance(values)) {
             Converter converter = converterRegistry.lookup(typeClass);
             if (converter == null) {
-                throw new ConversionException("No type converter found for the type [" + typeClass.getName() + "]");
+                throw new ConverterStateException("No type converter found for the type [" + typeClass.getName() + "]");
             }
 
             newValue = converter.convertFromStrings(values, typeClass, context.getRequest(),
