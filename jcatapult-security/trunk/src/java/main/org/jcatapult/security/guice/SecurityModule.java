@@ -15,16 +15,15 @@
  */
 package org.jcatapult.security.guice;
 
-import org.jcatapult.guice.WorkflowResolverModule;
 import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.UserAdapter;
 import org.jcatapult.security.login.AuthenticationService;
 import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
-import org.jcatapult.security.servlet.SecurityWorkflowResolver;
 import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
 import org.jcatapult.security.spi.SecurityContextProvider;
-import org.jcatapult.servlet.WorkflowResolver;
+
+import com.google.inject.AbstractModule;
 
 /**
  * <p>
@@ -35,19 +34,10 @@ import org.jcatapult.servlet.WorkflowResolver;
  *
  * @author  Brian Pontarelli
  */
-public abstract class SecurityModule extends WorkflowResolverModule {
+public abstract class SecurityModule extends AbstractModule {
     protected void configure() {
-        configureWorkflow();
         configureImplementations();
         configureContexts();
-    }
-
-    /**
-     * Configure the {@link WorkflowResolver} sub-class that the security framework needs.
-     */
-    protected void configureWorkflow() {
-        // Setup the workflow resolver
-        bind(WorkflowResolver.class).to(SecurityWorkflowResolver.class);
     }
 
     /**
