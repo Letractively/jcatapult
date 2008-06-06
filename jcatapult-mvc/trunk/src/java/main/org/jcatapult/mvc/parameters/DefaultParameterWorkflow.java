@@ -97,7 +97,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
                 try {
                     expressionEvaluator.setValue(key, action, struct.values, request, response, locale, struct.attributes);
                 } catch (ConversionException ce) {
-                    messageStore.addConversionError(key, locale, struct.attributes, struct.values);
+                    messageStore.addConversionError(action.getClass().getName(), key, locale, struct.attributes, struct.values);
                 }
             }
         }

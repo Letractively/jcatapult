@@ -32,20 +32,24 @@ public interface MessageProvider {
      * Finds a message with the given key and for the given locale. This should then process the message
      * using the attributes and values given in order to token replace and format the message correctly.
      *
+     * @param   bundle The name of the bundle to pull the message from. This might be a ResourceBundle
+     *          or a database or a table name, etc.
      * @param   key The key of the message.
      * @param   locale The locale of the message.
      * @param   attributes Any additional attributes for the message.
-     * @param   values Any additional values for the message.
+     * @param   values Any additional values for the message. @return  The message or null if it doesn't exist.
      * @return  The message or null if it doesn't exist.
      */
-    String getMessage(String key, Locale locale, Map<String, String> attributes, String... values);
+    String getMessage(String bundle, String key, Locale locale, Map<String, String> attributes, String... values);
 
     /**
      * Finds a message with the given key and for the given locale.
      *
+     * @param   bundle The name of the bundle to pull the message from. This might be a ResourceBundle
+     *          or a database or a table name, etc.
      * @param   key The key of the message.
-     * @param   locale The locale of the message.
+     * @param   locale The locale of the message. @return  The message or null if it doesn't exist.
      * @return  The message or null if it doesn't exist.
      */
-    String getMessage(String key, Locale locale);
+    String getMessage(String bundle, String key, Locale locale);
 }

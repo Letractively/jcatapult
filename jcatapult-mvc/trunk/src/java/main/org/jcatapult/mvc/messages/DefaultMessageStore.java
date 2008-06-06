@@ -39,8 +39,9 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class DefaultMessageStore implements MessageWorkflow, MessageStore {
-    public static final String FIELD_MESSAGE_KEY = "__jcatapult_messages_field";
-    public static final String FLASH_KEY = "__jcatapult_messages_flash";
+    public static final String FIELD_KEY = "JCATAPULT_FIELD_MESSAGES";
+    public static final String ACTION_KEY = "JCATAPULT_ACTION_MESSAGES";
+    public static final String FLASH_KEY = "JCATAPULT_FLASH_MESSAGES";
     private final MessageProvider messageProvider;
     private final HttpServletRequest request;
 
@@ -55,10 +56,11 @@ public class DefaultMessageStore implements MessageWorkflow, MessageStore {
     /**
      * {@inheritDoc}
      */
-    public void addConversionError(String field, Locale locale, Map<String, String> attributes, String... values)
+    public void addConversionError(String bundle, String field, Locale locale, Map<String, String> attributes,
+            String... values)
     throws MissingMessageException {
         field = field + ".conversionError";
-        String message = messageProvider.getMessage(field, locale, attributes, values);
+        String message = messageProvider.getMessage(bundle, field, locale, attributes, values);
         if (message == null) {
             throw new MissingMessageException("A conversion message for the key [" + field +
                 "] and locale [" + locale + "] could not be found.");
@@ -98,10 +100,10 @@ public class DefaultMessageStore implements MessageWorkflow, MessageStore {
      */
     @SuppressWarnings("unchecked")
     private List<String> getMessagesForField(String field) {
-        Map<String, List<String>> fieldMessages = (Map<String, List<String>>) request.getAttribute(FIELD_MESSAGE_KEY);
+        Map<String, List<String>> fieldMessages = (Map<String, List<String>>) request.getAttribute(FIELD_KEY);
         if (fieldMessages == null) {
             fieldMessages = new HashMap<String, List<String>>();
-            request.setAttribute(FIELD_MESSAGE_KEY, fieldMessages);
+            request.setAttribute(FIELD_KEY, fieldMessages);
         }
 
         List<String> messages = fieldMessages.get(field);

@@ -48,7 +48,7 @@ public class FlashScope implements Scope<Flash> {
     /**
      * {@inheritDoc}
      */
-    public Object get(String fieldName, HttpServletRequest request) {
+    public Object get(Object action, String fieldName, HttpServletRequest request) {
         Map<String, Object> flash = (Map<String, Object>) request.getAttribute(FLASH_KEY);
         if (flash == null) {
             return null;
@@ -60,7 +60,7 @@ public class FlashScope implements Scope<Flash> {
     /**
      * {@inheritDoc}
      */
-    public void set(String fieldName, HttpServletRequest request, Object value) {
+    public void set(Object action, String fieldName, HttpServletRequest request, Object value) {
         Map<String, Object> flash = (Map<String, Object>) request.getSession().getAttribute(FLASH_KEY);
         if (flash == null) {
             flash = new HashMap<String, Object>();

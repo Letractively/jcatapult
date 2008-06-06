@@ -87,14 +87,15 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(actionMappingWorkflow);
 
         MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
-        messageStore.addConversionError(eq("user.inches"), same(Locale.US), eq(new HashMap<String, String>()), aryEq(array("tall")));
+        messageStore.addConversionError(eq("org.jcatapult.mvc.parameters.el.Action"), eq("user.inches"),
+            same(Locale.US), eq(new HashMap<String, String>()), eq("tall"));
         EasyMock.replay(messageStore);
 
         WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
         chain.doWorkflow(request, null);
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeWorkflow, actionMappingWorkflow, messageStore, expressionEvaluator, flashScope, scopeRegistry);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeWorkflow, actionMappingWorkflow, messageStore, expressionEvaluator);
         workflow.perform(request, null, chain);
 
         EasyMock.verify(request, expressionEvaluator, localeWorkflow, invocation, actionMappingWorkflow, messageStore, chain);
