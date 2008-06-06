@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jcatapult.mvc.action.ActionInvocationWorkflow;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
+import org.jcatapult.mvc.messages.MessageWorkflow;
 import org.jcatapult.mvc.parameters.ParameterWorkflow;
 import org.jcatapult.mvc.scope.ScopeWorkflow;
 import org.jcatapult.servlet.SubWorkflowChain;
@@ -46,9 +47,10 @@ public class MVCWorkflow implements Workflow {
 
     @Inject
     public MVCWorkflow(LocaleWorkflow localeWorkflow, ActionMappingWorkflow actionMappingWorkflow,
-            ScopeWorkflow scopeWorkflow, ParameterWorkflow parameterWorkflow, /* ValidationWorkflow validationWorkflow,*/
-            ActionInvocationWorkflow actionInvocationWorkflow) {
-        workflows = asList(localeWorkflow, actionMappingWorkflow, scopeWorkflow, parameterWorkflow, actionInvocationWorkflow);
+            ScopeWorkflow scopeWorkflow, MessageWorkflow messageWorkflow, ParameterWorkflow parameterWorkflow,
+            /* ValidationWorkflow validationWorkflow,*/ ActionInvocationWorkflow actionInvocationWorkflow) {
+        workflows = asList(localeWorkflow, actionMappingWorkflow, scopeWorkflow, messageWorkflow,
+            parameterWorkflow, actionInvocationWorkflow);
     }
 
     /**

@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
+import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
 
@@ -37,12 +38,13 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class ForwardResult implements Result<Forward> {
+public class ForwardResult extends AbstractResult<Forward> {
     public static final String DIR = "/WEB-INF/content";
     private final ServletContext servletContext;
 
     @Inject
-    public ForwardResult(ServletContext servletContext) {
+    public ForwardResult(ServletContext servletContext, ExpressionEvaluator expressionEvaluator) {
+        super(expressionEvaluator);
         this.servletContext = servletContext;
     }
 
@@ -59,7 +61,7 @@ public class ForwardResult implements Result<Forward> {
             }
 
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(page);
-            requestDispatcher.forward(request, response);
+            requestDispatcher.forward(wrapRequest(invocation, request), response);
         } else {
             throw new RuntimeException("Not supported yet");
         }
@@ -87,8 +89,7 @@ public class ForwardResult implements Result<Forward> {
      * </p>
      *
      * @param   uri The URI.
-     * @return  The Forward and never null.
-     * @throws  RuntimeException If the default forward could not be found.
+     * @return  The Forward and or null if it doesn't exist.
      */
     public Forward defaultForward(final String uri) {
         // This is always a forward
@@ -101,10 +102,6 @@ public class ForwardResult implements Result<Forward> {
         }
         if (forward == null) {
             forward = findResult(DIR + uri + "/index.ftl", null);
-        }
-
-        if (forward == null) {
-            throw new RuntimeException("Unable to locate default result for URI [" + uri + "]");
         }
 
         return forward;

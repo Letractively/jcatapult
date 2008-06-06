@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.jcatapult.mvc.parameters.convert.ConversionException;
 import org.jcatapult.mvc.parameters.convert.ConverterStateException;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This interface defines the mechanism by which expressions are evaluated
@@ -33,6 +35,7 @@ import org.jcatapult.mvc.parameters.convert.ConverterStateException;
  *
  * @author  Brian Pontarelli
  */
+@ImplementedBy(DefaultExpressionEvaluator.class)
 public interface ExpressionEvaluator {
     /**
      * Retrieves a value defined by the given expression from the given object.

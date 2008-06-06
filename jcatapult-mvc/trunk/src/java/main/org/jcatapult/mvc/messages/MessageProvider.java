@@ -18,6 +18,8 @@ package org.jcatapult.mvc.messages;
 import java.util.Locale;
 import java.util.Map;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This interface defines how localized messages can be found and
@@ -27,6 +29,7 @@ import java.util.Map;
  *
  * @author  Brian Pontarelli
  */
+@ImplementedBy(ResourceBundleMessageProvider.class)
 public interface MessageProvider {
     /**
      * Finds a message with the given key and for the given locale. This should then process the message

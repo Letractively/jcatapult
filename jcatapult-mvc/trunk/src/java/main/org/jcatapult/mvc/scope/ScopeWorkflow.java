@@ -15,7 +15,6 @@
  */
 package org.jcatapult.mvc.scope;
 
-import org.jcatapult.mvc.parameters.DefaultParameterWorkflow;
 import org.jcatapult.servlet.Workflow;
 
 import com.google.inject.ImplementedBy;
@@ -29,6 +28,6 @@ import com.google.inject.ImplementedBy;
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultParameterWorkflow.class)
+@ImplementedBy(DefaultScopeWorkflow.class)
 public interface ScopeWorkflow extends Workflow {
 }

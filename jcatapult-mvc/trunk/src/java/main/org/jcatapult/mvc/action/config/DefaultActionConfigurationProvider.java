@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 import javax.servlet.ServletContext;
 
 import org.jcatapult.mvc.action.annotation.Action;
@@ -41,6 +43,7 @@ import static net.java.util.CollectionTools.*;
 @Singleton
 @SuppressWarnings("unchecked")
 public class DefaultActionConfigurationProvider implements ActionConfigurationProvider {
+    private static final Logger logger = Logger.getLogger(DefaultActionConfigurationProvider.class.getName());
     public static final String ACTION_CONFIGURATION_KEY = "__jcatapult_action_configuration";
     private final ServletContext context;
 
@@ -52,7 +55,7 @@ public class DefaultActionConfigurationProvider implements ActionConfigurationPr
         Set<Class<?>> actionClassses;
         try {
             actionClassses = resolver.findByLocators(new ClassClassLoaderResolver.AnnotatedWith(Action.class),
-                true, array("org.jcatapult.*", "org.hibernate.*"), "action");
+                true, array("org.jcatapult.mvc.*", "org.hibernate.*"), "action");
         } catch (IOException e) {
             throw new RuntimeException("Error discovering action classes", e);
         }
@@ -62,6 +65,9 @@ public class DefaultActionConfigurationProvider implements ActionConfigurationPr
             String uri = actionURIBuilder.build(actionClass);
             ActionConfiguration actionConfiguration = new DefaultActionConfiguration(actionClass, uri);
             configuration.put(uri, actionConfiguration);
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("Added action configuration for [" + actionClass + "] and the uri [" + uri + "]");
+            }
         }
 
         context.setAttribute(ACTION_CONFIGURATION_KEY, configuration);

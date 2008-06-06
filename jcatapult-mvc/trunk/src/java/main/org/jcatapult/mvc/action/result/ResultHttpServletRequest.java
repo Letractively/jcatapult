@@ -16,14 +16,10 @@
 package org.jcatapult.mvc.action.result;
 
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameters.el.ExpressionException;
@@ -39,17 +35,12 @@ import net.java.util.IteratorEnumeration;
  * @author Brian Pontarelli
  */
 public class ResultHttpServletRequest extends HttpServletRequestWrapper {
-    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
     private final ExpressionEvaluator expressionEvaluator;
-    private final HttpServletResponse response;
-    private final Locale locale;
     private final Object action;
 
-    public ResultHttpServletRequest(HttpServletRequest request, HttpServletResponse response,
-            Object action, Locale locale, ExpressionEvaluator expressionEvaluator) {
+    public ResultHttpServletRequest(HttpServletRequest request, Object action,
+            ExpressionEvaluator expressionEvaluator) {
         super(request);
-        this.response = response;
-        this.locale = locale;
         this.action = action;
         this.expressionEvaluator = expressionEvaluator;
     }

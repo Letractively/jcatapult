@@ -17,6 +17,8 @@ package org.jcatapult.mvc.scope;
 
 import java.lang.annotation.Annotation;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This is the storage location for scopes.
@@ -24,6 +26,7 @@ import java.lang.annotation.Annotation;
  *
  * @author  Brian Pontarelli
  */
+@ImplementedBy(DefaultScopeRegistry.class)
 public interface ScopeRegistry {
     /**
      * Looks up the scope for the given annotation.
