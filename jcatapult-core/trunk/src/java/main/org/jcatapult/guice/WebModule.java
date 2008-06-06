@@ -21,7 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.config.EnvironmentAwareConfiguration;
+import org.jcatapult.servlet.DefaultWorkflowResolver;
 import org.jcatapult.servlet.ServletObjectsHolder;
+import org.jcatapult.servlet.WorkflowResolver;
 import org.jcatapult.servlet.annotation.HTTPMethod;
 
 import com.google.inject.AbstractModule;

@@ -24,7 +24,7 @@ import com.google.inject.name.Named;
 
 /**
  * <p>
- * This is the default workflow resolver and it 
+ * This is the default workflow resolver and it
  * </p>
  *
  * @author Brian Pontarelli
