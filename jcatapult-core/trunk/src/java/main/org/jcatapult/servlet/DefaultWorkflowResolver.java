@@ -15,33 +15,45 @@
  */
 package org.jcatapult.servlet;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.jcatapult.jpa.JPAWorkflow;
-
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.name.Named;
 
 /**
  * <p>
- * This is the default workflow resolver and it currently returns an
- * a list that contains an instance of {@link org.jcatapult.servlet.StaticResourceWorkflow} and
- * {@link org.jcatapult.jpa.JPAWorkflow} in that order.
+ * This is the default workflow resolver and it 
  * </p>
  *
  * @author Brian Pontarelli
  */
 public class DefaultWorkflowResolver implements WorkflowResolver {
-    private JPAWorkflow jpaWorkflow;
-    private StaticResourceWorkflow staticResourceWorkflow;
+    private final String workflows;
+    private final Injector injector;
 
     @Inject
-    public void setWorkflows(JPAWorkflow jpaWorkflow, StaticResourceWorkflow staticResourceWorkflow) {
-        this.jpaWorkflow = jpaWorkflow;
-        this.staticResourceWorkflow = staticResourceWorkflow;
+    public DefaultWorkflowResolver(@Named("jcatapult.workflows") String workflows, Injector injector) {
+        this.workflows = workflows;
+        this.injector = injector;
     }
 
     public List<Workflow> resolve() {
-        return Arrays.asList(staticResourceWorkflow, jpaWorkflow);
+        String[] names = workflows.split(",");
+        List<Workflow> result = new ArrayList<Workflow>();
+        for (String name : names) {
+            try {
+                Class<?> klass = Class.forName(name);
+                Workflow workflow = (Workflow) injector.getInstance(klass);
+                if (workflow != null) {
+                    result.add(workflow);
+                }
+            } catch (ClassNotFoundException e) {
+                // Skip it. It isn't in the classpath
+            }
+        }
+
+        return result;
     }
 }
