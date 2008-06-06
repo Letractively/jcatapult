@@ -29,20 +29,21 @@ public interface Scope<T extends Annotation> {
     /**
      * Retrieve the value from the scope based on the name given.
      *
-     * @param   fieldName The name of the field.
-     * @param   request The request.
-     * @return  The value or null if it doesn't exist in the scope.
+     * @param action
+     *@param   fieldName The name of the field.
+     * @param   request The request. @return  The value or null if it doesn't exist in the scope.
      */
-    Object get(String fieldName, HttpServletRequest request);
+    Object get(Object action, String fieldName, HttpServletRequest request);
 
     /**
      * Sets the value into the scope.
      *
+     * @param action
      * @param   fieldName The name to store the value under in the scope.
      * @param   request The request.
      * @param   value The value.
      */
-    void set(String fieldName, HttpServletRequest request, Object value);
+    void set(Object action, String fieldName, HttpServletRequest request, Object value);
 
     /**
      * @return  The annotation type that this scope is associated with.

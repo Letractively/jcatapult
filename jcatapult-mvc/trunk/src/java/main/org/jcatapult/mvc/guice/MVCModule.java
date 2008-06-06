@@ -22,6 +22,7 @@ import org.jcatapult.mvc.parameters.convert.converters.CharacterConverter;
 import org.jcatapult.mvc.parameters.convert.converters.FileConverter;
 import org.jcatapult.mvc.parameters.convert.converters.NumberConverter;
 import org.jcatapult.mvc.parameters.convert.converters.StringConverter;
+import org.jcatapult.mvc.scope.ActionSessionScope;
 import org.jcatapult.mvc.scope.ContextScope;
 import org.jcatapult.mvc.scope.FlashScope;
 import org.jcatapult.mvc.scope.RequestScope;

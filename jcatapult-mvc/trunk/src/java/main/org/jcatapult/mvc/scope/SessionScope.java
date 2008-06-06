@@ -31,14 +31,14 @@ public class SessionScope implements Scope<Session> {
     /**
      * {@inheritDoc}
      */
-    public Object get(String fieldName, HttpServletRequest request) {
+    public Object get(Object action, String fieldName, HttpServletRequest request) {
         return request.getSession().getAttribute(fieldName);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void set(String fieldName, HttpServletRequest request, Object value) {
+    public void set(Object action, String fieldName, HttpServletRequest request, Object value) {
         request.getSession().setAttribute(fieldName, value);
     }
 

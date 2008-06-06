@@ -17,20 +17,93 @@ package org.jcatapult.mvc.messages;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * <p>
- * This
+ * This implements the MessageProvider using ResourceBundles. However, it adds
+ * the additional step of looking for multiple bundle if the message isn't
+ * initially found. The search method is:
  * </p>
  *
- * @author Brian Pontarelli
+ * <pre>
+ * bundle = com.example.action.Foo
+ * locale = en_US
+ *
+ * com.example.action.Foo_en_US
+ * com.example.action.Foo_en
+ * com.example.action.Foo
+ * com.example.action.package_en_US
+ * com.example.action.package_en
+ * com.example.action.package
+ * com.example.package_en_US
+ * com.example.package_en
+ * com.example.package
+ * ...
+ * </pre>
+ *
+ * <p>
+ * This continues to look up packages until if finds the message.
+ * </p>
+ *
+ * TODO add toekn replacement
+ *
+ * @author  Brian Pontarelli
  */
 public class ResourceBundleMessageProvider implements MessageProvider {
-    public String getMessage(String key, Locale locale, Map<String, String> attributes, String... values) {
-        return null;
+    /**
+     * {@inheritDoc}
+     */
+    public String getMessage(String bundle, String key, Locale locale, Map<String, String> attributes,
+            String... values) {
+        String message = getMessage(bundle, key, locale);
+        if (message != null) {
+            // Token replace
+        }
+
+        return message;
     }
 
-    public String getMessage(String key, Locale locale) {
+    /**
+     * {@inheritDoc}
+     */
+    public String getMessage(String bundle, String key, Locale locale) {
+        ResourceBundle rb = null;
+        try {
+            rb = ResourceBundle.getBundle(bundle, locale);
+        } catch (MissingResourceException e) {
+        }
+
+        if (rb == null) {
+            int index = bundle.lastIndexOf('.');
+            if (index == -1) {
+                return null;
+            }
+
+            String baseName = bundle.substring(0, index);
+            while (rb == null) {
+                try {
+                    rb = ResourceBundle.getBundle(baseName + ".package", locale);
+                } catch (MissingResourceException e) {
+                    index = baseName.lastIndexOf('.');
+                    if (index == -1) {
+                        break;
+                    }
+
+                    bundle = bundle.substring(0, index);
+
+                }
+            }
+        }
+
+        if (rb != null) {
+            try {
+                return rb.getString(key);
+            } catch (MissingResourceException e) {
+            }
+        }
+
         return null;
     }
 }
