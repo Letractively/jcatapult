@@ -46,11 +46,16 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
      * </p>
      *
      * @param   uri The URI to append to the page.
-     * @return  The result invocation that is a forward.
+     * @return  The result invocation that is a forward or null if there isn't a forwardable resource
+     *          in the web application for the given URI.
      */
     public ResultInvocation lookup(final String uri) {
         // This is always a forward
         Forward forward = forwardResult.defaultForward(uri);
+        if (forward == null) {
+            return null;
+        }
+
         return new DefaultResultInvocation(forward, uri, null);
     }
 

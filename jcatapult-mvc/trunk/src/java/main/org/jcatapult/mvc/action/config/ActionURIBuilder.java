@@ -15,6 +15,8 @@
  */
 package org.jcatapult.mvc.action.config;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This interface defines how a package and class name are converted into
@@ -23,6 +25,7 @@ package org.jcatapult.mvc.action.config;
  *
  * @author  Brian Pontarelli
  */
+@ImplementedBy(DefaultActionURIBuilder.class)
 public interface ActionURIBuilder {
     /**
      * Converts the action class name into a URI.

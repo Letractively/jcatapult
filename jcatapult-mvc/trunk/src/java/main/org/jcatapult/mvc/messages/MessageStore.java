@@ -18,6 +18,8 @@ package org.jcatapult.mvc.messages;
 import java.util.Locale;
 import java.util.Map;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This interface defines the mechanism by which errors are added and fetched.
@@ -25,6 +27,7 @@ import java.util.Map;
  *
  * @author  Brian Pontarelli
  */
+@ImplementedBy(DefaultMessageStore.class)
 public interface MessageStore {
     /**
      * Usually called by the {@link org.jcatapult.mvc.parameters.ParameterWorkflow}, this method adds

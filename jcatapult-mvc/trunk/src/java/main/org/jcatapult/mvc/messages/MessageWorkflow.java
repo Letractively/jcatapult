@@ -17,6 +17,8 @@ package org.jcatapult.mvc.messages;
 
 import org.jcatapult.servlet.Workflow;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * <p>
  * This interface defines the workflow process that handles messages.
@@ -27,5 +29,6 @@ import org.jcatapult.servlet.Workflow;
  *
  * @author  Brian Pontarelli
  */
+@ImplementedBy(DefaultMessageStore.class)
 public interface MessageWorkflow extends Workflow {
 }

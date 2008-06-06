@@ -16,12 +16,9 @@
 package org.jcatapult.mvc.action.result;
 
 import java.lang.annotation.Annotation;
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.locale.LocaleWorkflow;
 import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
@@ -35,12 +32,10 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractResult<U extends Annotation> implements Result<U> {
-    protected final LocaleWorkflow localeWorkflow;
     protected final ExpressionEvaluator expressionEvaluator;
 
     @Inject
-    protected AbstractResult(LocaleWorkflow localeWorkflow, ExpressionEvaluator expressionEvaluator) {
-        this.localeWorkflow = localeWorkflow;
+    protected AbstractResult(ExpressionEvaluator expressionEvaluator) {
         this.expressionEvaluator = expressionEvaluator;
     }
 
@@ -50,14 +45,11 @@ public abstract class AbstractResult<U extends Annotation> implements Result<U> 
      *
      * @param   invocation The action invocation.
      * @param   request The request.
-     * @param   response The response.
      * @return  The wrapped request or the request passed in, depending.
      */
-    protected HttpServletRequest wrapRequest(ActionInvocation invocation, HttpServletRequest request,
-            HttpServletResponse response) {
+    protected HttpServletRequest wrapRequest(ActionInvocation invocation, HttpServletRequest request) {
         if (invocation != null) {
-            Locale locale = localeWorkflow.getLocale(request);
-            return new ResultHttpServletRequest(request, response, invocation.action(), locale, expressionEvaluator);
+            return new ResultHttpServletRequest(request, invocation.action(), expressionEvaluator);
         }
 
         return request;

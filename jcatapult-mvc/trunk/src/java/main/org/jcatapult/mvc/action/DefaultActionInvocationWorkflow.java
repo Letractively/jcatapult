@@ -85,7 +85,7 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
     throws IOException, ServletException {
         ActionInvocation invocation = actionMappingWorkflow.fetch(request);
         ResultInvocation resultInvocation;
-        if (invocation == null) {
+        if (invocation.action() == null) {
             // Try a default result mapping just for the URI
             String uri = request.getRequestURI();
             if (!uri.startsWith("/")) {
