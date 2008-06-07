@@ -15,11 +15,11 @@
  */
 package org.jcatapult.mvc.scope;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.mvc.scope.annotation.Session;
+import org.jcatapult.mvc.scope.annotation.ActionSession;
 
 /**
  * <p>
@@ -35,8 +35,8 @@ import org.jcatapult.mvc.scope.annotation.Session;
  * @author Brian Pontarelli
  */
 @SuppressWarnings("unchecked")
-public class ActionSessionScope implements Scope<Session> {
-    public static final String ACTION_SESSION_KEY = "JCATAPULT_ACTION_SESSION";
+public class ActionSessionScope implements Scope<ActionSession> {
+    public static final String ACTION_SESSION_KEY = "JCATAPULT_ACTION_SESSION_SCOPE";
 
     /**
      * {@inheritDoc}
@@ -77,7 +77,7 @@ public class ActionSessionScope implements Scope<Session> {
     /**
      * {@inheritDoc}
      */
-    public Class<Session> annotationType() {
-        return Session.class;
+    public Class<ActionSession> annotationType() {
+        return ActionSession.class;
     }
 }
