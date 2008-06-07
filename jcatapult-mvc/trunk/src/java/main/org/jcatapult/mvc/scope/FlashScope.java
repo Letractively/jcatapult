@@ -43,7 +43,7 @@ import org.jcatapult.mvc.scope.annotation.Flash;
  */
 @SuppressWarnings("unchecked")
 public class FlashScope implements Scope<Flash> {
-    public static final String FLASH_KEY = "__jcatapult_scope_flash";
+    public static final String FLASH_KEY = "JCATAPULT_FLASH_SCOPE";
 
     /**
      * {@inheritDoc}

@@ -48,7 +48,7 @@ public abstract class AbstractResult<U extends Annotation> implements Result<U> 
      * @return  The wrapped request or the request passed in, depending.
      */
     protected HttpServletRequest wrapRequest(ActionInvocation invocation, HttpServletRequest request) {
-        if (invocation != null) {
+        if (invocation.action() != null) {
             return new ResultHttpServletRequest(request, invocation.action(), expressionEvaluator);
         }
 
