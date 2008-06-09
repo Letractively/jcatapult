@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
@@ -66,11 +65,11 @@ public class DefaultParameterWorkflowTest {
 
         ExpressionEvaluator expressionEvaluator = EasyMock.createNiceMock(ExpressionEvaluator.class);
         expressionEvaluator.setValue(eq("user.addresses['home'].city"), same(action), aryEq(array("Boulder")),
-            same(request), eq((HttpServletResponse) null), same(Locale.US), eq(new HashMap<String, String>()));
+            same(request), same(Locale.US), eq(new HashMap<String, String>()));
         expressionEvaluator.setValue(eq("user.age"), same(action), aryEq(array("32")), same(request),
-            eq((HttpServletResponse) null), same(Locale.US), eq(map("dateFormat", "MM/dd/yyyy")));
+            same(Locale.US), eq(map("dateFormat", "MM/dd/yyyy")));
         expressionEvaluator.setValue(eq("user.inches"), same(action), aryEq(array("tall")), same(request),
-            eq((HttpServletResponse) null), same(Locale.US), eq(new HashMap<String, String>()));
+            same(Locale.US), eq(new HashMap<String, String>()));
         expectLastCall().andThrow(new ConversionException());
         EasyMock.replay(expressionEvaluator);
 
@@ -87,7 +86,7 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(actionMappingWorkflow);
 
         MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
-        messageStore.addConversionError(eq("org.jcatapult.mvc.parameters.el.Action"), eq("user.inches"),
+        messageStore.addConversionError(eq("user.inches"), eq("org.jcatapult.mvc.parameters.el.Action"),
             same(Locale.US), eq(new HashMap<String, String>()), eq("tall"));
         EasyMock.replay(messageStore);
 

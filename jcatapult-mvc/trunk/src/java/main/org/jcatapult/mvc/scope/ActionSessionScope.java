@@ -47,7 +47,8 @@ public class ActionSessionScope implements Scope<ActionSession> {
             return null;
         }
 
-        Map<String, Object> values = actionSession.get(fieldName);
+        String className = action.getClass().getName();
+        Map<String, Object> values = actionSession.get(className);
         if (values == null) {
             return null;
         }
@@ -65,10 +66,11 @@ public class ActionSessionScope implements Scope<ActionSession> {
             request.getSession().setAttribute(ACTION_SESSION_KEY, actionSession);
         }
 
-        Map<String, Object> values = actionSession.get(fieldName);
+        String className = action.getClass().getName();
+        Map<String, Object> values = actionSession.get(className);
         if (values == null) {
             values = new HashMap<String, Object>();
-            actionSession.put(action.getClass().getName(), values);
+            actionSession.put(className, values);
         }
 
         values.put(fieldName, value);
