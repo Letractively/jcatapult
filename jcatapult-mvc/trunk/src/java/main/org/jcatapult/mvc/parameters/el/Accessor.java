@@ -190,7 +190,7 @@ public abstract class Accessor {
             }
 
             newValue = converter.convertFromStrings(values, typeClass, context.getRequest(),
-                context.getResponse(), context.getLocale(), context.getAttributes());
+                context.getLocale(), context.getAttributes());
         }
 
         return newValue;

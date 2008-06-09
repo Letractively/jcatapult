@@ -16,11 +16,9 @@
 package org.jcatapult.mvc.parameters.el;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
-
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameters.convert.ConverterRegistry;
 
@@ -36,7 +34,6 @@ import net.java.lang.ObjectTools;
 public class Context {
     private final List<Atom> atoms;
     private final HttpServletRequest request;
-    private final HttpServletResponse response;
     private final Map<String, String> attributes;
     private final Locale locale;
     private final ConverterRegistry converterRegistry;
@@ -47,17 +44,16 @@ public class Context {
     private int index;
 
     public Context(ConverterRegistry converterRegistry, List<Atom> atoms, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes) {
+            Locale locale, Map<String, String> attributes) {
         this.atoms = atoms;
         this.request = request;
-        this.response = response;
         this.locale = locale;
         this.attributes = attributes;
         this.converterRegistry = converterRegistry;
     }
 
     public Context(ConverterRegistry converterRegistry, List<Atom> atoms) {
-        this(converterRegistry, atoms, null, null, null, null);
+        this(converterRegistry, atoms, null, null, null);
     }
 
     public void init(Object object) {
@@ -114,10 +110,6 @@ public class Context {
 
     public HttpServletRequest getRequest() {
         return request;
-    }
-
-    public HttpServletResponse getResponse() {
-        return response;
     }
 
     public Map<String, String> getAttributes() {

@@ -39,9 +39,11 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class DefaultMessageStore implements MessageWorkflow, MessageStore {
-    public static final String FIELD_KEY = "JCATAPULT_FIELD_MESSAGES";
-    public static final String ACTION_KEY = "JCATAPULT_ACTION_MESSAGES";
-    public static final String FLASH_KEY = "JCATAPULT_FLASH_MESSAGES";
+    public static final String FIELD_MESSAGES_KEY = "jcatapultFieldMessages";
+    public static final String FIELD_ERRORS_KEY = "jcatapultFieldErrors";
+    public static final String ACTION_MESSAGES_KEY = "jcatapultActionMessages";
+    public static final String ACTION_ERRORS_KEY = "jcatapultActionErrors";
+    public static final String FLASH_KEY = "jcatapultFlash";
     private final MessageProvider messageProvider;
     private final HttpServletRequest request;
 
@@ -56,8 +58,8 @@ public class DefaultMessageStore implements MessageWorkflow, MessageStore {
     /**
      * {@inheritDoc}
      */
-    public void addConversionError(String bundle, String field, Locale locale, Map<String, String> attributes,
-            String... values)
+    public void addConversionError(String field, String bundle, Locale locale, Map<String, String> attributes,
+        String... values)
     throws MissingMessageException {
         field = field + ".conversionError";
         String message = messageProvider.getMessage(bundle, field, locale, attributes, values);
@@ -113,5 +115,12 @@ public class DefaultMessageStore implements MessageWorkflow, MessageStore {
         }
 
         return messages;
+    }
+
+    private class Flash {
+        private Map<String, List<String>> fieldMessages = new HashMap<String, List<String>>();
+        private Map<String, List<String>> fieldErrors = new HashMap<String, List<String>>();
+        private List<String> actionMessages = new ArrayList<String>();
+        private List<String> actionErrors = new ArrayList<String>();
     }
 }

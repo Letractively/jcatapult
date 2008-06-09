@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
+import org.jcatapult.mvc.messages.MessageStore;
 import org.jcatapult.mvc.parameters.ParameterWorkflow;
 import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
 
@@ -45,16 +46,18 @@ public class Checkbox implements Control, TemplateDirectiveModel {
     private final ExpressionEvaluator expressionEvaluator;
     private final ActionMappingWorkflow actionMappingWorkflow;
     private final ParameterWorkflow parameterWorkflow;
+    private final MessageStore messageStore;
     private final HttpServletRequest request;
 
     @Inject
     public Checkbox(LocaleWorkflow localeWorkflow, ExpressionEvaluator expressionEvaluator,
             ActionMappingWorkflow actionMappingWorkflow, ParameterWorkflow parameterWorkflow,
-            HttpServletRequest request) {
+            MessageStore messageStore, HttpServletRequest request) {
         this.localeWorkflow = localeWorkflow;
         this.expressionEvaluator = expressionEvaluator;
         this.actionMappingWorkflow = actionMappingWorkflow;
         this.parameterWorkflow = parameterWorkflow;
+        this.messageStore = messageStore;
         this.request = request;
     }
 
@@ -66,13 +69,20 @@ public class Checkbox implements Control, TemplateDirectiveModel {
         Locale locale = localeWorkflow.getLocale(request);
 
         if (!attributes.containsKey("value") && action != null) {
-            String value = expressionEvaluator.getValue(name, action, request, null, locale, paramAttributes);
+            String value = expressionEvaluator.getValue(name, action, request, locale, paramAttributes);
             if (value == null) {
                 value = (String) attributes.get("defaultValue");
             }
 
             attributes.put("value", value);
         }
+
+        attributes.put("action", action);
+        attributes.put("request", request);
+        attributes.put("fieldErrors", messageStore.getFieldErrors(request));
+        attributes.put("fieldMessages", messageStore.getFieldMessages(request));
+        attributes.put("actionErrors", messageStore.getActionErrors(request));
+        attributes.put("actionMessages", messageStore.getActionMessages(request));
 
         executeTemplate("checkbox", attributes, actionInvocation, locale);
     }

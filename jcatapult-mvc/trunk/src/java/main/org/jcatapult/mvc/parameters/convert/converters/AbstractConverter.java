@@ -46,7 +46,7 @@ import net.java.lang.StringTools;
 @SuppressWarnings("unchecked")
 public abstract class AbstractConverter implements Converter {
     public <T> T convertFromStrings(String[] values, Class<T> convertTo, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+        Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         // Handle null
         if (values == null) {
@@ -85,7 +85,7 @@ public abstract class AbstractConverter implements Converter {
     }
 
     public <T> String convertToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+        Locale locale, Map<String, String> attributes)
     throws ConversionException {
         // Handle null
         if (value == null) {
@@ -175,7 +175,7 @@ public abstract class AbstractConverter implements Converter {
         for (int i = 0; i < length; i++) {
             Object o = Array.get(value, i);
             str.append(convertToString(o, (Class<Object>) value.getClass().getComponentType(),
-                request, response, locale, attributes));
+                request, locale, attributes));
             if (i + 1 < length) {
                 str.append(",");
             }

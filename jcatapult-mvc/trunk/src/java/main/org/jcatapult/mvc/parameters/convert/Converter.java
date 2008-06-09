@@ -18,7 +18,6 @@ package org.jcatapult.mvc.parameters.convert;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -121,10 +120,10 @@ public interface Converter {
      * @param   values The value(s) to convert. This might be a single value or multiple values.
      * @param   convertTo The type to convert the value to.
      * @param   request The servlet request.
-     * @param   response The servlet response.
      * @param   locale The current locale.
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
-     *          attributes are described in the {@link ParameterService} class comment.
+     *          attributes are described in the {@link org.jcatapult.mvc.parameters.ParameterWorkflow}
+     *          class comment.
      * @return  The converted value.
      * @throws  ConversionException If there was a problem converting the given value to the
      *          given type.
@@ -133,7 +132,7 @@ public interface Converter {
      *          fixable during development but not in production.
      */
     <T> T convertFromStrings(String[] values, Class<T> convertTo, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+        Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -155,10 +154,10 @@ public interface Converter {
      * @param   value The Object value to convert.
      * @param   convertFrom The type to convert the value from.
      * @param   request The servlet request.
-     * @param   response The servlet response.
      * @param   locale The current locale.
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
-     *          attributes are described in the {@link ParameterService} class comment.
+     *          attributes are described in the {@link org.jcatapult.mvc.parameters.ParameterWorkflow}
+     *          class comment.
      * @return  The converted value.
      * @throws  ConversionException If there was a problem converting the given value to the
      *          given type.
@@ -167,7 +166,7 @@ public interface Converter {
      *          fixable during development but not in production.
      */
     <T> String convertToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws ConversionException;
 
     /**

@@ -23,20 +23,13 @@ import org.jcatapult.mvc.scope.annotation.Flash;
 
 /**
  * <p>
- * This is the flash scope which fetches and stores values in the
- * HttpSession inside a Map under the flash key. Flash handling requires a
- * number of specific operations to occur in a specific order.
- * </p>
- *
- * <p>
- * First, the flash Map must be pulled out of the session prior to any parameter
- * handling is performed. It also must be pulled out of the session prior to
- * any scope handling.
- * </p>
- *
- * <p>
- * Second, the flash Map must be stored into the request after it has been
- * pulled out of the session.
+ * This is the flash scope which stores values in the HttpSession inside
+ * a Map under the flash key. It fetches values from the HttpServletRequest
+ * under the same key as well as the HttpSession under that key. This
+ * allows for flash objects to be migrated from the session to the request
+ * during request handling so that they are not persisted in the session
+ * forever. However, it also allows flash values to be retrieved during the
+ * initial request from the session.
  * </p>
  *
  * @author  Brian Pontarelli
@@ -50,8 +43,11 @@ public class FlashScope implements Scope<Flash> {
      */
     public Object get(Object action, String fieldName, HttpServletRequest request) {
         Map<String, Object> flash = (Map<String, Object>) request.getAttribute(FLASH_KEY);
-        if (flash == null) {
-            return null;
+        if (flash == null || !flash.containsKey(fieldName)) {
+            flash = (Map<String, Object>) request.getSession().getAttribute(FLASH_KEY);
+            if (flash == null) {
+                return null;
+            }
         }
 
         return flash.get(fieldName);

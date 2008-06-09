@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.messages;
+package org.jcatapult.mvc.messages.scope;
 
 /**
  * <p>
@@ -23,7 +23,7 @@ package org.jcatapult.mvc.messages;
  *
  * @author  Brian Pontarelli
  */
-public enum Scope {
+public enum MessageScope {
     /**
      * The request scope, when messages are stored in the request.
      */

@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameters.convert.ConversionException;
 import org.jcatapult.mvc.parameters.convert.Converter;
@@ -88,7 +87,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
      */
     @Override
     public String getValue(String expression, Object object, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+        Locale locale, Map<String, String> attributes)
     throws ExpressionException {
         Object value = getValue(expression, object);
         if (value == null) {
@@ -101,7 +100,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
             throw new ConverterStateException("No type converter found for the type [" + type + "]");
         }
 
-        return converter.convertToString(value, (Class<Object>) type, request, response, locale, attributes);
+        return converter.convertToString(value, (Class<Object>) type, request, locale, attributes);
     }
 
     /**
@@ -143,10 +142,10 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
      */
     @Override
     public void setValue(String expression, Object object, String[] values, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+        Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException, ExpressionException {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(converterRegistry, atoms, request, response, locale, attributes);
+        Context context = new Context(converterRegistry, atoms, request, locale, attributes);
         context.init(object);
         while (context.hasNext()) {
             Atom atom = context.next();

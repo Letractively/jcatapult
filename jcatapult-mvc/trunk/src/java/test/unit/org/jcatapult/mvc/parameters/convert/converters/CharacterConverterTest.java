@@ -36,49 +36,49 @@ public class CharacterConverterTest {
     @Test
     public void testFromStrings() {
         Converter converter = new CharacterConverter();
-        Character cw = converter.convertFromStrings(array((String) null), Character.class, null, null, null, null);
+        Character cw = converter.convertFromStrings(array((String) null), Character.class, null, null, null);
         assertNull(cw);
 
-        char c = converter.convertFromStrings(array((String) null), Character.TYPE, null, null, null, null);
+        char c = converter.convertFromStrings(array((String) null), Character.TYPE, null, null, null);
         assertEquals('\u0000', c);
 
-        c = converter.convertFromStrings(array("c"), Character.class, null, null, null, null);
+        c = converter.convertFromStrings(array("c"), Character.class, null, null, null);
         assertEquals('c', c);
 
-        c = converter.convertFromStrings(array("c"), Character.TYPE, null, null, null, null);
+        c = converter.convertFromStrings(array("c"), Character.TYPE, null, null, null);
         assertEquals('c', c);
 
-        Character[] ca = converter.convertFromStrings(array("c", "d"), Character[].class, null, null, null, null);
+        Character[] ca = converter.convertFromStrings(array("c", "d"), Character[].class, null, null, null);
         assertEquals((Character) 'c', ca[0]);
         assertEquals((Character) 'd', ca[1]);
 
-        char[] cpa = converter.convertFromStrings(array("c", "d"), char[].class, null, null, null, null);
+        char[] cpa = converter.convertFromStrings(array("c", "d"), char[].class, null, null, null);
         assertEquals('c', cpa[0]);
         assertEquals('d', cpa[1]);
 
         try {
-            converter.convertFromStrings(array("bad"), Character.class, null, null, null, null);
+            converter.convertFromStrings(array("bad"), Character.class, null, null, null);
             fail("Should have failed");
         } catch (ConversionException ce) {
             // Expected
         }
 
         try {
-            converter.convertFromStrings(array("bad"), Character.TYPE, null, null, null, null);
+            converter.convertFromStrings(array("bad"), Character.TYPE, null, null, null);
             fail("Should have failed");
         } catch (ConversionException ce) {
             // Expected
         }
 
         try {
-            converter.convertFromStrings(array("   "), Character.class, null, null, null, null);
+            converter.convertFromStrings(array("   "), Character.class, null, null, null);
             fail("Should have failed");
         } catch (ConversionException e) {
             // Expected
         }
 
         try {
-            converter.convertFromStrings(array("   "), Boolean.TYPE, null, null, null, null);
+            converter.convertFromStrings(array("   "), Boolean.TYPE, null, null, null);
             fail("Should have failed");
         } catch (ConversionException e) {
             // Expected
@@ -91,13 +91,13 @@ public class CharacterConverterTest {
     @Test
     public void testToStrings() {
         Converter converter = new BooleanConverter();
-        String str = converter.convertToString(null, Character.class, null, null, null, null);
+        String str = converter.convertToString(null, Character.class, null, null, null);
         assertNull(str);
 
-        str = converter.convertToString('c', Character.class, null, null, null, null);
+        str = converter.convertToString('c', Character.class, null, null, null);
         assertEquals("c", str);
 
-        str = converter.convertToString('c', Character.TYPE, null, null, null, null);
+        str = converter.convertToString('c', Character.TYPE, null, null, null);
         assertEquals("c", str);
     }
 }
