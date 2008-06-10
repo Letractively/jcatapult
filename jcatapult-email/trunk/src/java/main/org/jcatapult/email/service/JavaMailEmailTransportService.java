@@ -19,11 +19,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -166,13 +166,36 @@ public class JavaMailEmailTransportService implements EmailTransportService {
         int maximumPoolSize = configuration.getInt("jcatapult.email.thread-pool.maximum-size", 5);
         int keepAlive = configuration.getInt("jcatapult.email.thread-pool.keep-alive", 500);
         executorService = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAlive,
-            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(),
+            new RejectedExecutionHandler() {
+                public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                    throw new RejectedExecutionException("An email task was rejected.");
+                }
+            });
     }
 
     /**
      * {@inheritDoc}
      */
     public Future<Email> sendEmail(Email email) {
+        try {
+            return executorService.submit(new EmailRunnable(message(email),session), email);
+        } catch (RejectedExecutionException ree) {
+            throw new EmailException("Unable to submit the JavaMail message to the asynchronous handler " +
+                "so that it can be processed at a later time. The email was therefore not sent.", ree);
+        }
+    }
+
+    public void sendEmailLater(Email email) {
+        try {
+            executorService.execute(new EmailRunnable(message(email), session));
+        } catch (RejectedExecutionException ree) {
+            throw new EmailException("Unable to submit the JavaMail message to the asynchronous handler " +
+                "so that it can be processed at a later time. The email was therefore not sent.", ree);
+        }
+    }
+
+    private Message message(Email email) {
         try {
             // Define message
             Message message = new MimeMessage(session);
@@ -244,14 +267,10 @@ public class JavaMailEmailTransportService implements EmailTransportService {
 
             // Set the multipart content
             message.setContent(mp);
-
-            return executorService.submit(new EmailCallable(message, email, session));
+            return message;
         } catch (MessagingException e) {
             throw new EmailException("An error occurred while trying to construct the JavaMail Message " +
                 "object", e);
-        } catch (RejectedExecutionException ree) {
-            throw new EmailException("Unable to submit the JavaMail message to the asynchronous handler " +
-                "so that it can be processed at a later time. The email was therefore not sent.", ree);
         } catch (UnsupportedEncodingException e) {
             throw new EmailException("Unable to create email addresses. The email was therefore not sent.", e);
         }
@@ -260,19 +279,17 @@ public class JavaMailEmailTransportService implements EmailTransportService {
     /**
      * The callable for handling async message sending.
      */
-    public static class EmailCallable implements Callable<Email> {
-        private static final Logger logger = Logger.getLogger(EmailCallable.class.getName());
+    public static class EmailRunnable implements Runnable {
+        private static final Logger logger = Logger.getLogger(EmailRunnable.class.getName());
         private Message message;
-        private Email email;
         private Session session;
 
-        public EmailCallable(Message message, Email email, Session session) {
+        public EmailRunnable(Message message, Session session) {
             this.message = message;
-            this.email = email;
             this.session = session;
         }
 
-        public Email call() throws Exception {
+        public void run() {
             try {
                 logger.fine("Sending mail to JavaMail API");
 
@@ -282,10 +299,9 @@ public class JavaMailEmailTransportService implements EmailTransportService {
                 transport.close();
 
                 logger.fine("Finished JavaMail send");
-                return email;
             } catch (MessagingException e) {
                 logger.log(Level.SEVERE, "Unable to send email via JavaMail", e);
-                throw e;
+                throw new EmailException("Unable to send email via JavaMail", e);
             }
         }
     }

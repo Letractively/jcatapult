@@ -194,7 +194,7 @@ public class FreeMarkerEmailService implements EmailService {
             email.setBcc(bccEmails);
         }
 
-        return new EmailCommandImpl(template, this, email);
+        return new FreeMarkerEmailCommand(template, this, email);
     }
 
     /**
@@ -207,6 +207,31 @@ public class FreeMarkerEmailService implements EmailService {
      * @return  The future from the transport.
      */
     Future<Email> sendEmail(String template, Email email, Map<String, Object> params) {
+        renderEmail(template, email, params);
+        return emailTransportService.sendEmail(email);
+    }
+
+    /**
+     * This call back executes the templates and then sends the email using the transport service
+     * that is set in the constructor.
+     *
+     * @param   template The template to execute.
+     * @param   email The email to add the text to and send.
+     * @param   params The params that are sent to the template.
+     */
+    void sendEmailLater(String template, Email email, Map<String, Object> params) {
+        renderEmail(template, email, params);
+        emailTransportService.sendEmailLater(email);
+    }
+
+    /**
+     * Renders the FTL templates to construct the body of the email.
+     *
+     * @param   template The template to invoke.
+     * @param   email The email to populate.
+     * @param   params Parameters passed to the template.
+     */
+    private void renderEmail(String template, Email email, Map<String, Object> params) {
         // Get the text version if there is a template
         String text = callTemplate(template + "-text.ftl", params);
         if (text != null) {
@@ -224,8 +249,6 @@ public class FreeMarkerEmailService implements EmailService {
                 "]. Either add a file named [" + template + "-text.ftl] or a file named [" +
                 template + "-html.ftl] to the [" + templatesLocation + "] directory.");
         }
-
-        return emailTransportService.sendEmail(email);
     }
 
     /**

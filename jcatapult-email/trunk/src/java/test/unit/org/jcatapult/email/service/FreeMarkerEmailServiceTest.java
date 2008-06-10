@@ -191,5 +191,9 @@ public class FreeMarkerEmailServiceTest {
                 }
             };
         }
+
+        public void sendEmailLater(Email email) {
+            this.email = email;
+        }
     }
 }

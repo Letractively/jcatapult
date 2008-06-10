@@ -15,6 +15,8 @@
  */
 package org.jcatapult.email;
 
+import java.util.Queue;
+import java.util.LinkedList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -42,21 +44,21 @@ import com.google.inject.AbstractModule;
  * @author Brian Pontarelli
  */
 public class EmailTestHelper {
-    private static ThreadLocal<Email> emailResult = new ThreadLocal<Email>();
+    private static ThreadLocal<Queue<Email>> emailResult = new ThreadLocal<Queue<Email>>();
     private static ThreadLocal<Future<Email>> future = new ThreadLocal<Future<Email>>();
 
     /**
-     * Returns the email result for the last test run. This is a thread safe retrieval.
+     * Returns the email results for the last test run. This is a thread safe retrieval.
      *
-     * @return  The email result or null if there isn't one.
+     * @return  The email results or null if there isn't any.
      */
-    public static Email getEmailResult() {
+    public static Queue<Email> getEmailResults() {
         return emailResult.get();
     }
 
     /**
      * Mocks out an {@link EmailTransportService} so that an SMTP server is not required to run the
-     * tests. This will mock return the mail and also provides the email via the {@link #getEmailResult()}
+     * tests. This will mock return the mail and also provides the emails via the {@link #getEmailResults()}
      * method on this class. This class is thread safe and can be used in parallel test cases.
      *
      * @param   test The test to setup for email handling.
@@ -67,8 +69,20 @@ public class EmailTestHelper {
 
         final EmailTransportService ets = new EmailTransportService() {
             public Future<Email> sendEmail(Email email) {
-                emailResult.set(email);
+                if (emailResult.get() == null) {
+                    emailResult.set(new LinkedList<Email>());
+                }
+
+                emailResult.get().offer(email);
                 return future.get();
+            }
+
+            public void sendEmailLater(Email email) {
+                if (emailResult.get() == null) {
+                    emailResult.set(new LinkedList<Email>());
+                }
+
+                emailResult.get().offer(email);
             }
         };
 
@@ -120,14 +134,14 @@ public class EmailTestHelper {
                 throw new AssertionError("Timeout set and get() was called. You should be calling " +
                     "get(long, TimeUnit) from you code.");
             }
-            return emailResult.get();
+            return emailResult.get().poll();
         }
 
         public Email get(long duration, TimeUnit unit) throws TimeoutException {
             if (timeout) {
                 throw new TimeoutException("Timeout");
             }
-            return emailResult.get();
+            return emailResult.get().poll();
         }
     }
 }

@@ -51,8 +51,8 @@ public interface EmailService {
      * @param   template (Required) The name of the template. The implementation will dictate the type
      *          of template and how they are stored.
      * @return  The name value pair chain.
-     * @throws JCatapultEmailException Runtime exception thrown if the from and/or subject are null and also
-     * if the email message contains zero recipients
+     * @throws  JCatapultEmailException Runtime exception thrown if the from and/or subject are null and also
+     *          if the email message contains zero recipients
      */
     EmailCommand sendEmail(String template) throws JCatapultEmailException ;
 }
