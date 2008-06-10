@@ -29,7 +29,7 @@ import org.jcatapult.email.domain.Email;
 public class EmailBuilderImplTest {
     @Test
     public void testTemplateParams() {
-        EmailCommand eb = new EmailCommandImpl(null, null, new Email());
+        EmailCommand eb = new FreeMarkerEmailCommand(null, null, new Email());
         eb = eb.withTemplateParam("key1", "value1").withTemplateParam("key2", "value2");
 
         Assert.assertEquals(2, eb.getTemplateParams().size());
@@ -40,7 +40,7 @@ public class EmailBuilderImplTest {
 
     @Test
     public void testSubjectExplicit() {
-        EmailCommand eb = new EmailCommandImpl(null, null, new Email());
+        EmailCommand eb = new FreeMarkerEmailCommand(null, null, new Email());
         eb.withSubject("test subject");
         Assert.assertEquals("test subject", eb.getSubject());
     }

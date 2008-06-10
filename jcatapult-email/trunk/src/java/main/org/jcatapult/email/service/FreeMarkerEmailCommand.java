@@ -30,7 +30,7 @@ import org.jcatapult.email.domain.Email;
 /**
  * {@inheritDoc}
  */
-public class EmailCommandImpl implements EmailCommand {
+public class FreeMarkerEmailCommand implements EmailCommand {
     private final Map<String, Object> params = new HashMap<String, Object>();
     private final String template;
     private final Email email;
@@ -44,7 +44,7 @@ public class EmailCommandImpl implements EmailCommand {
      * @param   freeMarkerEmailService To send the email.
      * @param   email The email from the configuration.
      */
-    EmailCommandImpl(String template, FreeMarkerEmailService freeMarkerEmailService, Email email) {
+    FreeMarkerEmailCommand(String template, FreeMarkerEmailService freeMarkerEmailService, Email email) {
         this.template = template;
         this.freeMarkerEmailService = freeMarkerEmailService;
         this.email = email;
@@ -242,7 +242,14 @@ public class EmailCommandImpl implements EmailCommand {
     /**
      * {@inheritDoc}
      */
-    public Future<Email> later() {
+    public void later() {
+        freeMarkerEmailService.sendEmailLater(template, email, params);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Future<Email> inTheFuture() {
         return freeMarkerEmailService.sendEmail(template, email, params);
     }
 

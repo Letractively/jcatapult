@@ -40,4 +40,12 @@ public interface EmailTransportService {
      * @return  A Future for implementations that send email asynchronously.
      */
     Future<Email> sendEmail(Email email);
+
+    /**
+     * Sends an email using some SMTP transport mechanism. This will always send the message
+     * asynchronously and return control immediately to the caller.
+     *
+     * @param   email The email to send.
+     */
+    void sendEmailLater(Email email);
 }

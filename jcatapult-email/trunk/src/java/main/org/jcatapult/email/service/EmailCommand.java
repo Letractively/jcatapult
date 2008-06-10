@@ -17,8 +17,8 @@ package org.jcatapult.email.service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.domain.Attachment;
@@ -229,10 +229,23 @@ public interface EmailCommand {
     TimeCommand withinTheNext(long amount);
 
     /**
-     * Sends the email later.
+     * Sends the email later without waiting for a result or allowing the caller to handle the result.
+     */
+    void later();
+
+    /**
+     * <p>
+     * Sends the email sometime in the future.
+     * </p>
+     *
+     * <p>
+     * <strong>NOTE</strong> You must handle the future in order to ensure correct email handling.
+     * In some cases if you don't handle the future, the email will not be sent. If you don't want
+     * to handle the future and want to send the email later, always use the {@link #later()} method.
+     * </p>
      *
      * @return  A Future that represents the sending operation which might have already happened or
      *          will happen in the future, depending on the speed of things.
      */
-    Future<Email> later();
+    Future<Email> inTheFuture();
 }
