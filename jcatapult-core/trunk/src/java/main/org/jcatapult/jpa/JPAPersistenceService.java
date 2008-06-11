@@ -18,7 +18,6 @@ package org.jcatapult.jpa;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
@@ -359,10 +358,9 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
-    public boolean persist(Object obj) {
+    public void persist(Object obj) {
         // Check for and possibly start a tranasction
         Transaction transaction = startTransaction(entityManager);
-        boolean uniqueConstraint = false;
         boolean exception = false;
         try {
             if (entityManager.contains(obj) ||
@@ -371,9 +369,6 @@ public class JPAPersistenceService implements PersistenceService {
             } else {
                 entityManager.merge(obj);
             }
-        } catch (EntityExistsException e) {
-            uniqueConstraint = true;
-            exception = true;
         } catch (PersistenceException pe) {
             exception = true;
             throw pe;
@@ -385,8 +380,6 @@ public class JPAPersistenceService implements PersistenceService {
                 transaction.rollback();
             }
         }
-
-        return !uniqueConstraint;
     }
 
     /**

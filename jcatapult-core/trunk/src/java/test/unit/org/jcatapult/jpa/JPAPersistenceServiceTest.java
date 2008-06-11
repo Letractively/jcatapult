@@ -17,8 +17,10 @@ package org.jcatapult.jpa;
 
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.RollbackException;
 import javax.sql.RowSet;
 
 import org.jcatapult.JCatapultCoreBaseTest;
@@ -295,6 +297,15 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         user = service.findAllByType(User.class).get(0);
         assertNotNull(user);
         assertEquals("Fred", user.getName());
+
+        // Test the unique key violation
+        user = new User();
+        user.setName("Fred");
+        try {
+            service.persist(user);
+            fail("Should have failed");
+        } catch (EntityExistsException e) {
+        }
     }
 
     @Test
@@ -313,6 +324,19 @@ public class JPAPersistenceServiceTest extends JCatapultCoreBaseTest {
         user = service.findAllByType(User.class).get(0);
         assertNotNull(user);
         assertEquals("Barry", user.getName());
+
+        // Test update unique key violation
+        user = new User();
+        user.setName("Manilow");
+        service.persist(user);
+
+        user = service.findAllByType(User.class).get(1);
+        user.setName("Barry");
+        try {
+            service.persist(user);
+            fail("Should have failed");
+        } catch (RollbackException e) {
+        }
     }
 
     @Test
