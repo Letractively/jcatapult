@@ -21,8 +21,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
-import org.jcatapult.mvc.parameters.el.ExpressionException;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.mvc.parameter.el.ExpressionException;
 
 import net.java.util.IteratorEnumeration;
 

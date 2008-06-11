@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.scope.annotation.ScopeAnnotation;
 import org.jcatapult.servlet.WorkflowChain;
 
