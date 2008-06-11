@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  This is the production file that allows you to override configuration from the
+  config-default.xml file with production specific settings.
+-->
+<config>
+</config>
