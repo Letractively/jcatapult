@@ -248,12 +248,10 @@ public interface PersistenceService {
      * Saves or updates the object to the database.
      *
      * @param   obj The object to persist.
-     * @return  True if the object was persisted. False if the object was not persisted because of a
-     *          unique key constraint.
-     * @throws  javax.persistence.PersistenceException If there were any database issues while persisting
-     *          the Object. This does not include unique key exceptions (i.e. EntityExistsException).
+     * @throws  javax.persistence.PersistenceException If there were any database issues while
+     *          persisting the Object.
      */
-    boolean persist(Object obj);
+    void persist(Object obj);
 
     /**
      * Removes the object with the given type and primary key. Since this uses a primary key to remove
