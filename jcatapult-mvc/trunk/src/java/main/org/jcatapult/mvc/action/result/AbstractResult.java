@@ -19,7 +19,7 @@ import java.lang.annotation.Annotation;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.parameters.el.ExpressionEvaluator;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
 

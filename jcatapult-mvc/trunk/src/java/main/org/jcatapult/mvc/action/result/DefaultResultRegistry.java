@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jcatapult.mvc.parameters.convert.ConverterRegistry;
+import org.jcatapult.mvc.parameter.convert.ConverterRegistry;
 
 import com.google.inject.Binding;
 import com.google.inject.Inject;

@@ -17,11 +17,11 @@ package org.jcatapult.mvc.guice;
 
 import org.jcatapult.mvc.action.result.ForwardResult;
 import org.jcatapult.mvc.action.result.RedirectResult;
-import org.jcatapult.mvc.parameters.convert.converters.BooleanConverter;
-import org.jcatapult.mvc.parameters.convert.converters.CharacterConverter;
-import org.jcatapult.mvc.parameters.convert.converters.FileConverter;
-import org.jcatapult.mvc.parameters.convert.converters.NumberConverter;
-import org.jcatapult.mvc.parameters.convert.converters.StringConverter;
+import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
+import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
+import org.jcatapult.mvc.parameter.convert.converters.FileConverter;
+import org.jcatapult.mvc.parameter.convert.converters.NumberConverter;
+import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
 import org.jcatapult.mvc.scope.ActionSessionScope;
 import org.jcatapult.mvc.scope.ContextScope;
 import org.jcatapult.mvc.scope.FlashScope;
