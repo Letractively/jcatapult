@@ -124,19 +124,20 @@ public class JavaMailEmailTransportService implements EmailTransportService {
      *          class comment for settings.
      */
     @Inject
+    @SuppressWarnings({"unchecked"})
     public JavaMailEmailTransportService(Configuration configuration) {
-        @SuppressWarnings({"unchecked"})
         Iterator<String> keysIter = configuration.getKeys();
         Properties props = new Properties();
         while (keysIter.hasNext()) {
             String key = keysIter.next();
             if (key.startsWith("jcatapult.email.")) {
-                String emailKey = key.substring("jcatapult.email.".length());
+                String emailKey = "mail.smtp." + key.substring("jcatapult.email.".length());
                 String value = configuration.getString(key);
                 props.setProperty(emailKey, value);
             }
         }
 
+        // Set the auth
         final String username = configuration.getString("jcatapult.email.username");
         final String password = configuration.getString("jcatapult.email.password");
         Authenticator auth = null;
@@ -146,6 +147,25 @@ public class JavaMailEmailTransportService implements EmailTransportService {
                     return new PasswordAuthentication(username, password);
                 }
             };
+
+            props.put("mail.user", username);
+            props.put("mail.smtp.auth", "true");
+        }
+
+        // Setup TLS
+        boolean tls = configuration.getBoolean("jcatapult.email.tls", false);
+        if (tls) {
+            props.put("mail.smtp.starttls.enable", "true");
+        }
+
+        // Setup SSL
+        boolean ssl = configuration.getBoolean("jcatapult.email.ssl", false);
+        if (ssl) {
+            String port = configuration.getString("jcatapult.email.port", "465");
+            props.put("mail.smtp.ssl", "true");
+            props.put("mail.smtp.socketFactory.port", port);
+            props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            props.put("mail.smtp.socketFactory.fallback", "false");
         }
 
         // Set the SMTP host
