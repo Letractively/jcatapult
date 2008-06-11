@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-commerce"
          group="jcatapult.org"
-         version="1.0-RC3">
+         version="1.0-RC4">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -22,7 +22,7 @@
 
   <!-- compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult" value="1.0-RC3"/>
+  <property name="version.jcatapult" value="1.0-RC4"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
@@ -32,7 +32,7 @@
       <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
       <artifact group="hibernate.org" project="hibernate" name="hibernate" version="3.2.6" type="jar"/>
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
       <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
       <artifact group="ognl.org" project="ognl" name="ognl" version="2.6.11" type="jar"/>
