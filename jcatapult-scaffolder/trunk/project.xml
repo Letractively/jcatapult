@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
     name="jcatapult-scaffolder"
     group="jcatapult.org"
-    version="1.0-RC3">
+    version="1.0-RC4">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -36,7 +36,7 @@
       <artifact group="groovy.codehaus.org" project="groovy" name="groovy-all" version="1.5.4" type="jar"/>
 
       <!-- java net commons -->
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
 
       <!-- jdom -->
       <artifact group="jdom.org" project="jdom" name="jdom" version="1.1" type="jar"/>
