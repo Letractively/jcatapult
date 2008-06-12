@@ -67,7 +67,7 @@ public class JPATransactionManager implements TransactionManager {
      */
     public void endTransaction(Object result, Throwable t, TransactionState txn,
             TransactionResultProcessor processor) {
-        boolean rollback = processor.rollback(result, t);
+        boolean rollback = processor.rollback(result, t) || txn.transaction().getRollbackOnly();
         if (rollback && !txn.embedded()) { // Not embedded, roll back
             txn.transaction().rollback();
         } else if (rollback) { // Embedded, set flag
