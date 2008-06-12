@@ -18,7 +18,6 @@ package org.jcatapult.mvc.parameter.convert.converters;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 
@@ -27,7 +26,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import static net.java.lang.ObjectTools.*;
 import net.java.lang.StringTools;
-import static net.java.util.CollectionTools.array;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -47,7 +46,7 @@ public class StringConverter extends AbstractConverter {
     }
 
     protected <T> T stringToObject(String value, Class<T> convertTo, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         if (emptyIsNull && StringTools.isTrimmedEmpty(value)) {
             return null;
@@ -57,13 +56,13 @@ public class StringConverter extends AbstractConverter {
     }
 
     protected <T> T stringsToObject(String[] values, Class<T> convertTo, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         return (T) join(values, ",");
     }
 
     protected <T> String objectToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         return value.toString();
     }

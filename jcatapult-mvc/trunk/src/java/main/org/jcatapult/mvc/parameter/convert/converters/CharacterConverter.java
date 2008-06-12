@@ -18,13 +18,12 @@ package org.jcatapult.mvc.parameter.convert.converters;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 
 import com.google.inject.Singleton;
-import static net.java.util.CollectionTools.array;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -40,7 +39,7 @@ public class CharacterConverter extends AbstractPrimitiveConverter {
      * Returns a single character with a unicode value of 0.
      */
     protected <T> T defaultPrimitive(Class<T> convertTo, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return (T) new Character('\u0000');
     }
@@ -50,7 +49,7 @@ public class CharacterConverter extends AbstractPrimitiveConverter {
      * returned. If the value is null or empty, this throws an exception.
      */
     protected <T> T stringToPrimitive(String value, Class<T> convertTo, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (value.length() > 1) {
             throw new ConversionException("Conversion from String to character must be a String" +
@@ -61,7 +60,7 @@ public class CharacterConverter extends AbstractPrimitiveConverter {
     }
 
     protected <T> String primitiveToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return value.toString();
     }

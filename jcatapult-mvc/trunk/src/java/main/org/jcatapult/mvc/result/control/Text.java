@@ -15,85 +15,62 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.locale.LocaleWorkflow;
-import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.mvc.parameter.ParameterWorkflow;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateDirectiveModel;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
 
 /**
  * <p>
- * This class is the control for a checkbox.
+ * This class is the control for a input type=text.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class Text implements Control, TemplateDirectiveModel {
-    private final LocaleWorkflow localeWorkflow;
+public class Text extends AbstractControl {
     private final ExpressionEvaluator expressionEvaluator;
-    private final ActionMappingWorkflow actionMappingWorkflow;
-    private final ParameterWorkflow parameterWorkflow;
-    private final MessageStore messageStore;
-    private final HttpServletRequest request;
 
     @Inject
-    public Text(LocaleWorkflow localeWorkflow, ExpressionEvaluator expressionEvaluator,
-            ActionMappingWorkflow actionMappingWorkflow, ParameterWorkflow parameterWorkflow,
-            MessageStore messageStore, HttpServletRequest request) {
-        this.localeWorkflow = localeWorkflow;
+    public Text(ExpressionEvaluator expressionEvaluator) {
         this.expressionEvaluator = expressionEvaluator;
-        this.actionMappingWorkflow = actionMappingWorkflow;
-        this.parameterWorkflow = parameterWorkflow;
-        this.messageStore = messageStore;
-        this.request = request;
     }
 
-    public void render(Map<String, Object> attributes) {
+    /**
+     * Adds a String attribute named <strong>value</strong> by pulling the value associated with the
+     * control. However, if there is already a value attribute, it is always used. Likewise, if the
+     * value attribute is missing, the value associated with the control is null and there is a
+     * <strong>defaultValue</strong> attribute, it is used.
+     *
+     * @param   request The request, which is passed to the expression evaluator.
+     * @param   attributes The value String is put into this Map.
+     * @param   actionInvocation Used to grab the action.
+     * @param   locale The locale.
+     */
+    protected void addAdditionalAttributes(HttpServletRequest request, Map<String, Object> attributes,
+            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Locale locale) {
         String name = (String) attributes.get("name");
-        Map<String, String> paramAttributes = parameterWorkflow.fetchAttributes(request, name);
-        ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
         Object action = actionInvocation.action();
-        Locale locale = localeWorkflow.getLocale(request);
-
+        String value;
         if (!attributes.containsKey("value") && action != null) {
-            String value = expressionEvaluator.getValue(name, action, request, locale, paramAttributes);
+            value = expressionEvaluator.getValue(name, action, request, locale, parameterAttributes);
             if (value == null) {
-                value = (String) attributes.get("defaultValue");
+                value = (String) attributes.remove("defaultValue");
             }
 
-            attributes.put("value", value);
+            if (value != null) {
+                attributes.put("value", value);
+            }
         }
-
-        attributes.put("action", action);
-        attributes.put("request", request);
-        attributes.put("fieldErrors", messageStore.getFieldErrors(request));
-        attributes.put("fieldMessages", messageStore.getFieldMessages(request));
-        attributes.put("actionErrors", messageStore.getActionErrors(request));
-        attributes.put("actionMessages", messageStore.getActionMessages(request));
-
-        executeTemplate("checkbox", attributes, actionInvocation, locale);
     }
 
-    public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
-    throws TemplateException, IOException {
-        render(params);
-    }
-
-    protected void executeTemplate(String templateName, Map<String, Object> attributes,
-            ActionInvocation actionInvocation, Locale locale) {
-        // run freemarker here
+    /**
+     * @return  text
+     */
+    protected String templateName() {
+        return "text.ftl";
     }
 }

@@ -21,6 +21,12 @@ import java.util.HashMap;
 import org.jcatapult.mvc.test.junit.WebBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.example.domain.Action;
+import org.example.domain.UserField;
+import org.example.domain.User;
+import org.example.domain.ActionField;
+import org.example.domain.Address;
+import org.example.domain.AddressField;
 
 import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
