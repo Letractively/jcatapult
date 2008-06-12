@@ -15,6 +15,7 @@
  */
 package org.jcatapult.mvc.freemarker;
 
+import java.io.OutputStream;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,5 +30,13 @@ import java.util.Map;
  * @author  Brian Pontarelli
  */
 public interface FreeMarkerRenderer {
-    String render(String template, Map<String, Object> parameters, Locale locale);
+    /**
+     * Renders the given FreeMarker template with the given parameters and locale.
+     *
+     * @param   stream The stream that the rendered template is output to.
+     * @param   template The template.
+     * @param   parameters The parameters.
+     * @param   locale The locale.
+     */
+    void render(OutputStream stream, String template, Map<String, Object> parameters, Locale locale);
 }
