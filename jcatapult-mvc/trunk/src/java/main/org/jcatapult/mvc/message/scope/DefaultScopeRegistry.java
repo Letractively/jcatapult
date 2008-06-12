@@ -18,6 +18,8 @@ package org.jcatapult.mvc.message.scope;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,5 +63,12 @@ public class DefaultScopeRegistry implements ScopeRegistry {
      */
     public Scope lookup(MessageScope scope) {
         return scopes.get(scope);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Scope> getAllScopes() {
+        return new ArrayList<Scope>(scopes.values());
     }
 }

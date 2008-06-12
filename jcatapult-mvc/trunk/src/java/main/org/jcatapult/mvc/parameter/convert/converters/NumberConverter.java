@@ -20,13 +20,12 @@ import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 
 import com.google.inject.Singleton;
-import static net.java.util.CollectionTools.array;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -43,7 +42,7 @@ public class NumberConverter extends AbstractPrimitiveConverter {
      * Returns 0 for everything but in the correct wrapper classes.
      */
     protected <T> T defaultPrimitive(Class<T> convertTo, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (convertTo == Byte.TYPE || convertTo == Byte.class) {
             return (T) new Byte((byte) 0);
@@ -70,7 +69,7 @@ public class NumberConverter extends AbstractPrimitiveConverter {
      * Uses the valueOf methods in the wrapper classes based on the convertTo type.
      */
     protected <T> T stringToPrimitive(String value, Class<T> convertTo, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         try {
             if (convertTo == Byte.TYPE || convertTo == Byte.class) {
@@ -98,7 +97,7 @@ public class NumberConverter extends AbstractPrimitiveConverter {
     }
 
     protected <T> String primitiveToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return value.toString();
 

@@ -38,7 +38,7 @@ import org.jcatapult.mvc.result.control.Control;
  */
 public abstract class AbstractControlTag<T extends Control> extends TagSupport implements DynamicAttributes {
     Map<String, Object> attributes = new HashMap<String, Object>();
-    private String laf;
+    Map<String, String> parameterAttributes = new HashMap<String, String>();
 
     //-------------------------------------------------------------------------
     //----------------------- Core attributes for HTML tags -------------------
@@ -83,21 +83,11 @@ public abstract class AbstractControlTag<T extends Control> extends TagSupport i
     }
 
     /**
-     * Gets the tags cssClass, which is also the class html attribute
-     *
-     * @return  The tags style class
-     */
-    public String getCssClass() {
-        return (String) attributes.get("class");
-    }
-
-    /**
-     * Sets the tags CssClass (class attribute) and adds it to the attributes
-     * hash
+     * Sets the tags class and adds it to the attributes hash
      *
      * @param   cssClass The new style class of the tag
      */
-    public void setCssClass(String cssClass) {
+    public void setClass(String cssClass) {
         attributes.put("class", cssClass);
     }
 
@@ -435,13 +425,17 @@ public abstract class AbstractControlTag<T extends Control> extends TagSupport i
      * @param   value The value of the dynamic attribute.
      */
     public void setDynamicAttribute(String uri, String name, Object value) {
-        attributes.put(name, value);
+        if (name.startsWith("_")) {
+            parameterAttributes.put(name.substring(1), value.toString());
+        } else {
+            attributes.put(name, value);
+        }
     }
 
     @Override
     public int doEndTag() throws JspException {
         Control control = GuiceContainer.getInjector().getInstance(controlClass());
-        control.render((HttpServletRequest) pageContext.getRequest(), attributes);
+        control.render((HttpServletRequest) pageContext.getRequest(), pageContext.getOut(), attributes, parameterAttributes);
 
         attributes.clear();
 

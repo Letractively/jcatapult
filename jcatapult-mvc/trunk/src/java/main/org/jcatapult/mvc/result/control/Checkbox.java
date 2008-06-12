@@ -15,92 +15,61 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.freemarker.FreeMarkerRenderer;
-import org.jcatapult.mvc.locale.LocaleWorkflow;
-import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.parameter.ParameterWorkflow;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateDirectiveModel;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
 
 /**
  * <p>
  * This class is the control for a checkbox.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class Checkbox implements Control, TemplateDirectiveModel {
-    private final LocaleWorkflow localeWorkflow;
+public class Checkbox extends AbstractControl {
     private final ExpressionEvaluator expressionEvaluator;
-    private final ActionMappingWorkflow actionMappingWorkflow;
     private final ParameterWorkflow parameterWorkflow;
-    private final MessageStore messageStore;
-    private final FreeMarkerRenderer freeMarkerRenderer;
 
     @Inject
-    public Checkbox(LocaleWorkflow localeWorkflow, ExpressionEvaluator expressionEvaluator,
-            ActionMappingWorkflow actionMappingWorkflow, ParameterWorkflow parameterWorkflow,
-            MessageStore messageStore, FreeMarkerRenderer freeMarkerRenderer) {
-        this.localeWorkflow = localeWorkflow;
+    public Checkbox(ExpressionEvaluator expressionEvaluator, ParameterWorkflow parameterWorkflow) {
         this.expressionEvaluator = expressionEvaluator;
-        this.actionMappingWorkflow = actionMappingWorkflow;
         this.parameterWorkflow = parameterWorkflow;
-        this.messageStore = messageStore;
-        this.freeMarkerRenderer = freeMarkerRenderer;
     }
 
-    public void render(HttpServletRequest request, Writer writer, Map<String, Object> attributes) {
+    /**
+     * Adds a boolean attribute named checked if the value associated with the control is equal to
+     * the value of the tag.
+     *
+     * @param   request The request, which is passed to the expression evaluator.
+     * @param   attributes The checked boolean is put into this Map.
+     * @param   actionInvocation Used to grab the action.
+     * @param   locale The locale.
+     */
+    protected void addAdditionalAttributes(HttpServletRequest request, Map<String, Object> attributes,
+            ActionInvocation actionInvocation, Locale locale) {
         String name = (String) attributes.get("name");
         Map<String, String> paramAttributes = parameterWorkflow.fetchAttributes(request, name);
-        ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
         Object action = actionInvocation.action();
-        Locale locale = localeWorkflow.getLocale(request);
-
-        Boolean checked;
         if (!attributes.containsKey("checked") && action != null) {
             String value = expressionEvaluator.getValue(name, action, request, locale, paramAttributes);
-            if (value == null) {
-                checked = (Boolean) attributes.get("defaultChecked");
-            } else {
-                checked = value.equals(attributes.get("value"));
+            Boolean checked = (value == null) ? (Boolean) attributes.get("defaultChecked") :
+                value.equals(attributes.get("value"));
+            if (checked != null) {
+                attributes.put("checked", checked);
             }
-        } else {
-            checked = (Boolean) attributes.get("checked");
         }
-
-        attributes.put("checked", checked);
-        attributes.put("actionInvocation", actionInvocation);
-        attributes.put("action", action);
-        attributes.put("request", request);
-        attributes.put("session", request.getSession());
-        attributes.put("context", request.getSession().getServletContext());
-        attributes.put("fieldMessages", messageStore.getFieldMessages(request, MessageType.PLAIN, action));
-        attributes.put("fieldErrors", messageStore.getFieldMessages(request, MessageType.ERROR, action));
-        attributes.put("actionMessages", messageStore.getActionMessages(request, MessageType.PLAIN, action));
-        attributes.put("actionErrors", messageStore.getActionMessages(request, MessageType.ERROR, action));
-
-        freeMarkerRenderer.render("checkbox", attributes,  locale);
     }
 
-    public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
-    throws TemplateException, IOException {
-        HttpServletRequest request = ServletObjectsHolder.getServletRequest();
-        render(request, params);
+    /**
+     * @return  checkbox
+     */
+    protected String templateName() {
+        return "checkbox";
     }
 }

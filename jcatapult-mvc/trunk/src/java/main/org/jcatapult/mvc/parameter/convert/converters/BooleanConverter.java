@@ -18,14 +18,13 @@ package org.jcatapult.mvc.parameter.convert.converters;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 
 import com.google.inject.Singleton;
 import net.java.lang.StringTools;
-import static net.java.util.CollectionTools.array;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -41,7 +40,7 @@ public class BooleanConverter extends AbstractPrimitiveConverter {
      * Returns false.
      */
     protected <T> T defaultPrimitive(Class<T> convertTo, HttpServletRequest request,
-        HttpServletResponse response, Locale locale, Map<String, String> attributes)
+        Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return (T) Boolean.FALSE;
     }
@@ -51,7 +50,7 @@ public class BooleanConverter extends AbstractPrimitiveConverter {
      * the {@link StringTools#isValidBoolean(String)} method.
      */
     protected <T> T stringToPrimitive(String value, Class<T> convertTo, HttpServletRequest request,
-        HttpServletResponse response, Locale locale, Map<String, String> attributes)
+        Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (!StringTools.isValidBoolean(value)) {
             throw new ConversionException ("Unable to convert invalid boolean String [" + value + "]");
@@ -64,7 +63,7 @@ public class BooleanConverter extends AbstractPrimitiveConverter {
      * Returns value.toString().
      */
     protected <T> String primitiveToString(T value, Class<T> convertFrom, HttpServletRequest request,
-        HttpServletResponse response, Locale locale, Map<String, String> attributes)
+        Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return value.toString();
     }

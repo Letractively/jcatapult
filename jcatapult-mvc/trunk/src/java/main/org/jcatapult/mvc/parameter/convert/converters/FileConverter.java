@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
@@ -27,7 +26,7 @@ import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 import com.google.inject.Singleton;
 import static net.java.lang.ObjectTools.*;
 import net.java.lang.StringTools;
-import static net.java.util.CollectionTools.array;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -46,7 +45,7 @@ public class FileConverter extends AbstractConverter {
      *          be the parent directory.
      */
     protected <T> T stringToObject(String value, Class<T> convertTo, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (StringTools.isTrimmedEmpty(value)) {
             return null;
@@ -70,17 +69,17 @@ public class FileConverter extends AbstractConverter {
      * Joins the values and then sends the new joined String to the stringToObject method.
      */
     protected <T> T stringsToObject(String[] values, Class<T> convertTo, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         String joined = join(values, File.separator);
-        return stringToObject(joined, convertTo, request, response, locale, attributes);
+        return stringToObject(joined, convertTo, request, locale, attributes);
     }
 
     /**
      * Returns the absolute path of the file.
      */
     protected <T> String objectToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            HttpServletResponse response, Locale locale, Map<String, String> attributes)
+            Locale locale, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         File file = (File) value;
         return file.getAbsolutePath();

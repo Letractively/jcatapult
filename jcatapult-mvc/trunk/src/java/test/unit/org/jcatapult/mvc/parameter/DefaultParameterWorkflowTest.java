@@ -29,7 +29,7 @@ import org.jcatapult.mvc.action.ActionMappingWorkflow;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
-import org.jcatapult.mvc.parameter.el.Action;
+import org.example.domain.Action;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.servlet.WorkflowChain;
 import org.junit.Test;
@@ -86,7 +86,7 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(actionMappingWorkflow);
 
         MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
-        messageStore.addConversionError(eq("user.inches"), eq("org.jcatapult.mvc.parameter.el.Action"),
+        messageStore.addConversionError(request, action, eq("user.inches"), eq("org.example.domain.Action"),
             same(Locale.US), eq(new HashMap<String, String>()), eq("tall"));
         EasyMock.replay(messageStore);
 
