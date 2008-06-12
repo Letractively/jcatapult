@@ -8,80 +8,114 @@
  */
 package org.jcatapult.freemarker;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import javax.servlet.ServletContext;
 
+import org.jcatapult.container.ContainerResolver;
+
+import com.google.inject.Inject;
 import freemarker.cache.TemplateLoader;
 
 /**
  * <p>
- * This class allows templates to be loaded from multiple locations
- * in a search order. This allows overridding of templates.
+ * This class is a free marker template loader that uses the {@link ContainerResolver}
+ * interface and the current context ClassLoader to find the templates. This provides
+ * override support by looking in the container first and then the ClassLoader.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 public class OverridingTemplateLoader implements TemplateLoader {
-    private static final Logger logger = Logger.getLogger(OverridingTemplateLoader.class.getName());
-    private ServletContext context;
-    private String contextPrefix;
-    private Class<?> searchClass;
-    private String classPathPrefix;
+    private final ContainerResolver containerResolver;
 
-    public OverridingTemplateLoader(ServletContext context, String contextPrefix, Class<?> searchClass,
-            String classPathPrefix) {
-        this.context = context;
-        this.contextPrefix = contextPrefix;
-        this.searchClass = searchClass;
-        this.classPathPrefix = classPathPrefix;
+    /**
+     * Creates a resource template loader that will use the specified container resolver to load the
+     * resources as well as the current threads context class loader.
+     *
+     * @param   containerResolver The container resolver to use to find the files.
+     */
+    @Inject
+    public OverridingTemplateLoader(ContainerResolver containerResolver) {
+        this.containerResolver = containerResolver;
     }
 
+    /**
+     * <p>
+     * First looks in the container using the {@link ContainerResolver} to get the real path to a
+     * File on the file system. If that works, it creates a URL out of the File and returns a new
+     * URLTemplateSource from that URL.
+     * </p>
+     *
+     * <p>
+     * If that fails, it tries getting the resource URL frm the {@link ContainerResolver}. If that
+     * works, it creates a URLTemplateSource from that URL.
+     * </p>
+     *
+     * <p>
+     * If that fails, it tries to get the resource from the current threads context classloader. If
+     * that works, it creates a URLTemplateSource from that URL.
+     * </p>
+     *
+     * @param   name The name of the template.
+     * @return  The template or null if it doesn't exist.
+     * @throws  IOException If the template could not be resolved.
+     */
     public Object findTemplateSource(String name) throws IOException {
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("Searching in ServletContext for [" + contextPrefix + name + "]");
-        }
-
-        URL url = context.getResource(contextPrefix + name);
-        if (url == null) {
-            // Check the classpath last
-            if (logger.isLoggable(Level.FINEST)) {
-                logger.finest("Not found in ServletContext, searching in classpath for [" +
-                    classPathPrefix + name + "]");
+        // First try to open as plain file.
+        try {
+            String realPath = containerResolver.getRealPath(name);
+            if (realPath != null) {
+                File file = new File(realPath);
+                if (file.isFile() && file.canRead()) {
+                    return new URLTemplateSource(file.toURI().toURL());
+                }
             }
-
-            url = searchClass.getResource(classPathPrefix + name);
+        } catch (SecurityException e) {
         }
 
-        return url;
+        // If it fails, try to open it with servletContext.getResource.
+        URL url = containerResolver.getResource(name);
+        if (url == null) {
+            // If that fails, finally try looking it up in the class path
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            url = cl.getResource(name);
+        }
+
+        return url == null ? null : new URLTemplateSource(url);
     }
 
+    /**
+     * Gets the last modified from the URLTemplateSource.
+     *
+     * @param   templateSource The URLTemplateSource.
+     * @return The last modified from the URLConnection inside the URLTemplateSource.
+     */
     public long getLastModified(Object templateSource) {
-        URL url = (URL) templateSource;
-        String urlStr = url.toString();
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("Trying to determine last modified for URL [" + urlStr + "]");
-        }
-
-        if (urlStr.startsWith("file://") && urlStr.indexOf("#") < 0) {
-            // Looks like a normal urlStr
-            File file = new File(urlStr.substring("file://".length()));
-            return file.lastModified();
-        }
-
-        return -1;
+        return ((URLTemplateSource) templateSource).lastModified();
     }
 
+    /**
+     * Returns the InputStream from the URLTemplateSource wrapped in an InputStreamReader.
+     *
+     * @param   templateSource The URLTemplateSource.
+     * @param   encoding Used to construct the InputStreamReader.
+     * @return The reader.
+     * @throws IOException if the Reader couldn't be created.
+     */
     public Reader getReader(Object templateSource, String encoding) throws IOException {
-        return new InputStreamReader(((URL) templateSource).openStream(), encoding);
+        return new InputStreamReader(((URLTemplateSource) templateSource).getInputStream(), encoding);
     }
 
+    /**
+     * Calls close on the URLTemplateSource.
+     *
+     * @param   templateSource The URLTemplateSource.
+     * @throws  IOException If the close fails.
+     */
     public void closeTemplateSource(Object templateSource) throws IOException {
-        // Do nothing
+        ((URLTemplateSource) templateSource).close();
     }
 }
