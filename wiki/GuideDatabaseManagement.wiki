@@ -2,7 +2,7 @@
 
 = Database Management =
 
-JCatapult has a robust set of tools that allow you to manage project databases. Since JCatapult is also highly moduleized, it also provides the ability to manage all of the tables and data required by modules. This support is called the JCatapult Database Management system.
+JCatapult has a robust set of tools that allow you to manage project databases. Since JCatapult is also highly modularized, it also provides the ability to manage all of the tables and data required by modules. This support is called the JCatapult Database Management system.
 
 During the course of development, modules and web applications go through various stages with respect to the database. Like all other project assets, the database is a versioned resource that is used by the application. Therefore, it is important to be able to manage the database effectively as a versioned resource.
 
