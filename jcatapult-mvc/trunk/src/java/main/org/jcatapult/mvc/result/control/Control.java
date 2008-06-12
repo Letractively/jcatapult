@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.result.control;
 
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -30,8 +31,9 @@ public interface Control {
     /**
      * Renders the control.
      *
+     * @param   request The servlet request.
      * @param   attributes The attributes that are passed from the JSP tag or the FreeMarker
      *          directive.
      */
-    void render(Map<String, Object> attributes);
+    void render(HttpServletRequest request, Map<String, Object> attributes);
 }

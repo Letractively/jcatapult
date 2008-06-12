@@ -16,17 +16,20 @@
 package org.jcatapult.mvc.result.control;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
+import org.jcatapult.mvc.freemarker.FreeMarkerRenderer;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.parameter.ParameterWorkflow;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;
 import freemarker.core.Environment;
@@ -48,21 +51,21 @@ public class Checkbox implements Control, TemplateDirectiveModel {
     private final ActionMappingWorkflow actionMappingWorkflow;
     private final ParameterWorkflow parameterWorkflow;
     private final MessageStore messageStore;
-    private final HttpServletRequest request;
+    private final FreeMarkerRenderer freeMarkerRenderer;
 
     @Inject
     public Checkbox(LocaleWorkflow localeWorkflow, ExpressionEvaluator expressionEvaluator,
             ActionMappingWorkflow actionMappingWorkflow, ParameterWorkflow parameterWorkflow,
-            MessageStore messageStore, HttpServletRequest request) {
+            MessageStore messageStore, FreeMarkerRenderer freeMarkerRenderer) {
         this.localeWorkflow = localeWorkflow;
         this.expressionEvaluator = expressionEvaluator;
         this.actionMappingWorkflow = actionMappingWorkflow;
         this.parameterWorkflow = parameterWorkflow;
         this.messageStore = messageStore;
-        this.request = request;
+        this.freeMarkerRenderer = freeMarkerRenderer;
     }
 
-    public void render(Map<String, Object> attributes) {
+    public void render(HttpServletRequest request, Writer writer, Map<String, Object> attributes) {
         String name = (String) attributes.get("name");
         Map<String, String> paramAttributes = parameterWorkflow.fetchAttributes(request, name);
         ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
@@ -82,23 +85,22 @@ public class Checkbox implements Control, TemplateDirectiveModel {
         }
 
         attributes.put("checked", checked);
+        attributes.put("actionInvocation", actionInvocation);
         attributes.put("action", action);
         attributes.put("request", request);
+        attributes.put("session", request.getSession());
+        attributes.put("context", request.getSession().getServletContext());
         attributes.put("fieldMessages", messageStore.getFieldMessages(request, MessageType.PLAIN, action));
         attributes.put("fieldErrors", messageStore.getFieldMessages(request, MessageType.ERROR, action));
         attributes.put("actionMessages", messageStore.getActionMessages(request, MessageType.PLAIN, action));
         attributes.put("actionErrors", messageStore.getActionMessages(request, MessageType.ERROR, action));
 
-        executeTemplate("checkbox", attributes, actionInvocation, locale);
+        freeMarkerRenderer.render("checkbox", attributes,  locale);
     }
 
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
     throws TemplateException, IOException {
-        render(params);
-    }
-
-    protected void executeTemplate(String templateName, Map<String, Object> attributes,
-            ActionInvocation actionInvocation, Locale locale) {
-        // run freemarker here
+        HttpServletRequest request = ServletObjectsHolder.getServletRequest();
+        render(request, params);
     }
 }
