@@ -26,6 +26,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.cli.BasicParser;
 import org.jcatapult.scaffolder.annotation.LongDescription;
 import org.jcatapult.scaffolder.annotation.ShortDescription;
 
@@ -47,7 +48,7 @@ public class Main {
         Options options = new Options();
         options.addOption(new Option("o", "overwrite", false, "Overwrite existing files created by the scaffolder"));
 
-        CommandLineParser parser = new PosixParser();
+        CommandLineParser parser = new BasicParser();
         CommandLine line;
         try {
             line = parser.parse(options, args);
@@ -67,7 +68,7 @@ public class Main {
             if (commands[0].equals("help")) {
                 printAllHelp(scaffolderDirs);
             } else {
-                File scaffolderDir = new File(scaffolderDirs.get(commands[0]), commands[0]);
+                File scaffolderDir = new File(scaffolderDirs.get(commands[0]).getParentFile(), commands[0]);
                 Scaffolder scaffolder = makeScaffolder(commands[0], scaffolderDir);
                 scaffolder.setDir(scaffolderDir);
                 scaffolder.setOverwrite(line.hasOption("overwrite"));
@@ -137,8 +138,6 @@ public class Main {
               scaffolderDirs.put(customScaffolder.getName(),  customScaffolder);
             }
         }
-
-        System.out.println("Scaffolders list: " + scaffolderDirs);
 
         return scaffolderDirs;
     }
