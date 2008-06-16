@@ -11,6 +11,12 @@ package org.jcatapult.scaffolder;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Collection;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -23,6 +29,7 @@ import org.jcatapult.scaffolder.annotation.LongDescription;
 import org.jcatapult.scaffolder.annotation.ShortDescription;
 
 import groovy.lang.GroovyClassLoader;
+import net.java.lang.StringTools;
 
 /**
  * <p>
@@ -33,15 +40,8 @@ import groovy.lang.GroovyClassLoader;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        String scaffolderHome = System.getProperty("scaffolder.home");
-        if (scaffolderHome == null) {
-            System.err.println("You must provide the scaffolder.home Java property");
-            System.exit(1);
-        } else {
-            System.out.println("Using Scaffolder home [" + scaffolderHome + "]");
-        }
 
-        File scaffoldersDir = new File(scaffolderHome, "scaffolders");
+        Map<String, File> scaffolderDirs = getScaffolderDirs();
 
         Options options = new Options();
         options.addOption(new Option("o", "overwrite", false, "Overwrite existing files created by the scaffolder"));
@@ -64,16 +64,16 @@ public class Main {
             System.exit(1);
         } else if (commands.length == 1) {
             if (commands[0].equals("help")) {
-                printAllHelp(scaffoldersDir);
+                printAllHelp(scaffolderDirs);
             } else {
-                File scaffolderDir = new File(scaffoldersDir, commands[0]);
+                File scaffolderDir = new File(scaffolderDirs.get(commands[0]), commands[0]);
                 Scaffolder scaffolder = makeScaffolder(commands[0], scaffolderDir);
                 scaffolder.setDir(scaffolderDir);
                 scaffolder.setOverwrite(line.hasOption("overwrite"));
                 scaffolder.execute();
             }
         } else if (commands.length == 2) {
-            File scaffolderDir = new File(scaffoldersDir, commands[1]);
+            File scaffolderDir = new File(scaffolderDirs.get(commands[1]), commands[1]);
             Scaffolder scaffolder = makeScaffolder(commands[1], scaffolderDir);
             LongDescription description = scaffolder.getClass().getAnnotation(LongDescription.class);
             if (description != null) {
@@ -82,6 +82,54 @@ public class Main {
                 System.out.println("The scaffolder [" + commands[1] + "] has no help.");
             }
         }
+    }
+
+    /**
+     * <p>Helper method that returns a map containing the default and custom scaffolders.</p>
+     *
+     * Map:
+     * <ul>
+     *   <li>key: scaffolder (directory) name</li>
+     *   <li>value: file object representing the directory</li>
+     * </ul>
+     *
+     * Scaffolder Dirs:
+     * <ul>
+     *   <li>default: JCATAPULT_HOME/scaffolder/scaffolders</li>
+     *   <li>custom: USER.HOME/.jcatapult/scaffolders</li>
+     * </ul>
+     *
+     * @return map contaning the default and custom scaffolders dir
+     */
+    private static Map<String, File> getScaffolderDirs() {
+
+        Map<String, File> scaffolderDirs = new HashMap<String, File>();
+
+        // get the default scaffolder dir
+        String jcatapultHome = System.getenv("JCATAPULT_HOME");
+        if (StringTools.isEmpty(jcatapultHome)) {
+            System.err.println("JCATAPULT_HOME must be set into your environment");
+            System.exit(1);
+        }
+        File defaultScaffolderDir = new File(jcatapultHome, "scaffolder/scaffolders");
+        File[] defaultScaffolders = defaultScaffolderDir.listFiles();
+        for (File defaultScaffolder : defaultScaffolders) {
+            scaffolderDirs.put(defaultScaffolder.getName(), defaultScaffolder);
+        }
+
+        // get the custom scaffolder dir
+        String dotJcat = System.getProperty("user.home") + "/.jcatapult";
+        File customScaffolderDir = new File(dotJcat, "scaffolders");
+        if (customScaffolderDir.exists() && customScaffolderDir.isDirectory()) {
+            File[] customScaffolders = customScaffolderDir.listFiles();
+            for (File customScaffolder : customScaffolders) {
+              scaffolderDirs.put(customScaffolder.getName(),  customScaffolder);
+            }
+        }
+
+        System.out.println("Scaffolders list: " + scaffolderDirs);
+
+        return scaffolderDirs;
     }
 
     private static Scaffolder makeScaffolder(String name, File scaffolderDir) {
@@ -116,8 +164,8 @@ public class Main {
         return null;
     }
 
-    private static void printAllHelp(File scaffoldersDir) {
-        File[] list = scaffoldersDir.listFiles();
+    private static void printAllHelp(Map<String, File> scaffolders) {
+        Collection<File> list = scaffolders.values();
         for (File file : list) {
             if (file.isDirectory()) {
                 Scaffolder scaffolder = makeScaffolder(file.getName(), file);
