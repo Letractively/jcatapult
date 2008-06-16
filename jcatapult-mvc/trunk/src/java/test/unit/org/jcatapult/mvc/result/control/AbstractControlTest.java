@@ -19,11 +19,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import static java.util.Arrays.asList;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
-import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
@@ -55,12 +56,18 @@ public class AbstractControlTest {
         return env;
     }
 
-    protected MessageStore makeMessageStore(HttpServletRequest request, Object action) {
+    protected MessageStore makeMessageStore(HttpServletRequest request, Object action, String field, String... errors) {
         MessageStore ms = EasyMock.createStrictMock(MessageStore.class);
-        EasyMock.expect(ms.getFieldMessages(request, MessageType.PLAIN, action)).andReturn(new HashMap<String, List<String>>());
-        EasyMock.expect(ms.getFieldMessages(request, MessageType.ERROR, action)).andReturn(new HashMap<String, List<String>>());
         EasyMock.expect(ms.getActionMessages(request, MessageType.PLAIN, action)).andReturn(new ArrayList<String>());
         EasyMock.expect(ms.getActionMessages(request, MessageType.ERROR, action)).andReturn(new ArrayList<String>());
+        EasyMock.expect(ms.getFieldMessages(request, MessageType.PLAIN, action)).andReturn(new HashMap<String, List<String>>());
+
+        Map<String, List<String>> fieldErrors = new HashMap<String, List<String>>();
+        if (errors.length > 0) {
+            fieldErrors.put(field, asList(errors));
+        }
+
+        EasyMock.expect(ms.getFieldMessages(request, MessageType.ERROR, action)).andReturn(fieldErrors);
         EasyMock.replay(ms);
         return ms;
     }

@@ -124,8 +124,6 @@ public abstract class AbstractControl implements Control, TemplateDirectiveModel
         parameters.put("action", action);
         parameters.put("request", request);
         parameters.put("locale", locale);
-        parameters.put("field_messages", messageStore.getFieldMessages(request, MessageType.PLAIN, action));
-        parameters.put("field_errors", messageStore.getFieldMessages(request, MessageType.ERROR, action));
         parameters.put("action_messages", messageStore.getActionMessages(request, MessageType.PLAIN, action));
         parameters.put("action_errors", messageStore.getActionMessages(request, MessageType.ERROR, action));
         parameters.put("append_attributes", new AppendAttributesMethod());

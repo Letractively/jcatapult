@@ -71,7 +71,7 @@ public class Text extends AbstractInput {
     }
 
     /**
-     * @return  text
+     * @return  text.ftl
      */
     protected String templateName() {
         return "text.ftl";

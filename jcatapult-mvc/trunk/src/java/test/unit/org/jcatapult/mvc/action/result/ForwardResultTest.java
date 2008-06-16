@@ -50,7 +50,7 @@ public class ForwardResultTest {
 
         Forward forward = new ForwardResult.ForwardImpl("/foo/bar.jsp", null);
         ForwardResult forwardResult = new ForwardResult(context, null);
-        forwardResult.execute(forward, null, request, null);
+        forwardResult.execute(forward, new DefaultActionInvocation(null, "/foo/bar", null), request, null);
 
         EasyMock.verify(context, dispatcher, request);
     }
