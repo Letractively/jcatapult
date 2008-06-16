@@ -10,6 +10,7 @@ package org.jcatapult.scaffolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.ArrayList;
@@ -121,7 +122,17 @@ public class Main {
         String dotJcat = System.getProperty("user.home") + "/.jcatapult";
         File customScaffolderDir = new File(dotJcat, "scaffolders");
         if (customScaffolderDir.exists() && customScaffolderDir.isDirectory()) {
-            File[] customScaffolders = customScaffolderDir.listFiles();
+            File[] customScaffolders = customScaffolderDir.listFiles(new FilenameFilter() {
+
+                public boolean accept(File dir, String name) {
+                    File file = new File(dir, name);
+                    boolean accept = true;
+                    if (name.equals(".svn") || name.equals(".cvs") || !file.isDirectory()) {
+                        accept = false;
+                    }
+                    return accept;
+                }
+            });
             for (File customScaffolder : customScaffolders) {
               scaffolderDirs.put(customScaffolder.getName(),  customScaffolder);
             }
