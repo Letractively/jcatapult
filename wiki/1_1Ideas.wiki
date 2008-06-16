@@ -55,6 +55,7 @@ Another thing that needs to be in there is support for CRUD, particularly fetchi
   * Form preparation (discussed above)
   * Using the same action for GET and POST. GET renders the form, POST handles submission
 
+Also, thinking if the validation annotations should be tied back to the tag in order to put the asterisk in the label to denote required fields.
 
 = DSL for the database manager =
 
