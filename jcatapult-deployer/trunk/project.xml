@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-deployer"
          group="jcatapult.org"
-         version="1.0-RC3">
+         version="1.0-RC4">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
@@ -44,7 +44,7 @@
       <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.94" type="jar"/>
 
       <!-- utils -->
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
 
       <!-- jsch -->
       <artifact group="jsch.jcraft.com" project="jsch" name="jsch" version="0.1.31" type="jar"/>
@@ -52,7 +52,7 @@
     <artifactGroup type="test-run"/>
     <artifactGroup type="test-compile">
       <!-- jc core test jar -->
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-RC3" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-RC4" type="jar"/>
 
       <!-- junit -->
       <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
