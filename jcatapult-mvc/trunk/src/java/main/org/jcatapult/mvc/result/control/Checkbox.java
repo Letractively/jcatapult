@@ -32,7 +32,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class Checkbox extends AbstractControl {
+public class Checkbox extends AbstractInput {
     private final ExpressionEvaluator expressionEvaluator;
     private final ParameterWorkflow parameterWorkflow;
 
@@ -67,9 +67,9 @@ public class Checkbox extends AbstractControl {
     }
 
     /**
-     * @return  checkbox
+     * @return  checkbox.ftl
      */
     protected String templateName() {
-        return "checkbox";
+        return "checkbox.ftl";
     }
 }

@@ -54,8 +54,9 @@ public class DefaultActionInvocationWorkflowTest {
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
+        ActionInvocation ai = new DefaultActionInvocation(null, "foo/bar", null);
         ActionMappingWorkflow amw = EasyMock.createStrictMock(ActionMappingWorkflow.class);
-        EasyMock.expect(amw.fetch(request)).andReturn(null);
+        EasyMock.expect(amw.fetch(request)).andReturn(ai);
         EasyMock.replay(amw);
 
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", null);
@@ -65,7 +66,7 @@ public class DefaultActionInvocationWorkflowTest {
         EasyMock.replay(rip);
 
         Result result = EasyMock.createStrictMock(Result.class);
-        result.execute(annotation, null, request, response);
+        result.execute(annotation, ai, request, response);
         EasyMock.replay(result);
 
         ResultRegistry resultRegistry = EasyMock.createStrictMock(ResultRegistry.class);
@@ -90,7 +91,7 @@ public class DefaultActionInvocationWorkflowTest {
         EasyMock.replay(response);
 
         ActionMappingWorkflow amw = EasyMock.createStrictMock(ActionMappingWorkflow.class);
-        EasyMock.expect(amw.fetch(request)).andReturn(null);
+        EasyMock.expect(amw.fetch(request)).andReturn(new DefaultActionInvocation(null, "foo/bar", null));
         EasyMock.replay(amw);
 
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);

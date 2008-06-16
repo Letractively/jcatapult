@@ -86,7 +86,7 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(actionMappingWorkflow);
 
         MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
-        messageStore.addConversionError(request, action, eq("user.inches"), eq("org.example.domain.Action"),
+        messageStore.addConversionError(same(request), same(action), eq("user.inches"), eq("org.example.domain.Action"),
             same(Locale.US), eq(new HashMap<String, String>()), eq("tall"));
         EasyMock.replay(messageStore);
 

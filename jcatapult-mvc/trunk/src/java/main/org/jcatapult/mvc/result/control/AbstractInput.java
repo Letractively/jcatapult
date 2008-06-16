@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.message.MessageProvider;
+import org.jcatapult.mvc.message.scope.MessageType;
 
 import com.google.inject.Inject;
 
@@ -111,6 +112,10 @@ public abstract class AbstractInput extends AbstractControl {
         } else {
             throw new IllegalStateException("Missing localized label for the field named [" + name + "]");
         }
+
+        // Add the field messages and errors as a list or null
+        map.put("field_messages", messageStore.getFieldMessages(request, MessageType.PLAIN, action).get(name));
+        map.put("field_errors", messageStore.getFieldMessages(request, MessageType.ERROR, action).get(name));
 
         // Move the label position up
         Object labelPosition = attributes.remove("labelPosition");

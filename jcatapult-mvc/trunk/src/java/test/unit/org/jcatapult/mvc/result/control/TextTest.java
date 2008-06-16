@@ -51,7 +51,7 @@ public class TextTest extends AbstractInputTest {
         HttpServletRequest request = makeRequest();
         ActionMappingWorkflow amw = makeActionMappingWorkflow(request, null, "/test");
         LocaleWorkflow lw = makeLocaleWorkflow(request);
-        MessageStore ms = makeMessageStore(request, null);
+        MessageStore ms = makeMessageStore(request, null, "test");
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
         ContainerResolver containerResolver = makeContainerResolver();
@@ -70,8 +70,10 @@ public class TextTest extends AbstractInputTest {
         text.render(request, writer, mapNV("name", "test", "class", "css-class", "bundle", "foo.bar"), parameterAttributes);
         assertEquals(
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<label for=\"test\">Test</label>\n" +
-            "<input type=\"text\" class=\"css-class\" id=\"test\" name=\"test\"/>", writer.toString());
+            "<div class=\"input\">\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
+            "</div>", writer.toString());
 
         EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee, mp);
     }
@@ -82,7 +84,7 @@ public class TextTest extends AbstractInputTest {
         HttpServletRequest request = makeRequest();
         ActionMappingWorkflow amw = makeActionMappingWorkflow(request, action, "/test");
         LocaleWorkflow lw = makeLocaleWorkflow(request);
-        MessageStore ms = makeMessageStore(request, action);
+        MessageStore ms = makeMessageStore(request, action, "usre.name");
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
         ContainerResolver containerResolver = makeContainerResolver();
@@ -102,8 +104,10 @@ public class TextTest extends AbstractInputTest {
         text.render(request, writer, mapNV("name", "user.name", "class", "css-class"), parameterAttributes);
         assertEquals(
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
-            "<label for=\"user_name\">Your name</label>\n" +
-            "<input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/>", writer.toString());
+            "<div class=\"input\">\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/></div>\n" +
+            "</div>", writer.toString());
 
         EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee, mp);
     }
@@ -114,7 +118,7 @@ public class TextTest extends AbstractInputTest {
         HttpServletRequest request = makeRequest();
         ActionMappingWorkflow amw = makeActionMappingWorkflow(request, action, "/test");
         LocaleWorkflow lw = makeLocaleWorkflow(request);
-        MessageStore ms = makeMessageStore(request, action);
+        MessageStore ms = makeMessageStore(request, action, "user.name");
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
         ContainerResolver containerResolver = makeContainerResolver();
@@ -134,8 +138,10 @@ public class TextTest extends AbstractInputTest {
         text.render(request, writer, mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"), parameterAttributes);
         assertEquals(
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
-            "<label for=\"user_name\">Your name</label>\n" +
-            "<input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"John\"/>", writer.toString());
+            "<div class=\"input\">\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"John\"/></div>\n" +
+            "</div>", writer.toString());
 
         EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee, mp);
     }
@@ -146,7 +152,7 @@ public class TextTest extends AbstractInputTest {
         HttpServletRequest request = makeRequest();
         ActionMappingWorkflow amw = makeActionMappingWorkflow(request, action, "/test");
         LocaleWorkflow lw = makeLocaleWorkflow(request);
-        MessageStore ms = makeMessageStore(request, action);
+        MessageStore ms = makeMessageStore(request, action, "user.name");
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
         ContainerResolver containerResolver = makeContainerResolver();
@@ -165,8 +171,43 @@ public class TextTest extends AbstractInputTest {
         text.render(request, writer, mapNV("name", "user.name", "class", "css-class", "value", "Barry"), parameterAttributes);
         assertEquals(
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
-            "<label for=\"user_name\">Your name</label>\n" +
-            "<input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/>", writer.toString());
+            "<div class=\"input\">\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
+            "</div>", writer.toString());
+
+        EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee, mp);
+    }
+
+    @Test
+    public void testFieldErrors() {
+        Edit action = new Edit();
+        HttpServletRequest request = makeRequest();
+        ActionMappingWorkflow amw = makeActionMappingWorkflow(request, action, "/test");
+        LocaleWorkflow lw = makeLocaleWorkflow(request);
+        MessageStore ms = makeMessageStore(request, action, "user.name", "Name is required", "Name must be cool");
+        Configuration configuration = makeConfiguration();
+        EnvironmentResolver env = makeEnvironmenResolver();
+        ContainerResolver containerResolver = makeContainerResolver();
+
+        Map<String, String> parameterAttributes = map("param", "param-value");
+        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.replay(ee);
+
+        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.name", Locale.US, parameterAttributes, "Your name");
+
+        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
+        Text text = new Text(ee);
+        text.setServices(lw, amw, ms, fms);
+        text.setMessageProvider(mp);
+        StringWriter writer = new StringWriter();
+        text.render(request, writer, mapNV("name", "user.name", "class", "css-class", "value", "Barry"), parameterAttributes);
+        assertEquals(
+            "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
+            "</div>", writer.toString());
 
         EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee, mp);
     }

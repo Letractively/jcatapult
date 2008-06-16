@@ -189,24 +189,6 @@ public abstract class AbstractInputTag<T extends Control> extends AbstractContro
     }
 
     /**
-     * Retrieves the tags labelPosition attribute
-     *
-     * @return	Returns the tags labelPosition attribute
-     */
-    public String getLabelPosition() {
-        return (String) attributes.get("labelPosition");
-    }
-
-    /**
-     * Populates the tags labelPosition attribute
-     *
-     * @param	labelPosition The value of the tags labelPosition attribute
-     */
-    public void setLabelPosition(String labelPosition) {
-        attributes.put("labelPosition", labelPosition);
-    }
-
-    /**
      * Retrieves the tags bundle attribute.
      *
      * @return	Returns the tags bundle attribute.
