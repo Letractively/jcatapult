@@ -31,7 +31,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class Text extends AbstractControl {
+public class Text extends AbstractInput {
     private final ExpressionEvaluator expressionEvaluator;
 
     @Inject
@@ -52,6 +52,9 @@ public class Text extends AbstractControl {
      */
     protected void addAdditionalAttributes(HttpServletRequest request, Map<String, Object> attributes,
             Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Locale locale) {
+        // Call super to handle the ID
+        super.addAdditionalAttributes(request, attributes, parameterAttributes, actionInvocation, locale);
+
         String name = (String) attributes.get("name");
         Object action = actionInvocation.action();
         String value;

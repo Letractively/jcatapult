@@ -30,6 +30,7 @@ import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.freemarker.OverridingTemplateLoader;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
 import org.jcatapult.mvc.locale.LocaleWorkflow;
+import org.jcatapult.mvc.message.MessageProvider;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import static org.junit.Assert.*;
@@ -44,7 +45,7 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class TextTest extends AbstractControlTest {
+public class TextTest extends AbstractInputTest {
     @Test
     public void testActionLess() {
         HttpServletRequest request = makeRequest();
@@ -55,19 +56,24 @@ public class TextTest extends AbstractControlTest {
         EnvironmentResolver env = makeEnvironmenResolver();
         ContainerResolver containerResolver = makeContainerResolver();
 
+        Map<String, String> parameterAttributes = map("param", "param-value");
+        MessageProvider mp = makeMessageProvider("foo.bar", "test", Locale.US, parameterAttributes, "Test");
+
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.replay(ee);
 
         FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
         Text text = new Text(ee);
         text.setServices(lw, amw, ms, fms);
+        text.setMessageProvider(mp);
         StringWriter writer = new StringWriter();
-        text.render(request, writer, mapNV("name", "test", "class", "css-class"), map("param", "param-value"));
+        text.render(request, writer, mapNV("name", "test", "class", "css-class", "bundle", "foo.bar"), parameterAttributes);
         assertEquals(
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<input type=\"text\" class=\"css-class\" name=\"test\"/>", writer.toString());
+            "<label for=\"test\">Test</label>\n" +
+            "<input type=\"text\" class=\"css-class\" id=\"test\" name=\"test\"/>", writer.toString());
 
-        EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee);
+        EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee, mp);
     }
 
     @Test
@@ -86,16 +92,20 @@ public class TextTest extends AbstractControlTest {
         EasyMock.expect(ee.getValue("user.name", action, request, Locale.US, parameterAttributes)).andReturn("Brian");
         EasyMock.replay(ee);
 
+        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.name", Locale.US, parameterAttributes, "Your name");
+
         FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
         Text text = new Text(ee);
         text.setServices(lw, amw, ms, fms);
+        text.setMessageProvider(mp);
         StringWriter writer = new StringWriter();
         text.render(request, writer, mapNV("name", "user.name", "class", "css-class"), parameterAttributes);
         assertEquals(
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
-            "<input type=\"text\" class=\"css-class\" name=\"user.name\" value=\"Brian\"/>", writer.toString());
+            "<label for=\"user_name\">Your name</label>\n" +
+            "<input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/>", writer.toString());
 
-        EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee);
+        EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee, mp);
     }
 
     @Test
@@ -107,24 +117,27 @@ public class TextTest extends AbstractControlTest {
         MessageStore ms = makeMessageStore(request, action);
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
+        ContainerResolver containerResolver = makeContainerResolver();
 
         Map<String, String> parameterAttributes = map("param", "param-value");
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.expect(ee.getValue("user.name", action, request, Locale.US, parameterAttributes)).andReturn(null);
         EasyMock.replay(ee);
 
-        ContainerResolver containerResolver = makeContainerResolver();
+        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.name", Locale.US, parameterAttributes, "Your name");
 
         FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
         Text text = new Text(ee);
         text.setServices(lw, amw, ms, fms);
+        text.setMessageProvider(mp);
         StringWriter writer = new StringWriter();
         text.render(request, writer, mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"), parameterAttributes);
         assertEquals(
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
-            "<input type=\"text\" class=\"css-class\" name=\"user.name\" value=\"John\"/>", writer.toString());
+            "<label for=\"user_name\">Your name</label>\n" +
+            "<input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"John\"/>", writer.toString());
 
-        EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee);
+        EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee, mp);
     }
 
     @Test
@@ -136,22 +149,25 @@ public class TextTest extends AbstractControlTest {
         MessageStore ms = makeMessageStore(request, action);
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
+        ContainerResolver containerResolver = makeContainerResolver();
 
         Map<String, String> parameterAttributes = map("param", "param-value");
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.replay(ee);
 
-        ContainerResolver containerResolver = makeContainerResolver();
+        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.name", Locale.US, parameterAttributes, "Your name");
 
         FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
         Text text = new Text(ee);
         text.setServices(lw, amw, ms, fms);
+        text.setMessageProvider(mp);
         StringWriter writer = new StringWriter();
         text.render(request, writer, mapNV("name", "user.name", "class", "css-class", "value", "Barry"), parameterAttributes);
         assertEquals(
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
-            "<input type=\"text\" class=\"css-class\" name=\"user.name\" value=\"Barry\"/>", writer.toString());
+            "<label for=\"user_name\">Your name</label>\n" +
+            "<input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/>", writer.toString());
 
-        EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee);
+        EasyMock.verify(request, amw, lw, ms, configuration, env, containerResolver, ee, mp);
     }
 }

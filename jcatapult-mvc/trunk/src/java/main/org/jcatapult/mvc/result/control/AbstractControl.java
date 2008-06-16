@@ -37,16 +37,18 @@ import freemarker.template.TemplateModel;
 
 /**
  * <p>
- * This class is the control for a checkbox.
+ * This class an abstract Control implementation that is useful for creating new
+ * controls that might need access to things such as the request, the action
+ * invocation and attributes.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 public abstract class AbstractControl implements Control, TemplateDirectiveModel {
-    private LocaleWorkflow localeWorkflow;
-    private ActionMappingWorkflow actionMappingWorkflow;
-    private MessageStore messageStore;
-    private FreeMarkerService freeMarkerService;
+    protected LocaleWorkflow localeWorkflow;
+    protected ActionMappingWorkflow actionMappingWorkflow;
+    protected MessageStore messageStore;
+    protected FreeMarkerService freeMarkerService;
 
     @Inject
     public void setServices(LocaleWorkflow localeWorkflow, ActionMappingWorkflow actionMappingWorkflow,
@@ -65,7 +67,27 @@ public abstract class AbstractControl implements Control, TemplateDirectiveModel
      * is passed to FreeMarker as well as determine the name of the template.
      * </p>
      *
+     * @param   request The request.
+     * @param   writer The writer to output to.
+     * @param   attributes The attributes.
+     * @param   parameterAttributes The parameter attributes.
+     */
+    public void render(HttpServletRequest request, Writer writer, Map<String, Object> attributes,
+            Map<String, String> parameterAttributes) {
+        ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
+        Object action = actionInvocation.action();
+        Locale locale = localeWorkflow.getLocale(request);
+
+        addAdditionalAttributes(request, attributes, parameterAttributes, actionInvocation, locale);
+        Map<String, Object> parameters = makeParameters(request, attributes, parameterAttributes, actionInvocation, action, locale);
+
+        String templateName = "/WEB-INF/control-templates/" + templateName();
+        freeMarkerService.render(writer, templateName, parameters, locale);
+    }
+
+    /**
      * <p>
+     * Creats the parameters Map that is the root node used by the FreeMarker template when rendering.
      * This places these values in the root map:
      * </p>
      *
@@ -84,33 +106,30 @@ public abstract class AbstractControl implements Control, TemplateDirectiveModel
      * <li>action_errors - Any errors associated with the current action invocation</li>
      * </ul>
      *
-     * @param   request The request.
-     * @param   writer The writer to output to.
-     * @param   attributes The attributes.
-     * @param   parameterAttributes The parameter attributes.
+     * @param   request Thr request.
+     * @param   attributes The attributes from the tag.
+     * @param   parameterAttributes The parameter attributes from the tag.
+     * @param   actionInvocation The action invocation.
+     * @param   action The action.
+     * @param   locale The current locale.
+     * @return  The Parameters Map.
      */
-    public void render(HttpServletRequest request, Writer writer, Map<String, Object> attributes,
-            Map<String, String> parameterAttributes) {
-        ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
-        Object action = actionInvocation.action();
-        Locale locale = localeWorkflow.getLocale(request);
-
-        addAdditionalAttributes(request, attributes, parameterAttributes, actionInvocation, locale);
-
+    protected Map<String, Object> makeParameters(HttpServletRequest request, Map<String, Object> attributes,
+            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Object action,
+            Locale locale) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("attributes", attributes);
         parameters.put("parameter_attributes", parameterAttributes);
         parameters.put("action_invocation", actionInvocation);
         parameters.put("action", action);
         parameters.put("request", request);
+        parameters.put("locale", locale);
         parameters.put("field_messages", messageStore.getFieldMessages(request, MessageType.PLAIN, action));
         parameters.put("field_errors", messageStore.getFieldMessages(request, MessageType.ERROR, action));
         parameters.put("action_messages", messageStore.getActionMessages(request, MessageType.PLAIN, action));
         parameters.put("action_errors", messageStore.getActionMessages(request, MessageType.ERROR, action));
         parameters.put("append_attributes", new AppendAttributesMethod());
-
-        String templateName = "/WEB-INF/control-templates/" + templateName();
-        freeMarkerService.render(writer, templateName, parameters, locale);
+        return parameters;
     }
 
     /**

@@ -86,11 +86,4 @@ public class AbstractControlTest {
         EasyMock.replay(lw);
         return lw;
     }
-
-    protected ContainerResolver makeContainerResolver() {
-        ContainerResolver containerResolver = EasyMock.createStrictMock(ContainerResolver.class);
-        EasyMock.expect(containerResolver.getRealPath("WEB-INF/control-templates/text_en_US.ftl")).andReturn("src/ftl/main/WEB-INF/control-templates/text.ftl");
-        EasyMock.replay(containerResolver);
-        return containerResolver;
-    }
 }

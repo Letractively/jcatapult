@@ -189,24 +189,6 @@ public abstract class AbstractInputTag<T extends Control> extends AbstractContro
     }
 
     /**
-     * Retrieves the tags label attribute
-     *
-     * @return	Returns the tags label attribute
-     */
-    public String getLabel() {
-        return (String) attributes.get("label");
-    }
-
-    /**
-     * Populates the tags label attribute
-     *
-     * @param	label The value of the tags label attribute
-     */
-    public void setLabel(String label) {
-        attributes.put("label", label);
-    }
-
-    /**
      * Retrieves the tags labelPosition attribute
      *
      * @return	Returns the tags labelPosition attribute
@@ -222,5 +204,23 @@ public abstract class AbstractInputTag<T extends Control> extends AbstractContro
      */
     public void setLabelPosition(String labelPosition) {
         attributes.put("labelPosition", labelPosition);
+    }
+
+    /**
+     * Retrieves the tags bundle attribute.
+     *
+     * @return	Returns the tags bundle attribute.
+     */
+    public String getBundle() {
+        return (String) attributes.get("bundle");
+    }
+
+    /**
+     * Populates the tags bundle attribute.
+     *
+     * @param	bundle The value of the tags bundle attribute.
+     */
+    public void setBundle(String bundle) {
+        attributes.put("bundle", bundle);
     }
 }
