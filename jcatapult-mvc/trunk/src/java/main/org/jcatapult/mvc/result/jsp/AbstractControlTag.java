@@ -21,7 +21,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.DynamicAttributes;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.mvc.result.control.Control;
@@ -435,7 +434,7 @@ public abstract class AbstractControlTag<T extends Control> extends TagSupport i
     @Override
     public int doEndTag() throws JspException {
         Control control = GuiceContainer.getInjector().getInstance(controlClass());
-        control.render((HttpServletRequest) pageContext.getRequest(), pageContext.getOut(), attributes, parameterAttributes);
+        control.render(pageContext.getOut(), attributes, parameterAttributes);
 
         attributes.clear();
 

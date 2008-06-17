@@ -15,10 +15,12 @@
  */
 package org.jcatapult.mvc.scope.annotation;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
+
+import org.jcatapult.mvc.scope.Scope;
 
 /**
  * <p>
@@ -31,4 +33,8 @@ import java.lang.annotation.ElementType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface ScopeAnnotation {
+    /**
+     * @return  The class that implements the scope annotation's processing.
+     */
+    Class<? extends Scope> value();
 }

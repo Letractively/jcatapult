@@ -16,17 +16,14 @@
 package org.jcatapult.mvc.parameter.convert.converters;
 
 import java.io.File;
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.convert.annotation.Converter;
 
-import com.google.inject.Singleton;
 import static net.java.lang.ObjectTools.*;
 import net.java.lang.StringTools;
-import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -35,17 +32,15 @@ import static net.java.util.CollectionTools.*;
  *
  * @author Brian Pontarelli
  */
+@Converter(forTypes = {File.class})
 @SuppressWarnings("unchecked")
-@Singleton
 public class FileConverter extends AbstractConverter {
     /**
      * Returns null if the value is null, otherwise this returns a new File of the value.
      *
      * @param   attributes Can contain the parentDir attribute which if the String is relative will
-     *          be the parent directory.
      */
-    protected <T> T stringToObject(String value, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> T stringToObject(String value, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (StringTools.isTrimmedEmpty(value)) {
             return null;
@@ -68,27 +63,18 @@ public class FileConverter extends AbstractConverter {
     /**
      * Joins the values and then sends the new joined String to the stringToObject method.
      */
-    protected <T> T stringsToObject(String[] values, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> T stringsToObject(String[] values, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         String joined = join(values, File.separator);
-        return stringToObject(joined, convertTo, request, locale, attributes);
+        return stringToObject(joined, convertTo, attributes);
     }
 
     /**
      * Returns the absolute path of the file.
      */
-    protected <T> String objectToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> String objectToString(T value, Class<T> convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         File file = (File) value;
         return file.getAbsolutePath();
-    }
-
-    /**
-     * Returns File.class.
-     */
-    public Class<?>[] supportedTypes() {
-        return array(File.class);
     }
 }

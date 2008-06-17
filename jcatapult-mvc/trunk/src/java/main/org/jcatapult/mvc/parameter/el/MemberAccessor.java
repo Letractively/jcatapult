@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import org.jcatapult.mvc.parameter.convert.ConverterRegistry;
+import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 
 import static net.java.lang.reflect.ReflectionTools.*;
 
@@ -77,14 +77,14 @@ public class MemberAccessor extends Accessor {
     final Field field;
     final PropertyInfo propertyInfo;
 
-    public MemberAccessor(ConverterRegistry converterRegistry, MemberAccessor accessor) {
-        super(converterRegistry, accessor);
+    public MemberAccessor(ConverterProvider converterProvider, MemberAccessor accessor) {
+        super(converterProvider, accessor);
         this.field = accessor.field;
         this.propertyInfo = accessor.propertyInfo;
     }
 
-    public MemberAccessor(ConverterRegistry converterRegistry, Class<?> declaringClass, String name) {
-        super(converterRegistry);
+    public MemberAccessor(ConverterProvider converterProvider, Class<?> declaringClass, String name) {
+        super(converterProvider);
         Map<String, PropertyInfo> map = getPropMap(declaringClass);
         PropertyInfo bpi = map.get(name);
         if (bpi == null || bpi.getMethods().get("get") == null) {

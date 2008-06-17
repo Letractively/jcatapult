@@ -33,5 +33,5 @@ public interface ObjectFactory {
      * @param   klass The class.
      * @return  The Object and never null.
      */
-    Object create(Class<?> klass);
+    <T> T create(Class<T> klass);
 }

@@ -15,32 +15,20 @@
  */
 package org.jcatapult.mvc.action;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.jcatapult.servlet.Workflow;
 
 import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This class defines the mechanism used to locate actions to invoke and
- * invoke them. It also allows other classes to gain access to the action
- * invocation information whenever they need it. This should make every
- * effort to cache this information rather than parse it from the HTTP
- * request each time.
+ * This class defines the workflow process that uses the incoming request
+ * URI to determine the action to invoke. This locates the
+ * {@link ActionInvocation} and ensures that it can be accessed during the
+ * current request.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 @ImplementedBy(DefaultActionMappingWorkflow.class)
 public interface ActionMappingWorkflow extends Workflow {
-    /**
-     * Grabs the action invocation information from the HTTP request. This might have already been
-     * fetched as part of the workflow process and reside inside the HTTP request as an attribute,
-     * or this method might parse determine the action invocation based on the HTTP request.
-     *
-     * @param   request The request.
-     * @return  The ActionInvocation or null if there isn't an action to invoke.
-     */
-    ActionInvocation fetch(HttpServletRequest request);
 }

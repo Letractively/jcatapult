@@ -13,29 +13,31 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.action.result.annotation;
+package org.jcatapult.mvc.message.scope;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
 
-import org.jcatapult.mvc.action.result.Result;
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This annotation is a marker that is used to mark custom result annotations
- * so that JCatapult can determine which annotations on an action class are
- * results annotations.
+ * This is the provider for scopes.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
-public @interface ResultAnnotation {
+@ImplementedBy(DefaultScopeProvider.class)
+public interface ScopeProvider {
     /**
-     * @return  The class that implements the result annotation's processing.
+     * Looks up the scope for the given annotation.
+     *
+     * @param   scope The scope enum value.
+     * @return  The Scope and never null.
      */
-    Class<? extends Result> value();
+    Scope lookup(MessageScope scope);
+
+    /**
+     * @return  All of the registered scopes.
+     */
+    List<Scope> getAllScopes();
 }

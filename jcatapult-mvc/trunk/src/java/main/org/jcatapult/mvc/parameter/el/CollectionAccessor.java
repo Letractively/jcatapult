@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.List;
 
-import org.jcatapult.mvc.parameter.convert.ConverterRegistry;
+import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 
 import static net.java.lang.ObjectTools.*;
 
@@ -38,9 +38,9 @@ public class CollectionAccessor extends Accessor {
     String index;
     MemberAccessor memberAccessor;
 
-    public CollectionAccessor(ConverterRegistry converterRegistry, Accessor accessor, String index,
+    public CollectionAccessor(ConverterProvider converterProvider, Accessor accessor, String index,
             MemberAccessor memberAccessor) {
-        super(converterRegistry, accessor);
+        super(converterProvider, accessor);
         this.index = index;
         super.type = componentType(super.type);
         this.memberAccessor = memberAccessor;

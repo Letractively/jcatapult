@@ -15,15 +15,14 @@
  */
 package org.jcatapult.mvc.parameter.convert;
 
+import org.jcatapult.mvc.GuiceObjectFactory;
+import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
+import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
+import org.jcatapult.mvc.parameter.convert.converters.NumberConverter;
+import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
+import org.jcatapult.mvc.test.junit.WebBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import net.java.convert.Converter;
-import net.java.convert.ConverterRegistry;
-import net.java.convert.converters.BooleanConverter;
-import net.java.convert.converters.CharacterConverter;
-import net.java.convert.converters.NumberConverter;
-import net.java.convert.converters.StringConverter;
 
 /**
  * <p>
@@ -32,97 +31,92 @@ import net.java.convert.converters.StringConverter;
  *
  * @author  Brian Pontarelli
  */
-public class ConverterRegistryTest {
-
+public class DefaultConverterProviderTest extends WebBaseTest {
     /**
      * Test the lookup of converters
      */
     @Test
     public void testLookups() {
-        net.java.convert.Converter tc = ConverterRegistry.lookup(Character.class);
+        ConverterProvider provider = new DefaultConverterProvider(new GuiceObjectFactory());
+        Converter tc = provider.lookup(Character.class);
         assertSame(CharacterConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Character.TYPE);
+        tc = provider.lookup(Character.TYPE);
         assertSame(CharacterConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Character[].class);
+        tc = provider.lookup(Character[].class);
         assertSame(CharacterConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(char[].class);
+        tc = provider.lookup(char[].class);
         assertSame(CharacterConverter.class, tc.getClass());
 
-        tc = ConverterRegistry.lookup(Byte.class);
+        tc = provider.lookup(Byte.class);
         assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Byte.TYPE);
+        tc = provider.lookup(Byte.TYPE);
         assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Byte[].class);
+        tc = provider.lookup(Byte[].class);
         assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(byte[].class);
-        assertSame(NumberConverter.class, tc.getClass());
-
-        tc = ConverterRegistry.lookup(Short.class);
-        assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Short.TYPE);
-        assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Short[].class);
-        assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(short[].class);
+        tc = provider.lookup(byte[].class);
         assertSame(NumberConverter.class, tc.getClass());
 
-        tc = ConverterRegistry.lookup(Integer.class);
+        tc = provider.lookup(Short.class);
         assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Integer.TYPE);
+        tc = provider.lookup(Short.TYPE);
         assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Integer[].class);
+        tc = provider.lookup(Short[].class);
         assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(int[].class);
-        assertSame(NumberConverter.class, tc.getClass());
-
-        tc = ConverterRegistry.lookup(Long.class);
-        assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Long.TYPE);
-        assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Long[].class);
-        assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(long[].class);
+        tc = provider.lookup(short[].class);
         assertSame(NumberConverter.class, tc.getClass());
 
-        tc = ConverterRegistry.lookup(Float.class);
+        tc = provider.lookup(Integer.class);
         assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Float.TYPE);
+        tc = provider.lookup(Integer.TYPE);
         assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Float[].class);
+        tc = provider.lookup(Integer[].class);
         assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(float[].class);
-        assertSame(NumberConverter.class, tc.getClass());
-
-        tc = ConverterRegistry.lookup(Double.class);
-        assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Double.TYPE);
-        assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Double[].class);
-        assertSame(NumberConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(double[].class);
+        tc = provider.lookup(int[].class);
         assertSame(NumberConverter.class, tc.getClass());
 
-        tc = ConverterRegistry.lookup(Boolean.class);
+        tc = provider.lookup(Long.class);
+        assertSame(NumberConverter.class, tc.getClass());
+        tc = provider.lookup(Long.TYPE);
+        assertSame(NumberConverter.class, tc.getClass());
+        tc = provider.lookup(Long[].class);
+        assertSame(NumberConverter.class, tc.getClass());
+        tc = provider.lookup(long[].class);
+        assertSame(NumberConverter.class, tc.getClass());
+
+        tc = provider.lookup(Float.class);
+        assertSame(NumberConverter.class, tc.getClass());
+        tc = provider.lookup(Float.TYPE);
+        assertSame(NumberConverter.class, tc.getClass());
+        tc = provider.lookup(Float[].class);
+        assertSame(NumberConverter.class, tc.getClass());
+        tc = provider.lookup(float[].class);
+        assertSame(NumberConverter.class, tc.getClass());
+
+        tc = provider.lookup(Double.class);
+        assertSame(NumberConverter.class, tc.getClass());
+        tc = provider.lookup(Double.TYPE);
+        assertSame(NumberConverter.class, tc.getClass());
+        tc = provider.lookup(Double[].class);
+        assertSame(NumberConverter.class, tc.getClass());
+        tc = provider.lookup(double[].class);
+        assertSame(NumberConverter.class, tc.getClass());
+
+        tc = provider.lookup(Boolean.class);
         assertSame(BooleanConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Boolean.TYPE);
+        tc = provider.lookup(Boolean.TYPE);
         assertSame(BooleanConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(Boolean[].class);
+        tc = provider.lookup(Boolean[].class);
         assertSame(BooleanConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(boolean[].class);
+        tc = provider.lookup(boolean[].class);
         assertSame(BooleanConverter.class, tc.getClass());
 
-        tc = ConverterRegistry.lookup(String.class);
+        tc = provider.lookup(String.class);
         assertSame(StringConverter.class, tc.getClass());
-        tc = ConverterRegistry.lookup(String[].class);
+        tc = provider.lookup(String[].class);
         assertSame(StringConverter.class, tc.getClass());
-    }
 
-    /**
-     * Tests lookup failures
-     */
-    @Test
-    public void testLookupFailures() {
-        Converter tc = ConverterRegistry.lookup(this.getClass());
+        // Failure
+        tc = provider.lookup(this.getClass());
         assertNull(tc);
     }
 }

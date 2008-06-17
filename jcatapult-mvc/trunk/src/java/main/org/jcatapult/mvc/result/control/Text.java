@@ -15,9 +15,7 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
@@ -45,21 +43,19 @@ public class Text extends AbstractInput {
      * value attribute is missing, the value associated with the control is null and there is a
      * <strong>defaultValue</strong> attribute, it is used.
      *
-     * @param   request The request, which is passed to the expression evaluator.
      * @param   attributes The value String is put into this Map.
      * @param   actionInvocation Used to grab the action.
-     * @param   locale The locale.
      */
-    protected void addAdditionalAttributes(HttpServletRequest request, Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Locale locale) {
+    protected void addAdditionalAttributes(Map<String, Object> attributes,
+            Map<String, String> parameterAttributes, ActionInvocation actionInvocation) {
         // Call super to handle the ID
-        super.addAdditionalAttributes(request, attributes, parameterAttributes, actionInvocation, locale);
+        super.addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
 
         String name = (String) attributes.get("name");
         Object action = actionInvocation.action();
         String value;
         if (!attributes.containsKey("value") && action != null) {
-            value = expressionEvaluator.getValue(name, action, request, locale, parameterAttributes);
+            value = expressionEvaluator.getValue(name, action, parameterAttributes);
             if (value == null) {
                 value = (String) attributes.remove("defaultValue");
             }

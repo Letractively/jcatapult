@@ -16,7 +16,6 @@
 package org.jcatapult.mvc.parameter.convert;
 
 import com.google.inject.ImplementedBy;
-import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -25,9 +24,8 @@ import com.google.inject.Singleton;
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultConverterRegistry.class)
-@Singleton
-public interface ConverterRegistry {
+@ImplementedBy(DefaultConverterProvider.class)
+public interface ConverterProvider {
     /**
      * <p>
      * Returns the type converter for the given type. This converter is either

@@ -53,8 +53,8 @@ public class SessionScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            SessionScope scope = new SessionScope();
-            List<String> messages = scope.getActionMessages(request, type, null);
+            SessionScope scope = new SessionScope(request);
+            List<String> messages = scope.getActionMessages(type);
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
 
@@ -70,8 +70,8 @@ public class SessionScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            SessionScope scope = new SessionScope();
-            List<String> messages = scope.getActionMessages(request, type, null);
+            SessionScope scope = new SessionScope(request);
+            List<String> messages = scope.getActionMessages(type);
             assertEquals(0, messages.size());
 
             EasyMock.verify(request);
@@ -87,8 +87,8 @@ public class SessionScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            SessionScope scope = new SessionScope();
-            scope.addActionMessage(request, type, null, "Test message");
+            SessionScope scope = new SessionScope(request);
+            scope.addActionMessage(type, "Test message");
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
 
@@ -106,8 +106,8 @@ public class SessionScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            SessionScope scope = new SessionScope();
-            scope.addActionMessage(request, type, null, "Test message");
+            SessionScope scope = new SessionScope(request);
+            scope.addActionMessage(type, "Test message");
             List<String> messages = (List<String>) list.object;
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
@@ -135,8 +135,8 @@ public class SessionScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            SessionScope scope = new SessionScope();
-            Map<String, List<String>> messages = scope.getFieldMessages(request, type, null);
+            SessionScope scope = new SessionScope(request);
+            Map<String, List<String>> messages = scope.getFieldMessages(type);
             assertEquals(1, messages.size());
             assertEquals(1, messages.get("user.name").size());
             assertEquals("Test message", messages.get("user.name").get(0));
@@ -153,8 +153,8 @@ public class SessionScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            SessionScope scope = new SessionScope();
-            Map<String, List<String>> messages = scope.getFieldMessages(request, type, null);
+            SessionScope scope = new SessionScope(request);
+            Map<String, List<String>> messages = scope.getFieldMessages(type);
             assertEquals(0, messages.size());
 
             EasyMock.verify(request);
@@ -170,8 +170,8 @@ public class SessionScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            SessionScope scope = new SessionScope();
-            scope.addFieldMessage(request, type, null, "user.name", "Test message");
+            SessionScope scope = new SessionScope(request);
+            scope.addFieldMessage(type, "user.name", "Test message");
             assertEquals(1, messages.size());
             assertEquals(1, messages.get("user.name").size());
             assertEquals("Test message", messages.get("user.name").get(0));
@@ -190,8 +190,8 @@ public class SessionScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            SessionScope scope = new SessionScope();
-            scope.addFieldMessage(request, type, null, "user.name", "Test message");
+            SessionScope scope = new SessionScope(request);
+            scope.addFieldMessage(type, "user.name", "Test message");
             Map<String, List<String>> messages = (Map<String, List<String>>) map.object;
             assertEquals(1, messages.size());
             assertEquals(1, messages.get("user.name").size());

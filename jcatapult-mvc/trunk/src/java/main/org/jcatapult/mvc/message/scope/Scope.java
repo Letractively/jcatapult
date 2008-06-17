@@ -17,7 +17,6 @@ package org.jcatapult.mvc.message.scope;
 
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -31,54 +30,48 @@ public interface Scope {
      * Retrieve a Map of all of the field messages stored in the scope. This Map is not live and
      * modifications are not stored in the scope.
      *
-     * @param   request The request.
      * @param   type The type of messages to retrieve.
-     * @param   action The current action.
      * @return  The Map and never null.
      */
-    Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action);
+    Map<String, List<String>> getFieldMessages(MessageType type);
 
     /**
      * Sets a field message.
      *
-     * @param   request The request.
      * @param   type The type of messages to retrieve.
-     * @param   action The current action.
      * @param   fieldName The name of the field.
      * @param   message The message.
      */
-    void addFieldMessage(HttpServletRequest request, MessageType type, Object action, String fieldName, String message);
+    void addFieldMessage(MessageType type, String fieldName, String message);
 
     /**
      * Retrieve a List of all of the action messages stored in the scope. This List is not live and
      * modifications are not stored in the scope.
      *
-     * @param   request The request.
      * @param   type The type of messages to retrieve.
-     * @param   action The current action.
      * @return  The List and never null.
      */
-    List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action);
+    List<String> getActionMessages(MessageType type);
 
     /**
      * Sets an action message.
      *
-     * @param   request The request.
      * @param   type The type of messages to retrieve.
-     * @param   action The current action.
      * @param   message The message.
      */
-    void addActionMessage(HttpServletRequest request, MessageType type, Object action, String message);
+    void addActionMessage(MessageType type, String message);
 
     /**
-     * Clears all of the messages from the scope completely.
+     * Clears all of the action messages of the given type from the scope completely.
      *
-     * @param   request The request.
+     * @param   type The message type to clear.
      */
-    void clear(HttpServletRequest request);
+    void clearActionMessages(MessageType type);
 
     /**
-     * @return  The MessageScope that this scope is associated with.
+     * Clears all of the field messages of the given type from the scope completely.
+     *
+     * @param   type The message type to clear.
      */
-    MessageScope scope();
+    void clearFieldMessages(MessageType type);
 }

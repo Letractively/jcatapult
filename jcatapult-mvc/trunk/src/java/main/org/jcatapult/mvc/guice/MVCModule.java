@@ -15,8 +15,13 @@
  */
 package org.jcatapult.mvc.guice;
 
+import java.util.Locale;
+
 import org.jcatapult.mvc.action.result.ForwardResult;
 import org.jcatapult.mvc.action.result.RedirectResult;
+import org.jcatapult.mvc.locale.DefaultLocaleStore;
+import org.jcatapult.mvc.locale.annotation.CurrentLocale;
+import org.jcatapult.mvc.parameter.convert.DefaultConverterProvider;
 import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
 import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
 import org.jcatapult.mvc.parameter.convert.converters.FileConverter;
@@ -43,6 +48,7 @@ public class MVCModule extends AbstractModule {
         configureConverters();
         configureResults();
         configureScopes();
+        configureLocale();
     }
 
     /**
@@ -54,6 +60,9 @@ public class MVCModule extends AbstractModule {
         bind(FileConverter.class);
         bind(NumberConverter.class);
         bind(StringConverter.class);
+
+        // Inject the registry so that the Class to Class mapping is setup
+        requestStaticInjection(DefaultConverterProvider.class);
     }
 
     /**
@@ -73,5 +82,13 @@ public class MVCModule extends AbstractModule {
         bind(ActionSessionScope.class);
         bind(FlashScope.class);
         bind(ContextScope.class);
+    }
+
+    /**
+     * Sets up the Locale so that it can be injected when the {@link CurrentLocale} annotation is
+     * used. The injection is handled by the {@link org.jcatapult.mvc.locale.DefaultLocaleStore} class.
+     */
+    protected void configureLocale() {
+        bind(Locale.class).annotatedWith(CurrentLocale.class).toProvider(DefaultLocaleStore.class);
     }
 }

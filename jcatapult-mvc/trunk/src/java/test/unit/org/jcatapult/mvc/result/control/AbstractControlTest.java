@@ -16,30 +16,28 @@
 package org.jcatapult.mvc.result.control;
 
 import java.util.ArrayList;
+import static java.util.Arrays.*;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import static java.util.Arrays.asList;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionMappingWorkflow;
+import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
-import org.jcatapult.mvc.locale.LocaleProvider;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.junit.Ignore;
 
 /**
  * <p>
- * This
+ * This is a base test for helping test controls.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 @Ignore
 public class AbstractControlTest {
@@ -56,18 +54,18 @@ public class AbstractControlTest {
         return env;
     }
 
-    protected MessageStore makeMessageStore(HttpServletRequest request, Object action, String field, String... errors) {
+    protected MessageStore makeMessageStore(String field, String... errors) {
         MessageStore ms = EasyMock.createStrictMock(MessageStore.class);
-        EasyMock.expect(ms.getActionMessages(request, MessageType.PLAIN, action)).andReturn(new ArrayList<String>());
-        EasyMock.expect(ms.getActionMessages(request, MessageType.ERROR, action)).andReturn(new ArrayList<String>());
-        EasyMock.expect(ms.getFieldMessages(request, MessageType.PLAIN, action)).andReturn(new HashMap<String, List<String>>());
+        EasyMock.expect(ms.getActionMessages(MessageType.PLAIN)).andReturn(new ArrayList<String>());
+        EasyMock.expect(ms.getActionMessages(MessageType.ERROR)).andReturn(new ArrayList<String>());
+        EasyMock.expect(ms.getFieldMessages(MessageType.PLAIN)).andReturn(new HashMap<String, List<String>>());
 
         Map<String, List<String>> fieldErrors = new HashMap<String, List<String>>();
         if (errors.length > 0) {
             fieldErrors.put(field, asList(errors));
         }
 
-        EasyMock.expect(ms.getFieldMessages(request, MessageType.ERROR, action)).andReturn(fieldErrors);
+        EasyMock.expect(ms.getFieldMessages(MessageType.ERROR)).andReturn(fieldErrors);
         EasyMock.replay(ms);
         return ms;
     }
@@ -79,18 +77,11 @@ public class AbstractControlTest {
         return configuration;
     }
 
-    protected ActionMappingWorkflow makeActionMappingWorkflow(HttpServletRequest request, Object action, String uri) {
+    protected ActionInvocationStore makeActionInvocationStore(Object action, String uri) {
         ActionInvocation invocation = new DefaultActionInvocation(action, uri, null);
-        ActionMappingWorkflow amw = EasyMock.createStrictMock(ActionMappingWorkflow.class);
-        EasyMock.expect(amw.fetch(request)).andReturn(invocation);
-        EasyMock.replay(amw);
-        return amw;
-    }
-
-    protected LocaleProvider makeLocaleWorkflow(HttpServletRequest request) {
-        LocaleProvider lw = EasyMock.createStrictMock(LocaleProvider.class);
-        EasyMock.expect(lw.getLocale(request)).andReturn(Locale.US);
-        EasyMock.replay(lw);
-        return lw;
+        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.replay(ais);
+        return ais;
     }
 }

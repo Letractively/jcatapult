@@ -13,39 +13,47 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.scope;
+package org.jcatapult.mvc.message.scope;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jcatapult.mvc.ObjectFactory;
 
 import com.google.inject.Inject;
 
 /**
  * <p>
- * This is the request scope which fetches and stores values in the
- * HttpServletRequest.
+ * This class implements the scope provider interface.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class RequestScope implements Scope {
-    private final HttpServletRequest request;
+public class DefaultScopeProvider implements ScopeProvider {
+    private final ObjectFactory objectFactory;
 
     @Inject
-    public RequestScope(HttpServletRequest request) {
-        this.request = request;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public Object get(String fieldName) {
-        return request.getAttribute(fieldName);
+    public DefaultScopeProvider(ObjectFactory objectFactory) {
+        this.objectFactory = objectFactory;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void set(String fieldName, Object value) {
-        request.setAttribute(fieldName, value);
+    public Scope lookup(MessageScope scope) {
+        return objectFactory.create(scope.getType());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<Scope> getAllScopes() {
+        MessageScope[] scopes = MessageScope.values();
+        List<Scope> result = new ArrayList<Scope>();
+        for (MessageScope scope : scopes) {
+            result.add(lookup(scope));
+        }
+
+        return result;
     }
 }

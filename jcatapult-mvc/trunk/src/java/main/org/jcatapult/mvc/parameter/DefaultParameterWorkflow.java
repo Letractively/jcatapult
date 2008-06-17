@@ -26,15 +26,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.locale.LocaleProvider;
+import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 /**
@@ -46,24 +45,22 @@ import com.google.inject.name.Named;
  *
  * @author  Brian Pontarelli
  */
-@Singleton
 public class DefaultParameterWorkflow implements ParameterWorkflow {
     public static final String CHECKBOX_PREFIX = "__jc_cb";
     public static final String RADIOBUTTON_PREFIX = "__jc_rb";
     public static final String ACTION_PREFIX = "__jc_a";
-    public static final String PARAMETERS_KEY = "jcatapultParametersKey";
 
-    private final LocaleProvider localeProvider;
-    private final ActionMappingWorkflow actionMappingWorkflow;
+    private final Locale locale;
+    private final ActionInvocationStore actionInvocationStore;
     private final MessageStore messageStore;
     private final ExpressionEvaluator expressionEvaluator;
     private boolean ignoreEmptyParameters = true;
 
     @Inject
-    public DefaultParameterWorkflow(LocaleProvider localeProvider, ActionMappingWorkflow actionMappingWorkflow,
+    public DefaultParameterWorkflow(@CurrentLocale Locale locale, ActionInvocationStore actionInvocationStore,
             MessageStore messageStore, ExpressionEvaluator expressionEvaluator) {
-        this.localeProvider = localeProvider;
-        this.actionMappingWorkflow = actionMappingWorkflow;
+        this.locale = locale;
+        this.actionInvocationStore = actionInvocationStore;
         this.messageStore = messageStore;
         this.expressionEvaluator = expressionEvaluator;
     }
@@ -82,22 +79,20 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
      */
     public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
     throws IOException, ServletException {
-        ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
+        ActionInvocation actionInvocation = actionInvocationStore.get();
         Object action = actionInvocation.action();
 
         if (action != null) {
             // First grab the structs and then save them to the request
             Map<String, Struct> structs = getValuesToSet(request);
-            request.setAttribute(PARAMETERS_KEY, structs);
 
             // Next, process them
-            Locale locale = localeProvider.getLocale(request);
             for (String key : structs.keySet()) {
                 Struct struct = structs.get(key);
                 try {
-                    expressionEvaluator.setValue(key, action, struct.values, request, locale, struct.attributes);
+                    expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
                 } catch (ConversionException ce) {
-                    messageStore.addConversionError(request, action, key, action.getClass().getName(), locale, struct.attributes, struct.values);
+                    messageStore.addConversionError(key, action.getClass().getName(), struct.attributes, struct.values);
                 }
             }
         }
@@ -109,27 +104,6 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
      * Does nothing.
      */
     public void destroy() {
-    }
-
-    /**
-     * Pulls the attributes for the given parameter out of the request. The Structs that are setup
-     * by the perform method are stored in the request under the key {@code jcatapultParametersKey}.
-     * The Strut for the given parameter is then pulled out and the attributes from the Struct are
-     * returned.
-     *
-     * @param   request The request.
-     * @param   parameter The name of the parameter.
-     * @return  The attributes or an empty Map if the parameter has no attributes.
-     */
-    @SuppressWarnings("unchecked")
-    public Map<String, String> fetchAttributes(HttpServletRequest request, String parameter) {
-        Map<String, Struct> structs = (Map<String, Struct>) request.getAttribute(PARAMETERS_KEY);
-        if (structs == null) {
-            throw new AssertionError("The parameter structs are missing from the request.");
-        }
-
-        Struct struct = structs.get(parameter);
-        return struct == null ? new HashMap<String, String>() : struct.attributes;
     }
 
     /**

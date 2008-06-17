@@ -15,12 +15,9 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.parameter.ParameterWorkflow;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
@@ -34,30 +31,26 @@ import com.google.inject.Inject;
  */
 public class Checkbox extends AbstractInput {
     private final ExpressionEvaluator expressionEvaluator;
-    private final ParameterWorkflow parameterWorkflow;
 
     @Inject
-    public Checkbox(ExpressionEvaluator expressionEvaluator, ParameterWorkflow parameterWorkflow) {
+    public Checkbox(ExpressionEvaluator expressionEvaluator) {
         this.expressionEvaluator = expressionEvaluator;
-        this.parameterWorkflow = parameterWorkflow;
     }
 
     /**
      * Adds a boolean attribute named checked if the value associated with the control is equal to
      * the value of the tag.
      *
-     * @param   request The request, which is passed to the expression evaluator.
      * @param   attributes The checked boolean is put into this Map.
      * @param   actionInvocation Used to grab the action.
-     * @param   locale The locale.
      */
-    protected void addAdditionalAttributes(HttpServletRequest request, Map<String, Object> attributes,
-            ActionInvocation actionInvocation, Locale locale) {
+    @Override
+    protected void addAdditionalAttributes(Map<String, Object> attributes,
+            Map<String, String> parameterAttributes, ActionInvocation actionInvocation) {
         String name = (String) attributes.get("name");
-        Map<String, String> paramAttributes = parameterWorkflow.fetchAttributes(request, name);
         Object action = actionInvocation.action();
         if (!attributes.containsKey("checked") && action != null) {
-            String value = expressionEvaluator.getValue(name, action, request, locale, paramAttributes);
+            String value = expressionEvaluator.getValue(name, action, parameterAttributes);
             Boolean checked = (value == null) ? (Boolean) attributes.get("defaultChecked") :
                 value.equals(attributes.get("value"));
             if (checked != null) {

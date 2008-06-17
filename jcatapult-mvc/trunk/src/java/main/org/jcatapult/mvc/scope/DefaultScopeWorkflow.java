@@ -23,13 +23,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionMappingWorkflow;
+import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.scope.annotation.ScopeAnnotation;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -38,21 +37,19 @@ import com.google.inject.Singleton;
  *
  * @author  Brian Pontarelli
  */
-@Singleton
 public class DefaultScopeWorkflow implements ScopeWorkflow {
-    private final FlashScope flashScope;
-    private final ScopeRegistry scopeRegistry;
-    private final ActionMappingWorkflow actionMappingWorkflow;
+    private final ActionInvocationStore actionInvocationStore;
     private final ExpressionEvaluator expressionEvaluator;
+    private final FlashScope flashScope;
+    private final ScopeProvider scopeProvider;
 
     @Inject
-    public DefaultScopeWorkflow(ActionMappingWorkflow actionMappingWorkflow,
-            ExpressionEvaluator expressionEvaluator, FlashScope flashScope,
-            ScopeRegistry scopeRegistry) {
-        this.actionMappingWorkflow = actionMappingWorkflow;
+    public DefaultScopeWorkflow(ActionInvocationStore actionInvocationStore,
+            ExpressionEvaluator expressionEvaluator, FlashScope flashScope, ScopeProvider scopeProvider) {
+        this.actionInvocationStore = actionInvocationStore;
         this.expressionEvaluator = expressionEvaluator;
         this.flashScope = flashScope;
-        this.scopeRegistry = scopeRegistry;
+        this.scopeProvider = scopeProvider;
     }
 
     /**
@@ -66,19 +63,19 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
     throws IOException, ServletException {
         handleFlashScope(request);
 
-        ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
+        ActionInvocation actionInvocation = actionInvocationStore.get();
         Object action = actionInvocation.action();
 
         // Handle loading scoped members into the action
         if (action != null) {
-            loadScopedMembers(action, request);
+            loadScopedMembers(action);
         }
 
         chain.doWorkflow(request, response);
 
         // Handle storing scoped members from the action
         if (action != null) {
-            storeScopedMembers(action, request);
+            storeScopedMembers(action);
         }
     }
 
@@ -97,9 +94,8 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
      * Loads all of the values into the action from the scopes.
      *
      * @param   action The action to sets the values from scopes into.
-     * @param   request The request.
      */
-    protected void loadScopedMembers(Object action, HttpServletRequest request) {
+    protected void loadScopedMembers(Object action) {
         Class<?> klass = action.getClass();
         Field[] fields = klass.getDeclaredFields();
         for (Field field : fields) {
@@ -109,8 +105,8 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
                 String fieldName = field.getName();
 
                 if (type.isAnnotationPresent(ScopeAnnotation.class)) {
-                    Scope scope = scopeRegistry.lookup(type);
-                    Object value = scope.get(action, fieldName, request);
+                    Scope scope = scopeProvider.lookup(type);
+                    Object value = scope.get(fieldName);
                     if (value != null) {
                         expressionEvaluator.setValue(fieldName, action, value);
                     }
@@ -123,9 +119,8 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
      * Stores all of the values from the action from into the scopes.
      *
      * @param   action The action to get the values from.
-     * @param   request The request.
      */
-    protected void storeScopedMembers(Object action, HttpServletRequest request) {
+    protected void storeScopedMembers(Object action) {
         Class<?> klass = action.getClass();
         Field[] fields = klass.getDeclaredFields();
         for (Field field : fields) {
@@ -135,9 +130,9 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
                 String fieldName = field.getName();
 
                 if (type.isAnnotationPresent(ScopeAnnotation.class)) {
-                    Scope scope = scopeRegistry.lookup(type);
+                    Scope scope = scopeProvider.lookup(type);
                     Object value = expressionEvaluator.getValue(fieldName, action);
-                    scope.set(action, fieldName, request, value);
+                    scope.set(fieldName, value);
                 }
             }
         }

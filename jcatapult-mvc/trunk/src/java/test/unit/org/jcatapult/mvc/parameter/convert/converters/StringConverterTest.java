@@ -35,16 +35,16 @@ public class StringConverterTest {
     @Test
     public void testFromStrings() {
         Converter converter = new StringConverter();
-        String str = converter.convertFromStrings(array((String) null), String.class, null, null, null);
+        String str = converter.convertFromStrings(array((String) null), String.class, null);
         assertNull(str);
 
-        str = converter.convertFromStrings(array(""), String.class, null, null, null);
+        str = converter.convertFromStrings(array(""), String.class, null);
         assertNull(str);
 
-        str = converter.convertFromStrings(array("a"), String.class, null, null, null);
+        str = converter.convertFromStrings(array("a"), String.class, null);
         assertEquals("a", str);
 
-        str = converter.convertFromStrings(array("a", "b"), String.class, null, null, null);
+        str = converter.convertFromStrings(array("a", "b"), String.class, null);
         assertEquals("a,b", str);
     }
 
@@ -54,10 +54,10 @@ public class StringConverterTest {
     @Test
     public void testToStrings() {
         Converter converter = new StringConverter();
-        String str = converter.convertToString(null, String.class, null, null, null);
+        String str = converter.convertToString(null, String.class, null);
         assertNull(str);
 
-        str = converter.convertToString("foo", String.class, null, null, null);
+        str = converter.convertToString("foo", String.class, null);
         assertEquals("foo", str);
     }
 }

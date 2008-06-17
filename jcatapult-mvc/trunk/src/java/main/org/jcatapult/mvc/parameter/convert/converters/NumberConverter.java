@@ -17,15 +17,11 @@ package org.jcatapult.mvc.parameter.convert.converters;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
-
-import com.google.inject.Singleton;
-import static net.java.util.CollectionTools.*;
+import org.jcatapult.mvc.parameter.convert.annotation.Converter;
 
 /**
  * <p>
@@ -35,14 +31,14 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
+@Converter(forTypes = {byte.class, short.class, int.class, long.class, float.class, double.class,
+    Number.class, BigDecimal.class, BigInteger.class})
 @SuppressWarnings("unchecked")
-@Singleton
 public class NumberConverter extends AbstractPrimitiveConverter {
     /**
      * Returns 0 for everything but in the correct wrapper classes.
      */
-    protected <T> T defaultPrimitive(Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> T defaultPrimitive(Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (convertTo == Byte.TYPE || convertTo == Byte.class) {
             return (T) new Byte((byte) 0);
@@ -68,8 +64,7 @@ public class NumberConverter extends AbstractPrimitiveConverter {
     /**
      * Uses the valueOf methods in the wrapper classes based on the convertTo type.
      */
-    protected <T> T stringToPrimitive(String value, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> T stringToPrimitive(String value, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         try {
             if (convertTo == Byte.TYPE || convertTo == Byte.class) {
@@ -96,8 +91,7 @@ public class NumberConverter extends AbstractPrimitiveConverter {
         }
     }
 
-    protected <T> String primitiveToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> String primitiveToString(T value, Class<T> convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return value.toString();
 
@@ -115,13 +109,5 @@ public class NumberConverter extends AbstractPrimitiveConverter {
 //        } else if (convertFrom == BigDecimal.class) {
 //            return (T) new BigDecimal(value);
 //        }
-    }
-
-    /**
-     * Returns all the number primitives, Number.class, BigInteger.class and BigDecimal.class.
-     */
-    public Class<?>[] supportedTypes() {
-        return array(Byte.TYPE, Short.TYPE, Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE,
-            Number.class, BigDecimal.class, BigInteger.class);
     }
 }

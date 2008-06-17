@@ -15,7 +15,6 @@
  */
 package org.jcatapult.mvc.message;
 
-import java.util.Locale;
 import java.util.Map;
 
 import com.google.inject.ImplementedBy;
@@ -38,12 +37,13 @@ public interface MessageProvider {
      * @param   bundle The name of the bundle to pull the message from. This might be a ResourceBundle
      *          or a database or a table name, etc.
      * @param   key The key of the message.
-     * @param   locale The locale of the message.
      * @param   attributes Any additional attributes for the message.
-     * @param   values Any additional values for the message. @return  The message or null if it doesn't exist.
-     * @return  The message or null if it doesn't exist.
+     * @param   values Any additional values for the message.
+     * @return  The message.
+     * @throws  MissingMessageException If the message is missing.
      */
-    String getMessage(String bundle, String key, Locale locale, Map<String, String> attributes, String... values);
+    String getMessage(String bundle, String key, Map<String, String> attributes, Object... values)
+    throws MissingMessageException;
 
     /**
      * Finds a message with the given key and for the given locale.
@@ -51,8 +51,9 @@ public interface MessageProvider {
      * @param   bundle The name of the bundle to pull the message from. This might be a ResourceBundle
      *          or a database or a table name, etc.
      * @param   key The key of the message.
-     * @param   locale The locale of the message. @return  The message or null if it doesn't exist.
-     * @return  The message or null if it doesn't exist.
+     * @param   values Any additional values for the message.
+     * @return  The message.
+     * @throws  MissingMessageException If the message is missing.
      */
-    String getMessage(String bundle, String key, Locale locale);
+    String getMessage(String bundle, String key, Object... values) throws MissingMessageException;
 }

@@ -18,18 +18,16 @@ package org.jcatapult.mvc.action.result;
 import java.lang.annotation.Annotation;
 
 import com.google.inject.ImplementedBy;
-import com.google.inject.Singleton;
 
 /**
  * <p>
- * This interface defines the registry that stores Results.
+ * This interface defines the provider that creates Results.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultResultRegistry.class)
-@Singleton
-public interface ResultRegistry {
+@ImplementedBy(DefaultResultProvider.class)
+public interface ResultProvider {
     /**
      * <p>
      * Returns the result for the given annotation.

@@ -49,7 +49,7 @@ public class ContextScopeTest {
             EasyMock.replay(context);
 
             ContextScope scope = new ContextScope(context);
-            List<String> messages = scope.getActionMessages(null, type, null);
+            List<String> messages = scope.getActionMessages(type);
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
 
@@ -62,7 +62,7 @@ public class ContextScopeTest {
             EasyMock.replay(context);
 
             ContextScope scope = new ContextScope(context);
-            List<String> messages = scope.getActionMessages(null, type, null);
+            List<String> messages = scope.getActionMessages(type);
             assertEquals(0, messages.size());
 
             EasyMock.verify(context);
@@ -75,7 +75,7 @@ public class ContextScopeTest {
             EasyMock.replay(context);
 
             ContextScope scope = new ContextScope(context);
-            scope.addActionMessage(null, type, null, "Test message");
+            scope.addActionMessage(type, "Test message");
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
 
@@ -90,7 +90,7 @@ public class ContextScopeTest {
             EasyMock.replay(context);
 
             ContextScope scope = new ContextScope(context);
-            scope.addActionMessage(null, type, null, "Test message");
+            scope.addActionMessage(type, "Test message");
             List<String> messages = (List<String>) list.object;
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
@@ -115,7 +115,7 @@ public class ContextScopeTest {
             EasyMock.replay(context);
 
             ContextScope scope = new ContextScope(context);
-            Map<String, List<String>> messages = scope.getFieldMessages(null, type, null);
+            Map<String, List<String>> messages = scope.getFieldMessages(type);
             assertEquals(1, messages.size());
             assertEquals(1, messages.get("user.name").size());
             assertEquals("Test message", messages.get("user.name").get(0));
@@ -129,7 +129,7 @@ public class ContextScopeTest {
             EasyMock.replay(context);
 
             ContextScope scope = new ContextScope(context);
-            Map<String, List<String>> messages = scope.getFieldMessages(null, type, null);
+            Map<String, List<String>> messages = scope.getFieldMessages(type);
             assertEquals(0, messages.size());
 
             EasyMock.verify(context);
@@ -142,7 +142,7 @@ public class ContextScopeTest {
             EasyMock.replay(context);
 
             ContextScope scope = new ContextScope(context);
-            scope.addFieldMessage(null, type, null, "user.name", "Test message");
+            scope.addFieldMessage(type, "user.name", "Test message");
             assertEquals(1, messages.size());
             assertEquals(1, messages.get("user.name").size());
             assertEquals("Test message", messages.get("user.name").get(0));
@@ -158,7 +158,7 @@ public class ContextScopeTest {
             EasyMock.replay(context);
 
             ContextScope scope = new ContextScope(context);
-            scope.addFieldMessage(null, type, null, "user.name", "Test message");
+            scope.addFieldMessage(type, "user.name", "Test message");
             Map<String, List<String>> messages = (Map<String, List<String>>) map.object;
             assertEquals(1, messages.size());
             assertEquals(1, messages.get("user.name").size());

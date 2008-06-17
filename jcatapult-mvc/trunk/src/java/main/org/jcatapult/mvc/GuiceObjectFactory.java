@@ -32,7 +32,7 @@ public class GuiceObjectFactory implements ObjectFactory {
      * @param   klass The class to create.
      * @return  The Object and never null.
      */
-    public Object create(Class<?> klass) {
+    public <T> T create(Class<T> klass) {
         return GuiceContainer.getInjector().getInstance(klass);
     }
 }

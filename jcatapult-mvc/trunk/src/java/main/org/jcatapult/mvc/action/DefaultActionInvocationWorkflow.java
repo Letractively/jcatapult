@@ -26,11 +26,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.jcatapult.mvc.action.result.Result;
 import org.jcatapult.mvc.action.result.ResultInvocation;
 import org.jcatapult.mvc.action.result.ResultInvocationProvider;
-import org.jcatapult.mvc.action.result.ResultRegistry;
+import org.jcatapult.mvc.action.result.ResultProvider;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -41,18 +40,17 @@ import com.google.inject.Singleton;
  *
  * @author  Brian Pontarelli
  */
-@Singleton
 public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow {
-    private final ActionMappingWorkflow actionMappingWorkflow;
+    private final ActionInvocationStore actionInvocationStore;
     private final ResultInvocationProvider resultInvocationProvider;
-    private final ResultRegistry resultRegistry;
+    private final ResultProvider resultProvider;
 
     @Inject
-    public DefaultActionInvocationWorkflow(ActionMappingWorkflow actionMappingWorkflow,
-            ResultInvocationProvider resultInvocationProvider, ResultRegistry resultRegistry) {
-        this.actionMappingWorkflow = actionMappingWorkflow;
+    public DefaultActionInvocationWorkflow(ActionInvocationStore actionInvocationStore,
+        ResultInvocationProvider resultInvocationProvider, ResultProvider resultProvider) {
+        this.actionInvocationStore = actionInvocationStore;
         this.resultInvocationProvider = resultInvocationProvider;
-        this.resultRegistry = resultRegistry;
+        this.resultProvider = resultProvider;
     }
 
     /**
@@ -83,7 +81,7 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
      */
     public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
     throws IOException, ServletException {
-        ActionInvocation invocation = actionMappingWorkflow.fetch(request);
+        ActionInvocation invocation = actionInvocationStore.get();
         ResultInvocation resultInvocation;
         if (invocation.action() == null) {
             // Try a default result mapping just for the URI
@@ -110,14 +108,14 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
         }
 
         Annotation annotation = resultInvocation.annotation();
-        Result result = resultRegistry.lookup(annotation.annotationType());
+        Result result = resultProvider.lookup(annotation.annotationType());
         if (result == null) {
             throw new ServletException("Unmapped result annotationType [" + annotation.getClass() +
                 "]. You probably need to define a Result implementation that maps to this annotationType " +
                 "and then add that Result implementation to your Guice Module.");
         }
 
-        result.execute(annotation, invocation, request, response);
+        result.execute(annotation, invocation);
     }
 
     /**

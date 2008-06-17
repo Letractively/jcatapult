@@ -24,12 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
-import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.mvc.locale.LocaleProvider;
-import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.example.domain.Action;
+import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.message.MessageStore;
+import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.servlet.WorkflowChain;
 import org.junit.Test;
@@ -60,43 +59,34 @@ public class DefaultParameterWorkflowTest {
 
         final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getParameterMap()).andReturn(values);
-        request.setAttribute(eq(DefaultParameterWorkflow.PARAMETERS_KEY), isA(Map.class));
         EasyMock.replay(request);
 
         ExpressionEvaluator expressionEvaluator = EasyMock.createNiceMock(ExpressionEvaluator.class);
-        expressionEvaluator.setValue(eq("user.addresses['home'].city"), same(action), aryEq(array("Boulder")),
-            same(request), same(Locale.US), eq(new HashMap<String, String>()));
-        expressionEvaluator.setValue(eq("user.age"), same(action), aryEq(array("32")), same(request),
-            same(Locale.US), eq(map("dateFormat", "MM/dd/yyyy")));
-        expressionEvaluator.setValue(eq("user.inches"), same(action), aryEq(array("tall")), same(request),
-            same(Locale.US), eq(new HashMap<String, String>()));
+        expressionEvaluator.setValue(eq("user.addresses['home'].city"), same(action), aryEq(array("Boulder")), eq(new HashMap<String, String>()));
+        expressionEvaluator.setValue(eq("user.age"), same(action), aryEq(array("32")), eq(map("dateFormat", "MM/dd/yyyy")));
+        expressionEvaluator.setValue(eq("user.inches"), same(action), aryEq(array("tall")), eq(new HashMap<String, String>()));
         expectLastCall().andThrow(new ConversionException());
         EasyMock.replay(expressionEvaluator);
-
-        LocaleProvider localeProvider = EasyMock.createStrictMock(LocaleProvider.class);
-        EasyMock.expect(localeProvider.getLocale(request)).andReturn(Locale.US);
-        EasyMock.replay(localeProvider);
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
         EasyMock.expect(invocation.action()).andReturn(action);
         EasyMock.replay(invocation);
 
-        ActionMappingWorkflow actionMappingWorkflow = EasyMock.createStrictMock(ActionMappingWorkflow.class);
-        EasyMock.expect(actionMappingWorkflow.fetch(request)).andReturn(invocation);
-        EasyMock.replay(actionMappingWorkflow);
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.get()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
 
         MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
-        messageStore.addConversionError(same(request), same(action), eq("user.inches"), eq("org.example.domain.Action"),
-            same(Locale.US), eq(new HashMap<String, String>()), eq("tall"));
+        messageStore.addConversionError(eq("user.inches"), eq("org.example.domain.Action"), eq(new HashMap<String, String>()), eq("tall"));
         EasyMock.replay(messageStore);
 
         WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
         chain.doWorkflow(request, null);
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeProvider, actionMappingWorkflow, messageStore, expressionEvaluator);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(Locale.US, actionInvocationStore, messageStore, expressionEvaluator);
         workflow.perform(request, null, chain);
 
-        EasyMock.verify(request, expressionEvaluator, localeProvider, invocation, actionMappingWorkflow, messageStore, chain);
+        EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
     }
 }

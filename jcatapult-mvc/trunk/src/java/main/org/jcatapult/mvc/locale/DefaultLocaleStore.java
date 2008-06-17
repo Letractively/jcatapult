@@ -19,7 +19,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.google.inject.Singleton;
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -28,9 +28,14 @@ import com.google.inject.Singleton;
  *
  * @author  Brian Pontarelli
  */
-@Singleton
-public class DefaultLocaleProvider implements LocaleProvider {
+public class DefaultLocaleStore implements LocaleStore {
     public static final String LOCALE_KEY = "jcatapultLocale";
+    private final HttpServletRequest request;
+
+    @Inject
+    public DefaultLocaleStore(HttpServletRequest request) {
+        this.request = request;
+    }
 
     /**
      * Looks up the Locale using this search order:
@@ -41,10 +46,9 @@ public class DefaultLocaleProvider implements LocaleProvider {
      * <li>If the locale hasn't been found, get it from the request</li>
      * </ol>
      *
-     * @param   request The request used to get the session or check for the Locale in.
      * @return  The Locale and never null.
      */
-    public Locale getLocale(HttpServletRequest request) {
+    public Locale get() {
         HttpSession session = request.getSession(false);
         Locale locale;
         if (session == null) {
@@ -64,10 +68,9 @@ public class DefaultLocaleProvider implements LocaleProvider {
      * Sets the Locale into the session using the LOCALE_KEY constant. This doesn't ever create
      * a session. If there isn't a session, this falls back to storing the Locale in the request.
      *
-     * @param   request The request used to get the session or store the Locale in.
      * @param   locale The Locale to store.
      */
-    public void setLocale(HttpServletRequest request, Locale locale) {
+    public void set(Locale locale) {
         HttpSession session = request.getSession(false);
         if (session == null) {
             request.setAttribute(LOCALE_KEY, locale);

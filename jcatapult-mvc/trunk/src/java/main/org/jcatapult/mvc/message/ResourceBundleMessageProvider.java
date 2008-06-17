@@ -15,10 +15,20 @@
  */
 package org.jcatapult.mvc.message;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import static java.util.Arrays.*;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import org.jcatapult.mvc.locale.annotation.CurrentLocale;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -47,28 +57,53 @@ import java.util.ResourceBundle;
  * This continues to look up packages until if finds the message.
  * </p>
  *
- * TODO add toekn replacement
+ * <p>
+ * Once the message is found, it is formatted using the {@link java.text.MessageFormat}
+ * class. The values are passed in order. The attributes Map is also passed to
+ * the format as well. The attributes are always after the values and are in
+ * alphabetically order based on the keys for each attribute.
+ * </p>
  *
  * @author  Brian Pontarelli
  */
 public class ResourceBundleMessageProvider implements MessageProvider {
-    /**
-     * {@inheritDoc}
-     */
-    public String getMessage(String bundle, String key, Locale locale, Map<String, String> attributes,
-            String... values) {
-        String message = getMessage(bundle, key, locale);
-        if (message != null) {
-            // Token replace
-        }
+    private final Locale locale;
 
-        return message;
+    @Inject
+    public ResourceBundleMessageProvider(@CurrentLocale Locale locale) {
+        this.locale = locale;
     }
 
     /**
      * {@inheritDoc}
      */
-    public String getMessage(String bundle, String key, Locale locale) {
+    public String getMessage(String bundle, String key, Map<String, String> attributes, Object... values) {
+        String message = findMessage(bundle, key);
+        List<Object> params = new ArrayList<Object>(asList(values));
+        SortedSet<String> sortedKeys = new TreeSet<String>(attributes.keySet());
+        for (String sortedKey : sortedKeys) {
+            params.add(attributes.get(sortedKey));
+        }
+
+        return MessageFormat.format(message, params.toArray());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getMessage(String bundle, String key, Object... values) {
+        String message = findMessage(bundle, key);
+        return MessageFormat.format(message, values);
+    }
+
+    /**
+     * Finds the message in a resource bundle using the search method described in the class comment.
+     *
+     * @param   bundle The bundle to start the search with.
+     * @param   key The key of the message.
+     * @return  The message or null if it doesn't exist.
+     */
+    protected String findMessage(String bundle, String key) {
         ResourceBundle rb = null;
         try {
             rb = ResourceBundle.getBundle(bundle, locale);
@@ -104,6 +139,7 @@ public class ResourceBundleMessageProvider implements MessageProvider {
             }
         }
 
-        return null;
+        throw new MissingMessageException("Message could not be found for bundle name [" + bundle +
+            "] and key [" + key + "]");
     }
 }
