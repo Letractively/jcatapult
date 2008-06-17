@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.mvc.scope.annotation.Flash;
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -35,13 +35,19 @@ import org.jcatapult.mvc.scope.annotation.Flash;
  * @author  Brian Pontarelli
  */
 @SuppressWarnings("unchecked")
-public class FlashScope implements Scope<Flash> {
+public class FlashScope implements Scope {
     public static final String FLASH_KEY = "JCATAPULT_FLASH_SCOPE";
+    private final HttpServletRequest request;
+
+    @Inject
+    public FlashScope(HttpServletRequest request) {
+        this.request = request;
+    }
 
     /**
      * {@inheritDoc}
      */
-    public Object get(Object action, String fieldName, HttpServletRequest request) {
+    public Object get(String fieldName) {
         Map<String, Object> flash = (Map<String, Object>) request.getAttribute(FLASH_KEY);
         if (flash == null || !flash.containsKey(fieldName)) {
             flash = (Map<String, Object>) request.getSession().getAttribute(FLASH_KEY);
@@ -56,7 +62,7 @@ public class FlashScope implements Scope<Flash> {
     /**
      * {@inheritDoc}
      */
-    public void set(Object action, String fieldName, HttpServletRequest request, Object value) {
+    public void set(String fieldName, Object value) {
         Map<String, Object> flash = (Map<String, Object>) request.getSession().getAttribute(FLASH_KEY);
         if (flash == null) {
             flash = new HashMap<String, Object>();
@@ -77,12 +83,5 @@ public class FlashScope implements Scope<Flash> {
             request.getSession().removeAttribute(FLASH_KEY);
             request.setAttribute(FLASH_KEY, flash);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Class<Flash> annotationType() {
-        return Flash.class;
     }
 }

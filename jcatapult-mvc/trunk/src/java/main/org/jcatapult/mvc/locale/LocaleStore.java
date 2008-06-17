@@ -16,9 +16,9 @@
 package org.jcatapult.mvc.locale;
 
 import java.util.Locale;
-import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.ImplementedBy;
+import com.google.inject.Provider;
 
 /**
  * <p>
@@ -29,21 +29,12 @@ import com.google.inject.ImplementedBy;
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultLocaleProvider.class)
-public interface LocaleProvider {
-    /**
-     * Locates the current locale. This should only be a user defined Locale and NEVER the default.
-     *
-     * @param   request The request.
-     * @return  The Locale or null if there hasn't been a Locale setup for the user.
-     */
-    Locale getLocale(HttpServletRequest request);
-
+@ImplementedBy(DefaultLocaleStore.class)
+public interface LocaleStore extends Provider<Locale> {
     /**
      * Stores a new Locale.
      *
-     * @param   request The request.
      * @param   locale The new Locale.
      */
-    void setLocale(HttpServletRequest request, Locale locale);
+    void set(Locale locale);
 }

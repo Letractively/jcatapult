@@ -23,13 +23,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.mvc.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.Converter;
-import org.jcatapult.mvc.parameter.convert.ConverterRegistry;
+import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -45,14 +45,18 @@ import com.google.inject.Singleton;
  *
  * @author  Brian Pontarelli
  */
-@Singleton
 @SuppressWarnings("unchecked")
 public class DefaultExpressionEvaluator implements ExpressionEvaluator {
-    private final ConverterRegistry converterRegistry;
+    private final Locale locale;
+    private final HttpServletRequest request;
+    private final ConverterProvider converterProvider;
 
     @Inject
-    public DefaultExpressionEvaluator(ConverterRegistry converterRegistry) {
-        this.converterRegistry = converterRegistry;
+    public DefaultExpressionEvaluator(@CurrentLocale Locale locale, HttpServletRequest request,
+            ConverterProvider converterProvider) {
+        this.locale = locale;
+        this.request = request;
+        this.converterProvider = converterProvider;
     }
 
     /**
@@ -61,13 +65,12 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     @Override
     public <T> T getValue(String expression, Object object) throws ExpressionException {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(converterRegistry, atoms);
+        Context context = new Context(converterProvider, atoms);
         context.init(object);
         while (context.hasNext()) {
             Atom atom = context.next();
             context.initAccessor(atom.getName());
             if (context.skip()) {
-                System.out.println("Skipped");
                 continue;
             }
 
@@ -86,8 +89,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
      * {@inheritDoc}
      */
     @Override
-    public String getValue(String expression, Object object, HttpServletRequest request,
-        Locale locale, Map<String, String> attributes)
+    public String getValue(String expression, Object object, Map<String, String> attributes)
     throws ExpressionException {
         Object value = getValue(expression, object);
         if (value == null) {
@@ -95,12 +97,12 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
         }
 
         Class<?> type = value.getClass();
-        Converter converter = converterRegistry.lookup(type);
+        Converter converter = converterProvider.lookup(type);
         if (converter == null) {
             throw new ConverterStateException("No type converter found for the type [" + type + "]");
         }
 
-        return converter.convertToString(value, (Class<Object>) type, request, locale, attributes);
+        return converter.convertToString(value, (Class<Object>) type, attributes);
     }
 
     /**
@@ -110,7 +112,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 
     public void setValue(String expression, Object object, Object value) throws ExpressionException {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(converterRegistry, atoms);
+        Context context = new Context(converterProvider, atoms);
         context.init(object);
         while (context.hasNext()) {
             Atom atom = context.next();
@@ -141,11 +143,10 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
      * {@inheritDoc}
      */
     @Override
-    public void setValue(String expression, Object object, String[] values, HttpServletRequest request,
-        Locale locale, Map<String, String> attributes)
+    public void setValue(String expression, Object object, String[] values, Map<String, String> attributes)
     throws ConversionException, ConverterStateException, ExpressionException {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(converterRegistry, atoms, request, locale, attributes);
+        Context context = new Context(converterProvider, atoms, request, locale, attributes);
         context.init(object);
         while (context.hasNext()) {
             Atom atom = context.next();

@@ -15,10 +15,8 @@
  */
 package org.jcatapult.mvc.parameter.el;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
@@ -52,8 +50,6 @@ public interface ExpressionEvaluator {
      *
      * @param   expression The expression that defines the value to get from the object.
      * @param   object The object to get the value from.
-     * @param   request The HttpServletRequest which is passed to the Converter.
-     * @param   locale The current Locale for the user of the application which is passed to the Converter.
      * @param   attributes The attributes for the expression. These attributes are only available if
      *          the user submitted a form and a particular parameter had some attributes associated
      *          with it. Those attributes are stored in the HttpServletRequest and can be fetched via
@@ -62,9 +58,7 @@ public interface ExpressionEvaluator {
      * @return  The String value from the object. This value has been converted.
      * @throws  ExpressionException If the expression is invalid or there was an error during processing.
      */
-    String getValue(String expression, Object object, HttpServletRequest request, Locale locale,
-            Map<String, String> attributes)
-    throws ExpressionException;
+    String getValue(String expression, Object object, Map<String, String> attributes) throws ExpressionException;
 
     /**
      * Sets the given value into the given object using the given expression.
@@ -85,8 +79,6 @@ public interface ExpressionEvaluator {
      * @param   expression The expression.
      * @param   object The object.
      * @param   values The HttpServletRequest parameter values.
-     * @param   request The HttpServletRequest, which is passed to the converter.
-     * @param   locale The current Locale for the user of the application which is passed to the Converter.
      * @param   attributes The attributes for the expression. These attributes are only available if
      *          the user submitted a form and a particular parameter had some attributes associated
      *          with it. Those attributes are stored in the HttpServletRequest and can be fetched via
@@ -97,8 +89,7 @@ public interface ExpressionEvaluator {
      *          because it was missing a required attribute.
      * @throws  ExpressionException If the expression is invalid or there was an error during processing.
      */
-    void setValue(String expression, Object object, String[] values, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    void setValue(String expression, Object object, String[] values, Map<String, String> attributes)
     throws ConversionException, ConverterStateException, ExpressionException;
 
     /**

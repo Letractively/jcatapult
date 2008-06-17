@@ -36,48 +36,48 @@ public class BooleanConverterTest {
     @Test
     public void testFromStrings() {
         Converter converter = new BooleanConverter();
-        Boolean b = converter.convertFromStrings(array((String) null), Boolean.class, null, null, null);
+        Boolean b = converter.convertFromStrings(array((String) null), Boolean.class, null);
         assertNull(b);
 
-        b = converter.convertFromStrings(array((String) null), Boolean.TYPE, null, null, null);
+        b = converter.convertFromStrings(array((String) null), Boolean.TYPE, null);
         assertFalse(b);
 
-        b = converter.convertFromStrings(array("true"), Boolean.class, null, null, null);
+        b = converter.convertFromStrings(array("true"), Boolean.class, null);
         assertTrue(b);
 
-        b = converter.convertFromStrings(array("true"), Boolean.TYPE, null, null, null);
+        b = converter.convertFromStrings(array("true"), Boolean.TYPE, null);
         assertTrue(b);
 
-        b = converter.convertFromStrings(array("false"), Boolean.class, null, null, null);
+        b = converter.convertFromStrings(array("false"), Boolean.class, null);
         assertFalse(b);
 
-        b = converter.convertFromStrings(array("false"), Boolean.TYPE, null, null, null);
+        b = converter.convertFromStrings(array("false"), Boolean.TYPE, null);
         assertFalse(b);
 
-        Boolean[] ba = converter.convertFromStrings(array("true", "false"), Boolean[].class, null, null, null);
+        Boolean[] ba = converter.convertFromStrings(array("true", "false"), Boolean[].class, null);
         assertTrue(ba[0]);
         assertFalse(ba[1]);
 
-        boolean[] bpa = converter.convertFromStrings(array("true", "false"), boolean[].class, null, null, null);
+        boolean[] bpa = converter.convertFromStrings(array("true", "false"), boolean[].class, null);
         assertTrue(bpa[0]);
         assertFalse(bpa[1]);
 
         try {
-            converter.convertFromStrings(array("fals3"), Boolean.class, null, null, null);
+            converter.convertFromStrings(array("fals3"), Boolean.class, null);
             fail("Should have failed");
         } catch (ConversionException ce) {
             // Expected
         }
 
         try {
-            converter.convertFromStrings(array("   "), Boolean.class, null, null, null);
+            converter.convertFromStrings(array("   "), Boolean.class, null);
             fail("Should have failed");
         } catch (ConversionException e) {
             // Expected
         }
 
         try {
-            converter.convertFromStrings(array("   "), Boolean.TYPE, null, null, null);
+            converter.convertFromStrings(array("   "), Boolean.TYPE, null);
             fail("Should have failed");
         } catch (ConversionException e) {
             // Expected
@@ -90,19 +90,19 @@ public class BooleanConverterTest {
     @Test
     public void testToStrings() {
         Converter converter = new BooleanConverter();
-        String str = converter.convertToString(null, Boolean.class, null, null, null);
+        String str = converter.convertToString(null, Boolean.class, null);
         assertNull(str);
 
-        str = converter.convertToString(Boolean.TRUE, Boolean.class, null, null, null);
+        str = converter.convertToString(Boolean.TRUE, Boolean.class, null);
         assertEquals("true", str);
 
-        str = converter.convertToString(Boolean.TRUE, Boolean.TYPE, null, null, null);
+        str = converter.convertToString(Boolean.TRUE, Boolean.TYPE, null);
         assertEquals("true", str);
 
-        str = converter.convertToString(Boolean.FALSE, Boolean.class, null, null, null);
+        str = converter.convertToString(Boolean.FALSE, Boolean.class, null);
         assertEquals("false", str);
 
-        str = converter.convertToString(Boolean.FALSE, Boolean.TYPE, null, null, null);
+        str = converter.convertToString(Boolean.FALSE, Boolean.TYPE, null);
         assertEquals("false", str);
     }
 }

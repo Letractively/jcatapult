@@ -16,12 +16,8 @@
 package org.jcatapult.mvc.scope;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
-import org.jcatapult.mvc.scope.annotation.Context;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -31,8 +27,7 @@ import com.google.inject.Singleton;
  *
  * @author Brian Pontarelli
  */
-@Singleton
-public class ContextScope implements Scope<Context> {
+public class ContextScope implements Scope {
     private final ServletContext context;
 
     @Inject
@@ -43,21 +38,14 @@ public class ContextScope implements Scope<Context> {
     /**
      * {@inheritDoc}
      */
-    public Object get(Object action, String fieldName, HttpServletRequest request) {
+    public Object get(String fieldName) {
         return context.getAttribute(fieldName);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void set(Object action, String fieldName, HttpServletRequest request, Object value) {
+    public void set(String fieldName, Object value) {
         context.setAttribute(fieldName, value);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Class<Context> annotationType() {
-        return Context.class;
     }
 }

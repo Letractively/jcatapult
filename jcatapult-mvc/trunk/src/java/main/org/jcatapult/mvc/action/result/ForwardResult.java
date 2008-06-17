@@ -41,19 +41,22 @@ import com.google.inject.Inject;
 public class ForwardResult extends AbstractResult<Forward> {
     public static final String DIR = "/WEB-INF/content";
     private final ServletContext servletContext;
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
 
     @Inject
-    public ForwardResult(ServletContext servletContext, ExpressionEvaluator expressionEvaluator) {
+    public ForwardResult(ServletContext servletContext, ExpressionEvaluator expressionEvaluator,
+            HttpServletRequest request, HttpServletResponse response) {
         super(expressionEvaluator);
         this.servletContext = servletContext;
+        this.request = request;
+        this.response = response;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void execute(Forward forward, ActionInvocation invocation, HttpServletRequest request,
-        HttpServletResponse response)
-    throws IOException, ServletException {
+    public void execute(Forward forward, ActionInvocation invocation) throws IOException, ServletException {
         String page = forward.page();
         if (page.endsWith(".jsp")) {
             if (!page.startsWith("/")) {
@@ -65,13 +68,6 @@ public class ForwardResult extends AbstractResult<Forward> {
         } else {
             throw new RuntimeException("Not supported yet");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Class<Forward> annotationType() {
-        return Forward.class;
     }
 
     /**

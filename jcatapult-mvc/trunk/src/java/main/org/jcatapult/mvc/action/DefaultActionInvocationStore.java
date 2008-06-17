@@ -13,40 +13,39 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.scope;
+package org.jcatapult.mvc.action;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import com.google.inject.Inject;
 
 /**
  * <p>
- * This is the request scope which fetches and stores values in the
- * HttpSession.
+ * This class is the default action invocation store.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class SessionScope implements Scope {
-    private final HttpSession session;
+public class DefaultActionInvocationStore implements ActionInvocationStore {
+    public static final String ACTION_INVOCATION_KEY = "jcatapultActionInvocation";
+    private final HttpServletRequest request;
 
     @Inject
-    public SessionScope(HttpServletRequest request) {
-        this.session = request.getSession();
+    public DefaultActionInvocationStore(HttpServletRequest request) {
+        this.request = request;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Object get(String fieldName) {
-        return session.getAttribute(fieldName);
+    public ActionInvocation get() {
+        return (ActionInvocation) request.getAttribute(ACTION_INVOCATION_KEY);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void set(String fieldName, Object value) {
-        session.setAttribute(fieldName, value);
+    public void set(ActionInvocation invocation) {
+        request.setAttribute(ACTION_INVOCATION_KEY, invocation);
     }
 }

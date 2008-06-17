@@ -26,6 +26,9 @@ import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.Capture;
+import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -49,9 +52,16 @@ public class ActionSessionScopeTest {
 
         HttpServletRequest request = makeRequest(session);
 
-        Edit action = new Edit();
-        ActionSessionScope scope = new ActionSessionScope();
-        List<String> messages = scope.getActionMessages(request, MessageType.PLAIN, action);
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation get() {
+                return new DefaultActionInvocation(action, "", null);
+            }
+
+            public void set(ActionInvocation invocation) {
+            }
+        });
+        List<String> messages = scope.getActionMessages(MessageType.PLAIN);
         assertEquals(1, messages.size());
         assertEquals("Test message", messages.get(0));
 
@@ -64,9 +74,16 @@ public class ActionSessionScopeTest {
         HttpSession session = makeSession(map, ActionSessionScope.ACTION_SESSION_ACTION_MESSAGE_KEY);
         HttpServletRequest request = makeRequest(session);
 
-        Edit action = new Edit();
-        ActionSessionScope scope = new ActionSessionScope();
-        scope.addActionMessage(request, MessageType.PLAIN, action, "Test message");
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation get() {
+                return new DefaultActionInvocation(action, "", null);
+            }
+
+            public void set(ActionInvocation invocation) {
+            }
+        });
+        scope.addActionMessage(MessageType.PLAIN, "Test message");
 
         verifyAction(map, session, request);
     }
@@ -82,9 +99,16 @@ public class ActionSessionScopeTest {
 
         HttpServletRequest request = makeRequest(session);
 
-        Edit action = new Edit();
-        ActionSessionScope scope = new ActionSessionScope();
-        List<String> messages = scope.getActionMessages(request, MessageType.ERROR, action);
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation get() {
+                return new DefaultActionInvocation(action, "", null);
+            }
+
+            public void set(ActionInvocation invocation) {
+            }
+        });
+        List<String> messages = scope.getActionMessages(MessageType.ERROR);
         assertEquals(1, messages.size());
         assertEquals("Test message", messages.get(0));
 
@@ -97,9 +121,16 @@ public class ActionSessionScopeTest {
         HttpSession session = makeSession(map, ActionSessionScope.ACTION_SESSION_ACTION_ERROR_KEY);
         HttpServletRequest request = makeRequest(session);
 
-        Edit action = new Edit();
-        ActionSessionScope scope = new ActionSessionScope();
-        scope.addActionMessage(request, MessageType.ERROR, action, "Test message");
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation get() {
+                return new DefaultActionInvocation(action, "", null);
+            }
+
+            public void set(ActionInvocation invocation) {
+            }
+        });
+        scope.addActionMessage(MessageType.ERROR, "Test message");
 
         verifyAction(map, session, request);
     }
@@ -118,9 +149,16 @@ public class ActionSessionScopeTest {
 
         HttpServletRequest request = makeRequest(session);
 
-        Edit action = new Edit();
-        ActionSessionScope scope = new ActionSessionScope();
-        Map<String, List<String>> messages = scope.getFieldMessages(request, MessageType.PLAIN, action);
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation get() {
+                return new DefaultActionInvocation(action, "", null);
+            }
+
+            public void set(ActionInvocation invocation) {
+            }
+        });
+        Map<String, List<String>> messages = scope.getFieldMessages(MessageType.PLAIN);
         assertEquals(1, messages.size());
         assertEquals(1, messages.get("user.name").size());
         assertEquals("Test message", messages.get("user.name").get(0));
@@ -134,9 +172,16 @@ public class ActionSessionScopeTest {
         HttpSession session = makeSession(map, ActionSessionScope.ACTION_SESSION_FIELD_MESSAGE_KEY);
         HttpServletRequest request = makeRequest(session);
 
-        Edit action = new Edit();
-        ActionSessionScope scope = new ActionSessionScope();
-        scope.addFieldMessage(request, MessageType.PLAIN, action, "user.name", "Test message");
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation get() {
+                return new DefaultActionInvocation(action, "", null);
+            }
+
+            public void set(ActionInvocation invocation) {
+            }
+        });
+        scope.addFieldMessage(MessageType.PLAIN, "user.name", "Test message");
 
         verifyField(map, session, request);
     }
@@ -155,9 +200,16 @@ public class ActionSessionScopeTest {
 
         HttpServletRequest request = makeRequest(session);
 
-        Edit action = new Edit();
-        ActionSessionScope scope = new ActionSessionScope();
-        Map<String, List<String>> messages = scope.getFieldMessages(request, MessageType.ERROR, action);
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation get() {
+                return new DefaultActionInvocation(action, "", null);
+            }
+
+            public void set(ActionInvocation invocation) {
+            }
+        });
+        Map<String, List<String>> messages = scope.getFieldMessages(MessageType.ERROR);
         assertEquals(1, messages.size());
         assertEquals(1, messages.get("user.name").size());
         assertEquals("Test message", messages.get("user.name").get(0));
@@ -171,9 +223,16 @@ public class ActionSessionScopeTest {
         HttpSession session = makeSession(map, ActionSessionScope.ACTION_SESSION_FIELD_ERROR_KEY);
         HttpServletRequest request = makeRequest(session);
 
-        Edit action = new Edit();
-        ActionSessionScope scope = new ActionSessionScope();
-        scope.addFieldMessage(request, MessageType.ERROR, action, "user.name", "Test message");
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation get() {
+                return new DefaultActionInvocation(action, "", null);
+            }
+
+            public void set(ActionInvocation invocation) {
+            }
+        });
+        scope.addFieldMessage(MessageType.ERROR, "user.name", "Test message");
 
         verifyField(map, session, request);
     }

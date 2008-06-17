@@ -15,22 +15,17 @@
  */
 package org.jcatapult.mvc.message;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.jcatapult.mvc.message.scope.FlashScope;
+import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.message.scope.Scope;
-import org.jcatapult.mvc.message.scope.ScopeRegistry;
-import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.mvc.message.scope.ScopeProvider;
 
 import com.google.inject.Inject;
 
@@ -42,46 +37,134 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultMessageStore implements MessageWorkflow, MessageStore {
+public class DefaultMessageStore implements MessageStore {
+    private final ActionInvocationStore actionInvocationStore;
     private final MessageProvider messageProvider;
-    private final ScopeRegistry scopeRegistry;
-    private final FlashScope flashScope;
+    private final ScopeProvider scopeProvider;
 
     @Inject
-    public DefaultMessageStore(MessageProvider messageProvider, ScopeRegistry scopeRegistry,
-            FlashScope flashScope) {
+    public DefaultMessageStore(ActionInvocationStore actionInvocationStore, MessageProvider messageProvider,
+            ScopeProvider scopeProvider) {
+        this.actionInvocationStore = actionInvocationStore;
         this.messageProvider = messageProvider;
-        this.scopeRegistry = scopeRegistry;
-        this.flashScope = flashScope;
+        this.scopeProvider = scopeProvider;
     }
-
-    //----------------------------- Store methods -----------------------------------
 
     /**
      * {@inheritDoc}
      */
-    public void addConversionError(HttpServletRequest request, Object action, String field, String bundle,
-            Locale locale, Map<String, String> attributes, String... values)
+    public void addConversionError(String field, String bundle, Map<String, String> attributes, String... values)
     throws MissingMessageException {
         field = field + ".conversionError";
-        String message = messageProvider.getMessage(bundle, field, locale, attributes, values);
-        if (message == null) {
-            throw new MissingMessageException("A conversion message for the key [" + field +
-                "] and locale [" + locale + "] could not be found.");
-        }
-
-        Scope scope = scopeRegistry.lookup(MessageScope.REQUEST);
-        scope.addFieldMessage(request, MessageType.ERROR, action, field, message);
+        String message = messageProvider.getMessage(bundle, field, attributes, (Object[]) values);
+        Scope scope = scopeProvider.lookup(MessageScope.REQUEST);
+        scope.addFieldMessage(MessageType.ERROR, field, message);
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action) {
+    public void addFieldMessage(MessageScope scope, String field, String bundle, String key, Object... values)
+    throws MissingMessageException {
+        String message = messageProvider.getMessage(bundle, key, values);
+        Scope s = scopeProvider.lookup(scope);
+        s.addFieldMessage(MessageType.PLAIN, field, message);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addFieldMessage(MessageScope scope, String field, String key, Object... values)
+    throws MissingMessageException {
+        ActionInvocation actionInvocation = actionInvocationStore.get();
+        if (actionInvocation.action() == null) {
+            throw new IllegalStateException("Attempting to add an field message without a bundle name " +
+                "but the current request URL is not associated with an action class");
+        }
+
+        addFieldMessage(scope, field, actionInvocation.action().getClass().getName(), key, values);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addFieldError(MessageScope scope, String field, String bundle, String key, Object... values)
+    throws MissingMessageException {
+        String message = messageProvider.getMessage(bundle, key, values);
+        Scope s = scopeProvider.lookup(scope);
+        s.addFieldMessage(MessageType.ERROR, field, message);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addFieldError(MessageScope scope, String field, String key, Object... values)
+    throws MissingMessageException {
+        ActionInvocation actionInvocation = actionInvocationStore.get();
+        if (actionInvocation.action() == null) {
+            throw new IllegalStateException("Attempting to add an field error without a bundle name " +
+                "but the current request URL is not associated with an action class");
+        }
+
+        addFieldError(scope, field, actionInvocation.action().getClass().getName(), key, values);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addActionMessage(MessageScope scope, String bundle, String key, Object... values)
+    throws MissingMessageException {
+        String message = messageProvider.getMessage(bundle, key, values);
+        Scope s = scopeProvider.lookup(scope);
+        s.addActionMessage(MessageType.PLAIN, message);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addActionMessage(MessageScope scope, String key, Object... values)
+    throws MissingMessageException {
+        ActionInvocation actionInvocation = actionInvocationStore.get();
+        if (actionInvocation.action() == null) {
+            throw new IllegalStateException("Attempting to add an action message without a bundle name " +
+                "but the current request URL is not associated with an action class");
+        }
+
+        addActionMessage(scope, actionInvocation.action().getClass().getName(), key, values);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addActionError(MessageScope scope, String bundle, String key, Object... values)
+    throws MissingMessageException {
+        String message = messageProvider.getMessage(bundle, key, values);
+        Scope s = scopeProvider.lookup(scope);
+        s.addActionMessage(MessageType.ERROR, message);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addActionError(MessageScope scope, String key, Object... values)
+    throws MissingMessageException {
+        ActionInvocation actionInvocation = actionInvocationStore.get();
+        if (actionInvocation.action() == null) {
+            throw new IllegalStateException("Attempting to add an action error without a bundle name " +
+                "but the current request URL is not associated with an action class");
+        }
+
+        addActionError(scope, actionInvocation.action().getClass().getName(), key, values);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> getActionMessages(MessageType type) {
         List<String> allMessages = new ArrayList<String>();
-        List<Scope> allScopes = scopeRegistry.getAllScopes();
+        List<Scope> allScopes = scopeProvider.getAllScopes();
         for (Scope scope : allScopes) {
-            List<String> messages = scope.getActionMessages(request, type, action);
+            List<String> messages = scope.getActionMessages(type);
             if (messages != null) {
                 allMessages.addAll(messages);
             }
@@ -93,11 +176,11 @@ public class DefaultMessageStore implements MessageWorkflow, MessageStore {
     /**
      * {@inheritDoc}
      */
-    public Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action) {
+    public Map<String, List<String>> getFieldMessages(MessageType type) {
         Map<String, List<String>> allMessages = new HashMap<String, List<String>>();
-        List<Scope> allScopes = scopeRegistry.getAllScopes();
+        List<Scope> allScopes = scopeProvider.getAllScopes();
         for (Scope scope : allScopes) {
-            Map<String, List<String>> messages = scope.getFieldMessages(request, type, action);
+            Map<String, List<String>> messages = scope.getFieldMessages(type);
             if (messages != null) {
                 allMessages.putAll(messages);
             }
@@ -106,20 +189,23 @@ public class DefaultMessageStore implements MessageWorkflow, MessageStore {
         return allMessages;
     }
 
-    //----------------------------- Workflow methods -----------------------------------
+    /**
+     * {@inheritDoc}
+     */
+    public void clearActionMessages(MessageType type) {
+        List<Scope> allScopes = scopeProvider.getAllScopes();
+        for (Scope scope : allScopes) {
+            scope.clearActionMessages(type);
+        }
+    }
 
     /**
      * {@inheritDoc}
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
-        flashScope.transferFlash(request);
-        chain.doWorkflow(request, response);
-    }
-
-    /**
-     * Does nothing.
-     */
-    public void destroy() {
+    public void clearFieldMessages(MessageType type) {
+        List<Scope> allScopes = scopeProvider.getAllScopes();
+        for (Scope scope : allScopes) {
+            scope.clearFieldMessages(type);
+        }
     }
 }

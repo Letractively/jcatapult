@@ -23,6 +23,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionInvocationStore;
+
+import com.google.inject.Inject;
+
 /**
  * <p>
  * This is the message scope which fetches and stores messages in the
@@ -62,16 +67,24 @@ public class ActionSessionScope implements Scope {
      */
     public static final String ACTION_SESSION_ACTION_MESSAGE_KEY = "jcatapultActionSessionActionMessages";
 
+    private final HttpServletRequest request;
+    private final ActionInvocationStore actionInvocationStore;
+
+    @Inject
+    public ActionSessionScope(HttpServletRequest request, ActionInvocationStore actionInvocationStore) {
+        this.request = request;
+        this.actionInvocationStore = actionInvocationStore;
+    }
+
+
     /**
      * Correctly synchronizes on the session, action session and field messages. It also returns empty
      * maps if anything is missing so that the session doesn't get all filled up with empty maps.
      *
-     * @param   request The request used to get the session.
      * @param   type The message type.
-     * @param   action The action used to get the class name from.
      * @return  The Map of field messages or an empty map is there aren't any.
      */
-    public Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action) {
+    public Map<String, List<String>> getFieldMessages(MessageType type) {
         String key = (type == MessageType.ERROR) ? ACTION_SESSION_FIELD_ERROR_KEY : ACTION_SESSION_FIELD_MESSAGE_KEY;
         HttpSession session = request.getSession();
         Map<String, FieldMessages> actionSession;
@@ -84,7 +97,13 @@ public class ActionSessionScope implements Scope {
 
         Map<String, List<String>> values;
         synchronized (actionSession) {
-            String className = action.getClass().getName();
+            ActionInvocation invocation = actionInvocationStore.get();
+            if (invocation.action() == null) {
+                throw new IllegalStateException("Attempting to set an action session message without " +
+                    "an action associated with the URL");
+            }
+
+            String className = invocation.action().getClass().getName();
             values = actionSession.get(className);
             if (values == null) {
                 return Collections.emptyMap();
@@ -100,13 +119,11 @@ public class ActionSessionScope implements Scope {
     /**
      * Correctly synchronizes on the session, action session, and field messages.
      *
-     * @param   request The request used to get the session.
      * @param   type The message type.
-     * @param   action The action used to get the class name from.
      * @param   fieldName The field name.
      * @param   message The new message to append.
      */
-    public void addFieldMessage(HttpServletRequest request, MessageType type, Object action, String fieldName, String message) {
+    public void addFieldMessage(MessageType type, String fieldName, String message) {
         String key = (type == MessageType.ERROR) ? ACTION_SESSION_FIELD_ERROR_KEY : ACTION_SESSION_FIELD_MESSAGE_KEY;
         HttpSession session = request.getSession();
         Map<String, FieldMessages> actionSession;
@@ -120,7 +137,13 @@ public class ActionSessionScope implements Scope {
 
         FieldMessages values;
         synchronized (actionSession) {
-            String className = action.getClass().getName();
+            ActionInvocation invocation = actionInvocationStore.get();
+            if (invocation.action() == null) {
+                throw new IllegalStateException("Attempting to set an action session message without " +
+                    "an action associated with the URL");
+            }
+
+            String className = invocation.action().getClass().getName();
             values = actionSession.get(className);
             if (values == null) {
                 values = new FieldMessages();
@@ -137,12 +160,10 @@ public class ActionSessionScope implements Scope {
      * Correctly synchronizes on the session, action session and action messages. It also returns empty
      * Lists if anything is missing so that the session doesn't get all filled up with empty objects.
      *
-     * @param   request The request used to get the session.
      * @param   type The message type.
-     * @param   action The action used to get the class name from.
      * @return  The List of action messages or an empty List is there aren't any.
      */
-    public List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action) {
+    public List<String> getActionMessages(MessageType type) {
         String key = (type == MessageType.ERROR) ? ACTION_SESSION_ACTION_ERROR_KEY : ACTION_SESSION_ACTION_MESSAGE_KEY;
         HttpSession session = request.getSession();
         Map<String, List<String>> actionSession;
@@ -155,7 +176,13 @@ public class ActionSessionScope implements Scope {
 
         List<String> values;
         synchronized (actionSession) {
-            String className = action.getClass().getName();
+            ActionInvocation invocation = actionInvocationStore.get();
+            if (invocation.action() == null) {
+                throw new IllegalStateException("Attempting to set an action session message without " +
+                    "an action associated with the URL");
+            }
+
+            String className = invocation.action().getClass().getName();
             values = actionSession.get(className);
             if (values == null) {
                 return Collections.emptyList();
@@ -171,12 +198,10 @@ public class ActionSessionScope implements Scope {
     /**
      * Correctly synchronizes on the session, action session, and action messages.
      *
-     * @param   request The request used to get the session.
      * @param   type The message type.
-     * @param   action The action used to get the class name from.
      * @param   message The new message to append.
      */
-    public void addActionMessage(HttpServletRequest request, MessageType type, Object action, String message) {
+    public void addActionMessage(MessageType type, String message) {
         String key = (type == MessageType.ERROR) ? ACTION_SESSION_ACTION_ERROR_KEY : ACTION_SESSION_ACTION_MESSAGE_KEY;
         HttpSession session = request.getSession();
         Map<String, List<String>> actionSession;
@@ -190,7 +215,13 @@ public class ActionSessionScope implements Scope {
 
         List<String> values;
         synchronized (actionSession) {
-            String className = action.getClass().getName();
+            ActionInvocation invocation = actionInvocationStore.get();
+            if (invocation.action() == null) {
+                throw new IllegalStateException("Attempting to set an action session message without " +
+                    "an action associated with the URL");
+            }
+
+            String className = invocation.action().getClass().getName();
             values = actionSession.get(className);
             if (values == null) {
                 values = new ArrayList<String>();
@@ -206,20 +237,28 @@ public class ActionSessionScope implements Scope {
     /**
      * {@inheritDoc}
      */
-    public void clear(HttpServletRequest request) {
+    public void clearActionMessages(MessageType type) {
         HttpSession session = request.getSession();
         synchronized (session) {
-            session.removeAttribute(ACTION_SESSION_ACTION_ERROR_KEY);
-            session.removeAttribute(ACTION_SESSION_ACTION_MESSAGE_KEY);
-            session.removeAttribute(ACTION_SESSION_FIELD_ERROR_KEY);
-            session.removeAttribute(ACTION_SESSION_FIELD_MESSAGE_KEY);
+            if (type == MessageType.ERROR) {
+                session.removeAttribute(ACTION_SESSION_ACTION_ERROR_KEY);
+            } else {
+                session.removeAttribute(ACTION_SESSION_ACTION_MESSAGE_KEY);
+            }
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public MessageScope scope() {
-        return MessageScope.ACTION_SESSION;
+    public void clearFieldMessages(MessageType type) {
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            if (type == MessageType.ERROR) {
+                session.removeAttribute(ACTION_SESSION_FIELD_ERROR_KEY);
+            } else {
+                session.removeAttribute(ACTION_SESSION_FIELD_MESSAGE_KEY);
+            }
+        }
     }
 }

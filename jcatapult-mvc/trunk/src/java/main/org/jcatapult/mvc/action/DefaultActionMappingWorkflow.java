@@ -26,7 +26,6 @@ import org.jcatapult.mvc.action.config.ActionConfigurationProvider;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -39,28 +38,17 @@ import com.google.inject.Singleton;
  *
  * @author  Brian Pontarelli
  */
-@Singleton
 public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
-    public static final String ACTION_INVOCATION_KEY = "jcatapultActionInvocation";
-
     private final ActionConfigurationProvider actionConfigurationProvider;
+    private final ActionInvocationStore actionInvocationStore;
     private final ObjectFactory objectFactory;
 
     @Inject
     public DefaultActionMappingWorkflow(ActionConfigurationProvider actionConfigurationProvider,
-            ObjectFactory objectFactory) {
+            ActionInvocationStore actionInvocationStore, ObjectFactory objectFactory) {
         this.actionConfigurationProvider = actionConfigurationProvider;
+        this.actionInvocationStore = actionInvocationStore;
         this.objectFactory = objectFactory;
-    }
-
-    /**
-     * Always loads the action invocation from the request.
-     *
-     * @param   request The request where the action invocation is stored
-     * @return  The action invocation or null if it doesn't exist for the request URI.
-     */
-    public ActionInvocation fetch(HttpServletRequest request) {
-        return (ActionInvocation) request.getAttribute(ACTION_INVOCATION_KEY);
     }
 
     /**
@@ -87,7 +75,7 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
         }
 
         ActionInvocation invocation = new DefaultActionInvocation(action, uri, actionConfiguration);
-        request.setAttribute(ACTION_INVOCATION_KEY, invocation);
+        actionInvocationStore.set(invocation);
 
         chain.doWorkflow(request, response);
     }

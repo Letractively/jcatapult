@@ -15,10 +15,12 @@
  */
 package org.jcatapult.mvc.scope.annotation;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
+
+import org.jcatapult.mvc.scope.ActionSessionScope;
 
 /**
  * <p>
@@ -29,7 +31,7 @@ import java.lang.annotation.ElementType;
  * @author  Brian Pontarelli
  */
 @Retention(RetentionPolicy.RUNTIME)
-@ScopeAnnotation
+@ScopeAnnotation(ActionSessionScope.class)
 @Target(ElementType.FIELD)
 public @interface ActionSession {
 }

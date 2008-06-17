@@ -15,9 +15,6 @@
  */
 package org.jcatapult.mvc.parameter;
 
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-
 import org.jcatapult.servlet.Workflow;
 
 import com.google.inject.ImplementedBy;
@@ -33,12 +30,4 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(DefaultParameterWorkflow.class)
 public interface ParameterWorkflow extends Workflow {
-    /**
-     * Pulls the attributes for the given parameter out of the request.
-     *
-     * @param   request The request.
-     * @param   parameter The name of the parameter.
-     * @return  The attributes or an empty Map if the parameter has no attributes.
-     */
-    Map<String, String> fetchAttributes(HttpServletRequest request, String parameter);
 }

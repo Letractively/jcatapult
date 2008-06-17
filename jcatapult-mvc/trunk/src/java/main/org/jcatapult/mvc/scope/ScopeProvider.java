@@ -13,29 +13,26 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.action.result;
+package org.jcatapult.mvc.scope;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
-import javax.servlet.ServletException;
 
-import org.jcatapult.mvc.action.ActionInvocation;
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This interface defines the public API for the result.
+ * This is the provider for scopes.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface Result<T extends Annotation> {
+@ImplementedBy(DefaultScopeProvider.class)
+public interface ScopeProvider {
     /**
-     * Executes the result.
+     * Looks up the scope for the given annotation.
      *
-     * @param   annoation The annotation that caused the result to be invoked.
-     * @param   invocation The action invocation (if there is one)
-     * @throws  IOException If there is any IO error rendering the result.
-     * @throws  ServletException If there is any servlet error rendering the result.
+     * @param   scopeAnnotation The scope annotation.
+     * @return  The Scope and never null.
      */
-    void execute(T annoation, ActionInvocation invocation) throws IOException, ServletException;
+    Scope lookup(Class<? extends Annotation> scopeAnnotation);
 }

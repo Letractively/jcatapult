@@ -16,10 +16,9 @@
 package org.jcatapult.mvc.message;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.message.scope.MessageType;
 
 import com.google.inject.ImplementedBy;
@@ -38,20 +37,143 @@ public interface MessageStore {
      * a conversion error for the given parameter. The values can be token replaced within the localized
      * error message.
      *
-     * @param   request The request used to store the conversion error.
-     * @param   action The action that the conversion failed for.
      * @param   field The name of the field that the conversion error failed for.
      * @param   bundle The name of the bundle that the error is pulled from.
-     * @param   locale The locale used for localization.
      * @param   attributes The parameter attributes, which might be useful for error messaging stuff
      * @param   values The values attempting to be set into the field.
      * @throws  MissingMessageException If the conversion message is missing.
      */
-    void addConversionError(HttpServletRequest request, Object action, String field, String bundle,
-            Locale locale, Map<String, String> attributes, String... values)
+    void addConversionError(String field, String bundle, Map<String, String> attributes, String... values) throws MissingMessageException;
+
+    /**
+     * Adds a field message which is pulled from the {@link MessageProvider}.
+     *
+     * @param   scope The scope that the message should be placed into.
+     * @param   field The field that the message is associated with.
+     * @param   bundle The bundle the message should be pulled from.
+     * @param   key The key in the bundle.
+     * @param   values The values used to format the message.
+     * @throws  MissingMessageException If the message is missing.
+     */
+    void addFieldMessage(MessageScope scope, String field, String bundle, String key, Object... values) throws MissingMessageException;
+
+    /**
+     * Adds a field message which is pulled from the {@link MessageProvider}. The name of the bundle
+     * is the same as the class name of the current action that the request is associated with. If
+     * there is no action, this method will throw an exception.
+     *
+     * @param   scope The scope that the message should be placed into.
+     * @param   field The field that the message is associated with.
+     * @param   key The key in the bundle.
+     * @param   values The values used to format the message.
+     * @throws  MissingMessageException If the message is missing.
+     * @throws  IllegalStateException If there is no action class associated with the current request.
+     */
+    void addFieldMessage(MessageScope scope, String field, String key, Object... values)
+    throws MissingMessageException, IllegalStateException;
+
+    /**
+     * Adds a field error which is pulled from the {@link MessageProvider}.
+     *
+     * @param   scope The scope that the error should be placed into.
+     * @param   field The field that the error is associated with.
+     * @param   bundle The bundle the error should be pulled from.
+     * @param   key The key in the bundle.
+     * @param   values The values used to format the error.
+     * @throws  MissingMessageException If the error is missing.
+     */
+    void addFieldError(MessageScope scope, String field, String bundle, String key, Object... values)
     throws MissingMessageException;
 
-    List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action);
+    /**
+     * Adds a field error which is pulled from the {@link MessageProvider}. The name of the bundle
+     * is the same as the class name of the current action that the request is associated with. If
+     * there is no action, this method will throw an exception.
+     *
+     * @param   scope The scope that the error should be placed into.
+     * @param   field The field that the error is associated with.
+     * @param   key The key in the bundle.
+     * @param   values The values used to format the error.
+     * @throws  MissingMessageException If the error is missing.
+     * @throws  IllegalStateException If there is no action class associated with the current request.
+     */
+    void addFieldError(MessageScope scope, String field, String key, Object... values) throws MissingMessageException;
 
-    Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action);
+    /**
+     * Adds an action message which is pulled from the {@link MessageProvider}.
+     *
+     * @param   scope The scope that the message should be placed into.
+     * @param   bundle The bundle the message should be pulled from.
+     * @param   key The key in the bundle.
+     * @param   values The values used to format the message.
+     * @throws  MissingMessageException If the message is missing.
+     */
+    void addActionMessage(MessageScope scope, String bundle, String key, Object... values) throws MissingMessageException;
+
+    /**
+     * Adds an action message which is pulled from the {@link MessageProvider}. The name of the bundle
+     * is the same as the class name of the current action that the request is associated with. If
+     * there is no action, this method will throw an exception.
+     *
+     * @param   scope The scope that the message should be placed into.
+     * @param   key The key in the bundle.
+     * @param   values The values used to format the message.
+     * @throws  MissingMessageException If the message is missing.
+     * @throws  IllegalStateException If there is no action class associated with the current request.
+     */
+    void addActionMessage(MessageScope scope, String key, Object... values) throws MissingMessageException;
+
+    /**
+     * Adds an action error which is pulled from the {@link MessageProvider}.
+     *
+     * @param   scope The scope that the error should be placed into.
+     * @param   bundle The bundle the error should be pulled from.
+     * @param   key The key in the bundle.
+     * @param   values The values used to format the error.
+     * @throws  MissingMessageException If the error is missing.
+     */
+    void addActionError(MessageScope scope, String bundle, String key, Object... values) throws MissingMessageException;
+
+    /**
+     * Adds an action errorwhich is pulled from the {@link MessageProvider}. The name of the bundle
+     * is the same as the class name of the current action that the request is associated with. If
+     * there is no action, this method will throw an exception.
+     *
+     * @param   scope The scope that the error should be placed into.
+     * @param   key The key in the bundle.
+     * @param   values The values used to format the error.
+     * @throws  MissingMessageException If the error is missing.
+     * @throws  IllegalStateException If there is no action class associated with the current request.
+     */
+    void addActionError(MessageScope scope, String key, Object... values) throws MissingMessageException;
+
+    /**
+     * Fetches all of the action messages that are currently available. Not mutable.
+     *
+     * @param   type The message type to fetch (error or plain messages).
+     * @return  The List of action messages and never null.
+     */
+    List<String> getActionMessages(MessageType type);
+
+    /**
+     * Fetches all of the field messages that are currently available. Not mutable.
+     *
+     * @param   type The message type to fetch (error or plain messages).
+     * @return  The Map of field messages and never null.
+     */
+    Map<String, List<String>> getFieldMessages(MessageType type);
+
+    /**
+     * Clears all of the action messages in all scopes of the given type.
+     *
+     * @param   type The type of messages to clear (error or plain messages).
+     */
+    void clearActionMessages(MessageType type);
+
+    /**
+     * Clears all of the field messages in all scopes of the given type.
+     *
+     * @param   type The type of messages to clear (error or plain messages).
+     */
+    void clearFieldMessages(MessageType type);
 }

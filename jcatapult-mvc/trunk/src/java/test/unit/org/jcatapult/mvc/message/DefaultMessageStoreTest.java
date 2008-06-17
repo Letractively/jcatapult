@@ -13,29 +13,17 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.action.result.annotation;
+package org.jcatapult.mvc.message;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.jcatapult.mvc.action.result.Result;
+import org.junit.Ignore;
 
 /**
  * <p>
- * This annotation is a marker that is used to mark custom result annotations
- * so that JCatapult can determine which annotations on an action class are
- * results annotations.
+ * This tests the default message store.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
-public @interface ResultAnnotation {
-    /**
-     * @return  The class that implements the result annotation's processing.
-     */
-    Class<? extends Result> value();
+@Ignore
+public class DefaultMessageStoreTest {
 }

@@ -16,8 +16,6 @@
 package org.jcatapult.mvc.result.control;
 
 import java.util.Map;
-import java.util.Locale;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.message.MessageProvider;
@@ -50,14 +48,12 @@ public abstract class AbstractInput extends AbstractControl {
     /**
      * Adds a default ID if one doesn't exist.
      *
-     * @param   request Thr request.
      * @param   attributes The attributes from the tag.
      * @param   parameterAttributes The parameter attributes from the tag.
      * @param   actionInvocation The action invocation.
-     * @param   locale The current locale.
      */
-    protected void addAdditionalAttributes(HttpServletRequest request, Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Locale locale) {
+    protected void addAdditionalAttributes(Map<String, Object> attributes,
+            Map<String, String> parameterAttributes, ActionInvocation actionInvocation) {
         String id = (String) attributes.get("id");
         if (id == null) {
             id = makeID((String) attributes.get("name"));
@@ -80,19 +76,16 @@ public abstract class AbstractInput extends AbstractControl {
      * tags. This also moves the <code>labelposition</code> attribute from the tag to the returned
      * Map (removes it from the attributes).
      *
-     * @param   request Thr request.
      * @param   attributes The attributes from the tag.
      * @param   parameterAttributes The parameter attributes from the tag.
      * @param   actionInvocation The action invocation.
      * @param   action The action.
-     * @param   locale The current locale.
      * @return  The parameter map.
      */
     @Override
-    protected Map<String, Object> makeParameters(HttpServletRequest request, Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Object action,
-            Locale locale) {
-        Map<String, Object> map = super.makeParameters(request, attributes, parameterAttributes, actionInvocation, action, locale);
+    protected Map<String, Object> makeParameters(Map<String, Object> attributes,
+            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Object action) {
+        Map<String, Object> map = super.makeParameters(attributes, parameterAttributes, actionInvocation, action);
         String name = (String) attributes.get("name");
         String bundleName;
         if (attributes.containsKey("bundle")) {
@@ -114,8 +107,8 @@ public abstract class AbstractInput extends AbstractControl {
         }
 
         // Add the field messages and errors as a list or null
-        map.put("field_messages", messageStore.getFieldMessages(request, MessageType.PLAIN, action).get(name));
-        map.put("field_errors", messageStore.getFieldMessages(request, MessageType.ERROR, action).get(name));
+        map.put("field_messages", messageStore.getFieldMessages(MessageType.PLAIN).get(name));
+        map.put("field_errors", messageStore.getFieldMessages(MessageType.ERROR).get(name));
 
         // Move the label position up
         Object labelPosition = attributes.remove("labelPosition");

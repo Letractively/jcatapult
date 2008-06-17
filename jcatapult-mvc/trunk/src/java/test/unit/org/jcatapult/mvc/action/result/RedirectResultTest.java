@@ -40,8 +40,8 @@ public class RedirectResultTest {
         EasyMock.replay(response);
 
         Redirect redirect = new RedirectImpl("success", "http://www.google.com", true);
-        RedirectResult forwardResult = new RedirectResult();
-        forwardResult.execute(redirect, null, null, response);
+        RedirectResult forwardResult = new RedirectResult(response);
+        forwardResult.execute(redirect, null);
 
         EasyMock.verify(response);
     }
@@ -54,8 +54,8 @@ public class RedirectResultTest {
         EasyMock.replay(response);
 
         Redirect redirect = new RedirectImpl("success", "/foo/bar.jsp", false);
-        RedirectResult forwardResult = new RedirectResult();
-        forwardResult.execute(redirect, null, null, response);
+        RedirectResult forwardResult = new RedirectResult(response);
+        forwardResult.execute(redirect, null);
 
         EasyMock.verify(response);
     }

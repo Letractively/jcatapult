@@ -16,10 +16,12 @@
  */
 package org.jcatapult.mvc.action.result.annotation;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
+
+import org.jcatapult.mvc.action.result.ForwardResult;
 
 /**
  * <p>
@@ -29,7 +31,7 @@ import java.lang.annotation.ElementType;
  *
  * @author Brian Pontarelli
  */
-@ResultAnnotation
+@ResultAnnotation(ForwardResult.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Forward {

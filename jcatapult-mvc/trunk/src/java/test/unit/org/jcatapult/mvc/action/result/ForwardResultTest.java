@@ -49,8 +49,8 @@ public class ForwardResultTest {
         EasyMock.replay(context);
 
         Forward forward = new ForwardResult.ForwardImpl("/foo/bar.jsp", null);
-        ForwardResult forwardResult = new ForwardResult(context, null);
-        forwardResult.execute(forward, new DefaultActionInvocation(null, "/foo/bar", null), request, null);
+        ForwardResult forwardResult = new ForwardResult(context, null, request, null);
+        forwardResult.execute(forward, new DefaultActionInvocation(null, "/foo/bar", null));
 
         EasyMock.verify(context, dispatcher, request);
     }
@@ -70,8 +70,8 @@ public class ForwardResultTest {
         EasyMock.replay(context);
 
         Forward forward = new ForwardResult.ForwardImpl("bar.jsp", null);
-        ForwardResult forwardResult = new ForwardResult(context, null);
-        forwardResult.execute(forward, new DefaultActionInvocation(null, "/action", null), request, null);
+        ForwardResult forwardResult = new ForwardResult(context, null, request, null);
+        forwardResult.execute(forward, new DefaultActionInvocation(null, "/action", null));
 
         EasyMock.verify(context, dispatcher, request);
     }

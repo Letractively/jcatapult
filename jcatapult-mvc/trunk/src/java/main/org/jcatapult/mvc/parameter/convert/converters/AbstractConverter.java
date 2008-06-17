@@ -16,9 +16,7 @@
 package org.jcatapult.mvc.parameter.convert.converters;
 
 import java.lang.reflect.Array;
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.Converter;
@@ -44,8 +42,7 @@ import net.java.lang.StringTools;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractConverter implements Converter {
-    public <T> T convertFromStrings(String[] values, Class<T> convertTo, HttpServletRequest request,
-        Locale locale, Map<String, String> attributes)
+    public <T> T convertFromStrings(String[] values, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         // Handle null
         if (values == null) {
@@ -63,10 +60,10 @@ public abstract class AbstractConverter implements Converter {
                         " conversion to multi-dimensional arrays of type [" + convertTo + "]");
                 }
 
-                return stringToArray(value, convertTo, request, locale, attributes);
+                return stringToArray(value, convertTo, attributes);
             }
 
-            return stringToObject(value, convertTo, request, locale, attributes);
+            return stringToObject(value, convertTo, attributes);
         }
 
         // Handle multiple strings
@@ -77,14 +74,14 @@ public abstract class AbstractConverter implements Converter {
                     " conversion to multi-dimensional arrays of type [" + convertTo + "]");
             }
 
-            return stringsToArray(values, convertTo, request, locale, attributes);
+            return stringsToArray(values, convertTo, attributes);
         }
 
-        return stringsToObject(values, convertTo, request, locale, attributes);
+        return stringsToObject(values, convertTo, attributes);
     }
 
-    public <T> String convertToString(T value, Class<T> convertFrom, HttpServletRequest request,
-        Locale locale, Map<String, String> attributes)
+    public <T> String convertToString(T value, Class<T> convertFrom,
+        Map<String, String> attributes)
     throws ConversionException {
         // Handle null
         if (value == null) {
@@ -98,14 +95,13 @@ public abstract class AbstractConverter implements Converter {
 
         // Handle arrays
         if (convertFrom.isArray()) {
-            return arrayToString(value, convertFrom, request, locale, attributes);
+            return arrayToString(value, convertFrom, attributes);
         }
 
-        return objectToString(value, convertFrom, request, locale, attributes);
+        return objectToString(value, convertFrom, attributes);
     }
 
-    protected <T> T stringToArray(String value, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> T stringToArray(String value, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException {
         if (value == null) {
             return null;
@@ -118,8 +114,8 @@ public abstract class AbstractConverter implements Converter {
             String[] parts = value.split(",");
             finalArray = Array.newInstance(convertTo.getComponentType(), parts.length);
             for (int i = 0; i < parts.length; i++) {
-                Object singleValue = stringToObject(parts[i], convertTo.getComponentType(), request,
-                    locale, attributes);
+                Object singleValue = stringToObject(parts[i], convertTo.getComponentType(),
+                    attributes);
                 Array.set(finalArray, i, singleValue);
             }
         }
@@ -127,8 +123,7 @@ public abstract class AbstractConverter implements Converter {
         return (T) finalArray;
     }
 
-    protected <T> T stringsToArray(String[] values, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> T stringsToArray(String[] values, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException {
         if (values == null) {
             return null;
@@ -140,8 +135,8 @@ public abstract class AbstractConverter implements Converter {
         } else {
             finalArray = Array.newInstance(convertTo.getComponentType(), values.length);
             for (int i = 0; i < values.length; i++) {
-                Object singleValue = stringToObject(values[i], convertTo.getComponentType(), request,
-                    locale, attributes);
+                Object singleValue = stringToObject(values[i], convertTo.getComponentType(),
+                    attributes);
                 Array.set(finalArray, i, singleValue);
             }
         }
@@ -149,8 +144,8 @@ public abstract class AbstractConverter implements Converter {
         return (T) finalArray;
     }
 
-    public <T> String arrayToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    public <T> String arrayToString(T value, Class<T> convertFrom,
+        Map<String, String> attributes)
     throws ConversionException {
         if (convertFrom != null && !convertFrom.isArray()) {
             throw new ConversionException("The convertFrom parameter must be an array type");
@@ -174,7 +169,7 @@ public abstract class AbstractConverter implements Converter {
         for (int i = 0; i < length; i++) {
             Object o = Array.get(value, i);
             str.append(convertToString(o, (Class<Object>) value.getClass().getComponentType(),
-                request, locale, attributes));
+                attributes));
             if (i + 1 < length) {
                 str.append(",");
             }
@@ -183,15 +178,12 @@ public abstract class AbstractConverter implements Converter {
         return str.toString();
     }
 
-    protected abstract <T> T stringToObject(String value, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected abstract <T> T stringToObject(String value, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 
-    protected abstract <T> T stringsToObject(String[] values, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected abstract <T> T stringsToObject(String[] values, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 
-    protected abstract <T> String objectToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected abstract <T> String objectToString(T value, Class<T> convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 }

@@ -16,15 +16,15 @@
 package org.jcatapult.mvc.result.control;
 
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.locale.LocaleProvider;
+import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.servlet.ServletObjectsHolder;
@@ -45,16 +45,19 @@ import freemarker.template.TemplateModel;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractControl implements Control, TemplateDirectiveModel {
-    protected LocaleProvider localeProvider;
-    protected ActionMappingWorkflow actionMappingWorkflow;
+    protected Locale locale;
+    protected ActionInvocationStore actionInvocationStore;
     protected MessageStore messageStore;
     protected FreeMarkerService freeMarkerService;
+    protected HttpServletRequest request;
 
     @Inject
-    public void setServices(LocaleProvider localeProvider, ActionMappingWorkflow actionMappingWorkflow,
-            MessageStore messageStore, FreeMarkerService freeMarkerService) {
-        this.localeProvider = localeProvider;
-        this.actionMappingWorkflow = actionMappingWorkflow;
+    public void setServices(@CurrentLocale Locale locale, HttpServletRequest request,
+            ActionInvocationStore actionInvocationStore, MessageStore messageStore,
+            FreeMarkerService freeMarkerService) {
+        this.locale = locale;
+        this.request = request;
+        this.actionInvocationStore = actionInvocationStore;
         this.messageStore = messageStore;
         this.freeMarkerService = freeMarkerService;
     }
@@ -67,19 +70,16 @@ public abstract class AbstractControl implements Control, TemplateDirectiveModel
      * is passed to FreeMarker as well as determine the name of the template.
      * </p>
      *
-     * @param   request The request.
      * @param   writer The writer to output to.
      * @param   attributes The attributes.
      * @param   parameterAttributes The parameter attributes.
      */
-    public void render(HttpServletRequest request, Writer writer, Map<String, Object> attributes,
-            Map<String, String> parameterAttributes) {
-        ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
+    public void render(Writer writer, Map<String, Object> attributes, Map<String, String> parameterAttributes) {
+        ActionInvocation actionInvocation = actionInvocationStore.get();
         Object action = actionInvocation.action();
-        Locale locale = localeProvider.getLocale(request);
 
-        addAdditionalAttributes(request, attributes, parameterAttributes, actionInvocation, locale);
-        Map<String, Object> parameters = makeParameters(request, attributes, parameterAttributes, actionInvocation, action, locale);
+        addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
+        Map<String, Object> parameters = makeParameters(attributes, parameterAttributes, actionInvocation, action);
 
         String templateName = "/WEB-INF/control-templates/" + templateName();
         freeMarkerService.render(writer, templateName, parameters, locale);
@@ -106,17 +106,14 @@ public abstract class AbstractControl implements Control, TemplateDirectiveModel
      * <li>action_errors - Any errors associated with the current action invocation</li>
      * </ul>
      *
-     * @param   request Thr request.
      * @param   attributes The attributes from the tag.
      * @param   parameterAttributes The parameter attributes from the tag.
      * @param   actionInvocation The action invocation.
      * @param   action The action.
-     * @param   locale The current locale.
      * @return  The Parameters Map.
      */
-    protected Map<String, Object> makeParameters(HttpServletRequest request, Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Object action,
-            Locale locale) {
+    protected Map<String, Object> makeParameters(Map<String, Object> attributes,
+            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Object action) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("attributes", attributes);
         parameters.put("parameter_attributes", parameterAttributes);
@@ -124,14 +121,14 @@ public abstract class AbstractControl implements Control, TemplateDirectiveModel
         parameters.put("action", action);
         parameters.put("request", request);
         parameters.put("locale", locale);
-        parameters.put("action_messages", messageStore.getActionMessages(request, MessageType.PLAIN, action));
-        parameters.put("action_errors", messageStore.getActionMessages(request, MessageType.ERROR, action));
+        parameters.put("action_messages", messageStore.getActionMessages(MessageType.PLAIN));
+        parameters.put("action_errors", messageStore.getActionMessages(MessageType.ERROR));
         parameters.put("append_attributes", new AppendAttributesMethod());
         return parameters;
     }
 
     /**
-     * Chains to the {@link #render(HttpServletRequest, Writer, Map, Map)} method. The request is
+     * Chains to the {@link #render(Writer, Map, Map)} method. The request is
      * pulled from the {@link ServletObjectsHolder} and the Writer is pulled from the FreeMarker
      * Environment.
      *
@@ -142,7 +139,6 @@ public abstract class AbstractControl implements Control, TemplateDirectiveModel
      */
     @SuppressWarnings("unchecked")
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) {
-        HttpServletRequest request = ServletObjectsHolder.getServletRequest();
         Map<String, String> parameterAttributes = new HashMap<String, String>();
         for (Object o : params.keySet()) {
             String key = (String) o;
@@ -151,21 +147,19 @@ public abstract class AbstractControl implements Control, TemplateDirectiveModel
             }
         }
 
-        render(request, env.getOut(), params, parameterAttributes);
+        render(env.getOut(), params, parameterAttributes);
     }
 
     /**
      * Sub-classes can implement this method to add additional attributes. This is primarily used
      * by control tags to determine values, checked states, selected options, etc.
      *
-     * @param   request The HttpServletRequest.
      * @param   attributes The attributes.
      * @param   actionInvocation The action invocation.
-     * @param   locale The Locale.
      * @param   parameterAttributes The parameter attributes.
      */
-    protected abstract void addAdditionalAttributes(HttpServletRequest request, Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Locale locale);
+    protected abstract void addAdditionalAttributes(Map<String, Object> attributes,
+            Map<String, String> parameterAttributes, ActionInvocation actionInvocation);
 
     /**
      * @return  The name of the FreeMarker template that this control renders.

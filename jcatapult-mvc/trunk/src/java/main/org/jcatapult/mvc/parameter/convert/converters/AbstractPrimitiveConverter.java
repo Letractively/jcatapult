@@ -15,9 +15,7 @@
  */
 package org.jcatapult.mvc.parameter.convert.converters;
 
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
@@ -31,28 +29,26 @@ import org.jcatapult.mvc.parameter.convert.ConverterStateException;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractPrimitiveConverter extends AbstractConverter {
-    protected <T> T stringToObject(String value, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> T stringToObject(String value, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (value == null && convertTo.isPrimitive()) {
-            return defaultPrimitive(convertTo, request, locale, attributes);
+            return defaultPrimitive(convertTo, attributes);
         } else if (value == null) {
             return null;
         }
 
-        return stringToPrimitive(value, convertTo, request, locale, attributes);
+        return stringToPrimitive(value, convertTo, attributes);
     }
 
-    protected <T> T stringsToObject(String[] values, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> T stringsToObject(String[] values, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         throw new ConverterStateException("The primitive converter doesn't support String[] to Object conversion.");
     }
 
-    protected <T> String objectToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> String objectToString(T value, Class<T> convertFrom,
+        Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
-        return primitiveToString(value, convertFrom, request, locale, attributes);
+        return primitiveToString(value, convertFrom, attributes);
     }
 
     /**
@@ -60,12 +56,10 @@ public abstract class AbstractPrimitiveConverter extends AbstractConverter {
      * classes as return types.
      *
      * @param   convertTo The type of primitive to return the default value for.
-     * @param   locale If needed.
      * @return  The wrapper that contains the default value for the primitive.
      * @throws  ConversionException If the default value could not be determined.
      */
-    protected abstract <T> T defaultPrimitive(Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected abstract <T> T defaultPrimitive(Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -73,8 +67,6 @@ public abstract class AbstractPrimitiveConverter extends AbstractConverter {
      *
      * @param   value The value to convert.
      * @param   convertTo The type to convert the value to.
-     * @param   request The servlet request.
-     * @param   locale The current locale.
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
@@ -85,8 +77,7 @@ public abstract class AbstractPrimitiveConverter extends AbstractConverter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    protected abstract <T> T stringToPrimitive(String value, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected abstract <T> T stringToPrimitive(String value, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -94,8 +85,6 @@ public abstract class AbstractPrimitiveConverter extends AbstractConverter {
      *
      * @param   value The Object value to convert.
      * @param   convertFrom The type to convert the value from.
-     * @param   request The servlet request.
-     * @param   locale The current locale.
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
@@ -106,7 +95,6 @@ public abstract class AbstractPrimitiveConverter extends AbstractConverter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    protected abstract <T> String primitiveToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected abstract <T> String primitiveToString(T value, Class<T> convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 }

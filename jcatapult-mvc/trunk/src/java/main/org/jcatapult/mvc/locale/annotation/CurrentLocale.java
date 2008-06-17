@@ -13,29 +13,25 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.action.result.annotation;
+package org.jcatapult.mvc.locale.annotation;
 
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
-import org.jcatapult.mvc.action.result.Result;
+import com.google.inject.BindingAnnotation;
 
 /**
  * <p>
- * This annotation is a marker that is used to mark custom result annotations
- * so that JCatapult can determine which annotations on an action class are
- * results annotations.
+ * This annoation is used to provide an injection point for
+ * Guice to inject the current locale.
  * </p>
  *
  * @author  Brian Pontarelli
  */
+@BindingAnnotation
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
-public @interface ResultAnnotation {
-    /**
-     * @return  The class that implements the result annotation's processing.
-     */
-    Class<? extends Result> value();
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+public @interface CurrentLocale {
 }

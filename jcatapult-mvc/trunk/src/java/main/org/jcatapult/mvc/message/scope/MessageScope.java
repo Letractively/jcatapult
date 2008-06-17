@@ -27,28 +27,38 @@ public enum MessageScope {
     /**
      * The request scope, when messages are stored in the request.
      */
-    REQUEST,
+    REQUEST(RequestScope.class),
 
     /**
      * The flash scope, when messages are stored in the session, but are only available on the next
      * request.
      */
-    FLASH,
+    FLASH(FlashScope.class),
 
     /**
      * The session scope, when messages are stored in the session.
      */
-    SESSION,
+    SESSION(SessionScope.class),
 
     /**
      * The action session scope, when messages are stored in the session, but are only associated and
      * available to a specific action.
      */
-    ACTION_SESSION,
+    ACTION_SESSION(ActionSessionScope.class),
 
     /**
      * The servlet context scope, when messages are stored in the servlet context. Useful for messages
      * that should be displayed to all users.
      */
-    CONTEXT
+    CONTEXT(ContextScope.class);
+
+    private final Class<? extends Scope> type;
+
+    private MessageScope(Class<? extends Scope> type) {
+        this.type = type;
+    }
+
+    public Class<? extends Scope> getType() {
+        return type;
+    }
 }

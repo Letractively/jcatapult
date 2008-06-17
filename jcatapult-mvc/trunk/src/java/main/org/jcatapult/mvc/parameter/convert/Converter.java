@@ -15,9 +15,7 @@
  */
 package org.jcatapult.mvc.parameter.convert;
 
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -27,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * this is setup is that a Converter implementation is
  * registered with the ConverterRegistry. The registry can
  * then be queried for a particular Conveter (see {@link
- * ConverterRegistry} for more information about retrieval).
+ * ConverterProvider} for more information about retrieval).
  * Next, the Converter can be used for conversions using one
  * of the methods described below. Any given Converter may be
  * used to convert to many different types because of the way
@@ -89,6 +87,22 @@ import javax.servlet.http.HttpServletRequest;
  * of nulls, that the default value of the primitive is returned.
  * </p>
  *
+ * <h3>Custom converters</h3>
+ * <p>
+ * In order to write a custom type converter, you need to implement this
+ * interface AND also annotate your converter class with the
+ * {@link org.jcatapult.mvc.parameter.convert.annotation.Converter} annotation
+ * and specify in that annotation the types the Converter supports.
+ * Next, you need to define the Converter in a Guice module that will
+ * be discovered by JCatapult like this:
+ * </p>
+ *
+ * <pre>
+ * public void bind() {
+ *   bind(MyCustomerConverter.class);
+ * }
+ * </pre>
+ *
  * @author  Brian Pontarelli
  */
 public interface Converter {
@@ -119,8 +133,6 @@ public interface Converter {
      *
      * @param   values The value(s) to convert. This might be a single value or multiple values.
      * @param   convertTo The type to convert the value to.
-     * @param   request The servlet request.
-     * @param   locale The current locale.
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
@@ -131,8 +143,7 @@ public interface Converter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    <T> T convertFromStrings(String[] values, Class<T> convertTo, HttpServletRequest request,
-        Locale locale, Map<String, String> attributes)
+    <T> T convertFromStrings(String[] values, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -153,8 +164,6 @@ public interface Converter {
      *
      * @param   value The Object value to convert.
      * @param   convertFrom The type to convert the value from.
-     * @param   request The servlet request.
-     * @param   locale The current locale.
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
@@ -165,12 +174,6 @@ public interface Converter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    <T> String convertToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    <T> String convertToString(T value, Class<T> convertFrom, Map<String, String> attributes)
     throws ConversionException;
-
-    /**
-     * @return  The list of supported types for this converter. This should not contain array types.
-     */
-    Class<?>[] supportedTypes();
 }

@@ -33,7 +33,7 @@ import java.util.TreeSet;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.Converter;
-import org.jcatapult.mvc.parameter.convert.ConverterRegistry;
+import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 
 import static net.java.lang.reflect.ReflectionTools.*;
@@ -46,17 +46,17 @@ import static net.java.lang.reflect.ReflectionTools.*;
  * @author Brian Pontarelli
  */
 public abstract class Accessor {
-    protected final ConverterRegistry converterRegistry;
+    protected final ConverterProvider converterProvider;
     protected Type type;
     protected Class<?> declaringClass;
     protected Object object;
 
-    protected Accessor(ConverterRegistry converterRegistry) {
-        this.converterRegistry = converterRegistry;
+    protected Accessor(ConverterProvider converterProvider) {
+        this.converterProvider = converterProvider;
     }
 
-    public Accessor(ConverterRegistry converterRegistry, Accessor accessor) {
-        this.converterRegistry = converterRegistry;
+    public Accessor(ConverterProvider converterProvider, Accessor accessor) {
+        this.converterProvider = converterProvider;
         this.type = accessor.type;
         this.declaringClass = accessor.declaringClass;
     }
@@ -184,13 +184,13 @@ public abstract class Accessor {
         // The converter does this, but pre-emptively checking these conditions will speed up conversion times
         Class<?> typeClass = typeToClass(type);
         if (values != null && !typeClass.isInstance(values)) {
-            Converter converter = converterRegistry.lookup(typeClass);
+            Converter converter = converterProvider.lookup(typeClass);
             if (converter == null) {
                 throw new ConverterStateException("No type converter found for the type [" + typeClass.getName() + "]");
             }
 
-            newValue = converter.convertFromStrings(values, typeClass, context.getRequest(),
-                context.getLocale(), context.getAttributes());
+            newValue = converter.convertFromStrings(values, typeClass,
+                context.getAttributes());
         }
 
         return newValue;

@@ -13,40 +13,46 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.action.result;
+package org.jcatapult.mvc.message;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.result.annotation.Redirect;
+import org.jcatapult.mvc.message.scope.FlashScope;
+import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
 
 /**
  * <p>
- * This result performs a HTTP redirect to a URL.
+ * This is the default message workflow implementation. It removes
+ * all flash messages from the session and places them in the request.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class RedirectResult implements Result<Redirect> {
-    private final HttpServletResponse response;
+public class DefaultMessageWorkflow implements MessageWorkflow {
+    private final FlashScope flashScope;
 
     @Inject
-    public RedirectResult(HttpServletResponse response) {
-        this.response = response;
+    public DefaultMessageWorkflow(FlashScope flashScope) {
+        this.flashScope = flashScope;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void execute(Redirect redirect, ActionInvocation invocation) throws IOException, ServletException {
-        String page = redirect.uri();
-        boolean perm = redirect.perm();
+    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
+    throws IOException, ServletException {
+        flashScope.transferFlash(request);
+        chain.doWorkflow(request, response);
+    }
 
-        response.setStatus(perm ? 301 : 302);
-        response.sendRedirect(page);
+    /**
+     * Does nothing.
+     */
+    public void destroy() {
     }
 }

@@ -58,8 +58,8 @@ public class FlashScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            FlashScope scope = new FlashScope();
-            List<String> messages = scope.getActionMessages(request, type, null);
+            FlashScope scope = new FlashScope(request);
+            List<String> messages = scope.getActionMessages(type);
             assertEquals(2, messages.size());
             assertEquals("Test request message", messages.get(0));
             assertEquals("Test session message", messages.get(1));
@@ -77,8 +77,8 @@ public class FlashScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            FlashScope scope = new FlashScope();
-            List<String> messages = scope.getActionMessages(request, type, null);
+            FlashScope scope = new FlashScope(request);
+            List<String> messages = scope.getActionMessages(type);
             assertEquals(0, messages.size());
 
             EasyMock.verify(request, session);
@@ -95,8 +95,8 @@ public class FlashScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            FlashScope scope = new FlashScope();
-            scope.addActionMessage(request, type, null, "Test message");
+            FlashScope scope = new FlashScope(request);
+            scope.addActionMessage(type, "Test message");
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
 
@@ -114,8 +114,8 @@ public class FlashScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            FlashScope scope = new FlashScope();
-            scope.addActionMessage(request, type, null, "Test message");
+            FlashScope scope = new FlashScope(request);
+            scope.addActionMessage(type, "Test message");
             List<String> messages = (List<String>) list.object;
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
@@ -146,8 +146,8 @@ public class FlashScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            FlashScope scope = new FlashScope();
-            Map<String, List<String>> messages = scope.getFieldMessages(request, type, null);
+            FlashScope scope = new FlashScope(request);
+            Map<String, List<String>> messages = scope.getFieldMessages(type);
             assertEquals(1, messages.size());
             assertEquals(2, messages.get("user.name").size());
             assertEquals("Test request message", messages.get("user.name").get(0));
@@ -166,8 +166,8 @@ public class FlashScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            FlashScope scope = new FlashScope();
-            Map<String, List<String>> messages = scope.getFieldMessages(request, type, null);
+            FlashScope scope = new FlashScope(request);
+            Map<String, List<String>> messages = scope.getFieldMessages(type);
             assertEquals(0, messages.size());
 
             EasyMock.verify(request, session);
@@ -184,8 +184,8 @@ public class FlashScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            FlashScope scope = new FlashScope();
-            scope.addFieldMessage(request, type, null, "user.name", "Test message");
+            FlashScope scope = new FlashScope(request);
+            scope.addFieldMessage(type, "user.name", "Test message");
             assertEquals(1, messages.size());
             assertEquals(1, messages.get("user.name").size());
             assertEquals("Test message", messages.get("user.name").get(0));
@@ -204,8 +204,8 @@ public class FlashScopeTest {
             EasyMock.expect(request.getSession()).andReturn(session);
             EasyMock.replay(request);
 
-            FlashScope scope = new FlashScope();
-            scope.addFieldMessage(request, type, null, "user.name", "Test message");
+            FlashScope scope = new FlashScope(request);
+            scope.addFieldMessage(type, "user.name", "Test message");
             FieldMessages messages = (FieldMessages) capture.object;
             assertEquals(1, messages.size());
             assertEquals(1, messages.get("user.name").size());

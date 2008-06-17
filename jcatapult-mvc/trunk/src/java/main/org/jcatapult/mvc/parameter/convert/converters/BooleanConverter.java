@@ -15,16 +15,13 @@
  */
 package org.jcatapult.mvc.parameter.convert.converters;
 
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.convert.annotation.Converter;
 
-import com.google.inject.Singleton;
 import net.java.lang.StringTools;
-import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -33,14 +30,13 @@ import static net.java.util.CollectionTools.*;
  *
  * @author Brian Pontarelli
  */
+@Converter(forTypes = {Boolean.class, boolean.class})
 @SuppressWarnings("unchecked")
-@Singleton
 public class BooleanConverter extends AbstractPrimitiveConverter {
     /**
      * Returns false.
      */
-    protected <T> T defaultPrimitive(Class<T> convertTo, HttpServletRequest request,
-        Locale locale, Map<String, String> attributes)
+    protected <T> T defaultPrimitive(Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return (T) Boolean.FALSE;
     }
@@ -49,8 +45,7 @@ public class BooleanConverter extends AbstractPrimitiveConverter {
      * Uses Boolean.valueOf. Throws an exception if the String is not a valid boolean as dictated by
      * the {@link StringTools#isValidBoolean(String)} method.
      */
-    protected <T> T stringToPrimitive(String value, Class<T> convertTo, HttpServletRequest request,
-        Locale locale, Map<String, String> attributes)
+    protected <T> T stringToPrimitive(String value, Class<T> convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (!StringTools.isValidBoolean(value)) {
             throw new ConversionException ("Unable to convert invalid boolean String [" + value + "]");
@@ -62,16 +57,8 @@ public class BooleanConverter extends AbstractPrimitiveConverter {
     /**
      * Returns value.toString().
      */
-    protected <T> String primitiveToString(T value, Class<T> convertFrom, HttpServletRequest request,
-        Locale locale, Map<String, String> attributes)
+    protected <T> String primitiveToString(T value, Class<T> convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return value.toString();
-    }
-
-    /**
-     * Returns Boolean.Type and Boolean.class.
-     */
-    public Class<?>[] supportedTypes() {
-        return array(Boolean.TYPE, Boolean.class);
     }
 }

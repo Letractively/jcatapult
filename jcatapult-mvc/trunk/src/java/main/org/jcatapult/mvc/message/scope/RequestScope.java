@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.inject.Inject;
+
 /**
  * <p>
  * This is the message scope which fetches and stores values in the
@@ -32,10 +34,17 @@ import javax.servlet.http.HttpServletRequest;
  */
 @SuppressWarnings("unchecked")
 public class RequestScope extends AbstractJEEScope {
+    private final HttpServletRequest request;
+
+    @Inject
+    public RequestScope(HttpServletRequest request) {
+        this.request = request;
+    }
+
     /**
      * {@inheritDoc}
      */
-    public Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action) {
+    public Map<String, List<String>> getFieldMessages(MessageType type) {
         FieldMessages messages = (FieldMessages) request.getAttribute(fieldKey(type));
         if (messages == null) {
             return Collections.emptyMap();
@@ -48,7 +57,7 @@ public class RequestScope extends AbstractJEEScope {
     /**
      * {@inheritDoc}
      */
-    public void addFieldMessage(HttpServletRequest request, MessageType type, Object action, String fieldName, String message) {
+    public void addFieldMessage(MessageType type, String fieldName, String message) {
         String key = fieldKey(type);
         FieldMessages messages = (FieldMessages) request.getAttribute(key);
         if (messages == null) {
@@ -62,7 +71,7 @@ public class RequestScope extends AbstractJEEScope {
     /**
      * {@inheritDoc}
      */
-    public List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action) {
+    public List<String> getActionMessages(MessageType type) {
         List<String> messages = (List<String>) request.getAttribute(actionKey(type));
         if (messages == null) {
             return Collections.emptyList();
@@ -75,7 +84,7 @@ public class RequestScope extends AbstractJEEScope {
     /**
      * {@inheritDoc}
      */
-    public void addActionMessage(HttpServletRequest request, MessageType type, Object action, String message) {
+    public void addActionMessage(MessageType type, String message) {
         String key = actionKey(type);
         List<String> messages = (List<String>) request.getAttribute(key);
         if (messages == null) {
@@ -89,17 +98,22 @@ public class RequestScope extends AbstractJEEScope {
     /**
      * {@inheritDoc}
      */
-    public void clear(HttpServletRequest request) {
-        request.removeAttribute(ACTION_ERROR_KEY);
-        request.removeAttribute(ACTION_MESSAGE_KEY);
-        request.removeAttribute(FIELD_ERROR_KEY);
-        request.removeAttribute(FIELD_MESSAGE_KEY);
+    public void clearActionMessages(MessageType type) {
+        if (type == MessageType.ERROR) {
+            request.removeAttribute(ACTION_ERROR_KEY);
+        } else {
+            request.removeAttribute(ACTION_MESSAGE_KEY);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    public MessageScope scope() {
-        return MessageScope.REQUEST;
+    public void clearFieldMessages(MessageType type) {
+        if (type == MessageType.ERROR) {
+            request.removeAttribute(FIELD_ERROR_KEY);
+        } else {
+            request.removeAttribute(FIELD_MESSAGE_KEY);
+        }
     }
 }

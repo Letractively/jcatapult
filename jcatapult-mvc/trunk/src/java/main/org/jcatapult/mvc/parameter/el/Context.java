@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.mvc.parameter.convert.ConverterRegistry;
+import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 
 import net.java.lang.ObjectTools;
 
@@ -36,24 +36,24 @@ public class Context {
     private final HttpServletRequest request;
     private final Map<String, String> attributes;
     private final Locale locale;
-    private final ConverterRegistry converterRegistry;
+    private final ConverterProvider converterProvider;
 
     private Class<?> type;
     private Object object;
     private Accessor accessor;
     private int index;
 
-    public Context(ConverterRegistry converterRegistry, List<Atom> atoms, HttpServletRequest request,
+    public Context(ConverterProvider converterProvider, List<Atom> atoms, HttpServletRequest request,
             Locale locale, Map<String, String> attributes) {
         this.atoms = atoms;
         this.request = request;
         this.locale = locale;
         this.attributes = attributes;
-        this.converterRegistry = converterRegistry;
+        this.converterProvider = converterProvider;
     }
 
-    public Context(ConverterRegistry converterRegistry, List<Atom> atoms) {
-        this(converterRegistry, atoms, null, null, null);
+    public Context(ConverterProvider converterProvider, List<Atom> atoms) {
+        this(converterProvider, atoms, null, null, null);
     }
 
     public void init(Object object) {
@@ -68,11 +68,11 @@ public class Context {
     public void initAccessor(String name) {
         // This is the indexed case, so the name is the index to the method
         if (accessor != null && accessor.isIndexed()) {
-            accessor = new IndexedAccessor(converterRegistry, (MemberAccessor) accessor, name);
+            accessor = new IndexedAccessor(converterProvider, (MemberAccessor) accessor, name);
         } else if (ObjectTools.isCollection(object) || object.getClass().isArray()) {
-            accessor = new CollectionAccessor(converterRegistry, accessor, name, accessor.getMemberAccessor());
+            accessor = new CollectionAccessor(converterProvider, accessor, name, accessor.getMemberAccessor());
         } else {
-            accessor = new MemberAccessor(converterRegistry, type, name);
+            accessor = new MemberAccessor(converterProvider, type, name);
         }
     }
 

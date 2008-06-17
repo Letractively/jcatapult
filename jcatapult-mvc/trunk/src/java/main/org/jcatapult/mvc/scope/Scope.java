@@ -15,9 +15,6 @@
  */
 package org.jcatapult.mvc.scope;
 
-import java.lang.annotation.Annotation;
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * <p>
  * This interface defines the handler for a specific scope.
@@ -25,28 +22,20 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author  Brian Pontarelli
  */
-public interface Scope<T extends Annotation> {
+public interface Scope {
     /**
      * Retrieve the value from the scope based on the name given.
      *
-     * @param action
-     *@param   fieldName The name of the field.
-     * @param   request The request. @return  The value or null if it doesn't exist in the scope.
+     * @param   fieldName The name of the field.
+     * @return  The value or null if it doesn't exist in the scope.
      */
-    Object get(Object action, String fieldName, HttpServletRequest request);
+    Object get(String fieldName);
 
     /**
      * Sets the value into the scope.
      *
-     * @param action
      * @param   fieldName The name to store the value under in the scope.
-     * @param   request The request.
      * @param   value The value.
      */
-    void set(Object action, String fieldName, HttpServletRequest request, Object value);
-
-    /**
-     * @return  The annotation type that this scope is associated with.
-     */
-    Class<T> annotationType();
+    void set(String fieldName, Object value);
 }

@@ -13,31 +13,26 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.message.scope;
+package org.jcatapult.mvc.parameter.convert.annotation;
 
-import java.util.List;
-
-import com.google.inject.ImplementedBy;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * <p>
- * This is the storage location for scopes.
+ * This annotation must be placed on all implementations of the
+ * {@link org.jcatapult.mvc.parameter.convert.Converter} interface.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-@ImplementedBy(DefaultScopeRegistry.class)
-public interface ScopeRegistry {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Converter {
     /**
-     * Looks up the scope for the given annotation.
-     *
-     * @param   scope The scope enum value.
-     * @return  The Scope and never null.
+     * @return  Converters must define the types that they convert using this parameter.
      */
-    Scope lookup(MessageScope scope);
-
-    /**
-     * @return  All of the registered scopes.
-     */
-    List<Scope> getAllScopes();
+    Class<?>[] forTypes();
 }

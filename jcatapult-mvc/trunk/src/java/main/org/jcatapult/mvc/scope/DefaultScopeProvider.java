@@ -17,22 +17,31 @@ package org.jcatapult.mvc.scope;
 
 import java.lang.annotation.Annotation;
 
-import com.google.inject.ImplementedBy;
+import org.jcatapult.mvc.ObjectFactory;
+import org.jcatapult.mvc.scope.annotation.ScopeAnnotation;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
- * This is the storage location for scopes.
+ * This class implements the scope provider interface.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultScopeRegistry.class)
-public interface ScopeRegistry {
+public class DefaultScopeProvider implements ScopeProvider {
+    private final ObjectFactory objectFactory;
+
+    @Inject
+    public DefaultScopeProvider(ObjectFactory objectFactory) {
+        this.objectFactory = objectFactory;
+    }
+
     /**
-     * Looks up the scope for the given annotation.
-     *
-     * @param   scopeAnnotation The scope annotation.
-     * @return  The Scope and never null.
+     * {@inheritDoc}
      */
-    Scope lookup(Class<? extends Annotation> scopeAnnotation);
+    public Scope lookup(Class<? extends Annotation> scopeAnnotation) {
+        ScopeAnnotation ca = scopeAnnotation.getAnnotation(ScopeAnnotation.class);
+        return objectFactory.create(ca.value());
+    }
 }

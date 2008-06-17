@@ -15,18 +15,15 @@
  */
 package org.jcatapult.mvc.parameter.convert.converters;
 
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.convert.annotation.Converter;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import static net.java.lang.ObjectTools.*;
 import net.java.lang.StringTools;
-import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -35,8 +32,8 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
+@Converter(forTypes = {String.class})
 @SuppressWarnings("unchecked")
-@Singleton
 public class StringConverter extends AbstractConverter {
     private boolean emptyIsNull = true;
 
@@ -45,8 +42,7 @@ public class StringConverter extends AbstractConverter {
         this.emptyIsNull = emptyIsNull;
     }
 
-    protected <T> T stringToObject(String value, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> T stringToObject(String value, Class<T> convertTo, Map<String, String> attributes)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         if (emptyIsNull && StringTools.isTrimmedEmpty(value)) {
             return null;
@@ -55,22 +51,13 @@ public class StringConverter extends AbstractConverter {
         return (T) value;
     }
 
-    protected <T> T stringsToObject(String[] values, Class<T> convertTo, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> T stringsToObject(String[] values, Class<T> convertTo, Map<String, String> attributes)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         return (T) join(values, ",");
     }
 
-    protected <T> String objectToString(T value, Class<T> convertFrom, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes)
+    protected <T> String objectToString(T value, Class<T> convertFrom, Map<String, String> attributes)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         return value.toString();
-    }
-
-    /**
-     * Returns String.class.
-     */
-    public Class<?>[] supportedTypes() {
-        return array(String.class);
     }
 }

@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.google.inject.Inject;
+
 /**
  * <p>
  * This is the flash scope which stores messages in the HttpSession
@@ -57,17 +59,22 @@ public class FlashScope implements Scope {
      */
     public static final String FLASH_ACTION_MESSAGES_KEY = "jcatapultFlashActionMessages";
 
+    private final HttpServletRequest request;
+
+    @Inject
+    public FlashScope(HttpServletRequest request) {
+        this.request = request;
+    }
+
     /**
      * This combines the flash messages from the request and from the session into a single Map. This
      * allows access to newly added flash messages as well as flash messages from the previous request
      * that have been transfered to the request.
      *
-     * @param   request The request.
      * @param   type The type.
-     * @param   action The action.
      * @return  The flash field messages.
      */
-    public Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action) {
+    public Map<String, List<String>> getFieldMessages(MessageType type) {
         String key = fieldKey(type);
         Map<String, List<String>> combined = new HashMap<String, List<String>>();
         FieldMessages fromRequest = (FieldMessages) request.getAttribute(key);
@@ -97,14 +104,12 @@ public class FlashScope implements Scope {
      * Stores new messages in the flash scope in the session. This correctly synchronizes the session
      * and field messages.
      *
-     * @param   request The request used to get the session.
      * @param   type The type of message to store.
-     * @param   action The action (not used).
      * @param   fieldName The name of the field that the message associated with.
      * @param   message The message itself.
      */
-    public void addFieldMessage(HttpServletRequest request, MessageType type, Object action,
-            String fieldName, String message) {
+    public void addFieldMessage(MessageType type,
+        String fieldName, String message) {
         HttpSession session = request.getSession();
         FieldMessages messages;
         synchronized (session) {
@@ -126,12 +131,10 @@ public class FlashScope implements Scope {
      * allows access to newly added flash messages as well as flash messages from the previous request
      * that have been transfered to the request.
      *
-     * @param   request The request.
      * @param   type The type.
-     * @param   action The action.
      * @return  The flash action messages.
      */
-    public List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action) {
+    public List<String> getActionMessages(MessageType type) {
         String key = actionKey(type);
         List<String> combined = new ArrayList<String>();
 
@@ -155,12 +158,10 @@ public class FlashScope implements Scope {
      * Stores new messages in the flash scope in the session. This correctly synchronizes the session
      * and message List.
      *
-     * @param   request The request used to get the session.
      * @param   type The type of message to store.
-     * @param   action The action (not used).
      * @param   message The message itself.
      */
-    public void addActionMessage(HttpServletRequest request, MessageType type, Object action, String message) {
+    public void addActionMessage(MessageType type, String message) {
         HttpSession session = request.getSession();
         List<String> scope;
         synchronized (session) {
@@ -180,19 +181,33 @@ public class FlashScope implements Scope {
     /**
      * {@inheritDoc}
      */
-    public void clear(HttpServletRequest request) {
+    public void clearActionMessages(MessageType type) {
         HttpSession session = request.getSession();
         synchronized (session) {
-            session.removeAttribute(FLASH_ACTION_ERRORS_KEY);
-            session.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
-            session.removeAttribute(FLASH_FIELD_ERRORS_KEY);
-            session.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
+            if (type == MessageType.ERROR) {
+                session.removeAttribute(FLASH_ACTION_ERRORS_KEY);
+                request.removeAttribute(FLASH_ACTION_ERRORS_KEY);
+            } else {
+                session.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
+                request.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
+            }
         }
+    }
 
-        request.removeAttribute(FLASH_ACTION_ERRORS_KEY);
-        request.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
-        request.removeAttribute(FLASH_FIELD_ERRORS_KEY);
-        request.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
+    /**
+     * {@inheritDoc}
+     */
+    public void clearFieldMessages(MessageType type) {
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            if (type == MessageType.ERROR) {
+                session.removeAttribute(FLASH_FIELD_ERRORS_KEY);
+                request.removeAttribute(FLASH_FIELD_ERRORS_KEY);
+            } else {
+                session.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
+                request.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
+            }
+        }
     }
 
     /**
@@ -239,12 +254,5 @@ public class FlashScope implements Scope {
      */
     private String actionKey(MessageType type) {
         return (type == MessageType.ERROR) ? FLASH_ACTION_ERRORS_KEY : FLASH_ACTION_MESSAGES_KEY;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public MessageScope scope() {
-        return MessageScope.FLASH;
     }
 }
