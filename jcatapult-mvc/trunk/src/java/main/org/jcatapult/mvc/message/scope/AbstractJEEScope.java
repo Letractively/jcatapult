@@ -15,12 +15,6 @@
  */
 package org.jcatapult.mvc.message.scope;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * <p>
  * This class is an abstract implementation of the Scope interface. It
@@ -32,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author  Brian Pontarelli
  */
 @SuppressWarnings("unchecked")
-public abstract class AbstractJEEScope extends AbstractScope {
+public abstract class AbstractJEEScope implements Scope {
     /**
      * The location where the field errors are stored. This keys into the session a Map whose key
      * is the action's class name and whose value is the field errors Map.
@@ -57,63 +51,11 @@ public abstract class AbstractJEEScope extends AbstractScope {
      */
     public static final String ACTION_MESSAGE_KEY = "jcatapultActionMessages";
 
-    /**
-     * Implements the getFieldScope method in a generic JEE way. This simply uses two template methods
-     * that are responsible for looking up the scope in the correct JEE interface.
-     *
-     * @param   request The request.
-     * @param   type The type, which is used to determine the key that the scope is stored under.
-     * @param   action The action (not really used).
-     * @return  The scope and never null.
-     */
-    protected Map<String, List<String>> getFieldScope(HttpServletRequest request, MessageType type, Object action) {
-        String key = (type == MessageType.ERROR) ? FIELD_ERROR_KEY : FIELD_MESSAGE_KEY;
-        Map<String, List<String>> scope = (Map<String, List<String>>) findScope(request, key);
-        if (scope == null) {
-            scope = new HashMap<String, List<String>>();
-            storeScope(request, key, scope);
-        }
-
-        return scope;
+    protected String fieldKey(MessageType type) {
+        return (type == MessageType.ERROR) ? FIELD_ERROR_KEY : FIELD_MESSAGE_KEY;
     }
 
-    /**
-     * Implements the getActionScope method in a generic JEE way. This simply uses two template methods
-     * that are responsible for looking up the scope in the correct JEE interface.
-     *
-     * @param   request The request.
-     * @param   type The type, which is used to determine the key that the scope is stored under.
-     * @param   action The action (not really used).
-     * @return  The scope and never null.
-     */
-    protected List<String> getActionScope(HttpServletRequest request, MessageType type, Object action) {
-        String key = (type == MessageType.ERROR) ? ACTION_ERROR_KEY : ACTION_MESSAGE_KEY;
-        List<String> scope = (List<String>) findScope(request, key);
-        if (scope == null) {
-            scope = new ArrayList<String>();
-            storeScope(request, key, scope);
-        }
-
-        return scope;
+    protected String actionKey(MessageType type) {
+        return (type == MessageType.ERROR) ? ACTION_ERROR_KEY : ACTION_MESSAGE_KEY;
     }
-
-    /**
-     * Must be implemented by sub-classes to lookup the scope under the given key from the correct
-     * JEE interface. If it doesn't exist, this method should NOT create the scope and store it.
-     *
-     * @param   request The request.
-     * @param   key The key that the scope is stored under.
-     * @return  The scope or null if it doesn't exist.
-     */
-    protected abstract Object findScope(HttpServletRequest request, String key);
-
-    /**
-     * Must be implemented by sub-classes to store the given scope under the given key into the
-     * correct JEE interface.
-     *
-     * @param   request The request.
-     * @param   key The key to store the scope under.
-     * @param   scope The scope.
-     */
-    protected abstract void storeScope(HttpServletRequest request, String key, Object scope);
 }

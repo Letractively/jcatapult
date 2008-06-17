@@ -27,7 +27,7 @@ import static org.easymock.EasyMock.*;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
 import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.mvc.locale.LocaleWorkflow;
+import org.jcatapult.mvc.locale.LocaleProvider;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.example.domain.Action;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
@@ -73,9 +73,9 @@ public class DefaultParameterWorkflowTest {
         expectLastCall().andThrow(new ConversionException());
         EasyMock.replay(expressionEvaluator);
 
-        LocaleWorkflow localeWorkflow = EasyMock.createStrictMock(LocaleWorkflow.class);
-        EasyMock.expect(localeWorkflow.getLocale(request)).andReturn(Locale.US);
-        EasyMock.replay(localeWorkflow);
+        LocaleProvider localeProvider = EasyMock.createStrictMock(LocaleProvider.class);
+        EasyMock.expect(localeProvider.getLocale(request)).andReturn(Locale.US);
+        EasyMock.replay(localeProvider);
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
         EasyMock.expect(invocation.action()).andReturn(action);
@@ -94,9 +94,9 @@ public class DefaultParameterWorkflowTest {
         chain.doWorkflow(request, null);
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeWorkflow, actionMappingWorkflow, messageStore, expressionEvaluator);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(localeProvider, actionMappingWorkflow, messageStore, expressionEvaluator);
         workflow.perform(request, null, chain);
 
-        EasyMock.verify(request, expressionEvaluator, localeWorkflow, invocation, actionMappingWorkflow, messageStore, chain);
+        EasyMock.verify(request, expressionEvaluator, localeProvider, invocation, actionMappingWorkflow, messageStore, chain);
     }
 }

@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.locale.LocaleWorkflow;
+import org.jcatapult.mvc.locale.LocaleProvider;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
@@ -51,18 +51,18 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     public static final String CHECKBOX_PREFIX = "__jc_cb";
     public static final String RADIOBUTTON_PREFIX = "__jc_rb";
     public static final String ACTION_PREFIX = "__jc_a";
-    public static final String PARAMETERS_KEY = "__jcatapult_parameters_key";
+    public static final String PARAMETERS_KEY = "jcatapultParametersKey";
 
-    private final LocaleWorkflow localeWorkflow;
+    private final LocaleProvider localeProvider;
     private final ActionMappingWorkflow actionMappingWorkflow;
     private final MessageStore messageStore;
     private final ExpressionEvaluator expressionEvaluator;
     private boolean ignoreEmptyParameters = true;
 
     @Inject
-    public DefaultParameterWorkflow(LocaleWorkflow localeWorkflow, ActionMappingWorkflow actionMappingWorkflow,
+    public DefaultParameterWorkflow(LocaleProvider localeProvider, ActionMappingWorkflow actionMappingWorkflow,
             MessageStore messageStore, ExpressionEvaluator expressionEvaluator) {
-        this.localeWorkflow = localeWorkflow;
+        this.localeProvider = localeProvider;
         this.actionMappingWorkflow = actionMappingWorkflow;
         this.messageStore = messageStore;
         this.expressionEvaluator = expressionEvaluator;
@@ -91,7 +91,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
             request.setAttribute(PARAMETERS_KEY, structs);
 
             // Next, process them
-            Locale locale = localeWorkflow.getLocale(request);
+            Locale locale = localeProvider.getLocale(request);
             for (String key : structs.keySet()) {
                 Struct struct = structs.get(key);
                 try {
@@ -113,7 +113,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
 
     /**
      * Pulls the attributes for the given parameter out of the request. The Structs that are setup
-     * by the perform method are stored in the request under the key {@code __jcatapult_parameters_key}.
+     * by the perform method are stored in the request under the key {@code jcatapultParametersKey}.
      * The Strut for the given parameter is then pulled out and the attributes from the Struct are
      * returned.
      *

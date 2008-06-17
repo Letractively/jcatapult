@@ -15,9 +15,12 @@
  */
 package org.jcatapult.mvc.message.scope;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-
-import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -27,28 +30,70 @@ import com.google.inject.Singleton;
  *
  * @author  Brian Pontarelli
  */
-@Singleton
+@SuppressWarnings("unchecked")
 public class RequestScope extends AbstractJEEScope {
     /**
-     * Looks up a value from the request.
-     *
-     * @param   request Not used.
-     * @param   key The key to lookup the value from.
-     * @return  The value or null if it doesn't exist.
+     * {@inheritDoc}
      */
-    protected Object findScope(HttpServletRequest request, String key) {
-        return request.getAttribute(key);
+    public Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action) {
+        FieldMessages messages = (FieldMessages) request.getAttribute(fieldKey(type));
+        if (messages == null) {
+            return Collections.emptyMap();
+        }
+
+        // Copy the map to protect it
+        return new HashMap<String, List<String>>(messages);
     }
 
     /**
-     * Stores a value into the request.
-     *
-     * @param   request Not used.
-     * @param   key The key to store the value under.
-     * @param   scope The value to store.
+     * {@inheritDoc}
      */
-    protected void storeScope(HttpServletRequest request, String key, Object scope) {
-        request.setAttribute(key, scope);
+    public void addFieldMessage(HttpServletRequest request, MessageType type, Object action, String fieldName, String message) {
+        String key = fieldKey(type);
+        FieldMessages messages = (FieldMessages) request.getAttribute(key);
+        if (messages == null) {
+            messages = new FieldMessages();
+            request.setAttribute(key, messages);
+        }
+
+        messages.addMessage(fieldName, message);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action) {
+        List<String> messages = (List<String>) request.getAttribute(actionKey(type));
+        if (messages == null) {
+            return Collections.emptyList();
+        }
+
+        // Copy the map to protect it
+        return new ArrayList<String>(messages);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addActionMessage(HttpServletRequest request, MessageType type, Object action, String message) {
+        String key = actionKey(type);
+        List<String> messages = (List<String>) request.getAttribute(key);
+        if (messages == null) {
+            messages = new ArrayList<String>();
+            request.setAttribute(key, messages);
+        }
+
+        messages.add(message);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear(HttpServletRequest request) {
+        request.removeAttribute(ACTION_ERROR_KEY);
+        request.removeAttribute(ACTION_MESSAGE_KEY);
+        request.removeAttribute(FIELD_ERROR_KEY);
+        request.removeAttribute(FIELD_MESSAGE_KEY);
     }
 
     /**

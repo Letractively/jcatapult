@@ -29,7 +29,7 @@ import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
-import org.jcatapult.mvc.locale.LocaleWorkflow;
+import org.jcatapult.mvc.locale.LocaleProvider;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.junit.Ignore;
@@ -87,8 +87,8 @@ public class AbstractControlTest {
         return amw;
     }
 
-    protected LocaleWorkflow makeLocaleWorkflow(HttpServletRequest request) {
-        LocaleWorkflow lw = EasyMock.createStrictMock(LocaleWorkflow.class);
+    protected LocaleProvider makeLocaleWorkflow(HttpServletRequest request) {
+        LocaleProvider lw = EasyMock.createStrictMock(LocaleProvider.class);
         EasyMock.expect(lw.getLocale(request)).andReturn(Locale.US);
         EasyMock.replay(lw);
         return lw;

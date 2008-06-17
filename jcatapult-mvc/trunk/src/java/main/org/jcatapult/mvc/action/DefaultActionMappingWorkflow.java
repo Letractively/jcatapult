@@ -41,7 +41,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
-    public static final String ACTION_INVOCATION_KEY = "__jcatapult_action_invocation";
+    public static final String ACTION_INVOCATION_KEY = "jcatapultActionInvocation";
 
     private final ActionConfigurationProvider actionConfigurationProvider;
     private final ObjectFactory objectFactory;

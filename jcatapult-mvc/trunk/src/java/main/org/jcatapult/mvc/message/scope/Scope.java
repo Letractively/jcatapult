@@ -47,7 +47,7 @@ public interface Scope {
      * @param   fieldName The name of the field.
      * @param   message The message.
      */
-    void setFieldMessages(HttpServletRequest request, MessageType type, Object action, String fieldName, String message);
+    void addFieldMessage(HttpServletRequest request, MessageType type, Object action, String fieldName, String message);
 
     /**
      * Retrieve a List of all of the action messages stored in the scope. This List is not live and
@@ -68,7 +68,14 @@ public interface Scope {
      * @param   action The current action.
      * @param   message The message.
      */
-    void setActionMessages(HttpServletRequest request, MessageType type, Object action, String message);
+    void addActionMessage(HttpServletRequest request, MessageType type, Object action, String message);
+
+    /**
+     * Clears all of the messages from the scope completely.
+     *
+     * @param   request The request.
+     */
+    void clear(HttpServletRequest request);
 
     /**
      * @return  The MessageScope that this scope is associated with.

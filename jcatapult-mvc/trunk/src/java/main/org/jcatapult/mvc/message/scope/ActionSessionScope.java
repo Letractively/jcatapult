@@ -15,11 +15,13 @@
  */
 package org.jcatapult.mvc.message.scope;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * <p>
@@ -35,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author  Brian Pontarelli
  */
 @SuppressWarnings("unchecked")
-public class ActionSessionScope extends AbstractScope {
+public class ActionSessionScope implements Scope {
     /**
      * The location where the field errors are stored. This keys into the session a Map whose key
      * is the action's class name and whose value is the field errors Map.
@@ -61,43 +63,157 @@ public class ActionSessionScope extends AbstractScope {
     public static final String ACTION_SESSION_ACTION_MESSAGE_KEY = "jcatapultActionSessionActionMessages";
 
     /**
-     * {@inheritDoc}
+     * Correctly synchronizes on the session, action session and field messages. It also returns empty
+     * maps if anything is missing so that the session doesn't get all filled up with empty maps.
+     *
+     * @param   request The request used to get the session.
+     * @param   type The message type.
+     * @param   action The action used to get the class name from.
+     * @return  The Map of field messages or an empty map is there aren't any.
      */
-    protected Map<String, List<String>> getFieldScope(HttpServletRequest request, MessageType type, Object action) {
+    public Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action) {
         String key = (type == MessageType.ERROR) ? ACTION_SESSION_FIELD_ERROR_KEY : ACTION_SESSION_FIELD_MESSAGE_KEY;
-        Map<String, Map<String, List<String>>> actionSession = (Map<String, Map<String, List<String>>>) request.getSession().getAttribute(key);
-        if (actionSession == null) {
-            actionSession = new HashMap<String, Map<String, List<String>>>();
-            request.getSession().setAttribute(key, actionSession);
+        HttpSession session = request.getSession();
+        Map<String, FieldMessages> actionSession;
+        synchronized (session) {
+            actionSession = (Map<String, FieldMessages>) session.getAttribute(key);
+            if (actionSession == null) {
+                return Collections.emptyMap();
+            }
         }
 
-        String className = action.getClass().getName();
-        Map<String, List<String>> values = actionSession.get(className);
-        if (values == null) {
-            values = new HashMap<String, List<String>>();
-            actionSession.put(className, values);
+        Map<String, List<String>> values;
+        synchronized (actionSession) {
+            String className = action.getClass().getName();
+            values = actionSession.get(className);
+            if (values == null) {
+                return Collections.emptyMap();
+            }
+
+            // Copy it to protect the Map from threading
+            values = new HashMap<String, List<String>>(values);
         }
+
         return values;
+    }
+
+    /**
+     * Correctly synchronizes on the session, action session, and field messages.
+     *
+     * @param   request The request used to get the session.
+     * @param   type The message type.
+     * @param   action The action used to get the class name from.
+     * @param   fieldName The field name.
+     * @param   message The new message to append.
+     */
+    public void addFieldMessage(HttpServletRequest request, MessageType type, Object action, String fieldName, String message) {
+        String key = (type == MessageType.ERROR) ? ACTION_SESSION_FIELD_ERROR_KEY : ACTION_SESSION_FIELD_MESSAGE_KEY;
+        HttpSession session = request.getSession();
+        Map<String, FieldMessages> actionSession;
+        synchronized (session) {
+            actionSession = (Map<String, FieldMessages>) session.getAttribute(key);
+            if (actionSession == null) {
+                actionSession = new HashMap<String, FieldMessages>();
+                session.setAttribute(key, actionSession);
+            }
+        }
+
+        FieldMessages values;
+        synchronized (actionSession) {
+            String className = action.getClass().getName();
+            values = actionSession.get(className);
+            if (values == null) {
+                values = new FieldMessages();
+                actionSession.put(className, values);
+            }
+        }
+
+        synchronized (values) {
+            values.addMessage(fieldName, message);
+        }
+    }
+
+    /**
+     * Correctly synchronizes on the session, action session and action messages. It also returns empty
+     * Lists if anything is missing so that the session doesn't get all filled up with empty objects.
+     *
+     * @param   request The request used to get the session.
+     * @param   type The message type.
+     * @param   action The action used to get the class name from.
+     * @return  The List of action messages or an empty List is there aren't any.
+     */
+    public List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action) {
+        String key = (type == MessageType.ERROR) ? ACTION_SESSION_ACTION_ERROR_KEY : ACTION_SESSION_ACTION_MESSAGE_KEY;
+        HttpSession session = request.getSession();
+        Map<String, List<String>> actionSession;
+        synchronized (session) {
+            actionSession = (Map<String, List<String>>) session.getAttribute(key);
+            if (actionSession == null) {
+                return Collections.emptyList();
+            }
+        }
+
+        List<String> values;
+        synchronized (actionSession) {
+            String className = action.getClass().getName();
+            values = actionSession.get(className);
+            if (values == null) {
+                return Collections.emptyList();
+            }
+
+            // Copy it to protect the list from threading
+            values = new ArrayList<String>(values);
+        }
+
+        return values;
+    }
+
+    /**
+     * Correctly synchronizes on the session, action session, and action messages.
+     *
+     * @param   request The request used to get the session.
+     * @param   type The message type.
+     * @param   action The action used to get the class name from.
+     * @param   message The new message to append.
+     */
+    public void addActionMessage(HttpServletRequest request, MessageType type, Object action, String message) {
+        String key = (type == MessageType.ERROR) ? ACTION_SESSION_ACTION_ERROR_KEY : ACTION_SESSION_ACTION_MESSAGE_KEY;
+        HttpSession session = request.getSession();
+        Map<String, List<String>> actionSession;
+        synchronized (session) {
+            actionSession = (Map<String, List<String>>) session.getAttribute(key);
+            if (actionSession == null) {
+                actionSession = new HashMap<String, List<String>>();
+                session.setAttribute(key, actionSession);
+            }
+        }
+
+        List<String> values;
+        synchronized (actionSession) {
+            String className = action.getClass().getName();
+            values = actionSession.get(className);
+            if (values == null) {
+                values = new ArrayList<String>();
+                actionSession.put(className, values);
+            }
+        }
+
+        synchronized (values) {
+            values.add(message);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    protected List<String> getActionScope(HttpServletRequest request, MessageType type, Object action) {
-        String key = (type == MessageType.ERROR) ? ACTION_SESSION_ACTION_ERROR_KEY : ACTION_SESSION_ACTION_MESSAGE_KEY;
-        Map<String, List<String>> actionSession = (Map<String, List<String>>) request.getSession().getAttribute(key);
-        if (actionSession == null) {
-            actionSession = new HashMap<String, List<String>>();
-            request.getSession().setAttribute(key, actionSession);
+    public void clear(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            session.removeAttribute(ACTION_SESSION_ACTION_ERROR_KEY);
+            session.removeAttribute(ACTION_SESSION_ACTION_MESSAGE_KEY);
+            session.removeAttribute(ACTION_SESSION_FIELD_ERROR_KEY);
+            session.removeAttribute(ACTION_SESSION_FIELD_MESSAGE_KEY);
         }
-
-        String className = action.getClass().getName();
-        List<String> values = actionSession.get(className);
-        if (values == null) {
-            values = new ArrayList<String>();
-            actionSession.put(className, values);
-        }
-        return values;
     }
 
     /**

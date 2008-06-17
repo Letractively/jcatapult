@@ -20,11 +20,11 @@ import javax.servlet.ServletContext;
 
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
-import org.easymock.IArgumentMatcher;
 import org.example.action.Simple;
 import org.example.action.user.Index;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.jcatapult.mvc.Capture;
 
 /**
  * <p>
@@ -53,21 +53,4 @@ public class DefaultActionConfigurationProviderTest {
         assertEquals("/user/index", config.get("/user/index").uri());
     }
 
-    public static class Capture {
-        public Object object;
-
-        public <T> T capture() {
-            reportMatcher(new IArgumentMatcher() {
-                public boolean matches(Object argument) {
-                    Capture.this.object = argument;
-                    return true;
-                }
-
-                public void appendTo(StringBuffer buffer) {
-                }
-            });
-
-            return null;
-        }
-    }
 }

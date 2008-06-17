@@ -71,7 +71,7 @@ public class DefaultMessageStore implements MessageWorkflow, MessageStore {
         }
 
         Scope scope = scopeRegistry.lookup(MessageScope.REQUEST);
-        scope.setFieldMessages(request, MessageType.ERROR, action, field, message);
+        scope.addFieldMessage(request, MessageType.ERROR, action, field, message);
     }
 
     /**
