@@ -18,21 +18,19 @@ package org.jcatapult.mvc.locale;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.servlet.Workflow;
-
 import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This is a workflow that handles Locale information. The user might
+ * This is a provider that handles Locale information. The user might
  * select a new Locale from the browser, the application might change the
  * Locale, or the Locale might already be persisted in the users session.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultLocaleWorkflow.class)
-public interface LocaleWorkflow extends Workflow {
+@ImplementedBy(DefaultLocaleProvider.class)
+public interface LocaleProvider {
     /**
      * Locates the current locale. This should only be a user defined Locale and NEVER the default.
      *

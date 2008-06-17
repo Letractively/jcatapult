@@ -44,7 +44,7 @@ import static net.java.util.CollectionTools.*;
 @SuppressWarnings("unchecked")
 public class DefaultActionConfigurationProvider implements ActionConfigurationProvider {
     private static final Logger logger = Logger.getLogger(DefaultActionConfigurationProvider.class.getName());
-    public static final String ACTION_CONFIGURATION_KEY = "__jcatapult_action_configuration";
+    public static final String ACTION_CONFIGURATION_KEY = "jcatapultActionConfiguration";
     private final ServletContext context;
 
     @Inject

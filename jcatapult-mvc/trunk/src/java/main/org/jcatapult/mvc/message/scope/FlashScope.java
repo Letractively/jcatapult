@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * <p>
@@ -67,22 +68,34 @@ public class FlashScope implements Scope {
      * @return  The flash field messages.
      */
     public Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action) {
-        String key = (type == MessageType.ERROR) ? FLASH_FIELD_ERRORS_KEY : FLASH_FIELD_MESSAGES_KEY;
-        Map<String, List<String>> fromRequest = (Map<String, List<String>>) request.getAttribute(key);
-        Map<String, List<String>> fromSession = (Map<String, List<String>>) request.getSession().getAttribute(key);
+        String key = fieldKey(type);
         Map<String, List<String>> combined = new HashMap<String, List<String>>();
+        FieldMessages fromRequest = (FieldMessages) request.getAttribute(key);
         if (fromRequest != null && fromRequest.size() > 0) {
             combined.putAll(fromRequest);
         }
-        if (fromSession != null && fromSession.size() > 0) {
-            combined.putAll(fromSession);
+
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            FieldMessages fromSession = (FieldMessages) session.getAttribute(key);
+            if (fromSession != null && fromSession.size() > 0) {
+                for (String s : fromSession.keySet()) {
+                    List<String> list = fromSession.get(s);
+                    if (combined.get(s) == null) {
+                        combined.put(s, list);
+                    } else {
+                        combined.get(s).addAll(list);
+                    }
+                }
+            }
         }
 
         return combined;
     }
 
     /**
-     * Stores new messages in the flash scope in the session.
+     * Stores new messages in the flash scope in the session. This correctly synchronizes the session
+     * and field messages.
      *
      * @param   request The request used to get the session.
      * @param   type The type of message to store.
@@ -90,21 +103,22 @@ public class FlashScope implements Scope {
      * @param   fieldName The name of the field that the message associated with.
      * @param   message The message itself.
      */
-    public void setFieldMessages(HttpServletRequest request, MessageType type, Object action, String fieldName, String message) {
-        String key = (type == MessageType.ERROR) ? FLASH_FIELD_ERRORS_KEY : FLASH_FIELD_MESSAGES_KEY;
-        Map<String, List<String>> scope = (Map<String, List<String>>) request.getSession().getAttribute(key);
-        if (scope == null) {
-            scope = new HashMap<String, List<String>>();
-            request.getSession().setAttribute(key, scope);
+    public void addFieldMessage(HttpServletRequest request, MessageType type, Object action,
+            String fieldName, String message) {
+        HttpSession session = request.getSession();
+        FieldMessages messages;
+        synchronized (session) {
+            String key = fieldKey(type);
+            messages = (FieldMessages) session.getAttribute(key);
+            if (messages == null) {
+                messages = new FieldMessages();
+                session.setAttribute(key, messages);
+            }
         }
 
-        List<String> messages = scope.get(fieldName);
-        if (message == null) {
-            messages = new ArrayList<String>();
-            scope.put(fieldName, messages);
+        synchronized (messages) {
+            messages.addMessage(fieldName, message);
         }
-
-        messages.add(message);
     }
 
     /**
@@ -118,37 +132,67 @@ public class FlashScope implements Scope {
      * @return  The flash action messages.
      */
     public List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action) {
-        String key = (type == MessageType.ERROR) ? FLASH_ACTION_ERRORS_KEY : FLASH_ACTION_MESSAGES_KEY;
-        List<String> fromRequest = (List<String>) request.getAttribute(key);
-        List<String> fromSession = (List<String>) request.getSession().getAttribute(key);
+        String key = actionKey(type);
         List<String> combined = new ArrayList<String>();
+
+        List<String> fromRequest = (List<String>) request.getAttribute(key);
         if (fromRequest != null && fromRequest.size() > 0) {
             combined.addAll(fromRequest);
         }
-        if (fromSession != null && fromSession.size() > 0) {
-            combined.addAll(fromSession);
+
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            List<String> fromSession = (List<String>) session.getAttribute(key);
+            if (fromSession != null && fromSession.size() > 0) {
+                combined.addAll(fromSession);
+            }
         }
 
         return combined;
     }
 
     /**
-     * Stores new messages in the flash scope in the session.
+     * Stores new messages in the flash scope in the session. This correctly synchronizes the session
+     * and message List.
      *
      * @param   request The request used to get the session.
      * @param   type The type of message to store.
      * @param   action The action (not used).
      * @param   message The message itself.
      */
-    public void setActionMessages(HttpServletRequest request, MessageType type, Object action, String message) {
-        String key = (type == MessageType.ERROR) ? FLASH_ACTION_ERRORS_KEY : FLASH_ACTION_MESSAGES_KEY;
-        List<String> scope = (List<String>) request.getSession().getAttribute(key);
-        if (scope == null) {
-            scope = new ArrayList<String>();
-            request.getSession().setAttribute(key, scope);
+    public void addActionMessage(HttpServletRequest request, MessageType type, Object action, String message) {
+        HttpSession session = request.getSession();
+        List<String> scope;
+        synchronized (session) {
+            String key = actionKey(type);
+            scope = (List<String>) session.getAttribute(key);
+            if (scope == null) {
+                scope = new ArrayList<String>();
+                session.setAttribute(key, scope);
+            }
         }
 
-        scope.add(message);
+        synchronized (scope) {
+            scope.add(message);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            session.removeAttribute(FLASH_ACTION_ERRORS_KEY);
+            session.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
+            session.removeAttribute(FLASH_FIELD_ERRORS_KEY);
+            session.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
+        }
+
+        request.removeAttribute(FLASH_ACTION_ERRORS_KEY);
+        request.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
+        request.removeAttribute(FLASH_FIELD_ERRORS_KEY);
+        request.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
     }
 
     /**
@@ -157,24 +201,44 @@ public class FlashScope implements Scope {
      * @param   request The request used to get the session and possibly store the flash.
      */
     public void transferFlash(HttpServletRequest request) {
-        transferFlash(request, FLASH_FIELD_ERRORS_KEY);
-        transferFlash(request, FLASH_FIELD_MESSAGES_KEY);
-        transferFlash(request, FLASH_ACTION_ERRORS_KEY);
-        transferFlash(request, FLASH_ACTION_MESSAGES_KEY);
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            transferFlash(request, session, FLASH_FIELD_ERRORS_KEY);
+            transferFlash(request, session, FLASH_FIELD_MESSAGES_KEY);
+            transferFlash(request, session, FLASH_ACTION_ERRORS_KEY);
+            transferFlash(request, session, FLASH_ACTION_MESSAGES_KEY);
+        }
     }
 
     /**
      * Transfers the value from the session under the given key to the request under the given key.
      *
      * @param   request The request.
+     * @param   session The session.
      * @param   key The key.
      */
-    protected void transferFlash(HttpServletRequest request, String key) {
-        Map<String, Object> flash = (Map<String, Object>) request.getSession().getAttribute(key);
+    protected void transferFlash(HttpServletRequest request, HttpSession session, String key) {
+        Object flash = session.getAttribute(key);
         if (flash != null) {
-            request.getSession().removeAttribute(key);
+            session.removeAttribute(key);
             request.setAttribute(key, flash);
         }
+    }
+
+    /**
+     * @param   type The message type.
+     * @return  The correct key for the message type.
+     */
+    private String fieldKey(MessageType type) {
+        return (type == MessageType.ERROR) ? FLASH_FIELD_ERRORS_KEY : FLASH_FIELD_MESSAGES_KEY;
+    }
+
+    /**
+     * @param   type The message type.
+     * @return  The correct key for the message type.
+     */
+    private String actionKey(MessageType type) {
+        return (type == MessageType.ERROR) ? FLASH_ACTION_ERRORS_KEY : FLASH_ACTION_MESSAGES_KEY;
     }
 
     /**

@@ -15,9 +15,13 @@
  */
 package org.jcatapult.mvc.message.scope;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-
-import com.google.inject.Singleton;
+import javax.servlet.http.HttpSession;
 
 /**
  * <p>
@@ -27,28 +31,114 @@ import com.google.inject.Singleton;
  *
  * @author  Brian Pontarelli
  */
-@Singleton
+@SuppressWarnings("unchecked")
 public class SessionScope extends AbstractJEEScope {
     /**
-     * Looks up a value from the session.
+     * Correctly synchronizes the session.
      *
      * @param   request Not used.
-     * @param   key The key to lookup the value from.
-     * @return  The value or null if it doesn't exist.
+     * @param   type Used to determine the key to lookup the message map from.
+     * @param   action Not used.
+     * @return  The Map or an empty map if the session doesn't contain the FieldMessages yet.
      */
-    protected Object findScope(HttpServletRequest request, String key) {
-        return request.getSession().getAttribute(key);
+    public Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action) {
+        HttpSession session = request.getSession();
+        FieldMessages messages;
+        synchronized (session) {
+            messages = (FieldMessages) session.getAttribute(fieldKey(type));
+            if (messages == null) {
+                return Collections.emptyMap();
+            }
+
+            // Copy the map to protect it from threading
+            return new HashMap<String, List<String>>(messages);
+        }
     }
 
     /**
-     * Stores a value into the session.
+     * Correctly synchronizes the context and the FieldMessages object.
      *
      * @param   request Not used.
-     * @param   key The key to store the value under.
-     * @param   scope The value to store.
+     * @param   type Used to determine the key to lookup the message map from.
+     * @param   action Not used.
+     * @param   fieldName The name of the field.
+     * @param   message The message to append.
      */
-    protected void storeScope(HttpServletRequest request, String key, Object scope) {
-        request.getSession().setAttribute(key, scope);
+    public void addFieldMessage(HttpServletRequest request, MessageType type, Object action, String fieldName, String message) {
+        HttpSession session = request.getSession();
+        FieldMessages messages;
+        synchronized (session) {
+            String key = fieldKey(type);
+            messages = (FieldMessages) session.getAttribute(key);
+            if (messages == null) {
+                messages = new FieldMessages();
+                session.setAttribute(key, messages);
+            }
+        }
+
+        synchronized (messages) {
+            messages.addMessage(fieldName, message);
+        }
+    }
+
+    /**
+     * Correctly synchronizes the session.
+     *
+     * @param   request Not used.
+     * @param   type Used to determine the key to lookup the message map from.
+     * @param   action Not used.
+     * @return  The List or an empty List if the session doesn't contain the action messages yet.
+     */
+    public List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action) {
+        HttpSession session = request.getSession();
+        List<String> messages;
+        synchronized (session) {
+            messages = (List<String>) session.getAttribute(actionKey(type));
+            if (messages == null) {
+                return Collections.emptyList();
+            }
+
+            // Copy the map to protect it from threading
+            return new ArrayList<String>(messages);
+        }
+    }
+
+    /**
+     * Correctly synchronizes the session and the action messages List.
+     *
+     * @param   request Not used.
+     * @param   type Used to determine the key to lookup the message map from.
+     * @param   action Not used.
+     * @param   message The message to append.
+     */
+    public void addActionMessage(HttpServletRequest request, MessageType type, Object action, String message) {
+        HttpSession session = request.getSession();
+        List<String> messages;
+        synchronized (session) {
+            String key = actionKey(type);
+            messages = (List<String>) session.getAttribute(key);
+            if (messages == null) {
+                messages = new ArrayList<String>();
+                session.setAttribute(key, messages);
+            }
+        }
+
+        synchronized (messages) {
+            messages.add(message);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            session.removeAttribute(ACTION_ERROR_KEY);
+            session.removeAttribute(ACTION_MESSAGE_KEY);
+            session.removeAttribute(FIELD_ERROR_KEY);
+            session.removeAttribute(FIELD_MESSAGE_KEY);
+        }
     }
 
     /**

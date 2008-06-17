@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.locale.LocaleWorkflow;
+import org.jcatapult.mvc.locale.LocaleProvider;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.servlet.ServletObjectsHolder;
@@ -45,15 +45,15 @@ import freemarker.template.TemplateModel;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractControl implements Control, TemplateDirectiveModel {
-    protected LocaleWorkflow localeWorkflow;
+    protected LocaleProvider localeProvider;
     protected ActionMappingWorkflow actionMappingWorkflow;
     protected MessageStore messageStore;
     protected FreeMarkerService freeMarkerService;
 
     @Inject
-    public void setServices(LocaleWorkflow localeWorkflow, ActionMappingWorkflow actionMappingWorkflow,
+    public void setServices(LocaleProvider localeProvider, ActionMappingWorkflow actionMappingWorkflow,
             MessageStore messageStore, FreeMarkerService freeMarkerService) {
-        this.localeWorkflow = localeWorkflow;
+        this.localeProvider = localeProvider;
         this.actionMappingWorkflow = actionMappingWorkflow;
         this.messageStore = messageStore;
         this.freeMarkerService = freeMarkerService;
@@ -76,7 +76,7 @@ public abstract class AbstractControl implements Control, TemplateDirectiveModel
             Map<String, String> parameterAttributes) {
         ActionInvocation actionInvocation = actionMappingWorkflow.fetch(request);
         Object action = actionInvocation.action();
-        Locale locale = localeWorkflow.getLocale(request);
+        Locale locale = localeProvider.getLocale(request);
 
         addAdditionalAttributes(request, attributes, parameterAttributes, actionInvocation, locale);
         Map<String, Object> parameters = makeParameters(request, attributes, parameterAttributes, actionInvocation, action, locale);

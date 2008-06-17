@@ -15,6 +15,11 @@
  */
 package org.jcatapult.mvc.message.scope;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,6 +36,7 @@ import com.google.inject.Singleton;
  * @author Brian Pontarelli
  */
 @Singleton
+@SuppressWarnings("unchecked")
 public class ContextScope extends AbstractJEEScope {
     private final ServletContext context;
 
@@ -40,25 +46,106 @@ public class ContextScope extends AbstractJEEScope {
     }
 
     /**
-     * Looks up a value from the servlet context.
+     * Correctly synchronizes the context.
      *
      * @param   request Not used.
-     * @param   key The key to lookup the value from.
-     * @return  The value or null if it doesn't exist.
+     * @param   type Used to determine the key to lookup the message map from.
+     * @param   action Not used.
+     * @return  The Map or an empty map if the context doesn't contain the FieldMessages yet.
      */
-    protected Object findScope(HttpServletRequest request, String key) {
-        return context.getAttribute(key);
+    public Map<String, List<String>> getFieldMessages(HttpServletRequest request, MessageType type, Object action) {
+        FieldMessages messages;
+        synchronized (context) {
+            messages = (FieldMessages) context.getAttribute(fieldKey(type));
+            if (messages == null) {
+                return Collections.emptyMap();
+            }
+
+            // Copy the map to protect it from threading
+            return new HashMap<String, List<String>>(messages);
+        }
     }
 
     /**
-     * Stores a value into the servlet context.
+     * Correctly synchronizes the context and the FieldMessages object.
      *
      * @param   request Not used.
-     * @param   key The key to store the value under.
-     * @param   scope The value to store.
+     * @param   type Used to determine the key to lookup the message map from.
+     * @param   action Not used.
+     * @param   fieldName The name of the field.
+     * @param   message The message to append.
      */
-    protected void storeScope(HttpServletRequest request, String key, Object scope) {
-        context.setAttribute(key, scope);
+    public void addFieldMessage(HttpServletRequest request, MessageType type, Object action, String fieldName, String message) {
+        FieldMessages messages;
+        synchronized (context) {
+            String key = fieldKey(type);
+            messages = (FieldMessages) context.getAttribute(key);
+            if (messages == null) {
+                messages = new FieldMessages();
+                context.setAttribute(key, messages);
+            }
+        }
+
+        synchronized (messages) {
+            messages.addMessage(fieldName, message);
+        }
+    }
+
+    /**
+     * Correctly synchronizes the context.
+     *
+     * @param   request Not used.
+     * @param   type Used to determine the key to lookup the message map from.
+     * @param   action Not used.
+     * @return  The List or an empty List if the context doesn't contain the action messages yet.
+     */
+    public List<String> getActionMessages(HttpServletRequest request, MessageType type, Object action) {
+        List<String> messages;
+        synchronized (context) {
+            messages = (List<String>) context.getAttribute(actionKey(type));
+            if (messages == null) {
+                return Collections.emptyList();
+            }
+
+            // Copy the map to protect it from threading
+            return new ArrayList<String>(messages);
+        }
+    }
+
+    /**
+     * Correctly synchronizes the context and the action messages List.
+     *
+     * @param   request Not used.
+     * @param   type Used to determine the key to lookup the message map from.
+     * @param   action Not used.
+     * @param   message The message to append.
+     */
+    public void addActionMessage(HttpServletRequest request, MessageType type, Object action, String message) {
+        List<String> messages;
+        synchronized (context) {
+            String key = actionKey(type);
+            messages = (List<String>) context.getAttribute(key);
+            if (messages == null) {
+                messages = new ArrayList<String>();
+                context.setAttribute(key, messages);
+            }
+        }
+
+        synchronized (messages) {
+            messages.add(message);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear(HttpServletRequest request) {
+        synchronized (context) {
+            context.removeAttribute(ACTION_ERROR_KEY);
+            context.removeAttribute(ACTION_MESSAGE_KEY);
+            context.removeAttribute(FIELD_ERROR_KEY);
+            context.removeAttribute(FIELD_MESSAGE_KEY);
+        }
     }
 
     /**

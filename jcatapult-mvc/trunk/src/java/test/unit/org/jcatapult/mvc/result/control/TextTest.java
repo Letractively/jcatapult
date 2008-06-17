@@ -29,7 +29,7 @@ import org.jcatapult.freemarker.DefaultFreeMarkerService;
 import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.freemarker.OverridingTemplateLoader;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
-import org.jcatapult.mvc.locale.LocaleWorkflow;
+import org.jcatapult.mvc.locale.LocaleProvider;
 import org.jcatapult.mvc.message.MessageProvider;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
@@ -50,7 +50,7 @@ public class TextTest extends AbstractInputTest {
     public void testActionLess() {
         HttpServletRequest request = makeRequest();
         ActionMappingWorkflow amw = makeActionMappingWorkflow(request, null, "/test");
-        LocaleWorkflow lw = makeLocaleWorkflow(request);
+        LocaleProvider lw = makeLocaleWorkflow(request);
         MessageStore ms = makeMessageStore(request, null, "test");
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
@@ -83,7 +83,7 @@ public class TextTest extends AbstractInputTest {
         Edit action = new Edit();
         HttpServletRequest request = makeRequest();
         ActionMappingWorkflow amw = makeActionMappingWorkflow(request, action, "/test");
-        LocaleWorkflow lw = makeLocaleWorkflow(request);
+        LocaleProvider lw = makeLocaleWorkflow(request);
         MessageStore ms = makeMessageStore(request, action, "usre.name");
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
@@ -117,7 +117,7 @@ public class TextTest extends AbstractInputTest {
         Edit action = new Edit();
         HttpServletRequest request = makeRequest();
         ActionMappingWorkflow amw = makeActionMappingWorkflow(request, action, "/test");
-        LocaleWorkflow lw = makeLocaleWorkflow(request);
+        LocaleProvider lw = makeLocaleWorkflow(request);
         MessageStore ms = makeMessageStore(request, action, "user.name");
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
@@ -151,7 +151,7 @@ public class TextTest extends AbstractInputTest {
         Edit action = new Edit();
         HttpServletRequest request = makeRequest();
         ActionMappingWorkflow amw = makeActionMappingWorkflow(request, action, "/test");
-        LocaleWorkflow lw = makeLocaleWorkflow(request);
+        LocaleProvider lw = makeLocaleWorkflow(request);
         MessageStore ms = makeMessageStore(request, action, "user.name");
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
@@ -184,7 +184,7 @@ public class TextTest extends AbstractInputTest {
         Edit action = new Edit();
         HttpServletRequest request = makeRequest();
         ActionMappingWorkflow amw = makeActionMappingWorkflow(request, action, "/test");
-        LocaleWorkflow lw = makeLocaleWorkflow(request);
+        LocaleProvider lw = makeLocaleWorkflow(request);
         MessageStore ms = makeMessageStore(request, action, "user.name", "Name is required", "Name must be cool");
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
