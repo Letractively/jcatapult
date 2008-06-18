@@ -37,17 +37,21 @@ import javax.servlet.http.HttpServletResponse;
 public class DefaultWorkflowChain implements WorkflowChain {
     private final Iterator<Workflow> workflows;
     private final FilterChain filterChain;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
 
-    public DefaultWorkflowChain(List<Workflow> workflows, FilterChain filterChain) {
+    public DefaultWorkflowChain(HttpServletRequest request, HttpServletResponse response,
+            List<Workflow> workflows, FilterChain filterChain) {
+        this.request = request;
+        this.response = response;
         this.workflows = workflows.iterator();
         this.filterChain = filterChain;
     }
 
-    public void doWorkflow(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+    public void continueWorkflow() throws IOException, ServletException {
         if (workflows.hasNext()) {
             Workflow workflow = workflows.next();
-            workflow.perform(request, response, this);
+            workflow.perform(this);
         } else {
             filterChain.doFilter(request, response);
         }

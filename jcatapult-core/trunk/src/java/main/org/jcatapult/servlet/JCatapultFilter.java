@@ -109,8 +109,9 @@ public class JCatapultFilter implements Filter {
                 logger.finest("Found these workflows: " + workflows);
             }
 
-            DefaultWorkflowChain workflowChain = new DefaultWorkflowChain(workflows, chain);
-            workflowChain.doWorkflow((HttpServletRequest) request, (HttpServletResponse) response);
+            DefaultWorkflowChain workflowChain = new DefaultWorkflowChain((HttpServletRequest) request,
+                (HttpServletResponse) response, workflows, chain);
+            workflowChain.continueWorkflow();
         } finally {
             long end = System.currentTimeMillis();
             if (logger.isLoggable(Level.FINEST)) {
@@ -139,7 +140,9 @@ public class JCatapultFilter implements Filter {
         WorkflowResolver workflowResolver = GuiceContainer.getInjector().getInstance(WorkflowResolver.class);
         List<Workflow> workflows = workflowResolver.resolve();
         for (Workflow workflow : workflows) {
-            workflow.destroy();
+            if (workflow instanceof DestroyableWorkflow) {
+                ((DestroyableWorkflow) workflow).destroy();
+            }
         }
     }
 }

@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -39,13 +37,12 @@ public class SubWorkflowChain implements WorkflowChain {
         this.workflowChain = workflowChain;
     }
 
-    public void doWorkflow(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+    public void continueWorkflow() throws IOException, ServletException {
         if (workflows.hasNext()) {
             Workflow workflow = workflows.next();
-            workflow.perform(request, response, this);
+            workflow.perform(this);
         } else {
-            workflowChain.doWorkflow(request, response);
+            workflowChain.continueWorkflow();
         }
     }
 }

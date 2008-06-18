@@ -69,8 +69,8 @@ public class StaticResourceWorkflowTest {
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
         EasyMock.replay(wc);
 
-        StaticResourceWorkflow srw = new StaticResourceWorkflow(configuration);
-        srw.perform(req, res, wc);
+        StaticResourceWorkflow srw = new StaticResourceWorkflow(req, res, configuration);
+        srw.perform(wc);
         EasyMock.verify(configuration, req, res, wc);
 
         assertEquals("Test\n", build.toString());
@@ -99,8 +99,8 @@ public class StaticResourceWorkflowTest {
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
         EasyMock.replay(wc);
 
-        StaticResourceWorkflow srw = new StaticResourceWorkflow(configuration);
-        srw.perform(req, res, wc);
+        StaticResourceWorkflow srw = new StaticResourceWorkflow(req, res, configuration);
+        srw.perform(wc);
         EasyMock.verify(configuration, req, res, wc);
     }
 
@@ -123,11 +123,11 @@ public class StaticResourceWorkflowTest {
         EasyMock.replay(res);
 
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
-        wc.doWorkflow(req, res);
+        wc.continueWorkflow();
         EasyMock.replay(wc);
 
-        StaticResourceWorkflow srw = new StaticResourceWorkflow(configuration);
-        srw.perform(req, res, wc);
+        StaticResourceWorkflow srw = new StaticResourceWorkflow(req, res, configuration);
+        srw.perform(wc);
         EasyMock.verify(configuration, req, res, wc);
     }
 
@@ -149,11 +149,11 @@ public class StaticResourceWorkflowTest {
         EasyMock.replay(res);
 
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
-        wc.doWorkflow(req, res);
+        wc.continueWorkflow();
         EasyMock.replay(wc);
 
-        StaticResourceWorkflow srw = new StaticResourceWorkflow(configuration);
-        srw.perform(req, res, wc);
+        StaticResourceWorkflow srw = new StaticResourceWorkflow(req, res, configuration);
+        srw.perform(wc);
         EasyMock.verify(configuration, req, res, wc);
     }
 

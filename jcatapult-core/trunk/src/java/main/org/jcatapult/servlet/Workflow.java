@@ -17,8 +17,6 @@ package org.jcatapult.servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -26,26 +24,17 @@ import javax.servlet.http.HttpServletResponse;
  * JCatapultFilter passing control down the J2EE filter chain.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 public interface Workflow {
     /**
      * Performs a task.
      *
-     * @param   request The HTTP request in case it is needed by the Workflow.
-     * @param   response The HTTP response in case it is needed by the Workflow.
      * @param   workflowChain This chain should be called if the Workflow wants to continue processing
      *          the request by the next Workflow in the chain or by the next J2EE filter in the
      *          chain after the JCatapultFilter.
      * @throws  IOException If the workflow had any IO problems.
      * @throws  ServletException If the workflow had any servlet problems.
      */
-    void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain workflowChain)
-    throws IOException, ServletException;
-
-    /**
-     * Shutsdown the Workflow instance and allows the Workflow to clean up any resources or objects
-     * it has created.
-     */
-    void destroy();
+    void perform(WorkflowChain workflowChain) throws IOException, ServletException;
 }
