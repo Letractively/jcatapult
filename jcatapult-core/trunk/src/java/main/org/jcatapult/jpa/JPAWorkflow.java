@@ -18,14 +18,11 @@ package org.jcatapult.jpa;
 import java.io.IOException;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.jcatapult.servlet.Workflow;
+import org.jcatapult.servlet.DestroyableWorkflow;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * <p>
@@ -41,14 +38,9 @@ import com.google.inject.Singleton;
  * into the JCatapult workflow processing.
  * </p>
  *
- * <p>
- * This is a singleton for performance.
- * </p>
- *
  * @author  Brian Pontarelli
  */
-@Singleton
-public class JPAWorkflow implements Workflow {
+public class JPAWorkflow implements DestroyableWorkflow {
     private final JPAService service;
 
     @Inject
@@ -59,26 +51,23 @@ public class JPAWorkflow implements Workflow {
     /**
      * Sets up an entity manager if JPA is enabled.
      *
-     * @param   request Passed on.
-     * @param   response Passed on.
      * @param   workflowChain The chain.
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain workflowChain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
         EntityManagerFactory emf = service.getFactory();
         if (emf != null) {
             try {
                 service.setupEntityManager();
 
                 // Proceed down the chain
-                workflowChain.doWorkflow(request, response);
+                workflowChain.continueWorkflow();
             } finally {
                 service.tearDownEntityManager();
             }
         } else {
-            workflowChain.doWorkflow(request, response);
+            workflowChain.continueWorkflow();
         }
     }
 

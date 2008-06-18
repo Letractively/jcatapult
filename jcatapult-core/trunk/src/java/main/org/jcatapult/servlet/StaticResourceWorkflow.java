@@ -58,11 +58,15 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
  */
 public class StaticResourceWorkflow implements Workflow {
     private static final Logger logger = Logger.getLogger(StaticResourceWorkflow.class.getName());
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
     private final String[] staticPrefixes;
     private final boolean enabled;
 
     @Inject
-    public StaticResourceWorkflow(Configuration configuration) {
+    public StaticResourceWorkflow(HttpServletRequest request, HttpServletResponse response, Configuration configuration) {
+        this.request = request;
+        this.response = response;
         this.staticPrefixes = getPrefixes(configuration);
         this.enabled = configuration.getBoolean("jcatapult.static-resource.enabled", true);
     }
@@ -85,17 +89,13 @@ public class StaticResourceWorkflow implements Workflow {
      * Checks for static resource request and if it is one, locates and sends back the static resource.
      * If it isn't one, it passes control down the chain.
      *
-     * @param   request The request.
-     * @param   response The response.
      * @param   workflowChain The workflow chain to use if the request is not a static resource.
      * @throws  IOException If the request is a static resource and sending it failed or if the
      *          chain throws an IOException.
      * @throws  ServletException If the chain throws.
      */
     @Override
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain workflowChain)
-    throws IOException, ServletException {
-
+    public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
         String uri = request.getRequestURI();
         boolean handled = false;
         if (enabled) {
@@ -112,15 +112,8 @@ public class StaticResourceWorkflow implements Workflow {
         }
 
         if (!handled) {
-            workflowChain.doWorkflow(request, response);
+            workflowChain.continueWorkflow();
         }
-    }
-
-    /**
-     * Empty.
-     */
-    @Override
-    public void destroy() {
     }
 
     /**

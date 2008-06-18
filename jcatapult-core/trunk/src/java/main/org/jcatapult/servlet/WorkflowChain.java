@@ -17,8 +17,6 @@ package org.jcatapult.servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -34,10 +32,8 @@ public interface WorkflowChain {
      * this should pass control back to the JCatapultFilter to continue processing the HTTP request
      * down the filter chain.
      *
-     * @param   request The request.
-     * @param   response The response.
      * @throws  IOException If the workflows or filters throw IOException.
      * @throws  ServletException If the workflows or filters throw ServletException.
      */
-    void doWorkflow(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
+    void continueWorkflow() throws IOException, ServletException;
 }

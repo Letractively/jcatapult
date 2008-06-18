@@ -18,8 +18,6 @@ package org.jcatapult.servlet;
 
 import java.io.IOException;
 import java.util.Arrays;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import org.jcatapult.jpa.JPAWorkflow;
@@ -46,21 +44,12 @@ public class CoreWorkflow implements Workflow {
     /**
      * Creates a sub-chain and invokes it.
      *
-     * @param   request Passed to the sub chain.
-     * @param   response Passed to the sub chain.
      * @param   chain The end of the sub chain.
      * @throws  IOException If the sub chain throws.
      * @throws  ServletException If the sub chain throws.
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
         SubWorkflowChain sub = new SubWorkflowChain(Arrays.asList(staticResourceWorkflow, jpaWorkflow), chain);
-        sub.doWorkflow(request, response);
-    }
-
-    /**
-     * Empty.
-     */
-    public void destroy() {
+        sub.continueWorkflow();
     }
 }
