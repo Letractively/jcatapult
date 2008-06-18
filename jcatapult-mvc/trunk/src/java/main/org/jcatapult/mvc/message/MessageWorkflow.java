@@ -29,6 +29,6 @@ import com.google.inject.ImplementedBy;
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultMessageStore.class)
+@ImplementedBy(DefaultMessageWorkflow.class)
 public interface MessageWorkflow extends Workflow {
 }

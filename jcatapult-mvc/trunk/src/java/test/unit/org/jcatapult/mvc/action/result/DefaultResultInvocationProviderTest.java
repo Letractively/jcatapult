@@ -17,6 +17,7 @@ package org.jcatapult.mvc.action.result;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 import javax.servlet.ServletContext;
 
 import org.easymock.EasyMock;
@@ -42,7 +43,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.expect(context.getResource("/WEB-INF/content/foo/bar/index.ftl")).andReturn(new URL("http://google.com"));
         EasyMock.replay(context);
 
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(context, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
         ResultInvocation invocation = provider.lookup("/foo/bar");
         assertNotNull(invocation);
         assertNull(invocation.resultCode());
@@ -59,7 +60,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         TestAction action = new TestAction();
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(context, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
         ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null), "/foo/bar", "success");
         assertNotNull(invocation);
         assertEquals("success", invocation.resultCode());
@@ -82,7 +83,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         TestAction action = new TestAction();
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(context, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
         ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null), "/foo/bar", "error");
         assertNotNull(invocation);
         assertEquals("error", invocation.resultCode());

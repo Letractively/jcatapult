@@ -15,18 +15,26 @@
  */
 package org.jcatapult.mvc.validation;
 
-import org.jcatapult.servlet.Workflow;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 
-import com.google.inject.ImplementedBy;
+import org.jcatapult.servlet.WorkflowChain;
 
 /**
  * <p>
- * This is the validation workflow that performs validation on the action
- * and its fields.
+ * This
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-@ImplementedBy(DefaultValidationWorkflow.class)
-public interface ValidationWorkflow extends Workflow {
+public class DefaultValidationWorkflow implements ValidationWorkflow {
+    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
+    throws IOException, ServletException {
+        chain.doWorkflow(request, response);
+    }
+
+    public void destroy() {
+    }
 }

@@ -29,9 +29,7 @@ import org.example.domain.User;
 import org.example.domain.UserField;
 import org.jcatapult.mvc.locale.DefaultLocaleStore;
 import org.jcatapult.mvc.test.junit.WebBaseTest;
-import org.jcatapult.servlet.ServletObjectsHolder;
 import static org.junit.Assert.*;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -46,20 +44,6 @@ import static net.java.util.CollectionTools.*;
  */
 public class DefaultExpressionEvaluatorTest extends WebBaseTest {
     DefaultExpressionEvaluator evaluator;
-
-    /**
-     * Setup a request.
-     */
-    @Before
-    public void inject() {
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession(false)).andReturn(null);
-        EasyMock.expect(request.getAttribute(DefaultLocaleStore.LOCALE_KEY)).andReturn(Locale.US);
-        EasyMock.replay(request);
-        ServletObjectsHolder.setServletRequest(request);
-
-        super.inject();
-    }
 
     @Inject
     public void setEvaluator(DefaultExpressionEvaluator evaluator) {

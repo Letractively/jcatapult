@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.action.result;
 
 import java.io.IOException;
+import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -49,7 +50,7 @@ public class ForwardResultTest {
         EasyMock.replay(context);
 
         Forward forward = new ForwardResult.ForwardImpl("/foo/bar.jsp", null);
-        ForwardResult forwardResult = new ForwardResult(context, null, request, null);
+        ForwardResult forwardResult = new ForwardResult(Locale.CANADA, context, request, null, null, null);
         forwardResult.execute(forward, new DefaultActionInvocation(null, "/foo/bar", null));
 
         EasyMock.verify(context, dispatcher, request);
@@ -70,7 +71,7 @@ public class ForwardResultTest {
         EasyMock.replay(context);
 
         Forward forward = new ForwardResult.ForwardImpl("bar.jsp", null);
-        ForwardResult forwardResult = new ForwardResult(context, null, request, null);
+        ForwardResult forwardResult = new ForwardResult(Locale.GERMAN, context, request, null, null, null);
         forwardResult.execute(forward, new DefaultActionInvocation(null, "/action", null));
 
         EasyMock.verify(context, dispatcher, request);
