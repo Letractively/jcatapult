@@ -11,7 +11,7 @@
 
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult.core" value="1.0-RC4-{integration}"/>
+  <property name="version.jcatapult.core" value="1.0-RC5-{integration}"/>
 
    <!-- database props -->
   <property name="project.requires.database" value="true"/>
