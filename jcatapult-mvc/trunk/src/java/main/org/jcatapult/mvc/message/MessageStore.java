@@ -43,7 +43,7 @@ public interface MessageStore {
      * @param   values The values attempting to be set into the field.
      * @throws  MissingMessageException If the conversion message is missing.
      */
-    void addConversionError(String field, String bundle, Map<String, String> attributes, String... values) throws MissingMessageException;
+    void addConversionError(String field, String bundle, Map<String, String> attributes, Object... values) throws MissingMessageException;
 
     /**
      * Adds a field message which is pulled from the {@link MessageProvider}.

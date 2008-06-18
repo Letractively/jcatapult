@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import static java.util.ResourceBundle.Control.*;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -67,6 +68,7 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class ResourceBundleMessageProvider implements MessageProvider {
+    private static final ResourceBundle.Control CONTROL = getNoFallbackControl(FORMAT_DEFAULT);
     private final Locale locale;
 
     @Inject
@@ -77,7 +79,8 @@ public class ResourceBundleMessageProvider implements MessageProvider {
     /**
      * {@inheritDoc}
      */
-    public String getMessage(String bundle, String key, Map<String, String> attributes, Object... values) {
+    public String getMessage(String bundle, String key, Map<String, String> attributes, Object... values)
+    throws MissingMessageException {
         String message = findMessage(bundle, key);
         List<Object> params = new ArrayList<Object>(asList(values));
         SortedSet<String> sortedKeys = new TreeSet<String>(attributes.keySet());
@@ -91,7 +94,7 @@ public class ResourceBundleMessageProvider implements MessageProvider {
     /**
      * {@inheritDoc}
      */
-    public String getMessage(String bundle, String key, Object... values) {
+    public String getMessage(String bundle, String key, Object... values) throws MissingMessageException {
         String message = findMessage(bundle, key);
         return MessageFormat.format(message, values);
     }
@@ -106,7 +109,7 @@ public class ResourceBundleMessageProvider implements MessageProvider {
     protected String findMessage(String bundle, String key) {
         ResourceBundle rb = null;
         try {
-            rb = ResourceBundle.getBundle(bundle, locale);
+            rb = ResourceBundle.getBundle(bundle, locale, CONTROL);
         } catch (MissingResourceException e) {
         }
 
@@ -126,8 +129,7 @@ public class ResourceBundleMessageProvider implements MessageProvider {
                         break;
                     }
 
-                    bundle = bundle.substring(0, index);
-
+                    baseName = baseName.substring(0, index);
                 }
             }
         }
