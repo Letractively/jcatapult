@@ -24,9 +24,9 @@ import com.google.inject.Inject;
 /**
  * <p>
  * This is the flash scope which stores values in the HttpSession inside
- * a Map under the flash key. It fetches values from the HttpServletRequest
- * under the same key as well as the HttpSession under that key. This
- * allows for flash objects to be migrated from the session to the request
+ * a Map under the flash key <code>jcatapultFlash</code>. It fetches
+ * values from both the HttpServletRequest and HttpSession under that key.
+ * This allows for flash objects to be migrated from the session to the request
  * during request handling so that they are not persisted in the session
  * forever. However, it also allows flash values to be retrieved during the
  * initial request from the session.
@@ -36,7 +36,7 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("unchecked")
 public class FlashScope implements Scope {
-    public static final String FLASH_KEY = "JCATAPULT_FLASH_SCOPE";
+    public static final String FLASH_KEY = "jcatapultFlash";
     private final HttpServletRequest request;
 
     @Inject

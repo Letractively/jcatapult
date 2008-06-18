@@ -30,7 +30,7 @@ import com.google.inject.Inject;
  * This is the request scope which fetches and stores values in the
  * HttpSession, but those values are associated with a specific action.
  * In order to accomplish this, a Map is put into the session under the
- * key <strong>JCATAPULT_ACTION_SESSION</code> and the values are stored
+ * key <strong>jcatapultActionSession</code> and the values are stored
  * inside that Map. The key is the name of the action class and the value
  * is a Map. The second Map's key is the fieldName and the value is the
  * value being stored.
@@ -40,7 +40,7 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("unchecked")
 public class ActionSessionScope implements Scope {
-    public static final String ACTION_SESSION_KEY = "JCATAPULT_ACTION_SESSION_SCOPE";
+    public static final String ACTION_SESSION_KEY = "jcatapultActionSession";
     private final HttpSession session;
     private final ActionInvocationStore actionInvocationStore;
 

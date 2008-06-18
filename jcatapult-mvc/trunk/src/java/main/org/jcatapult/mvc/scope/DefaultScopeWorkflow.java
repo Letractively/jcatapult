@@ -37,7 +37,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultScopeWorkflow implements ScopeWorkflow {
+public class efaultScopeWorkflow implements ScopeWorkflow {
     private final ActionInvocationStore actionInvocationStore;
     private final ExpressionEvaluator expressionEvaluator;
     private final FlashScope flashScope;

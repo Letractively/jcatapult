@@ -53,10 +53,10 @@ public class DefaultMessageStore implements MessageStore {
     /**
      * {@inheritDoc}
      */
-    public void addConversionError(String field, String bundle, Map<String, String> attributes, String... values)
+    public void addConversionError(String field, String bundle, Map<String, String> attributes, Object... values)
     throws MissingMessageException {
-        field = field + ".conversionError";
-        String message = messageProvider.getMessage(bundle, field, attributes, (Object[]) values);
+        String key = field + ".conversionError";
+        String message = messageProvider.getMessage(bundle, key, attributes, (Object[]) values);
         Scope scope = scopeProvider.lookup(MessageScope.REQUEST);
         scope.addFieldMessage(MessageType.ERROR, field, message);
     }
@@ -66,7 +66,7 @@ public class DefaultMessageStore implements MessageStore {
      */
     public void addFieldMessage(MessageScope scope, String field, String bundle, String key, Object... values)
     throws MissingMessageException {
-        String message = messageProvider.getMessage(bundle, key, values);
+        String message = messageProvider.getMessage(bundle, key, (Object[]) values);
         Scope s = scopeProvider.lookup(scope);
         s.addFieldMessage(MessageType.PLAIN, field, message);
     }
@@ -90,7 +90,7 @@ public class DefaultMessageStore implements MessageStore {
      */
     public void addFieldError(MessageScope scope, String field, String bundle, String key, Object... values)
     throws MissingMessageException {
-        String message = messageProvider.getMessage(bundle, key, values);
+        String message = messageProvider.getMessage(bundle, key, (Object[]) values);
         Scope s = scopeProvider.lookup(scope);
         s.addFieldMessage(MessageType.ERROR, field, message);
     }
@@ -114,7 +114,7 @@ public class DefaultMessageStore implements MessageStore {
      */
     public void addActionMessage(MessageScope scope, String bundle, String key, Object... values)
     throws MissingMessageException {
-        String message = messageProvider.getMessage(bundle, key, values);
+        String message = messageProvider.getMessage(bundle, key, (Object[]) values);
         Scope s = scopeProvider.lookup(scope);
         s.addActionMessage(MessageType.PLAIN, message);
     }
@@ -138,7 +138,7 @@ public class DefaultMessageStore implements MessageStore {
      */
     public void addActionError(MessageScope scope, String bundle, String key, Object... values)
     throws MissingMessageException {
-        String message = messageProvider.getMessage(bundle, key, values);
+        String message = messageProvider.getMessage(bundle, key, (Object[]) values);
         Scope s = scopeProvider.lookup(scope);
         s.addActionMessage(MessageType.ERROR, message);
     }
