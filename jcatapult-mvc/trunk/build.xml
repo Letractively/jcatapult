@@ -29,4 +29,12 @@
 
   <!-- IDE -->
   <import file="${plugin.dir}/ide/1.0/ide.xml"/>
+
+  <macrodef name="compile-main-post">
+    <sequential>
+      <copy todir="${dir.target.classes.main}">
+        <fileset dir="src/ftl/main" includes="**/*"/>
+      </copy>
+    </sequential>
+  </macrodef>
 </project>

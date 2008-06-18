@@ -32,7 +32,6 @@ import org.jcatapult.servlet.ServletObjectsHolder;
 import com.google.inject.Inject;
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateModel;
 
 /**
@@ -44,7 +43,7 @@ import freemarker.template.TemplateModel;
  *
  * @author  Brian Pontarelli
  */
-public abstract class AbstractControl implements Control, TemplateDirectiveModel {
+public abstract class AbstractControl implements Control {
     protected Locale locale;
     protected ActionInvocationStore actionInvocationStore;
     protected MessageStore messageStore;

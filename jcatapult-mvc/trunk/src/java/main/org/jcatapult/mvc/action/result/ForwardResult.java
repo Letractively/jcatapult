@@ -16,16 +16,22 @@
 package org.jcatapult.mvc.action.result;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
+import java.util.Locale;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
+import org.jcatapult.mvc.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
@@ -40,17 +46,22 @@ import com.google.inject.Inject;
  */
 public class ForwardResult extends AbstractResult<Forward> {
     public static final String DIR = "/WEB-INF/content";
+    private final Locale locale;
     private final ServletContext servletContext;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
+    private final FreeMarkerService freeMarkerService;
 
     @Inject
-    public ForwardResult(ServletContext servletContext, ExpressionEvaluator expressionEvaluator,
-            HttpServletRequest request, HttpServletResponse response) {
+    public ForwardResult(@CurrentLocale Locale locale, ServletContext servletContext,
+            HttpServletRequest request, HttpServletResponse response,
+            ExpressionEvaluator expressionEvaluator, FreeMarkerService freeMarkerService) {
         super(expressionEvaluator);
+        this.locale = locale;
         this.servletContext = servletContext;
         this.request = request;
         this.response = response;
+        this.freeMarkerService = freeMarkerService;
     }
 
     /**
@@ -58,14 +69,17 @@ public class ForwardResult extends AbstractResult<Forward> {
      */
     public void execute(Forward forward, ActionInvocation invocation) throws IOException, ServletException {
         String page = forward.page();
-        if (page.endsWith(".jsp")) {
-            if (!page.startsWith("/")) {
-                page = DIR + invocation.actionURI() + "/" + page;
-            }
+        if (!page.startsWith("/")) {
+            page = DIR + invocation.actionURI() + "/" + page;
+        }
 
+        if (page.endsWith(".jsp")) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(page);
             requestDispatcher.forward(wrapRequest(invocation, request), response);
-        } else {
+        } else if (page.endsWith(".ftl")) {
+            ServletOutputStream sos = response.getOutputStream();
+            Map<String, Object> map = new FreeMarkerMap(servletContext, request, expressionEvaluator, invocation.action());
+            freeMarkerService.render(new OutputStreamWriter(sos, "UTF-8"), page, map, locale);
             throw new RuntimeException("Not supported yet");
         }
     }

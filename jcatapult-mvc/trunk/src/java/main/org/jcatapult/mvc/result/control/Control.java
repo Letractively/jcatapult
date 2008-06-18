@@ -18,6 +18,8 @@ package org.jcatapult.mvc.result.control;
 import java.io.Writer;
 import java.util.Map;
 
+import freemarker.template.TemplateDirectiveModel;
+
 /**
  * <p>
  * This interface defines a control is called from a JSP tag
@@ -27,7 +29,7 @@ import java.util.Map;
  *
  * @author  Brian Pontarelli
  */
-public interface Control {
+public interface Control extends TemplateDirectiveModel {
     /**
      * Renders the control.
      *

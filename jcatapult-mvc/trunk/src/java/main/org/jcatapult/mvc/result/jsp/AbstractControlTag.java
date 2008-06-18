@@ -82,15 +82,6 @@ public abstract class AbstractControlTag<T extends Control> extends TagSupport i
     }
 
     /**
-     * Sets the tags class and adds it to the attributes hash
-     *
-     * @param   cssClass The new style class of the tag
-     */
-    public void setClass(String cssClass) {
-        attributes.put("class", cssClass);
-    }
-
-    /**
      * Gets the tags title
      *
      * @return  The tags title

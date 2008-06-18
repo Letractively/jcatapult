@@ -15,13 +15,16 @@
  */
 package org.jcatapult.mvc.test.junit;
 
+import java.util.Locale;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.servlet.ServletObjectsHolder;
+import org.jcatapult.mvc.locale.DefaultLocaleStore;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 
 /**
@@ -33,42 +36,47 @@ import org.junit.Ignore;
  */
 @Ignore
 public class WebBaseTest {
-    protected static ServletContext context;
-
-    /**
-     * A @BeforeClass method that sets up the ServletContext and GuiceContainer.
-     */
-    @BeforeClass
-    public static void setupClass() {
-        setupServletContext();
-        setupGuice();
-    }
-
-    /**
-     * Called as a BeforeClass JUnit setup. Also can be invoked directly from tests cases to reset
-     * the ServletContext. This setups up the ServletContext as an EasyMock nice mock.
-     *
-     * @return  The ServletContext.
-     */
-    protected static ServletContext setupServletContext() {
-        context = EasyMock.createNiceMock(ServletContext.class);
-        ServletObjectsHolder.setServletContext(context);
-        return context;
-    }
-
-    /**
-     * Called as a BeforeClass JUnit setup to setup the GuiceContainer.
-     */
-    protected static void setupGuice() {
-        GuiceContainer.inject();
-        GuiceContainer.initialize();
-    }
-
     /**
      * A @Before method that injects this class.
      */
     @Before
-    public void inject() {
+    public void setup() {
+        HttpServletRequest request = makeRequest();
+        ServletObjectsHolder.setServletRequest(request);
+
+        HttpServletResponse response = makeResponse();
+        ServletObjectsHolder.setServletResponse(response);
+
+        ServletContext context = makeContext();
+        ServletObjectsHolder.setServletContext(context);
+
+        GuiceContainer.inject();
+        GuiceContainer.initialize();
         GuiceContainer.getInjector().injectMembers(this);
+    }
+
+    /**
+     * @return  Makes a HttpServletRequest as a nice mock. Sub-classes can override this
+     */
+    protected HttpServletRequest makeRequest() {
+        HttpServletRequest request = EasyMock.createNiceMock(HttpServletRequest.class);
+        EasyMock.expect(request.getSession(false)).andReturn(null);
+        EasyMock.expect(request.getAttribute(DefaultLocaleStore.LOCALE_KEY)).andReturn(Locale.US);
+        EasyMock.replay(request);
+        return request;
+    }
+
+    /**
+     * @return  Makes a HttpServletResponse as a nice mock. Sub-classes can override this
+     */
+    protected HttpServletResponse makeResponse() {
+        return EasyMock.createNiceMock(HttpServletResponse.class);
+    }
+
+    /**
+     * @return  Makes a ServletContext as a nice mock. Sub-classes can override this
+     */
+    protected ServletContext makeContext() {
+        return EasyMock.createNiceMock(ServletContext.class);
     }
 }
