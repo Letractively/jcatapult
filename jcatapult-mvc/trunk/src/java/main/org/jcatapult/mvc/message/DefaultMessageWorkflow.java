@@ -17,8 +17,6 @@ package org.jcatapult.mvc.message;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.message.scope.FlashScope;
 import org.jcatapult.servlet.WorkflowChain;
@@ -44,10 +42,9 @@ public class DefaultMessageWorkflow implements MessageWorkflow {
     /**
      * {@inheritDoc}
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
-        flashScope.transferFlash(request);
-        chain.doWorkflow(request, response);
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
+        flashScope.transferFlash();
+        chain.continueWorkflow();
     }
 
     /**

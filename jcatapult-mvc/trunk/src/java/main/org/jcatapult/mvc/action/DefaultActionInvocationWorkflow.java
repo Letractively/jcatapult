@@ -41,13 +41,18 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow {
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
     private final ActionInvocationStore actionInvocationStore;
     private final ResultInvocationProvider resultInvocationProvider;
     private final ResultProvider resultProvider;
 
     @Inject
-    public DefaultActionInvocationWorkflow(ActionInvocationStore actionInvocationStore,
-        ResultInvocationProvider resultInvocationProvider, ResultProvider resultProvider) {
+    public DefaultActionInvocationWorkflow(HttpServletRequest request, HttpServletResponse response,
+            ActionInvocationStore actionInvocationStore, ResultInvocationProvider resultInvocationProvider,
+            ResultProvider resultProvider) {
+        this.request = request;
+        this.response = response;
         this.actionInvocationStore = actionInvocationStore;
         this.resultInvocationProvider = resultInvocationProvider;
         this.resultProvider = resultProvider;
@@ -73,14 +78,11 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
      * <li>Invoke the Result</li>
      * </ul>
      *
-     * @param   request The request.
-     * @param   response The response.
      * @param   chain The chain.
      * @throws  IOException If the chain throws an IOException.
      * @throws  ServletException If the chain throws a ServletException or if the result can't be found.
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
         ActionInvocation invocation = actionInvocationStore.get();
         ResultInvocation resultInvocation;
         if (invocation.action() == null) {
@@ -92,7 +94,7 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
 
             resultInvocation = resultInvocationProvider.lookup(uri);
             if (resultInvocation == null) {
-                chain.doWorkflow(request, response);
+                chain.continueWorkflow();
                 return;
             }
         } else {

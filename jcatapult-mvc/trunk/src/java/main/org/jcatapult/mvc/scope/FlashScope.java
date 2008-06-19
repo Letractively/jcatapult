@@ -74,10 +74,8 @@ public class FlashScope implements Scope {
 
     /**
      * Moves the flash from the session to the request.
-     *
-     * @param   request The request used to get the session and possibly store the flash.
      */
-    public void transferFlash(HttpServletRequest request) {
+    public void transferFlash() {
         Map<String, Object> flash = (Map<String, Object>) request.getSession().getAttribute(FLASH_KEY);
         if (flash != null) {
             request.getSession().removeAttribute(FLASH_KEY);

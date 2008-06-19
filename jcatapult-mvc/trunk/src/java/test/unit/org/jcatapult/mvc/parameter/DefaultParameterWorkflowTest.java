@@ -81,11 +81,11 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(messageStore);
 
         WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
-        chain.doWorkflow(request, null);
+        chain.continueWorkflow();
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(Locale.US, actionInvocationStore, messageStore, expressionEvaluator);
-        workflow.perform(request, null, chain);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator);
+        workflow.perform(chain);
 
         EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
     }
