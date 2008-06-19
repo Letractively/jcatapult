@@ -212,10 +212,8 @@ public class FlashScope implements Scope {
 
     /**
      * Moves the flash from the session to the request.
-     *
-     * @param   request The request used to get the session and possibly store the flash.
      */
-    public void transferFlash(HttpServletRequest request) {
+    public void transferFlash() {
         HttpSession session = request.getSession();
         synchronized (session) {
             transferFlash(request, session, FLASH_FIELD_ERRORS_KEY);

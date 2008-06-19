@@ -18,16 +18,13 @@ package org.jcatapult.mvc.parameter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
-import org.jcatapult.mvc.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
@@ -50,16 +47,16 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     public static final String RADIOBUTTON_PREFIX = "__jc_rb";
     public static final String ACTION_PREFIX = "__jc_a";
 
-    private final Locale locale;
+    private final HttpServletRequest request;
     private final ActionInvocationStore actionInvocationStore;
     private final MessageStore messageStore;
     private final ExpressionEvaluator expressionEvaluator;
     private boolean ignoreEmptyParameters = true;
 
     @Inject
-    public DefaultParameterWorkflow(@CurrentLocale Locale locale, ActionInvocationStore actionInvocationStore,
+    public DefaultParameterWorkflow(HttpServletRequest request, ActionInvocationStore actionInvocationStore,
             MessageStore messageStore, ExpressionEvaluator expressionEvaluator) {
-        this.locale = locale;
+        this.request = request;
         this.actionInvocationStore = actionInvocationStore;
         this.messageStore = messageStore;
         this.expressionEvaluator = expressionEvaluator;
@@ -73,12 +70,9 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     /**
      * Handles the incoming HTTP request parameters.
      *
-     * @param   request The request.
-     * @param   response The response.
      * @param   chain The workflow chain.
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
         ActionInvocation actionInvocation = actionInvocationStore.get();
         Object action = actionInvocation.action();
 
@@ -97,7 +91,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
             }
         }
 
-        chain.doWorkflow(request, response);
+        chain.continueWorkflow();
     }
 
     /**

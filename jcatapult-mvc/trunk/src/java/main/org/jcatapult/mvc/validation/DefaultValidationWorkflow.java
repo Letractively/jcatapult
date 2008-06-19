@@ -16,8 +16,6 @@
 package org.jcatapult.mvc.validation;
 
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import org.jcatapult.servlet.WorkflowChain;
@@ -30,9 +28,8 @@ import org.jcatapult.servlet.WorkflowChain;
  * @author Brian Pontarelli
  */
 public class DefaultValidationWorkflow implements ValidationWorkflow {
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
-        chain.doWorkflow(request, response);
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
+        chain.continueWorkflow();
     }
 
     public void destroy() {

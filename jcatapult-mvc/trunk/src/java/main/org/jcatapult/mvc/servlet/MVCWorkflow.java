@@ -19,8 +19,6 @@ import java.io.IOException;
 import static java.util.Arrays.*;
 import java.util.List;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocationWorkflow;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
@@ -56,16 +54,13 @@ public class MVCWorkflow implements Workflow {
     /**
      * Creates a sub-chain of the MVC workflows and invokes it.
      *
-     * @param   request The request.
-     * @param   response The response.
      * @param   chain The chain.
      * @throws  IOException If the sub-chain throws an IOException
      * @throws  ServletException If the sub-chain throws an ServletException
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
         SubWorkflowChain subChain = new SubWorkflowChain(workflows, chain);
-        subChain.doWorkflow(request, response);
+        subChain.continueWorkflow();
     }
 
     /**

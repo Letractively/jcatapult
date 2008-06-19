@@ -20,7 +20,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
@@ -55,13 +54,10 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
     /**
      * Handles the incoming HTTP request for scope values.
      *
-     * @param   request The request.
-     * @param   response The response.
      * @param   chain The workflow chain.
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
-        handleFlashScope(request);
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
+        flashScope.transferFlash();
 
         ActionInvocation actionInvocation = actionInvocationStore.get();
         Object action = actionInvocation.action();
@@ -71,23 +67,12 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
             loadScopedMembers(action);
         }
 
-        chain.doWorkflow(request, response);
+        chain.continueWorkflow();
 
         // Handle storing scoped members from the action
         if (action != null) {
             storeScopedMembers(action);
         }
-    }
-
-    /**
-     * Handles trasnfer of the flash scope by calling the {@link org.jcatapult.mvc.scope.FlashScope#transferFlash(javax.servlet.http.HttpServletRequest)}
-     * method.
-     *
-     * @param   request The request used for the transfer.
-     */
-    protected void handleFlashScope(HttpServletRequest request) {
-        // Transfer the flash
-        flashScope.transferFlash(request);
     }
 
     /**

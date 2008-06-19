@@ -18,7 +18,6 @@ package org.jcatapult.mvc.action;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.config.ActionConfiguration;
@@ -39,30 +38,30 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
+    private final HttpServletRequest request;
     private final ActionConfigurationProvider actionConfigurationProvider;
     private final ActionInvocationStore actionInvocationStore;
     private final ObjectFactory objectFactory;
 
     @Inject
-    public DefaultActionMappingWorkflow(ActionConfigurationProvider actionConfigurationProvider,
+    public DefaultActionMappingWorkflow(HttpServletRequest request,
+            ActionConfigurationProvider actionConfigurationProvider,
             ActionInvocationStore actionInvocationStore, ObjectFactory objectFactory) {
         this.actionConfigurationProvider = actionConfigurationProvider;
         this.actionInvocationStore = actionInvocationStore;
         this.objectFactory = objectFactory;
+        this.request = request;
     }
 
     /**
      * Processes the request URI, loads the action configuration, creates the action and stores the
      * invocation in the request.
      *
-     * @param   request The request where the URI used to map to an action invocation is pulled from.
-     * @param   response The response.
      * @param   chain The workflow chain.
      * @throws  IOException If the chain throws an exception.
      * @throws  ServletException If the chain throws an exception.
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
         String uri = request.getRequestURI();
         if (!uri.startsWith("/")) {
             uri = "/" + uri;
@@ -77,7 +76,7 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
         ActionInvocation invocation = new DefaultActionInvocation(action, uri, actionConfiguration);
         actionInvocationStore.set(invocation);
 
-        chain.doWorkflow(request, response);
+        chain.continueWorkflow();
     }
 
     /**
