@@ -30,6 +30,7 @@ import java.util.ArrayList;
 public class User {
     private String name;
     private Integer age;
+    private boolean male;
     private Map<String, Address> addresses = new HashMap<String, Address>();
     private List<User> siblings = new ArrayList<User>();
     private String[] securityQuestions;
@@ -48,6 +49,14 @@ public class User {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public boolean isMale() {
+        return male;
+    }
+
+    public void setMale(boolean male) {
+        this.male = male;
     }
 
     public Map<String, Address> getAddresses() {

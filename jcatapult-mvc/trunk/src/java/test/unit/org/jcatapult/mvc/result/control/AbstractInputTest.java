@@ -40,9 +40,9 @@ public class AbstractInputTest extends AbstractControlTest {
         return mp;
     }
 
-    protected ContainerResolver makeContainerResolver() {
+    protected ContainerResolver makeContainerResolver(String name) {
         ContainerResolver containerResolver = EasyMock.createStrictMock(ContainerResolver.class);
-        EasyMock.expect(containerResolver.getRealPath("WEB-INF/control-templates/text_en_US.ftl")).andReturn("src/ftl/main/WEB-INF/control-templates/text.ftl");
+        EasyMock.expect(containerResolver.getRealPath("WEB-INF/control-templates/" + name + "_en_US.ftl")).andReturn("src/ftl/main/WEB-INF/control-templates/" + name + ".ftl");
         EasyMock.expect(containerResolver.getRealPath("WEB-INF/control-templates/parameter-attributes_en_US.ftl")).andReturn("src/ftl/main/WEB-INF/control-templates/parameter-attributes.ftl");
         EasyMock.expect(containerResolver.getRealPath("WEB-INF/control-templates/label_en_US.ftl")).andReturn("src/ftl/main/WEB-INF/control-templates/label.ftl");
         EasyMock.replay(containerResolver);
