@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.io.IOException;
 
+import org.jcatapult.config.guice.ConfigurationModule;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;

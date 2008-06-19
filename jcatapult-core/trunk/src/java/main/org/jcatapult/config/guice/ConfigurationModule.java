@@ -13,13 +13,15 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.guice;
+package org.jcatapult.config.guice;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Logger;
+
+import org.jcatapult.guice.NamedAnnotation;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
