@@ -18,12 +18,12 @@ package org.jcatapult.security.servlet.login;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.JCatapultSecurityException;
 import org.jcatapult.security.config.SecurityConfiguration;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;
 
@@ -47,22 +47,23 @@ import com.google.inject.Inject;
  */
 public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
     public static final String EXCEPTION_KEY = "jcatapult_security_login_exception";
+    private final HttpServletRequest request;
     private final String failedLoginURI;
 
     @Inject
-    public DefaultLoginExceptionHandler(SecurityConfiguration configuration) {
+    public DefaultLoginExceptionHandler(HttpServletRequest request, SecurityConfiguration configuration) {
+        this.request = request;
         this.failedLoginURI = configuration.getLoginFailedURI();
     }
 
     /**
      * {@inheritDoc}
      */
-    public void handle(JCatapultSecurityException exception, HttpServletRequest request,
-            HttpServletResponse response, WorkflowChain chain)
+    public void handle(JCatapultSecurityException exception, WorkflowChain chain)
     throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        FacadeHttpServletRequest wrapper = new FacadeHttpServletRequest(httpRequest, failedLoginURI, null);
-        httpRequest.setAttribute(EXCEPTION_KEY, exception);
-        chain.doWorkflow(wrapper, response);
+        FacadeHttpServletRequest wrapper = new FacadeHttpServletRequest(request, failedLoginURI, null);
+        request.setAttribute(EXCEPTION_KEY, exception);
+        ServletObjectsHolder.setServletRequest(wrapper);
+        chain.continueWorkflow();
     }
 }

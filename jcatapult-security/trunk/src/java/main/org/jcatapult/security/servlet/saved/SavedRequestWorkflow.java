@@ -27,6 +27,7 @@ import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 import static org.jcatapult.security.servlet.ServletTools.*;
 import org.jcatapult.security.servlet.auth.NotLoggedInHandler;
 import org.jcatapult.security.servlet.login.PostLoginHandler;
+import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 
@@ -65,12 +66,17 @@ import com.google.inject.Inject;
 public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandler, Workflow {
     public static final String LOGIN_KEY = "org.jcatapult.security.servlet.saved.loginSavedHttpRequest";
     public static final String POST_LOGIN_KEY = "org.jcatapult.security.servlet.saved.postLoginSavedHttpRequest";
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
     private final String notLoggedInURI;
     private final String successfulLoginURI;
     private final SavedRequestService savedRequestService;
 
     @Inject
-    public SavedRequestWorkflow(SecurityConfiguration configuration, SavedRequestService savedRequestService) {
+    public SavedRequestWorkflow(HttpServletRequest request, HttpServletResponse response,
+            SecurityConfiguration configuration, SavedRequestService savedRequestService) {
+        this.request = request;
+        this.response = response;
         this.notLoggedInURI = configuration.getNotLoggedInURI();
         this.successfulLoginURI = configuration.getLoginSuccessURI();
         this.savedRequestService = savedRequestService;
@@ -82,17 +88,15 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
      * During a redirect to a saved request, this will pull the saved request from the session and
      * mock out a request so that stored parameters can be used.
      *
-     * @param   request The incoming request from the servlet container.
-     * @param   response The response.
      * @param   chain Once the request is mocked or not, this is invoked.
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
         // See if there is a saved request
         HttpServletRequest httpRequest = savedRequestService.mockSavedRequest(request);
-        chain.doWorkflow(httpRequest, response);
+        ServletObjectsHolder.setServletRequest(httpRequest);
+        chain.continueWorkflow();
     }
 
     /**
@@ -108,20 +112,18 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
      * redirect is sent to the saved requests URI. Otherwise a a facade is created to invoke the
      * Struts action of the successful login URI.
      *
-     * @param   request The request used to get the session and check for saved requests.
-     * @param   response The response used for directs.
      * @param   workflowChain THe workflow change that is called if no direct
      * @throws  ServletException If the chain throws.
      * @throws  IOException If the chain throws.
      */
-    public void handle(HttpServletRequest request, HttpServletResponse response, WorkflowChain workflowChain)
-    throws ServletException, IOException {
+    public void handle(WorkflowChain workflowChain) throws ServletException, IOException {
         String uri = savedRequestService.processSavedRequest(request);
         if (uri != null) {
             response.sendRedirect(getContextURI(request, uri));
         } else {
             FacadeHttpServletRequest facade = new FacadeHttpServletRequest(request, successfulLoginURI, null);
-            workflowChain.doWorkflow(facade, response);
+            ServletObjectsHolder.setServletRequest(facade);
+            workflowChain.continueWorkflow();
         }
     }
 
@@ -132,19 +134,15 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
      * into the session so that it can be re-executed.
      *
      * @param   exception The not logged in exception that was thrown.
-     * @param   request The request used to get the session for saving the request.
-     * @param   response The response used for the direct to the login page.
      * @param   workflowChain The chain is not used.
      * @throws  ServletException If the redirect throws.
      * @throws  IOException If the redirect throws.
      */
     @SuppressWarnings("unchecked")
-    public void handle(NotLoggedInException exception, HttpServletRequest request, HttpServletResponse response,
-            WorkflowChain workflowChain)
-    throws ServletException, IOException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        savedRequestService.saveRequest(httpRequest);
-        httpRequest = new FacadeHttpServletRequest(httpRequest, notLoggedInURI, null);
-        workflowChain.doWorkflow(httpRequest, response);
+    public void handle(NotLoggedInException exception, WorkflowChain workflowChain) throws ServletException, IOException {
+        savedRequestService.saveRequest(request);
+        HttpServletRequest httpRequest = new FacadeHttpServletRequest(request, notLoggedInURI, null);
+        ServletObjectsHolder.setServletRequest(httpRequest);
+        workflowChain.continueWorkflow();
     }
 }

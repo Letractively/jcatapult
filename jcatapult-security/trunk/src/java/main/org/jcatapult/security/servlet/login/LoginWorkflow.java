@@ -18,7 +18,6 @@ package org.jcatapult.security.servlet.login;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.JCatapultSecurityException;
 import org.jcatapult.security.config.SecurityConfiguration;
@@ -38,6 +37,7 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class LoginWorkflow implements Workflow {
+    private final HttpServletRequest request;
     private final LoginService loginService;
     private final LoginExceptionHandler exceptionHandler;
     private final PostLoginHandler loginHandler;
@@ -46,8 +46,10 @@ public class LoginWorkflow implements Workflow {
     private final String passwordParameter;
 
     @Inject
-    public LoginWorkflow(LoginService loginService, SecurityConfiguration configuration,
-            LoginExceptionHandler exceptionHandler, PostLoginHandler loginHandler) {
+    public LoginWorkflow(HttpServletRequest request, LoginService loginService,
+            SecurityConfiguration configuration, LoginExceptionHandler exceptionHandler,
+            PostLoginHandler loginHandler) {
+        this.request = request;
         this.loginService = loginService;
         this.exceptionHandler = exceptionHandler;
         this.loginHandler = loginHandler;
@@ -56,8 +58,7 @@ public class LoginWorkflow implements Workflow {
         this.passwordParameter = configuration.getPasswordParameter();
     }
 
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
         if (request.getRequestURI().equals(loginURI)) {
             String userName = request.getParameter(userNameParameter);
             String password = request.getParameter(passwordParameter);
@@ -68,12 +69,12 @@ public class LoginWorkflow implements Workflow {
 
             try {
                 loginService.login(userName, password, request.getParameterMap());
-                loginHandler.handle(request, response, chain);
+                loginHandler.handle(chain);
             } catch (JCatapultSecurityException e) {
-                exceptionHandler.handle(e, request, response, chain);
+                exceptionHandler.handle(e, chain);
             }
         } else {
-            chain.doWorkflow(request, response);
+            chain.continueWorkflow();
         }
     }
 

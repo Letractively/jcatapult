@@ -38,13 +38,11 @@ public interface PostLoginHandler {
     /**
      * Handles a successful login.
      *
-     * @param   request The HTTP servlet request.
-     * @param   response The HTTP servlet response.
      * @param   chain The workflow chain if the implementation wants to continue down the
      *          workflow chain.
      * @throws  ServletException If the a servlet error occurs.
      * @throws  IOException If an IO error occurs.
      */
-    void handle(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
+    void handle(WorkflowChain chain)
     throws ServletException, IOException;
 }
