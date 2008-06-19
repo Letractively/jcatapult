@@ -20,8 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -37,13 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 public class DefaultWorkflowChain implements WorkflowChain {
     private final Iterator<Workflow> workflows;
     private final FilterChain filterChain;
-    private HttpServletRequest request;
-    private HttpServletResponse response;
 
-    public DefaultWorkflowChain(HttpServletRequest request, HttpServletResponse response,
-            List<Workflow> workflows, FilterChain filterChain) {
-        this.request = request;
-        this.response = response;
+    public DefaultWorkflowChain(List<Workflow> workflows, FilterChain filterChain) {
         this.workflows = workflows.iterator();
         this.filterChain = filterChain;
     }
@@ -53,7 +46,7 @@ public class DefaultWorkflowChain implements WorkflowChain {
             Workflow workflow = workflows.next();
             workflow.perform(this);
         } else {
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(ServletObjectsHolder.getServletRequest(), ServletObjectsHolder.getServletResponse());
         }
     }
 }
