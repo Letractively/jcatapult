@@ -15,13 +15,16 @@
  */
 package org.jcatapult.mvc.result.control;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleScalar;
+import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 
@@ -41,12 +44,20 @@ import freemarker.template.TemplateModelException;
  */
 public class AppendAttributesMethod implements TemplateMethodModelEx {
     public Object exec(List arguments) throws TemplateModelException {
+        Set<String> ignore = new HashSet<String>();
+        if (arguments.size() == 2) {
+            SimpleSequence collection = (SimpleSequence) arguments.get(1);
+            ignore.addAll(collection.toList());
+        }
+
         StringBuilder build = new StringBuilder();
         SimpleHash hash = (SimpleHash) arguments.get(0);
         Map<String, Object> map = hash.toMap();
         SortedSet<String> sortedKeys = new TreeSet<String>(map.keySet());
         for (String key : sortedKeys) {
-            build.append(" ").append(key).append("=\"").append(map.get(key)).append("\"");
+            if (!ignore.contains(key)) {
+                build.append(" ").append(key).append("=\"").append(map.get(key)).append("\"");
+            }
         }
 
         return new SimpleScalar(build.toString());
