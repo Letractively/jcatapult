@@ -28,12 +28,6 @@
     <tag-class>org.jcatapult.mvc.result.jsp.TextTag</tag-class>
     <body-content>empty</body-content>
     <attribute>
-      <description><![CDATA[The accept attribute]]></description>
-      <name>accept</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The accesskey attribute]]></description>
       <name>accesskey</name>
       <required>false</required>
@@ -210,17 +204,12 @@
     <dynamic-attributes>true</dynamic-attributes>
   </tag>
 
+
   <tag>
-    <description><![CDATA[Checkbox field tag]]></description>
-    <name>checkbox</name>
-    <tag-class>org.jcatapult.mvc.result.jsp.CheckboxTag</tag-class>
+    <description><![CDATA[Passowrd field tag]]></description>
+    <name>password</name>
+    <tag-class>org.jcatapult.mvc.result.jsp.PasswordTag</tag-class>
     <body-content>empty</body-content>
-    <attribute>
-      <description><![CDATA[The accept attribute]]></description>
-      <name>accept</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
     <attribute>
       <description><![CDATA[The accesskey attribute]]></description>
       <name>accesskey</name>
@@ -236,12 +225,6 @@
     <attribute>
       <description><![CDATA[The name of the resource bundle used to fetch the label]]></description>
       <name>bundle</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[Determines if the checkbox should be checked or not if bean's value is null.]]></description>
-      <name>defaultChecked</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
@@ -276,7 +259,7 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Both the name output in HTML as well as the property associated with the checkbox field from the action]]></description>
+      <description><![CDATA[Both the name output in HTML as well as the property associated with the text field from the action]]></description>
       <name>name</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
@@ -356,6 +339,177 @@
     <attribute>
       <description><![CDATA[The onselect attribute]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The readonly attribute]]></description>
+      <name>readonly</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The size attribute]]></description>
+      <name>size</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The CSS style attribute (the class attribute is just class="foo")]]></description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The tabindex attribute]]></description>
+      <name>tabindex</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The title attribute]]></description>
+      <name>title</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <dynamic-attributes>true</dynamic-attributes>
+  </tag>
+
+
+  <tag>
+    <description><![CDATA[Checkbox field tag]]></description>
+    <name>checkbox</name>
+    <tag-class>org.jcatapult.mvc.result.jsp.CheckboxTag</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <description><![CDATA[The accesskey attribute]]></description>
+      <name>accesskey</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The alt attribute]]></description>
+      <name>alt</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The name of the resource bundle used to fetch the label]]></description>
+      <name>bundle</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Overrides the value comparison and the defaultChecked state.]]></description>
+      <name>checked</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Determines if the checkbox should be checked or not if bean's value is null.]]></description>
+      <name>defaultChecked</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The dir attribute]]></description>
+      <name>dir</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The disabled attribute]]></description>
+      <name>disabled</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The ID of the text field]]></description>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The lang attribute]]></description>
+      <name>lang</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Both the name output in HTML as well as the property associated with the checkbox field from the action]]></description>
+      <name>name</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onblur attribute]]></description>
+      <name>onblur</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onchange attribute]]></description>
+      <name>onchange</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onclick attribute]]></description>
+      <name>onclick</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The ondblclick attribute]]></description>
+      <name>ondblclick</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onfocus attribute]]></description>
+      <name>onfocus</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onkeydown attribute]]></description>
+      <name>onkeydown</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onkeyup attribute]]></description>
+      <name>onkeyup</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onmousedown attribute]]></description>
+      <name>onmousedown</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onmousemove attribute]]></description>
+      <name>onmousemove</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onmouseout attribute]]></description>
+      <name>onmouseout</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onmouseover attribute]]></description>
+      <name>onmouseover</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The onmouseup attribute]]></description>
+      <name>onmouseup</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
