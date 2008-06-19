@@ -20,12 +20,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.security.config.DefaultSecurityConfiguration;
 import org.jcatapult.security.login.InvalidUsernameException;
+import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.WorkflowChain;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -46,28 +46,22 @@ public class DefaultLoginExceptionHandlerTest {
 
         InvalidUsernameException exception = new InvalidUsernameException();
 
-        HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
-        req.setAttribute("jcatapult_security_login_exception", exception);
-        EasyMock.replay(req);
-
-        HttpServletResponse res = EasyMock.createStrictMock(HttpServletResponse.class);
-        EasyMock.replay(res);
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        request.setAttribute("jcatapult_security_login_exception", exception);
+        EasyMock.replay(request);
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-                assertNotNull(request);
-                assertNotNull(response);
-                assertTrue(request instanceof HttpServletRequestWrapper);
-                assertEquals("/login-failed", request.getRequestURI());
+            public void continueWorkflow() throws IOException, ServletException {
+                assertTrue(ServletObjectsHolder.getServletRequest() instanceof HttpServletRequestWrapper);
+                assertEquals("/login-failed", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
             }
         };
 
-        DefaultLoginExceptionHandler dleh = new DefaultLoginExceptionHandler(new DefaultSecurityConfiguration(c));
-        dleh.handle(exception, req, res, wc);
+        DefaultLoginExceptionHandler dleh = new DefaultLoginExceptionHandler(request, new DefaultSecurityConfiguration(c));
+        dleh.handle(exception, wc);
         assertTrue(called.get());
-        EasyMock.verify(c, req, res);
+        EasyMock.verify(c, request);
     }
 }

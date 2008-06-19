@@ -41,14 +41,12 @@ public interface LoginExceptionHandler {
      * Handles the exception.
      *
      * @param   exception The exception that was thrown.
-     * @param   request The request for forwarding and including.
-     * @param   response The response for redirects, forwarding and including.
      * @param   chain The workflow chain in case the implementation wants to keep going down
      *          the chain.
      * @throws  ServletException If something goes wrong during the exception handling.
      * @throws  IOException If something goes wrong during the exception handling.
      */
-    void handle(JCatapultSecurityException exception, HttpServletRequest request, HttpServletResponse response,
-            WorkflowChain chain)
+    void handle(JCatapultSecurityException exception,
+        WorkflowChain chain)
     throws ServletException, IOException;
 }

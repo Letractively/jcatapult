@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
 import org.jcatapult.security.EnhancedSecurityContext;
@@ -42,26 +41,26 @@ public class CredentialStorageWorkflowTest {
 
         EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
 
-        HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.replay(req);
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.replay(request);
 
         CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
-        EasyMock.expect(cs.locate(req)).andReturn(user);
+        EasyMock.expect(cs.locate(request)).andReturn(user);
         EasyMock.replay(cs);
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(HttpServletRequest request, HttpServletResponse response) {
+            public void continueWorkflow() {
                 assertNotNull(SecurityContext.getCurrentUser());
                 called.set(true);
             }
         };
 
-        CredentialStorageWorkflow csw = new CredentialStorageWorkflow(cs);
-        csw.perform(req, null, wc);
+        CredentialStorageWorkflow csw = new CredentialStorageWorkflow(request, cs);
+        csw.perform(wc);
         assertNull(SecurityContext.getCurrentUser());
         assertTrue(called.get());
-        EasyMock.verify(req, cs);
+        EasyMock.verify(request, cs);
     }
 
     @Test
@@ -70,28 +69,28 @@ public class CredentialStorageWorkflowTest {
 
         EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
 
-        HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.replay(req);
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.replay(request);
 
         CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
-        EasyMock.expect(cs.locate(req)).andReturn(null);
-        cs.store(user, req);
+        EasyMock.expect(cs.locate(request)).andReturn(null);
+        cs.store(user, request);
         EasyMock.replay(cs);
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(HttpServletRequest request, HttpServletResponse response) {
+            public void continueWorkflow() {
                 assertNull(SecurityContext.getCurrentUser());
                 EnhancedSecurityContext.login(user);
                 called.set(true);
             }
         };
 
-        CredentialStorageWorkflow csw = new CredentialStorageWorkflow(cs);
-        csw.perform(req, null, wc);
+        CredentialStorageWorkflow csw = new CredentialStorageWorkflow(request, cs);
+        csw.perform(wc);
         assertNull(SecurityContext.getCurrentUser());
         assertTrue(called.get());
-        EasyMock.verify(req, cs);
+        EasyMock.verify(request, cs);
     }
 
     @Test
@@ -100,27 +99,27 @@ public class CredentialStorageWorkflowTest {
 
         EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
 
-        HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.replay(req);
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.replay(request);
 
         CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
-        EasyMock.expect(cs.locate(req)).andReturn(user);
-        cs.remove(req);
+        EasyMock.expect(cs.locate(request)).andReturn(user);
+        cs.remove(request);
         EasyMock.replay(cs);
 
         final AtomicBoolean called = new AtomicBoolean(false);
         WorkflowChain wc = new WorkflowChain() {
-            public void doWorkflow(HttpServletRequest request, HttpServletResponse response) {
+            public void continueWorkflow() {
                 assertNotNull(EnhancedSecurityContext.getCurrentUser());
                 EnhancedSecurityContext.logout();
                 called.set(true);
             }
         };
 
-        CredentialStorageWorkflow csw = new CredentialStorageWorkflow(cs);
-        csw.perform(req, null, wc);
+        CredentialStorageWorkflow csw = new CredentialStorageWorkflow(request, cs);
+        csw.perform(wc);
         assertNull(EnhancedSecurityContext.getCurrentUser());
         assertTrue(called.get());
-        EasyMock.verify(req, cs);
+        EasyMock.verify(request, cs);
     }
 }

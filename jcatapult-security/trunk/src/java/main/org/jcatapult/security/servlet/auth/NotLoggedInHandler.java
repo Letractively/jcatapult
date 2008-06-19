@@ -40,14 +40,12 @@ public interface NotLoggedInHandler {
      * Handles the exception.
      *
      * @param   exception The exception that was thrown.
-     * @param   request The request for forwarding and including.
-     * @param   response The response for redirects, forwarding and including.
      * @param   chain The workflow chain in case the implementation wants to keep going down
      *          the chain.
      * @throws javax.servlet.ServletException If something goes wrong during the exception handling.
      * @throws java.io.IOException If something goes wrong during the exception handling.
      */
-    void handle(NotLoggedInException exception, HttpServletRequest request, HttpServletResponse response,
-            WorkflowChain chain)
+    void handle(NotLoggedInException exception,
+        WorkflowChain chain)
     throws ServletException, IOException;
 }

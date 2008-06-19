@@ -18,7 +18,6 @@ package org.jcatapult.security.servlet.auth;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.auth.AuthorizationException;
@@ -63,13 +62,15 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class AuthorizationWorkflow implements Workflow {
+    private final HttpServletRequest request;
     private final Authorizer authorizer;
     private final NotLoggedInHandler notLoggedInHandler;
     private final AuthorizationExceptionHandler authorizationExceptionHandler;
 
     @Inject
-    public AuthorizationWorkflow(Authorizer authorizer, NotLoggedInHandler notLoggedInHandler,
-            AuthorizationExceptionHandler authorizationExceptionHandler) {
+    public AuthorizationWorkflow(HttpServletRequest request, Authorizer authorizer,
+            NotLoggedInHandler notLoggedInHandler, AuthorizationExceptionHandler authorizationExceptionHandler) {
+        this.request = request;
         this.authorizer = authorizer;
         this.notLoggedInHandler = notLoggedInHandler;
         this.authorizationExceptionHandler = authorizationExceptionHandler;
@@ -83,28 +84,25 @@ public class AuthorizationWorkflow implements Workflow {
      * be one to verify credentials (i.e. the authorizer threw a NotLoggedInException), this
      * delegates control to the {@link NotLoggedInHandler}.
      *
-     * @param   request The HTTP request to get the request URI from.
-     * @param   response Not used.
      * @param   workflowChain The workflow chain which is called if the authorization passes.
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain workflowChain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
         String uri = request.getRequestURI();
         Object user = EnhancedSecurityContext.getCurrentUser();
 
         try {
             authorizer.authorize(user, uri);
         } catch (AuthorizationException e) {
-            authorizationExceptionHandler.handle(e, request, response, workflowChain);
+            authorizationExceptionHandler.handle(e, workflowChain);
             return;
         } catch (NotLoggedInException e) {
-            notLoggedInHandler.handle(e, request, response, workflowChain);
+            notLoggedInHandler.handle(e, workflowChain);
             return;
         }
 
-        workflowChain.doWorkflow(request, response);
+        workflowChain.continueWorkflow();
     }
 
     public void destroy() {

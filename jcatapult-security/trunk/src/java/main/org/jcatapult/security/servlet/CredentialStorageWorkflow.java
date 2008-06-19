@@ -18,7 +18,6 @@ package org.jcatapult.security.servlet;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.servlet.Workflow;
@@ -37,10 +36,12 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class CredentialStorageWorkflow implements Workflow {
+    private final HttpServletRequest request;
     private final CredentialStorage credentialStorage;
 
     @Inject
-    public CredentialStorageWorkflow(CredentialStorage credentialStorage) {
+    public CredentialStorageWorkflow(HttpServletRequest request, CredentialStorage credentialStorage) {
+        this.request = request;
         this.credentialStorage = credentialStorage;
     }
 
@@ -49,14 +50,11 @@ public class CredentialStorageWorkflow implements Workflow {
      * either case, it calls the chain to proceed and removes the object from the context after the chain
      * has returned.
      *
-     * @param   request The request.
-     * @param   response The response.
      * @param   chain The workflow chain.
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
         Object userObject = credentialStorage.locate(request);
         boolean existing = (userObject != null);
         if (existing) {
@@ -64,7 +62,7 @@ public class CredentialStorageWorkflow implements Workflow {
         }
 
         try {
-            chain.doWorkflow(request, response);
+            chain.continueWorkflow();
         } finally {
             // If the user didn't exist before and now it does, store it.
             if (!existing && EnhancedSecurityContext.getCurrentUser() != null) {

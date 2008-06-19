@@ -45,18 +45,18 @@ public class LoginWorkflowTest {
         EasyMock.expect(c.getString("jcatapult.security.login.password-parameter", "j_password")).andReturn("j_password");
         EasyMock.replay(c);
 
-        HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(req.getRequestURI()).andReturn("/not-login");
-        EasyMock.replay(req);
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getRequestURI()).andReturn("/not-login");
+        EasyMock.replay(request);
 
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
-        wc.doWorkflow(req, null);
+        wc.continueWorkflow();
         EasyMock.replay(wc);
 
-        LoginWorkflow lw = new LoginWorkflow(null, new DefaultSecurityConfiguration(c), null, null);
-        lw.perform(req, null, wc);
+        LoginWorkflow lw = new LoginWorkflow(request, null, new DefaultSecurityConfiguration(c), null, null);
+        lw.perform(wc);
 
-        EasyMock.verify(c, req, wc);
+        EasyMock.verify(c, request, wc);
     }
 
     @Test
@@ -68,12 +68,12 @@ public class LoginWorkflowTest {
         EasyMock.replay(c);
 
         Map<String, Object> params = new HashMap<String, Object>();
-        HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(req.getRequestURI()).andReturn("/jcatapult-security-check");
-        EasyMock.expect(req.getParameter("j_username")).andReturn("test-username");
-        EasyMock.expect(req.getParameter("j_password")).andReturn("test-password");
-        EasyMock.expect(req.getParameterMap()).andReturn(params);
-        EasyMock.replay(req);
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getRequestURI()).andReturn("/jcatapult-security-check");
+        EasyMock.expect(request.getParameter("j_username")).andReturn("test-username");
+        EasyMock.expect(request.getParameter("j_password")).andReturn("test-password");
+        EasyMock.expect(request.getParameterMap()).andReturn(params);
+        EasyMock.replay(request);
 
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
         EasyMock.replay(wc);
@@ -84,13 +84,13 @@ public class LoginWorkflowTest {
         EasyMock.replay(ls);
 
         PostLoginHandler plh = EasyMock.createStrictMock(PostLoginHandler.class);
-        plh.handle(req, null, wc);
+        plh.handle(wc);
         EasyMock.replay(plh);
 
-        LoginWorkflow lw = new LoginWorkflow(ls, new DefaultSecurityConfiguration(c), null, plh);
-        lw.perform(req, null, wc);
+        LoginWorkflow lw = new LoginWorkflow(request, ls, new DefaultSecurityConfiguration(c), null, plh);
+        lw.perform(wc);
 
-        EasyMock.verify(c, req, wc, ls, plh);
+        EasyMock.verify(c, request, wc, ls, plh);
     }
 
     @Test
@@ -102,12 +102,12 @@ public class LoginWorkflowTest {
         EasyMock.replay(c);
 
         Map<String, Object> params = new HashMap<String, Object>();
-        HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(req.getRequestURI()).andReturn("/jcatapult-security-check");
-        EasyMock.expect(req.getParameter("j_username")).andReturn("test-username");
-        EasyMock.expect(req.getParameter("j_password")).andReturn("test-password");
-        EasyMock.expect(req.getParameterMap()).andReturn(params);
-        EasyMock.replay(req);
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getRequestURI()).andReturn("/jcatapult-security-check");
+        EasyMock.expect(request.getParameter("j_username")).andReturn("test-username");
+        EasyMock.expect(request.getParameter("j_password")).andReturn("test-password");
+        EasyMock.expect(request.getParameterMap()).andReturn(params);
+        EasyMock.replay(request);
 
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
         EasyMock.replay(wc);
@@ -118,12 +118,12 @@ public class LoginWorkflowTest {
         EasyMock.replay(ls);
 
         LoginExceptionHandler leh = EasyMock.createStrictMock(LoginExceptionHandler.class);
-        leh.handle(exception, req, null, wc);
+        leh.handle(exception, wc);
         EasyMock.replay(leh);
 
-        LoginWorkflow lw = new LoginWorkflow(ls, new DefaultSecurityConfiguration(c), leh, null);
-        lw.perform(req, null, wc);
+        LoginWorkflow lw = new LoginWorkflow(request, ls, new DefaultSecurityConfiguration(c), leh, null);
+        lw.perform(wc);
 
-        EasyMock.verify(c, req, wc, ls, leh);
+        EasyMock.verify(c, request, wc, ls, leh);
     }
 }

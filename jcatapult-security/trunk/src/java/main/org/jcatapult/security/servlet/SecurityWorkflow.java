@@ -18,8 +18,6 @@ package org.jcatapult.security.servlet;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
 import org.jcatapult.security.servlet.login.LoginWorkflow;
@@ -60,8 +58,9 @@ public class SecurityWorkflow implements Workflow {
     private final AuthorizationWorkflow authorizationWorkflow;
 
     @Inject
-    public SecurityWorkflow(CredentialStorageWorkflow credentialStorageWorkflow, SavedRequestWorkflow savedRequestWorkflow,
-            LoginWorkflow loginWorkflow, AuthorizationWorkflow authorizationWorkflow) {
+    public SecurityWorkflow(CredentialStorageWorkflow credentialStorageWorkflow,
+            SavedRequestWorkflow savedRequestWorkflow, LoginWorkflow loginWorkflow,
+            AuthorizationWorkflow authorizationWorkflow) {
         this.credentialStorageWorkflow = credentialStorageWorkflow;
         this.savedRequestWorkflow = savedRequestWorkflow;
         this.loginWorkflow = loginWorkflow;
@@ -71,17 +70,14 @@ public class SecurityWorkflow implements Workflow {
     /**
      * Creates a sub-workflow chain that calls the sub-workflows in the order from the class comment.
      *
-     * @param   request The request which is passed to the sub-workflow chain.
-     * @param   response The response which is passed to the sub-workflow chain.
      * @param   chain The workflow chain, which is the end point of the sub-workflow chain.
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
-    public void perform(HttpServletRequest request, HttpServletResponse response, WorkflowChain chain)
-    throws IOException, ServletException {
+    public void perform(WorkflowChain chain) throws IOException, ServletException {
         SubWorkflowChain subChain = new SubWorkflowChain(Arrays.asList(credentialStorageWorkflow, savedRequestWorkflow,
             loginWorkflow, authorizationWorkflow), chain);
-        subChain.doWorkflow(request, response);
+        subChain.continueWorkflow();
     }
 
     public void destroy() {
