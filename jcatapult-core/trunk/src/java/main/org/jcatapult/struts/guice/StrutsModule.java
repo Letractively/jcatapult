@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.guice;
+package org.jcatapult.struts.guice;
 
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.struts.action.annotation.ActionName;

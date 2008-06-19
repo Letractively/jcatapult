@@ -1,4 +1,4 @@
-package org.jcatapult.guice;
+package org.jcatapult.jpa.guice;
 
 import javax.persistence.EntityManager;
 

@@ -42,7 +42,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 /**
  * <p>
  * This class can be used for testing classes that depend on
- * injection via the {@link org.jcatapult.guice.WebModule}.
+ * injection via the {@link org.jcatapult.servlet.guice.WebModule}.
  * </p>
  *
  * @author  Brian Pontarelli

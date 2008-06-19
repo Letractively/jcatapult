@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.guice;
+package org.jcatapult.servlet.guice;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.config.EnvironmentAwareConfiguration;
-import org.jcatapult.servlet.DefaultWorkflowResolver;
 import org.jcatapult.servlet.ServletObjectsHolder;
-import org.jcatapult.servlet.WorkflowResolver;
 import org.jcatapult.servlet.annotation.HTTPMethod;
 
 import com.google.inject.AbstractModule;
@@ -80,7 +78,7 @@ public class WebModule extends AbstractModule {
         // Bind the servlet request
         bind(HttpServletRequest.class).toProvider(new Provider<HttpServletRequest>() {
             public HttpServletRequest get() {
-                return ServletObjectsHolder.getServletRequest();
+                return new HttpServletRequestProxy();
             }
         });
 
