@@ -47,16 +47,28 @@ public class Checkbox extends AbstractInput {
     @Override
     protected void addAdditionalAttributes(Map<String, Object> attributes,
             Map<String, String> parameterAttributes, ActionInvocation actionInvocation) {
+        super.addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
         String name = (String) attributes.get("name");
         Object action = actionInvocation.action();
         if (!attributes.containsKey("checked") && action != null) {
             String value = expressionEvaluator.getValue(name, action, parameterAttributes);
-            Boolean checked = (value == null) ? (Boolean) attributes.get("defaultChecked") :
-                value.equals(attributes.get("value"));
-            if (checked != null) {
-                attributes.put("checked", checked);
+            boolean checked = false;
+            if (value == null && attributes.containsKey("defaultChecked")) {
+                checked = (Boolean) attributes.get("defaultChecked");
+            } else if (value != null) {
+                checked = value.equals(attributes.get("value"));
             }
+
+            if (checked) {
+                attributes.put("checked", "checked");
+            }
+        } else if (attributes.containsKey("checked") && (Boolean) attributes.get("checked")) {
+            attributes.put("checked", "checked");
+        } else {
+            attributes.remove("checked");
         }
+
+        attributes.remove("defaultChecked");
     }
 
     /**

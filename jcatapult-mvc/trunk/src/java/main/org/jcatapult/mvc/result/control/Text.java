@@ -57,13 +57,15 @@ public class Text extends AbstractInput {
         if (!attributes.containsKey("value") && action != null) {
             value = expressionEvaluator.getValue(name, action, parameterAttributes);
             if (value == null) {
-                value = (String) attributes.remove("defaultValue");
+                value = (String) attributes.get("defaultValue");
             }
 
             if (value != null) {
                 attributes.put("value", value);
             }
         }
+
+        attributes.remove("defaultValue");
     }
 
     /**

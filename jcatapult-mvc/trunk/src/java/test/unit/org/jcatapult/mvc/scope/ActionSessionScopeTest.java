@@ -57,6 +57,8 @@ public class ActionSessionScopeTest {
 
         ActionSessionScope scope = new ActionSessionScope(request, ais);
         assertSame(value, scope.get("test"));
+
+        EasyMock.verify(session, request, ais);
     }
 
     @Test
@@ -86,6 +88,8 @@ public class ActionSessionScopeTest {
         } catch (IllegalStateException e) {
             // Expected
         }
+
+        EasyMock.verify(session, request, ais);
     }
 
     @Test
@@ -108,6 +112,8 @@ public class ActionSessionScopeTest {
         ActionSessionScope scope = new ActionSessionScope(request, ais);
         scope.set("test", value);
         assertSame(value, map.get("org.example.action.user.Edit").get("test"));
+
+        EasyMock.verify(session, request, ais);
     }
 
     @Test
@@ -133,5 +139,7 @@ public class ActionSessionScopeTest {
         } catch (IllegalStateException e) {
             // Expected
         }
+
+        EasyMock.verify(session, request, ais);
     }
 }

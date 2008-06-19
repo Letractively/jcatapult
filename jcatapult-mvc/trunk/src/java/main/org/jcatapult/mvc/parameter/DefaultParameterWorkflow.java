@@ -43,9 +43,9 @@ import com.google.inject.name.Named;
  * @author  Brian Pontarelli
  */
 public class DefaultParameterWorkflow implements ParameterWorkflow {
-    public static final String CHECKBOX_PREFIX = "__jc_cb";
-    public static final String RADIOBUTTON_PREFIX = "__jc_rb";
-    public static final String ACTION_PREFIX = "__jc_a";
+    public static final String CHECKBOX_PREFIX = "__jc_cb_";
+    public static final String RADIOBUTTON_PREFIX = "__jc_rb_";
+    public static final String ACTION_PREFIX = "__jc_a_";
 
     private final HttpServletRequest request;
     private final ActionInvocationStore actionInvocationStore;
