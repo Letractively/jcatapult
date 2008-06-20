@@ -24,6 +24,7 @@ import org.jcatapult.mvc.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.parameter.convert.DefaultConverterProvider;
 import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
 import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
+import org.jcatapult.mvc.parameter.convert.converters.CollectionConverter;
 import org.jcatapult.mvc.parameter.convert.converters.FileConverter;
 import org.jcatapult.mvc.parameter.convert.converters.NumberConverter;
 import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
@@ -60,6 +61,7 @@ public class MVCModule extends AbstractModule {
         bind(FileConverter.class);
         bind(NumberConverter.class);
         bind(StringConverter.class);
+        bind(CollectionConverter.class);
 
         // Inject the registry so that the Class to Class mapping is setup
         requestStaticInjection(DefaultConverterProvider.class);

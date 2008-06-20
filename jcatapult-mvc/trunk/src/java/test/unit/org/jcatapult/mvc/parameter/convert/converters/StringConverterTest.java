@@ -35,16 +35,16 @@ public class StringConverterTest {
     @Test
     public void testFromStrings() {
         Converter converter = new StringConverter();
-        String str = converter.convertFromStrings(array((String) null), String.class, null);
+        String str = (String) converter.convertFromStrings(array((String) null), String.class, null);
         assertNull(str);
 
-        str = converter.convertFromStrings(array(""), String.class, null);
+        str = (String) converter.convertFromStrings(array(""), String.class, null);
         assertNull(str);
 
-        str = converter.convertFromStrings(array("a"), String.class, null);
+        str = (String) converter.convertFromStrings(array("a"), String.class, null);
         assertEquals("a", str);
 
-        str = converter.convertFromStrings(array("a", "b"), String.class, null);
+        str = (String) converter.convertFromStrings(array("a", "b"), String.class, null);
         assertEquals("a,b", str);
     }
 

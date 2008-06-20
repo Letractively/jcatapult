@@ -15,6 +15,7 @@
  */
 package org.jcatapult.mvc.parameter.convert.converters;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
@@ -28,27 +29,29 @@ import org.jcatapult.mvc.parameter.convert.ConverterStateException;
  *
  * @author  Brian Pontarelli
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractPrimitiveConverter extends AbstractConverter {
-    protected <T> T stringToObject(String value, Class<T> convertTo, Map<String, String> attributes)
+    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
-        if (value == null && convertTo.isPrimitive()) {
-            return defaultPrimitive(convertTo, attributes);
+        Class<?> rawType = rawType(convertTo);
+        if (value == null && rawType.isPrimitive()) {
+            return defaultPrimitive(rawType, attributes);
         } else if (value == null) {
             return null;
         }
 
-        return stringToPrimitive(value, convertTo, attributes);
+        return stringToPrimitive(value, rawType, attributes);
     }
 
-    protected <T> T stringsToObject(String[] values, Class<T> convertTo, Map<String, String> attributes)
+    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         throw new ConverterStateException("The primitive converter doesn't support String[] to Object conversion.");
     }
 
-    protected <T> String objectToString(T value, Class<T> convertFrom,
-        Map<String, String> attributes)
+    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
-        return primitiveToString(value, convertFrom, attributes);
+        Class<?> rawType = rawType(convertFrom);
+        return primitiveToString(value, rawType, attributes);
     }
 
     /**
@@ -59,7 +62,7 @@ public abstract class AbstractPrimitiveConverter extends AbstractConverter {
      * @return  The wrapper that contains the default value for the primitive.
      * @throws  ConversionException If the default value could not be determined.
      */
-    protected abstract <T> T defaultPrimitive(Class<T> convertTo, Map<String, String> attributes)
+    protected abstract Object defaultPrimitive(Class convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -77,7 +80,7 @@ public abstract class AbstractPrimitiveConverter extends AbstractConverter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    protected abstract <T> T stringToPrimitive(String value, Class<T> convertTo, Map<String, String> attributes)
+    protected abstract Object stringToPrimitive(String value, Class convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -95,6 +98,6 @@ public abstract class AbstractPrimitiveConverter extends AbstractConverter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    protected abstract <T> String primitiveToString(T value, Class<T> convertFrom, Map<String, String> attributes)
+    protected abstract String primitiveToString(Object value, Class convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 }

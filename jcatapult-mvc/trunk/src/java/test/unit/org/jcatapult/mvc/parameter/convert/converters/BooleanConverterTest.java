@@ -36,29 +36,29 @@ public class BooleanConverterTest {
     @Test
     public void testFromStrings() {
         Converter converter = new BooleanConverter();
-        Boolean b = converter.convertFromStrings(array((String) null), Boolean.class, null);
+        Boolean b = (Boolean) converter.convertFromStrings(array((String) null), Boolean.class, null);
         assertNull(b);
 
-        b = converter.convertFromStrings(array((String) null), Boolean.TYPE, null);
+        b = (Boolean) converter.convertFromStrings(array((String) null), Boolean.TYPE, null);
         assertFalse(b);
 
-        b = converter.convertFromStrings(array("true"), Boolean.class, null);
+        b = (Boolean) converter.convertFromStrings(array("true"), Boolean.class, null);
         assertTrue(b);
 
-        b = converter.convertFromStrings(array("true"), Boolean.TYPE, null);
+        b = (Boolean) converter.convertFromStrings(array("true"), Boolean.TYPE, null);
         assertTrue(b);
 
-        b = converter.convertFromStrings(array("false"), Boolean.class, null);
+        b = (Boolean) converter.convertFromStrings(array("false"), Boolean.class, null);
         assertFalse(b);
 
-        b = converter.convertFromStrings(array("false"), Boolean.TYPE, null);
+        b = (Boolean) converter.convertFromStrings(array("false"), Boolean.TYPE, null);
         assertFalse(b);
 
-        Boolean[] ba = converter.convertFromStrings(array("true", "false"), Boolean[].class, null);
+        Boolean[] ba = (Boolean[]) converter.convertFromStrings(array("true", "false"), Boolean[].class, null);
         assertTrue(ba[0]);
         assertFalse(ba[1]);
 
-        boolean[] bpa = converter.convertFromStrings(array("true", "false"), boolean[].class, null);
+        boolean[] bpa = (boolean[]) converter.convertFromStrings(array("true", "false"), boolean[].class, null);
         assertTrue(bpa[0]);
         assertFalse(bpa[1]);
 

@@ -36,23 +36,23 @@ public class CharacterConverterTest {
     @Test
     public void testFromStrings() {
         Converter converter = new CharacterConverter();
-        Character cw = converter.convertFromStrings(array((String) null), Character.class, null);
+        Character cw = (Character) converter.convertFromStrings(array((String) null), Character.class, null);
         assertNull(cw);
 
-        char c = converter.convertFromStrings(array((String) null), Character.TYPE, null);
+        char c = (Character) converter.convertFromStrings(array((String) null), Character.TYPE, null);
         assertEquals('\u0000', c);
 
-        c = converter.convertFromStrings(array("c"), Character.class, null);
+        c = (Character) converter.convertFromStrings(array("c"), Character.class, null);
         assertEquals('c', c);
 
-        c = converter.convertFromStrings(array("c"), Character.TYPE, null);
+        c = (Character) converter.convertFromStrings(array("c"), Character.TYPE, null);
         assertEquals('c', c);
 
-        Character[] ca = converter.convertFromStrings(array("c", "d"), Character[].class, null);
+        Character[] ca = (Character[]) converter.convertFromStrings(array("c", "d"), Character[].class, null);
         assertEquals((Character) 'c', ca[0]);
         assertEquals((Character) 'd', ca[1]);
 
-        char[] cpa = converter.convertFromStrings(array("c", "d"), char[].class, null);
+        char[] cpa = (char[]) converter.convertFromStrings(array("c", "d"), char[].class, null);
         assertEquals('c', cpa[0]);
         assertEquals('d', cpa[1]);
 

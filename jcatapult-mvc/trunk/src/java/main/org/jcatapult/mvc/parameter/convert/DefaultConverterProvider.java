@@ -16,16 +16,17 @@
 package org.jcatapult.mvc.parameter.convert;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import static java.util.Arrays.asList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jcatapult.mvc.ObjectFactory;
 
-import com.google.inject.Binding;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Key;
 
 /**
  * <p>
@@ -54,20 +55,18 @@ public class DefaultConverterProvider implements ConverterProvider {
     private final ObjectFactory objectFactory;
 
     @Inject
-    public static void initialize(Injector injector) {
-        Map<Key<?>, Binding<?>> bindings = injector.getBindings();
-        for (Key<?> key : bindings.keySet()) {
-            Class<?> bindingType = (Class<?>) key.getTypeLiteral().getType();
-            if (bindingType instanceof Class && Converter.class.isAssignableFrom(bindingType)) {
-                org.jcatapult.mvc.parameter.convert.annotation.Converter converter = bindingType.getAnnotation(org.jcatapult.mvc.parameter.convert.annotation.Converter.class);
-                Class<?>[] types = converter.forTypes();
-                for (Class<?> type : types) {
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.fine("Registering converter class [" + converter.getClass() + "] for type [" + type + "]");
-                    }
-
-                    converters.put(type, bindingType);
+    public static void initialize(ObjectFactory objectFactory) {
+        List<Class<? extends Converter>> types = objectFactory.getAllForType(Converter.class);
+        for (Class<? extends Converter> type : types) {
+            org.jcatapult.mvc.parameter.convert.annotation.Converter converter =
+                type.getAnnotation(org.jcatapult.mvc.parameter.convert.annotation.Converter.class);
+            Class<?>[] convertTypes = converter.forTypes();
+            for (Class<?> convertType : convertTypes) {
+                if (logger.isLoggable(Level.FINE)) {
+                    logger.fine("Registering converter class [" + converter.getClass() + "] for type [" + convertType + "]");
                 }
+
+                converters.put(convertType, type);
             }
         }
     }
@@ -106,7 +105,7 @@ public class DefaultConverterProvider implements ConverterProvider {
      * @return  The converter or null if one was not found
      */
     public Converter lookup(Class<?> type) {
-        Class localType = type;
+        Class<?> localType = type;
 
         // If it is an array, just use the component type because TypeConverters
         // can convert to arrays
@@ -124,6 +123,29 @@ public class DefaultConverterProvider implements ConverterProvider {
                 return (Converter) objectFactory.create(converterType);
             }
         }
+
+        localType = type;
+        Queue<Class<?>> interfaces = new LinkedList<Class<?>>(asList(type.getInterfaces()));
+        Class<?> inter;
+        while ((inter = interfaces.poll()) != null) {
+            // First, check the interface
+            Class<?> converterType = converters.get(inter);
+            if (converterType != null) {
+                return (Converter) objectFactory.create(converterType);
+            }
+
+            // Next, append the interfaces for this interface
+            interfaces.addAll(asList(inter.getInterfaces()));
+
+            // If there are no more, go up to the super class
+            if (interfaces.size() == 0 && !localType.isInterface()) {
+                localType = localType.getSuperclass();
+                if (localType != Object.class) {
+                    interfaces.addAll(asList(localType.getInterfaces()));
+                }
+            }
+        }
+
 
         return null;
     }

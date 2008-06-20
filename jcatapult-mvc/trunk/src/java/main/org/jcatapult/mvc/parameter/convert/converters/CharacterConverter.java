@@ -34,26 +34,26 @@ public class CharacterConverter extends AbstractPrimitiveConverter {
     /**
      * Returns a single character with a unicode value of 0.
      */
-    protected <T> T defaultPrimitive(Class<T> convertTo, Map<String, String> attributes)
+    protected Object defaultPrimitive(Class convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
-        return (T) new Character('\u0000');
+        return new Character('\u0000');
     }
 
     /**
      * If String is longer than one character, this throws an exception. Otherwise, that character is
      * returned. If the value is null or empty, this throws an exception.
      */
-    protected <T> T stringToPrimitive(String value, Class<T> convertTo, Map<String, String> attributes)
+    protected Object stringToPrimitive(String value, Class convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (value.length() > 1) {
             throw new ConversionException("Conversion from String to character must be a String" +
                 " of length 1 - [" + value + "] is invalid");
         }
 
-        return (T) new Character(value.charAt(0));
+        return new Character(value.charAt(0));
     }
 
-    protected <T> String primitiveToString(T value, Class<T> convertFrom, Map<String, String> attributes)
+    protected  String primitiveToString(Object value, Class convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return value.toString();
     }

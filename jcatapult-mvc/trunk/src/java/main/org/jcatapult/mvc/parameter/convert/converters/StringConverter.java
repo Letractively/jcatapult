@@ -15,6 +15,7 @@
  */
 package org.jcatapult.mvc.parameter.convert.converters;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
@@ -42,21 +43,21 @@ public class StringConverter extends AbstractConverter {
         this.emptyIsNull = emptyIsNull;
     }
 
-    protected <T> T stringToObject(String value, Class<T> convertTo, Map<String, String> attributes)
+    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         if (emptyIsNull && StringTools.isTrimmedEmpty(value)) {
             return null;
         }
 
-        return (T) value;
+        return value;
     }
 
-    protected <T> T stringsToObject(String[] values, Class<T> convertTo, Map<String, String> attributes)
+    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
-        return (T) join(values, ",");
+        return join(values, ",");
     }
 
-    protected <T> String objectToString(T value, Class<T> convertFrom, Map<String, String> attributes)
+    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         return value.toString();
     }

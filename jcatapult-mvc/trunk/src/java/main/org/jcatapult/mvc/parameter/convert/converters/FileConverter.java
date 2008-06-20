@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.parameter.convert.converters;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.Map;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
@@ -40,30 +41,30 @@ public class FileConverter extends AbstractConverter {
      *
      * @param   attributes Can contain the parentDir attribute which if the String is relative will
      */
-    protected <T> T stringToObject(String value, Class<T> convertTo, Map<String, String> attributes)
+    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (StringTools.isTrimmedEmpty(value)) {
             return null;
         }
 
         if (value.charAt(0) == File.separatorChar || value.charAt(0) == '\\') {
-            return (T) new File(value);
+            return new File(value);
         }
 
         if (attributes != null) {
             String parent = attributes.get("parentDir");
             if (parent != null) {
-                return (T) new File(parent, value);
+                return new File(parent, value);
             }
         }
 
-        return (T) new File(value);
+        return new File(value);
     }
 
     /**
      * Joins the values and then sends the new joined String to the stringToObject method.
      */
-    protected <T> T stringsToObject(String[] values, Class<T> convertTo, Map<String, String> attributes)
+    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         String joined = join(values, File.separator);
         return stringToObject(joined, convertTo, attributes);
@@ -72,7 +73,7 @@ public class FileConverter extends AbstractConverter {
     /**
      * Returns the absolute path of the file.
      */
-    protected <T> String objectToString(T value, Class<T> convertFrom, Map<String, String> attributes)
+    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         File file = (File) value;
         return file.getAbsolutePath();
