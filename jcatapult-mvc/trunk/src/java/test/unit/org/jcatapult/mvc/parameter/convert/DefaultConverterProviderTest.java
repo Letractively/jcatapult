@@ -15,6 +15,7 @@
  */
 package org.jcatapult.mvc.parameter.convert;
 
+import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.mvc.GuiceObjectFactory;
 import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
 import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
@@ -37,7 +38,7 @@ public class DefaultConverterProviderTest extends WebBaseTest {
      */
     @Test
     public void testLookups() {
-        ConverterProvider provider = new DefaultConverterProvider(new GuiceObjectFactory());
+        ConverterProvider provider = new DefaultConverterProvider(new GuiceObjectFactory(GuiceContainer.getInjector()));
         Converter tc = provider.lookup(Character.class);
         assertSame(CharacterConverter.class, tc.getClass());
         tc = provider.lookup(Character.TYPE);

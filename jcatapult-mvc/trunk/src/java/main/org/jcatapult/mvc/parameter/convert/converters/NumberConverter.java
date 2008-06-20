@@ -38,24 +38,24 @@ public class NumberConverter extends AbstractPrimitiveConverter {
     /**
      * Returns 0 for everything but in the correct wrapper classes.
      */
-    protected <T> T defaultPrimitive(Class<T> convertTo, Map<String, String> attributes)
+    protected Object defaultPrimitive(Class convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (convertTo == Byte.TYPE || convertTo == Byte.class) {
-            return (T) new Byte((byte) 0);
+            return new Byte((byte) 0);
         } else if (convertTo == Short.TYPE || convertTo == Short.class) {
-            return (T) new Short((short) 0);
+            return new Short((short) 0);
         } else if (convertTo == Integer.TYPE || convertTo == Integer.class) {
-            return (T) new Integer(0);
+            return new Integer(0);
         } else if (convertTo == Long.TYPE || convertTo == Long.class) {
-            return (T) new Long(0l);
+            return new Long(0l);
         } else if (convertTo == Float.TYPE || convertTo == Float.class) {
-            return (T) new Float(0.0f);
+            return new Float(0.0f);
         } else if (convertTo == BigInteger.class) {
-            return (T) BigInteger.ZERO;
+            return BigInteger.ZERO;
         } else if (convertTo == BigDecimal.class) {
-            return (T) new BigDecimal(new Double(0.0).doubleValue());
+            return new BigDecimal(new Double(0.0).doubleValue());
         } else if (convertTo == Double.TYPE || convertTo == Double.class) {
-            return (T) new Double(0.0);
+            return new Double(0.0);
         }
 
         throw new ConverterStateException("Invalid type for NumberConverter [" + convertTo + "]");
@@ -64,25 +64,25 @@ public class NumberConverter extends AbstractPrimitiveConverter {
     /**
      * Uses the valueOf methods in the wrapper classes based on the convertTo type.
      */
-    protected <T> T stringToPrimitive(String value, Class<T> convertTo, Map<String, String> attributes)
+    protected Object stringToPrimitive(String value, Class convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         try {
             if (convertTo == Byte.TYPE || convertTo == Byte.class) {
-                return (T) Byte.valueOf(value);
+                return Byte.valueOf(value);
             } else if (convertTo == Short.TYPE || convertTo == Short.class) {
-                return (T) Short.valueOf(value);
+                return Short.valueOf(value);
             } else if (convertTo == Integer.TYPE || convertTo == Integer.class) {
-                return (T) Integer.valueOf(value);
+                return Integer.valueOf(value);
             } else if (convertTo == Long.TYPE || convertTo == Long.class) {
-                return (T) Long.valueOf(value);
+                return Long.valueOf(value);
             } else if (convertTo == Float.TYPE || convertTo == Float.class) {
-                return (T) Float.valueOf(value);
+                return Float.valueOf(value);
             } else if (convertTo == Double.TYPE || convertTo == Double.class) {
-                return (T) Double.valueOf(value);
+                return Double.valueOf(value);
             } else if (convertTo == BigInteger.class) {
-                return (T) new BigInteger(value);
+                return new BigInteger(value);
             } else if (convertTo == BigDecimal.class) {
-                return (T) new BigDecimal(value);
+                return new BigDecimal(value);
             }
 
             throw new ConverterStateException("Invalid type for NumberConverter [" + convertTo + "]");
@@ -91,7 +91,7 @@ public class NumberConverter extends AbstractPrimitiveConverter {
         }
     }
 
-    protected <T> String primitiveToString(T value, Class<T> convertFrom, Map<String, String> attributes)
+    protected  String primitiveToString(Object value, Class convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return value.toString();
 
@@ -103,11 +103,11 @@ public class NumberConverter extends AbstractPrimitiveConverter {
 //            return value.toString();
 //        } else if (convertFrom == Float.TYPE || convertFrom == Float.class ||
 //                convertFrom == Double.TYPE || convertFrom == Double.class) {
-//            return (T) Double.valueOf(value);
+//            return Double.valueOf(value);
 //        } else if (convertFrom == BigInteger.class) {
-//            return (T) new BigInteger(value);
+//            return new BigInteger(value);
 //        } else if (convertFrom == BigDecimal.class) {
-//            return (T) new BigDecimal(value);
+//            return new BigDecimal(value);
 //        }
     }
 }

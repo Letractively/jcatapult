@@ -15,6 +15,7 @@
  */
 package org.jcatapult.mvc.parameter.convert;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
@@ -132,7 +133,8 @@ public interface Converter {
      * </ul>
      *
      * @param   values The value(s) to convert. This might be a single value or multiple values.
-     * @param   convertTo The type to convert the value to.
+     * @param   convertTo The type to convert the value to. This might be a Class or it might be a
+     *          parameterized type such as List&lt;String>.
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
@@ -143,7 +145,7 @@ public interface Converter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    <T> T convertFromStrings(String[] values, Class<T> convertTo, Map<String, String> attributes)
+    Object convertFromStrings(String[] values, Type convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -163,7 +165,8 @@ public interface Converter {
      * </ul>
      *
      * @param   value The Object value to convert.
-     * @param   convertFrom The type to convert the value from.
+     * @param   convertFrom The type to convert the value from. This might be a Class or it might be
+     *          a parameterized type such as List&lt;String>.
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
@@ -174,6 +177,6 @@ public interface Converter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    <T> String convertToString(T value, Class<T> convertFrom, Map<String, String> attributes)
+    String convertToString(Object value, Type convertFrom, Map<String, String> attributes)
     throws ConversionException;
 }

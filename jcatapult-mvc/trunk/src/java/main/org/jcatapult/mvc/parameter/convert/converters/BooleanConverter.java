@@ -36,28 +36,28 @@ public class BooleanConverter extends AbstractPrimitiveConverter {
     /**
      * Returns false.
      */
-    protected <T> T defaultPrimitive(Class<T> convertTo, Map<String, String> attributes)
+    protected Object defaultPrimitive(Class convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
-        return (T) Boolean.FALSE;
+        return Boolean.FALSE;
     }
 
     /**
      * Uses Boolean.valueOf. Throws an exception if the String is not a valid boolean as dictated by
      * the {@link StringTools#isValidBoolean(String)} method.
      */
-    protected <T> T stringToPrimitive(String value, Class<T> convertTo, Map<String, String> attributes)
+    protected Object stringToPrimitive(String value, Class convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         if (!StringTools.isValidBoolean(value)) {
             throw new ConversionException ("Unable to convert invalid boolean String [" + value + "]");
         }
 
-        return (T) Boolean.valueOf(value);
+        return Boolean.valueOf(value);
     }
 
     /**
      * Returns value.toString().
      */
-    protected <T> String primitiveToString(T value, Class<T> convertFrom, Map<String, String> attributes)
+    protected  String primitiveToString(Object value, Class convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return value.toString();
     }
