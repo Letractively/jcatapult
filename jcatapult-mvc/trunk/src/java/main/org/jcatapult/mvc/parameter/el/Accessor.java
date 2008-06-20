@@ -189,8 +189,7 @@ public abstract class Accessor {
                 throw new ConverterStateException("No type converter found for the type [" + typeClass.getName() + "]");
             }
 
-            newValue = converter.convertFromStrings(values, typeClass,
-                context.getAttributes());
+            newValue = converter.convertFromStrings(values, typeClass, context.getAttributes());
         }
 
         return newValue;
