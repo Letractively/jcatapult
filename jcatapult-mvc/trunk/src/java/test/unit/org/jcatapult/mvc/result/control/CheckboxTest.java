@@ -16,8 +16,12 @@
 package org.jcatapult.mvc.result.control;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.Configuration;
@@ -78,11 +82,38 @@ public class CheckboxTest extends AbstractInputTest {
 
     @Test
     public void testAction() {
-        testAction(true);
-        testAction(false);
+        // Test booleans
+        testAction(true, true, "true");
+        testAction(false, false, "true");
+
+        // Test arrays
+        testAction(true, new int[]{1, 2, 3}, "1");
+        testAction(true, new int[]{1, 2, 3}, "2");
+        testAction(true, new int[]{1, 2, 3}, "3");
+        testAction(false, new int[]{1, 2, 3}, "4");
+
+        // Test collection with Strings
+        Set<String> set = new HashSet<String>();
+        set.add("1");
+        set.add("2");
+        set.add("3");
+        testAction(true, set, "1");
+        testAction(true, set, "2");
+        testAction(true, set, "3");
+        testAction(false, set, "4");
+
+        // Test collection with Integers
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        testAction(true, list, "1");
+        testAction(true, list, "2");
+        testAction(true, list, "3");
+        testAction(false, list, "4");
     }
 
-    protected void testAction(boolean flag) {
+    protected void testAction(boolean flag, Object beanValue, String value) {
         Edit action = new Edit();
         HttpServletRequest request = makeRequest();
         ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
@@ -93,7 +124,7 @@ public class CheckboxTest extends AbstractInputTest {
 
         Map<String, String> parameterAttributes = map("param", "param-value");
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.male", action, parameterAttributes)).andReturn(flag ? "true" : "false");
+        EasyMock.expect(ee.getValue("user.male", action)).andReturn(beanValue);
         EasyMock.replay(ee);
 
         MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.male", Locale.US, parameterAttributes, "Male?");
@@ -103,12 +134,12 @@ public class CheckboxTest extends AbstractInputTest {
         checkbox.setServices(Locale.US, request, ais, ms, fms);
         checkbox.setMessageProvider(mp);
         StringWriter writer = new StringWriter();
-        checkbox.render(writer, mapNV("name", "user.male", "value", "true", "class", "css-class"), parameterAttributes);
+        checkbox.render(writer, mapNV("name", "user.male", "value", value, "class", "css-class"), parameterAttributes);
         assertEquals(
             "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\">Male?</label></div>\n" +
-            "<div class=\"control-container\"><input type=\"checkbox\" " + (flag ? "checked=\"checked\" " : "") + "class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.male\" value=\"\"/></div>\n" +
+            "<div class=\"control-container\"><input type=\"checkbox\" " + (flag ? "checked=\"checked\" " : "") + "class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"" + value + "\"/><input type=\"hidden\" name=\"__jc_cb_user.male\" value=\"\"/></div>\n" +
             "</div>", writer.toString());
 
         EasyMock.verify(request, ais, ms, configuration, env, containerResolver, ee, mp);
@@ -126,7 +157,7 @@ public class CheckboxTest extends AbstractInputTest {
 
         Map<String, String> parameterAttributes = map("param", "param-value");
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.male", action, parameterAttributes)).andReturn(null);
+        EasyMock.expect(ee.getValue("user.male", action)).andReturn(null);
         EasyMock.replay(ee);
 
         MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.male", Locale.US, parameterAttributes, "Male?");
@@ -191,7 +222,7 @@ public class CheckboxTest extends AbstractInputTest {
 
         Map<String, String> parameterAttributes = map("param", "param-value");
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.male", action, parameterAttributes)).andReturn(null);
+        EasyMock.expect(ee.getValue("user.male", action)).andReturn(null);
         EasyMock.replay(ee);
 
         MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.male", Locale.US, parameterAttributes, "Male?");

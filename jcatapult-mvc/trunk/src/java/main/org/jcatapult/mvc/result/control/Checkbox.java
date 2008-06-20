@@ -15,6 +15,7 @@
  */
 package org.jcatapult.mvc.result.control;
 
+import java.lang.reflect.Array;
 import java.util.Map;
 
 import org.jcatapult.mvc.action.ActionInvocation;
@@ -51,12 +52,33 @@ public class Checkbox extends AbstractInput {
         String name = (String) attributes.get("name");
         Object action = actionInvocation.action();
         if (!attributes.containsKey("checked") && action != null) {
-            String value = expressionEvaluator.getValue(name, action, parameterAttributes);
+            Object value = expressionEvaluator.getValue(name, action);
             boolean checked = false;
             if (value == null && attributes.containsKey("defaultChecked")) {
                 checked = (Boolean) attributes.get("defaultChecked");
             } else if (value != null) {
-                checked = value.equals(attributes.get("value"));
+                // Collection or array. Iterate and toString each item and compare to value
+                String valueAttr = (String) attributes.get("value");
+                if (value instanceof Iterable) {
+                    Iterable iterable = (Iterable) value;
+                    for (Object o : iterable) {
+                        if (o.toString().equals(valueAttr)) {
+                            checked = true;
+                            break;
+                        }
+                    }
+                } else if (value.getClass().isArray()) {
+                    int length = Array.getLength(value);
+                    for (int i = 0; i < length; i++) {
+                        Object arrayValue = Array.get(value, i);
+                        if (arrayValue.toString().equals(valueAttr)) {
+                            checked = true;
+                            break;
+                        }
+                    }
+                } else {
+                    checked = value.toString().equals(valueAttr);
+                }
             }
 
             if (checked) {
