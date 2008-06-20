@@ -17,17 +17,13 @@ package org.jcatapult.mvc.parameter.el;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
-import javax.servlet.http.HttpServletRequest;
 
-import org.easymock.EasyMock;
 import org.example.domain.Action;
 import org.example.domain.ActionField;
 import org.example.domain.Address;
 import org.example.domain.AddressField;
 import org.example.domain.User;
 import org.example.domain.UserField;
-import org.jcatapult.mvc.locale.DefaultLocaleStore;
 import org.jcatapult.mvc.test.junit.WebBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -218,6 +214,18 @@ public class DefaultExpressionEvaluatorTest extends WebBaseTest {
         assertEquals(1, action.getUser().getSiblings().size());
         assertEquals((Integer) 34, action.getUser().getSiblings().get(0).getAge());
         assertEquals("Brett", action.getUser().getSiblings().get(0).getName());
+
+        // Test arrays and complex maps
+        evaluator.setValue("roleIds", action, array("1", "2", "3"), null);
+        evaluator.setValue("choices['ids']", action, array("1", "2", "3"), null);
+        assertEquals(3, action.getRoleIds().length);
+        assertEquals(1, action.getRoleIds()[0]);
+        assertEquals(2, action.getRoleIds()[1]);
+        assertEquals(3, action.getRoleIds()[2]);
+        assertEquals(3, action.getChoices().get("ids").size());
+        assertEquals(1, (int) action.getChoices().get("ids").get(0));
+        assertEquals(2, (int) action.getChoices().get("ids").get(1));
+        assertEquals(3, (int) action.getChoices().get("ids").get(2));
     }
 
     /**

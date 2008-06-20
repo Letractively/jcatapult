@@ -15,6 +15,9 @@
  */
 package org.example.domain;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * This is a test action.
@@ -23,6 +26,10 @@ package org.example.domain;
  * @author  Brian Pontarelli
  */
 public class Action {
+    private int[] roleIds;
+    private List<Integer> selectionIds;
+    private Map<String, List<Integer>> choices;
+
     private User user;
 
     public User getUser() {
@@ -31,5 +38,29 @@ public class Action {
 
     public void setUser(User value) {
         this.user = value;
+    }
+
+    public int[] getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(int[] roleIds) {
+        this.roleIds = roleIds;
+    }
+
+    public List<Integer> getSelectionIds() {
+        return selectionIds;
+    }
+
+    public void setSelectionIds(List<Integer> selectionIds) {
+        this.selectionIds = selectionIds;
+    }
+
+    public Map<String, List<Integer>> getChoices() {
+        return choices;
+    }
+
+    public void setChoices(Map<String, List<Integer>> choices) {
+        this.choices = choices;
     }
 }
