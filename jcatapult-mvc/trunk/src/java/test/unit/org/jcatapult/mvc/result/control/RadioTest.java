@@ -17,25 +17,23 @@ package org.jcatapult.mvc.result.control;
 
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
-import com.google.inject.Inject;
-
 /**
  * <p>
- * This class is the control for a checkbox.
+ * This tests the radio control.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class Checkbox extends AbstractCheckedInput {
-    @Inject
-    public Checkbox(ExpressionEvaluator expressionEvaluator) {
-        super(expressionEvaluator);
+public class RadioTest extends AbstractCheckedInputTest {
+    protected AbstractCheckedInput getControl(ExpressionEvaluator ee) {
+        return new Radio(ee);
     }
 
-    /**
-     * @return  checkbox.ftl
-     */
-    protected String templateName() {
-        return "checkbox.ftl";
+    protected String getType() {
+        return "radio";
+    }
+
+    protected String getHiddenPrefix() {
+        return "__jc_rb";
     }
 }

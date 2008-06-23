@@ -13,29 +13,22 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.control;
+package org.jcatapult.mvc.result.jsp;
 
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-
-import com.google.inject.Inject;
+import org.jcatapult.mvc.result.control.Radio;
 
 /**
  * <p>
- * This class is the control for a checkbox.
+ * This class is the JSP taglib for the radio control.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class Checkbox extends AbstractCheckedInput {
-    @Inject
-    public Checkbox(ExpressionEvaluator expressionEvaluator) {
-        super(expressionEvaluator);
-    }
-
+public class RadioTag extends AbstractCheckedInputTag<Radio> {
     /**
-     * @return  checkbox.ftl
+     * @return  The {@link Radio} class.
      */
-    protected String templateName() {
-        return "checkbox.ftl";
+    protected Class<Radio> controlClass() {
+        return Radio.class;
     }
 }
