@@ -21,21 +21,21 @@ import com.google.inject.Inject;
 
 /**
  * <p>
- * This class is the control for a checkbox.
+ * This class is the control for a radio button.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class Checkbox extends AbstractCheckedInput {
+public class Radio extends AbstractCheckedInput {
     @Inject
-    public Checkbox(ExpressionEvaluator expressionEvaluator) {
+    public Radio(ExpressionEvaluator expressionEvaluator) {
         super(expressionEvaluator);
     }
 
     /**
-     * @return  checkbox.ftl
+     * @return  radio.ftl
      */
     protected String templateName() {
-        return "checkbox.ftl";
+        return "radio.ftl";
     }
 }

@@ -24,42 +24,7 @@ import org.jcatapult.mvc.result.control.Checkbox;
  *
  * @author  Brian Pontarelli
  */
-public class CheckboxTag extends AbstractInputTag<Checkbox> {
-    /**
-     * Retrieves the tag's checked attribute
-     *
-     * @return  The tag's checked attribute
-     */
-    public Boolean getChecked() {
-        return (Boolean) attributes.get("checked");
-    }
-
-    /**
-     * Populates the tag's checked attribute
-     *
-     * @param   checked The tag's checked attribute
-     */
-    public void setChecked(Boolean checked) {
-        attributes.put("checked", checked);
-    }
-    /**
-     * Retrieves the tags defaultChecked attribute
-     *
-     * @return	Returns the tags defaultChecked attribute
-     */
-    public Boolean getDefaultChecked() {
-        return (Boolean) attributes.get("defaultChecked");
-    }
-
-    /**
-     * Populates the tags defaultChecked attribute
-     *
-     * @param	defaultChecked The value of the tags defaultChecked attribute
-     */
-    public void setDefaultValue(Boolean defaultChecked) {
-        attributes.put("defaultChecked", defaultChecked);
-    }
-
+public class CheckboxTag extends AbstractCheckedInputTag<Checkbox> {
     /**
      * @return  The {@link Checkbox} class.
      */
