@@ -15,17 +15,26 @@
  */
 package org.jcatapult.mvc.servlet;
 
-import org.jcatapult.servlet.Workflow;
-
-import com.google.inject.ImplementedBy;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
- * This interface defines the main entry point for the JCatapult MVC.
+ * This request is a URI proxy.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-@ImplementedBy(DefaultMVCWorkflow.class)
-public interface MVCWorkflow extends Workflow {
+public class URIHttpServletRequest extends HttpServletRequestWrapper {
+    private final String uri;
+
+    public URIHttpServletRequest(HttpServletRequest httpServletRequest, String uri) {
+        super(httpServletRequest);
+        this.uri = uri;
+    }
+
+    @Override
+    public String getRequestURI() {
+        return uri;
+    }
 }

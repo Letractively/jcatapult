@@ -16,8 +16,15 @@
 package org.jcatapult.mvc.result.control;
 
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.servlet.MVCWorkflow;
+import org.jcatapult.mvc.servlet.URIHttpServletRequest;
+import org.jcatapult.servlet.ServletObjectsHolder;
+import org.jcatapult.servlet.WorkflowChain;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -28,8 +35,15 @@ import org.jcatapult.mvc.action.ActionInvocation;
  * @author  Brian Pontarelli
  */
 public class Form extends AbstractControl {
+    private final MVCWorkflow workflow;
+
+    @Inject
+    public Form(MVCWorkflow workflow) {
+        this.workflow = workflow;
+    }
+
     /**
-     * Does nothing.
+     * If the user supplied a prepare action URI, that action is inokved.
      *
      * @param   attributes The attributes of the tag.
      * @param   parameterAttributes The parameter attributes.
@@ -38,7 +52,29 @@ public class Form extends AbstractControl {
     @Override
     protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> parameterAttributes,
             ActionInvocation actionInvocation) {
-        // Does nothing.
+        final String uri = (String) attributes.remove("prepareAction");
+        if (uri != null) {
+            // Mock out the request for the new URI
+            HttpServletRequest old = request;
+            URIHttpServletRequest proxy = new URIHttpServletRequest(request, uri);
+
+            // Set in the wrapper
+            ServletObjectsHolder.setServletRequest(proxy);
+
+            // Invoke the workflow
+            try {
+                workflow.perform(new WorkflowChain() {
+                    public void continueWorkflow() {
+                    }
+                });
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            // Change back to the old URI
+            proxy = new URIHttpServletRequest(ServletObjectsHolder.getServletRequest(), old.getRequestURI());
+            ServletObjectsHolder.setServletRequest(proxy);
+        }
     }
 
     /**
