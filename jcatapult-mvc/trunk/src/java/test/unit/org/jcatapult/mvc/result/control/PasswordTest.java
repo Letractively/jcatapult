@@ -15,23 +15,7 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.io.StringWriter;
-import java.util.Locale;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.configuration.Configuration;
-import org.easymock.EasyMock;
 import org.example.action.user.Edit;
-import org.jcatapult.container.ContainerResolver;
-import org.jcatapult.environment.EnvironmentResolver;
-import org.jcatapult.freemarker.DefaultFreeMarkerService;
-import org.jcatapult.freemarker.FreeMarkerService;
-import org.jcatapult.freemarker.OverridingTemplateLoader;
-import org.jcatapult.mvc.action.ActionInvocationStore;
-import org.jcatapult.mvc.message.MessageProvider;
-import org.jcatapult.mvc.message.MessageStore;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import static net.java.util.CollectionTools.*;
@@ -51,7 +35,7 @@ public class PasswordTest extends AbstractInputTest {
     @Test
     public void testActionLess() {
         AbstractInput input = new Password();
-        run(input, null, "text", "foo.bar", "test", "Test",
+        run(input, null, "password", "foo.bar", "test", "Test",
             mapNV("name", "test", "class", "css-class", "value", "password", "bundle", "foo.bar"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -62,88 +46,25 @@ public class PasswordTest extends AbstractInputTest {
 
     @Test
     public void testAction() {
-        Edit action = new Edit();
-        HttpServletRequest request = makeRequest();
-        ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
-        MessageStore ms = makeMessageStore("user.password");
-        Configuration configuration = makeConfiguration();
-        EnvironmentResolver env = makeEnvironmenResolver();
-        ContainerResolver containerResolver = makeContainerResolver("password");
-
-        Map<String, String> parameterAttributes = map("param", "param-value");
-        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.password", Locale.US, parameterAttributes, "Your name");
-
-        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
-        Password password = new Password();
-        password.setServices(Locale.US, request, ais, ms, fms);
-        password.setMessageProvider(mp);
-        StringWriter writer = new StringWriter();
-        password.render(writer, mapNV("name", "user.password", "class", "css-class"), parameterAttributes);
-        assertEquals(
+        AbstractInput input = new Password();
+        run(input, new Edit(), "password", "org.example.action.user.Edit", "user.password", "Password",
+            mapNV("name", "user.password", "class", "css-class", "value", "password"),
             "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"user_password\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_password\" class=\"label\">Password</label></div>\n" +
             "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
-            "</div>", writer.toString());
-
-        EasyMock.verify(request, ais, ms, configuration, env, containerResolver, mp);
-    }
-
-    @Test
-    public void testHardCodedValue() {
-        Edit action = new Edit();
-        HttpServletRequest request = makeRequest();
-        ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
-        MessageStore ms = makeMessageStore("user.password");
-        Configuration configuration = makeConfiguration();
-        EnvironmentResolver env = makeEnvironmenResolver();
-        ContainerResolver containerResolver = makeContainerResolver("password");
-
-        Map<String, String> parameterAttributes = map("param", "param-value");
-        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.password", Locale.US, parameterAttributes, "Your password");
-
-        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
-        Password password = new Password();
-        password.setServices(Locale.US, request, ais, ms, fms);
-        password.setMessageProvider(mp);
-        StringWriter writer = new StringWriter();
-        password.render(writer, mapNV("name", "user.password", "class", "css-class", "value", "Barry"), parameterAttributes);
-        assertEquals(
-            "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"user_password\" class=\"label\">Your password</label></div>\n" +
-            "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
-            "</div>", writer.toString());
-
-        EasyMock.verify(request, ais, ms, configuration, env, containerResolver, mp);
+            "</div>");
     }
 
     @Test
     public void testFieldErrors() {
-        Edit action = new Edit();
-        HttpServletRequest request = makeRequest();
-        ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
-        MessageStore ms = makeMessageStore("user.password", "Password is required", "Password must be cool");
-        Configuration configuration = makeConfiguration();
-        EnvironmentResolver env = makeEnvironmenResolver();
-        ContainerResolver containerResolver = makeContainerResolver("password");
-
-        Map<String, String> parameterAttributes = map("param", "param-value");
-        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.password", Locale.US, parameterAttributes, "Your password");
-
-        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
-        Password password = new Password();
-        password.setServices(Locale.US, request, ais, ms, fms);
-        password.setMessageProvider(mp);
-        StringWriter writer = new StringWriter();
-        password.render(writer, mapNV("name", "user.password", "class", "css-class", "value", "Barry"), parameterAttributes);
-        assertEquals(
+        AbstractInput input = new Password();
+        run(input, new Edit(), "password", "org.example.action.user.Edit", "user.password", "Password",
+            mapNV("name", "user.password", "class", "css-class", "value", "password"),
             "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"user_password\" class=\"label\"><span class=\"error\">Your password (Password is required, Password must be cool)</span></label></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_password\" class=\"label\"><span class=\"error\">Password (Password is required, Password must be cool)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
-            "</div>", writer.toString());
-
-        EasyMock.verify(request, ais, ms, configuration, env, containerResolver, mp);
+            "</div>", "Password is required", "Password must be cool");
     }
 }
