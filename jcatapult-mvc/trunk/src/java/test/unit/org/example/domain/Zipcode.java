@@ -13,25 +13,25 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.example.action.user;
+package org.example.domain;
 
-import org.example.domain.User;
-import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.validation.annotation.Valid;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.jcatapult.mvc.validation.annotation.ValidatorAnnotation;
 
 /**
  * <p>
- * This class is a simple edit action for testing.
+ * This is a test annotation.
  * </p>
  *
  * @author Brian Pontarelli
  */
-@Action
-public class Edit {
-    @Valid
-    public User user;
-
-    public String execute() {
-        return "success";
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+@ValidatorAnnotation(StateValidator.class)
+public @interface Zipcode {
+    String key() default "";
 }

@@ -15,10 +15,13 @@
  */
 package org.example.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
+
+import org.jcatapult.mvc.validation.annotation.Required;
+import org.jcatapult.mvc.validation.annotation.ValidMap;
 
 /**
  * <p>
@@ -28,11 +31,15 @@ import java.util.ArrayList;
  * @author  Brian Pontarelli
  */
 public class User {
+    @Required
     private String name;
+    @Required
     private Integer age;
     private boolean male;
+    @ValidMap(keys = {"home", "work"})
     private Map<String, Address> addresses = new HashMap<String, Address>();
     private List<User> siblings = new ArrayList<User>();
+    @Required
     private String[] securityQuestions;
 
     public String getName() {

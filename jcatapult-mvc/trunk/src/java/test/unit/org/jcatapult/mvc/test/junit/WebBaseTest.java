@@ -15,15 +15,18 @@
  */
 package org.jcatapult.mvc.test.junit;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.easymock.EasyMock;
 import org.jcatapult.guice.GuiceContainer;
+import org.jcatapult.mvc.test.MockHttpServletRequest;
+import org.jcatapult.mvc.test.MockHttpServletResponse;
+import org.jcatapult.mvc.test.MockHttpSession;
 import org.jcatapult.servlet.ServletObjectsHolder;
-import org.jcatapult.mvc.locale.DefaultLocaleStore;
 import org.junit.Before;
 import org.junit.Ignore;
 
@@ -59,24 +62,20 @@ public class WebBaseTest {
      * @return  Makes a HttpServletRequest as a nice mock. Sub-classes can override this
      */
     protected HttpServletRequest makeRequest() {
-        HttpServletRequest request = EasyMock.createNiceMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession(false)).andReturn(null);
-        EasyMock.expect(request.getAttribute(DefaultLocaleStore.LOCALE_KEY)).andReturn(Locale.US);
-        EasyMock.replay(request);
-        return request;
+        return new MockHttpServletRequest(new HashMap<String, List<String>>(), "/test", "UTF-8", Locale.US);
     }
 
     /**
      * @return  Makes a HttpServletResponse as a nice mock. Sub-classes can override this
      */
     protected HttpServletResponse makeResponse() {
-        return EasyMock.createNiceMock(HttpServletResponse.class);
+        return new MockHttpServletResponse();
     }
 
     /**
      * @return  Makes a ServletContext as a nice mock. Sub-classes can override this
      */
     protected ServletContext makeContext() {
-        return EasyMock.createNiceMock(ServletContext.class);
+        return MockHttpSession.context;
     }
 }

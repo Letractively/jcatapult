@@ -15,12 +15,7 @@
  */
 package org.jcatapult.mvc.parameter.el;
 
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Map;
 import java.util.List;
 
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
@@ -42,7 +37,7 @@ public class CollectionAccessor extends Accessor {
             MemberAccessor memberAccessor) {
         super(converterProvider, accessor);
         this.index = index;
-        super.type = componentType(super.type);
+        super.type = ParameterTools.componentType(super.type, memberAccessor.toString());
         this.memberAccessor = memberAccessor;
     }
 
@@ -51,33 +46,6 @@ public class CollectionAccessor extends Accessor {
      */
     public MemberAccessor getMemberAccessor() {
         return memberAccessor;
-    }
-
-    protected Type componentType(Type type) {
-        if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) type;
-            Class<?> rawType = (Class<?>) parameterizedType.getRawType();
-            if (Map.class.isAssignableFrom(rawType)) {
-                return parameterizedType.getActualTypeArguments()[1];
-            } else if (Collection.class.isAssignableFrom(rawType)) {
-                return parameterizedType.getActualTypeArguments()[0];
-            } else {
-                throw new ExpressionException("Unknown collection type [" + type + "]");
-            }
-        } else if (type instanceof GenericArrayType) {
-            return ((GenericArrayType) type).getGenericComponentType();
-        }
-
-        Class<?> rawType = (Class<?>) type;
-        if (Map.class == type || Collection.class == type) {
-            throw new ExpressionException("The method or member [" + toString() + "] returns a simple " +
-                "Map or Collection. Unable to determine the type to create for Map or Collection. " +
-                "Please make this method generic so that the correct type can be determined.");
-        } else if (rawType.isArray()) {
-            return rawType.getComponentType();
-        }
-
-        return rawType;
     }
 
     /**

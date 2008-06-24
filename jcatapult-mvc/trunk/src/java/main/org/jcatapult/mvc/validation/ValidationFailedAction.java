@@ -13,25 +13,21 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.example.action.user;
+package org.jcatapult.mvc.validation;
 
-import org.example.domain.User;
 import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.validation.annotation.Valid;
 
 /**
  * <p>
- * This class is a simple edit action for testing.
+ * This class is a dummy action that always returns the <code>input</code>
+ * result code.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 @Action
-public class Edit {
-    @Valid
-    public User user;
-
+public class ValidationFailedAction extends Object {
     public String execute() {
-        return "success";
+        return "input";
     }
 }

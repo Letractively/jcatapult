@@ -176,4 +176,10 @@ public interface MessageStore {
      * @param   type The type of messages to clear (error or plain messages).
      */
     void clearFieldMessages(MessageType type);
+
+    /**
+     * @param   type The message type.
+     * @return  True if the message store contains messages of the given type, false otherwise.
+     */
+    boolean contains(MessageType type);
 }
