@@ -15,28 +15,14 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.example.action.user.Edit;
-import org.jcatapult.container.ContainerResolver;
-import org.jcatapult.environment.EnvironmentResolver;
-import org.jcatapult.freemarker.DefaultFreeMarkerService;
-import org.jcatapult.freemarker.FreeMarkerService;
-import org.jcatapult.freemarker.OverridingTemplateLoader;
-import org.jcatapult.mvc.action.ActionInvocationStore;
-import org.jcatapult.mvc.message.MessageProvider;
-import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -51,6 +37,10 @@ import static net.java.util.CollectionTools.*;
  */
 @Ignore
 public abstract class AbstractCheckedInputTest extends AbstractInputTest {
+    protected AbstractCheckedInputTest() {
+        super(true);
+    }
+
     /**
      * Makes a control for testing.
      *
@@ -71,33 +61,19 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
 
     @Test
     public void testActionLess() {
-        HttpServletRequest request = makeRequest();
-        ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
-        MessageStore ms = makeMessageStore("test");
-        Configuration configuration = makeConfiguration();
-        EnvironmentResolver env = makeEnvironmenResolver();
-        ContainerResolver containerResolver = makeContainerResolver(getType());
-
-        Map<String, String> parameterAttributes = map("param", "param-value");
-        MessageProvider mp = makeMessageProvider("foo.bar", "test", Locale.US, parameterAttributes, "Test");
-
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.replay(ee);
 
-        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
         AbstractCheckedInput input = getControl(ee);
-        input.setServices(Locale.US, request, ais, ms, fms);
-        input.setMessageProvider(mp);
-        StringWriter writer = new StringWriter();
-        input.render(writer, mapNV("name", "test", "value", "test-value", "class", "css-class", "bundle", "foo.bar"), parameterAttributes);
-        assertEquals(
+        run(input, null, getType(), "foo.bar", "test", "Test",
+            mapNV("name", "test", "value", "test-value", "class", "css-class", "bundle", "foo.bar"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" name=\"test\" value=\"test-value\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_test\" value=\"\"/></div>\n" +
-            "</div>", writer.toString());
+            "</div>");
 
-        EasyMock.verify(request, ais, ms, configuration, env, containerResolver, ee, mp);
+        EasyMock.verify(ee);
     }
 
     @Test
@@ -135,131 +111,75 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
 
     protected void testAction(boolean flag, Object beanValue, String value) {
         Edit action = new Edit();
-        HttpServletRequest request = makeRequest();
-        ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
-        MessageStore ms = makeMessageStore("user.male");
-        Configuration configuration = makeConfiguration();
-        EnvironmentResolver env = makeEnvironmenResolver();
-        ContainerResolver containerResolver = makeContainerResolver(getType());
-
-        Map<String, String> parameterAttributes = map("param", "param-value");
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.expect(ee.getValue("user.male", action)).andReturn(beanValue);
         EasyMock.replay(ee);
 
-        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.male", Locale.US, parameterAttributes, "Male?");
-
-        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
         AbstractCheckedInput input = getControl(ee);
-        input.setServices(Locale.US, request, ais, ms, fms);
-        input.setMessageProvider(mp);
-        StringWriter writer = new StringWriter();
-        input.render(writer, mapNV("name", "user.male", "value", value, "class", "css-class"), parameterAttributes);
-        assertEquals(
+        run(input, action, getType(), "org.example.action.user.Edit", "user.male", "Male?",
+            mapNV("name", "test", "value", value, "class", "css-class"),
             "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" " + (flag ? "checked=\"checked\" " : "") + "class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"" + value + "\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_user.male\" value=\"\"/></div>\n" +
-            "</div>", writer.toString());
+            "</div>");
 
-        EasyMock.verify(request, ais, ms, configuration, env, containerResolver, ee, mp);
+        EasyMock.verify(ee);
     }
 
     @Test
     public void testDefaultChecked() {
         Edit action = new Edit();
-        HttpServletRequest request = makeRequest();
-        ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
-        MessageStore ms = makeMessageStore("user.male");
-        Configuration configuration = makeConfiguration();
-        EnvironmentResolver env = makeEnvironmenResolver();
-        ContainerResolver containerResolver = makeContainerResolver(getType());
-
-        Map<String, String> parameterAttributes = map("param", "param-value");
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.expect(ee.getValue("user.male", action)).andReturn(null);
         EasyMock.replay(ee);
 
-        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.male", Locale.US, parameterAttributes, "Male?");
-
-        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
         AbstractCheckedInput input = getControl(ee);
-        input.setServices(Locale.US, request, ais, ms, fms);
-        input.setMessageProvider(mp);
-        StringWriter writer = new StringWriter();
-        input.render(writer, mapNV("name", "user.male", "value", "true", "class", "css-class", "defaultChecked", true), parameterAttributes);
-        assertEquals(
+        run(input, action, getType(), "org.example.action.user.Edit", "user.male", "Male?",
+            mapNV("name", "test", "defaultChecked", true, "class", "css-class", "value", true),
             "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" checked=\"checked\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_user.male\" value=\"\"/></div>\n" +
-            "</div>", writer.toString());
+            "</div>");
 
-        EasyMock.verify(request, ais, ms, configuration, env, containerResolver, ee, mp);
+        EasyMock.verify(ee);
     }
 
     @Test
     public void testHardCodedChecked() {
         Edit action = new Edit();
-        HttpServletRequest request = makeRequest();
-        ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
-        MessageStore ms = makeMessageStore("user.male");
-        Configuration configuration = makeConfiguration();
-        EnvironmentResolver env = makeEnvironmenResolver();
-        ContainerResolver containerResolver = makeContainerResolver(getType());
-
-        Map<String, String> parameterAttributes = map("param", "param-value");
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.replay(ee);
 
-        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.male", Locale.US, parameterAttributes, "Male?");
-
-        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
         AbstractCheckedInput input = getControl(ee);
-        input.setServices(Locale.US, request, ais, ms, fms);
-        input.setMessageProvider(mp);
-        StringWriter writer = new StringWriter();
-        input.render(writer, mapNV("name", "user.male", "checked", true, "class", "css-class", "value", "true"), parameterAttributes);
-        assertEquals(
+        run(input, action, getType(), "org.example.action.user.Edit", "user.male", "Male?",
+            mapNV("name", "test", "checked", true, "class", "css-class", "value", "true"),
             "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" checked=\"checked\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_user.male\" value=\"\"/></div>\n" +
-            "</div>", writer.toString());
+            "</div>");
 
-        EasyMock.verify(request, ais, ms, configuration, env, containerResolver, ee, mp);
+        EasyMock.verify(ee);
     }
 
     @Test
     public void testFieldErrors() {
         Edit action = new Edit();
-        HttpServletRequest request = makeRequest();
-        ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
-        MessageStore ms = makeMessageStore("user.male", "Must be male", "Check this box dude!");
-        Configuration configuration = makeConfiguration();
-        EnvironmentResolver env = makeEnvironmenResolver();
-        ContainerResolver containerResolver = makeContainerResolver(getType());
-
-        Map<String, String> parameterAttributes = map("param", "param-value");
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.expect(ee.getValue("user.male", action)).andReturn(null);
         EasyMock.replay(ee);
 
-        MessageProvider mp = makeMessageProvider(action.getClass().getName(), "user.male", Locale.US, parameterAttributes, "Male?");
-
-        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
         AbstractCheckedInput input = getControl(ee);
-        input.setServices(Locale.US, request, ais, ms, fms);
-        input.setMessageProvider(mp);
-        StringWriter writer = new StringWriter();
-        input.render(writer, mapNV("name", "user.male", "class", "css-class", "value", "true"), parameterAttributes);
-        assertEquals(
+        run(input, action, getType(), "org.example.action.user.Edit", "user.male", "Male?",
+            mapNV("name", "test", "class", "css-class", "value", "true"),
             "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\"><span class=\"error\">Male? (Must be male, Check this box dude!)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_user.male\" value=\"\"/></div>\n" +
-            "</div>", writer.toString());
+            "</div>", "Must be male", "Check this box dude!");
 
-        EasyMock.verify(request, ais, ms, configuration, env, containerResolver, ee, mp);
+        EasyMock.verify(ee);
     }
 }

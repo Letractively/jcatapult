@@ -20,21 +20,20 @@ import java.util.Map;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
-import com.google.inject.Inject;
-
 /**
  * <p>
- * This class is the control for a input textarea.
+ * This class is an abstract class that is used for the text and hidden
+ * controls since they both grab the value from the action and setup the
+ * value attribute.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class Textarea extends AbstractInput {
+public abstract class AbstractValueInput extends AbstractInput {
     private final ExpressionEvaluator expressionEvaluator;
 
-    @Inject
-    public Textarea(ExpressionEvaluator expressionEvaluator) {
-        super(true);
+    protected AbstractValueInput(ExpressionEvaluator expressionEvaluator, boolean labeled) {
+        super(labeled);
         this.expressionEvaluator = expressionEvaluator;
     }
 
@@ -67,12 +66,5 @@ public class Textarea extends AbstractInput {
         }
 
         attributes.remove("defaultValue");
-    }
-
-    /**
-     * @return  text.ftl
-     */
-    protected String templateName() {
-        return "textarea.ftl";
     }
 }

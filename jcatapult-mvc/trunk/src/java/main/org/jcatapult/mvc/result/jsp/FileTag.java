@@ -15,20 +15,38 @@
  */
 package org.jcatapult.mvc.result.jsp;
 
-import org.jcatapult.mvc.result.control.Text;
+import org.jcatapult.mvc.result.control.File;
 
 /**
  * <p>
- * This is the JSP taglib class for the text tag.
+ * This class is the JSP taglib for the file control.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class TextTag extends AbstractValueTag<Text> {
+public class FileTag extends AbstractInputTag<File> {
     /**
-     * @return  The {@link Text} class.
+     * Retrieves the tags accept attribute
+     *
+     * @return	Returns the tags accept attribute
      */
-    protected Class<Text> controlClass() {
-        return Text.class;
+    public String getAccept() {
+        return (String) attributes.get("accept");
+    }
+
+    /**
+     * Populates the tags accept attribute
+     *
+     * @param	accept The value of the tags accept attribute
+     */
+    public void setAccept(String accept) {
+        attributes.put("accept", accept);
+    }
+
+    /**
+     * @return  The {@link File} class.
+     */
+    protected Class<File> controlClass() {
+        return File.class;
     }
 }

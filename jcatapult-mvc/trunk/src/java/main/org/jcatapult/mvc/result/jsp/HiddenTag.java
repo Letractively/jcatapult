@@ -15,20 +15,20 @@
  */
 package org.jcatapult.mvc.result.jsp;
 
-import org.jcatapult.mvc.result.control.Text;
+import org.jcatapult.mvc.result.control.Hidden;
 
 /**
  * <p>
- * This is the JSP taglib class for the text tag.
+ * This class is the JSP taglib for the hidden control.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class TextTag extends AbstractValueTag<Text> {
+public class HiddenTag extends AbstractValueTag<Hidden> {
     /**
-     * @return  The {@link Text} class.
+     * @return  The {@link Hidden} class.
      */
-    protected Class<Text> controlClass() {
-        return Text.class;
+    protected Class<Hidden> controlClass() {
+        return Hidden.class;
     }
 }
