@@ -119,4 +119,12 @@ public abstract class AbstractInput extends AbstractControl {
 
         return map;
     }
+
+    /**
+     * @return  Always null since the input tags don't have a start.
+     */
+    @Override
+    protected String startTemplateName() {
+        return null;
+    }
 }

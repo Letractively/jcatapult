@@ -35,7 +35,7 @@ public class Hidden extends AbstractValueInput {
     /**
      * @return  hidden.ftl
      */
-    protected String templateName() {
+    protected String endTemplateName() {
         return "hidden.ftl";
     }
 }

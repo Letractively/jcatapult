@@ -30,7 +30,7 @@ public class File extends AbstractInput {
     /**
      * @return  file.ftl
      */
-    protected String templateName() {
+    protected String endTemplateName() {
         return "file.ftl";
     }
 }

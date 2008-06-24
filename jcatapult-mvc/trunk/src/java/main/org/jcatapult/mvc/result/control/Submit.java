@@ -26,7 +26,7 @@ public class Submit extends AbstractButtonInput {
     /**
      * @return  submit.ftl
      */
-    protected String templateName() {
+    protected String endTemplateName() {
         return "submit.ftl";
     }
 }

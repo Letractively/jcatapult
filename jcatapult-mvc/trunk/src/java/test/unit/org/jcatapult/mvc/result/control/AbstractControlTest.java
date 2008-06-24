@@ -58,14 +58,17 @@ public class AbstractControlTest {
         MessageStore ms = EasyMock.createStrictMock(MessageStore.class);
         EasyMock.expect(ms.getActionMessages(MessageType.PLAIN)).andReturn(new ArrayList<String>());
         EasyMock.expect(ms.getActionMessages(MessageType.ERROR)).andReturn(new ArrayList<String>());
-        EasyMock.expect(ms.getFieldMessages(MessageType.PLAIN)).andReturn(new HashMap<String, List<String>>());
+        if (field != null) {
+            EasyMock.expect(ms.getFieldMessages(MessageType.PLAIN)).andReturn(new HashMap<String, List<String>>());
 
-        Map<String, List<String>> fieldErrors = new HashMap<String, List<String>>();
-        if (errors.length > 0) {
-            fieldErrors.put(field, asList(errors));
+            Map<String, List<String>> fieldErrors = new HashMap<String, List<String>>();
+            if (errors.length > 0) {
+                fieldErrors.put(field, asList(errors));
+            }
+
+            EasyMock.expect(ms.getFieldMessages(MessageType.ERROR)).andReturn(fieldErrors);
         }
-
-        EasyMock.expect(ms.getFieldMessages(MessageType.ERROR)).andReturn(fieldErrors);
+        
         EasyMock.replay(ms);
         return ms;
     }

@@ -35,7 +35,7 @@ public class Text extends AbstractValueInput {
     /**
      * @return  text.ftl
      */
-    protected String templateName() {
+    protected String endTemplateName() {
         return "text.ftl";
     }
 }

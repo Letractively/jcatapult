@@ -72,7 +72,7 @@ public class Textarea extends AbstractInput {
     /**
      * @return  text.ftl
      */
-    protected String templateName() {
+    protected String endTemplateName() {
         return "textarea.ftl";
     }
 }

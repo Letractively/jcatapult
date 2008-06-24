@@ -31,7 +31,8 @@ import freemarker.template.TemplateDirectiveModel;
  */
 public interface Control extends TemplateDirectiveModel {
     /**
-     * Renders the control.
+     * Renders the start of the control. If the control doesn't have a start and an end, this method
+     * should be empty.
      *
      * @param   writer The writer to write the output to.
      * @param   attributes The attributes that are passed from the JSP tag or the FreeMarker
@@ -41,5 +42,13 @@ public interface Control extends TemplateDirectiveModel {
      *          class. In most cases these are used for type conversion, such as date formats and
      *          currency codes.
      */
-    void render(Writer writer, Map<String, Object> attributes, Map<String, String> parameterAttributes);
+    void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> parameterAttributes);
+
+    /**
+     * Renders the end of the control. If the control doesn't have a start and an end, this method
+     * should be perform the main rendering.
+     *
+     * @param   writer The writer to write the output to.
+     */
+    void renderEnd(Writer writer);
 }

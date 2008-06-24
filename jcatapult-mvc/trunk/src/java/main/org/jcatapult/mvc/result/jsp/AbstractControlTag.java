@@ -17,7 +17,6 @@ package org.jcatapult.mvc.result.jsp;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.DynamicAttributes;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -38,6 +37,7 @@ import org.jcatapult.mvc.result.control.Control;
 public abstract class AbstractControlTag<T extends Control> extends TagSupport implements DynamicAttributes {
     Map<String, Object> attributes = new HashMap<String, Object>();
     Map<String, String> parameterAttributes = new HashMap<String, String>();
+    private T control;
 
     //-------------------------------------------------------------------------
     //----------------------- Core attributes for HTML tags -------------------
@@ -324,83 +324,6 @@ public abstract class AbstractControlTag<T extends Control> extends TagSupport i
         attributes.put("onkeyup", onkeyup);
     }
 
-
-    //-------------------------------------------------------------------------
-    //----------------------- Misc attributes for HTML tags -------------------
-    //-------------------------------------------------------------------------
-
-    /**
-     * Retrieves the tags alt attribute
-     *
-     * @return	Returns the tags alt attribute
-     */
-    public String getAlt() {
-        return (String) attributes.get("alt");
-    }
-
-    /**
-     * Populates the tags alt attribute
-     *
-     * @param	alt The value of the tags alt attribute
-     */
-    public void setAlt(String alt) {
-        attributes.put("alt", alt);
-    }
-
-    /**
-     * Retrieves the tags tabindex attribute
-     *
-     * @return	Returns the tags tabindex attribute
-     */
-    public String getTabindex() {
-        return (String) attributes.get("tabindex");
-    }
-
-    /**
-     * Populates the tags tabindex attribute
-     *
-     * @param	tabindex The value of the tags tabindex attribute
-     */
-    public void setTabindex(String tabindex) {
-        attributes.put("tabindex", tabindex);
-    }
-
-    /**
-     * Retrieves the tags accesskey attribute
-     *
-     * @return	Returns the tags accesskey attribute
-     */
-    public String getAccesskey() {
-        return (String) attributes.get("accesskey");
-    }
-
-    /**
-     * Populates the tags accesskey attribute
-     *
-     * @param	accesskey The value of the tags accesskey attribute
-     */
-    public void setAccesskey(String accesskey) {
-        attributes.put("accesskey", accesskey);
-    }
-
-    /**
-     * Retrieves the tags accept attribute
-     *
-     * @return	Returns the tags accept attribute
-     */
-    public String getAccept() {
-        return (String) attributes.get("accept");
-    }
-
-    /**
-     * Populates the tags accept attribute
-     *
-     * @param	accept The value of the tags accept attribute
-     */
-    public void setAccept(String accept) {
-        attributes.put("accept", accept);
-    }
-
     /**
      * @return  The Control class that the tag renders. Sub-classes must implement this method in
      *          order to render a Control.
@@ -423,12 +346,16 @@ public abstract class AbstractControlTag<T extends Control> extends TagSupport i
     }
 
     @Override
-    public int doEndTag() throws JspException {
-        Control control = GuiceContainer.getInjector().getInstance(controlClass());
-        control.render(pageContext.getOut(), attributes, parameterAttributes);
-
+    public int doStartTag() {
         attributes.clear();
+        control = GuiceContainer.getInjector().getInstance(controlClass());
+        control.renderStart(pageContext.getOut(), attributes, parameterAttributes);
+        return Tag.EVAL_PAGE;
+    }
 
+    @Override
+    public int doEndTag() {
+        control.renderEnd(pageContext.getOut());
         return Tag.EVAL_PAGE;
     }
 }

@@ -97,7 +97,8 @@ public class AbstractInputTest extends AbstractControlTest {
         input.setServices(Locale.US, request, ais, ms, fms);
         input.setMessageProvider(mp);
         StringWriter writer = new StringWriter();
-        input.render(writer, attributes, parameterAttributes);
+        input.renderStart(writer, attributes, parameterAttributes);
+        input.renderEnd(writer);
         assertEquals(result, writer.toString());
 
         EasyMock.verify(request, ais, ms, configuration, env, containerResolver, mp);

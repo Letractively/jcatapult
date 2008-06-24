@@ -21,33 +21,37 @@ import org.jcatapult.mvc.action.ActionInvocation;
 
 /**
  * <p>
- * This class is the control for a input type=password.
+ * This is the form control that is used for rendering the open and
+ * close form tags.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class Password extends AbstractInput {
-    public Password() {
-        super(true);
-    }
-
+public class Form extends AbstractControl {
     /**
-     * Removes the value attribute for security.
+     * Does nothing.
      *
-     * @param   attributes The attributes.
+     * @param   attributes The attributes of the tag.
      * @param   parameterAttributes The parameter attributes.
      * @param   actionInvocation The action invocation.
      */
+    @Override
     protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> parameterAttributes,
             ActionInvocation actionInvocation) {
-        super.addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
-        attributes.remove("value");
+        // Does nothing.
     }
 
     /**
-     * @return  password.ftl
+     * @return  form-start.ftl
+     */
+    protected String startTemplateName() {
+        return "form-start.ftl";
+    }
+
+    /**
+     * @return  form-end.ftl
      */
     protected String endTemplateName() {
-        return "password.ftl";
+        return "form-end.ftl";
     }
 }

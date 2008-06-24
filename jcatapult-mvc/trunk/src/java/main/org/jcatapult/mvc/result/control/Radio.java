@@ -35,7 +35,7 @@ public class Radio extends AbstractCheckedInput {
     /**
      * @return  radio.ftl
      */
-    protected String templateName() {
+    protected String endTemplateName() {
         return "radio.ftl";
     }
 }
