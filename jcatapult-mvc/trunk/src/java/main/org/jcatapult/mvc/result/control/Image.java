@@ -48,7 +48,7 @@ public class Image extends AbstractButtonInput {
     /**
      * @return  image.ftl
      */
-    protected String templateName() {
+    protected String endTemplateName() {
         return "image.ftl";
     }
 }

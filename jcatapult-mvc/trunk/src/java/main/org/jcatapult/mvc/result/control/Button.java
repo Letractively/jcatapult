@@ -26,7 +26,7 @@ public class Button extends AbstractButtonInput {
     /**
      * @return  button.ftl
      */
-    protected String templateName() {
+    protected String endTemplateName() {
         return "button.ftl";
     }
 }

@@ -26,7 +26,7 @@ public class Reset extends AbstractButtonInput {
     /**
      * @return  reset.ftl
      */
-    protected String templateName() {
+    protected String endTemplateName() {
         return "reset.ftl";
     }
 }

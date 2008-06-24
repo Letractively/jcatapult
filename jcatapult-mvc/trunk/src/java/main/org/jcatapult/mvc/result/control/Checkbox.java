@@ -35,7 +35,7 @@ public class Checkbox extends AbstractCheckedInput {
     /**
      * @return  checkbox.ftl
      */
-    protected String templateName() {
+    protected String endTemplateName() {
         return "checkbox.ftl";
     }
 }

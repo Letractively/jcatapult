@@ -26,6 +26,83 @@ import org.jcatapult.mvc.result.control.Control;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractInputTag<T extends Control> extends AbstractControlTag<T> {
+
+    //-------------------------------------------------------------------------
+    //----------------------- Misc attributes for HTML tags -------------------
+    //-------------------------------------------------------------------------
+
+    /**
+     * Retrieves the tags alt attribute
+     *
+     * @return	Returns the tags alt attribute
+     */
+    public String getAlt() {
+        return (String) attributes.get("alt");
+    }
+
+    /**
+     * Populates the tags alt attribute
+     *
+     * @param	alt The value of the tags alt attribute
+     */
+    public void setAlt(String alt) {
+        attributes.put("alt", alt);
+    }
+
+    /**
+     * Retrieves the tags tabindex attribute
+     *
+     * @return	Returns the tags tabindex attribute
+     */
+    public String getTabindex() {
+        return (String) attributes.get("tabindex");
+    }
+
+    /**
+     * Populates the tags tabindex attribute
+     *
+     * @param	tabindex The value of the tags tabindex attribute
+     */
+    public void setTabindex(String tabindex) {
+        attributes.put("tabindex", tabindex);
+    }
+
+    /**
+     * Retrieves the tags accesskey attribute
+     *
+     * @return	Returns the tags accesskey attribute
+     */
+    public String getAccesskey() {
+        return (String) attributes.get("accesskey");
+    }
+
+    /**
+     * Populates the tags accesskey attribute
+     *
+     * @param	accesskey The value of the tags accesskey attribute
+     */
+    public void setAccesskey(String accesskey) {
+        attributes.put("accesskey", accesskey);
+    }
+
+    /**
+     * Retrieves the tags accept attribute
+     *
+     * @return	Returns the tags accept attribute
+     */
+    public String getAccept() {
+        return (String) attributes.get("accept");
+    }
+
+    /**
+     * Populates the tags accept attribute
+     *
+     * @param	accept The value of the tags accept attribute
+     */
+    public void setAccept(String accept) {
+        attributes.put("accept", accept);
+    }
+
     /**
      * Retrieves the tags disabled attribute
      *

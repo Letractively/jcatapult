@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.result.control;
 
 import java.io.Writer;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -27,12 +28,12 @@ import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
-import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
+import freemarker.template.TemplateException;
 
 /**
  * <p>
@@ -45,10 +46,12 @@ import freemarker.template.TemplateModel;
  */
 public abstract class AbstractControl implements Control {
     protected Locale locale;
-    protected ActionInvocationStore actionInvocationStore;
     protected MessageStore messageStore;
     protected FreeMarkerService freeMarkerService;
     protected HttpServletRequest request;
+    private ActionInvocation actionInvocation;
+    private Object action;
+    private Map<String, Object> parameters;
 
     @Inject
     public void setServices(@CurrentLocale Locale locale, HttpServletRequest request,
@@ -56,32 +59,49 @@ public abstract class AbstractControl implements Control {
             FreeMarkerService freeMarkerService) {
         this.locale = locale;
         this.request = request;
-        this.actionInvocationStore = actionInvocationStore;
         this.messageStore = messageStore;
         this.freeMarkerService = freeMarkerService;
+        this.actionInvocation = actionInvocationStore.get();
+        this.action = this.actionInvocation.action();
     }
 
     /**
      * <p>
-     * Implements the controls render method that is called directly by the JSP taglibs. This method
-     * is the main render point for the control and it uses the {@link FreeMarkerService} to render
-     * the control. Sub-classes need to implement a number of methods in order to setup the Map that
-     * is passed to FreeMarker as well as determine the name of the template.
+     * Implements the controls renderStart method that is called directly by the JSP taglibs. This
+     * method is the main render point for the control and it uses the {@link FreeMarkerService} to
+     * render the control. Sub-classes need to implement a number of methods in order to setup the
+     * Map that is passed to FreeMarker as well as determine the name of the template.
      * </p>
      *
      * @param   writer The writer to output to.
      * @param   attributes The attributes.
      * @param   parameterAttributes The parameter attributes.
      */
-    public void render(Writer writer, Map<String, Object> attributes, Map<String, String> parameterAttributes) {
-        ActionInvocation actionInvocation = actionInvocationStore.get();
-        Object action = actionInvocation.action();
-
+    public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> parameterAttributes) {
         addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
-        Map<String, Object> parameters = makeParameters(attributes, parameterAttributes, actionInvocation, action);
+        parameters = makeParameters(attributes, parameterAttributes, actionInvocation, action);
 
-        String templateName = "/WEB-INF/control-templates/" + templateName();
-        freeMarkerService.render(writer, templateName, parameters, locale);
+        if (startTemplateName() != null) {
+            String templateName = "/WEB-INF/control-templates/" + startTemplateName();
+            freeMarkerService.render(writer, templateName, parameters, locale);
+        }
+    }
+
+    /**
+     * <p>
+     * Implements the controls renderEnd method that is called directly by the JSP taglibs. This
+     * method is the main render point for the control and it uses the {@link FreeMarkerService} to
+     * render the control. Sub-classes need to implement a number of methods in order to setup the
+     * Map that is passed to FreeMarker as well as determine the name of the template.
+     * </p>
+     *
+     * @param   writer The writer to output to.
+     */
+    public void renderEnd(Writer writer) {
+        if (endTemplateName() != null) {
+            String templateName = "/WEB-INF/control-templates/" + endTemplateName();
+            freeMarkerService.render(writer, templateName, parameters, locale);
+        }
     }
 
     /**
@@ -127,9 +147,7 @@ public abstract class AbstractControl implements Control {
     }
 
     /**
-     * Chains to the {@link #render(Writer, Map, Map)} method. The request is
-     * pulled from the {@link ServletObjectsHolder} and the Writer is pulled from the FreeMarker
-     * Environment.
+     * Chains to the {@link #renderStart(Writer, Map, Map)} method and the {@link Control#renderEnd(java.io.Writer)}
      *
      * @param   env The FreeMarker environment.
      * @param   params The parameters passed to this control in the FTL file.
@@ -137,7 +155,8 @@ public abstract class AbstractControl implements Control {
      * @param   body The body of the directive.
      */
     @SuppressWarnings("unchecked")
-    public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) {
+    public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
+    throws IOException, TemplateException {
         Map<String, String> parameterAttributes = new HashMap<String, String>();
         for (Object o : params.keySet()) {
             String key = (String) o;
@@ -146,7 +165,9 @@ public abstract class AbstractControl implements Control {
             }
         }
 
-        render(env.getOut(), params, parameterAttributes);
+        renderStart(env.getOut(), params, parameterAttributes);
+        body.render(env.getOut());
+        renderEnd(env.getOut());
     }
 
     /**
@@ -161,7 +182,12 @@ public abstract class AbstractControl implements Control {
             Map<String, String> parameterAttributes, ActionInvocation actionInvocation);
 
     /**
-     * @return  The name of the FreeMarker template that this control renders.
+     * @return  The name of the FreeMarker template that this control renders when it starts.
      */
-    protected abstract String templateName();
+    protected abstract String startTemplateName();
+
+    /**
+     * @return  The name of the FreeMarker template that this control renders when it ends.
+     */
+    protected abstract String endTemplateName();
 }
