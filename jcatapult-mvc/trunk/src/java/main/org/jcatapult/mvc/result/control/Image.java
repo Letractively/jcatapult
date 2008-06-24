@@ -21,33 +21,34 @@ import org.jcatapult.mvc.action.ActionInvocation;
 
 /**
  * <p>
- * This class is the control for a input type=password.
+ * This class is the control for an image button.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class Password extends AbstractInput {
-    public Password() {
-        super(true);
-    }
-
+public class Image extends AbstractButtonInput {
     /**
-     * Removes the value attribute for security.
+     * Calls super and then moves the ismap attribute out and if it is true set it back in as the
+     * String <code>ismap</code>.
      *
-     * @param   attributes The attributes.
-     * @param   parameterAttributes The parameter attributes.
-     * @param   actionInvocation The action invocation.
+     * @param   attributes The attributes to check for the ismap attribute.
+     * @param   parameterAttributes Not used.
+     * @param   actionInvocation Not used.
      */
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> parameterAttributes,
-            ActionInvocation actionInvocation) {
+    @Override
+    protected void addAdditionalAttributes(Map<String, Object> attributes,
+            Map<String, String> parameterAttributes, ActionInvocation actionInvocation) {
         super.addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
-        attributes.remove("value");
+        Boolean ismap = (Boolean) attributes.remove("ismap");
+        if (ismap != null && ismap) {
+            attributes.put("ismap", "ismap");
+        }
     }
 
     /**
-     * @return  password.ftl
+     * @return  image.ftl
      */
     protected String templateName() {
-        return "password.ftl";
+        return "image.ftl";
     }
 }

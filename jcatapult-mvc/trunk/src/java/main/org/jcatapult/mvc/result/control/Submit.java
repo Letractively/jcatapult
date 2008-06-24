@@ -13,22 +13,20 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp;
-
-import org.jcatapult.mvc.result.control.Text;
+package org.jcatapult.mvc.result.control;
 
 /**
  * <p>
- * This is the JSP taglib class for the text tag.
+ * This class is the control for a submit button.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class TextTag extends AbstractValueTag<Text> {
+public class Submit extends AbstractButtonInput {
     /**
-     * @return  The {@link Text} class.
+     * @return  submit.ftl
      */
-    protected Class<Text> controlClass() {
-        return Text.class;
+    protected String templateName() {
+        return "submit.ftl";
     }
 }

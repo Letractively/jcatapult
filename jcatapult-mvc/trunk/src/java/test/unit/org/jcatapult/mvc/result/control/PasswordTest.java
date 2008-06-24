@@ -44,32 +44,20 @@ import static net.java.util.CollectionTools.*;
  * @author  Brian Pontarelli
  */
 public class PasswordTest extends AbstractInputTest {
+    public PasswordTest() {
+        super(true);
+    }
+
     @Test
     public void testActionLess() {
-        HttpServletRequest request = makeRequest();
-        ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
-        MessageStore ms = makeMessageStore("test");
-        Configuration configuration = makeConfiguration();
-        EnvironmentResolver env = makeEnvironmenResolver();
-        ContainerResolver containerResolver = makeContainerResolver("password");
-
-        Map<String, String> parameterAttributes = map("param", "param-value");
-        MessageProvider mp = makeMessageProvider("foo.bar", "test", Locale.US, parameterAttributes, "Test");
-
-        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
-        Password password = new Password();
-        password.setServices(Locale.US, request, ais, ms, fms);
-        password.setMessageProvider(mp);
-        StringWriter writer = new StringWriter();
-        password.render(writer, mapNV("name", "test", "class", "css-class", "bundle", "foo.bar"), parameterAttributes);
-        assertEquals(
+        AbstractInput input = new Password();
+        run(input, null, "text", "foo.bar", "test", "Test",
+            mapNV("name", "test", "class", "css-class", "value", "password", "bundle", "foo.bar"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
-            "</div>", writer.toString());
-
-        EasyMock.verify(request, ais, ms, configuration, env, containerResolver, mp);
+            "</div>");
     }
 
     @Test

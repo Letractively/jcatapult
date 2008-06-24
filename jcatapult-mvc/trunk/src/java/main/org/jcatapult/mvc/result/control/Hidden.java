@@ -13,22 +13,29 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp;
+package org.jcatapult.mvc.result.control;
 
-import org.jcatapult.mvc.result.control.Text;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
- * This is the JSP taglib class for the text tag.
+ * This class is the control for a input type=hidden.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class TextTag extends AbstractValueTag<Text> {
+public class Hidden extends AbstractValueInput {
+    @Inject
+    public Hidden(ExpressionEvaluator expressionEvaluator) {
+        super(expressionEvaluator, false);
+    }
+
     /**
-     * @return  The {@link Text} class.
+     * @return  hidden.ftl
      */
-    protected Class<Text> controlClass() {
-        return Text.class;
+    protected String templateName() {
+        return "hidden.ftl";
     }
 }

@@ -36,6 +36,7 @@ public abstract class AbstractCheckedInput extends AbstractInput {
 
     @Inject
     public AbstractCheckedInput(ExpressionEvaluator expressionEvaluator) {
+        super(true);
         this.expressionEvaluator = expressionEvaluator;
     }
 

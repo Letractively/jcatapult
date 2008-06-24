@@ -15,9 +15,6 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.util.Map;
-
-import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
@@ -29,43 +26,10 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class Text extends AbstractInput {
-    private final ExpressionEvaluator expressionEvaluator;
-
+public class Text extends AbstractValueInput {
     @Inject
     public Text(ExpressionEvaluator expressionEvaluator) {
-        this.expressionEvaluator = expressionEvaluator;
-    }
-
-    /**
-     * Adds a String attribute named <strong>value</strong> by pulling the value associated with the
-     * control. However, if there is already a value attribute, it is always used. Likewise, if the
-     * value attribute is missing, the value associated with the control is null and there is a
-     * <strong>defaultValue</strong> attribute, it is used.
-     *
-     * @param   attributes The value String is put into this Map.
-     * @param   actionInvocation Used to grab the action.
-     */
-    protected void addAdditionalAttributes(Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation) {
-        // Call super to handle the ID
-        super.addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
-
-        String name = (String) attributes.get("name");
-        Object action = actionInvocation.action();
-        String value;
-        if (!attributes.containsKey("value") && action != null) {
-            value = expressionEvaluator.getValue(name, action, parameterAttributes);
-            if (value == null) {
-                value = (String) attributes.get("defaultValue");
-            }
-
-            if (value != null) {
-                attributes.put("value", value);
-            }
-        }
-
-        attributes.remove("defaultValue");
+        super(expressionEvaluator, true);
     }
 
     /**

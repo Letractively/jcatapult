@@ -13,22 +13,23 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp;
+package org.jcatapult.mvc.result.control;
 
-import org.jcatapult.mvc.result.control.Text;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 /**
  * <p>
- * This is the JSP taglib class for the text tag.
+ * This tests the button control.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class TextTag extends AbstractValueTag<Text> {
-    /**
-     * @return  The {@link Text} class.
-     */
-    protected Class<Text> controlClass() {
-        return Text.class;
+public class ButtonTest extends AbstractButtonInputTest {
+    protected AbstractButtonInput getControl(ExpressionEvaluator ee) {
+        return new Button();
+    }
+
+    protected String getType() {
+        return "button";
     }
 }

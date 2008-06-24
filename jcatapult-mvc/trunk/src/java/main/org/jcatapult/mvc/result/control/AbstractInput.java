@@ -34,6 +34,11 @@ import com.google.inject.Inject;
  */
 public abstract class AbstractInput extends AbstractControl {
     protected MessageProvider messageProvider;
+    private final boolean labeled;
+
+    public AbstractInput(boolean labeled) {
+        this.labeled = labeled;
+    }
 
     /**
      * Sets the message provider, which is used to lookup the value from the inputs label.
@@ -87,32 +92,31 @@ public abstract class AbstractInput extends AbstractControl {
             Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Object action) {
         Map<String, Object> map = super.makeParameters(attributes, parameterAttributes, actionInvocation, action);
         String name = (String) attributes.get("name");
-        String bundleName;
-        if (attributes.containsKey("bundle")) {
-            bundleName = (String) attributes.remove("bundle");
-        } else if (action != null) {
-            bundleName = action.getClass().getName();
-        } else {
-            throw new IllegalStateException("Unable to locate the label message for the field named [" +
-                name + "]. If you don't have an action class for the URL, you define the bundle to " +
-                "use to localize the form. This bundle is specified either on the control tag or the " +
-                "form tag.");
+        if (labeled) {
+            String bundleName;
+            if (attributes.containsKey("bundle")) {
+                bundleName = (String) attributes.remove("bundle");
+            } else if (action != null) {
+                bundleName = action.getClass().getName();
+            } else {
+                throw new IllegalStateException("Unable to locate the label message for the field named [" +
+                    name + "]. If you don't have an action class for the URL, you define the bundle to " +
+                    "use to localize the form. This bundle is specified either on the control tag or the " +
+                    "form tag.");
+            }
+
+            String label = messageProvider.getMessage(bundleName, name, locale, parameterAttributes);
+            if (label != null) {
+                map.put("label", label);
+            } else {
+                throw new IllegalStateException("Missing localized label for the field named [" + name + "]");
+            }
+
+            // Add the field messages and errors as a list or null
+            map.put("field_messages", messageStore.getFieldMessages(MessageType.PLAIN).get(name));
+            map.put("field_errors", messageStore.getFieldMessages(MessageType.ERROR).get(name));
         }
 
-        String label = messageProvider.getMessage(bundleName, name, locale, parameterAttributes);
-        if (label != null) {
-            map.put("label", label);
-        } else {
-            throw new IllegalStateException("Missing localized label for the field named [" + name + "]");
-        }
-
-        // Add the field messages and errors as a list or null
-        map.put("field_messages", messageStore.getFieldMessages(MessageType.PLAIN).get(name));
-        map.put("field_errors", messageStore.getFieldMessages(MessageType.ERROR).get(name));
-
-        // Move the label position up
-        Object labelPosition = attributes.remove("labelPosition");
-        map.put("labelPosition", labelPosition);
         return map;
     }
 }
