@@ -107,8 +107,7 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
                 return;
             }
         } else {
-            Object action = invocation.action();
-            String resultCode = execute(action);
+            String resultCode = execute(invocation, request.getMethod());
 
             if (executeResult) {
                 resultInvocation = resultInvocationProvider.lookup(invocation, invocation.actionURI(), resultCode);
@@ -141,22 +140,78 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
     }
 
     /**
-     * Invokes the execute method on the action.
+     * Invokes the execute method on the action. This first checks if there is an extension and if
+     * there is it looks for a method with the same name. Next, it looks for a method that matches
+     * the current method (i.e. get or post) and finally falls back to execute.
      *
-     * @param   action The action.
+     * @param   actionInvocation The action invocation.
+     * @param   httpMethod The HTTP method used (get or post).
      * @return  The result code from the execute method and never null.
      * @throws  ServletException If the execute method doesn't exist, has the wrong signature, couldn't
      *          be invoked, threw an exception or returned null.
      */
-    protected String execute(Object action) throws ServletException {
-        try {
-            Method method = action.getClass().getMethod("execute");
-            if (method.getReturnType() != String.class) {
-                throw new ServletException("The action class [" + action.getClass() +
-                    "] has defined an execute method that is invalid. Execute methods must match the " +
-                    "signature [public String execute()].");
+    protected String execute(ActionInvocation actionInvocation, String httpMethod) throws ServletException {
+        Object action = actionInvocation.action();
+        String extension = actionInvocation.extension();
+        Method method = null;
+        if (extension != null) {
+            try {
+                method = action.getClass().getMethod(extension);
+            } catch (NoSuchMethodException e) {
+                // Ignore
             }
+        }
 
+        if (method == null) {
+            try {
+                method = action.getClass().getMethod(httpMethod.toLowerCase());
+            } catch (NoSuchMethodException e) {
+                // Ignore
+            }
+        }
+
+        if (method == null) {
+            try {
+                method = action.getClass().getMethod("execute");
+            } catch (NoSuchMethodException e) {
+                // Ignore
+            }
+        }
+
+        if (method == null) {
+            throw new ServletException("The action class [" + action.getClass() + "] is missing a " +
+                "valid execute method.");
+        }
+        
+        verify(method);
+        return invoke(method, action);
+    }
+
+    /**
+     * Ensures that the method is a correct execute method.
+     *
+     * @param   method The method.
+     * @throws  ServletException If the method is invalid.
+     */
+    protected void verify(Method method) throws ServletException {
+        if (method.getReturnType() != String.class || method.getParameterTypes().length != 0) {
+            throw new ServletException("The action class [" + method.getDeclaringClass().getClass() +
+                "] has defined an execute method named [" + method.getName() + "] that is invalid. " +
+                "Execute methods must have zero paramters and return a String like this: " +
+                "[public String execute()].");
+        }
+    }
+
+    /**
+     * Invokes the method and translates any exceptions to ServletExceptions.
+     *
+     * @param   method The method to invoke.
+     * @param   action The action to invoke the method on.
+     * @return  The result from the method.
+     * @throws  ServletException If the method invocation failed.
+     */
+    protected String invoke(Method method, Object action) throws ServletException {
+        try {
             String result = (String) method.invoke(action);
             if (result == null) {
                 throw new ServletException("The action class [" + action.getClass() + "] returned " +
@@ -164,10 +219,6 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
             }
 
             return result;
-        } catch (NoSuchMethodException e) {
-            throw new ServletException("The action class [" + action.getClass() +
-                "] is missing a valid execute method with the signature [public String " +
-                "execute()].");
         } catch (InvocationTargetException e) {
             throw new ServletException("The action class [" + action.getClass() + "] threw an exception.",
                 e.getTargetException());

@@ -68,7 +68,7 @@ public class AbstractControlTest {
 
             EasyMock.expect(ms.getFieldMessages(MessageType.ERROR)).andReturn(fieldErrors);
         }
-        
+
         EasyMock.replay(ms);
         return ms;
     }
@@ -81,7 +81,7 @@ public class AbstractControlTest {
     }
 
     protected ActionInvocationStore makeActionInvocationStore(Object action, String uri) {
-        ActionInvocation invocation = new DefaultActionInvocation(action, uri, null);
+        ActionInvocation invocation = new DefaultActionInvocation(action, uri, null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.get()).andReturn(invocation);
         EasyMock.replay(ais);

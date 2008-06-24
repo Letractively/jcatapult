@@ -67,13 +67,35 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
             uri = "/" + uri;
         }
 
+        // Handle extensions
+        String extension = null;
+        int index = uri.lastIndexOf('.');
+        if (index >= 0) {
+            extension = uri.substring(index + 1);
+
+            // Sanity check the extension to ensure it is part of a version
+            boolean good = false;
+            for (int i = 0; i < extension.length(); i++) {
+                good = Character.isLetter(extension.charAt(i));
+                if (good) {
+                    break;
+                }
+            }
+
+            if (good) {
+                uri = uri.substring(0, index);
+            } else {
+                extension = null;
+            }
+        }
+
         ActionConfiguration actionConfiguration = actionConfigurationProvider.lookup(uri);
         Object action = null;
         if (actionConfiguration != null) {
             action = objectFactory.create(actionConfiguration.actionClass());
         }
 
-        ActionInvocation invocation = new DefaultActionInvocation(action, uri, actionConfiguration);
+        ActionInvocation invocation = new DefaultActionInvocation(action, uri, extension, actionConfiguration);
         actionInvocationStore.set(invocation);
 
         chain.continueWorkflow();

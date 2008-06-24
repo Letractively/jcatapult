@@ -62,7 +62,7 @@ public class DefaultValidationWorkflowTest extends WebBaseTest {
     @Test
     public void testAllNull() throws IOException, ServletException {
         Edit action = new Edit();
-        ServletObjectsHolder.getServletRequest().setAttribute(DefaultActionInvocationStore.ACTION_INVOCATION_KEY, new DefaultActionInvocation(action, "/", null));
+        ServletObjectsHolder.getServletRequest().setAttribute(DefaultActionInvocationStore.ACTION_INVOCATION_KEY, new DefaultActionInvocation(action, "/", null, null));
         DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(actionInvocationStore,
             expressionEvaluator, validatorProvider, messageStore);
 
@@ -93,7 +93,7 @@ public class DefaultValidationWorkflowTest extends WebBaseTest {
         action.user.getAddress("work").setCity("Boulder");
         action.user.getAddress("work").setStreet("Main");
         action.user.getAddress("work").setCountry("US");
-        ServletObjectsHolder.getServletRequest().setAttribute(DefaultActionInvocationStore.ACTION_INVOCATION_KEY, new DefaultActionInvocation(action, "/", null));
+        ServletObjectsHolder.getServletRequest().setAttribute(DefaultActionInvocationStore.ACTION_INVOCATION_KEY, new DefaultActionInvocation(action, "/", null, null));
         DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(actionInvocationStore,
             expressionEvaluator, validatorProvider, messageStore);
 
