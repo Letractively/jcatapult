@@ -61,7 +61,7 @@ public class DefaultResultInvocationProviderTest {
 
         TestAction action = new TestAction();
         DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
-        ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null), "/foo/bar", "success");
+        ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null, null), "/foo/bar", "success");
         assertNotNull(invocation);
         assertEquals("success", invocation.resultCode());
         assertEquals("/foo/bar", invocation.uri());
@@ -84,7 +84,7 @@ public class DefaultResultInvocationProviderTest {
 
         TestAction action = new TestAction();
         DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
-        ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null), "/foo/bar", "error");
+        ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null, null), "/foo/bar", "error");
         assertNotNull(invocation);
         assertEquals("error", invocation.resultCode());
         assertEquals("/foo/bar", invocation.uri());

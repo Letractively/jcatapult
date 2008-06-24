@@ -55,7 +55,7 @@ public class ActionSessionScopeTest {
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
             public ActionInvocation get() {
-                return new DefaultActionInvocation(action, "", null);
+                return new DefaultActionInvocation(action, "", null, null);
             }
 
             public void set(ActionInvocation invocation) {
@@ -77,7 +77,7 @@ public class ActionSessionScopeTest {
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
             public ActionInvocation get() {
-                return new DefaultActionInvocation(action, "", null);
+                return new DefaultActionInvocation(action, "", null, null);
             }
 
             public void set(ActionInvocation invocation) {
@@ -102,7 +102,7 @@ public class ActionSessionScopeTest {
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
             public ActionInvocation get() {
-                return new DefaultActionInvocation(action, "", null);
+                return new DefaultActionInvocation(action, "", null, null);
             }
 
             public void set(ActionInvocation invocation) {
@@ -124,7 +124,7 @@ public class ActionSessionScopeTest {
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
             public ActionInvocation get() {
-                return new DefaultActionInvocation(action, "", null);
+                return new DefaultActionInvocation(action, "", null, null);
             }
 
             public void set(ActionInvocation invocation) {
@@ -152,7 +152,7 @@ public class ActionSessionScopeTest {
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
             public ActionInvocation get() {
-                return new DefaultActionInvocation(action, "", null);
+                return new DefaultActionInvocation(action, "", null, null);
             }
 
             public void set(ActionInvocation invocation) {
@@ -175,7 +175,7 @@ public class ActionSessionScopeTest {
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
             public ActionInvocation get() {
-                return new DefaultActionInvocation(action, "", null);
+                return new DefaultActionInvocation(action, "", null, null);
             }
 
             public void set(ActionInvocation invocation) {
@@ -203,7 +203,7 @@ public class ActionSessionScopeTest {
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
             public ActionInvocation get() {
-                return new DefaultActionInvocation(action, "", null);
+                return new DefaultActionInvocation(action, "", null, null);
             }
 
             public void set(ActionInvocation invocation) {
@@ -226,7 +226,7 @@ public class ActionSessionScopeTest {
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
             public ActionInvocation get() {
-                return new DefaultActionInvocation(action, "", null);
+                return new DefaultActionInvocation(action, "", null, null);
             }
 
             public void set(ActionInvocation invocation) {

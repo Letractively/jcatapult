@@ -13,35 +13,20 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.action;
+package org.example.action;
 
-import org.jcatapult.mvc.action.config.ActionConfiguration;
+import org.jcatapult.mvc.action.annotation.Action;
 
 /**
  * <p>
- * This interface defines the information about an action invocation.
+ * This is a simple test action.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public interface ActionInvocation {
-    /**
-     * @return  The action object.
-     */
-    Object action();
-
-    /**
-     * @return  The action URI that maps to the action object.
-     */
-    String actionURI();
-
-    /**
-     * @return  The URI extension or null if there isn't one.
-     */
-    String extension();
-
-    /**
-     * @return  The action configuration for this invocation.
-     */
-    ActionConfiguration configuration();
+@Action
+public class Extension {
+    public String json() {
+        return "success";
+    }
 }

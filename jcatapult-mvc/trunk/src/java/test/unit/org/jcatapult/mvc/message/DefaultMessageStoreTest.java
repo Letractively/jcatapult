@@ -95,7 +95,7 @@ public class DefaultMessageStoreTest {
         String[] values = array("value1", "value2");
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(action, "/foo/bar", null));
+        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(action, "/foo/bar", null, null));
         EasyMock.replay(ais);
 
         MessageProvider mp = EasyMock.createStrictMock(MessageProvider.class);
@@ -147,7 +147,7 @@ public class DefaultMessageStoreTest {
         String[] values = array("value1", "value2");
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(action, "/foo/bar", null));
+        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(action, "/foo/bar", null, null));
         EasyMock.replay(ais);
 
         MessageProvider mp = EasyMock.createStrictMock(MessageProvider.class);
@@ -199,7 +199,7 @@ public class DefaultMessageStoreTest {
         String[] values = array("value1", "value2");
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(action, "/foo/bar", null));
+        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(action, "/foo/bar", null, null));
         EasyMock.replay(ais);
 
         MessageProvider mp = EasyMock.createStrictMock(MessageProvider.class);
@@ -251,7 +251,7 @@ public class DefaultMessageStoreTest {
         String[] values = array("value1", "value2");
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(action, "/foo/bar", null));
+        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(action, "/foo/bar", null, null));
         EasyMock.replay(ais);
 
         MessageProvider mp = EasyMock.createStrictMock(MessageProvider.class);

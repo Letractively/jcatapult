@@ -23,9 +23,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
 import org.example.action.ExecuteMethodThrowsException;
+import org.example.action.Extension;
 import org.example.action.InvalidExecuteMethod;
 import org.example.action.MissingExecuteMethod;
+import org.example.action.Post;
 import org.example.action.Simple;
+import org.jcatapult.mvc.action.config.DefaultActionConfiguration;
 import org.jcatapult.mvc.action.result.DefaultResultInvocation;
 import org.jcatapult.mvc.action.result.ForwardResult;
 import org.jcatapult.mvc.action.result.Result;
@@ -33,7 +36,6 @@ import org.jcatapult.mvc.action.result.ResultInvocation;
 import org.jcatapult.mvc.action.result.ResultInvocationProvider;
 import org.jcatapult.mvc.action.result.ResultProvider;
 import org.jcatapult.mvc.action.result.annotation.Forward;
-import org.jcatapult.mvc.action.config.DefaultActionConfiguration;
 import org.jcatapult.servlet.WorkflowChain;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -55,7 +57,7 @@ public class DefaultActionInvocationWorkflowTest {
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
-        ActionInvocation ai = new DefaultActionInvocation(null, "foo/bar", null);
+        ActionInvocation ai = new DefaultActionInvocation(null, "foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.get()).andReturn(ai);
         EasyMock.replay(ais);
@@ -93,7 +95,7 @@ public class DefaultActionInvocationWorkflowTest {
         EasyMock.replay(response);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(null, "foo/bar", null));
+        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(null, "foo/bar", null, null));
         EasyMock.replay(ais);
 
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
@@ -120,12 +122,13 @@ public class DefaultActionInvocationWorkflowTest {
     public void testActionWithResult() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
+        EasyMock.expect(request.getMethod()).andReturn("post");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
         Simple simple = new Simple();
-        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null);
+        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.get()).andReturn(invocation);
         EasyMock.replay(ais);
@@ -157,12 +160,13 @@ public class DefaultActionInvocationWorkflowTest {
     public void testActionSuppressResult() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn("false");
+        EasyMock.expect(request.getMethod()).andReturn("get");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
         Simple simple = new Simple();
-        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null);
+        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.get()).andReturn(invocation);
         EasyMock.replay(ais);
@@ -189,13 +193,14 @@ public class DefaultActionInvocationWorkflowTest {
     public void testActionMissingResult() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
+        EasyMock.expect(request.getMethod()).andReturn("get");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         response.setStatus(404);
         EasyMock.replay(response);
 
         Simple simple = new Simple();
-        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", new DefaultActionConfiguration(Simple.class, "/foo/bar"));
+        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, new DefaultActionConfiguration(Simple.class, "/foo/bar"));
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.get()).andReturn(invocation);
         EasyMock.replay(ais);
@@ -226,12 +231,13 @@ public class DefaultActionInvocationWorkflowTest {
     public void testActionMissingResultType() throws IOException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
+        EasyMock.expect(request.getMethod()).andReturn("post");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
         Simple simple = new Simple();
-        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null);
+        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.get()).andReturn(invocation);
         EasyMock.replay(ais);
@@ -265,12 +271,13 @@ public class DefaultActionInvocationWorkflowTest {
     public void testActionWithoutExecuteMethod() throws IOException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
+        EasyMock.expect(request.getMethod()).andReturn("post");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
         MissingExecuteMethod action = new MissingExecuteMethod();
-        ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null);
+        ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.get()).andReturn(invocation);
         EasyMock.replay(ais);
@@ -300,12 +307,13 @@ public class DefaultActionInvocationWorkflowTest {
     public void testActionWithWrongReturnType() throws IOException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
+        EasyMock.expect(request.getMethod()).andReturn("post");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
         InvalidExecuteMethod action = new InvalidExecuteMethod();
-        ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", new DefaultActionConfiguration(InvalidExecuteMethod.class, "/foo/bar"));
+        ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null, new DefaultActionConfiguration(InvalidExecuteMethod.class, "/foo/bar"));
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.get()).andReturn(invocation);
         EasyMock.replay(ais);
@@ -335,12 +343,13 @@ public class DefaultActionInvocationWorkflowTest {
     public void testActionThatThrowsException() throws IOException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
+        EasyMock.expect(request.getMethod()).andReturn("get");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
         ExecuteMethodThrowsException action = new ExecuteMethodThrowsException();
-        ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null);
+        ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.get()).andReturn(invocation);
         EasyMock.replay(ais);
@@ -362,6 +371,82 @@ public class DefaultActionInvocationWorkflowTest {
             System.out.println(e);
             // Expected
         }
+
+        EasyMock.verify(request, response, ais, rip, resultProvider, chain);
+    }
+
+    @Test
+    public void testActionExtension() throws IOException, ServletException {
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
+        EasyMock.expect(request.getMethod()).andReturn("get");
+        EasyMock.replay(request);
+        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+        EasyMock.replay(response);
+
+        Extension action = new Extension();
+        ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", "json", null);
+        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.replay(ais);
+
+        Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");
+        ResultInvocation ri = new DefaultResultInvocation(annotation, "/foo/bar", "success");
+        ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
+        EasyMock.expect(rip.lookup(invocation, "/foo/bar", "success")).andReturn(ri);
+        EasyMock.replay(rip);
+
+        Result result = EasyMock.createStrictMock(Result.class);
+        result.execute(annotation, invocation);
+        EasyMock.replay(result);
+
+        ResultProvider resultProvider = EasyMock.createStrictMock(ResultProvider.class);
+        EasyMock.expect(resultProvider.lookup(annotation.annotationType())).andReturn(result);
+        EasyMock.replay(resultProvider);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        EasyMock.replay(chain);
+
+        DefaultActionInvocationWorkflow workflow = new DefaultActionInvocationWorkflow(request, response, ais, rip, resultProvider);
+        workflow.perform(chain);
+
+        EasyMock.verify(request, response, ais, rip, resultProvider, chain);
+    }
+
+    @Test
+    public void testHttpMethod() throws IOException, ServletException {
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
+        EasyMock.expect(request.getMethod()).andReturn("post");
+        EasyMock.replay(request);
+        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+        EasyMock.replay(response);
+
+        Post action = new Post();
+        ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null, null);
+        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.replay(ais);
+
+        Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");
+        ResultInvocation ri = new DefaultResultInvocation(annotation, "/foo/bar", "success");
+        ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
+        EasyMock.expect(rip.lookup(invocation, "/foo/bar", "success")).andReturn(ri);
+        EasyMock.replay(rip);
+
+        Result result = EasyMock.createStrictMock(Result.class);
+        result.execute(annotation, invocation);
+        EasyMock.replay(result);
+
+        ResultProvider resultProvider = EasyMock.createStrictMock(ResultProvider.class);
+        EasyMock.expect(resultProvider.lookup(annotation.annotationType())).andReturn(result);
+        EasyMock.replay(resultProvider);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        EasyMock.replay(chain);
+
+        DefaultActionInvocationWorkflow workflow = new DefaultActionInvocationWorkflow(request, response, ais, rip, resultProvider);
+        workflow.perform(chain);
 
         EasyMock.verify(request, response, ais, rip, resultProvider, chain);
     }

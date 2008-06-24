@@ -29,11 +29,13 @@ import org.jcatapult.mvc.action.config.ActionConfiguration;
 public class DefaultActionInvocation implements ActionInvocation {
     private final Object action;
     private final String uri;
+    private final String extension;
     private final ActionConfiguration configuration;
 
-    public DefaultActionInvocation(Object action, String uri, ActionConfiguration configuration) {
+    public DefaultActionInvocation(Object action, String uri, String extension, ActionConfiguration configuration) {
         this.action = action;
         this.uri = uri;
+        this.extension = extension;
         this.configuration = configuration;
     }
 
@@ -43,6 +45,10 @@ public class DefaultActionInvocation implements ActionInvocation {
 
     public String actionURI() {
         return uri;
+    }
+
+    public String extension() {
+        return extension;
     }
 
     public ActionConfiguration configuration() {
