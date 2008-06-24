@@ -13,25 +13,28 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.example.action.user;
+package org.jcatapult.mvc.validation.annotation;
 
-import org.example.domain.User;
-import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.validation.annotation.Valid;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * <p>
- * This class is a simple edit action for testing.
+ * This annotation marks a field in a bean as requiring validation.
+ * By default, the validation framework does not traverse down the object
+ * graph.
  * </p>
  *
  * @author Brian Pontarelli
  */
-@Action
-public class Edit {
-    @Valid
-    public User user;
-
-    public String execute() {
-        return "success";
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Valid {
+    /**
+     * @return  A list of groups that the value should be validated for. By default it is validated
+     *          for all groups.
+     */
+    String[] groups() default {};
 }

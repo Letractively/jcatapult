@@ -13,25 +13,26 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.example.action.user;
+package org.example.domain;
 
-import org.example.domain.User;
-import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.validation.annotation.Valid;
+import java.lang.annotation.Annotation;
+
+import org.jcatapult.mvc.validation.Validator;
 
 /**
  * <p>
- * This class is a simple edit action for testing.
+ * This is a simple test validator.
  * </p>
  *
  * @author Brian Pontarelli
  */
-@Action
-public class Edit {
-    @Valid
-    public User user;
+public class ZipcodeValidator implements Validator {
+    public boolean validate(Annotation annotation, Object container, Object value) {
+        Address address = (Address) container;
+        if (address != null && address.getCountry() != null && address.getCountry().equals("US")) {
+            return value != null;
+        }
 
-    public String execute() {
-        return "success";
+        return true;
     }
 }

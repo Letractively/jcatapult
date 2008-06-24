@@ -13,25 +13,25 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.example.action.user;
+package org.jcatapult.mvc.validation;
 
-import org.example.domain.User;
-import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.validation.annotation.Valid;
+import java.lang.annotation.Annotation;
 
 /**
  * <p>
- * This class is a simple edit action for testing.
+ * This class verifies that the value is not null.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-@Action
-public class Edit {
-    @Valid
-    public User user;
-
-    public String execute() {
-        return "success";
+public class RequiredValidator implements Validator {
+    /**
+     * @param   annotation Not used.
+     * @param   container Not used.
+     * @param   value The value to check.
+     * @return  True if the value is not null, false if it is null.
+     */
+    public boolean validate(Annotation annotation, Object container, Object value) {
+        return value != null;
     }
 }

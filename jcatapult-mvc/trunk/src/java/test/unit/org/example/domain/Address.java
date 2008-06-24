@@ -15,6 +15,8 @@
  */
 package org.example.domain;
 
+import org.jcatapult.mvc.validation.annotation.Required;
+
 /**
  * <p>
  * This is a test address.
@@ -23,10 +25,16 @@ package org.example.domain;
  * @author  Brian Pontarelli
  */
 public class Address {
+    @Required
     private String street;
+    @Required
     private String city;
+    @State
     private String state;
+    @Zipcode
     private String zipcode;
+    @Required
+    private String country;
 
     public String getStreet() {
         return street;
@@ -58,5 +66,13 @@ public class Address {
 
     public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

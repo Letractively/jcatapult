@@ -13,25 +13,29 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.example.action.user;
+package org.jcatapult.mvc.validation;
 
-import org.example.domain.User;
-import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.validation.annotation.Valid;
+import java.lang.annotation.Annotation;
+
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This class is a simple edit action for testing.
+ * This interface defines the provider that creates validators based on
+ * annotations.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-@Action
-public class Edit {
-    @Valid
-    public User user;
-
-    public String execute() {
-        return "success";
-    }
+@ImplementedBy(DefaultValidatorProvider.class)
+public interface ValidatorProvider {
+    /**
+     * <p>
+     * Returns the validator for the given annotation.
+     * </p>
+     *
+     * @param   annotation The annotation.
+     * @return  The Validator or null if one was not found
+     */
+    Validator lookup(Class<? extends Annotation> annotation);
 }

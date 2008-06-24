@@ -208,4 +208,11 @@ public class DefaultMessageStore implements MessageStore {
             scope.clearFieldMessages(type);
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean contains(MessageType type) {
+        return !getActionMessages(type).isEmpty() || !getFieldMessages(type).isEmpty();
+    }
 }
