@@ -60,7 +60,7 @@ public class TextTest extends AbstractInputTest {
 
         AbstractInput input = new Text(ee);
         run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
-            mapNV("name", "test", "class", "css-class"),
+            mapNV("name", "user.name", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
@@ -79,7 +79,7 @@ public class TextTest extends AbstractInputTest {
 
         AbstractInput input = new Text(ee);
         run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
-            mapNV("name", "test", "class", "css-class", "defaultValue", "John"),
+            mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
@@ -97,11 +97,11 @@ public class TextTest extends AbstractInputTest {
 
         AbstractInput input = new Text(ee);
         run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
-            mapNV("name", "test", "class", "css-class", "value", "Barry"),
+            mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"BarryJohn\"/></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
             "</div>");
 
         EasyMock.verify(ee);
@@ -116,7 +116,7 @@ public class TextTest extends AbstractInputTest {
 
         AbstractInput input = new Text(ee);
         run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
-            mapNV("name", "test", "class", "css-class"),
+            mapNV("name", "user.name", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +

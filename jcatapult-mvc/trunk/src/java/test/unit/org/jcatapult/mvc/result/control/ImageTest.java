@@ -15,27 +15,12 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.util.Map;
-import java.util.Locale;
-import java.io.StringWriter;
-import javax.servlet.http.HttpServletRequest;
-
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.action.ActionInvocationStore;
-import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.mvc.message.MessageProvider;
-import org.jcatapult.environment.EnvironmentResolver;
-import org.jcatapult.container.ContainerResolver;
-import org.jcatapult.freemarker.FreeMarkerService;
-import org.jcatapult.freemarker.DefaultFreeMarkerService;
-import org.jcatapult.freemarker.OverridingTemplateLoader;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
+import org.example.action.user.Edit;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.junit.Test;
 
-import static net.java.util.CollectionTools.map;
-import static net.java.util.CollectionTools.mapNV;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -55,31 +40,18 @@ public class ImageTest extends AbstractButtonInputTest {
 
     @Test
     public void testIsmap() {
-        HttpServletRequest request = makeRequest();
-        ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
-        MessageStore ms = makeMessageStore("test");
-        Configuration configuration = makeConfiguration();
-        EnvironmentResolver env = makeEnvironmenResolver();
-        ContainerResolver containerResolver = makeContainerResolver(getType());
-
-        Map<String, String> parameterAttributes = map("param", "param-value");
-        MessageProvider mp = makeMessageProvider("foo.bar", "test", Locale.US, parameterAttributes, "Test");
-
+        Edit action = new Edit();
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.replay(ee);
 
-        FreeMarkerService fms = new DefaultFreeMarkerService(configuration, env, new OverridingTemplateLoader(containerResolver));
         AbstractButtonInput input = getControl(ee);
-        input.setServices(Locale.US, request, ais, ms, fms);
-        input.setMessageProvider(mp);
-        StringWriter writer = new StringWriter();
-        input.render(writer, mapNV("name", "test", "value", "test-value", "class", "css-class", "bundle", "foo.bar", "ismap", true), parameterAttributes);
-        assertEquals(
+        run(input, action, getType(), "foo.bar", "test", "Test",
+            mapNV("name", "test", "value", "test-value", "class", "css-class", "bundle", "foo.bar", "ismap", true),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" ismap=\"ismap\" name=\"test\" value=\"Test\"/></div>\n" +
-            "</div>", writer.toString());
+            "</div>");
 
-        EasyMock.verify(request, ais, ms, configuration, env, containerResolver, ee, mp);
+        EasyMock.verify(ee);
     }
 }

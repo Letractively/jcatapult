@@ -40,7 +40,7 @@ public class TextareaTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Textarea(ee);
-        run(input, null, "text", "foo.bar", "test", "Test",
+        run(input, null, "textarea", "foo.bar", "test", "Test",
             mapNV("name", "test", "class", "css-class", "bundle", "foo.bar"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -59,8 +59,8 @@ public class TextareaTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Textarea(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
-            mapNV("name", "test", "class", "css-class"),
+        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
+            mapNV("name", "user.name", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
@@ -78,8 +78,8 @@ public class TextareaTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Textarea(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
-            mapNV("name", "test", "class", "css-class", "defaultValue", "John"),
+        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
+            mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
@@ -96,8 +96,8 @@ public class TextareaTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Textarea(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
-            mapNV("name", "test", "class", "css-class", "value", "Barry"),
+        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
+            mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
@@ -114,8 +114,8 @@ public class TextareaTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Textarea(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
-            mapNV("name", "test", "class", "css-class", "value", "Barry"),
+        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
+            mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +

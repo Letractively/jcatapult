@@ -86,7 +86,7 @@ public class AbstractInputTest extends AbstractControlTest {
             String message, Map<String, Object> attributes, String result, String... errors) {
         HttpServletRequest request = makeRequest();
         ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
-        MessageStore ms = makeMessageStore("test", errors);
+        MessageStore ms = makeMessageStore(key, errors);
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
         ContainerResolver containerResolver = makeContainerResolver(template);
