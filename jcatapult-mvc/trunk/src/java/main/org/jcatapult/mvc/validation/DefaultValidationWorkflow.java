@@ -20,12 +20,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import static java.util.Arrays.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
-import static java.util.Arrays.asList;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
@@ -57,11 +58,13 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
     private final ExpressionEvaluator expressionEvaluator;
     private final ValidatorProvider validatorProvider;
     private final MessageStore messageStore;
+    private final HttpServletRequest request;
 
     @Inject
-    public DefaultValidationWorkflow(ActionInvocationStore actionInvocationStore,
+    public DefaultValidationWorkflow(HttpServletRequest request, ActionInvocationStore actionInvocationStore,
             ExpressionEvaluator expressionEvaluator, ValidatorProvider validatorProvider,
             MessageStore messageStore) {
+        this.request = request;
         this.actionInvocationStore = actionInvocationStore;
         this.expressionEvaluator = expressionEvaluator;
         this.validatorProvider = validatorProvider;
@@ -78,13 +81,15 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
      * @throws  ServletException If the chain throws.
      */
     public void perform(WorkflowChain chain) throws IOException, ServletException {
-        ActionInvocation actionInvocation = actionInvocationStore.get();
-        Object action = actionInvocation.action();
-        if (action != null) {
-            validate(action);
-            if (!messageStore.contains(MessageType.ERROR)) {
-                actionInvocationStore.set(new DefaultActionInvocation(new ValidationFailedAction(),
-                    actionInvocation.actionURI(), null, actionInvocation.configuration()));
+        if (request.getMethod().equals("POST")) {
+            ActionInvocation actionInvocation = actionInvocationStore.get();
+            Object action = actionInvocation.action();
+            if (action != null) {
+                validate(action);
+                if (!messageStore.contains(MessageType.ERROR)) {
+                    actionInvocationStore.set(new DefaultActionInvocation(new ValidationFailedAction(),
+                        actionInvocation.actionURI(), null, actionInvocation.configuration()));
+                }
             }
         }
 

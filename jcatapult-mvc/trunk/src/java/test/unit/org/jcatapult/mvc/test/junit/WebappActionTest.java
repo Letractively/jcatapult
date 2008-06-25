@@ -15,18 +15,22 @@
  */
 package org.jcatapult.mvc.test.junit;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.io.IOException;
+import javax.servlet.ServletException;
 
 import org.jcatapult.guice.GuiceContainer;
+import org.jcatapult.mvc.message.MessageStore;
+import org.jcatapult.mvc.servlet.MVCWorkflow;
 import org.jcatapult.mvc.test.MockHttpServletRequest;
 import org.jcatapult.mvc.test.MockHttpServletResponse;
 import org.jcatapult.mvc.test.MockHttpSession;
 import org.jcatapult.mvc.test.MockServletContext;
 import org.jcatapult.servlet.ServletObjectsHolder;
-import org.junit.Before;
+import org.jcatapult.servlet.WorkflowChain;
 import org.junit.Ignore;
+
+import com.google.inject.Inject;
+import net.java.naming.MockJNDI;
 
 /**
  * <p>
@@ -36,17 +40,32 @@ import org.junit.Ignore;
  * @author  Brian Pontarelli
  */
 @Ignore
-public class WebBaseTest {
+public class WebappActionTest {
     protected MockHttpServletRequest request;
     protected MockHttpServletResponse response;
     protected MockServletContext context;
 
-    /**
-     * A @Before method that injects this class.
-     */
-    @Before
-    public void setup() {
-        this.request = makeRequest();
+    protected MVCWorkflow workflow;
+    protected MessageStore messageStore;
+
+    @Inject
+    public void setServices(MVCWorkflow workflow, MessageStore messageStore) {
+        this.workflow = workflow;
+        this.messageStore = messageStore;
+    }
+
+    public RequestBuilder test(String uri) {
+        return new RequestBuilder(uri, this);
+    }
+
+    void run(RequestBuilder builder, boolean post) throws IOException, ServletException {
+        // Set the environment to test
+        MockJNDI jndi = new MockJNDI();
+        jndi.bind("java:comp/env/environment", "test");
+        jndi.activate();
+
+        this.request = new MockHttpServletRequest(builder.getParameters(), builder.getUri(), "UTF-8",
+            builder.getLocale(), post);
         ServletObjectsHolder.setServletRequest(request);
 
         this.response = makeResponse();
@@ -58,13 +77,11 @@ public class WebBaseTest {
         GuiceContainer.inject();
         GuiceContainer.initialize();
         GuiceContainer.getInjector().injectMembers(this);
-    }
 
-    /**
-     * @return  Makes a HttpServletRequest mock. Sub-classes can override this to change the settings.
-     */
-    protected MockHttpServletRequest makeRequest() {
-        return new MockHttpServletRequest(new HashMap<String, List<String>>(), "/test", "UTF-8", Locale.US, false);
+        workflow.perform(new WorkflowChain() {
+            public void continueWorkflow() {
+            }
+        });
     }
 
     /**

@@ -23,7 +23,7 @@ import javax.servlet.ServletException;
 
 /**
  * <p>
- * This
+ * This is a mock request dispatcher.
  * </p>
  *
  * @author Brian Pontarelli

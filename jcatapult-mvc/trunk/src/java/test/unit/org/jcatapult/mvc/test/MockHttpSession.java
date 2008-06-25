@@ -32,7 +32,7 @@ import net.java.util.IteratorEnumeration;
  * @author Brian Pontarelli
  */
 public class MockHttpSession implements HttpSession {
-    public static ServletContext context = new MockServletContext();
+    public static MockServletContext context = new MockServletContext();
     private Map<String, Object> attributes = new HashMap<String, Object>();
 
     public long getCreationTime() {

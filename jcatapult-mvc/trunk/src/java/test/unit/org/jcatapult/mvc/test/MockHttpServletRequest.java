@@ -44,17 +44,19 @@ public class MockHttpServletRequest implements HttpServletRequest {
     private final Map<String, Object> attributes = new HashMap<String, Object>();
     private final MockHttpSession session = new MockHttpSession();
     private final Map<String, List<String>> parameters;
-    private final String uri;
-    private final Locale locale;
+    private String uri;
+    private Locale locale;
+    private boolean post;
     private String encoding;
     private MockRequestDispatcher dispatcher;
 
     public MockHttpServletRequest(Map<String, List<String>> parameters, String uri, String encoding,
-            Locale locale) {
+            Locale locale, boolean post) {
         this.parameters = parameters;
         this.uri = uri;
         this.encoding = encoding;
         this.locale = locale;
+        this.post = post;
     }
 
 
@@ -179,11 +181,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     */
-    public RequestDispatcher getRequestDispatcher(String thePath)
-    {
-
+    public RequestDispatcher getRequestDispatcher(String thePath) {
         if (thePath == null) {
             return null;
         }
@@ -305,7 +303,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     /**
      */
     public String getMethod() {
-        throw new UnsupportedOperationException();
+        return (post) ? "POST" : "GET";
     }
 
     /**
@@ -513,5 +511,41 @@ public class MockHttpServletRequest implements HttpServletRequest {
      */
     public MockRequestDispatcher getRequestDispatcher() {
         return dispatcher;
+    }
+
+    /**
+     * Modifies the request URI.
+     *
+     * @param   uri The request URI.
+     */
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    /**
+     * Modifies the locale.
+     *
+     * @param   locale The locale.
+     */
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    /**
+     * Sets whether or not the request is a POST or a GET.
+     *
+     * @param   post True for a POST.
+     */
+    public void setPost(boolean post) {
+        this.post = post;
+    }
+
+    /**
+     * Modifies the encoding.
+     *
+     * @param   encoding The encoding.
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
     }
 }

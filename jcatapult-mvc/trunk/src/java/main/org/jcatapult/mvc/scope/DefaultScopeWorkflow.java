@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;

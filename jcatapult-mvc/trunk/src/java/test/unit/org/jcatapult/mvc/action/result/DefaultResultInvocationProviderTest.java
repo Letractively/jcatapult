@@ -43,7 +43,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.expect(context.getResource("/WEB-INF/content/foo/bar/index.ftl")).andReturn(new URL("http://google.com"));
         EasyMock.replay(context);
 
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup("/foo/bar");
         assertNotNull(invocation);
         assertNull(invocation.resultCode());
@@ -60,7 +60,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         TestAction action = new TestAction();
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null, null), "/foo/bar", "success");
         assertNotNull(invocation);
         assertEquals("success", invocation.resultCode());
@@ -83,7 +83,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         TestAction action = new TestAction();
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, null, null, null), "/foo/bar", "error");
         assertNotNull(invocation);
         assertEquals("error", invocation.resultCode());

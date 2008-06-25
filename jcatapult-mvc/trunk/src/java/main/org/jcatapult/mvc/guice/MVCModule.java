@@ -28,6 +28,17 @@ import org.jcatapult.mvc.parameter.convert.converters.CollectionConverter;
 import org.jcatapult.mvc.parameter.convert.converters.FileConverter;
 import org.jcatapult.mvc.parameter.convert.converters.NumberConverter;
 import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
+import org.jcatapult.mvc.result.control.Button;
+import org.jcatapult.mvc.result.control.Checkbox;
+import org.jcatapult.mvc.result.control.File;
+import org.jcatapult.mvc.result.control.Hidden;
+import org.jcatapult.mvc.result.control.Image;
+import org.jcatapult.mvc.result.control.Password;
+import org.jcatapult.mvc.result.control.Radio;
+import org.jcatapult.mvc.result.control.Reset;
+import org.jcatapult.mvc.result.control.Submit;
+import org.jcatapult.mvc.result.control.Text;
+import org.jcatapult.mvc.result.control.Textarea;
 import org.jcatapult.mvc.scope.ActionSessionScope;
 import org.jcatapult.mvc.scope.ContextScope;
 import org.jcatapult.mvc.scope.FlashScope;
@@ -92,5 +103,26 @@ public class MVCModule extends AbstractModule {
      */
     protected void configureLocale() {
         bind(Locale.class).annotatedWith(CurrentLocale.class).toProvider(DefaultLocaleStore.class);
+    }
+
+    /**
+     * This binds the controls so that they can be resolved by the FreeMarker result handling and
+     * dynamically added to the Map as directives under the jc key and using the class name as the
+     * directive name.
+     */
+    protected void configureControls() {
+        bind(Button.class);
+        bind(Checkbox.class);
+        bind(File.class);
+        bind(Hidden.class);
+        bind(Image.class);
+        bind(Password.class);
+        bind(Radio.class);
+        bind(Reset.class);
+        bind(Submit.class);
+        bind(Text.class);
+        bind(Textarea.class);
+
+        requestStaticInjection(ForwardResult.class);
     }
 }
