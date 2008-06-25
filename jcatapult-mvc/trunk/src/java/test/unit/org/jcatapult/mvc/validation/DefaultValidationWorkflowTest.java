@@ -63,7 +63,7 @@ public class DefaultValidationWorkflowTest extends WebBaseTest {
     public void testAllNull() throws IOException, ServletException {
         Edit action = new Edit();
         ServletObjectsHolder.getServletRequest().setAttribute(DefaultActionInvocationStore.ACTION_INVOCATION_KEY, new DefaultActionInvocation(action, "/", null, null));
-        DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(actionInvocationStore,
+        DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
             expressionEvaluator, validatorProvider, messageStore);
 
         WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
@@ -94,7 +94,7 @@ public class DefaultValidationWorkflowTest extends WebBaseTest {
         action.user.getAddress("work").setStreet("Main");
         action.user.getAddress("work").setCountry("US");
         ServletObjectsHolder.getServletRequest().setAttribute(DefaultActionInvocationStore.ACTION_INVOCATION_KEY, new DefaultActionInvocation(action, "/", null, null));
-        DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(actionInvocationStore,
+        DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
             expressionEvaluator, validatorProvider, messageStore);
 
         WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);

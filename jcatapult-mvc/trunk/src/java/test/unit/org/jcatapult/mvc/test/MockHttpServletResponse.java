@@ -17,124 +17,257 @@ package org.jcatapult.mvc.test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
+import java.util.Map;
+import java.util.HashMap;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
- * This
+ * This class is a mock servlet response.
  * </p>
  *
  * @author Brian Pontarelli
  */
 public class MockHttpServletResponse implements HttpServletResponse {
+    private List<Cookie> cookies = new ArrayList<Cookie>();
+    private MockServletOutputStream stream = new MockServletOutputStream();
+    private Map<String, Object> headers = new HashMap<String, Object>();
+    private int code;
+    private String message;
+    private String redirect;
+    private String encoding;
+    private String contentType;
+    private int length;
+    private int size;
+    private boolean reset;
+    private boolean flushed;
+    private Locale locale;
+    private boolean committed;
+
     public void addCookie(Cookie cookie) {
+        cookies.add(cookie);
     }
 
-    public boolean containsHeader(String s) {
-        return false;
+    public boolean containsHeader(String name) {
+        return headers.containsKey(name);
     }
 
     public String encodeURL(String s) {
-        return null;
+        throw new UnsupportedOperationException("Not used in this MVC");
     }
 
     public String encodeRedirectURL(String s) {
-        return null;
+        throw new UnsupportedOperationException("Not used in this MVC");
     }
 
     public String encodeUrl(String s) {
-        return null;
+        throw new UnsupportedOperationException("Not used in this MVC");
     }
 
     public String encodeRedirectUrl(String s) {
-        return null;
+        throw new UnsupportedOperationException("Not used in this MVC");
     }
 
-    public void sendError(int i, String s) throws IOException {
+    public void sendError(int code, String message) throws IOException {
+        this.code = code;
+        this.message = message;
     }
 
-    public void sendError(int i) throws IOException {
+    public void sendError(int code) throws IOException {
+        this.code = code;
     }
 
-    public void sendRedirect(String s) throws IOException {
+    public void sendRedirect(String url) throws IOException {
+        this.redirect = url;
     }
 
-    public void setDateHeader(String s, long l) {
+    public void setDateHeader(String name, long date) {
+        headers.put(name, date);
     }
 
-    public void addDateHeader(String s, long l) {
+    public void addDateHeader(String name, long date) {
+        headers.put(name, date);
     }
 
-    public void setHeader(String s, String s1) {
+    public void setHeader(String name, String value) {
+        headers.put(name, value);
     }
 
-    public void addHeader(String s, String s1) {
+    public void addHeader(String name, String value) {
+        headers.put(name, value);
     }
 
-    public void setIntHeader(String s, int i) {
+    public void setIntHeader(String name, int value) {
+        headers.put(name, value);
     }
 
-    public void addIntHeader(String s, int i) {
+    public void addIntHeader(String name, int value) {
+        headers.put(name, value);
     }
 
-    public void setStatus(int i) {
+    public void setStatus(int code) {
+        this.code = code;
     }
 
-    public void setStatus(int i, String s) {
+    public void setStatus(int code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
     public String getCharacterEncoding() {
-        return null;
+        return encoding;
     }
 
     public String getContentType() {
-        return null;
+        return contentType;
     }
 
     public ServletOutputStream getOutputStream() throws IOException {
-        return null;
+        return stream;
     }
 
     public PrintWriter getWriter() throws IOException {
-        return null;
+        return new PrintWriter(stream);
     }
 
-    public void setCharacterEncoding(String s) {
+    public void setCharacterEncoding(String encoding) {
+        this.encoding = encoding;
     }
 
-    public void setContentLength(int i) {
+    public void setContentLength(int length) {
+        this.length = length;
     }
 
-    public void setContentType(String s) {
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
-    public void setBufferSize(int i) {
+    public void setBufferSize(int size) {
+        this.size = size;
     }
 
     public int getBufferSize() {
-        return 0;
+        return size;
     }
 
     public void flushBuffer() throws IOException {
+        this.flushed = true;
     }
 
     public void resetBuffer() {
+        this.reset = true;
     }
 
     public boolean isCommitted() {
-        return false;
+        return committed;
+    }
+
+    public void setCommitted(boolean committed) {
+        this.committed = committed;
     }
 
     public void reset() {
+        this.reset = true;
     }
 
     public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 
     public Locale getLocale() {
-        return null;
+        return locale;
+    }
+
+    public List<Cookie> getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(List<Cookie> cookies) {
+        this.cookies = cookies;
+    }
+
+    public MockServletOutputStream getStream() {
+        return stream;
+    }
+
+    public void setStream(MockServletOutputStream stream) {
+        this.stream = stream;
+    }
+
+    public Map<String, Object> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map<String, Object> headers) {
+        this.headers = headers;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public boolean isReset() {
+        return reset;
+    }
+
+    public void setReset(boolean reset) {
+        this.reset = reset;
+    }
+
+    public boolean isFlushed() {
+        return flushed;
+    }
+
+    public void setFlushed(boolean flushed) {
+        this.flushed = flushed;
     }
 }

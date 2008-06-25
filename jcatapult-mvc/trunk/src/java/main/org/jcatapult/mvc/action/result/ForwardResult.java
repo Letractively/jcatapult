@@ -16,23 +16,26 @@
 package org.jcatapult.mvc.action.result;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.freemarker.FreeMarkerService;
+import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.mvc.result.control.Control;
 
 import com.google.inject.Inject;
 
@@ -46,22 +49,39 @@ import com.google.inject.Inject;
  */
 public class ForwardResult extends AbstractResult<Forward> {
     public static final String DIR = "/WEB-INF/content";
+    private static final Map<String, Class<? extends Control>> controls = new HashMap<String, Class<? extends Control>>();
     private final Locale locale;
     private final ServletContext servletContext;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final FreeMarkerService freeMarkerService;
+    private final ObjectFactory objectFactory;
+
+    /**
+     * Initializes the list of control classes.
+     *
+     * @param   objectFactory The object factory.
+     */
+    @Inject
+    public static void initialize(ObjectFactory objectFactory) {
+        List<Class<? extends Control>> types = objectFactory.getAllForType(Control.class);
+        for (Class<? extends Control> type : types) {
+            controls.put(type.getSimpleName(), type);
+        }
+    }
 
     @Inject
     public ForwardResult(@CurrentLocale Locale locale, ServletContext servletContext,
             HttpServletRequest request, HttpServletResponse response,
-            ExpressionEvaluator expressionEvaluator, FreeMarkerService freeMarkerService) {
+            ExpressionEvaluator expressionEvaluator, FreeMarkerService freeMarkerService,
+            ObjectFactory objectFactory) {
         super(expressionEvaluator);
         this.locale = locale;
         this.servletContext = servletContext;
         this.request = request;
         this.response = response;
         this.freeMarkerService = freeMarkerService;
+        this.objectFactory = objectFactory;
     }
 
     /**
@@ -77,10 +97,10 @@ public class ForwardResult extends AbstractResult<Forward> {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(page);
             requestDispatcher.forward(wrapRequest(invocation, request), response);
         } else if (page.endsWith(".ftl")) {
-            ServletOutputStream sos = response.getOutputStream();
-            Map<String, Object> map = new FreeMarkerMap(servletContext, request, expressionEvaluator, invocation.action());
-            freeMarkerService.render(new OutputStreamWriter(sos, "UTF-8"), page, map, locale);
-            throw new RuntimeException("Not supported yet");
+            PrintWriter writer = response.getWriter();
+            Map<String, Object> map = new FreeMarkerMap(servletContext, request, expressionEvaluator,
+                invocation.action(), controls, objectFactory);
+            freeMarkerService.render(writer, page, map, locale);
         }
     }
 
@@ -172,7 +192,8 @@ public class ForwardResult extends AbstractResult<Forward> {
     protected Forward findResult(String path, String resultCode) {
         try {
             String classLoaderPath = path.startsWith("/") ? path.substring(1, path.length()) : path;
-            if (servletContext.getResource(path) != null || getClass().getResource(classLoaderPath) != null) {
+            if (servletContext.getResource(path) != null ||
+                    Thread.currentThread().getContextClassLoader().getResource(classLoaderPath) != null) {
                 return new ForwardImpl(path, resultCode);
             }
         } catch (MalformedURLException e) {

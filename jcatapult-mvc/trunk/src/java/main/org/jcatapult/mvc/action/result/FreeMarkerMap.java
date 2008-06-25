@@ -16,13 +16,19 @@
 package org.jcatapult.mvc.action.result;
 
 import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashSet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.mvc.result.control.Control;
 
 /**
  * <p>
@@ -36,25 +42,31 @@ public class FreeMarkerMap implements Map<String, Object> {
     private final HttpServletRequest request;
     private final ExpressionEvaluator expressionEvaluator;
     private final Object action;
+    private final ControlMap controlMap;
 
     public FreeMarkerMap(ServletContext context, HttpServletRequest request, ExpressionEvaluator expressionEvaluator,
-            Object action) {
+            Object action, Map<String, Class<? extends Control>> controls, ObjectFactory objectFactory) {
         this.request = request;
         this.expressionEvaluator = expressionEvaluator;
         this.action = action;
         this.context = context;
+        this.controlMap = new ControlMap(objectFactory, controls);
     }
 
     public int size() {
-        throw new UnsupportedOperationException("Size not known for this map");
+        return controlMap.size() + expressionEvaluator.getAllMembers(action.getClass()).size() +
+            count(request.getAttributeNames()) + count(request.getSession().getAttributeNames()) +
+            count(context.getAttributeNames());
     }
 
     public boolean isEmpty() {
-        return false;
+        return size() > 0;
     }
 
     public boolean containsKey(Object key) {
-        throw new UnsupportedOperationException("containsKey not known for this map");
+        return controlMap.containsKey(key) || expressionEvaluator.getAllMembers(action.getClass()).contains(key) ||
+            contains(request.getAttributeNames(), key) || contains(request.getSession().getAttributeNames(), key) ||
+            contains(context.getAttributeNames(), key);
     }
 
     public boolean containsValue(Object value) {
@@ -62,6 +74,10 @@ public class FreeMarkerMap implements Map<String, Object> {
     }
 
     public Object get(Object key) {
+        if (key.equals("jc")) {
+            return controlMap;
+        }
+
         // First check the action
         Object value = null;
         String strKey = (String) key;
@@ -104,7 +120,9 @@ public class FreeMarkerMap implements Map<String, Object> {
     }
 
     public Set<String> keySet() {
-        throw new UnsupportedOperationException("keySet not supported for this map");
+        return append(controlMap.keySet(), expressionEvaluator.getAllMembers(action.getClass()),
+            iterable(request.getAttributeNames()), iterable(request.getSession().getAttributeNames()),
+            iterable(context.getAttributeNames()));
     }
 
     public Collection<Object> values() {
@@ -113,5 +131,45 @@ public class FreeMarkerMap implements Map<String, Object> {
 
     public Set<Entry<String, Object>> entrySet() {
         throw new UnsupportedOperationException("entrySet not supported for this map");
+    }
+
+    private int count(Enumeration enumeration) {
+        int count = 0;
+        while (enumeration.hasMoreElements()) {
+            count++;
+            enumeration.nextElement();
+        }
+
+        return count;
+    }
+
+    private boolean contains(Enumeration enumeration, Object key) {
+        while (enumeration.hasMoreElements()) {
+            if (enumeration.nextElement().equals(key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private Set<String> append(Iterable<String>... iterables) {
+        Set<String> set = new HashSet<String>();
+        for (Iterable<String> iterable : iterables) {
+            for (String key : iterable) {
+                set.add(key);
+            }
+        }
+
+        return set;
+    }
+
+    private Iterable<String> iterable(Enumeration enumeration) {
+        List<String> list = new ArrayList<String>();
+        while (enumeration.hasMoreElements()) {
+            list.add((String) enumeration.nextElement());
+        }
+
+        return list;
     }
 }

@@ -13,24 +13,32 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc;
+package org.jcatapult.mvc.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import javax.servlet.ServletException;
-
-import org.jcatapult.mvc.test.junit.WebappActionTest;
-import org.junit.Test;
+import java.io.UnsupportedEncodingException;
+import javax.servlet.ServletOutputStream;
 
 /**
  * <p>
- * This class tests the MVC from a high level perspective.
+ * This is a mock version of the servlet output stream.
  * </p>
  *
  * @author Brian Pontarelli
  */
-public class GlobalTest extends WebappActionTest {
-    @Test
-    public void testWorkflowCall() throws IOException, ServletException {
-        test("/user/edit").get();
+public class MockServletOutputStream extends ServletOutputStream {
+    private ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+    public void write(int b) throws IOException {
+        baos.write(b);
+    }
+
+    public String toString() {
+        try {
+            return baos.toString("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
