@@ -17,6 +17,7 @@ package org.jcatapult.mvc.parameter.el;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
@@ -96,8 +97,17 @@ public interface ExpressionEvaluator {
      * Retrieves all of the names of the members from the given class that can be accessed by the
      * expression evaluator.
      *
-     * @param   klass The class to retrieve the members from.
+     * @param   type The class to retrieve the members from.
      * @return  The list of member names.
      */
-    Set<String> getAllMembers(Class<?> klass);
+    Set<String> getAllMembers(Class<?> type);
+
+    /**
+     * Retrieves all of the values of the members from the given Object that can be accessed by the
+     * expression evaluator.
+     *
+     * @param   obj The Object to retrieve the values from.
+     * @return  The list of member values.
+     */
+    Collection<Object> getAllMemberValues(Object obj);
 }

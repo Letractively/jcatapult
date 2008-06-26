@@ -62,6 +62,7 @@ public class DefaultValidationWorkflowTest extends WebBaseTest {
     @Test
     public void testAllNull() throws IOException, ServletException {
         Edit action = new Edit();
+        request.setPost(true);
         ServletObjectsHolder.getServletRequest().setAttribute(DefaultActionInvocationStore.ACTION_INVOCATION_KEY, new DefaultActionInvocation(action, "/", null, null));
         DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
             expressionEvaluator, validatorProvider, messageStore);
@@ -81,6 +82,7 @@ public class DefaultValidationWorkflowTest extends WebBaseTest {
     @Test
     public void testClassLevel() throws IOException, ServletException {
         Edit action = new Edit();
+        request.setPost(true);
         action.user = new User();
         action.user.setName("Fred");
         action.user.setAge(12);

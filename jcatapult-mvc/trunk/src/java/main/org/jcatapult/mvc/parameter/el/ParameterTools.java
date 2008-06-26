@@ -36,19 +36,19 @@ public class ParameterTools {
      * @param   path The path to the type, used in exception message.
      * @return  The component type.
      */
-    public static Class<?> componentType(Type type, String path) {
+    public static Type componentType(Type type, String path) {
         if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
             Class<?> rawType = (Class<?>) parameterizedType.getRawType();
             if (Map.class.isAssignableFrom(rawType)) {
-                return (Class<?>) parameterizedType.getActualTypeArguments()[1];
+                return parameterizedType.getActualTypeArguments()[1];
             } else if (Collection.class.isAssignableFrom(rawType)) {
-                return (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                return parameterizedType.getActualTypeArguments()[0];
             } else {
                 throw new ExpressionException("Unknown collection type [" + type + "]");
             }
         } else if (type instanceof GenericArrayType) {
-            return (Class<?>) ((GenericArrayType) type).getGenericComponentType();
+            return ((GenericArrayType) type).getGenericComponentType();
         }
 
         Class<?> rawType = (Class<?>) type;
@@ -61,6 +61,22 @@ public class ParameterTools {
         }
 
         return rawType;
+    }
+
+    /**
+     * Determines the final component type. This continues to loop over Collections until it hits
+     * a non-parameterized type.
+     *
+     * @param   type The parameterized type.
+     * @param   path The path to the type, used in exception message.
+     * @return  The final component type.
+     */
+    public static Class<?> componentFinalType(Type type, String path) {
+        while (!(type instanceof Class)) {
+            type = componentType(type, path);
+        }
+
+        return (Class<?>) type;
     }
 
     /**

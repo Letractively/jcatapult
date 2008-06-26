@@ -46,7 +46,7 @@ public class TextTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
-            "</div>");
+            "</div>\n");
 
         EasyMock.verify(ee);
     }
@@ -65,7 +65,7 @@ public class TextTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/></div>\n" +
-            "</div>");
+            "</div>\n");
 
         EasyMock.verify(ee);
     }
@@ -84,7 +84,7 @@ public class TextTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"John\"/></div>\n" +
-            "</div>");
+            "</div>\n");
 
         EasyMock.verify(ee);
     }
@@ -102,7 +102,7 @@ public class TextTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
-            "</div>");
+            "</div>\n");
 
         EasyMock.verify(ee);
     }
@@ -121,7 +121,7 @@ public class TextTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
-            "</div>", "Name is required", "Name must be cool");
+            "</div>\n", "Name is required", "Name must be cool");
         EasyMock.verify(ee);
     }
 }

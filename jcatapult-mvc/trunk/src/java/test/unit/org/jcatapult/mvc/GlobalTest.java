@@ -19,7 +19,10 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 
 import org.jcatapult.mvc.test.junit.WebappActionTest;
+import static org.junit.Assert.*;
 import org.junit.Test;
+
+import net.java.io.FileTools;
 
 /**
  * <p>
@@ -30,7 +33,9 @@ import org.junit.Test;
  */
 public class GlobalTest extends WebappActionTest {
     @Test
-    public void testWorkflowCall() throws IOException, ServletException {
+    public void testRenderFTL() throws IOException, ServletException {
         test("/user/edit").get();
+        assertEquals(FileTools.read("src/java/test/unit/org/jcatapult/mvc/render-ftl.txt").toString(),
+            response.getStream().toString());
     }
 }

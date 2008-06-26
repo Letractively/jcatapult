@@ -60,7 +60,7 @@ public abstract class AbstractButtonInputTest extends AbstractInputTest {
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" name=\"test\" value=\"Test\"/></div>\n" +
-            "</div>");
+            "</div>\n");
 
         EasyMock.verify(ee);
     }
@@ -76,7 +76,7 @@ public abstract class AbstractButtonInputTest extends AbstractInputTest {
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" name=\"test\" value=\"Test\"/></div>\n" +
-            "</div>");
+            "</div>\n");
 
         EasyMock.verify(ee);
     }

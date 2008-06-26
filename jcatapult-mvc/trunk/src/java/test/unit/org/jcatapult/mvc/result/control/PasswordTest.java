@@ -41,7 +41,7 @@ public class PasswordTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
-            "</div>");
+            "</div>\n");
     }
 
     @Test
@@ -53,7 +53,7 @@ public class PasswordTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_password\" class=\"label\">Password</label></div>\n" +
             "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
-            "</div>");
+            "</div>\n");
     }
 
     @Test
@@ -65,6 +65,6 @@ public class PasswordTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_password\" class=\"label\"><span class=\"error\">Password (Password is required, Password must be cool)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
-            "</div>", "Password is required", "Password must be cool");
+            "</div>\n", "Password is required", "Password must be cool");
     }
 }

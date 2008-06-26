@@ -55,14 +55,14 @@ public class MemberAccessor extends Accessor {
     }
 
     /**
-     * Pulls all of the fields and java bean properties from the given klass and returns the names.
+     * Pulls all of the fields and java bean properties from the given Class and returns the names.
      *
-     * @param   klass The klass to pull the names from.
+     * @param   type The Class to pull the names from.
      * @return  The names of all the fields and java bean properties.
      */
-    public static Set<String> getAllMembers(Class<?> klass) {
-        Field[] fields = klass.getFields();
-        Map<String, PropertyInfo> map = getPropMap(klass);
+    public static Set<String> getAllMembers(Class<?> type) {
+        Field[] fields = type.getFields();
+        Map<String, PropertyInfo> map = getPropMap(type);
 
         // Favor properties
         Set<String> names = new HashSet<String>();
@@ -73,7 +73,7 @@ public class MemberAccessor extends Accessor {
         names.addAll(map.keySet());
         return names;
     }
-
+    
     final Field field;
     final PropertyInfo propertyInfo;
 

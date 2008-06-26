@@ -66,7 +66,7 @@ public class ForwardResult extends AbstractResult<Forward> {
     public static void initialize(ObjectFactory objectFactory) {
         List<Class<? extends Control>> types = objectFactory.getAllForType(Control.class);
         for (Class<? extends Control> type : types) {
-            controls.put(type.getSimpleName(), type);
+            controls.put(type.getSimpleName().toLowerCase(), type);
         }
     }
 
@@ -98,7 +98,7 @@ public class ForwardResult extends AbstractResult<Forward> {
             requestDispatcher.forward(wrapRequest(invocation, request), response);
         } else if (page.endsWith(".ftl")) {
             PrintWriter writer = response.getWriter();
-            Map<String, Object> map = new FreeMarkerMap(servletContext, request, expressionEvaluator,
+            FreeMarkerMap map = new FreeMarkerMap(servletContext, request, expressionEvaluator,
                 invocation.action(), controls, objectFactory);
             freeMarkerService.render(writer, page, map, locale);
         }
