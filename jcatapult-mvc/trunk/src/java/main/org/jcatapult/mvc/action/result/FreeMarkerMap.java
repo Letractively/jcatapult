@@ -15,13 +15,13 @@
  */
 package org.jcatapult.mvc.action.result;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.ArrayList;
-import java.util.HashSet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,19 +30,28 @@ import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.result.control.Control;
 
+import freemarker.ext.beans.BeanModel;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.SimpleCollection;
+import freemarker.template.TemplateCollectionModel;
+import freemarker.template.TemplateHashModelEx;
+import freemarker.template.TemplateModel;
+
 /**
  * <p>
- * This
+ * This class is a FreeMarker model that provides access in the templates
+ * to the request, session and contet attributes as well as values from the
+ * action and the Control directives via the {@link ControlHashModel} class.
  * </p>
  *
  * @author Brian Pontarelli
  */
-public class FreeMarkerMap implements Map<String, Object> {
+public class FreeMarkerMap implements TemplateHashModelEx {
     private final ServletContext context;
     private final HttpServletRequest request;
     private final ExpressionEvaluator expressionEvaluator;
     private final Object action;
-    private final ControlMap controlMap;
+    private final ControlHashModel controlHashModel;
 
     public FreeMarkerMap(ServletContext context, HttpServletRequest request, ExpressionEvaluator expressionEvaluator,
             Object action, Map<String, Class<? extends Control>> controls, ObjectFactory objectFactory) {
@@ -50,11 +59,11 @@ public class FreeMarkerMap implements Map<String, Object> {
         this.expressionEvaluator = expressionEvaluator;
         this.action = action;
         this.context = context;
-        this.controlMap = new ControlMap(objectFactory, controls);
+        this.controlHashModel = new ControlHashModel(objectFactory, controls);
     }
 
     public int size() {
-        return controlMap.size() + expressionEvaluator.getAllMembers(action.getClass()).size() +
+        return controlHashModel.size() + expressionEvaluator.getAllMembers(action.getClass()).size() +
             count(request.getAttributeNames()) + count(request.getSession().getAttributeNames()) +
             count(context.getAttributeNames());
     }
@@ -63,74 +72,71 @@ public class FreeMarkerMap implements Map<String, Object> {
         return size() > 0;
     }
 
-    public boolean containsKey(Object key) {
-        return controlMap.containsKey(key) || expressionEvaluator.getAllMembers(action.getClass()).contains(key) ||
-            contains(request.getAttributeNames(), key) || contains(request.getSession().getAttributeNames(), key) ||
-            contains(context.getAttributeNames(), key);
-    }
-
-    public boolean containsValue(Object value) {
-        throw new UnsupportedOperationException("containsValue not known for this map");
-    }
-
-    public Object get(Object key) {
+    public TemplateModel get(String key) {
         if (key.equals("jc")) {
-            return controlMap;
+            return controlHashModel;
         }
 
         // First check the action
         Object value = null;
-        String strKey = (String) key;
         if (action != null) {
-            value = expressionEvaluator.getValue(strKey, action);
+            value = expressionEvaluator.getValue(key, action);
         }
 
         if (value == null) {
-            value = request.getAttribute(strKey);
+            value = request.getAttribute(key);
         }
 
         if (value == null) {
             HttpSession session = request.getSession(false);
             if (session != null) {
-                value = session.getAttribute(strKey);
+                value = session.getAttribute(key);
             }
         }
 
         if (value == null) {
-            value = context.getAttribute(strKey);
+            value = context.getAttribute(key);
         }
 
-        return value;
+        return new BeanModel(value, new BeansWrapper());
     }
 
-    public Object put(String key, Object value) {
-        throw new UnsupportedOperationException("put not supported for this map");
+    public TemplateCollectionModel keys() {
+        Set<String> keys = append(controlHashModel.keySet(), iterable(request.getAttributeNames()),
+            iterable(request.getSession().getAttributeNames()), iterable(context.getAttributeNames()));
+        if (action != null) {
+            keys.addAll(expressionEvaluator.getAllMembers(action.getClass()));
+        }
+
+        return new SimpleCollection(keys);
     }
 
-    public Object remove(Object key) {
-        throw new UnsupportedOperationException("remove not supported for this map");
-    }
+    public TemplateCollectionModel values() {
+        Collection<Object> values = new ArrayList<Object>(controlHashModel.valueCollection());
+        if (action != null) {
+            values.addAll(expressionEvaluator.getAllMemberValues(action));
+        }
 
-    public void putAll(Map<? extends String, ?> m) {
-        throw new UnsupportedOperationException("putAll not supported for this map");
-    }
+        Enumeration en = request.getAttributeNames();
+        while (en.hasMoreElements()) {
+            String name = (String) en.nextElement();
+            values.add(request.getAttribute(name));
+        }
 
-    public void clear() {
-        throw new UnsupportedOperationException("clear not supported for this map");
-    }
+        HttpSession session = request.getSession();
+        en = session.getAttributeNames();
+        while (en.hasMoreElements()) {
+            String name = (String) en.nextElement();
+            values.add(session.getAttribute(name));
+        }
 
-    public Set<String> keySet() {
-        return append(controlMap.keySet(), expressionEvaluator.getAllMembers(action.getClass()),
-            iterable(request.getAttributeNames()), iterable(request.getSession().getAttributeNames()),
-            iterable(context.getAttributeNames()));
-    }
+        en = context.getAttributeNames();
+        while (en.hasMoreElements()) {
+            String name = (String) en.nextElement();
+            values.add(context.getAttribute(name));
+        }
 
-    public Collection<Object> values() {
-        throw new UnsupportedOperationException("values not supported for this map");
-    }
-
-    public Set<Entry<String, Object>> entrySet() {
-        throw new UnsupportedOperationException("entrySet not supported for this map");
+        return new SimpleCollection(values);
     }
 
     private int count(Enumeration enumeration) {
@@ -143,20 +149,10 @@ public class FreeMarkerMap implements Map<String, Object> {
         return count;
     }
 
-    private boolean contains(Enumeration enumeration, Object key) {
-        while (enumeration.hasMoreElements()) {
-            if (enumeration.nextElement().equals(key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private Set<String> append(Iterable<String>... iterables) {
-        Set<String> set = new HashSet<String>();
-        for (Iterable<String> iterable : iterables) {
-            for (String key : iterable) {
+    private <T> Set<T> append(Iterable<T>... iterables) {
+        Set<T> set = new HashSet<T>();
+        for (Iterable<T> iterable : iterables) {
+            for (T key : iterable) {
                 set.add(key);
             }
         }

@@ -15,9 +15,10 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +32,10 @@ import org.jcatapult.mvc.message.scope.MessageType;
 
 import com.google.inject.Inject;
 import freemarker.core.Environment;
+import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateModel;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
 
 /**
  * <p>
@@ -157,6 +159,7 @@ public abstract class AbstractControl implements Control {
     @SuppressWarnings("unchecked")
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
     throws IOException, TemplateException {
+        DefaultObjectWrapper objectWrapper = new DefaultObjectWrapper();
         Map<String, String> parameterAttributes = new HashMap<String, String>();
         for (Object o : params.keySet()) {
             String key = (String) o;
@@ -165,8 +168,19 @@ public abstract class AbstractControl implements Control {
             }
         }
 
-        renderStart(env.getOut(), params, parameterAttributes);
-        body.render(env.getOut());
+        Map<String, Object> map = new HashMap<String, Object>(params.size());
+        for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            Object value = entry.getValue();
+            if (value != null) {
+                map.put((String) entry.getKey(), objectWrapper.unwrap((TemplateModel) value));
+            }
+        }
+
+        renderStart(env.getOut(), map, parameterAttributes);
+        if (body != null) {
+            body.render(env.getOut());
+        }
         renderEnd(env.getOut());
     }
 

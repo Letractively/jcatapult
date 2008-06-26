@@ -17,7 +17,6 @@ package org.jcatapult.mvc.action.result;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,22 +24,32 @@ import java.util.Set;
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.result.control.Control;
 
+import freemarker.template.SimpleCollection;
+import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateDirectiveModel;
+import freemarker.template.TemplateHashModelEx;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 
 /**
  * <p>
- * This
+ * This class is a hash that stores the {@link Control} classes so that they
+ * can be used from the FreeMarker templates.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class ControlMap implements Map<String, TemplateDirectiveModel> {
+public class ControlHashModel implements TemplateHashModelEx {
     private final ObjectFactory objectFactory;
     private final Map<String, Class<? extends Control>> controls;
 
-    public ControlMap(ObjectFactory objectFactory, Map<String, Class<? extends Control>> controls) {
+    public ControlHashModel(ObjectFactory objectFactory, Map<String, Class<? extends Control>> controls) {
         this.objectFactory = objectFactory;
         this.controls = controls;
+    }
+
+    public TemplateCollectionModel keys() throws TemplateModelException {
+        return new SimpleCollection(controls.keySet());
     }
 
     public int size() {
@@ -51,15 +60,7 @@ public class ControlMap implements Map<String, TemplateDirectiveModel> {
         return controls.isEmpty();
     }
 
-    public boolean containsKey(Object key) {
-        return controls.containsKey(key);
-    }
-
-    public boolean containsValue(Object value) {
-        return containsValue(value);
-    }
-
-    public TemplateDirectiveModel get(Object key) {
+    public TemplateModel get(String key) {
         Class<? extends Control> type = controls.get(key);
         if (type != null) {
             return objectFactory.create(type);
@@ -68,41 +69,25 @@ public class ControlMap implements Map<String, TemplateDirectiveModel> {
         return null;
     }
 
-    public TemplateDirectiveModel put(String key, TemplateDirectiveModel value) {
-        throw new UnsupportedOperationException("Putting not allowed into the jc directive map");
-    }
+    public TemplateCollectionModel values() {
+        List<TemplateDirectiveModel> all = new ArrayList<TemplateDirectiveModel>();
+        for (String name : controls.keySet()) {
+            all.add(objectFactory.create(controls.get(name)));
+        }
 
-    public TemplateDirectiveModel remove(Object key) {
-        throw new UnsupportedOperationException("Removing not allowed into the jc directive map");
-    }
-
-    public void putAll(Map<? extends String, ? extends TemplateDirectiveModel> m) {
-        throw new UnsupportedOperationException("Putting not allowed into the jc directive map");
-    }
-
-    public void clear() {
-        throw new UnsupportedOperationException("Clearing not allowed into the jc directive map");
+        return new SimpleCollection(all);
     }
 
     public Set<String> keySet() {
         return controls.keySet();
     }
 
-    public Collection<TemplateDirectiveModel> values() {
-        List<TemplateDirectiveModel> all = new ArrayList<TemplateDirectiveModel>();
+    public Collection<Object> valueCollection() {
+        List<Object> all = new ArrayList<Object>();
         for (String name : controls.keySet()) {
             all.add(objectFactory.create(controls.get(name)));
         }
 
         return all;
-    }
-
-    public Set<Entry<String, TemplateDirectiveModel>> entrySet() {
-        Map<String, TemplateDirectiveModel> all = new HashMap<String, TemplateDirectiveModel>();
-        for (String name : controls.keySet()) {
-            all.put(name, objectFactory.create(controls.get(name)));
-        }
-
-        return all.entrySet();
     }
 }

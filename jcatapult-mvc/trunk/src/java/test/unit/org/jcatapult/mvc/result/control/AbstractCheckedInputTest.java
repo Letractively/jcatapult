@@ -71,7 +71,7 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" name=\"test\" value=\"test-value\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_test\" value=\"\"/></div>\n" +
-            "</div>");
+            "</div>\n");
 
         EasyMock.verify(ee);
     }
@@ -122,7 +122,7 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" " + (flag ? "checked=\"checked\" " : "") + "class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"" + value + "\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_user.male\" value=\"\"/></div>\n" +
-            "</div>");
+            "</div>\n");
 
         EasyMock.verify(ee);
     }
@@ -141,7 +141,7 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" checked=\"checked\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_user.male\" value=\"\"/></div>\n" +
-            "</div>");
+            "</div>\n");
 
         EasyMock.verify(ee);
     }
@@ -159,7 +159,7 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" checked=\"checked\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_user.male\" value=\"\"/></div>\n" +
-            "</div>");
+            "</div>\n");
 
         EasyMock.verify(ee);
     }
@@ -178,7 +178,7 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\"><span class=\"error\">Male? (Must be male, Check this box dude!)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_user.male\" value=\"\"/></div>\n" +
-            "</div>", "Must be male", "Check this box dude!");
+            "</div>\n", "Must be male", "Check this box dude!");
 
         EasyMock.verify(ee);
     }

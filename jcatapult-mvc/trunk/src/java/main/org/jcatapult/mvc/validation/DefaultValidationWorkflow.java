@@ -113,20 +113,27 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
         handleAnnotations(action.getClass(), action, "");
     }
 
-    protected void handleAnnotations(Class<?> type, Object container, String path) {
+    /**
+     * Handles looping over all of the fields on the given Class and looking for validation annotations.
+     *
+     * @param   type The Class to validate.
+     * @param   object (Optional) The instance of the Class.
+     * @param   path The current validation path to the object.
+     */
+    protected void handleAnnotations(Class<?> type, Object object, String path) {
         List<Field> fields = allFields(type);
         for (Field field : fields) {
             Annotation[] annotations = field.getAnnotations();
             for (Annotation annotation : annotations) {
                 if (annotation.annotationType().isAnnotationPresent(ValidatorAnnotation.class)) {
-                    Object value = (container != null) ? expressionEvaluator.getValue(field.getName(), container) : null;
-                    validate(annotation, container, value, path + "." + field.getName());
+                    Object value = (object != null) ? expressionEvaluator.getValue(field.getName(), object) : null;
+                    validate(annotation, object, value, path + "." + field.getName());
                 } else if (annotation.annotationType() == Valid.class) {
-                    handleObject(container, path, field);
+                    handleObject(object, path, field);
                 } else if (annotation.annotationType() == ValidMap.class) {
-                    handleMap(container, path, field, annotation);
+                    handleMap(object, path, field, annotation);
                 } else if (annotation.annotationType() == ValidCollection.class) {
-                    handleCollection(container, path, field, annotation);
+                    handleCollection(object, path, field, annotation);
                 }
             }
 
@@ -185,7 +192,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
                     handleAnnotations(mapObj.getClass(), mapObj, keyedPath);
                 } else {
                     Type fieldType = field.getGenericType();
-                    Class<?> componentType = ParameterTools.componentType(fieldType, keyedPath);
+                    Class<?> componentType = ParameterTools.componentFinalType(fieldType, keyedPath);
                     handleAnnotations(componentType, null, keyedPath);
                 }
             }
@@ -193,7 +200,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
             ValidMap validMap = (ValidMap) annotation;
             String[] keys = validMap.keys();
             Type fieldType = field.getGenericType();
-            Class<?> componentType = ParameterTools.componentType(fieldType, path + "." + field.getName());
+            Class<?> componentType = ParameterTools.componentFinalType(fieldType, path + "." + field.getName());
             for (String key : keys) {
                 String keyedPath = newPath + "['" + key + "']";
                 handleAnnotations(componentType, null, keyedPath);
@@ -228,7 +235,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
                     handleAnnotations(o.getClass(), o, indexedPath);
                 } else {
                     Type fieldType = field.getGenericType();
-                    Class<?> componentType = ParameterTools.componentType(fieldType, indexedPath);
+                    Class<?> componentType = ParameterTools.componentFinalType(fieldType, indexedPath);
                     handleAnnotations(componentType, null, indexedPath);
                 }
             }
@@ -236,7 +243,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
             ValidCollection validCollection = (ValidCollection) annotation;
             int[] indexes = validCollection.indexes();
             Type fieldType = field.getGenericType();
-            Class<?> componentType = ParameterTools.componentType(fieldType, newPath);
+            Class<?> componentType = ParameterTools.componentFinalType(fieldType, newPath);
             for (int index : indexes) {
                 String indexedPath = newPath + "[" + index + "]";
                 handleAnnotations(componentType, null, indexedPath);

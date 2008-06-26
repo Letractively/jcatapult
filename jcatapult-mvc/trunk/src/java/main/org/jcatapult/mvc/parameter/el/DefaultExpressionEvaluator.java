@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.parameter.el;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -176,8 +177,21 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     /**
      * {@inheritDoc}
      */
-    public Set<String> getAllMembers(Class<?> klass) {
-        return MemberAccessor.getAllMembers(klass);
+    public Set<String> getAllMembers(Class<?> type) {
+        return MemberAccessor.getAllMembers(type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Collection<Object> getAllMemberValues(Object obj) {
+        Set<String> names = getAllMembers(obj.getClass());
+        Collection<Object> values = new ArrayList<Object>();
+        for (String name : names) {
+            values.add(getValue(name, obj));
+        }
+
+        return values;
     }
 
     /**

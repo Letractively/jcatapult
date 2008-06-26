@@ -56,8 +56,9 @@ public class FormTest extends AbstractControlTest {
         form.renderEnd(writer);
         assertEquals(
             "<div class=\"form\">\n" +
-            "<form action=\"/test\" method=\"POST\"></form>\n" +
-            "</div>", writer.toString());
+            "<form action=\"/test\" method=\"POST\">\n" +
+            "</form>\n" +
+            "</div>\n", writer.toString());
     }
 
     @Test
@@ -84,8 +85,9 @@ public class FormTest extends AbstractControlTest {
         form.renderEnd(writer);
         assertEquals(
             "<div class=\"form\">\n" +
-            "<form action=\"/test\" method=\"POST\"></form>\n" +
-            "</div>", writer.toString());
+            "<form action=\"/test\" method=\"POST\">\n" +
+            "</form>\n" +
+            "</div>\n", writer.toString());
         assertTrue(called.get());
         assertEquals("/test", ServletObjectsHolder.getServletRequest().getRequestURI());
 

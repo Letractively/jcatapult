@@ -31,6 +31,7 @@ import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
 import org.jcatapult.mvc.result.control.Button;
 import org.jcatapult.mvc.result.control.Checkbox;
 import org.jcatapult.mvc.result.control.File;
+import org.jcatapult.mvc.result.control.Form;
 import org.jcatapult.mvc.result.control.Hidden;
 import org.jcatapult.mvc.result.control.Image;
 import org.jcatapult.mvc.result.control.Password;
@@ -61,6 +62,7 @@ public class MVCModule extends AbstractModule {
         configureResults();
         configureScopes();
         configureLocale();
+        configureControls();
     }
 
     /**
@@ -114,6 +116,7 @@ public class MVCModule extends AbstractModule {
         bind(Button.class);
         bind(Checkbox.class);
         bind(File.class);
+        bind(Form.class);
         bind(Hidden.class);
         bind(Image.class);
         bind(Password.class);

@@ -41,7 +41,7 @@ public class FileTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\"><input type=\"file\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
-            "</div>");
+            "</div>\n");
     }
 
     @Test
@@ -53,7 +53,7 @@ public class FileTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_profile\" class=\"label\">Your profile</label></div>\n" +
             "<div class=\"control-container\"><input type=\"file\" class=\"css-class\" id=\"user_profile\" name=\"user.profile\"/></div>\n" +
-            "</div>");
+            "</div>\n");
     }
 
     @Test
@@ -65,6 +65,6 @@ public class FileTest extends AbstractInputTest {
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_profile\" class=\"label\"><span class=\"error\">Your profile (Profile is required, Profile must be cool)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"file\" class=\"css-class\" id=\"user_profile\" name=\"user.profile\"/></div>\n" +
-            "</div>", "Profile is required", "Profile must be cool");
+            "</div>\n", "Profile is required", "Profile must be cool");
     }
 }
