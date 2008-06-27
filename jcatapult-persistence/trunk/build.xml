@@ -18,8 +18,11 @@
   <import file="${plugin.dir}/java/1.0/jar.xml"/>
 
   <!-- JUnit -->
-  <import file="${plugin.dir}/junit/1.0/junit-no-db.xml"/>
+  <import file="${plugin.dir}/junit/1.0/junit.xml"/>
   <import file="${plugin.dir}/cobertura/1.0/cobertura.xml"/>
+
+  <!-- mysql -->
+  <import file="${plugin.dir}/mysql/1.0/mysql.xml"/>
 
   <!-- SVN -->
   <import file="${plugin.dir}/svn/1.0/svn.xml"/>
