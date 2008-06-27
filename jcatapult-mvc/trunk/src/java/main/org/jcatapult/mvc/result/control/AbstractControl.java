@@ -51,8 +51,8 @@ public abstract class AbstractControl implements Control {
     protected MessageStore messageStore;
     protected FreeMarkerService freeMarkerService;
     protected HttpServletRequest request;
-    private ActionInvocation actionInvocation;
-    private Object action;
+    protected ActionInvocation actionInvocation;
+    protected Object action;
     private Map<String, Object> parameters;
 
     @Inject
@@ -80,8 +80,8 @@ public abstract class AbstractControl implements Control {
      * @param   parameterAttributes The parameter attributes.
      */
     public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> parameterAttributes) {
-        addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
-        parameters = makeParameters(attributes, parameterAttributes, actionInvocation, action);
+        addAdditionalAttributes(attributes, parameterAttributes);
+        parameters = makeParameters(attributes, parameterAttributes);
 
         if (startTemplateName() != null) {
             String templateName = "/WEB-INF/control-templates/" + startTemplateName();
@@ -129,12 +129,9 @@ public abstract class AbstractControl implements Control {
      *
      * @param   attributes The attributes from the tag.
      * @param   parameterAttributes The parameter attributes from the tag.
-     * @param   actionInvocation The action invocation.
-     * @param   action The action.
      * @return  The Parameters Map.
      */
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Object action) {
+    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> parameterAttributes) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("attributes", attributes);
         parameters.put("parameter_attributes", parameterAttributes);
@@ -189,11 +186,10 @@ public abstract class AbstractControl implements Control {
      * by control tags to determine values, checked states, selected options, etc.
      *
      * @param   attributes The attributes.
-     * @param   actionInvocation The action invocation.
      * @param   parameterAttributes The parameter attributes.
      */
     protected abstract void addAdditionalAttributes(Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation);
+        Map<String, String> parameterAttributes);
 
     /**
      * @return  The name of the FreeMarker template that this control renders when it starts.

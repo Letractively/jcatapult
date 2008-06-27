@@ -17,8 +17,6 @@ package org.jcatapult.mvc.result.control;
 
 import java.util.Map;
 
-import org.jcatapult.mvc.action.ActionInvocation;
-
 /**
  * <p>
  * This class is the control for an image button.
@@ -33,12 +31,11 @@ public class Image extends AbstractButtonInput {
      *
      * @param   attributes The attributes to check for the ismap attribute.
      * @param   parameterAttributes Not used.
-     * @param   actionInvocation Not used.
      */
     @Override
     protected void addAdditionalAttributes(Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation) {
-        super.addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
+        Map<String, String> parameterAttributes) {
+        super.addAdditionalAttributes(attributes, parameterAttributes);
         Boolean ismap = (Boolean) attributes.remove("ismap");
         if (ismap != null && ismap) {
             attributes.put("ismap", "ismap");

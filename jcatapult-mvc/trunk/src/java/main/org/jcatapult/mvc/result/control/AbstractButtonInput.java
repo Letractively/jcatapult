@@ -17,8 +17,6 @@ package org.jcatapult.mvc.result.control;
 
 import java.util.Map;
 
-import org.jcatapult.mvc.action.ActionInvocation;
-
 /**
  * <p>
  * This class is the abstract control for a button input. Button tags are simple
@@ -38,14 +36,12 @@ public abstract class AbstractButtonInput extends AbstractInput {
      *
      * @param   attributes Passed to super.
      * @param   parameterAttributes Passed to super.
-     * @param   actionInvocation Passed to super.
-     * @param   action Passed to super.
      * @return  The fixed parameters map.
      */
     @Override
     protected Map<String, Object> makeParameters(Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Object action) {
-        Map<String, Object> parameters = super.makeParameters(attributes, parameterAttributes, actionInvocation, action);
+        Map<String, String> parameterAttributes) {
+        Map<String, Object> parameters = super.makeParameters(attributes, parameterAttributes);
         Object label = parameters.get("label");
         attributes.put("value", label);
         return parameters;
