@@ -17,8 +17,8 @@ package org.jcatapult.commerce.service;
 
 import java.net.InetAddress;
 
-import org.jcatapult.commerce.domain.CreditCard;
-import org.jcatapult.commerce.domain.Money;
+import org.jcatapult.domain.commerce.CreditCard;
+import org.jcatapult.domain.commerce.Money;
 
 import com.google.inject.ImplementedBy;
 
