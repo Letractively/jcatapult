@@ -18,7 +18,6 @@ package org.jcatapult.mvc.result.control;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.servlet.MVCWorkflow;
 import org.jcatapult.mvc.servlet.URIHttpServletRequest;
 import org.jcatapult.servlet.ServletObjectsHolder;
@@ -47,11 +46,10 @@ public class Form extends AbstractControl {
      *
      * @param   attributes The attributes of the tag.
      * @param   parameterAttributes The parameter attributes.
-     * @param   actionInvocation The action invocation.
      */
     @Override
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> parameterAttributes,
-            ActionInvocation actionInvocation) {
+    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> parameterAttributes
+    ) {
         final String uri = (String) attributes.remove("prepareAction");
         if (uri != null) {
             // Mock out the request for the new URI

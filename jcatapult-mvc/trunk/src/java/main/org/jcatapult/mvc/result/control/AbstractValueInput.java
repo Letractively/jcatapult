@@ -17,7 +17,6 @@ package org.jcatapult.mvc.result.control;
 
 import java.util.Map;
 
-import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 /**
@@ -30,7 +29,7 @@ import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractValueInput extends AbstractInput {
-    private final ExpressionEvaluator expressionEvaluator;
+    protected final ExpressionEvaluator expressionEvaluator;
 
     protected AbstractValueInput(ExpressionEvaluator expressionEvaluator, boolean labeled) {
         super(labeled);
@@ -44,15 +43,12 @@ public abstract class AbstractValueInput extends AbstractInput {
      * <strong>defaultValue</strong> attribute, it is used.
      *
      * @param   attributes The value String is put into this Map.
-     * @param   actionInvocation Used to grab the action.
      */
-    protected void addAdditionalAttributes(Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation) {
+    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> parameterAttributes) {
         // Call super to handle the ID
-        super.addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
+        super.addAdditionalAttributes(attributes, parameterAttributes);
 
         String name = (String) attributes.get("name");
-        Object action = actionInvocation.action();
         String value;
         if (!attributes.containsKey("value") && action != null) {
             value = expressionEvaluator.getValue(name, action, parameterAttributes);

@@ -17,7 +17,6 @@ package org.jcatapult.mvc.result.control;
 
 import java.util.Map;
 
-import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.message.MessageProvider;
 import org.jcatapult.mvc.message.scope.MessageType;
 
@@ -55,10 +54,9 @@ public abstract class AbstractInput extends AbstractControl {
      *
      * @param   attributes The attributes from the tag.
      * @param   parameterAttributes The parameter attributes from the tag.
-     * @param   actionInvocation The action invocation.
      */
     protected void addAdditionalAttributes(Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation) {
+        Map<String, String> parameterAttributes) {
         String id = (String) attributes.get("id");
         if (id == null) {
             id = makeID((String) attributes.get("name"));
@@ -83,22 +81,16 @@ public abstract class AbstractInput extends AbstractControl {
      *
      * @param   attributes The attributes from the tag.
      * @param   parameterAttributes The parameter attributes from the tag.
-     * @param   actionInvocation The action invocation.
-     * @param   action The action.
      * @return  The parameter map.
      */
     @Override
     protected Map<String, Object> makeParameters(Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation, Object action) {
-        Map<String, Object> map = super.makeParameters(attributes, parameterAttributes, actionInvocation, action);
+        Map<String, String> parameterAttributes) {
+        Map<String, Object> map = super.makeParameters(attributes, parameterAttributes);
         String name = (String) attributes.get("name");
         if (labeled) {
-            String bundleName;
-            if (attributes.containsKey("bundle")) {
-                bundleName = (String) attributes.remove("bundle");
-            } else if (action != null) {
-                bundleName = action.getClass().getName();
-            } else {
+            String bundleName = determineBundleName(attributes);
+            if (bundleName == null) {
                 throw new IllegalStateException("Unable to locate the label message for the field named [" +
                     name + "]. If you don't have an action class for the URL, you define the bundle to " +
                     "use to localize the form. This bundle is specified either on the control tag or the " +
@@ -126,5 +118,16 @@ public abstract class AbstractInput extends AbstractControl {
     @Override
     protected String startTemplateName() {
         return null;
+    }
+
+    protected String determineBundleName(Map<String, Object> attributes) {
+        String bundleName = null;
+        if (attributes.containsKey("bundle")) {
+            bundleName = (String) attributes.remove("bundle");
+        } else if (action != null) {
+            bundleName = action.getClass().getName();
+        }
+
+        return bundleName;
     }
 }

@@ -17,8 +17,6 @@ package org.jcatapult.mvc.result.control;
 
 import java.util.Map;
 
-import org.jcatapult.mvc.action.ActionInvocation;
-
 /**
  * <p>
  * This class is the control for a input type=password.
@@ -36,11 +34,10 @@ public class Password extends AbstractInput {
      *
      * @param   attributes The attributes.
      * @param   parameterAttributes The parameter attributes.
-     * @param   actionInvocation The action invocation.
      */
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> parameterAttributes,
-            ActionInvocation actionInvocation) {
-        super.addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
+    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> parameterAttributes
+    ) {
+        super.addAdditionalAttributes(attributes, parameterAttributes);
         attributes.remove("value");
     }
 

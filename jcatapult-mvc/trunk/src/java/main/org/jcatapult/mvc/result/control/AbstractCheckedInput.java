@@ -18,7 +18,6 @@ package org.jcatapult.mvc.result.control;
 import java.lang.reflect.Array;
 import java.util.Map;
 
-import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
@@ -45,12 +44,11 @@ public abstract class AbstractCheckedInput extends AbstractInput {
      * the value of the tag.
      *
      * @param   attributes The checked boolean is put into this Map.
-     * @param   actionInvocation Used to grab the action.
      */
     @Override
     protected void addAdditionalAttributes(Map<String, Object> attributes,
-            Map<String, String> parameterAttributes, ActionInvocation actionInvocation) {
-        super.addAdditionalAttributes(attributes, parameterAttributes, actionInvocation);
+        Map<String, String> parameterAttributes) {
+        super.addAdditionalAttributes(attributes, parameterAttributes);
         String name = (String) attributes.get("name");
         Object action = actionInvocation.action();
         if (!attributes.containsKey("checked") && action != null) {
