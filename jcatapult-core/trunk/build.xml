@@ -23,7 +23,7 @@
   <import file="${plugin.dir}/javadoc/1.0/javadoc.xml"/>
 
   <!-- junit -->
-  <import file="${plugin.dir}/junit/1.0/junit.xml"/>
+  <import file="${plugin.dir}/junit/1.0/junit-no-db.xml"/>
 
   <!-- ide -->
   <import file="${plugin.dir}/ide/1.0/ide.xml"/>

@@ -20,24 +20,20 @@ import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.ServletException;
 
-import org.jcatapult.jpa.JPAWorkflow;
-
 import com.google.inject.Inject;
 
 /**
  * <p>
- * This is the core workflow that includes the JPA and static resource workflows.
+ * This is the core workflow that includes the static resource workflows.
  * </p>
  *
  * @author Brian Pontarelli
  */
 public class CoreWorkflow implements Workflow {
-    private final JPAWorkflow jpaWorkflow;
     private final StaticResourceWorkflow staticResourceWorkflow;
 
     @Inject
-    public CoreWorkflow(JPAWorkflow jpaWorkflow, StaticResourceWorkflow staticResourceWorkflow) {
-        this.jpaWorkflow = jpaWorkflow;
+    public CoreWorkflow(StaticResourceWorkflow staticResourceWorkflow) {
         this.staticResourceWorkflow = staticResourceWorkflow;
     }
 
@@ -49,7 +45,7 @@ public class CoreWorkflow implements Workflow {
      * @throws  ServletException If the sub chain throws.
      */
     public void perform(WorkflowChain chain) throws IOException, ServletException {
-        SubWorkflowChain sub = new SubWorkflowChain(Arrays.asList(staticResourceWorkflow, jpaWorkflow), chain);
+        SubWorkflowChain sub = new SubWorkflowChain(Arrays.asList((Workflow) staticResourceWorkflow), chain);
         sub.continueWorkflow();
     }
 }
