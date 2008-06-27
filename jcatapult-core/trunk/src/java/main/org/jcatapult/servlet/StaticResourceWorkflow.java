@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.configuration.Configuration;
 
 import com.google.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 
 /**
  * <p>
@@ -197,7 +196,7 @@ public class StaticResourceWorkflow implements Workflow {
         if (uri.startsWith("/")) {
             uri = uri.substring(1);
         }
-        return ClassLoaderUtil.getResourceAsStream(uri, getClass());
+        return Thread.currentThread().getContextClassLoader().getResourceAsStream(uri);
     }
 
     /**
