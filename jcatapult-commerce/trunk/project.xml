@@ -20,6 +20,9 @@
   -->
   <properties file="${user.home}/inversoft-org-release-build.properties"/>
 
+  <!-- Commerce doesn't have any database code any longer -->
+  <property name="project.requires.database" value="false"/>
+
   <!-- compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
   <property name="version.jcatapult" value="1.0-RC5-{integration}"/>
