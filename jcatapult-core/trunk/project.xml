@@ -35,24 +35,16 @@
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
-      <!--<artifact group="jsp.servlet.javax" project="jsp-api" name="jsp-api" version="2.0" type="jar"/>-->
+      <artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>
       <artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="compile">
-      <!--<artifact group="aopalliance.sourceforge.net" project="aopalliance" name="aopalliance" version="1.0" type="jar"/>-->
       <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="commons.apache.org" project="commons-lang" name="commons-lang" version="2.3" type="jar"/>
       <artifact group="freemarker.org" project="freemarker" name="freemarker" version="2.3.12" type="jar"/>
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
-      <!--<artifact group="hibernate.org" project="hibernate-annotations" name="hibernate-annotations" version="3.3.1" type="jar"/>-->
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
       <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
-      <!--<artifact group="mysql.com" project="mysql-connector-java" name="mysql-connector-java" version="5.1.6" type="jar"/>-->
-      <!--<artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>-->
-    </artifactGroup>
-    <artifactGroup type="run">
-      <!--<artifact group="hibernate.org" project="hibernate-entitymanager" name="hibernate-entitymanager" version="3.3.2" type="jar"/>-->
-      <!--<artifact group="joda-time.joda.org" project="joda-time-hibernate" name="joda-time-hibernate" version="1.0" type="jar"/>-->
     </artifactGroup>
     <artifactGroup type="test-compile">
       <artifact group="easymock.org" project="easymock" name="easymock" version="2.2" type="jar"/>
