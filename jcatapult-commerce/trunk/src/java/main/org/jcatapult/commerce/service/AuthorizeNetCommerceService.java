@@ -28,8 +28,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.configuration.Configuration;
-import org.jcatapult.commerce.domain.CreditCard;
-import org.jcatapult.commerce.domain.Money;
+import org.jcatapult.domain.commerce.CreditCard;
+import org.jcatapult.domain.commerce.Money;
 
 import com.google.inject.Inject;
 

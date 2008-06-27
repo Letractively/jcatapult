@@ -34,18 +34,13 @@
     <artifactGroup type="compile">
       <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="hibernate.org" project="hibernate" name="hibernate" version="3.2.6" type="jar"/>
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence" version="${version.jcatapult}" type="jar"/>
       <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
-      <artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-compile">
       <artifact group="easymock.org" project="easymock" name="easymock" version="2.2" type="jar"/>
-      <artifact group="hibernate.org" project="hibernate-annotations" name="hibernate-annotations" version="3.3.1" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence-test" version="${version.jcatapult}" type="jar"/>
       <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
     </artifactGroup>
   </dependencies>
