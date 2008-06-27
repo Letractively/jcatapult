@@ -30,13 +30,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.guice.GuiceContainer;
-import org.jcatapult.jpa.EntityManagerContext;
 
 /**
  * <p>
  * This is the main Servlet filter for the JCatapult framework. This
- * will setup the {@link ServletObjectsHolder}, the {@link EntityManagerContext}
- * and any other JCatapult configuration that is needed.
+ * will setup the {@link ServletObjectsHolder}, the JPA context (if the
+ * project is using JPA) and any other JCatapult configuration that is needed.
  * </p>
  *
  * <p>
