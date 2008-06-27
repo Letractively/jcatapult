@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Locale;
-import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 import org.jcatapult.environment.EnvironmentResolver;
@@ -99,21 +98,20 @@ public class DefaultFreeMarkerService implements FreeMarkerService {
     /**
      * {@inheritDoc}
      */
-    public String render(String templateName, Map<String, Object> parameters, Locale locale)
-    throws FreeMarkerRenderException {
+    public String render(String templateName, Object root, Locale locale) throws FreeMarkerRenderException {
         StringWriter writer = new StringWriter();
-        render(writer, templateName, parameters, locale);
+        render(writer, templateName, root, locale);
         return writer.toString();
     }
 
     /**
      * {@inheritDoc}
      */
-    public void render(Writer writer, String templateName, Map<String, Object> parameters, Locale locale)
+    public void render(Writer writer, String templateName, Object root, Locale locale)
     throws FreeMarkerRenderException {
         try {
             Template template = freeMarkerConfiguration.getTemplate(templateName, locale);
-            template.process(parameters, writer);
+            template.process(root, writer);
         } catch (IOException e) {
             throw new FreeMarkerRenderException(e);
         } catch (TemplateException e) {

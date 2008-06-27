@@ -18,7 +18,6 @@ package org.jcatapult.freemarker;
 
 import java.io.Writer;
 import java.util.Locale;
-import java.util.Map;
 
 import com.google.inject.ImplementedBy;
 
@@ -39,13 +38,13 @@ public interface FreeMarkerService {
      *
      * @param   templateName The name of the template. Since this service is generic, this is the full
      *          path to the template. For example, it would be <strong>/WEB-INF/emails/foo-html.ftl</strong>.
-     * @param   parameters The parameters passed to the template.
+     * @param   root This can be a Map or a FreeMarker model type that provides the values to the
+     *          template.
      * @param   locale The locale used to find the template.
      * @return  The template.
      * @throws  FreeMarkerRenderException If the render fails.
      */
-    String render(String templateName, Map<String, Object> parameters, Locale locale)
-    throws FreeMarkerRenderException;
+    String render(String templateName, Object root, Locale locale) throws FreeMarkerRenderException;
 
     /**
      * Renders the given template. This method renders the template into the given Writer.
@@ -53,10 +52,10 @@ public interface FreeMarkerService {
      * @param   writer The writer to output the render to.
      * @param   templateName The name of the template. Since this service is generic, this is the full
      *          path to the template. For example, it would be <strong>/WEB-INF/emails/foo-html.ftl</strong>.
-     * @param   parameters The parameters passed to the template.
+     * @param   root This can be a Map or a FreeMarker model type that provides the values to the
+     *          template.
      * @param   locale The locale used to find the template.
      * @throws  FreeMarkerRenderException If the render fails.
      */
-    void render(Writer writer, String templateName, Map<String, Object> parameters, Locale locale)
-    throws FreeMarkerRenderException;
+    void render(Writer writer, String templateName, Object root, Locale locale) throws FreeMarkerRenderException;
 }
