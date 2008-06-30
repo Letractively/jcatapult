@@ -4,8 +4,10 @@
              version="1.0">
   <persistence-unit name="punit">
     <non-jta-data-source>java:comp/env/jdbc/jcatapult_persistence</non-jta-data-source>
-    <class>org.jcatapult.jpa.User</class>
-    <class>org.jcatapult.jpa.SoftDeletableUser</class>
+    <class>org.jcatapult.persistence.service.jpa.User</class>
+    <class>org.jcatapult.persistence.service.jpa.SoftDeletableUser</class>
+    <class>org.jcatapult.domain.commerce.MoneyHolder</class>
+    <class>org.jcatapult.domain.commerce.MoneyAmountHolder</class>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
       <property name="hibernate.hbm2ddl.auto" value="create"/>

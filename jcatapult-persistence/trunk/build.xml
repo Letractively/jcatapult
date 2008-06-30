@@ -32,4 +32,17 @@
 
   <!-- IDE -->
   <import file="${plugin.dir}/ide/1.0/ide.xml"/>
+
+  <macrodef name="jar-post">
+    <sequential>
+      <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}.jar">
+        <fileset dir="${dir.target.classes.test.unit}" includes="**/test/**/*"/>
+      </jar>
+
+      <!-- Source JAR -->
+      <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}-src.jar">
+        <fileset dir="${dir.src.java.test.unit}" includes="**/test/*"/>
+      </jar>
+   </sequential>
+  </macrodef>
 </project>
