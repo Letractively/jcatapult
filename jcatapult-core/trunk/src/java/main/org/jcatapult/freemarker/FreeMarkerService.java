@@ -43,8 +43,10 @@ public interface FreeMarkerService {
      * @param   locale The locale used to find the template.
      * @return  The template.
      * @throws  FreeMarkerRenderException If the render fails.
+     * @throws  MissingTemplateException If the template is missing.
      */
-    String render(String templateName, Object root, Locale locale) throws FreeMarkerRenderException;
+    String render(String templateName, Object root, Locale locale)
+    throws FreeMarkerRenderException, MissingTemplateException;
 
     /**
      * Renders the given template. This method renders the template into the given Writer.
@@ -56,6 +58,8 @@ public interface FreeMarkerService {
      *          template.
      * @param   locale The locale used to find the template.
      * @throws  FreeMarkerRenderException If the render fails.
+     * @throws  MissingTemplateException If the template is missing.
      */
-    void render(Writer writer, String templateName, Object root, Locale locale) throws FreeMarkerRenderException;
+    void render(Writer writer, String templateName, Object root, Locale locale)
+    throws FreeMarkerRenderException, MissingTemplateException;
 }

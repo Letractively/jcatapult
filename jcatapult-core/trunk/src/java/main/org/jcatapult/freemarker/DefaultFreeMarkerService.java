@@ -16,6 +16,7 @@
  */
 package org.jcatapult.freemarker;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -98,7 +99,8 @@ public class DefaultFreeMarkerService implements FreeMarkerService {
     /**
      * {@inheritDoc}
      */
-    public String render(String templateName, Object root, Locale locale) throws FreeMarkerRenderException {
+    public String render(String templateName, Object root, Locale locale)
+    throws FreeMarkerRenderException, MissingTemplateException {
         StringWriter writer = new StringWriter();
         render(writer, templateName, root, locale);
         return writer.toString();
@@ -108,10 +110,12 @@ public class DefaultFreeMarkerService implements FreeMarkerService {
      * {@inheritDoc}
      */
     public void render(Writer writer, String templateName, Object root, Locale locale)
-    throws FreeMarkerRenderException {
+    throws FreeMarkerRenderException, MissingTemplateException {
         try {
             Template template = freeMarkerConfiguration.getTemplate(templateName, locale);
             template.process(root, writer);
+        } catch (FileNotFoundException fnfe) {
+            throw new MissingTemplateException(fnfe);
         } catch (IOException e) {
             throw new FreeMarkerRenderException(e);
         } catch (TemplateException e) {
