@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module relativePaths="true" classpath="eclipse" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
-    <facet type="jpa" name="JPA" implicit="true">
+    <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />
@@ -12,7 +12,7 @@
   </component>
   <component name="copyright">
     <Base>
-      <setting name="state" value="2" />
+      <setting name="state" value="1" />
     </Base>
   </component>
 </module>
