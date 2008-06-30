@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.junit.Test;
 
 /**
@@ -34,28 +36,53 @@ import org.junit.Test;
 public class RedirectResultTest {
     @Test
     public void testFullyQualified() throws IOException, ServletException {
+        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.replay(ee);
+
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         response.setStatus(301);
         response.sendRedirect("http://www.google.com");
         EasyMock.replay(response);
 
         Redirect redirect = new RedirectImpl("success", "http://www.google.com", true);
-        RedirectResult forwardResult = new RedirectResult(response);
-        forwardResult.execute(redirect, null);
+        RedirectResult forwardResult = new RedirectResult(ee, response);
+        forwardResult.execute(redirect, new DefaultActionInvocation(null, "/foo", "", null));
 
         EasyMock.verify(response);
     }
 
     @Test
     public void testRelative() throws IOException, ServletException {
+        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.replay(ee);
+
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         response.setStatus(302);
         response.sendRedirect("/foo/bar.jsp");
         EasyMock.replay(response);
 
         Redirect redirect = new RedirectImpl("success", "/foo/bar.jsp", false);
-        RedirectResult forwardResult = new RedirectResult(response);
-        forwardResult.execute(redirect, null);
+        RedirectResult forwardResult = new RedirectResult(ee, response);
+        forwardResult.execute(redirect, new DefaultActionInvocation(null, "foo", "", null));
+
+        EasyMock.verify(response);
+    }
+
+    @Test
+    public void testExpand() throws IOException, ServletException {
+        Object action = new Object();
+        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.expect(ee.expand("${foo}", action)).andReturn("result");
+        EasyMock.replay(ee);
+
+        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+        response.setStatus(302);
+        response.sendRedirect("result");
+        EasyMock.replay(response);
+
+        Redirect redirect = new RedirectImpl("success", "${foo}", false);
+        RedirectResult forwardResult = new RedirectResult(ee, response);
+        forwardResult.execute(redirect, new DefaultActionInvocation(action, "foo", "", null));
 
         EasyMock.verify(response);
     }

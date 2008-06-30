@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.action.result.annotation.ResultAnnotation;
+import org.jcatapult.mvc.action.result.annotation.ResultContainerAnnotation;
 
 import com.google.inject.Inject;
 import net.java.lang.reflect.ReflectionException;
@@ -81,19 +82,41 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
         Annotation[] annotations = action.getClass().getAnnotations();
         for (Annotation annotation : annotations) {
             if (annotation.annotationType().isAnnotationPresent(ResultAnnotation.class)) {
+                if (matchesCode(resultCode, annotation)) {
+                    return new DefaultResultInvocation(annotation, uri, resultCode);
+                }
+            } else if (annotation.annotationType().isAnnotationPresent(ResultContainerAnnotation.class)) {
+                // There are multiple annotations inside the value
                 try {
-                    String code = (String) invokeMethod("code", annotation);
-                    if (code.equals(resultCode)) {
-                        return new DefaultResultInvocation(annotation, uri, resultCode);
+                    Annotation[] results = (Annotation[]) invokeMethod("value", annotation);
+                    for (Annotation result : results) {
+                        if (matchesCode(resultCode, result)) {
+                            return new DefaultResultInvocation(result, uri, resultCode);
+                        }
                     }
                 } catch (ReflectionException e) {
-                    throw new RuntimeException("Custom result annotations must have a method named " +
-                        "[code] that contains the result code they are associated with.");
+                    throw new RuntimeException("Custom result annotation containers must have a method " +
+                        "named [value] that is an array of result annotations.");
                 }
             }
+
         }
 
         Forward forward = forwardResult.defaultForward(uri, resultCode);
         return new DefaultResultInvocation(forward, uri, resultCode);
+    }
+
+    private boolean matchesCode(String resultCode, Annotation annotation) {
+        try {
+            String code = (String) invokeMethod("code", annotation);
+            if (code.equals(resultCode)) {
+                return true;
+            }
+        } catch (ReflectionException e) {
+            throw new RuntimeException("Custom result annotations must have a method named " +
+                "[code] that contains the result code they are associated with.");
+        }
+
+        return false;
     }
 }

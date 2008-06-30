@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.locale.annotation.CurrentLocale;
@@ -31,6 +32,9 @@ import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 
 import com.google.inject.Inject;
+import net.java.variable.VariableExpander;
+import net.java.variable.ExpanderStrategy;
+import net.java.variable.ExpanderException;
 
 /**
  * <p>
@@ -172,6 +176,18 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
                 context.init(nextValue);
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String expand(String str, final Object object)
+    throws ExpressionException {
+        return VariableExpander.expand(str, new ExpanderStrategy() {
+            public String expand(String variableName) throws ExpanderException {
+                return getValue(variableName, object, new HashMap<String, String>());
+            }
+        });
     }
 
     /**

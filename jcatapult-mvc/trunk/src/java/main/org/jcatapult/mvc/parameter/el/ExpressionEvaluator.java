@@ -94,6 +94,16 @@ public interface ExpressionEvaluator {
     throws ConversionException, ConverterStateException, ExpressionException;
 
     /**
+     * Expands variables in the given String. The variables must be in the form <code>${foo}</code>.
+     *
+     * @param   str The String to expand.
+     * @param   object The Root object where the variables are expanded from.
+     * @return  The expanded String and never null.
+     * @throws  ExpressionException If the expansion failed.
+     */
+    String expand(String str, Object object) throws ExpressionException;
+
+    /**
      * Retrieves all of the names of the members from the given class that can be accessed by the
      * expression evaluator.
      *
