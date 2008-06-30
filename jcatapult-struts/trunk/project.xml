@@ -21,6 +21,7 @@
     <artifactGroup type="compile">
       <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-commerce" name="jcatapult-commerce" version="1.0-RC5-{integration}" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="1.0-RC5-{integration}" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence" version="1.0-RC5-{integration}" type="jar"/>
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>

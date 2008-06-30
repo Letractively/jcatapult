@@ -26,6 +26,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.easymock.EasyMock;
 import org.jcatapult.container.ContainerResolver;
+import org.jcatapult.persistence.test.JPABaseTest;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.test.servlet.MockServletRequest;
 import org.junit.Before;
