@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-email"
          group="jcatapult.org"
-         version="1.0-RC4">
+         version="1.0-RC5">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -22,7 +22,7 @@
 
   <!-- compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult" value="1.0-RC4"/>
+  <property name="version.jcatapult" value="1.0-RC5-{integration}"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile">
