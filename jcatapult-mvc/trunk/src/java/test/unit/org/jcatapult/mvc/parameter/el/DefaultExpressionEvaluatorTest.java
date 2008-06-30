@@ -24,7 +24,7 @@ import org.example.domain.Address;
 import org.example.domain.AddressField;
 import org.example.domain.User;
 import org.example.domain.UserField;
-import org.jcatapult.mvc.test.junit.WebBaseTest;
+import org.jcatapult.mvc.test.WebBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

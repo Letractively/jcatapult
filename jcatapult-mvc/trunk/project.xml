@@ -12,6 +12,13 @@
   <!-- set to true if this libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="false"/>
 
+  <release>
+    <publication name="jcatapult-mvc" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"
+                 dependencies="dependencies.project"/>
+    <publication name="jcatapult-mvc-test" type="jar" compatType="minor" file="target/jars/${project.name}-test-${project.version}.jar"
+                 dependencies="dependencies.project"/>
+  </release>
+
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
       <artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
@@ -27,6 +34,7 @@
     <artifactGroup type="test-compile">
       <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="easymock.org" project="easymock" name="easymock" version="2.3" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-RC5-{integration}" type="jar"/>
       <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-run"/>

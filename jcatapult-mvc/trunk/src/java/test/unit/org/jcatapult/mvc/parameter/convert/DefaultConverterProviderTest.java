@@ -21,7 +21,7 @@ import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
 import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
 import org.jcatapult.mvc.parameter.convert.converters.NumberConverter;
 import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
-import org.jcatapult.mvc.test.junit.WebBaseTest;
+import org.jcatapult.mvc.test.WebBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
