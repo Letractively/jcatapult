@@ -12,6 +12,13 @@
   <!-- set to true if this libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="false"/>
 
+  <release>
+    <publication name="jcatapult-struts" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"
+                 dependencies="dependencies.project"/>
+    <publication name="jcatapult-struts-test" type="jar" compatType="minor" file="target/jars/${project.name}-test-${project.version}.jar"
+                 dependencies="dependencies.project"/>
+  </release>
+
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
       <!--<artifact group="jsp.servlet.javax" project="jsp-api" name="jsp-api" version="2.0" type="jar"/>-->
