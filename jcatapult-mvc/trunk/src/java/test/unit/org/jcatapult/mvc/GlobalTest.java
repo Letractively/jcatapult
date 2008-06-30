@@ -18,7 +18,8 @@ package org.jcatapult.mvc;
 import java.io.IOException;
 import javax.servlet.ServletException;
 
-import org.jcatapult.mvc.test.junit.WebappActionTest;
+import org.jcatapult.mvc.test.WebBaseTest;
+import org.jcatapult.mvc.test.WebappTestRunner;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -31,11 +32,12 @@ import net.java.io.FileTools;
  *
  * @author Brian Pontarelli
  */
-public class GlobalTest extends WebappActionTest {
+public class GlobalTest extends WebBaseTest {
     @Test
     public void testRenderFTL() throws IOException, ServletException {
-        test("/user/edit").get();
+        WebappTestRunner runner = new WebappTestRunner();
+        runner.test("/user/edit").get();
         assertEquals(FileTools.read("src/java/test/unit/org/jcatapult/mvc/render-ftl.txt").toString(),
-            response.getStream().toString());
+            runner.response.getStream().toString());
     }
 }

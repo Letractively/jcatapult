@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.test.junit;
+package org.jcatapult.mvc.test;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -21,32 +21,26 @@ import javax.servlet.ServletException;
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.servlet.MVCWorkflow;
-import org.jcatapult.mvc.test.MockHttpServletRequest;
-import org.jcatapult.mvc.test.MockHttpServletResponse;
-import org.jcatapult.mvc.test.MockHttpSession;
-import org.jcatapult.mvc.test.MockServletContext;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.WorkflowChain;
-import org.junit.Ignore;
 
 import com.google.inject.Inject;
-import net.java.naming.MockJNDI;
+import com.google.inject.Module;
 
 /**
  * <p>
- * This class is a JUnit 4 base test for MVC testing.
+ * This class is a test helper that assists in executing MVC actions and
+ * testing the entire MVC workflow for the action.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@Ignore
-public class WebappActionTest {
-    protected MockHttpServletRequest request;
-    protected MockHttpServletResponse response;
-    protected MockServletContext context;
-
-    protected MVCWorkflow workflow;
-    protected MessageStore messageStore;
+public class WebappTestRunner {
+    public MVCWorkflow workflow;
+    public MessageStore messageStore;
+    public MockHttpServletRequest request;
+    public MockHttpServletResponse response;
+    public MockServletContext context;
 
     @Inject
     public void setServices(MVCWorkflow workflow, MessageStore messageStore) {
@@ -59,11 +53,6 @@ public class WebappActionTest {
     }
 
     void run(RequestBuilder builder, boolean post) throws IOException, ServletException {
-        // Set the environment to test
-        MockJNDI jndi = new MockJNDI();
-        jndi.bind("java:comp/env/environment", "test");
-        jndi.activate();
-
         this.request = new MockHttpServletRequest(builder.getParameters(), builder.getUri(), "UTF-8",
             builder.getLocale(), post);
         ServletObjectsHolder.setServletRequest(request);
@@ -74,6 +63,7 @@ public class WebappActionTest {
         this.context = makeContext();
         ServletObjectsHolder.setServletContext(context);
 
+        GuiceContainer.setGuiceModules(builder.getModules().toArray(new Module[builder.getModules().size()]));
         GuiceContainer.inject();
         GuiceContainer.initialize();
         GuiceContainer.getInjector().injectMembers(this);

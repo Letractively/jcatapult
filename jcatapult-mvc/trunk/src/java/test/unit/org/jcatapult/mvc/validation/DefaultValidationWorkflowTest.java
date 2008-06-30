@@ -28,7 +28,7 @@ import org.jcatapult.mvc.action.DefaultActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.test.junit.WebBaseTest;
+import org.jcatapult.mvc.test.WebBaseTest;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.WorkflowChain;
 import static org.junit.Assert.*;
