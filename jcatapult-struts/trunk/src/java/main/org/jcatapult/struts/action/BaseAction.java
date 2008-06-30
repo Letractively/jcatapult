@@ -16,9 +16,9 @@
 package org.jcatapult.struts.action;
 
 import org.apache.commons.configuration.Configuration;
-import org.jcatapult.persistence.PersistenceService;
-import org.jcatapult.struts.action.annotation.ActionName;
+import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.servlet.annotation.HTTPMethod;
+import org.jcatapult.struts.action.annotation.ActionName;
 
 import com.google.inject.Inject;
 import com.opensymphony.xwork2.ActionSupport;
