@@ -271,4 +271,18 @@ public class DefaultExpressionEvaluatorTest extends WebBaseTest {
         assertEquals("What is your pet's name?", action.user.securityQuestions[0]);
         assertEquals("What is your home town?", action.user.securityQuestions[1]);
     }
+
+    /**
+     * Test expansion.
+     */
+    @Test
+    public void testExpansion() {
+        // Test nested property set and type conversion
+        ActionField action = new ActionField();
+        action.user = new UserField();
+        action.user.name = "Fred";
+
+        String result = evaluator.expand("My name is ${user.name}", action);
+        assertEquals("My name is Fred", result);
+    }
 }

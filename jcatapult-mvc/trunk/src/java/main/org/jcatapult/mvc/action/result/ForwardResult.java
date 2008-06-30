@@ -88,7 +88,7 @@ public class ForwardResult extends AbstractResult<Forward> {
      * {@inheritDoc}
      */
     public void execute(Forward forward, ActionInvocation invocation) throws IOException, ServletException {
-        String page = forward.page();
+        String page = expand(forward.page(), invocation.action());
         if (!page.startsWith("/")) {
             page = DIR + invocation.actionURI() + "/" + page;
         }

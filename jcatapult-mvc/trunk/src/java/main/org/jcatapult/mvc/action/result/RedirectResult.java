@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
 
@@ -31,11 +32,12 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class RedirectResult implements Result<Redirect> {
+public class RedirectResult extends AbstractResult<Redirect> {
     private final HttpServletResponse response;
 
     @Inject
-    public RedirectResult(HttpServletResponse response) {
+    public RedirectResult(ExpressionEvaluator expressionEvaluator, HttpServletResponse response) {
+        super(expressionEvaluator);
         this.response = response;
     }
 
@@ -43,7 +45,7 @@ public class RedirectResult implements Result<Redirect> {
      * {@inheritDoc}
      */
     public void execute(Redirect redirect, ActionInvocation invocation) throws IOException, ServletException {
-        String page = redirect.uri();
+        String page = expand(redirect.uri(), invocation.action());
         boolean perm = redirect.perm();
 
         response.setStatus(perm ? 301 : 302);

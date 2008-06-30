@@ -54,4 +54,19 @@ public abstract class AbstractResult<U extends Annotation> implements Result<U> 
 
         return request;
     }
+
+    /**
+     * Expands any variables in the String.
+     *
+     * @param   str The String to expand.
+     * @param   action The action used to expand.
+     * @return  The result.
+     */
+    protected String expand(String str, Object action) {
+        if (action != null) {
+            return expressionEvaluator.expand(str, action);
+        }
+
+        return str;
+    }
 }
