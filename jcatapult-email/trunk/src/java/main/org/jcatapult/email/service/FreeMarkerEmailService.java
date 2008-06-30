@@ -15,27 +15,22 @@
  */
 package org.jcatapult.email.service;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.configuration.Configuration;
-import org.jcatapult.container.ContainerResolver;
-import org.jcatapult.container.FreeMarkerContainerTemplateLoader;
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.EmailException;
 import org.jcatapult.email.domain.Email;
+import org.jcatapult.freemarker.FreeMarkerService;
+import org.jcatapult.freemarker.MissingTemplateException;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import freemarker.cache.ClassTemplateLoader;
-import freemarker.cache.MultiTemplateLoader;
-import freemarker.cache.TemplateLoader;
-import freemarker.template.Template;
 
 /**
  * <p>
@@ -57,21 +52,10 @@ import freemarker.template.Template;
  * <p>
  *
  * <p>
- * There are a number of configuration parameters that can be specified to control
- * the behavior of FreeMarker. These are:
+ * This uses the {@link FreeMarkerService} for the template rendering. That
+ * service has a number of configuration parameters that can be set to control
+ * caching and reloading.
  * </p>
- *
- * <table>
- * <tr><th>Name</th><th>Description</th><th>Optional</th><th>Default if optional</th></tr>
- * <tr><td>jcatapult.email.templates.location</td><td>The location on disk of the email templates. This only
- *  works when the web application is deployed in exploded form. Otherwise the FreeMarker templates
- *  are searched for via the classpath.</td><td>Yes</td><td>/WEB-INF/email</td></tr>
- * <tr><td>jcatapult.email.templates.cache</td><td>A boolean that determines if the email templates should
- *  be cached by FreeMarker.</td><td>Yes</td><td>false</td></tr>
- * <tr><td>jcatapult.email.templates.check-interval</td><td>The number of seconds to check if the FreeMarker
- *  template has been modified. If caching is turned off this value is ignored.</td><td>Yes</td>
- *  <td>N/A</td></tr>
- * </table>
  *
  * <p>
  * After the templates are found, this class constructs an {@link Email} instance
@@ -98,27 +82,25 @@ import freemarker.template.Template;
 @Singleton
 public class FreeMarkerEmailService implements EmailService {
     private static final Logger logger = Logger.getLogger(FreeMarkerEmailService.class.getName());
-    private EmailTransportService emailTransportService;
-    private Configuration configuration;
-    private freemarker.template.Configuration freeMarkerConfiguration = new freemarker.template.Configuration();
+    private final FreeMarkerService freeMarkerService;
+    private final EmailTransportService emailTransportService;
+    private final Configuration configuration;
     private String templatesLocation;
 
     /**
      * Constructs a FreeMarkerEmailService. The transport given is used to send the emails and the
      * configuration given is used to control FreeMarker behavior.
      *
+     * @param   freeMarkerService The FreeMarkerService used to render the email templates.
      * @param   emailTransportService Used to send emails.
      * @param   configuration Used to control FreeMarker.
-     * @param   containerResolver The ContainerResolver that is used to find email templates in web applications.
-     * @param   defaultLocation The defaultLocation of the email templates to use. This is passed to the container
-     *          path resolver.
-     * @throws Exception If FreeMarker initialization failed.
+     * @param   defaultLocation The defaultLocation of the email templates to use. This is passed
+     *          to the container path resolver.
      */
     @Inject
-    public FreeMarkerEmailService(EmailTransportService emailTransportService,
-            Configuration configuration, ContainerResolver containerResolver,
-            @Named("jcatapult.email.templates.location")String defaultLocation)
-    throws Exception {
+    public FreeMarkerEmailService(FreeMarkerService freeMarkerService, EmailTransportService emailTransportService,
+            Configuration configuration, @Named("jcatapult.email.templates.location") String defaultLocation) {
+        this.freeMarkerService = freeMarkerService;
         this.emailTransportService = emailTransportService;
         this.configuration = configuration;
 
@@ -126,19 +108,6 @@ public class FreeMarkerEmailService implements EmailService {
         templatesLocation = configuration.getString("jcatapult.email.templates.location");
         if (templatesLocation == null) {
             templatesLocation = defaultLocation;
-        }
-
-        ClassTemplateLoader ctl = new ClassTemplateLoader(this.getClass(), templatesLocation);
-        FreeMarkerContainerTemplateLoader watl = new FreeMarkerContainerTemplateLoader(containerResolver, templatesLocation);
-        MultiTemplateLoader loader = new MultiTemplateLoader(new TemplateLoader[]{watl, ctl});
-        freeMarkerConfiguration.setTemplateLoader(loader);
-
-        boolean cache = configuration.getBoolean("jcatapult.email.templates.cache", false);
-        if (!cache) {
-            freeMarkerConfiguration.setTemplateUpdateDelay(Integer.MAX_VALUE);
-        } else {
-            int checkInterval = configuration.getInt("jcatapult.email.templates.check-interval", 2);
-            freeMarkerConfiguration.setTemplateUpdateDelay(checkInterval);
         }
     }
 
@@ -256,8 +225,8 @@ public class FreeMarkerEmailService implements EmailService {
      *
      * @param   templateName The name of the template file to process.
      * @param   parameters The parameters that are passed to the template.
-     * @return The String result of the processing the template.
-     * @throws EmailException If the template couldn't be processed.
+     * @return  The String result of the processing the template.
+     * @throws  EmailException If the template couldn't be processed.
      */
     protected String callTemplate(String templateName, Map<String, Object> parameters) {
         if (logger.isLoggable(Level.FINEST)) {
@@ -265,23 +234,10 @@ public class FreeMarkerEmailService implements EmailService {
                 parameters);
         }
 
-        Template template;
         try {
-            template = freeMarkerConfiguration.getTemplate(templateName);
-        } catch (IOException e) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, "Error loading template [" + templateName + "]", e);
-            }
-
+            return freeMarkerService.render(templatesLocation + "/" + templateName, parameters, Locale.US);
+        } catch (MissingTemplateException e) {
             return null;
-        }
-
-        try {
-            StringWriter writer = new StringWriter();
-            template.process(parameters, writer);
-            return writer.toString();
-        } catch (Exception e) {
-            throw new EmailException("Unable to process FreeMarker template [" + templateName + "]", e);
         }
     }
 }
