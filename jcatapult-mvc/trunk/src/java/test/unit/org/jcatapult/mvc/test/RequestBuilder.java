@@ -82,13 +82,16 @@ public class RequestBuilder {
      *
      * @param   iface The interface to mock out.
      * @param   impl The mocked out implementation of the interface.
+     * @return  This.
      */
-    public <T> void withMock(final Class<T> iface, final T impl) {
+    public <T> RequestBuilder withMock(final Class<T> iface, final T impl) {
         modules.add(new Module() {
             public void configure(Binder binder) {
                 binder.bind(iface).toInstance(impl);
             }
         });
+
+        return this;
     }
 
     /**

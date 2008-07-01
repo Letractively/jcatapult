@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.example.action.user.Edit;
+import org.jcatapult.l10n.MessageProvider;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.message.scope.MessageScope;
@@ -59,7 +60,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(sp);
 
         DefaultMessageStore store = new DefaultMessageStore(ais, mp, sp);
-        store.addConversionError("foo.bar", "bundle", attributes, values);
+        store.addConversionError("foo.bar", "bundle", attributes, (Object[]) values);
 
         EasyMock.verify(ais, mp, scope, sp);
     }
@@ -84,7 +85,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(sp);
 
         DefaultMessageStore store = new DefaultMessageStore(ais, mp, sp);
-        store.addFieldMessage(MessageScope.ACTION_SESSION, "foo.bar", "bundle", "key", values);
+        store.addFieldMessage(MessageScope.ACTION_SESSION, "foo.bar", "bundle", "key", (Object[]) values);
 
         EasyMock.verify(ais, mp, scope, sp);
     }
@@ -111,7 +112,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(sp);
 
         DefaultMessageStore store = new DefaultMessageStore(ais, mp, sp);
-        store.addFieldMessage(MessageScope.ACTION_SESSION, "foo.bar", "key", values);
+        store.addFieldMessage(MessageScope.ACTION_SESSION, "foo.bar", "key", (Object[]) values);
 
         EasyMock.verify(ais, mp, scope, sp);
     }
@@ -136,7 +137,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(sp);
 
         DefaultMessageStore store = new DefaultMessageStore(ais, mp, sp);
-        store.addFieldError(MessageScope.ACTION_SESSION, "foo.bar", "bundle", "key", values);
+        store.addFieldError(MessageScope.ACTION_SESSION, "foo.bar", "bundle", "key", (Object[]) values);
 
         EasyMock.verify(ais, mp, scope, sp);
     }
@@ -163,7 +164,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(sp);
 
         DefaultMessageStore store = new DefaultMessageStore(ais, mp, sp);
-        store.addFieldError(MessageScope.ACTION_SESSION, "foo.bar", "key", values);
+        store.addFieldError(MessageScope.ACTION_SESSION, "foo.bar", "key", (Object[]) values);
 
         EasyMock.verify(ais, mp, scope, sp);
     }
@@ -188,7 +189,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(sp);
 
         DefaultMessageStore store = new DefaultMessageStore(ais, mp, sp);
-        store.addActionMessage(MessageScope.ACTION_SESSION, "bundle", "key", values);
+        store.addActionMessage(MessageScope.ACTION_SESSION, "bundle", "key", (Object[]) values);
 
         EasyMock.verify(ais, mp, scope, sp);
     }
@@ -215,7 +216,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(sp);
 
         DefaultMessageStore store = new DefaultMessageStore(ais, mp, sp);
-        store.addActionMessage(MessageScope.ACTION_SESSION, "key", values);
+        store.addActionMessage(MessageScope.ACTION_SESSION, "key", (Object[]) values);
 
         EasyMock.verify(ais, mp, scope, sp);
     }
@@ -240,7 +241,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(sp);
 
         DefaultMessageStore store = new DefaultMessageStore(ais, mp, sp);
-        store.addActionError(MessageScope.ACTION_SESSION, "bundle", "key", values);
+        store.addActionError(MessageScope.ACTION_SESSION, "bundle", "key", (Object[]) values);
 
         EasyMock.verify(ais, mp, scope, sp);
     }
@@ -267,7 +268,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(sp);
 
         DefaultMessageStore store = new DefaultMessageStore(ais, mp, sp);
-        store.addActionError(MessageScope.ACTION_SESSION, "key", values);
+        store.addActionError(MessageScope.ACTION_SESSION, "key", (Object[]) values);
 
         EasyMock.verify(ais, mp, scope, sp);
     }

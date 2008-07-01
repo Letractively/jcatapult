@@ -38,6 +38,13 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
+    /**
+     * HTTP request parameter or scoped attribute from the request that indicates if the result
+     * should be executed or not. By default the result is always executed, but this can be used to
+     * suppress that behavior.
+     */
+    public static final String JCATAPULT_EXECUTE_RESULT = "jcatapultExecuteResult";
+
     private final HttpServletRequest request;
     private final ActionConfigurationProvider actionConfigurationProvider;
     private final ActionInvocationStore actionInvocationStore;
@@ -95,15 +102,30 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
             action = objectFactory.create(actionConfiguration.actionClass());
         }
 
-        ActionInvocation invocation = new DefaultActionInvocation(action, uri, extension, actionConfiguration);
+        boolean executeResult = executeResult(JCATAPULT_EXECUTE_RESULT);
+        ActionInvocation invocation = new DefaultActionInvocation(action, uri, extension,
+            actionConfiguration, executeResult, true, null);
         actionInvocationStore.set(invocation);
 
         chain.continueWorkflow();
     }
 
     /**
-     * Does nothing.
+     * Determines if the result should be executed or not.
+     *
+     * @param   key The key.
+     * @return  True of false.
      */
-    public void destroy() {
+    private boolean executeResult(String key) {
+        Object value = request.getParameter(key);
+        if (value == null) {
+            value = request.getAttribute(key);
+        }
+
+        if (value != null && value instanceof String) {
+            return value.equals("true");
+        }
+
+        return value == null ? true : (Boolean) value;
     }
 }

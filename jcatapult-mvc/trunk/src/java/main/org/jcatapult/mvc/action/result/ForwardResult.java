@@ -30,10 +30,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.freemarker.FreeMarkerService;
+import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
-import org.jcatapult.mvc.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.result.control.Control;
 
@@ -90,7 +90,14 @@ public class ForwardResult extends AbstractResult<Forward> {
     public void execute(Forward forward, ActionInvocation invocation) throws IOException, ServletException {
         String page = expand(forward.page(), invocation.action());
         if (!page.startsWith("/")) {
-            page = DIR + invocation.actionURI() + "/" + page;
+            // Strip off the last part of the URI since it is relative
+            String uri = invocation.actionURI();
+            int index = uri.lastIndexOf("/");
+            if (index >= 0) {
+                uri = uri.substring(0, index);
+            }
+
+            page = DIR + uri  + "/" + page;
         }
 
         if (page.endsWith(".jsp")) {

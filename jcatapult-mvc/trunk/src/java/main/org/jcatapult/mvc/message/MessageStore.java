@@ -18,6 +18,7 @@ package org.jcatapult.mvc.message;
 import java.util.List;
 import java.util.Map;
 
+import org.jcatapult.l10n.MissingMessageException;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.message.scope.MessageType;
 
@@ -46,7 +47,7 @@ public interface MessageStore {
     void addConversionError(String field, String bundle, Map<String, String> attributes, Object... values) throws MissingMessageException;
 
     /**
-     * Adds a field message which is pulled from the {@link MessageProvider}.
+     * Adds a field message which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
      *
      * @param   scope The scope that the message should be placed into.
      * @param   field The field that the message is associated with.
@@ -58,7 +59,7 @@ public interface MessageStore {
     void addFieldMessage(MessageScope scope, String field, String bundle, String key, Object... values) throws MissingMessageException;
 
     /**
-     * Adds a field message which is pulled from the {@link MessageProvider}. The name of the bundle
+     * Adds a field message which is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The name of the bundle
      * is the same as the class name of the current action that the request is associated with. If
      * there is no action, this method will throw an exception.
      *
@@ -73,7 +74,7 @@ public interface MessageStore {
     throws MissingMessageException, IllegalStateException;
 
     /**
-     * Adds a field error which is pulled from the {@link MessageProvider}.
+     * Adds a field error which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
      *
      * @param   scope The scope that the error should be placed into.
      * @param   field The field that the error is associated with.
@@ -86,7 +87,7 @@ public interface MessageStore {
     throws MissingMessageException;
 
     /**
-     * Adds a field error which is pulled from the {@link MessageProvider}. The name of the bundle
+     * Adds a field error which is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The name of the bundle
      * is the same as the class name of the current action that the request is associated with. If
      * there is no action, this method will throw an exception.
      *
@@ -100,7 +101,7 @@ public interface MessageStore {
     void addFieldError(MessageScope scope, String field, String key, Object... values) throws MissingMessageException;
 
     /**
-     * Adds an action message which is pulled from the {@link MessageProvider}.
+     * Adds an action message which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
      *
      * @param   scope The scope that the message should be placed into.
      * @param   bundle The bundle the message should be pulled from.
@@ -111,7 +112,7 @@ public interface MessageStore {
     void addActionMessage(MessageScope scope, String bundle, String key, Object... values) throws MissingMessageException;
 
     /**
-     * Adds an action message which is pulled from the {@link MessageProvider}. The name of the bundle
+     * Adds an action message which is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The name of the bundle
      * is the same as the class name of the current action that the request is associated with. If
      * there is no action, this method will throw an exception.
      *
@@ -124,7 +125,7 @@ public interface MessageStore {
     void addActionMessage(MessageScope scope, String key, Object... values) throws MissingMessageException;
 
     /**
-     * Adds an action error which is pulled from the {@link MessageProvider}.
+     * Adds an action error which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
      *
      * @param   scope The scope that the error should be placed into.
      * @param   bundle The bundle the error should be pulled from.
@@ -135,7 +136,7 @@ public interface MessageStore {
     void addActionError(MessageScope scope, String bundle, String key, Object... values) throws MissingMessageException;
 
     /**
-     * Adds an action errorwhich is pulled from the {@link MessageProvider}. The name of the bundle
+     * Adds an action errorwhich is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The name of the bundle
      * is the same as the class name of the current action that the request is associated with. If
      * there is no action, this method will throw an exception.
      *

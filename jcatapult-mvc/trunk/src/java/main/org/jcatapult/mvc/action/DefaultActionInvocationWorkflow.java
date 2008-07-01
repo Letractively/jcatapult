@@ -41,12 +41,6 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow {
-    /**
-     * HTTP request parameter that indicates if the result should be executed or not. By defaul the
-     * result is always executed, but this can be used to suppress that behavior.
-     */
-    public static final String JCATAPULT_EXECUTE_REQUEST = "jcatapultExecuteRequest";
-
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final ActionInvocationStore actionInvocationStore;
@@ -89,10 +83,8 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
      * @throws  ServletException If the chain throws a ServletException or if the result can't be found.
      */
     public void perform(WorkflowChain chain) throws IOException, ServletException {
-        String jer = request.getParameter(JCATAPULT_EXECUTE_REQUEST);
-        boolean executeResult = jer == null || jer.equals("true");
-
         ActionInvocation invocation = actionInvocationStore.get();
+
         ResultInvocation resultInvocation = null;
         if (invocation.action() == null) {
             // Try a default result mapping just for the URI
@@ -107,9 +99,14 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
                 return;
             }
         } else {
-            String resultCode = execute(invocation, request.getMethod());
+            String resultCode;
+            if (invocation.executeAction()) {
+                resultCode = execute(invocation, request.getMethod());
+            } else {
+                resultCode = invocation.resultCode();
+            }
 
-            if (executeResult) {
+            if (invocation.executeResult()) {
                 resultInvocation = resultInvocationProvider.lookup(invocation, invocation.actionURI(), resultCode);
                 if (resultInvocation == null) {
                     response.setStatus(404);
@@ -120,7 +117,7 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
             }
         }
 
-        if (executeResult && resultInvocation != null) {
+        if (invocation.executeResult()) {
             Annotation annotation = resultInvocation.annotation();
             Result result = resultProvider.lookup(annotation.annotationType());
             if (result == null) {
@@ -182,7 +179,7 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
             throw new ServletException("The action class [" + action.getClass() + "] is missing a " +
                 "valid execute method.");
         }
-        
+
         verify(method);
         return invoke(method, action);
     }
