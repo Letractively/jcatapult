@@ -31,12 +31,29 @@ public class DefaultActionInvocation implements ActionInvocation {
     private final String uri;
     private final String extension;
     private final ActionConfiguration configuration;
+    private final boolean executeResult;
+    private final boolean executeAction;
+    private final String resultCode;
 
     public DefaultActionInvocation(Object action, String uri, String extension, ActionConfiguration configuration) {
         this.action = action;
         this.uri = uri;
         this.extension = extension;
         this.configuration = configuration;
+        this.executeAction = true;
+        this.executeResult = true;
+        this.resultCode = null;
+    }
+
+    public DefaultActionInvocation(Object action, String uri, String extension, ActionConfiguration configuration,
+            boolean executeResult, boolean executeAction, String resultCode) {
+        this.action = action;
+        this.uri = uri;
+        this.extension = extension;
+        this.configuration = configuration;
+        this.executeResult = executeResult;
+        this.executeAction = executeAction;
+        this.resultCode = resultCode;
     }
 
     public Object action() {
@@ -53,5 +70,17 @@ public class DefaultActionInvocation implements ActionInvocation {
 
     public ActionConfiguration configuration() {
         return configuration;
+    }
+
+    public boolean executeResult() {
+        return executeResult;
+    }
+
+    public boolean executeAction() {
+        return executeAction;
+    }
+
+    public String resultCode() {
+        return resultCode;
     }
 }

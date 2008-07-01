@@ -64,7 +64,7 @@ public class ForwardResultTest {
         dispatcher.forward(request, null);
         EasyMock.replay(dispatcher);
 
-        EasyMock.expect(request.getRequestDispatcher("/WEB-INF/content/action/bar.jsp")).andReturn(dispatcher);
+        EasyMock.expect(request.getRequestDispatcher("/WEB-INF/content/bar.jsp")).andReturn(dispatcher);
         EasyMock.replay(request);
 
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);

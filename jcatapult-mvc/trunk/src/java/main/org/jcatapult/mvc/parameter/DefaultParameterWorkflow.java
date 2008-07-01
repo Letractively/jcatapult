@@ -86,7 +86,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
                 try {
                     expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
                 } catch (ConversionException ce) {
-                    messageStore.addConversionError(key, action.getClass().getName(), struct.attributes, struct.values);
+                    messageStore.addConversionError(key, action.getClass().getName(), struct.attributes, (Object[]) struct.values);
                 }
             }
         }

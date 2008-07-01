@@ -17,24 +17,24 @@ package org.jcatapult.mvc.parameter.el;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.mvc.locale.annotation.CurrentLocale;
+import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.Converter;
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 
 import com.google.inject.Inject;
-import net.java.variable.VariableExpander;
-import net.java.variable.ExpanderStrategy;
 import net.java.variable.ExpanderException;
+import net.java.variable.ExpanderStrategy;
+import net.java.variable.VariableExpander;
 
 /**
  * <p>

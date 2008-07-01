@@ -51,7 +51,6 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionLessWithDefault() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
         EasyMock.expect(request.getRequestURI()).andReturn("foo/bar");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
@@ -88,7 +87,6 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionLessWithoutDefault() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
         EasyMock.expect(request.getRequestURI()).andReturn("foo/bar");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
@@ -121,7 +119,6 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionWithResult() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
         EasyMock.expect(request.getMethod()).andReturn("post");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
@@ -159,14 +156,13 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionSuppressResult() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn("false");
-        EasyMock.expect(request.getMethod()).andReturn("get");
+        EasyMock.expect(request.getMethod()).andReturn("GET");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
         Simple simple = new Simple();
-        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, null);
+        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, null, false, true, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.get()).andReturn(invocation);
         EasyMock.replay(ais);
@@ -192,8 +188,7 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionMissingResult() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
-        EasyMock.expect(request.getMethod()).andReturn("get");
+        EasyMock.expect(request.getMethod()).andReturn("GET");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         response.setStatus(404);
@@ -230,7 +225,6 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionMissingResultType() throws IOException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
         EasyMock.expect(request.getMethod()).andReturn("post");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
@@ -270,7 +264,6 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionWithoutExecuteMethod() throws IOException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
         EasyMock.expect(request.getMethod()).andReturn("post");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
@@ -306,7 +299,6 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionWithWrongReturnType() throws IOException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
         EasyMock.expect(request.getMethod()).andReturn("post");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
@@ -342,8 +334,7 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionThatThrowsException() throws IOException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
-        EasyMock.expect(request.getMethod()).andReturn("get");
+        EasyMock.expect(request.getMethod()).andReturn("GET");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
@@ -378,8 +369,7 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionExtension() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
-        EasyMock.expect(request.getMethod()).andReturn("get");
+        EasyMock.expect(request.getMethod()).andReturn("GET");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
@@ -416,7 +406,6 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testHttpMethod() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getParameter(DefaultActionInvocationWorkflow.JCATAPULT_EXECUTE_REQUEST)).andReturn(null);
         EasyMock.expect(request.getMethod()).andReturn("post");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);

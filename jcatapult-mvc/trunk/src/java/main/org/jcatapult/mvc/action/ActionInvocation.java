@@ -44,4 +44,20 @@ public interface ActionInvocation {
      * @return  The action configuration for this invocation.
      */
     ActionConfiguration configuration();
+
+    /**
+     * @return  True if the result should be executed, false otherwise.
+     */
+    boolean executeResult();
+
+    /**
+     * @return  True if the action should be executed, false otherwise.
+     */
+    boolean executeAction();
+
+    /**
+     * @return  The default result code to use if the action is not executed according to the
+     *          {@link #executeAction()} method.
+     */
+    String resultCode();
 }

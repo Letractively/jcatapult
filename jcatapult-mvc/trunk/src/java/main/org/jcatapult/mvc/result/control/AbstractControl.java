@@ -24,9 +24,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.freemarker.FreeMarkerService;
+import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
-import org.jcatapult.mvc.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 

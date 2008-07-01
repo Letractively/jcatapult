@@ -17,7 +17,7 @@ package org.jcatapult.mvc.result.control;
 
 import java.util.Map;
 
-import org.jcatapult.mvc.message.MessageProvider;
+import org.jcatapult.l10n.MessageProvider;
 import org.jcatapult.mvc.message.scope.MessageType;
 
 import com.google.inject.Inject;
