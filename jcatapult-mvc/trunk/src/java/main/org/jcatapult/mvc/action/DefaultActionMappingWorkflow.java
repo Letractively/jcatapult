@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.action;
 
 import java.io.IOException;
+import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -68,10 +69,35 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
      * @throws  IOException If the chain throws an exception.
      * @throws  ServletException If the chain throws an exception.
      */
+    @SuppressWarnings("unchecked")
     public void perform(WorkflowChain chain) throws IOException, ServletException {
-        String uri = request.getRequestURI();
-        if (!uri.startsWith("/")) {
-            uri = "/" + uri;
+        // First, see if they hit a different button
+        String uri = null;
+        Set<String> keys = request.getParameterMap().keySet();
+        for (String key : keys) {
+            if (key.startsWith("__jc_a_")) {
+                String actionParameterName = key.substring(7);
+                String actionParameterValue = request.getParameter(key);
+                if (request.getParameter(actionParameterName) != null && actionParameterValue.trim().length() > 0) {
+                    uri = actionParameterValue;
+
+                    // Handle relative URIs
+                    if (!uri.startsWith("/")) {
+                        String requestURI = request.getRequestURI();
+                        int index = requestURI.lastIndexOf("/");
+                        if (index >= 0) {
+                            uri = requestURI.substring(0, index) + "/" + uri;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (uri == null) {
+            uri = request.getRequestURI();
+            if (!uri.startsWith("/")) {
+                uri = "/" + uri;
+            }
         }
 
         // Handle extensions
@@ -80,11 +106,11 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
         if (index >= 0) {
             extension = uri.substring(index + 1);
 
-            // Sanity check the extension to ensure it is part of a version
+            // Sanity check the extension to ensure it is NOT part of a version number like /foo-1.0
             boolean good = false;
             for (int i = 0; i < extension.length(); i++) {
                 good = Character.isLetter(extension.charAt(i));
-                if (good) {
+                if (!good) {
                     break;
                 }
             }

@@ -15,6 +15,19 @@
  */
 package org.jcatapult.mvc.action;
 
+import java.io.IOException;
+import java.util.Locale;
+import javax.servlet.ServletException;
+
+import org.easymock.EasyMock;
+import org.example.action.user.Edit;
+import org.jcatapult.mvc.Capture;
+import org.jcatapult.mvc.ObjectFactory;
+import org.jcatapult.mvc.action.config.ActionConfigurationProvider;
+import org.jcatapult.mvc.action.config.DefaultActionConfiguration;
+import org.jcatapult.mvc.test.MockHttpServletRequest;
+import org.jcatapult.servlet.WorkflowChain;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
@@ -26,7 +39,73 @@ import org.junit.Test;
  */
 public class DefaultActionMappingWorkflowTest {
     @Test
-    public void testMap() {
+    public void testDifferentButtonClick() throws IOException, ServletException {
+        MockHttpServletRequest request = new MockHttpServletRequest("/admin/user/edit", Locale.US, true, "UTF-8");
+        request.setParameter("__jc_a_submit", "");
+        request.setParameter("__jc_a_cancel", "/admin/user/cancel");
+        request.setParameter("cancel", "Cancel");
 
+        run(request, "/admin/user/cancel", null);
+    }
+
+    @Test
+    public void testDifferentButtonClickRelativeURI() throws IOException, ServletException {
+        MockHttpServletRequest request = new MockHttpServletRequest("/admin/user/edit", Locale.US, true, "UTF-8");
+        request.setParameter("__jc_a_submit", "");
+        request.setParameter("__jc_a_cancel", "cancel");
+        request.setParameter("cancel", "Cancel");
+
+        run(request, "/admin/user/cancel", null);
+    }
+
+    @Test
+    public void testRequestURI() throws IOException, ServletException {
+        MockHttpServletRequest request = new MockHttpServletRequest("/admin/user/edit", Locale.US, true, "UTF-8");
+        request.setParameter("__jc_a_submit", "");
+        request.setParameter("__jc_a_cancel", "cancel");
+        request.setParameter("submit", "Submit");
+
+        run(request, "/admin/user/edit", null);
+    }
+
+    @Test
+    public void testExtension() throws IOException, ServletException {
+        MockHttpServletRequest request = new MockHttpServletRequest("/admin/user/edit.xml", Locale.US, true, "UTF-8");
+        request.setParameter("__jc_a_submit", "");
+        request.setParameter("__jc_a_cancel", "cancel");
+        request.setParameter("submit", "Submit");
+
+        run(request, "/admin/user/edit", "xml");
+    }
+
+    private void run(MockHttpServletRequest request, String uri, String extension) throws IOException, ServletException {
+        ActionConfigurationProvider provider = EasyMock.createStrictMock(ActionConfigurationProvider.class);
+        EasyMock.expect(provider.lookup(uri)).andReturn(new DefaultActionConfiguration(Edit.class, uri));
+        EasyMock.replay(provider);
+
+        Capture capture = new Capture();
+        ActionInvocationStore store = EasyMock.createStrictMock(ActionInvocationStore.class);
+        store.set((ActionInvocation) capture.capture());
+        EasyMock.replay(store);
+
+        ObjectFactory factory = EasyMock.createStrictMock(ObjectFactory.class);
+        EasyMock.expect(factory.create(Edit.class)).andReturn(new Edit());
+        EasyMock.replay(factory);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultActionMappingWorkflow workflow = new DefaultActionMappingWorkflow(request, provider, store, factory);
+        workflow.perform(chain);
+
+        ActionInvocation ai = (ActionInvocation) capture.object;
+        assertEquals(uri, ai.actionURI());
+        assertEquals(extension, ai.extension());
+        assertNotNull(ai.configuration());
+        assertTrue(ai.executeAction());
+        assertTrue(ai.executeResult());
+
+        EasyMock.verify(provider, store, factory, chain);
     }
 }
