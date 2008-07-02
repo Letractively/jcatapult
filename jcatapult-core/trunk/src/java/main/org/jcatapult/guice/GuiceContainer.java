@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.io.IOException;
 
-import org.jcatapult.config.guice.ConfigurationModule;
+import org.jcatapult.config.guice.JCatapultConfigurationModule;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -158,7 +158,7 @@ public class GuiceContainer {
      */
     public static final void inject() {
         // Inject the JCatapult configuration
-        Guice.createInjector(new ConfigurationModule(), new AbstractModule() {
+        Guice.createInjector(new JCatapultConfigurationModule(), new AbstractModule() {
             protected void configure() {
                 requestStaticInjection(GuiceContainer.class);
             }

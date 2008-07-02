@@ -30,21 +30,23 @@ import com.google.inject.name.Named;
  * @author Brian Pontarelli
  */
 public class DefaultWorkflowResolver implements WorkflowResolver {
-    private final String workflows;
+    private final String[] types;
     private final Injector injector;
 
     @Inject
     public DefaultWorkflowResolver(@Named("jcatapult.workflows") String workflows, Injector injector) {
-        this.workflows = workflows;
+        this.types = workflows.split(",");
         this.injector = injector;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public List<Workflow> resolve() {
-        String[] names = workflows.split(",");
         List<Workflow> result = new ArrayList<Workflow>();
-        for (String name : names) {
+        for (String type : types) {
             try {
-                Class<?> klass = Class.forName(name);
+                Class<?> klass = Class.forName(type);
                 Workflow workflow = (Workflow) injector.getInstance(klass);
                 if (workflow != null) {
                     result.add(workflow);
@@ -55,5 +57,23 @@ public class DefaultWorkflowResolver implements WorkflowResolver {
         }
 
         return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    public List<Class<? extends Workflow>> getTypes() {
+        List<Class<? extends Workflow>> results = new ArrayList<Class<? extends Workflow>>();
+        for (String type : types) {
+            try {
+                Class<? extends Workflow> klass = (Class<? extends Workflow>) Class.forName(type);
+                results.add(klass);
+            } catch (ClassNotFoundException e) {
+                // Skip it. It isn't in the classpath
+            }
+        }
+
+        return results;
     }
 }

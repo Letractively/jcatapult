@@ -38,4 +38,12 @@ public interface WorkflowResolver {
      * @return  The list of workflows that should be invoked by the JCatapultFilter.
      */
     List<Workflow> resolve();
+
+    /**
+     * Called in the {@link org.jcatapult.servlet.JCatapultFilter#destroy()} method in order to get
+     * the list of Workflow classes that should destroyed.
+     *
+     * @return  The list of workflow classes.
+     */
+    List<Class<? extends Workflow>> getTypes();
 }

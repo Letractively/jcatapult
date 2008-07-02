@@ -12,82 +12,42 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
+ *
  */
 package org.jcatapult.config.guice;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.logging.Logger;
-
-import org.jcatapult.guice.NamedAnnotation;
+import org.apache.commons.configuration.Configuration;
+import org.jcatapult.config.EnvironmentAwareConfiguration;
+import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Key;
+import com.google.inject.Singleton;
 
 /**
  * <p>
- * This is a Guice module that is used by most of the framework to get
- * at the JCatapult configuration files (i.e. jcatapult.properties and
- * jcatapult-default.properties).
+ * This is a Guice module that sets up the apache commons configuration, which
+ * is deprecated at this point.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 public class ConfigurationModule extends AbstractModule {
-    private static final Logger logger = Logger.getLogger(ConfigurationModule.class.getName());
-
     /**
-     * Configures the Guice injector for using the jcatapult configuration files.
+     * If there is a ServletContext and if there is, it sets up the Apache Commons configuration.
      */
     @Override
     protected void configure() {
-        configureProperties();
+        if (ServletObjectsHolder.getServletContext() != null) {
+            configureConfiguration();
+        }
     }
 
     /**
-     * Loads the default properties from <strong>jcatapult-default.properties</strong> and then loads
-     * any custom properties from <strong>jcatapult.properties</strong>. This file doesn't have to
-     * exist, but the default does.
+     * Configures the Apache Commons {@link org.apache.commons.configuration.Configuration} for injection.
+     * This is deprecated.
      */
-    protected void configureProperties() {
-        // Load the default properties
-        Properties defaultProperties = new Properties();
-        try {
-            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(
-                "jcatapult-default.properties");
-            if (is == null) {
-                throw new IOException();
-            }
-
-            logger.fine("Loading default jcatapult properties");
-            defaultProperties.load(is);
-            logger.fine("Defaults are " + defaultProperties);
-        } catch (IOException e) {
-            logger.severe("Unable to find jcatapult-default.properties in classpath. This file must " +
-                "exist in the classpath and is usually inside the jcatapult-core JAR file. It might " +
-                "have been removed.");
-            System.exit(1);
-        }
-
-        // Bind the JCatapult properties file and the default
-        Properties properties = new Properties(defaultProperties);
-        try {
-            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("jcatapult.properties");
-            if (is == null) {
-                throw new IOException();
-            }
-
-            properties.load(is);
-        } catch (IOException e) {
-            logger.fine("Unable to find jcatapult.properties in classpath. All of the defaults will be used.");
-        }
-
-        Enumeration<?> keys = properties.propertyNames();
-        while (keys.hasMoreElements()) {
-            String key = (String) keys.nextElement();
-            bind(Key.get(String.class, new NamedAnnotation(key))).toInstance(properties.getProperty(key));
-        }
+    protected void configureConfiguration() {
+        // Setup the configuration
+        bind(Configuration.class).to(EnvironmentAwareConfiguration.class).in(Singleton.class);
     }
 }
