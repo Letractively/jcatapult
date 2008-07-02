@@ -114,7 +114,7 @@ public class Message implements TemplateMethodModel, TemplateDirectiveModel {
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
     throws TemplateException, IOException {
         String key = params.get("key").toString();
-        String bundle = params.get("bundle").toString();
-        render(env.getOut(), key, bundle);
+        Object bundle = params.get("bundle");
+        render(env.getOut(), key, bundle != null ? bundle.toString() : null);
     }
 }

@@ -86,7 +86,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
             Object action = actionInvocation.action();
             if (action != null) {
                 validate(action);
-                if (!messageStore.contains(MessageType.ERROR)) {
+                if (messageStore.contains(MessageType.ERROR)) {
                     actionInvocationStore.set(new DefaultActionInvocation(action, actionInvocation.actionURI(),
                         null, actionInvocation.configuration(), true, false, "input"));
                 }
@@ -136,7 +136,6 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
                     handleCollection(object, path, field, annotation);
                 }
             }
-
         }
     }
 
