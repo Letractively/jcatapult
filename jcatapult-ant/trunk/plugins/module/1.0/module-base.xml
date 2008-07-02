@@ -98,11 +98,13 @@
 
     <!-- Special test only JAR with the persistence.xml -->
     <module_create_persistence moduleFile="${dir.src.conf.main}/module.xml"
-                                  persistenceDir="${dir.target}"/>
+                                  persistenceDir="${dir.target.classes.test.unit}"/>
     <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}.jar">
-      <fileset dir="${dir.target}" includes="META-INF/**/*"/>
+      <fileset dir="${dir.target.classes.test.unit}" includes="META-INF/**/*"/>
     </jar>
+<!-- I moved the persistence.xml to the unit test output dir for debugging in IDEs
     <delete dir="${java.target}/META-INF"/>
+-->
 
      <!--Publish everything except the special test JAR-->
     <publish publishWorkflow="workflow.publish.local" integrationbuild="true"/>
