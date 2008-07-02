@@ -26,6 +26,7 @@ import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.environment.EnvironmentResolver;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 /**
@@ -73,7 +74,8 @@ import com.google.inject.name.Named;
  *
  * @author  Brian Pontarelli
  */
-public class EnvironmentAwareConfiguration extends CompositeConfiguration {
+@Singleton
+public class EnvironmentAwareConfiguration extends CompositeConfiguration implements Configuration {
     private static final Logger logger = Logger.getLogger(EnvironmentAwareConfiguration.class.getName());
 
     /**
@@ -122,4 +124,6 @@ public class EnvironmentAwareConfiguration extends CompositeConfiguration {
             }
         }
     }
+
+
 }

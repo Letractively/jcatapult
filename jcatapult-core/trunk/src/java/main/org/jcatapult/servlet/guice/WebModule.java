@@ -19,8 +19,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.configuration.Configuration;
-import org.jcatapult.config.EnvironmentAwareConfiguration;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.annotation.HTTPMethod;
 
@@ -50,7 +48,6 @@ public class WebModule extends AbstractModule {
      * Calls these methods in this order:
      *
      * <ol>
-     * <li>{@link #configureConfiguration()}</li>
      * <li>{@link #configureServletObjects()}</li>
      * </ol>
      */
@@ -60,7 +57,6 @@ public class WebModule extends AbstractModule {
             return;
         }
 
-        configureConfiguration();
         configureServletObjects();
     }
 
@@ -95,13 +91,5 @@ public class WebModule extends AbstractModule {
                 return ServletObjectsHolder.getServletRequest().getMethod();
             }
         });
-    }
-
-    /**
-     * Configures the Apache Commons {@link Configuration} for injection.
-     */
-    protected void configureConfiguration() {
-        // Setup the configuration
-        bind(Configuration.class).to(EnvironmentAwareConfiguration.class).in(Singleton.class);
     }
 }

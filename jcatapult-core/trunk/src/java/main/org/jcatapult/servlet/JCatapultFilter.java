@@ -135,11 +135,11 @@ public class JCatapultFilter implements Filter {
      * Closes the Workflow instances
      */
     public void destroy() {
-        WorkflowResolver workflowResolver = GuiceContainer.getInjector().getInstance(WorkflowResolver.class);
-        List<Workflow> workflows = workflowResolver.resolve();
-        for (Workflow workflow : workflows) {
-            if (workflow instanceof DestroyableWorkflow) {
-                ((DestroyableWorkflow) workflow).destroy();
+        WorkflowResolver resolver = GuiceContainer.getInjector().getInstance(WorkflowResolver.class);
+        List<Class<? extends Workflow>> types = resolver.getTypes();
+        for (Class<? extends Workflow> type : types) {
+            if (DestroyableWorkflow.class.isAssignableFrom(type)) {
+                ((DestroyableWorkflow) GuiceContainer.getInjector().getInstance(type)).destroy();
             }
         }
     }
