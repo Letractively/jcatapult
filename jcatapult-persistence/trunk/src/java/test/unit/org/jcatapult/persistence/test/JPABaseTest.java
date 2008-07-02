@@ -15,41 +15,17 @@
  */
 package org.jcatapult.persistence.test;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import javax.persistence.Table;
 import javax.sql.RowSet;
-import javax.sql.rowset.CachedRowSet;
 
-import org.jcatapult.persistence.DatabaseTools;
-import org.jcatapult.persistence.service.jpa.EntityManagerContext;
-import org.jcatapult.test.Fixture;
 import org.jcatapult.test.JCatapultBaseTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
-
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import com.sun.rowset.CachedRowSetImpl;
-import net.java.sql.ScriptExecutor;
-import net.java.text.SimplePluralizer;
-import static net.java.util.CollectionTools.*;
-import net.java.xml.JavaBeanObjectCreator;
-import net.java.xml.Unmarshaller;
 
 /**
  * <p>
@@ -61,24 +37,11 @@ import net.java.xml.Unmarshaller;
  */
 @Ignore
 public abstract class JPABaseTest extends JCatapultBaseTest {
-    public static final Logger logger = Logger.getLogger(JPABaseTest.class.getName());
-    public static String persistentUnit = "punit";
-    public static EntityManagerFactory emf;
-    public static MysqlDataSource dataSource = new MysqlDataSource();
-    public static String databaseName;
-
-    /**
-     * Default constructor.
-     */
-    protected JPABaseTest() {
-    }
-
     /**
      * Constructs the EntityManager and puts it in the context.
      */
     public void setUpEntityManager() {
-        EntityManager em = emf.createEntityManager();
-        EntityManagerContext.set(em);
+        JPATestHelper.setUpEntityManager();
     }
 
     /**
@@ -88,7 +51,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @param   persistentUnit The persistent unit to use.
      */
     public static void setPersistentUnit(String persistentUnit) {
-        JPABaseTest.persistentUnit = persistentUnit;
+        JPATestHelper.setPersistentUnit(persistentUnit);
     }
 
     /**
@@ -98,7 +61,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @param   databaseName The database name.
      */
     public static void setDatabaseName(String databaseName) {
-        JPABaseTest.databaseName = databaseName;
+        JPATestHelper.setDatabaseName(databaseName);
     }
 
     /**
@@ -106,10 +69,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      */
     @BeforeClass
     public static void setUpJPA() {
-        dataSource = DatabaseTools.setupJDBCandJNDI(jndi, databaseName);
-
-        // Create the JPA EMF
-        emf = Persistence.createEntityManagerFactory(persistentUnit);
+        JPATestHelper.initializeJPA(jndi);
     }
 
     /**
@@ -118,10 +78,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
     @Before
     @Override
     public void setUp() {
-        logger.info("Setting up JPA test support.");
-        EntityManager em = emf.createEntityManager();
-        EntityManagerContext.set(em);
-        super.setUp();
+        JPATestHelper.setupForTest();
     }
 
     /**
@@ -129,9 +86,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      */
     @After
     public void tearDownEntityManager() {
-        EntityManager em = EntityManagerContext.get();
-        EntityManagerContext.remove();
-        em.close();
+        JPATestHelper.tearDownFromTest();
     }
 
     /**
@@ -139,8 +94,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      */
     @AfterClass
     public static void tearDownJPA() {
-        EntityManagerContext.remove();
-        emf.close();
+        JPATestHelper.tearDownJPA();
     }
 
     /**
@@ -153,8 +107,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws java.io.IOException If the script file could not be read.
      */
     protected void executeScript(String script) throws SQLException, IOException {
-        ScriptExecutor executor = new ScriptExecutor(getConnection());
-        executor.execute(new File(script));
+        JPATestHelper.executeScript(script);
     }
 
     /**
@@ -166,11 +119,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws SQLException If the execute failed.
      */
     protected void executeSQL(String sql) throws SQLException {
-        Connection c = dataSource.getConnection();
-        Statement s = c.createStatement();
-        s.executeUpdate(sql);
-        s.close();
-        c.close();
+        JPATestHelper.executeSQL(sql);
     }
 
     /**
@@ -180,7 +129,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws SQLException If the clear failed.
      */
     protected void clearTable(String table) throws SQLException {
-        executeSQL("delete from " + table);
+        JPATestHelper.clearTable(table);
     }
 
     /**
@@ -191,15 +140,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws SQLException If the clear failed.
      */
     protected void clearTable(Class<?> klass) throws SQLException {
-        Table table = klass.getAnnotation(Table.class);
-        String tableName;
-        if (table == null || table.name().equals("")) {
-            tableName = klass.getSimpleName();
-        } else {
-            tableName = table.name();
-        }
-
-        clearTable(tableName);
+        JPATestHelper.clearTable(klass);
     }
 
     /**
@@ -210,15 +151,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws SQLException If the query failed.
      */
     protected RowSet executeQuery(String query) throws SQLException {
-        Connection c = dataSource.getConnection();
-        Statement s = c.createStatement();
-        ResultSet rs = s.executeQuery(query);
-        CachedRowSet rowSet = new CachedRowSetImpl();
-        rowSet.populate(rs);
-        rs.close();
-        s.close();
-        c.close();
-        return rowSet;
+        return JPATestHelper.executeQuery(query);
     }
 
     /**
@@ -226,7 +159,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws java.sql.SQLException on sql exception
      */
     protected Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+        return JPATestHelper.getConnection();
     }
 
     /**
@@ -265,52 +198,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws RuntimeException If anything failed.
      */
     @SuppressWarnings(value = "unchecked")
-    protected <T> void loadFixture(String fixture, Class<T> type)
-    throws RuntimeException {
-        logger.fine("Loading fixtures from [" + fixture + "] for [" + type + "]");
-
-        // Clear the table via the annotation
-        Table table = type.getAnnotation(Table.class);
-        String tableName;
-        if (table == null) {
-            Entity entity = type.getAnnotation(Entity.class);
-            if (entity == null) {
-                throw new IllegalArgumentException("The type [" + type + "] is not annotated with @Entity");
-            }
-
-            tableName = type.getSimpleName();
-        } else {
-            tableName = table.name();
-        }
-
-        try {
-            clearTable(tableName);
-
-            String pkg = getClass().getPackage().getName();
-            String location = "src/java/test/unit/" + pkg.replace(".", "/") + "/" + fixture;
-            logger.fine("Mapped location to [" + location + "]");
-
-            Map<String, String> mappings = map(tableName, "child");
-            Unmarshaller um = new Unmarshaller(null);
-            um.addObjectCreator("fixture", JavaBeanObjectCreator.forClass(Fixture.class,
-                new SimplePluralizer(), mappings));
-            um.addObjectCreator("fixture/*", JavaBeanObjectCreator.forClass(type));
-            Fixture<T> fix = (Fixture<T>) um.unmarshal(location);
-
-            EntityManager em = emf.createEntityManager();
-            EntityTransaction et = em.getTransaction();
-            et.begin();
-
-            List<T> objs = fix.getChildren();
-            for (T obj : objs) {
-                logger.fine("Running fixure for object [" + obj + "]");
-                em.persist(obj);
-            }
-
-            et.commit();
-            em.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    protected <T> void loadFixture(String fixture, Class<T> type) throws RuntimeException {
+        JPATestHelper.loadFixture(getClass(), fixture, type);
     }
 }
