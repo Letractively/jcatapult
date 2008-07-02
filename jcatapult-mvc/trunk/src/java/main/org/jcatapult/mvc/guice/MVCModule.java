@@ -17,7 +17,6 @@ package org.jcatapult.mvc.guice;
 
 import org.jcatapult.mvc.action.result.ForwardResult;
 import org.jcatapult.mvc.action.result.RedirectResult;
-import org.jcatapult.mvc.result.message.control.Message;
 import org.jcatapult.mvc.parameter.convert.DefaultConverterProvider;
 import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
 import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
@@ -38,6 +37,9 @@ import org.jcatapult.mvc.result.form.control.Reset;
 import org.jcatapult.mvc.result.form.control.Submit;
 import org.jcatapult.mvc.result.form.control.Text;
 import org.jcatapult.mvc.result.form.control.Textarea;
+import org.jcatapult.mvc.result.message.control.ActionMessages;
+import org.jcatapult.mvc.result.message.control.FieldMessages;
+import org.jcatapult.mvc.result.message.control.Message;
 import org.jcatapult.mvc.scope.ActionSessionScope;
 import org.jcatapult.mvc.scope.ContextScope;
 import org.jcatapult.mvc.scope.FlashScope;
@@ -102,20 +104,22 @@ public class MVCModule extends AbstractModule {
      * directive name.
      */
     protected void configureModels() {
+        bind(ActionMessages.class);
         bind(Button.class);
         bind(Checkbox.class);
         bind(CountriesSelect.class);
+        bind(FieldMessages.class);
         bind(File.class);
         bind(Form.class);
         bind(Hidden.class);
         bind(Image.class);
+        bind(Message.class);
         bind(Password.class);
         bind(Radio.class);
         bind(Reset.class);
         bind(Submit.class);
         bind(Text.class);
         bind(Textarea.class);
-        bind(Message.class);
 
         requestStaticInjection(ForwardResult.class);
     }

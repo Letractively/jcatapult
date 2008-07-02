@@ -142,7 +142,12 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     public Map getParameterMap() {
-        return parameters;
+        Map<String, String[]> params = new HashMap<String, String[]>();
+        for (String key : parameters.keySet()) {
+            params.put(key, parameters.get(key).toArray(new String[parameters.get(key).size()]));
+        }
+
+        return params;
     }
 
     public Enumeration getParameterNames() {

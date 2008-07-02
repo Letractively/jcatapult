@@ -15,6 +15,7 @@
  */
 package org.jcatapult.mvc.test;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -37,7 +38,23 @@ import net.java.util.IteratorEnumeration;
  * @author Brian Pontarelli
  */
 public class MockServletContext implements ServletContext {
-    private Map<String, Object> attributes = new HashMap<String, Object>();
+    private final Map<String, Object> attributes = new HashMap<String, Object>();
+    private File webDir;
+
+    public MockServletContext() {
+        webDir = new File("web");
+        if (!webDir.isDirectory()) {
+            webDir = new File("src/web/test");
+            if (!webDir.isDirectory()) {
+                throw new RuntimeException("Not testing in a web application or Module and webDir " +
+                    "was not passed to the MockServletContext in the constructor");
+            }
+        }
+    }
+
+    public MockServletContext(File webDir) {
+        this.webDir = webDir;
+    }
 
     public Object getAttribute(String name) {
         return attributes.get(name);
@@ -75,11 +92,28 @@ public class MockServletContext implements ServletContext {
         return null;
     }
 
-    public URL getResource(String s) throws MalformedURLException {
+    public URL getResource(String path) throws MalformedURLException {
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
+
+        File f = new File(webDir, path);
+        if (f.isFile()) {
+            return f.toURI().toURL();
+        }
+
         return null;
     }
 
-    public InputStream getResourceAsStream(String s) {
+    public InputStream getResourceAsStream(String path) {
+        try {
+            URL url = getResource(path);
+            if (url != null) {
+                return url.openStream();
+            }
+        } catch (Exception e) {
+        }
+
         return null;
     }
 
@@ -112,7 +146,16 @@ public class MockServletContext implements ServletContext {
     public void log(String s, Throwable throwable) {
     }
 
-    public String getRealPath(String s) {
+    public String getRealPath(String path) {
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
+
+        File f = new File(webDir, path);
+        if (f.isFile()) {
+            return f.getAbsolutePath();
+        }
+
         return null;
     }
 
