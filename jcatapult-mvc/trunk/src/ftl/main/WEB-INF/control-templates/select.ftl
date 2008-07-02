@@ -1,5 +1,5 @@
 [#ftl/]
-[#include "parameter-attributes.ftl"/]
+[#include "dynamic-attributes.ftl"/]
 <div class="input">
 [#include "label.ftl"/]
 <div class="control-container">

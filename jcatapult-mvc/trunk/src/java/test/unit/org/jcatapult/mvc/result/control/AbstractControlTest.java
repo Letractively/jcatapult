@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
+import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
@@ -54,21 +55,26 @@ public class AbstractControlTest {
         return env;
     }
 
-    protected MessageStore makeMessageStore(String field, String... errors) {
+    protected MessageStore makeFieldMessageStore(boolean isError, String field, String... messages) {
         MessageStore ms = EasyMock.createStrictMock(MessageStore.class);
-        EasyMock.expect(ms.getActionMessages(MessageType.PLAIN)).andReturn(new ArrayList<String>());
-        EasyMock.expect(ms.getActionMessages(MessageType.ERROR)).andReturn(new ArrayList<String>());
         if (field != null) {
-            EasyMock.expect(ms.getFieldMessages(MessageType.PLAIN)).andReturn(new HashMap<String, List<String>>());
-
-            Map<String, List<String>> fieldErrors = new HashMap<String, List<String>>();
-            if (errors.length > 0) {
-                fieldErrors.put(field, asList(errors));
+            Map<String, List<String>> map = new HashMap<String, List<String>>();
+            if (messages.length > 0) {
+                map.put(field, asList(messages));
             }
 
-            EasyMock.expect(ms.getFieldMessages(MessageType.ERROR)).andReturn(fieldErrors);
+            EasyMock.expect(ms.getFieldMessages(MessageType.PLAIN)).andReturn(isError ? new HashMap<String, List<String>>() : map);
+            EasyMock.expect(ms.getFieldMessages(MessageType.ERROR)).andReturn(isError ? map : new HashMap<String, List<String>>());
         }
 
+        EasyMock.replay(ms);
+        return ms;
+    }
+
+    protected MessageStore makeActionMessageStore(boolean errorType, String... errors) {
+        MessageStore ms = EasyMock.createStrictMock(MessageStore.class);
+        EasyMock.expect(ms.getActionMessages(MessageType.PLAIN)).andReturn(errorType ? new ArrayList<String>(): asList(errors) );
+        EasyMock.expect(ms.getActionMessages(MessageType.ERROR)).andReturn(errorType ? asList(errors) : new ArrayList<String>());
         EasyMock.replay(ms);
         return ms;
     }
@@ -86,5 +92,12 @@ public class AbstractControlTest {
         EasyMock.expect(ais.get()).andReturn(invocation);
         EasyMock.replay(ais);
         return ais;
+    }
+
+    protected ContainerResolver makeContainerResolver(String name) {
+        ContainerResolver containerResolver = EasyMock.createStrictMock(ContainerResolver.class);
+        EasyMock.expect(containerResolver.getRealPath("WEB-INF/control-templates/" + name + "_en_US.ftl")).andReturn("src/ftl/main/WEB-INF/control-templates/" + name + ".ftl");
+        EasyMock.replay(containerResolver);
+        return containerResolver;
     }
 }

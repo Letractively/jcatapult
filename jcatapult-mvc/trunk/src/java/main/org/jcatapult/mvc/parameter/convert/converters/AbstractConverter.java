@@ -57,13 +57,13 @@ public abstract class AbstractConverter implements Converter {
      *
      * @param   values The values to convert.
      * @param   convertTo The type to convert to.
-     * @param   attributes The parameter attributes used to assist in conversion.
+     * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    public Object convertFromStrings(String[] values, Type convertTo, Map<String, String> attributes)
+    public Object convertFromStrings(String[] values, Type convertTo, Map<String, String> dynamicAttributes)
     throws ConversionException, ConverterStateException {
         // Handle null
         if (values == null) {
@@ -82,10 +82,10 @@ public abstract class AbstractConverter implements Converter {
                         " conversion to multi-dimensional arrays of type [" + convertTo + "]");
                 }
 
-                return stringToArray(value, convertTo, attributes);
+                return stringToArray(value, convertTo, dynamicAttributes);
             }
 
-            return stringToObject(value, convertTo, attributes);
+            return stringToObject(value, convertTo, dynamicAttributes);
         }
 
         // Handle multiple strings
@@ -96,10 +96,10 @@ public abstract class AbstractConverter implements Converter {
                     " conversion to multi-dimensional arrays of type [" + convertTo + "]");
             }
 
-            return stringsToArray(values, convertTo, attributes);
+            return stringsToArray(values, convertTo, dynamicAttributes);
         }
 
-        return stringsToObject(values, convertTo, attributes);
+        return stringsToObject(values, convertTo, dynamicAttributes);
     }
 
     /**
@@ -136,13 +136,13 @@ public abstract class AbstractConverter implements Converter {
      *
      * @param   value The value to convert.
      * @param   convertFrom The original Type of the value.
-     * @param   attributes The parameter attributes to assist in the conversion.
+     * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    public String convertToString(Object value, Type convertFrom, Map<String, String> attributes)
+    public String convertToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes)
     throws ConversionException {
         // Handle null
         if (value == null) {
@@ -157,10 +157,10 @@ public abstract class AbstractConverter implements Converter {
         // Handle arrays
         Class<?> rawType = rawType(convertFrom);
         if (rawType.isArray()) {
-            return arrayToString(value, convertFrom, attributes);
+            return arrayToString(value, convertFrom, dynamicAttributes);
         }
 
-        return objectToString(value, convertFrom, attributes);
+        return objectToString(value, convertFrom, dynamicAttributes);
     }
 
     /**
@@ -168,13 +168,13 @@ public abstract class AbstractConverter implements Converter {
      *
      * @param   value The value to convert to an array.
      * @param   convertTo The array type to convert to.
-     * @param   attributes The parameter attributes to assist in the conversion.
+     * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected Object stringToArray(String value, Type convertTo, Map<String, String> attributes)
+    protected Object stringToArray(String value, Type convertTo, Map<String, String> dynamicAttributes)
     throws ConversionException {
         if (value == null) {
             return null;
@@ -189,7 +189,7 @@ public abstract class AbstractConverter implements Converter {
             finalArray = Array.newInstance(rawType.getComponentType(), parts.length);
             for (int i = 0; i < parts.length; i++) {
                 Object singleValue = stringToObject(parts[i], rawType.getComponentType(),
-                    attributes);
+                    dynamicAttributes);
                 Array.set(finalArray, i, singleValue);
             }
         }
@@ -202,13 +202,13 @@ public abstract class AbstractConverter implements Converter {
      *
      * @param   values The values to convert to an array.
      * @param   convertTo The array type to convert to.
-     * @param   attributes The parameter attributes to assist in the conversion.
+     * @param   dynamicAttributes The dynamic attributes to assist in the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected Object stringsToArray(String[] values, Type convertTo, Map<String, String> attributes)
+    protected Object stringsToArray(String[] values, Type convertTo, Map<String, String> dynamicAttributes)
     throws ConversionException {
         if (values == null) {
             return null;
@@ -222,7 +222,7 @@ public abstract class AbstractConverter implements Converter {
             finalArray = Array.newInstance(rawType.getComponentType(), values.length);
             for (int i = 0; i < values.length; i++) {
                 Object singleValue = stringToObject(values[i], rawType.getComponentType(),
-                    attributes);
+                    dynamicAttributes);
                 Array.set(finalArray, i, singleValue);
             }
         }
@@ -235,13 +235,13 @@ public abstract class AbstractConverter implements Converter {
      *
      * @param   value The array value to convert to a String.
      * @param   convertFrom The array type to convert from.
-     * @param   attributes The parameter attributes to assist in the conversion.
+     * @param   dynamicAttributes The dynamic attributes to assist in the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected String arrayToString(Object value, Type convertFrom, Map<String, String> attributes)
+    protected String arrayToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes)
     throws ConversionException {
         Class<?> rawType = rawType(convertFrom);
         if (!rawType.isArray()) {
@@ -265,7 +265,7 @@ public abstract class AbstractConverter implements Converter {
         StringBuffer str = new StringBuffer();
         for (int i = 0; i < length; i++) {
             Object o = Array.get(value, i);
-            str.append(convertToString(o, value.getClass().getComponentType(), attributes));
+            str.append(convertToString(o, value.getClass().getComponentType(), dynamicAttributes));
             if (i + 1 < length) {
                 str.append(",");
             }
@@ -279,13 +279,13 @@ public abstract class AbstractConverter implements Converter {
      *
      * @param   value The String value to convert.
      * @param   convertTo The type to convert to.
-     * @param   attributes The parameter attributes to assist in the conversion.
+     * @param   dynamicAttributes The dynamic attributes to assist in the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected abstract Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
+    protected abstract Object stringToObject(String value, Type convertTo, Map<String, String> dynamicAttributes)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -293,13 +293,13 @@ public abstract class AbstractConverter implements Converter {
      *
      * @param   values The String values to convert.
      * @param   convertTo The type to convert to.
-     * @param   attributes The parameter attributes to assist in the conversion.
+     * @param   dynamicAttributes The dynamic attributes to assist in the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected abstract Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes)
+    protected abstract Object stringsToObject(String[] values, Type convertTo, Map<String, String> dynamicAttributes)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -307,12 +307,12 @@ public abstract class AbstractConverter implements Converter {
      *
      * @param   value The Object value to convert.
      * @param   convertFrom The type to convert from.
-     * @param   attributes The parameter attributes to assist in the conversion.
+     * @param   dynamicAttributes The dynamic attributes to assist in the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected abstract String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
+    protected abstract String objectToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes)
     throws ConversionException, ConverterStateException;
 }

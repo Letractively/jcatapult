@@ -35,9 +35,9 @@ import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.result.control.Control;
 
 import com.google.inject.Inject;
+import freemarker.template.TemplateModel;
 
 /**
  * <p>
@@ -49,7 +49,7 @@ import com.google.inject.Inject;
  */
 public class ForwardResult extends AbstractResult<Forward> {
     public static final String DIR = "/WEB-INF/content";
-    private static final Map<String, Class<? extends Control>> controls = new HashMap<String, Class<? extends Control>>();
+    private static final Map<String, Class<? extends TemplateModel>> models = new HashMap<String, Class<? extends TemplateModel>>();
     private final Locale locale;
     private final ServletContext servletContext;
     private final HttpServletRequest request;
@@ -64,9 +64,9 @@ public class ForwardResult extends AbstractResult<Forward> {
      */
     @Inject
     public static void initialize(ObjectFactory objectFactory) {
-        List<Class<? extends Control>> types = objectFactory.getAllForType(Control.class);
-        for (Class<? extends Control> type : types) {
-            controls.put(type.getSimpleName().toLowerCase(), type);
+        List<Class<? extends TemplateModel>> types = objectFactory.getAllForType(TemplateModel.class);
+        for (Class<? extends TemplateModel> type : types) {
+            models.put(type.getSimpleName().toLowerCase(), type);
         }
     }
 
@@ -106,7 +106,7 @@ public class ForwardResult extends AbstractResult<Forward> {
         } else if (page.endsWith(".ftl")) {
             PrintWriter writer = response.getWriter();
             FreeMarkerMap map = new FreeMarkerMap(servletContext, request, expressionEvaluator,
-                invocation.action(), controls, objectFactory);
+                invocation.action(), models, objectFactory);
             freeMarkerService.render(writer, page, map, locale);
         }
     }

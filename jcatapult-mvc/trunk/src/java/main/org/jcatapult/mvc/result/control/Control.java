@@ -37,12 +37,12 @@ public interface Control extends TemplateDirectiveModel {
      * @param   writer The writer to write the output to.
      * @param   attributes The attributes that are passed from the JSP tag or the FreeMarker
      *          directive.
-     * @param   parameterAttributes The parameter attributes that are passed to the tag. These are
+     * @param   dynamicAttributes The dynamic attributes that are passed to the tag. These are
      *          described in the class comment of the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class. In most cases these are used for type conversion, such as date formats and
      *          currency codes.
      */
-    void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> parameterAttributes);
+    void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> dynamicAttributes);
 
     /**
      * Renders the end of the control. If the control doesn't have a start and an end, this method

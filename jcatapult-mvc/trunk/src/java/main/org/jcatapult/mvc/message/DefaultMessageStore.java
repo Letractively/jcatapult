@@ -55,10 +55,10 @@ public class DefaultMessageStore implements MessageStore {
     /**
      * {@inheritDoc}
      */
-    public void addConversionError(String field, String bundle, Map<String, String> attributes, Object... values)
+    public void addConversionError(String field, String bundle, Map<String, String> dynamicAttributes, Object... values)
     throws MissingMessageException {
         String key = field + ".conversionError";
-        String message = messageProvider.getMessage(bundle, key, attributes, (Object[]) values);
+        String message = messageProvider.getMessage(bundle, key, dynamicAttributes, (Object[]) values);
         Scope scope = scopeProvider.lookup(MessageScope.REQUEST);
         scope.addFieldMessage(MessageType.ERROR, field, message);
     }

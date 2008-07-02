@@ -40,11 +40,13 @@ public interface MessageStore {
      *
      * @param   field The name of the field that the conversion error failed for.
      * @param   bundle The name of the bundle that the error is pulled from.
-     * @param   attributes The parameter attributes, which might be useful for error messaging stuff
+     * @param   dynamicAttributes The dynamic attributes, which might be useful for error messaging
+     *          stuff.
      * @param   values The values attempting to be set into the field.
      * @throws  MissingMessageException If the conversion message is missing.
      */
-    void addConversionError(String field, String bundle, Map<String, String> attributes, Object... values) throws MissingMessageException;
+    void addConversionError(String field, String bundle, Map<String, String> dynamicAttributes, Object... values)
+    throws MissingMessageException;
 
     /**
      * Adds a field message which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
@@ -56,7 +58,8 @@ public interface MessageStore {
      * @param   values The values used to format the message.
      * @throws  MissingMessageException If the message is missing.
      */
-    void addFieldMessage(MessageScope scope, String field, String bundle, String key, Object... values) throws MissingMessageException;
+    void addFieldMessage(MessageScope scope, String field, String bundle, String key, Object... values)
+    throws MissingMessageException;
 
     /**
      * Adds a field message which is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The name of the bundle

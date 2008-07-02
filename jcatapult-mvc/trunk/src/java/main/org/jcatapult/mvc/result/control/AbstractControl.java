@@ -27,8 +27,7 @@ import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
-import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.mvc.message.scope.MessageType;
+import org.jcatapult.mvc.result.form.control.AppendAttributesMethod;
 
 import com.google.inject.Inject;
 import freemarker.core.Environment;
@@ -48,7 +47,6 @@ import freemarker.template.TemplateModel;
  */
 public abstract class AbstractControl implements Control {
     protected Locale locale;
-    protected MessageStore messageStore;
     protected FreeMarkerService freeMarkerService;
     protected HttpServletRequest request;
     protected ActionInvocation actionInvocation;
@@ -57,11 +55,10 @@ public abstract class AbstractControl implements Control {
 
     @Inject
     public void setServices(@CurrentLocale Locale locale, HttpServletRequest request,
-            ActionInvocationStore actionInvocationStore, MessageStore messageStore,
-            FreeMarkerService freeMarkerService) {
+        ActionInvocationStore actionInvocationStore,
+        FreeMarkerService freeMarkerService) {
         this.locale = locale;
         this.request = request;
-        this.messageStore = messageStore;
         this.freeMarkerService = freeMarkerService;
         this.actionInvocation = actionInvocationStore.get();
         this.action = this.actionInvocation.action();
@@ -77,11 +74,12 @@ public abstract class AbstractControl implements Control {
      *
      * @param   writer The writer to output to.
      * @param   attributes The attributes.
-     * @param   parameterAttributes The parameter attributes.
+     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
+     *          an underscore.
      */
-    public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> parameterAttributes) {
-        addAdditionalAttributes(attributes, parameterAttributes);
-        parameters = makeParameters(attributes, parameterAttributes);
+    public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+        addAdditionalAttributes(attributes, dynamicAttributes);
+        parameters = makeParameters(attributes, dynamicAttributes);
 
         if (startTemplateName() != null) {
             String templateName = "/WEB-INF/control-templates/" + startTemplateName();
@@ -114,7 +112,7 @@ public abstract class AbstractControl implements Control {
      *
      * <ul>
      * <li>attributes - The attributes</li>
-     * <li>parameter_attributes - The parameter attributes</li>
+     * <li>dynamic_attributes - The dynamic attributes</li>
      * <li>append_attributes - A FreeMarker method that appends attributes ({@link AppendAttributesMethod})</li>
      * <li>request - The HttpServletRequest</li>
      * <li>session - The HttpSession</li>
@@ -128,19 +126,18 @@ public abstract class AbstractControl implements Control {
      * </ul>
      *
      * @param   attributes The attributes from the tag.
-     * @param   parameterAttributes The parameter attributes from the tag.
+     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
+     *          an underscore.
      * @return  The Parameters Map.
      */
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> parameterAttributes) {
+    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("attributes", attributes);
-        parameters.put("parameter_attributes", parameterAttributes);
+        parameters.put("dynamic_attributes", dynamicAttributes);
         parameters.put("action_invocation", actionInvocation);
         parameters.put("action", action);
         parameters.put("request", request);
         parameters.put("locale", locale);
-        parameters.put("action_messages", messageStore.getActionMessages(MessageType.PLAIN));
-        parameters.put("action_errors", messageStore.getActionMessages(MessageType.ERROR));
         parameters.put("append_attributes", new AppendAttributesMethod());
         return parameters;
     }
@@ -186,10 +183,11 @@ public abstract class AbstractControl implements Control {
      * by control tags to determine values, checked states, selected options, etc.
      *
      * @param   attributes The attributes.
-     * @param   parameterAttributes The parameter attributes.
+     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
+     *          an underscore.
      */
-    protected abstract void addAdditionalAttributes(Map<String, Object> attributes,
-        Map<String, String> parameterAttributes);
+    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+    }
 
     /**
      * @return  The name of the FreeMarker template that this control renders when it starts.
