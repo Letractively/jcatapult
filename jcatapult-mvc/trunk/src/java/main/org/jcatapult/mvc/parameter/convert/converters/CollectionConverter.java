@@ -63,15 +63,15 @@ public class CollectionConverter extends AbstractConverter {
      *
      * @param   value The value.
      * @param   convertTo The type to convert to.
-     * @param   attributes The parameter attributes to assist in the conversion.
+     * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
+    protected Object stringToObject(String value, Type convertTo, Map<String, String> dynamicAttributes)
     throws ConversionException, ConverterStateException {
-        return stringsToObject(array(value), convertTo, attributes);
+        return stringsToObject(array(value), convertTo, dynamicAttributes);
     }
 
     /**
@@ -81,13 +81,13 @@ public class CollectionConverter extends AbstractConverter {
      *
      * @param   values The values.
      * @param   convertTo The type to convert to.
-     * @param   attributes The parameter attributes to assist in the conversion.
+     * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes)
+    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> dynamicAttributes)
     throws ConversionException, ConverterStateException {
         Class<?> rawType = rawType(convertTo);
         Class<?> parameter = parameterType(convertTo);
@@ -103,7 +103,7 @@ public class CollectionConverter extends AbstractConverter {
             }
 
             for (String value : values) {
-                collection.add(converter.convertFromStrings(array(value), parameter, attributes));
+                collection.add(converter.convertFromStrings(array(value), parameter, dynamicAttributes));
             }
         }
 
@@ -116,13 +116,13 @@ public class CollectionConverter extends AbstractConverter {
      *
      * @param   value The value.
      * @param   convertFrom The type to convert from.
-     * @param   attributes The parameter attributes to assist in the conversion.
+     * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
+    protected String objectToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes)
     throws ConversionException, ConverterStateException {
         Collection collection = (Collection) value;
         Class<?> parameter = parameterType(convertFrom);
@@ -138,7 +138,7 @@ public class CollectionConverter extends AbstractConverter {
 
             StringBuilder build = new StringBuilder();
             for (Object o : collection) {
-                String str = converter.convertToString(o, parameter, attributes);
+                String str = converter.convertToString(o, parameter, dynamicAttributes);
                 if (build.length() > 0) {
                     build.append(",");
                 }

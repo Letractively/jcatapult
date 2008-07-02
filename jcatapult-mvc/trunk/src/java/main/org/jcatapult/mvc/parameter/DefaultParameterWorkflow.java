@@ -103,8 +103,8 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     /**
      * Cleanses the HTTP request parameters by removing all the special JCatapult MVC marker parameters
      * for checkboxes, radio buttons and actions. It also adds into the parameters null values for
-     * any un-checked checkboxes and un-selected radio buttons. It also collects all of the attributes
-     * for each parameter using the {@code @} delimiter character.
+     * any un-checked checkboxes and un-selected radio buttons. It also collects all of the dynamic
+     * attributes for each parameter using the {@code @} delimiter character.
      *
      * @param   request The request.
      * @return  The parameters to set into the aciton.
@@ -161,9 +161,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         }
 
         // Remove actions from the parameter as they should be ignored right now
-        for (String actionKey : actions) {
-            structs.remove(actionKey);
-        }
+        structs.keySet().removeAll(actions);
 
         return structs;
     }

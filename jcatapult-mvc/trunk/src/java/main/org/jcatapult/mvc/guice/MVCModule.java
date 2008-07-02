@@ -17,6 +17,7 @@ package org.jcatapult.mvc.guice;
 
 import org.jcatapult.mvc.action.result.ForwardResult;
 import org.jcatapult.mvc.action.result.RedirectResult;
+import org.jcatapult.mvc.result.message.control.Message;
 import org.jcatapult.mvc.parameter.convert.DefaultConverterProvider;
 import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
 import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
@@ -24,18 +25,19 @@ import org.jcatapult.mvc.parameter.convert.converters.CollectionConverter;
 import org.jcatapult.mvc.parameter.convert.converters.FileConverter;
 import org.jcatapult.mvc.parameter.convert.converters.NumberConverter;
 import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
-import org.jcatapult.mvc.result.control.Button;
-import org.jcatapult.mvc.result.control.Checkbox;
-import org.jcatapult.mvc.result.control.File;
-import org.jcatapult.mvc.result.control.Form;
-import org.jcatapult.mvc.result.control.Hidden;
-import org.jcatapult.mvc.result.control.Image;
-import org.jcatapult.mvc.result.control.Password;
-import org.jcatapult.mvc.result.control.Radio;
-import org.jcatapult.mvc.result.control.Reset;
-import org.jcatapult.mvc.result.control.Submit;
-import org.jcatapult.mvc.result.control.Text;
-import org.jcatapult.mvc.result.control.Textarea;
+import org.jcatapult.mvc.result.form.control.Button;
+import org.jcatapult.mvc.result.form.control.Checkbox;
+import org.jcatapult.mvc.result.form.control.CountriesSelect;
+import org.jcatapult.mvc.result.form.control.File;
+import org.jcatapult.mvc.result.form.control.Form;
+import org.jcatapult.mvc.result.form.control.Hidden;
+import org.jcatapult.mvc.result.form.control.Image;
+import org.jcatapult.mvc.result.form.control.Password;
+import org.jcatapult.mvc.result.form.control.Radio;
+import org.jcatapult.mvc.result.form.control.Reset;
+import org.jcatapult.mvc.result.form.control.Submit;
+import org.jcatapult.mvc.result.form.control.Text;
+import org.jcatapult.mvc.result.form.control.Textarea;
 import org.jcatapult.mvc.scope.ActionSessionScope;
 import org.jcatapult.mvc.scope.ContextScope;
 import org.jcatapult.mvc.scope.FlashScope;
@@ -57,7 +59,7 @@ public class MVCModule extends AbstractModule {
         configureConverters();
         configureResults();
         configureScopes();
-        configureControls();
+        configureModels();
     }
 
     /**
@@ -95,13 +97,14 @@ public class MVCModule extends AbstractModule {
     }
 
     /**
-     * This binds the controls so that they can be resolved by the FreeMarker result handling and
+     * This binds the models so that they can be resolved by the FreeMarker result handling and
      * dynamically added to the Map as directives under the jc key and using the class name as the
      * directive name.
      */
-    protected void configureControls() {
+    protected void configureModels() {
         bind(Button.class);
         bind(Checkbox.class);
+        bind(CountriesSelect.class);
         bind(File.class);
         bind(Form.class);
         bind(Hidden.class);
@@ -112,6 +115,7 @@ public class MVCModule extends AbstractModule {
         bind(Submit.class);
         bind(Text.class);
         bind(Textarea.class);
+        bind(Message.class);
 
         requestStaticInjection(ForwardResult.class);
     }

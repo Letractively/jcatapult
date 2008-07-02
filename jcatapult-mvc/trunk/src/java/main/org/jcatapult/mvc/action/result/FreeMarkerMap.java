@@ -28,7 +28,6 @@ import javax.servlet.http.HttpSession;
 
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.result.control.Control;
 
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
@@ -54,12 +53,12 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     private final ControlHashModel controlHashModel;
 
     public FreeMarkerMap(ServletContext context, HttpServletRequest request, ExpressionEvaluator expressionEvaluator,
-            Object action, Map<String, Class<? extends Control>> controls, ObjectFactory objectFactory) {
+            Object action, Map<String, Class<? extends TemplateModel>> models, ObjectFactory objectFactory) {
         this.request = request;
         this.expressionEvaluator = expressionEvaluator;
         this.action = action;
         this.context = context;
-        this.controlHashModel = new ControlHashModel(objectFactory, controls);
+        this.controlHashModel = new ControlHashModel(objectFactory, models);
     }
 
     public int size() {

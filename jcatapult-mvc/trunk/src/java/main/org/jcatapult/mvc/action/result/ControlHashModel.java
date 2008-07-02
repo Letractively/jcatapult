@@ -17,6 +17,7 @@ package org.jcatapult.mvc.action.result;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +27,6 @@ import org.jcatapult.mvc.result.control.Control;
 
 import freemarker.template.SimpleCollection;
 import freemarker.template.TemplateCollectionModel;
-import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -41,27 +41,27 @@ import freemarker.template.TemplateModelException;
  */
 public class ControlHashModel implements TemplateHashModelEx {
     private final ObjectFactory objectFactory;
-    private final Map<String, Class<? extends Control>> controls;
+    private final Map<String, Class<? extends TemplateModel>> models;
 
-    public ControlHashModel(ObjectFactory objectFactory, Map<String, Class<? extends Control>> controls) {
+    public ControlHashModel(ObjectFactory objectFactory, Map<String, Class<? extends TemplateModel>> models) {
         this.objectFactory = objectFactory;
-        this.controls = controls;
+        this.models = models;
     }
 
     public TemplateCollectionModel keys() throws TemplateModelException {
-        return new SimpleCollection(controls.keySet());
+        return new SimpleCollection(keySet());
     }
 
     public int size() {
-        return controls.size();
+        return models.size();
     }
 
     public boolean isEmpty() {
-        return controls.isEmpty();
+        return models.isEmpty();
     }
 
     public TemplateModel get(String key) {
-        Class<? extends Control> type = controls.get(key);
+        Class<? extends TemplateModel> type = models.get(key);
         if (type != null) {
             return objectFactory.create(type);
         }
@@ -70,22 +70,17 @@ public class ControlHashModel implements TemplateHashModelEx {
     }
 
     public TemplateCollectionModel values() {
-        List<TemplateDirectiveModel> all = new ArrayList<TemplateDirectiveModel>();
-        for (String name : controls.keySet()) {
-            all.add(objectFactory.create(controls.get(name)));
-        }
-
-        return new SimpleCollection(all);
+        return new SimpleCollection(valueCollection());
     }
 
     public Set<String> keySet() {
-        return controls.keySet();
+        return new HashSet<String>(models.keySet());
     }
 
-    public Collection<Object> valueCollection() {
-        List<Object> all = new ArrayList<Object>();
-        for (String name : controls.keySet()) {
-            all.add(objectFactory.create(controls.get(name)));
+    public Collection<?> valueCollection() {
+        List<TemplateModel> all = new ArrayList<TemplateModel>();
+        for (String name : models.keySet()) {
+            all.add(objectFactory.create(models.get(name)));
         }
 
         return all;
