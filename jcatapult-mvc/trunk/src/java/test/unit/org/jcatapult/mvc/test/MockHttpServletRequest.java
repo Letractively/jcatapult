@@ -50,6 +50,14 @@ public class MockHttpServletRequest implements HttpServletRequest {
     private String encoding;
     private MockRequestDispatcher dispatcher;
 
+    public MockHttpServletRequest(String uri, Locale locale, boolean post, String encoding) {
+        this.parameters = new HashMap<String, List<String>>();
+        this.uri = uri;
+        this.locale = locale;
+        this.post = post;
+        this.encoding = encoding;
+    }
+
     public MockHttpServletRequest(Map<String, List<String>> parameters, String uri, String encoding,
             Locale locale, boolean post) {
         this.parameters = parameters;
