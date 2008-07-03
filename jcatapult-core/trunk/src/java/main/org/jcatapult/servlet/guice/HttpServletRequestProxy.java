@@ -33,12 +33,16 @@ import org.jcatapult.servlet.ServletObjectsHolder;
 
 /**
  * <p>
- * This
+ * This is a proxy to the HttpServletRequest. It is useful for allowing code
+ * to inject the request, but still allow it to be wrapped and then set back
+ * into the {@link ServletObjectsHolder}.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 public class HttpServletRequestProxy extends HttpServletRequestWrapper {
+    private boolean setup = false;
+
     public HttpServletRequestProxy() {
         super(ServletObjectsHolder.getServletRequest());
     }
@@ -314,6 +318,9 @@ public class HttpServletRequestProxy extends HttpServletRequestWrapper {
     }
 
     protected void initialize() {
-        setRequest(ServletObjectsHolder.getServletRequest());
+        if (!setup) {
+            super.setRequest(ServletObjectsHolder.getServletRequest());
+            setup = true;
+        }
     }
 }
