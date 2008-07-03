@@ -15,9 +15,6 @@
  */
 package org.jcatapult.test;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletContext;
@@ -25,14 +22,10 @@ import javax.servlet.ServletContext;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.easymock.EasyMock;
-import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.persistence.test.JPABaseTest;
-import org.jcatapult.servlet.ServletObjectsHolder;
-import org.jcatapult.test.servlet.MockServletRequest;
 import org.junit.Before;
 import org.junit.Ignore;
 
-import com.google.inject.AbstractModule;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -50,13 +43,11 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  */
 @Ignore
 public abstract class WebBaseTest extends JPABaseTest {
-    protected ServletContext servletContext;
     protected ConfigurationManager configurationManager;
     protected Configuration configuration;
     protected Container container;
     protected boolean setupStruts = true;
     protected boolean get = true;
-    protected MockServletRequest request;
 
     /**
      * Default constructor.
@@ -74,87 +65,13 @@ public abstract class WebBaseTest extends JPABaseTest {
     }
 
     /**
-     * Sets whether or not the current HTTP request is a GET or a POST. This defaults to GET.
-     *
-     * @param   get True if the the request should be a GET, false if it should be a POST.
-     */
-    public void setGet(boolean get) {
-        this.get = get;
-    }
-
-    /**
      * Constructs the EntityManager and puts it in the context.
      */
     @Before
     @Override
     public void setUp() {
-        setUpWeb();
         super.setUp();
         setUpStruts();
-    }
-
-    /**
-     * Returns the ServletContext that is an EasyMock mock object that can be programmed and replayed.
-     * This hasn't been touched at all.
-     *
-     * @return  The ServletContext or null if this project isn't a web project.
-     */
-    public ServletContext getServletContext() {
-        return servletContext;
-    }
-
-    /**
-     * Sets up the web layout, if the project has it. This will allow things like email templates and
-     * configuration files to be loaded from the correct location. This also sets up the ServletContext
-     * mock that can be used by tests and therefore removes the usage of the ThreadLocal that is a
-     * hack for Guice.
-     */
-    public void setUpWeb() {
-        final String webRootDir = getWebRootDir();
-        if (new File(webRootDir).exists()) {
-            logger.info("Project is a web project or a module.  Setting up web test support.");
-            modules.add(new AbstractModule() {
-                protected void configure() {
-                    bind(ContainerResolver.class).toInstance(new ContainerResolver() {
-                        public String getRealPath(String path) {
-                            String realPath = webRootDir + "/" + path;
-                            File f = new File(realPath);
-                            if (f.exists()) {
-                                return realPath;
-                            }
-
-                            return null;
-                        }
-
-                        public URL getResource(String path) {
-                            String resource = webRootDir + "/" + path;
-                            try {
-                                File f = new File(resource);
-                                if (f.exists()) {
-                                    return f.toURI().toURL();
-                                }
-
-                                return null;
-                            } catch (MalformedURLException e) {
-                                return null;
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-        // Setup servlet context
-        this.servletContext = EasyMock.createStrictMock(ServletContext.class);
-        ServletObjectsHolder.setServletContext(this.servletContext);
-
-        this.request = new MockServletRequest() {
-            @Override
-            public String getMethod() {
-                return get ? "GET" : "POST";
-            }
-        };
-        ServletObjectsHolder.setServletRequest(request);
     }
 
     /**
@@ -197,14 +114,5 @@ public abstract class WebBaseTest extends JPABaseTest {
      */
     protected String getActionName() {
         return "null";
-    }
-
-    /**
-     * Returns the directory of the web root
-     *
-     * @return web root directory
-     */
-    protected String getWebRootDir() {
-        return "web";
     }
 }

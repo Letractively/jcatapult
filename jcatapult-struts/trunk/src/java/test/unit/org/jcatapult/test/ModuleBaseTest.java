@@ -19,24 +19,12 @@ package org.jcatapult.test;
 import org.junit.Ignore;
 
 /**
- * <p>
- * This class can be used for testing module classes.
- * </p>
- *
- * @author  Brian Pontarelli
+ * @Deprecated  This class is no longer needed because the JCatapultBaseTest now handles all the
+ *              Servlet objects and it figures out if the project is a webapp or module. You can
+ *              extend the WebBaseTest if you like, but you really should upgrade the JCatapult
+ *              MVC because it provides full black-box functional testing of webapps and modules.
  */
 @Ignore
+@Deprecated
 public abstract class ModuleBaseTest extends WebBaseTest {
-
-    /**
-     * Returns the directory of the web root for a module which is currently the
-     * <code>src/web/test</code> directory. This is done since the <code>src/web/main</code>
-     * directory really only contains FreeMarker templates and the test directory might contain
-     * configuration files used for testing.
-     *
-     * @return  The module web root directory.
-     */
-    protected String getWebRootDir() {
-        return "src/web/test";
-    }
 }

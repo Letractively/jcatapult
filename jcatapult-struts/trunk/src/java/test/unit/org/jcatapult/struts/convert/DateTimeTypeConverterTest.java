@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import org.jcatapult.servlet.ServletObjectsHolder;
-import org.jcatapult.test.servlet.MockServletRequest;
+import org.jcatapult.test.JCatapultBaseTest;
 import org.joda.time.DateTime;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -34,7 +34,7 @@ import static net.java.util.CollectionTools.*;
  *
  * @author Brian Pontarelli
  */
-public class DateTimeTypeConverterTest {
+public class DateTimeTypeConverterTest extends JCatapultBaseTest {
     @Test
     public void testFormatInValues() {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -55,9 +55,6 @@ public class DateTimeTypeConverterTest {
 
     @Test
     public void testFormatStylePattern() {
-        HttpServletRequest request = new MockServletRequest();
-        ServletObjectsHolder.setServletRequest(request);
-
         String values = "10-20-2006 10:30:00 PM";
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
         Map<String, Object> context = mapNV("conversion.property.fullName", "foo.bar");
@@ -71,9 +68,6 @@ public class DateTimeTypeConverterTest {
 
     @Test
     public void testFormatStylePatternPartial() {
-        HttpServletRequest request = new MockServletRequest();
-        ServletObjectsHolder.setServletRequest(request);
-
         String values = "10-20-06";
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
         Map<String, Object> context = mapNV("conversion.property.fullName", "foo.bar");
@@ -86,9 +80,7 @@ public class DateTimeTypeConverterTest {
 
     @Test
     public void testOutput() {
-        HttpServletRequest request = new MockServletRequest();
         request.setAttribute("foo.bar#attributes", mapNV("dateTimeFormat", "MM/dd/yyyy hh:mm aa"));
-        ServletObjectsHolder.setServletRequest(request);
 
         DateTime now = new DateTime(2006, 10, 20, 22, 30, 0, 0);
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
