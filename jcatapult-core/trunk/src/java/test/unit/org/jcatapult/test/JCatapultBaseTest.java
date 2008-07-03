@@ -16,10 +16,17 @@
 package org.jcatapult.test;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.guice.GuiceContainer;
+import org.jcatapult.servlet.ServletObjectsHolder;
+import org.jcatapult.test.servlet.MockHttpServletRequest;
+import org.jcatapult.test.servlet.MockHttpServletResponse;
+import org.jcatapult.test.servlet.MockServletContext;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -46,6 +53,9 @@ public abstract class JCatapultBaseTest {
     protected List<Module> modules = CollectionTools.list();
     protected Injector injector;
     protected ServletContext servletContext;
+    protected HttpServletRequest request;
+    protected HttpServletResponse response;
+    protected ServletContext context;
 
     /**
      * Sets up a mock JNDI tree and sets the environment to test.
@@ -82,6 +92,48 @@ public abstract class JCatapultBaseTest {
     @Before
     public void setUp() {
         setUpGuice();
+        setUpServletObjects();
+    }
+
+    /**
+     * Creates the servlet request, servlet response and context and puts them into the holder.
+     */
+    protected void setUpServletObjects() {
+        this.context = makeContext();
+        this.request = makeRequest(context);
+        this.response = makeResponse();
+
+        ServletObjectsHolder.setServletContext(context);
+        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.setServletResponse(response);
+    }
+
+    /**
+     * Constructs a request whose URI is /test, Locale is US, is a GET and encoded using UTF-8.
+     *
+     * @param   context The MockServletContext.
+     * @return  The mock request.
+     */
+    protected HttpServletRequest makeRequest(ServletContext context) {
+        return new MockHttpServletRequest("/test", Locale.US, false, "UTF-8", (MockServletContext) context);
+    }
+
+    /**
+     * Constructs a mock response.
+     *
+     * @return  The mock response.
+     */
+    protected HttpServletResponse makeResponse() {
+        return new MockHttpServletResponse();
+    }
+
+    /**
+     * Constructs a mock servlet context.
+     *
+     * @return  The mock context.
+     */
+    protected ServletContext makeContext() {
+        return new MockServletContext();
     }
 
     /**
