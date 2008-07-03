@@ -17,10 +17,7 @@ package org.jcatapult.servlet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-
-import org.jcatapult.servlet.guice.HttpServletRequestProxy;
 
 /**
  * <p>
@@ -74,28 +71,7 @@ public final class ServletObjectsHolder {
      * @param   servletRequest The servlet request for the current thread.
      */
     public static void setServletRequest(HttpServletRequest servletRequest) {
-        // This code is to attempt to avoid infinite recursion. When classes are injected with the
-        // HttpServletRequestProxy they end up wrapping that object and then setting that wrapper
-        // back into this holder. The issue is that the proxy is meant to get the latest and greatest
-        // request at all times. Therefore, we need to remove it from the wrapper and set back in
-        // the actual current request.
-        if (!(servletRequest instanceof HttpServletRequestProxy)) {
-
-            // Remove any proxies in the wrapper chain
-            HttpServletRequest current = servletRequest;
-            while (current instanceof HttpServletRequestWrapper) {
-                HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) current;
-                HttpServletRequest wrapped = (HttpServletRequest) wrapper.getRequest();
-                if (wrapped instanceof HttpServletRequestProxy) {
-                    wrapper.setRequest(request.get());
-                    current = request.get();
-                } else {
-                    current = wrapped;
-                }
-            }
-
-            request.set(servletRequest);
-        }
+        request.set(servletRequest);
     }
 
     /**
