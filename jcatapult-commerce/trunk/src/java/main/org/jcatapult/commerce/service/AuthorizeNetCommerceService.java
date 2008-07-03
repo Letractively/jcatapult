@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.domain.commerce.CreditCard;
 import org.jcatapult.domain.commerce.Money;
 
