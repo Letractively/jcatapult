@@ -15,7 +15,7 @@
  */
 package org.jcatapult.struts.action;
 
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.servlet.annotation.HTTPMethod;
 import org.jcatapult.struts.action.annotation.ActionName;
