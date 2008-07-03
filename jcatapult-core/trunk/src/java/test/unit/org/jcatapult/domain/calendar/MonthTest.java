@@ -3,8 +3,8 @@
  */
 package org.jcatapult.domain.calendar;
 
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * <p>

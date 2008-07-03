@@ -19,9 +19,9 @@ package org.jcatapult.servlet;
 import java.net.URL;
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Test;
-import org.junit.Assert;
 import org.easymock.EasyMock;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * User: jhumphrey

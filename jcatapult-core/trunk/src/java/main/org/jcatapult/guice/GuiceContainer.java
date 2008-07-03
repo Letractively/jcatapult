@@ -15,13 +15,13 @@
  */
 package org.jcatapult.guice;
 
+import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.io.IOException;
 
 import org.jcatapult.config.guice.JCatapultConfigurationModule;
 
