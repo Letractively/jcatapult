@@ -30,9 +30,9 @@ import javax.servlet.ServletException;
  * @author Brian Pontarelli
  */
 public class MockRequestDispatcher implements RequestDispatcher {
-    private String uri;
-    private boolean forwarded;
-    private boolean included;
+    protected String uri;
+    protected boolean forwarded;
+    protected boolean included;
 
     public MockRequestDispatcher(String uri) {
         this.uri = uri;

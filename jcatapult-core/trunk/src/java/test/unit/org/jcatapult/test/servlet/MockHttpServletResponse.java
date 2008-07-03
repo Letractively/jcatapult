@@ -35,20 +35,20 @@ import javax.servlet.http.HttpServletResponse;
  * @author Brian Pontarelli
  */
 public class MockHttpServletResponse implements HttpServletResponse {
-    private List<Cookie> cookies = new ArrayList<Cookie>();
-    private MockServletOutputStream stream = new MockServletOutputStream();
-    private Map<String, Object> headers = new HashMap<String, Object>();
-    private int code;
-    private String message;
-    private String redirect;
-    private String encoding;
-    private String contentType;
-    private int length;
-    private int size;
-    private boolean reset;
-    private boolean flushed;
-    private Locale locale;
-    private boolean committed;
+    protected List<Cookie> cookies = new ArrayList<Cookie>();
+    protected MockServletOutputStream stream = new MockServletOutputStream();
+    protected Map<String, Object> headers = new HashMap<String, Object>();
+    protected int code;
+    protected String message;
+    protected String redirect;
+    protected String encoding;
+    protected String contentType;
+    protected int length;
+    protected int size;
+    protected boolean reset;
+    protected boolean flushed;
+    protected Locale locale;
+    protected boolean committed;
 
     public void addCookie(Cookie cookie) {
         cookies.add(cookie);

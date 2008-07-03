@@ -29,7 +29,7 @@ import javax.servlet.ServletOutputStream;
  * @author Brian Pontarelli
  */
 public class MockServletOutputStream extends ServletOutputStream {
-    private ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    protected ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     public void write(int b) throws IOException {
         baos.write(b);
