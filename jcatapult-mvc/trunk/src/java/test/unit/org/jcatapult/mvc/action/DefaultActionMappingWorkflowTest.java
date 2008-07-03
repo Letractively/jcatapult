@@ -16,7 +16,6 @@
 package org.jcatapult.mvc.action;
 
 import java.io.IOException;
-import java.util.Locale;
 import javax.servlet.ServletException;
 
 import org.easymock.EasyMock;
@@ -25,8 +24,9 @@ import org.jcatapult.mvc.Capture;
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.config.ActionConfigurationProvider;
 import org.jcatapult.mvc.action.config.DefaultActionConfiguration;
-import org.jcatapult.mvc.test.MockHttpServletRequest;
 import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.test.JCatapultBaseTest;
+import org.jcatapult.test.servlet.MockHttpServletRequest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -37,10 +37,11 @@ import org.junit.Test;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultActionMappingWorkflowTest {
+public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
     @Test
     public void testDifferentButtonClick() throws IOException, ServletException {
-        MockHttpServletRequest request = new MockHttpServletRequest("/admin/user/edit", Locale.US, true, "UTF-8");
+        request.setUri("/admin/user/edit");
+        request.setPost(true);
         request.setParameter("__jc_a_submit", "");
         request.setParameter("__jc_a_cancel", "/admin/user/cancel");
         request.setParameter("cancel", "Cancel");
@@ -50,7 +51,8 @@ public class DefaultActionMappingWorkflowTest {
 
     @Test
     public void testDifferentButtonClickRelativeURI() throws IOException, ServletException {
-        MockHttpServletRequest request = new MockHttpServletRequest("/admin/user/edit", Locale.US, true, "UTF-8");
+        request.setUri("/admin/user/edit");
+        request.setPost(true);
         request.setParameter("__jc_a_submit", "");
         request.setParameter("__jc_a_cancel", "cancel");
         request.setParameter("cancel", "Cancel");
@@ -60,7 +62,8 @@ public class DefaultActionMappingWorkflowTest {
 
     @Test
     public void testRequestURI() throws IOException, ServletException {
-        MockHttpServletRequest request = new MockHttpServletRequest("/admin/user/edit", Locale.US, true, "UTF-8");
+        request.setUri("/admin/user/edit");
+        request.setPost(true);
         request.setParameter("__jc_a_submit", "");
         request.setParameter("__jc_a_cancel", "cancel");
         request.setParameter("submit", "Submit");
@@ -70,7 +73,8 @@ public class DefaultActionMappingWorkflowTest {
 
     @Test
     public void testExtension() throws IOException, ServletException {
-        MockHttpServletRequest request = new MockHttpServletRequest("/admin/user/edit.xml", Locale.US, true, "UTF-8");
+        request.setUri("/admin/user/edit.xml");
+        request.setPost(true);
         request.setParameter("__jc_a_submit", "");
         request.setParameter("__jc_a_cancel", "cancel");
         request.setParameter("submit", "Submit");

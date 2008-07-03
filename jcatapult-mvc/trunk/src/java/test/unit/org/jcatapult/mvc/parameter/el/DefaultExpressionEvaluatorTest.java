@@ -24,9 +24,9 @@ import org.example.domain.Address;
 import org.example.domain.AddressField;
 import org.example.domain.User;
 import org.example.domain.UserField;
-import org.jcatapult.mvc.test.WebBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.jcatapult.test.JCatapultBaseTest;
 
 import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
@@ -38,7 +38,7 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultExpressionEvaluatorTest extends WebBaseTest {
+public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
     DefaultExpressionEvaluator evaluator;
 
     @Inject

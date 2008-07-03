@@ -23,6 +23,10 @@ import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.servlet.MVCWorkflow;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.test.servlet.MockHttpServletRequest;
+import org.jcatapult.test.servlet.MockHttpServletResponse;
+import org.jcatapult.test.servlet.MockServletContext;
+import org.jcatapult.test.servlet.WebTestHelper;
 
 import com.google.inject.Inject;
 import com.google.inject.Module;
@@ -53,15 +57,15 @@ public class WebappTestRunner {
     }
 
     void run(RequestBuilder builder, boolean post) throws IOException, ServletException {
+        this.context = makeContext();
+        ServletObjectsHolder.setServletContext(context);
+
         this.request = new MockHttpServletRequest(builder.getParameters(), builder.getUri(), "UTF-8",
-            builder.getLocale(), post);
+            builder.getLocale(), post, context);
         ServletObjectsHolder.setServletRequest(request);
 
         this.response = makeResponse();
         ServletObjectsHolder.setServletResponse(response);
-
-        this.context = makeContext();
-        ServletObjectsHolder.setServletContext(context);
 
         GuiceContainer.setGuiceModules(builder.getModules().toArray(new Module[builder.getModules().size()]));
         GuiceContainer.inject();
@@ -85,6 +89,6 @@ public class WebappTestRunner {
      * @return  Makes a ServletContext as a nice mock. Sub-classes can override this
      */
     protected MockServletContext makeContext() {
-        return MockHttpSession.context;
+        return WebTestHelper.makeContext();
     }
 }

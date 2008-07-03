@@ -21,7 +21,7 @@ import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
 import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
 import org.jcatapult.mvc.parameter.convert.converters.NumberConverter;
 import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
-import org.jcatapult.mvc.test.WebBaseTest;
+import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ import org.junit.Test;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultConverterProviderTest extends WebBaseTest {
+public class DefaultConverterProviderTest extends JCatapultBaseTest {
     /**
      * Test the lookup of converters
      */

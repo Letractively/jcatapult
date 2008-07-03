@@ -24,7 +24,7 @@ import java.lang.annotation.Annotation;
  *
  * @author  Brian Pontarelli
  */
-public interface Validator {
+public interface Validator<T extends Annotation> {
     /**
      * Validates the given value against the given annotation.
      *
@@ -37,5 +37,5 @@ public interface Validator {
      * @param   value The bean property or field value.
      * @return  True if the validation passes, false otherwise.
      */
-    boolean validate(Annotation annotation, Object container, Object value);
+    boolean validate(T annotation, Object container, Object value);
 }

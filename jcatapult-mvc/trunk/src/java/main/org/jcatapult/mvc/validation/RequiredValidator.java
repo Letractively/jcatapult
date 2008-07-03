@@ -15,7 +15,7 @@
  */
 package org.jcatapult.mvc.validation;
 
-import java.lang.annotation.Annotation;
+import org.jcatapult.mvc.validation.annotation.Required;
 
 /**
  * <p>
@@ -24,14 +24,14 @@ import java.lang.annotation.Annotation;
  *
  * @author  Brian Pontarelli
  */
-public class RequiredValidator implements Validator {
+public class RequiredValidator implements Validator<Required> {
     /**
      * @param   annotation Not used.
      * @param   container Not used.
      * @param   value The value to check.
      * @return  True if the value is not null, false if it is null.
      */
-    public boolean validate(Annotation annotation, Object container, Object value) {
+    public boolean validate(Required annotation, Object container, Object value) {
         return value != null;
     }
 }
