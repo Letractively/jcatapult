@@ -39,18 +39,10 @@ import net.java.util.IteratorEnumeration;
  * @author Brian Pontarelli
  */
 public class MockServletContext implements ServletContext {
-    private final Map<String, Object> attributes = new HashMap<String, Object>();
-    private File webDir;
+    protected final Map<String, Object> attributes = new HashMap<String, Object>();
+    protected File webDir;
 
     public MockServletContext() {
-        webDir = new File("web");
-        if (!webDir.isDirectory()) {
-            webDir = new File("src/web/test");
-            if (!webDir.isDirectory()) {
-                throw new RuntimeException("Not testing in a web application or Module and webDir " +
-                    "was not passed to the MockServletContext in the constructor");
-            }
-        }
     }
 
     public MockServletContext(File webDir) {

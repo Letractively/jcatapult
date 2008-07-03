@@ -33,8 +33,8 @@ import net.java.util.IteratorEnumeration;
  * @author Brian Pontarelli
  */
 public class MockHttpSession implements HttpSession {
-    private final Map<String, Object> attributes = new HashMap<String, Object>();
-    public final MockServletContext context;
+    protected final Map<String, Object> attributes = new HashMap<String, Object>();
+    protected final MockServletContext context;
 
     public MockHttpSession(MockServletContext context) {
         this.context = context;

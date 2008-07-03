@@ -36,20 +36,20 @@ import net.java.util.IteratorEnumeration;
 
 /**
  * <p>
- * This
+ * This class is a mock servlet request.
  * </p>
  *
  * @author Brian Pontarelli
  */
 public class MockHttpServletRequest implements HttpServletRequest {
-    private final Map<String, Object> attributes = new HashMap<String, Object>();
-    private final MockHttpSession session;
-    private final Map<String, List<String>> parameters;
-    private String uri;
-    private Locale locale;
-    private boolean post;
-    private String encoding;
-    private MockRequestDispatcher dispatcher;
+    protected final Map<String, Object> attributes = new HashMap<String, Object>();
+    protected final MockHttpSession session;
+    protected final Map<String, List<String>> parameters;
+    protected String uri;
+    protected Locale locale;
+    protected boolean post;
+    protected String encoding;
+    protected MockRequestDispatcher dispatcher;
 
     public MockHttpServletRequest(String uri, Locale locale, boolean post, String encoding,
             MockServletContext context) {

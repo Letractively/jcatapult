@@ -16,17 +16,15 @@
 package org.jcatapult.test;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.test.servlet.MockHttpServletRequest;
 import org.jcatapult.test.servlet.MockHttpServletResponse;
 import org.jcatapult.test.servlet.MockServletContext;
+import org.jcatapult.test.servlet.WebTestHelper;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -52,9 +50,8 @@ public abstract class JCatapultBaseTest {
     public static final MockJNDI jndi = new MockJNDI();
     protected List<Module> modules = CollectionTools.list();
     protected Injector injector;
-    protected ServletContext servletContext;
-    protected HttpServletRequest request;
-    protected HttpServletResponse response;
+    protected MockHttpServletRequest request;
+    protected MockHttpServletResponse response;
     protected ServletContext context;
 
     /**
@@ -91,8 +88,8 @@ public abstract class JCatapultBaseTest {
      */
     @Before
     public void setUp() {
-        setUpGuice();
         setUpServletObjects();
+        setUpGuice();
     }
 
     /**
@@ -109,31 +106,32 @@ public abstract class JCatapultBaseTest {
     }
 
     /**
-     * Constructs a request whose URI is /test, Locale is US, is a GET and encoded using UTF-8.
+     * Constructs a request whose URI is /test, Locale is US, is a GET and encoded using UTF-8
+     * by calling the by calling the {@link WebTestHelper#makeRequest(ServletContext)} method.
      *
      * @param   context The MockServletContext.
      * @return  The mock request.
      */
-    protected HttpServletRequest makeRequest(ServletContext context) {
-        return new MockHttpServletRequest("/test", Locale.US, false, "UTF-8", (MockServletContext) context);
+    protected MockHttpServletRequest makeRequest(ServletContext context) {
+        return WebTestHelper.makeRequest(context);
     }
 
     /**
-     * Constructs a mock response.
+     * Constructs a mock response by calling the {@link WebTestHelper#makeResponse()} method.
      *
      * @return  The mock response.
      */
-    protected HttpServletResponse makeResponse() {
-        return new MockHttpServletResponse();
+    protected MockHttpServletResponse makeResponse() {
+        return WebTestHelper.makeResponse();
     }
 
     /**
-     * Constructs a mock servlet context.
+     * Constructs a mock servlet context by calling the {@link WebTestHelper#makeContext()} method.
      *
      * @return  The mock context.
      */
-    protected ServletContext makeContext() {
-        return new MockServletContext();
+    protected MockServletContext makeContext() {
+        return WebTestHelper.makeContext();
     }
 
     /**
