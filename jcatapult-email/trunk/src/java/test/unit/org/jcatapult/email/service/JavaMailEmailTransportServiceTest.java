@@ -18,8 +18,8 @@ package org.jcatapult.email.service;
 import java.util.Collections;
 import java.util.concurrent.Future;
 
-import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.domain.Attachment;
 import org.jcatapult.email.domain.Email;
@@ -39,7 +39,7 @@ public class JavaMailEmailTransportServiceTest {
     @Test
     public void testSendEmail() throws Exception {
         Configuration config = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(config.getKeys()).andReturn(Collections.emptyList().iterator());
+        EasyMock.expect(config.getKeys()).andReturn(Collections.<String>emptyList().iterator());
         EasyMock.expect(config.getString("jcatapult.email.username")).andReturn(null);
         EasyMock.expect(config.getString("jcatapult.email.password")).andReturn(null);
         EasyMock.expect(config.getBoolean("jcatapult.email.tls", false)).andReturn(false);
@@ -65,7 +65,7 @@ public class JavaMailEmailTransportServiceTest {
     @Test
     public void testSendEmailWithAttachments() throws Exception {
         Configuration config = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(config.getKeys()).andReturn(Collections.emptyList().iterator());
+        EasyMock.expect(config.getKeys()).andReturn(Collections.<String>emptyList().iterator());
         EasyMock.expect(config.getString("jcatapult.email.username")).andReturn(null);
         EasyMock.expect(config.getString("jcatapult.email.password")).andReturn(null);
         EasyMock.expect(config.getBoolean("jcatapult.email.tls", false)).andReturn(false);
@@ -92,7 +92,7 @@ public class JavaMailEmailTransportServiceTest {
     @Ignore
     public void testSendEmailRemote() throws Exception {
         Configuration config = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(config.getKeys()).andReturn(Collections.emptyList().iterator());
+        EasyMock.expect(config.getKeys()).andReturn(Collections.<String>emptyList().iterator());
         EasyMock.expect(config.getString("jcatapult.email.username")).andReturn(null); // This needs to be set to test
         EasyMock.expect(config.getString("jcatapult.email.password")).andReturn(null); // So does this. DON'T CHECK IN
         EasyMock.expect(config.getBoolean("jcatapult.email.tls", false)).andReturn(false);

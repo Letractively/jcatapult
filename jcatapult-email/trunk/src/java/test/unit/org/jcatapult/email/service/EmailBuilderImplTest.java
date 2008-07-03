@@ -15,9 +15,9 @@
  */
 package org.jcatapult.email.service;
 
+import org.jcatapult.email.domain.Email;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jcatapult.email.domain.Email;
 
 /**
  * <p>

@@ -44,7 +44,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.EmailException;
 import org.jcatapult.email.domain.Attachment;
