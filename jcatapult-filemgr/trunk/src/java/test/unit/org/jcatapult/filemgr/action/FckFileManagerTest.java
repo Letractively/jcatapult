@@ -20,8 +20,8 @@ import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.filemgr.BaseTest;
 import org.jcatapult.filemgr.service.DefaultFileConfiguration;
 import org.jcatapult.filemgr.service.DefaultFileManagerService;

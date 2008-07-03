@@ -18,7 +18,7 @@ package org.jcatapult.filemgr.service;
 
 import java.util.Arrays;
 
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.config.Configuration;
 
 import com.google.inject.Inject;
 
