@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.EmailException;
 import org.jcatapult.email.domain.Email;

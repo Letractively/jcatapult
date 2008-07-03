@@ -21,8 +21,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.domain.Email;
