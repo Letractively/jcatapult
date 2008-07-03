@@ -28,8 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
-import org.jcatapult.persistence.DatabaseTools;
 import org.jcatapult.environment.Environment;
+import org.jcatapult.persistence.DatabaseTools;
 import org.jcatapult.persistence.service.jpa.EntityManagerContext;
 import static org.junit.Assert.*;
 import org.junit.Test;

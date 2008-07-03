@@ -26,7 +26,6 @@ import java.util.Currency;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
-import org.jcatapult.domain.commerce.Money;
 
 /**
  * <p>

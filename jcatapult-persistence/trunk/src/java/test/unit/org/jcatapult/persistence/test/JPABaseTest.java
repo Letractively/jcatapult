@@ -79,6 +79,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
     @Override
     public void setUp() {
         JPATestHelper.setupForTest();
+        super.setUp();
     }
 
     /**

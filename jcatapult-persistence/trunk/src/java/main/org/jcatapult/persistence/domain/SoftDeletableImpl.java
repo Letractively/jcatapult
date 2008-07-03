@@ -15,8 +15,8 @@
  */
 package org.jcatapult.persistence.domain;
 
-import javax.persistence.MappedSuperclass;
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
  * <p>
