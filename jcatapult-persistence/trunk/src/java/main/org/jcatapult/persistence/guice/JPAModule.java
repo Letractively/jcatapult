@@ -18,8 +18,8 @@ package org.jcatapult.persistence.guice;
 import javax.persistence.EntityManager;
 
 import org.jcatapult.persistence.service.jpa.EntityManagerProvider;
-import org.jcatapult.persistence.txn.annotation.Transactional;
 import org.jcatapult.persistence.txn.TransactionMethodInterceptor;
+import org.jcatapult.persistence.txn.annotation.Transactional;
 
 import com.google.inject.AbstractModule;
 import static com.google.inject.matcher.Matchers.*;

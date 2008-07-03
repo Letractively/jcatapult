@@ -19,9 +19,9 @@ import java.io.IOException;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
 
+import org.jcatapult.persistence.service.jpa.JPAService;
 import org.jcatapult.servlet.DestroyableWorkflow;
 import org.jcatapult.servlet.WorkflowChain;
-import org.jcatapult.persistence.service.jpa.JPAService;
 
 import com.google.inject.Inject;
 
