@@ -18,12 +18,12 @@ package org.jcatapult.domain.commerce;
 
 import java.io.Serializable;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
-import javax.persistence.Embeddable;
 
-import org.jcatapult.domain.location.Address;
 import org.jcatapult.domain.calendar.Month;
+import org.jcatapult.domain.location.Address;
 import org.joda.time.YearMonthDay;
 
 /**

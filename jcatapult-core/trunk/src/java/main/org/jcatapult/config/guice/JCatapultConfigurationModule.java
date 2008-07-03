@@ -21,13 +21,10 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.apache.commons.configuration.Configuration;
-import org.jcatapult.config.EnvironmentAwareConfiguration;
 import org.jcatapult.guice.NamedAnnotation;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
-import com.google.inject.Singleton;
 
 /**
  * <p>

@@ -22,7 +22,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Locale;
 
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.environment.EnvironmentResolver;
 
 import com.google.inject.Inject;

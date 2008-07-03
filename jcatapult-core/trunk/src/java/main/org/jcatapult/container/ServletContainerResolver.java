@@ -15,8 +15,8 @@
  */
 package org.jcatapult.container;
 
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 import javax.servlet.ServletContext;
 
 import com.google.inject.Inject;

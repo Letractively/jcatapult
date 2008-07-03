@@ -16,10 +16,10 @@
  */
 package org.jcatapult.servlet;
 
-import java.net.URL;
 import java.net.MalformedURLException;
-import java.util.logging.Logger;
+import java.net.URL;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletRequest;
 
 /**

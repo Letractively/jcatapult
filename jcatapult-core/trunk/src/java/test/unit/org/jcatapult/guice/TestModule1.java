@@ -15,8 +15,8 @@
  */
 package org.jcatapult.guice;
 
-import com.google.inject.Module;
 import com.google.inject.Binder;
+import com.google.inject.Module;
 
 /**
  * <p>

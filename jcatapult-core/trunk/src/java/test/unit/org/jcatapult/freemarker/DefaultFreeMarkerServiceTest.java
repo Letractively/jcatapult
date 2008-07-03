@@ -19,7 +19,7 @@ package org.jcatapult.freemarker;
 import java.util.HashMap;
 import java.util.Locale;
 
-import org.apache.commons.configuration.Configuration;
+import org.jcatapult.config.Configuration;
 import org.easymock.EasyMock;
 import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.environment.EnvironmentResolver;
