@@ -18,8 +18,8 @@ package org.jcatapult.mvc;
 import java.io.IOException;
 import javax.servlet.ServletException;
 
-import org.jcatapult.mvc.test.WebBaseTest;
 import org.jcatapult.mvc.test.WebappTestRunner;
+import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ import net.java.io.FileTools;
  *
  * @author Brian Pontarelli
  */
-public class GlobalTest extends WebBaseTest {
+public class GlobalTest extends JCatapultBaseTest {
     @Test
     public void testRenderFTL() throws IOException, ServletException {
         WebappTestRunner runner = new WebappTestRunner();

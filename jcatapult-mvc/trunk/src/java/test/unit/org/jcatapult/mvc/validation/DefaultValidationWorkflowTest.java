@@ -28,9 +28,9 @@ import org.jcatapult.mvc.action.DefaultActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.test.WebBaseTest;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -43,7 +43,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultValidationWorkflowTest extends WebBaseTest {
+public class DefaultValidationWorkflowTest extends JCatapultBaseTest {
     protected ActionInvocationStore actionInvocationStore;
     protected ExpressionEvaluator expressionEvaluator;
     protected ValidatorProvider validatorProvider;
