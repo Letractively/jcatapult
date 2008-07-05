@@ -160,12 +160,40 @@ public interface MessageStore {
     List<String> getActionMessages(MessageType type);
 
     /**
+     * Fetches all of the plain action messages that are currently available. Not mutable.
+     *
+     * @return  The List of action messages and never null.
+     */
+    List<String> getActionMessages();
+
+    /**
+     * Fetches all of the action errors that are currently available. Not mutable.
+     *
+     * @return  The List of action messages and never null.
+     */
+    List<String> getActionErrors();
+
+    /**
      * Fetches all of the field messages that are currently available. Not mutable.
      *
      * @param   type The message type to fetch (error or plain messages).
      * @return  The Map of field messages and never null.
      */
     Map<String, List<String>> getFieldMessages(MessageType type);
+
+    /**
+     * Fetches all of the plain field messages that are currently available. Not mutable.
+     *
+     * @return  The Map of field messages and never null.
+     */
+    Map<String, List<String>> getFieldMessages();
+
+    /**
+     * Fetches all of the field errors that are currently available. Not mutable.
+     *
+     * @return  The Map of field messages and never null.
+     */
+    Map<String, List<String>> getFieldErrors();
 
     /**
      * Clears all of the action messages in all scopes of the given type.
