@@ -217,10 +217,10 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
 
             return result;
         } catch (InvocationTargetException e) {
-            throw new ServletException("The action class [" + action.getClass() + "] threw an exception.",
+            throw new RuntimeException("The action class [" + action.getClass() + "] threw an exception.",
                 e.getTargetException());
         } catch (IllegalAccessException e) {
-            throw new ServletException("The action class [" + action.getClass() + "] has defined an " +
+            throw new RuntimeException("The action class [" + action.getClass() + "] has defined an " +
                 "execute method that is not invalid because it cannot be accessed.", e);
         }
     }

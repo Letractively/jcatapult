@@ -25,6 +25,7 @@ import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.WorkflowChain;
 import org.jcatapult.test.servlet.MockHttpServletRequest;
 import org.jcatapult.test.servlet.MockHttpServletResponse;
+import org.jcatapult.test.servlet.MockHttpSession;
 import org.jcatapult.test.servlet.MockServletContext;
 import org.jcatapult.test.servlet.WebTestHelper;
 
@@ -45,6 +46,14 @@ public class WebappTestRunner {
     public MockHttpServletRequest request;
     public MockHttpServletResponse response;
     public MockServletContext context;
+    public MockHttpSession session;
+
+    public WebappTestRunner() {
+        this.context = makeContext();
+        ServletObjectsHolder.setServletContext(context);
+
+        this.session = makeSession(context);
+    }
 
     @Inject
     public void setServices(MVCWorkflow workflow, MessageStore messageStore) {
@@ -57,11 +66,8 @@ public class WebappTestRunner {
     }
 
     void run(RequestBuilder builder, boolean post) throws IOException, ServletException {
-        this.context = makeContext();
-        ServletObjectsHolder.setServletContext(context);
-
         this.request = new MockHttpServletRequest(builder.getParameters(), builder.getUri(), "UTF-8",
-            builder.getLocale(), post, context);
+            builder.getLocale(), post, session);
         ServletObjectsHolder.setServletRequest(request);
 
         this.response = makeResponse();
@@ -86,9 +92,17 @@ public class WebappTestRunner {
     }
 
     /**
-     * @return  Makes a ServletContext as a nice mock. Sub-classes can override this
+     * @return  Makes a MockServletContext
      */
     protected MockServletContext makeContext() {
         return WebTestHelper.makeContext();
+    }
+
+    /**
+     * @param   context The mock servlet context.
+     * @return  Makes a MockHttpSession.
+     */
+    protected MockHttpSession makeSession(MockServletContext context) {
+        return WebTestHelper.makeSession(context);
     }
 }

@@ -178,6 +178,20 @@ public class DefaultMessageStore implements MessageStore {
     /**
      * {@inheritDoc}
      */
+    public List<String> getActionMessages() {
+        return getActionMessages(MessageType.PLAIN);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> getActionErrors() {
+        return getActionMessages(MessageType.ERROR);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, List<String>> getFieldMessages(MessageType type) {
         Map<String, List<String>> allMessages = new HashMap<String, List<String>>();
         List<Scope> allScopes = scopeProvider.getAllScopes();
@@ -189,6 +203,20 @@ public class DefaultMessageStore implements MessageStore {
         }
 
         return allMessages;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, List<String>> getFieldMessages() {
+        return getFieldMessages(MessageType.PLAIN);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, List<String>> getFieldErrors() {
+        return getFieldMessages(MessageType.ERROR);
     }
 
     /**

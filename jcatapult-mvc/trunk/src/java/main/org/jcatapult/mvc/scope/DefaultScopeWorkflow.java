@@ -81,21 +81,25 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
      */
     protected void loadScopedMembers(Object action) {
         Class<?> klass = action.getClass();
-        Field[] fields = klass.getDeclaredFields();
-        for (Field field : fields) {
-            Annotation[] annotations = field.getAnnotations();
-            for (Annotation annotation : annotations) {
-                Class<? extends Annotation> type = annotation.annotationType();
-                String fieldName = field.getName();
+        while (klass != Object.class) {
+            Field[] fields = klass.getDeclaredFields();
+            for (Field field : fields) {
+                Annotation[] annotations = field.getAnnotations();
+                for (Annotation annotation : annotations) {
+                    Class<? extends Annotation> type = annotation.annotationType();
+                    String fieldName = field.getName();
 
-                if (type.isAnnotationPresent(ScopeAnnotation.class)) {
-                    Scope scope = scopeProvider.lookup(type);
-                    Object value = scope.get(fieldName);
-                    if (value != null) {
-                        expressionEvaluator.setValue(fieldName, action, value);
+                    if (type.isAnnotationPresent(ScopeAnnotation.class)) {
+                        Scope scope = scopeProvider.lookup(type);
+                        Object value = scope.get(fieldName);
+                        if (value != null) {
+                            expressionEvaluator.setValue(fieldName, action, value);
+                        }
                     }
                 }
             }
+
+            klass = klass.getSuperclass();
         }
     }
 
@@ -106,19 +110,23 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
      */
     protected void storeScopedMembers(Object action) {
         Class<?> klass = action.getClass();
-        Field[] fields = klass.getDeclaredFields();
-        for (Field field : fields) {
-            Annotation[] annotations = field.getAnnotations();
-            for (Annotation annotation : annotations) {
-                Class<? extends Annotation> type = annotation.annotationType();
-                String fieldName = field.getName();
+        while (klass != Object.class) {
+            Field[] fields = klass.getDeclaredFields();
+            for (Field field : fields) {
+                Annotation[] annotations = field.getAnnotations();
+                for (Annotation annotation : annotations) {
+                    Class<? extends Annotation> type = annotation.annotationType();
+                    String fieldName = field.getName();
 
-                if (type.isAnnotationPresent(ScopeAnnotation.class)) {
-                    Scope scope = scopeProvider.lookup(type);
-                    Object value = expressionEvaluator.getValue(fieldName, action);
-                    scope.set(fieldName, value);
+                    if (type.isAnnotationPresent(ScopeAnnotation.class)) {
+                        Scope scope = scopeProvider.lookup(type);
+                        Object value = expressionEvaluator.getValue(fieldName, action);
+                        scope.set(fieldName, value);
+                    }
                 }
             }
+
+            klass = klass.getSuperclass();
         }
     }
 
