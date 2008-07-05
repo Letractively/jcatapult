@@ -67,10 +67,10 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
 
         AbstractCheckedInput input = getControl(ee);
         run(input, null, getType(), "foo.bar", "test", "Test",
-            mapNV("name", "test", "value", "test-value", "class", "css-class", "bundle", "foo.bar"),
+            mapNV("name", "test", "value", "test-value", "required", true, "class", "css-class", "bundle", "foo.bar"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test<span class=\"required\">*</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" name=\"test\" value=\"test-value\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_test\" value=\"\"/></div>\n" +
             "</div>\n");
 

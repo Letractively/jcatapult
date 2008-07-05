@@ -15,5 +15,8 @@
   [#if has_field_errors]
     </span>[#t/]
   [/#if]
+  [#if required!false]
+    <span class="required">*</span>[#t/]
+  [/#if]
 [/#macro]
 <div class="label-container"><label for="${attributes['id']}" class="label">[@print_label/]</label></div>

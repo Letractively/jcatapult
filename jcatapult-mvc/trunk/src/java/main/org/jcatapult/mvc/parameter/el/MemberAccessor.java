@@ -73,7 +73,7 @@ public class MemberAccessor extends Accessor {
         names.addAll(map.keySet());
         return names;
     }
-    
+
     final Field field;
     final PropertyInfo propertyInfo;
 
@@ -193,12 +193,12 @@ public class MemberAccessor extends Accessor {
 
                 Method existingMethod = info.getMethods().get(prefix);
                 if (existingMethod != null) {
-                    info.getMethods().put(name.getPrefix(), ERROR);
+                    info.getMethods().put(prefix, ERROR);
                     errorMethods = true;
                     continue;
                 }
 
-                MethodVerifier verifier = verifiers.get(name.getPrefix());
+                MethodVerifier verifier = verifiers.get(prefix);
                 if (verifier != null) {
                     String error = verifier.isValid(method, info);
                     if (error != null) {
@@ -208,7 +208,7 @@ public class MemberAccessor extends Accessor {
                     continue;
                 }
 
-                info.getMethods().put(name.getPrefix(), method);
+                info.getMethods().put(prefix, method);
                 info.setType(verifier.determineType(method));
                 info.setGenericType(verifier.determineGenericType(method));
                 info.setIndexed(verifier.isIndexed(method));
