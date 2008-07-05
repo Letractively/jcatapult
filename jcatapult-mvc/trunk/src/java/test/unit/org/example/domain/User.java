@@ -42,6 +42,8 @@ public class User {
     @Required
     private String[] securityQuestions;
 
+    private boolean active;
+
     public String getName() {
         return name;
     }
@@ -113,5 +115,13 @@ public class User {
 
     public void setSecurityQuestions(String[] securityQuestions) {
         this.securityQuestions = securityQuestions;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

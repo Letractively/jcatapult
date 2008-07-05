@@ -79,7 +79,6 @@ public class GetMethodVerifier implements MethodVerifier {
      * @return  Null if the method if correct, false otherwise.
      */
     public String isValid(Method method, PropertyInfo info) {
-        Method read = info.getMethods().get("get");
         Method write = info.getMethods().get("set");
         if (isValidGetter(method)) {
             if (info.isIndexed()) {
@@ -95,6 +94,7 @@ public class GetMethodVerifier implements MethodVerifier {
             return "Invalid getter method for property named [" + info.getName()+ "]";
         }
 
+        Method read = info.getMethods().get("get");
         if (read != null && write != null &&
                 ((info.isIndexed() && read.getReturnType() != write.getParameterTypes()[1]) ||
                  (!info.isIndexed() && read.getReturnType() != write.getParameterTypes()[0]))) {

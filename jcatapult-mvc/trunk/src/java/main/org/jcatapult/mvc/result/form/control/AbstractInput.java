@@ -113,6 +113,9 @@ public abstract class AbstractInput extends AbstractControl {
             // Add the field messages and errors as a list or null
             map.put("field_messages", messageStore.getFieldMessages(MessageType.PLAIN).get(name));
             map.put("field_errors", messageStore.getFieldMessages(MessageType.ERROR).get(name));
+
+            // Remove the required attribute and move it up
+            map.put("required", attributes.remove("required"));
         }
 
         return map;

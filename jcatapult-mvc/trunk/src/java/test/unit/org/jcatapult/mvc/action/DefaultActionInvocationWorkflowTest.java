@@ -332,7 +332,7 @@ public class DefaultActionInvocationWorkflowTest {
     }
 
     @Test
-    public void testActionThatThrowsException() throws IOException {
+    public void testActionThatThrowsException() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getMethod()).andReturn("GET");
         EasyMock.replay(request);
@@ -358,7 +358,7 @@ public class DefaultActionInvocationWorkflowTest {
         try {
             workflow.perform(chain);
             fail("Should have failed");
-        } catch (ServletException e) {
+        } catch (RuntimeException e) {
             System.out.println(e);
             // Expected
         }

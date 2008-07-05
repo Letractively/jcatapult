@@ -63,8 +63,10 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         // Test nested property get
         action.getUser().setAge(32);
         action.getUser().setName("Brian");
+        action.getUser().setActive(true);
         assertEquals(32, evaluator.getValue("user.age", action));
         assertEquals("Brian", evaluator.getValue("user.name", action));
+        assertTrue((Boolean) evaluator.getValue("user.active", action));
 
         // Test collection property gets
         Address address = new Address();
@@ -118,8 +120,10 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         // Test nested property get
         action.user.age = 32;
         action.user.name = "Brian";
+        action.user.active = true;
         assertEquals(32, evaluator.getValue("user.age", action));
         assertEquals("Brian", evaluator.getValue("user.name", action));
+        assertTrue((Boolean) evaluator.getValue("user.active", action));
 
         // Test collection property gets
         AddressField address = new AddressField();
@@ -156,8 +160,10 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         action.setUser(null);
         evaluator.setValue("user.age", action, array("32"), null);
         evaluator.setValue("user.name", action, array("Brian"), null);
+        evaluator.setValue("user.active", action, array("true"), null);
         assertEquals((Integer) 32, action.getUser().getAge());
         assertEquals("Brian", action.getUser().getName());
+        assertTrue(action.getUser().isActive());
 
         // Test collection property sets
         action.getUser().setAddresses(null);
@@ -237,8 +243,10 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         ActionField action = new ActionField();
         evaluator.setValue("user.age", action, array("32"), null);
         evaluator.setValue("user.name", action, array("Brian"), null);
+        evaluator.setValue("user.active", action, array("true"), null);
         assertEquals((Integer) 32, action.user.age);
         assertEquals("Brian", action.user.name);
+        assertTrue(action.user.active);
 
         // Test collection property sets
         action.user.addresses = null;

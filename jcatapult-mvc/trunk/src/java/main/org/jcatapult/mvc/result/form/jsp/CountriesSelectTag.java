@@ -26,39 +26,39 @@ import org.jcatapult.mvc.result.form.control.CountriesSelect;
  */
 public class CountriesSelectTag extends SelectTag<CountriesSelect> {
     /**
-     * Retrieves the tags includeblank attribute
+     * Retrieves the tags includeBlank attribute
      *
-     * @return	Returns the tags includeblank attribute
+     * @return	Returns the tags includeBlank attribute
      */
     public Boolean getIncludeblank() {
-        return (Boolean) attributes.get("includeblank");
+        return (Boolean) attributes.get("includeBlank");
     }
 
     /**
-     * Populates the tags includeblank attribute
+     * Populates the tags includeBlank attribute
      *
-     * @param	includeblank The value of the tags includeblank attribute
+     * @param	includeBlank The value of the tags includeBlank attribute
      */
-    public void setIncludeblank(Boolean includeblank) {
-        attributes.put("includeblank", includeblank);
+    public void setIncludeBlank(Boolean includeBlank) {
+        attributes.put("includeBlank", includeBlank);
     }
 
     /**
-     * Retrieves the tags preferredcodes attribute
+     * Retrieves the tags preferredCodes attribute
      *
-     * @return	Returns the tags preferredcodes attribute
+     * @return	Returns the tags preferredCodes attribute
      */
-    public String getPreferredcodes() {
-        return (String) attributes.get("preferredcodes");
+    public String getPreferredCodes() {
+        return (String) attributes.get("preferredCodes");
     }
 
     /**
-     * Populates the tags preferredcodes attribute
+     * Populates the tags preferredCodes attribute
      *
-     * @param	preferredcodes The value of the tags preferredcodes attribute
+     * @param	preferredCodes The value of the tags preferredCodes attribute
      */
-    public void setPreferredcodes(String preferredcodes) {
-        attributes.put("preferredcodes", preferredcodes);
+    public void setPreferredCodes(String preferredCodes) {
+        attributes.put("preferredCodes", preferredCodes);
     }
 
     /**
