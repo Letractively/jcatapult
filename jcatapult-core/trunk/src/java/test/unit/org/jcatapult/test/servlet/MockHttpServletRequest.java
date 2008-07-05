@@ -61,6 +61,26 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.session = new MockHttpSession(context);
     }
 
+    public MockHttpServletRequest(String uri, Locale locale, boolean post, String encoding,
+            MockHttpSession session) {
+        this.parameters = new HashMap<String, List<String>>();
+        this.uri = uri;
+        this.locale = locale;
+        this.post = post;
+        this.encoding = encoding;
+        this.session = session;
+    }
+
+    public MockHttpServletRequest(Map<String, List<String>> parameters, String uri, String encoding,
+            Locale locale, boolean post, MockHttpSession session) {
+        this.parameters = parameters;
+        this.uri = uri;
+        this.encoding = encoding;
+        this.locale = locale;
+        this.post = post;
+        this.session = session;
+    }
+
     public MockHttpServletRequest(Map<String, List<String>> parameters, String uri, String encoding,
             Locale locale, boolean post, MockServletContext context) {
         this.parameters = parameters;

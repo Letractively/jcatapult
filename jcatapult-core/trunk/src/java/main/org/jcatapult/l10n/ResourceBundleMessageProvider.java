@@ -18,10 +18,11 @@ package org.jcatapult.l10n;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import static java.util.Arrays.*;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.MissingResourceException;
+import java.util.Queue;
 import java.util.ResourceBundle;
 import static java.util.ResourceBundle.Control.*;
 import java.util.SortedSet;
@@ -107,41 +108,30 @@ public class ResourceBundleMessageProvider implements MessageProvider {
      * @return  The message or null if it doesn't exist.
      */
     protected String findMessage(String bundle, String key) {
-        ResourceBundle rb = null;
-        try {
-            rb = ResourceBundle.getBundle(bundle, locale, CONTROL);
-        } catch (MissingResourceException e) {
-        }
-
-        if (rb == null) {
-            int index = bundle.lastIndexOf('.');
-            if (index == -1) {
-                return null;
-            }
-
-            String baseName = bundle.substring(0, index);
-            while (rb == null) {
-                try {
-                    rb = ResourceBundle.getBundle(baseName + ".package", locale);
-                } catch (MissingResourceException e) {
-                    index = baseName.lastIndexOf('.');
-                    if (index == -1) {
-                        break;
-                    }
-
-                    baseName = baseName.substring(0, index);
-                }
-            }
-        }
-
-        if (rb != null) {
+        Queue<String> names = determineBundles(bundle);
+        for (String name : names) {
             try {
+                ResourceBundle rb = ResourceBundle.getBundle(name, locale, CONTROL);
                 return rb.getString(key);
-            } catch (MissingResourceException e) {
+            } catch (Exception e) {
             }
         }
 
         throw new MissingMessageException("Message could not be found for bundle name [" + bundle +
             "] and key [" + key + "]");
+    }
+
+    private Queue<String> determineBundles(String bundle) {
+        Queue<String> names = new LinkedList<String>();
+        names.offer(bundle);
+
+        int index = bundle.lastIndexOf('.');
+        while (index != -1) {
+            bundle = bundle.substring(0, index);
+            names.offer(bundle + ".package");
+            index = bundle.lastIndexOf('.');
+        }
+
+        return names;
     }
 }

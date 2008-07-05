@@ -17,12 +17,12 @@ package org.jcatapult.test;
 
 import java.util.List;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
 
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.test.servlet.MockHttpServletRequest;
 import org.jcatapult.test.servlet.MockHttpServletResponse;
+import org.jcatapult.test.servlet.MockHttpSession;
 import org.jcatapult.test.servlet.MockServletContext;
 import org.jcatapult.test.servlet.WebTestHelper;
 import org.junit.Before;
@@ -50,9 +50,10 @@ public abstract class JCatapultBaseTest {
     public static final MockJNDI jndi = new MockJNDI();
     protected List<Module> modules = CollectionTools.list();
     protected Injector injector;
+    protected MockServletContext context;
+    protected MockHttpSession session;
     protected MockHttpServletRequest request;
     protected MockHttpServletResponse response;
-    protected ServletContext context;
 
     /**
      * Sets up a mock JNDI tree and sets the environment to test.
@@ -97,7 +98,8 @@ public abstract class JCatapultBaseTest {
      */
     protected void setUpServletObjects() {
         this.context = makeContext();
-        this.request = makeRequest(context);
+        this.session = makeSession(context);
+        this.request = makeRequest(session);
         this.response = makeResponse();
 
         ServletObjectsHolder.setServletContext(context);
@@ -107,13 +109,13 @@ public abstract class JCatapultBaseTest {
 
     /**
      * Constructs a request whose URI is /test, Locale is US, is a GET and encoded using UTF-8
-     * by calling the by calling the {@link WebTestHelper#makeRequest(ServletContext)} method.
+     * by calling the by calling the {@link WebTestHelper#makeRequest(MockHttpSession)} method.
      *
-     * @param   context The MockServletContext.
+     * @param   session The mock session.
      * @return  The mock request.
      */
-    protected MockHttpServletRequest makeRequest(ServletContext context) {
-        return WebTestHelper.makeRequest(context);
+    protected MockHttpServletRequest makeRequest(MockHttpSession session) {
+        return WebTestHelper.makeRequest(session);
     }
 
     /**
@@ -123,6 +125,16 @@ public abstract class JCatapultBaseTest {
      */
     protected MockHttpServletResponse makeResponse() {
         return WebTestHelper.makeResponse();
+    }
+
+    /**
+     * Constructs a mock session by calling the {@link WebTestHelper#makeSession(MockServletContext)} method.
+     *
+     * @param   context The mock servlet context.
+     * @return  The mock session.
+     */
+    protected MockHttpSession makeSession(MockServletContext context) {
+        return WebTestHelper.makeSession(context);
     }
 
     /**
