@@ -18,7 +18,6 @@ package org.jcatapult.test.servlet;
 
 import java.io.File;
 import java.util.Locale;
-import javax.servlet.ServletContext;
 
 import org.jcatapult.servlet.ServletObjectsHolder;
 
@@ -37,13 +36,15 @@ public class WebTestHelper {
     public static MockHttpServletRequest request;
     public static MockHttpServletResponse response;
     public static MockServletContext context;
+    private static MockHttpSession session;
 
     /**
      * Creates the request, response and context.
      */
     public static void setUp() {
         WebTestHelper.context = makeContext();
-        WebTestHelper.request = makeRequest(context);
+        WebTestHelper.session = makeSession(context);
+        WebTestHelper.request = makeRequest(session);
         WebTestHelper.response = makeResponse();
 
         ServletObjectsHolder.setServletContext(context);
@@ -54,11 +55,11 @@ public class WebTestHelper {
     /**
      * Constructs a request whose URI is /test, Locale is US, is a GET and encoded using UTF-8.
      *
-     * @param   context The MockServletContext.
+     * @param   session The MockHttpSession.
      * @return  The mock request.
      */
-    public static MockHttpServletRequest makeRequest(ServletContext context) {
-        return new MockHttpServletRequest("/test", Locale.US, false, "UTF-8", (MockServletContext) context);
+    public static MockHttpServletRequest makeRequest(MockHttpSession session) {
+        return new MockHttpServletRequest("/test", Locale.US, false, "UTF-8", session);
     }
 
     /**
@@ -68,6 +69,16 @@ public class WebTestHelper {
      */
     public static MockHttpServletResponse makeResponse() {
         return new MockHttpServletResponse();
+    }
+
+    /**
+     * Constructs a mock session.
+     *
+     * @param   context The MockServletContext.
+     * @return  The mock session.
+     */
+    public static MockHttpSession makeSession(MockServletContext context) {
+        return new MockHttpSession(context);
     }
 
     /**
