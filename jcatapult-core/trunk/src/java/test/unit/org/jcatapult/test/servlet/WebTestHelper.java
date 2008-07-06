@@ -19,6 +19,8 @@ package org.jcatapult.test.servlet;
 import java.io.File;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequestWrapper;
+
 import org.jcatapult.servlet.ServletObjectsHolder;
 
 /**
@@ -48,7 +50,7 @@ public class WebTestHelper {
         WebTestHelper.response = makeResponse();
 
         ServletObjectsHolder.setServletContext(context);
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(request));
         ServletObjectsHolder.setServletResponse(response);
     }
 

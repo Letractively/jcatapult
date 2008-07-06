@@ -17,6 +17,7 @@ package org.jcatapult.servlet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -70,7 +71,11 @@ public final class ServletObjectsHolder {
      *
      * @param   servletRequest The servlet request for the current thread.
      */
-    public static void setServletRequest(HttpServletRequest servletRequest) {
+    public static void setServletRequest(HttpServletRequestWrapper servletRequest) {
+        if (request.get() != null) {
+            throw new IllegalStateException("Request is already set into the ServletObjectsHolder");
+        }
+
         request.set(servletRequest);
     }
 
@@ -96,6 +101,10 @@ public final class ServletObjectsHolder {
      * @param   servletResponse The servlet response for the current thread.
      */
     public static void setServletResponse(HttpServletResponse servletResponse) {
+        if (response.get() != null) {
+            throw new IllegalStateException("Response is already set into the ServletObjectsHolder");
+        }
+
         response.set(servletResponse);
     }
 

@@ -18,6 +18,8 @@ package org.jcatapult.test;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequestWrapper;
+
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.test.servlet.MockHttpServletRequest;
@@ -103,7 +105,9 @@ public abstract class JCatapultBaseTest {
         this.response = makeResponse();
 
         ServletObjectsHolder.setServletContext(context);
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(request));
+        ServletObjectsHolder.clearServletResponse();
         ServletObjectsHolder.setServletResponse(response);
     }
 

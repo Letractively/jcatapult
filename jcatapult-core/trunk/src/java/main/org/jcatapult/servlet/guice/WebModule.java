@@ -74,7 +74,7 @@ public class WebModule extends AbstractModule {
         // Bind the servlet request
         bind(HttpServletRequest.class).toProvider(new Provider<HttpServletRequest>() {
             public HttpServletRequest get() {
-                return new HttpServletRequestProxy();
+                return ServletObjectsHolder.getServletRequest();
             }
         });
 
