@@ -46,7 +46,7 @@ public abstract class WebBaseTest extends JPABaseTest {
     protected ConfigurationManager configurationManager;
     protected Configuration configuration;
     protected Container container;
-    protected boolean setupStruts = true;
+    protected boolean setupStruts = false;
     protected boolean get = true;
 
     /**
