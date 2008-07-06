@@ -26,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.environment.EnvironmentResolver;
@@ -93,7 +94,7 @@ public class JCatapultFilter implements Filter {
             request.setAttribute(ORIGINAL_REQUEST_URI, ((HttpServletRequest) request).getRequestURI());
         }
 
-        ServletObjectsHolder.setServletRequest((HttpServletRequest) request);
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper((HttpServletRequest) request));
         ServletObjectsHolder.setServletResponse((HttpServletResponse) response);
         try {
             long injectStart = System.currentTimeMillis();
