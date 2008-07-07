@@ -1,16 +1,32 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
-    name="jcatapult-struts"
-    group="jcatapult.org"
-    version="1.0-RC5">
+         name="jcatapult-struts"
+         group="jcatapult.org"
+         version="1.0-RC5">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
+
+  <!--
+    jcatapult-build.properties must contain the following:
+      svn.username=<username>
+      svn.password=<password>
+  -->
+  <properties file="${user.home}/google-code-build.properties"/>
+
+  <!--
+    inversoft-org-release-build.properties must contain the following:
+      svn.release.username=<username>
+      svn.release.password=<password>
+  -->
+  <properties file="${user.home}/inversoft-org-release-build.properties"/>
 
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
 
   <!-- set to true if this libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="false"/>
+
+  <property name="version.jcatapult" value="1.0-RC5-{integration}"/>
 
   <release>
     <publication name="jcatapult-struts" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"
@@ -21,16 +37,14 @@
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
-      <!--<artifact group="jsp.servlet.javax" project="jsp-api" name="jsp-api" version="2.0" type="jar"/>-->
       <artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="run"/>
     <artifactGroup type="compile">
       <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-commerce" name="jcatapult-commerce" version="1.0-RC5-{integration}" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="1.0-RC5-{integration}" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence" version="1.0-RC5-{integration}" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence" version="${version.jcatapult}" type="jar"/>
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
       <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
       <artifact group="ognl.org" project="ognl" name="ognl" version="2.6.11" type="jar"/>
@@ -40,8 +54,8 @@
     <artifactGroup type="test-run"/>
     <artifactGroup type="test-compile">
       <artifact group="easymock.org" project="easymock" name="easymock" version="2.2" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0-RC5-{integration}" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence-test" version="1.0-RC5-{integration}" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}" type="jar"/>
+      <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence-test" version="${version.jcatapult}" type="jar"/>
       <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
     </artifactGroup>
   </dependencies>
@@ -86,6 +100,6 @@
     another project.
   -->
   <publishWorkflow id="workflow.publish.remote">
-    <!-- Please setup your publishing processes -->
+    <process type="unifiedSVN" repository="https://svn.inversoft.org/savant-deps" username="${svn.release.username}" password="${svn.release.password}"/>
   </publishWorkflow>
 </project>
