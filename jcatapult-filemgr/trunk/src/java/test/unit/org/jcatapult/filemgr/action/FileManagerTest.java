@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.easymock.EasyMock;
 import org.jcatapult.config.Configuration;
@@ -94,7 +95,8 @@ public class FileManagerTest extends BaseTest {
         HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(httpRequest.getContextPath()).andReturn("/servlet-context/");
         EasyMock.replay(httpRequest);
-        ServletObjectsHolder.setServletRequest(httpRequest);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(httpRequest));
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext);
         Connector connector = service.getFolders("", null);
@@ -131,7 +133,8 @@ public class FileManagerTest extends BaseTest {
         HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(httpRequest.getContextPath()).andReturn("/servlet-context/");
         EasyMock.replay(httpRequest);
-        ServletObjectsHolder.setServletRequest(httpRequest);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(httpRequest));
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext);
         Connector connector = service.getFoldersAndFiles("", null);
