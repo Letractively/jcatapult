@@ -16,7 +16,6 @@
 package org.jcatapult.servlet;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public final class ServletObjectsHolder {
     private static ServletContext servletContext;
-    private static ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
+    private static ThreadLocal<HttpServletRequestWrapper> request = new ThreadLocal<HttpServletRequestWrapper>();
     private static ThreadLocal<HttpServletResponse> response = new ThreadLocal<HttpServletResponse>();
 
     /**
@@ -62,7 +61,7 @@ public final class ServletObjectsHolder {
      *
      * @return   The servlet request for the current thread.
      */
-    public static HttpServletRequest getServletRequest() {
+    public static HttpServletRequestWrapper getServletRequest() {
         return request.get();
     }
 
