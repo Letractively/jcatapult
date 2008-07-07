@@ -135,24 +135,6 @@ public class FormTag extends AbstractControlTag<Form> {
     }
 
     /**
-     * Retrieves the tags prepareURI attribute
-     *
-     * @return	Returns the tags prepareURI attribute
-     */
-    public String getPrepareURI() {
-        return (String) attributes.get("prepareURI");
-    }
-
-    /**
-     * Populates the tags prepareURI attribute
-     *
-     * @param	prepareURI The value of the tags prepareURI attribute
-     */
-    public void setPrepareURI(String prepareURI) {
-        attributes.put("prepareURI", prepareURI);
-    }
-
-    /**
      * @return  The {@link Form} class.
      */
     protected Class<Form> controlClass() {

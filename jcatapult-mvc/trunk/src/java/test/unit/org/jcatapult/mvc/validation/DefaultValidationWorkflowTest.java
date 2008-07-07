@@ -20,15 +20,13 @@ import javax.servlet.ServletException;
 
 import org.easymock.EasyMock;
 import org.example.action.user.Edit;
-import org.example.domain.User;
 import org.example.domain.Address;
+import org.example.domain.User;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
-import org.jcatapult.mvc.action.DefaultActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.WorkflowChain;
 import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
@@ -63,7 +61,7 @@ public class DefaultValidationWorkflowTest extends JCatapultBaseTest {
     public void testAllNull() throws IOException, ServletException {
         Edit action = new Edit();
         request.setPost(true);
-        ServletObjectsHolder.getServletRequest().setAttribute(DefaultActionInvocationStore.ACTION_INVOCATION_KEY, new DefaultActionInvocation(action, "/", null, null));
+        actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/", null, null));
         DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
             expressionEvaluator, validatorProvider, messageStore);
 
@@ -95,7 +93,7 @@ public class DefaultValidationWorkflowTest extends JCatapultBaseTest {
         action.user.getAddress("work").setCity("Boulder");
         action.user.getAddress("work").setStreet("Main");
         action.user.getAddress("work").setCountry("US");
-        ServletObjectsHolder.getServletRequest().setAttribute(DefaultActionInvocationStore.ACTION_INVOCATION_KEY, new DefaultActionInvocation(action, "/", null, null));
+        actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/", null, null));
         DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
             expressionEvaluator, validatorProvider, messageStore);
 

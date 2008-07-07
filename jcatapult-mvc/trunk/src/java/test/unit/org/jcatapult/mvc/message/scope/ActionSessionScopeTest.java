@@ -60,6 +60,9 @@ public class ActionSessionScopeTest {
 
             public void setCurrent(ActionInvocation invocation) {
             }
+
+            public void popCurrent() {
+            }
         });
         List<String> messages = scope.getActionMessages(MessageType.PLAIN);
         assertEquals(1, messages.size());
@@ -81,6 +84,9 @@ public class ActionSessionScopeTest {
             }
 
             public void setCurrent(ActionInvocation invocation) {
+            }
+
+            public void popCurrent() {
             }
         });
         scope.addActionMessage(MessageType.PLAIN, "Test message");
@@ -107,6 +113,9 @@ public class ActionSessionScopeTest {
 
             public void setCurrent(ActionInvocation invocation) {
             }
+
+            public void popCurrent() {
+            }
         });
         List<String> messages = scope.getActionMessages(MessageType.ERROR);
         assertEquals(1, messages.size());
@@ -128,6 +137,9 @@ public class ActionSessionScopeTest {
             }
 
             public void setCurrent(ActionInvocation invocation) {
+            }
+
+            public void popCurrent() {
             }
         });
         scope.addActionMessage(MessageType.ERROR, "Test message");
@@ -157,6 +169,9 @@ public class ActionSessionScopeTest {
 
             public void setCurrent(ActionInvocation invocation) {
             }
+
+            public void popCurrent() {
+            }
         });
         Map<String, List<String>> messages = scope.getFieldMessages(MessageType.PLAIN);
         assertEquals(1, messages.size());
@@ -179,6 +194,9 @@ public class ActionSessionScopeTest {
             }
 
             public void setCurrent(ActionInvocation invocation) {
+            }
+
+            public void popCurrent() {
             }
         });
         scope.addFieldMessage(MessageType.PLAIN, "user.name", "Test message");
@@ -208,6 +226,9 @@ public class ActionSessionScopeTest {
 
             public void setCurrent(ActionInvocation invocation) {
             }
+
+            public void popCurrent() {
+            }
         });
         Map<String, List<String>> messages = scope.getFieldMessages(MessageType.ERROR);
         assertEquals(1, messages.size());
@@ -230,6 +251,9 @@ public class ActionSessionScopeTest {
             }
 
             public void setCurrent(ActionInvocation invocation) {
+            }
+
+            public void popCurrent() {
             }
         });
         scope.addFieldMessage(MessageType.ERROR, "user.name", "Test message");

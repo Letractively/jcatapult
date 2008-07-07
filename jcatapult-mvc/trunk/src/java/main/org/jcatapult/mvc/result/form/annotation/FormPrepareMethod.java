@@ -13,25 +13,21 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.form;
+package org.jcatapult.mvc.result.form.annotation;
 
-import com.google.inject.ImplementedBy;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * <p>
- * This interface defines the method that forms can be prepared.
- * Form preparation is generally handled by invoking any no-argument
- * methods in the action class that have been annotated with the
- * {@link org.jcatapult.mvc.result.form.annotation.FormPrepareMethod}
- * annotation.
+ * This annotation defines a method that is a form preparer.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultFormPreparer.class)
-public interface FormPreparer {
-    /**
-     * Prepare the form using all of the FormPrepareMethod from the action class and super classes.
-     */
-    void prepare();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface FormPrepareMethod {
 }
