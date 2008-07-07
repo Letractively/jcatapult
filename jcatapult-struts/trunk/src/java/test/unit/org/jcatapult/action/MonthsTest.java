@@ -18,10 +18,10 @@ package org.jcatapult.action;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.jcatapult.action.jcatapult.Months;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jcatapult.action.jcatapult.Months;
 
 /**
  * <p>

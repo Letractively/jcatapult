@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.opensymphony.xwork2.XWorkException;
-import static net.java.util.CollectionTools.*;
+import static net.java.util.CollectionTools.mapNV;
 
 /**
  * <p>

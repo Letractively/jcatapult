@@ -15,23 +15,13 @@
  */
 package org.jcatapult.test;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.ServletContext;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.easymock.EasyMock;
 import org.jcatapult.persistence.test.JPABaseTest;
 import org.junit.Before;
 import org.junit.Ignore;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * <p>
@@ -47,7 +37,7 @@ public abstract class WebBaseTest extends JPABaseTest {
     protected Configuration configuration;
     protected Container container;
     protected boolean get = true;
-    
+
     /**
      * Deprecated
      */

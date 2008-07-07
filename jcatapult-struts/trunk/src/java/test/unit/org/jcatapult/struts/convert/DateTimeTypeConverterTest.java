@@ -23,10 +23,11 @@ import org.easymock.EasyMock;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.test.JCatapultBaseTest;
 import org.joda.time.DateTime;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
-import static net.java.util.CollectionTools.*;
+import static net.java.util.CollectionTools.mapNV;
 
 /**
  * <p>
