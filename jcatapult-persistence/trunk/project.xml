@@ -101,6 +101,6 @@
     another project.
   -->
   <publishWorkflow id="workflow.publish.remote">
-    <!-- Please setup your publishing processes -->
+    <process type="unifiedSVN" repository="https://svn.inversoft.org/savant-deps" username="${svn.release.username}" password="${svn.release.password}"/>
   </publishWorkflow>
 </project>
