@@ -267,24 +267,6 @@ public abstract class AbstractInputTag<T extends Control> extends AbstractContro
     }
 
     /**
-     * Retrieves the tags bundle attribute.
-     *
-     * @return	Returns the tags bundle attribute.
-     */
-    public String getBundle() {
-        return (String) attributes.get("bundle");
-    }
-
-    /**
-     * Populates the tags bundle attribute.
-     *
-     * @param	bundle The value of the tags bundle attribute.
-     */
-    public void setBundle(String bundle) {
-        attributes.put("bundle", bundle);
-    }
-
-    /**
      * Retrieves the tags required attribute.
      *
      * @return	Returns the tags required attribute.

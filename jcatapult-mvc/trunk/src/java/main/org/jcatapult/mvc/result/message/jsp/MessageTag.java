@@ -15,10 +15,7 @@
  */
 package org.jcatapult.mvc.result.message.jsp;
 
-import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.jsp.tagext.TagSupport;
-
-import org.jcatapult.guice.GuiceContainer;
+import org.jcatapult.mvc.result.jsp.AbstractControlTag;
 import org.jcatapult.mvc.result.message.control.Message;
 
 /**
@@ -29,15 +26,13 @@ import org.jcatapult.mvc.result.message.control.Message;
  *
  * @author  Brian Pontarelli
  */
-public class MessageTag extends TagSupport {
-    private String key;
-    private String bundle;
+public class MessageTag extends AbstractControlTag<Message> {
 
     /**
      * @return  The tags key attribute that is the key of the message to fetch.
      */
     public String getKey() {
-        return key;
+        return (String) attributes.get("key");
     }
 
     /**
@@ -46,31 +41,14 @@ public class MessageTag extends TagSupport {
      * @param	key The key.
      */
     public void setKey(String key) {
-        this.key = key;
+        attributes.put("key", key);
     }
 
     /**
-     * @return  The tags bundle attribute that is used to fetch the message is there is not a current
-     *          action invocation.
+     * @return  Message.class
      */
-    public String getBundle() {
-        return bundle;
-    }
-
-    /**
-     * Populates the tags bundle attribute that is used to fetch the message is there is not a current
-     * action invocation.
-     *
-     * @param	bundle The bundle.
-     */
-    public void setBundle(String bundle) {
-        this.bundle = bundle;
-    }
-
     @Override
-    public int doStartTag() {
-        Message message = GuiceContainer.getInjector().getInstance(Message.class);
-        message.render(pageContext.getOut(), key, bundle);
-        return Tag.EVAL_PAGE;
+    protected Class<Message> controlClass() {
+        return Message.class;
     }
 }

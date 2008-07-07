@@ -128,15 +128,4 @@ public abstract class AbstractInput extends AbstractControl {
     protected String startTemplateName() {
         return null;
     }
-
-    protected String determineBundleName(Map<String, Object> attributes) {
-        String bundleName = null;
-        if (attributes.containsKey("bundle")) {
-            bundleName = (String) attributes.remove("bundle");
-        } else if (action != null) {
-            bundleName = action.getClass().getName();
-        }
-
-        return bundleName;
-    }
 }

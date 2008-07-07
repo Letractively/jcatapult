@@ -16,6 +16,8 @@
 package org.jcatapult.mvc.result.message.control;
 
 import java.io.StringWriter;
+import java.util.Locale;
+import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import org.example.action.user.Edit;
@@ -23,8 +25,11 @@ import org.jcatapult.l10n.MessageProvider;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.result.control.AbstractControlTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
+
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -33,7 +38,7 @@ import org.junit.Test;
  *
  * @author  Brian Pontarelli
  */
-public class MessageTest {
+public class MessageTest extends AbstractControlTest {
     @Test
     public void testMessageAction() {
         MessageProvider provider = EasyMock.createStrictMock(MessageProvider.class);
@@ -45,9 +50,15 @@ public class MessageTest {
         EasyMock.expect(ais.getCurrent()).andReturn(ai);
         EasyMock.replay(ais);
 
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getAttribute("jcatapultControlBundle")).andReturn(null);
+        EasyMock.replay(request);
+
         StringWriter writer = new StringWriter();
-        Message message = new Message(provider, ais);
-        message.render(writer, "key", null);
+        Message message = new Message(provider);
+        message.setServices(Locale.US, request, ais, makeFreeMarkerService("message"));
+        message.renderStart(writer, mapNV("key", "key"), null);
+        message.renderEnd(writer);
         assertEquals("message", writer.toString());
         EasyMock.verify(provider, ais);
     }
@@ -63,9 +74,15 @@ public class MessageTest {
         EasyMock.expect(ais.getCurrent()).andReturn(ai);
         EasyMock.replay(ais);
 
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getAttribute("jcatapultControlBundle")).andReturn(null);
+        EasyMock.replay(request);
+
         StringWriter writer = new StringWriter();
-        Message message = new Message(provider, ais);
-        message.render(writer, "key", "bundle");
+        Message message = new Message(provider);
+        message.setServices(Locale.US, request, ais, makeFreeMarkerService("message"));
+        message.renderStart(writer, mapNV("key", "key", "bundle", "bundle"), null);
+        message.renderEnd(writer);
         assertEquals("message", writer.toString());
         EasyMock.verify(provider, ais);
     }
@@ -80,10 +97,16 @@ public class MessageTest {
         EasyMock.expect(ais.getCurrent()).andReturn(ai);
         EasyMock.replay(ais);
 
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getAttribute("jcatapultControlBundle")).andReturn(null);
+        EasyMock.replay(request);
+
         StringWriter writer = new StringWriter();
-        Message message = new Message(provider, ais);
+        Message message = new Message(provider);
+        message.setServices(Locale.US, request, ais, makeFreeMarkerService("message"));
         try {
-            message.render(writer, "key", null);
+            message.renderStart(writer, mapNV("key", "key"), null);
+            message.renderEnd(writer);
             fail("Should have failed");
         } catch (IllegalStateException e) {
             // Expected

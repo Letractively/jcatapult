@@ -34,6 +34,7 @@ import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
+import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
@@ -105,7 +106,7 @@ public class ForwardResult extends AbstractResult<Forward> {
             requestDispatcher.forward(wrapRequest(invocation, request), response);
         } else if (page.endsWith(".ftl")) {
             PrintWriter writer = response.getWriter();
-            FreeMarkerMap map = new FreeMarkerMap(servletContext, request, expressionEvaluator,
+            FreeMarkerMap map = new FreeMarkerMap(request, expressionEvaluator,
                 invocation.action(), models, objectFactory);
             freeMarkerService.render(writer, page, map, locale);
         }

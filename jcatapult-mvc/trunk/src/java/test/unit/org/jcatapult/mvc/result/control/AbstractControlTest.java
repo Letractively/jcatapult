@@ -22,10 +22,13 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.config.Configuration;
 import org.easymock.EasyMock;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.environment.EnvironmentResolver;
+import org.jcatapult.freemarker.FreeMarkerService;
+import org.jcatapult.freemarker.DefaultFreeMarkerService;
+import org.jcatapult.freemarker.OverridingTemplateLoader;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
@@ -42,8 +45,16 @@ import org.junit.Ignore;
  */
 @Ignore
 public class AbstractControlTest {
-    protected HttpServletRequest makeRequest() {
+    protected FreeMarkerService makeFreeMarkerService(String name) {
+        return new DefaultFreeMarkerService(makeConfiguration(), makeEnvironmenResolver(),
+            new OverridingTemplateLoader(makeContainerResolver(name)));
+    }
+
+    protected HttpServletRequest makeRequest(boolean checkBundle) {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        if (checkBundle) {
+            EasyMock.expect(request.getAttribute("jcatapultControlBundle")).andReturn(null);
+        }
         EasyMock.replay(request);
         return request;
     }

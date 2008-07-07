@@ -41,7 +41,7 @@ import static net.java.util.CollectionTools.*;
 public class ActionMessagesTest extends AbstractControlTest {
     @Test
     public void testActionMessagePlain() {
-        HttpServletRequest request = makeRequest();
+        HttpServletRequest request = makeRequest(false);
         ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
         MessageStore ms = makeActionMessageStore(false, "error1", "error2");
 
@@ -59,7 +59,7 @@ public class ActionMessagesTest extends AbstractControlTest {
 
     @Test
     public void testActionMessageError() {
-        HttpServletRequest request = makeRequest();
+        HttpServletRequest request = makeRequest(false);
         ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
         MessageStore ms = makeActionMessageStore(true, "error1", "error2");
 

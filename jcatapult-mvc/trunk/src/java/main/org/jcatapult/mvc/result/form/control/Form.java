@@ -48,6 +48,11 @@ public class Form extends AbstractControl {
     @Override
     protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
         formPreparer.prepare();
+
+        // Move the bundle attribute into the request
+        if (attributes.containsKey("bundle")) {
+            request.setAttribute("jcatapultControlBundle", attributes.remove("bundle"));
+        }
     }
 
     /**

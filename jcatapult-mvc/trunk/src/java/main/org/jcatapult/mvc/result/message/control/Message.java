@@ -15,23 +15,20 @@
  */
 package org.jcatapult.mvc.result.message.control;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jcatapult.l10n.MessageProvider;
-import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.result.control.AbstractControl;
 
 import com.google.inject.Inject;
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
-import freemarker.template.TemplateException;
 import freemarker.template.TemplateMethodModel;
-import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -41,47 +38,38 @@ import freemarker.template.TemplateModelException;
  *
  * @author  Brian Pontarelli
  */
-public class Message implements TemplateMethodModel, TemplateDirectiveModel {
+public class Message extends AbstractControl implements TemplateMethodModel, TemplateDirectiveModel {
     private final MessageProvider messageProvider;
-    private final Object action;
 
     @Inject
-    public Message(MessageProvider messageProvider, ActionInvocationStore actionInvocationStore) {
+    public Message(MessageProvider messageProvider) {
         this.messageProvider = messageProvider;
-        this.action = actionInvocationStore.getCurrent().action();
     }
 
     /**
-     * <p>
-     * Grabs the message from the provider and outputs it to the given writer.
-     * </p>
+     * Determines the bundle and then gets the message and puts it into the attributes.
      *
-     * @param   writer The writer to output to.
-     * @param   key The key of the message.
-     * @param   bundle (optional) The bundle to use if the action is null.
+     * @param   attributes Used to get the bundle and store the message.
+     * @param   dynamicAttributes Not used.
      */
-    public void render(Writer writer, String key, String bundle) {
+    @Override
+    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+        String bundle = determineBundleName(attributes);
         if (bundle == null) {
-            if (action == null) {
-                throw new IllegalStateException("The current URI doesn't have an action class " +
-                    "associated with it and the bundle attribute is null.");
-            }
-
-            bundle = action.getClass().getName();
+            throw new IllegalStateException("The current URI doesn't have an action class " +
+                "associated with it and the bundle attribute is null.");
         }
+
+        String key = (String) attributes.remove("key");
 
         String message = messageProvider.getMessage(bundle, key);
-        try {
-            writer.write(message);
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to write to Writer", e);
-        }
+        attributes.put("message", message);
     }
 
     /**
-     * Calls the {@link #render(Writer, String, String)} method using a StringWriter to collect
-     * the result and the first and second parameters to the method. The first is the key and the
-     * second is the bundle, which can be left out.
+     * Calls the {@link #renderStart(Writer, Map, Map)} and {@link #renderEnd(Writer)} methods using
+     * a StringWriter to collect the result and the first and second parameters to the method. The
+     * first is the key and the second is the bundle, which can be left out.
      *
      * @param   arguments The method arguments.
      * @return  The result.
@@ -96,25 +84,19 @@ public class Message implements TemplateMethodModel, TemplateDirectiveModel {
         StringWriter writer = new StringWriter();
         String key = (String) arguments.get(0);
         String bundle = (String) (arguments.size() > 1 ? arguments.get(1) : null);
-        render(writer, key, bundle);
+        Map<String, Object> attributes = mapNV("key", key, "bundle", bundle);
+        renderStart(writer, attributes, new HashMap<String, String>());
+        renderEnd(writer);
         return writer.toString();
     }
 
-    /**
-     * Calls the {@link #render(Writer, String, String)} method using the Writer from the Environment
-     * and the attributes passed to the directive. The attributes must be {@code key} and {@code bundle}
-     * but the bundle attribute is optional.
-     *
-     * @param   env The Environment to get the Writer from.
-     * @param   params The attributes passed to the directive.
-     * @param   loopVars Not used.
-     * @param   body Not used.
-     * @throws  TemplateException If the action is null and bundle is not specified.
-     */
-    public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
-    throws TemplateException, IOException {
-        String key = params.get("key").toString();
-        Object bundle = params.get("bundle");
-        render(env.getOut(), key, bundle != null ? bundle.toString() : null);
+    @Override
+    protected String startTemplateName() {
+        return null;
+    }
+
+    @Override
+    protected String endTemplateName() {
+        return "message.ftl";
     }
 }

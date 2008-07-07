@@ -86,7 +86,7 @@ public class AbstractInputTest extends AbstractControlTest {
      */
     protected void run(AbstractInput input, Object action, String template, String bundle, String key,
             String message, Map<String, Object> attributes, String result, String... errors) {
-        HttpServletRequest request = makeRequest();
+        HttpServletRequest request = makeRequest(!attributes.containsKey("bundle"));
         ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
         MessageStore ms = makeFieldMessageStore(true, key, errors);
         Configuration configuration = makeConfiguration();
