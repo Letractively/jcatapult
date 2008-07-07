@@ -85,6 +85,10 @@
                         username="${svn.username}" password="${svn.password}"/>
     <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-deployer"
                         username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-persistence"
+                        username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-struts"
+                        username="${svn.username}" password="${svn.password}"/>
 
     <!--export ant/plugins -->
     <scm_export dest="${dir.dist.ant}/plugins" username="${svn.username}" password="${svn.password}"
