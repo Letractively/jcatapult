@@ -22,6 +22,7 @@ import javax.servlet.ServletException;
 
 import org.jcatapult.mvc.action.ActionInvocationWorkflow;
 import org.jcatapult.mvc.action.ActionMappingWorkflow;
+import org.jcatapult.mvc.action.ActionPrepareWorkflow;
 import org.jcatapult.mvc.message.MessageWorkflow;
 import org.jcatapult.mvc.parameter.ParameterWorkflow;
 import org.jcatapult.mvc.scope.ScopeWorkflow;
@@ -45,10 +46,11 @@ public class DefaultMVCWorkflow implements MVCWorkflow {
 
     @Inject
     public DefaultMVCWorkflow(ActionMappingWorkflow actionMappingWorkflow, ScopeWorkflow scopeWorkflow,
-            MessageWorkflow messageWorkflow, ParameterWorkflow parameterWorkflow,
-            ValidationWorkflow validationWorkflow, ActionInvocationWorkflow actionInvocationWorkflow) {
-        workflows = asList(actionMappingWorkflow, scopeWorkflow, messageWorkflow, parameterWorkflow,
-            validationWorkflow, actionInvocationWorkflow);
+            MessageWorkflow messageWorkflow, ActionPrepareWorkflow actionPrepareWorkflow,
+            ParameterWorkflow parameterWorkflow, ValidationWorkflow validationWorkflow,
+            ActionInvocationWorkflow actionInvocationWorkflow) {
+        workflows = asList(actionMappingWorkflow, scopeWorkflow, messageWorkflow, actionPrepareWorkflow,
+            parameterWorkflow, validationWorkflow, actionInvocationWorkflow);
     }
 
     /**
