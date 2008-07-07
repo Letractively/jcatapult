@@ -82,12 +82,12 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
      */
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         if (request.getMethod().equals("POST")) {
-            ActionInvocation actionInvocation = actionInvocationStore.get();
+            ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
             Object action = actionInvocation.action();
             if (action != null) {
                 validate(action);
                 if (messageStore.contains(MessageType.ERROR)) {
-                    actionInvocationStore.set(new DefaultActionInvocation(action, actionInvocation.actionURI(),
+                    actionInvocationStore.setCurrent(new DefaultActionInvocation(action, actionInvocation.actionURI(),
                         null, actionInvocation.configuration(), true, false, "input"));
                 }
             }

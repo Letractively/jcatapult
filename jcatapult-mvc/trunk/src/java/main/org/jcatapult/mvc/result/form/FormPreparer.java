@@ -13,25 +13,25 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.action.config;
-
-import com.google.inject.ImplementedBy;
+package org.jcatapult.mvc.result.form;
 
 /**
  * <p>
- * This interface defines how a package and class name are converted into
- * a URI.
+ * This interface defines the method that forms can be prepared.
+ * Form preparation is generally handled by a class that is properly
+ * annotated with the {@link FormPreparer} annotation and that provides
+ * a single prepare method that conforms to the same signature as
+ * the action classes do, allowing for different handling for post,
+ * get and extensions.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultActionURIBuilder.class)
-public interface ActionURIBuilder {
+public interface FormPreparer {
     /**
-     * Converts the action class name into a URI.
+     * Prepare the form using the FormPreparer that is registered under the given URI.
      *
-     * @param   actionClass The action class to convert to a URI.
-     * @return  The URI.
+     * @param   uri The URI of the FormPreparer.
      */
-    String build(Class<?> actionClass);
+    void prepare(String uri);
 }

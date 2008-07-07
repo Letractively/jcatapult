@@ -60,7 +60,7 @@ public abstract class AbstractControl implements Control {
         this.locale = locale;
         this.request = request;
         this.freeMarkerService = freeMarkerService;
-        this.actionInvocation = actionInvocationStore.get();
+        this.actionInvocation = actionInvocationStore.getCurrent();
         this.action = this.actionInvocation.action();
     }
 

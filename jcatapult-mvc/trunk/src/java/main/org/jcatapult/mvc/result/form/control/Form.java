@@ -17,11 +17,12 @@ package org.jcatapult.mvc.result.form.control;
 
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.jcatapult.mvc.action.DefaultActionMappingWorkflow;
+import org.jcatapult.mvc.result.control.AbstractControl;
 import org.jcatapult.mvc.servlet.MVCWorkflow;
 import org.jcatapult.mvc.servlet.URIHttpServletRequest;
-import org.jcatapult.mvc.result.control.AbstractControl;
-import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -51,14 +52,15 @@ public class Form extends AbstractControl {
      */
     @Override
     protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        final String uri = (String) attributes.remove("prepareAction");
+        final String uri = (String) attributes.remove("preparerURI");
         if (uri != null) {
             // Mock out the request for the new URI
-            HttpServletRequest old = request;
-            URIHttpServletRequest proxy = new URIHttpServletRequest(request, uri);
-
-            // Set in the wrapper
-            ServletObjectsHolder.setServletRequest(proxy);
+            HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
+            HttpServletRequest old = (HttpServletRequest) wrapper.getRequest();
+            String originalURI = old.getRequestURI();
+            URIHttpServletRequest proxy = new URIHttpServletRequest(old, uri);
+            proxy.setAttribute(DefaultActionMappingWorkflow.JCATAPULT_EXECUTE_RESULT, "false");
+            wrapper.setRequest(proxy);
 
             // Invoke the workflow
             try {
@@ -71,8 +73,7 @@ public class Form extends AbstractControl {
             }
 
             // Change back to the old URI
-            proxy = new URIHttpServletRequest(ServletObjectsHolder.getServletRequest(), old.getRequestURI());
-            ServletObjectsHolder.setServletRequest(proxy);
+            proxy.setRequestURI(originalURI);
         }
     }
 

@@ -131,9 +131,11 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
         boolean executeResult = executeResult(JCATAPULT_EXECUTE_RESULT);
         ActionInvocation invocation = new DefaultActionInvocation(action, uri, extension,
             actionConfiguration, executeResult, true, null);
-        actionInvocationStore.set(invocation);
+        actionInvocationStore.setCurrent(invocation);
 
         chain.continueWorkflow();
+
+        actionInvocationStore.popCurrent();
     }
 
     /**

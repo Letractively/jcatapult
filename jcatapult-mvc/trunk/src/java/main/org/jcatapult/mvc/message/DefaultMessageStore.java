@@ -78,7 +78,7 @@ public class DefaultMessageStore implements MessageStore {
      */
     public void addFieldMessage(MessageScope scope, String field, String key, Object... values)
     throws MissingMessageException {
-        ActionInvocation actionInvocation = actionInvocationStore.get();
+        ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         if (actionInvocation.action() == null) {
             throw new IllegalStateException("Attempting to add an field message without a bundle name " +
                 "but the current request URL is not associated with an action class");
@@ -102,7 +102,7 @@ public class DefaultMessageStore implements MessageStore {
      */
     public void addFieldError(MessageScope scope, String field, String key, Object... values)
     throws MissingMessageException {
-        ActionInvocation actionInvocation = actionInvocationStore.get();
+        ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         if (actionInvocation.action() == null) {
             throw new IllegalStateException("Attempting to add an field error without a bundle name " +
                 "but the current request URL is not associated with an action class");
@@ -126,7 +126,7 @@ public class DefaultMessageStore implements MessageStore {
      */
     public void addActionMessage(MessageScope scope, String key, Object... values)
     throws MissingMessageException {
-        ActionInvocation actionInvocation = actionInvocationStore.get();
+        ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         if (actionInvocation.action() == null) {
             throw new IllegalStateException("Attempting to add an action message without a bundle name " +
                 "but the current request URL is not associated with an action class");
@@ -150,7 +150,7 @@ public class DefaultMessageStore implements MessageStore {
      */
     public void addActionError(MessageScope scope, String key, Object... values)
     throws MissingMessageException {
-        ActionInvocation actionInvocation = actionInvocationStore.get();
+        ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         if (actionInvocation.action() == null) {
             throw new IllegalStateException("Attempting to add an action error without a bundle name " +
                 "but the current request URL is not associated with an action class");

@@ -17,6 +17,7 @@ package org.jcatapult.mvc.action.config;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.jcatapult.mvc.util.DefaultURIBuilder;
 
 /**
  * <p>
@@ -31,7 +32,7 @@ public class DefaultActionURIBuilderTest {
      */
     @Test
     public void testBuild() {
-        DefaultActionURIBuilder builder = new DefaultActionURIBuilder();
+        DefaultURIBuilder builder = new DefaultURIBuilder();
         assertEquals("/config/default-action-uri-builder-test", builder.build(this.getClass()));
     }
 }

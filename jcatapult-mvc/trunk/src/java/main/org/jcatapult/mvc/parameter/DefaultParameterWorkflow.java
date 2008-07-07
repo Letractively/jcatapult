@@ -73,7 +73,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
      * @param   chain The workflow chain.
      */
     public void perform(WorkflowChain chain) throws IOException, ServletException {
-        ActionInvocation actionInvocation = actionInvocationStore.get();
+        ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         Object action = actionInvocation.action();
 
         if (action != null) {

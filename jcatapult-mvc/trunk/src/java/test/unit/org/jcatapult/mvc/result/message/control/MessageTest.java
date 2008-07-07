@@ -42,7 +42,7 @@ public class MessageTest {
 
         ActionInvocation ai = new DefaultActionInvocation(new Edit(), "/edit", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(ai);
+        EasyMock.expect(ais.getCurrent()).andReturn(ai);
         EasyMock.replay(ais);
 
         StringWriter writer = new StringWriter();
@@ -60,7 +60,7 @@ public class MessageTest {
 
         ActionInvocation ai = new DefaultActionInvocation(new Edit(), "/edit", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(ai);
+        EasyMock.expect(ais.getCurrent()).andReturn(ai);
         EasyMock.replay(ais);
 
         StringWriter writer = new StringWriter();
@@ -77,7 +77,7 @@ public class MessageTest {
 
         ActionInvocation ai = new DefaultActionInvocation(null, "/edit", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(ai);
+        EasyMock.expect(ais.getCurrent()).andReturn(ai);
         EasyMock.replay(ais);
 
         StringWriter writer = new StringWriter();

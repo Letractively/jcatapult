@@ -13,32 +13,25 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.servlet;
+package org.jcatapult.mvc.util;
 
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletRequest;
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This request is a URI proxy.
+ * This interface defines how a package and class name are converted into
+ * a URI.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class URIHttpServletRequest extends HttpServletRequestWrapper {
-    private String uri;
-
-    public URIHttpServletRequest(HttpServletRequest httpServletRequest, String uri) {
-        super(httpServletRequest);
-        this.uri = uri;
-    }
-
-    @Override
-    public String getRequestURI() {
-        return uri;
-    }
-
-    public void setRequestURI(String uri) {
-        this.uri = uri;
-    }
+@ImplementedBy(DefaultURIBuilder.class)
+public interface URIBuilder {
+    /**
+     * Converts the class name into a URI.
+     *
+     * @param   type The class to convert to a URI.
+     * @return  The URI.
+     */
+    String build(Class<?> type);
 }

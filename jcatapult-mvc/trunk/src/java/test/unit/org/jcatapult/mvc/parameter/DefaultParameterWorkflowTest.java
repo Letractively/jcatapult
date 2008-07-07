@@ -17,7 +17,6 @@ package org.jcatapult.mvc.parameter;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -73,7 +72,7 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(invocation);
 
         ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(actionInvocationStore.get()).andReturn(invocation);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
         EasyMock.replay(actionInvocationStore);
 
         MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
