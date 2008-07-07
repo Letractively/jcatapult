@@ -1,0 +1,5 @@
+org.jcatapult.dbmgr
+org.jcatapult.dbmgr.database
+org.jcatapult.dbmgr.domain
+org.jcatapult.dbmgr.module
+org.jcatapult.dbmgr.service
