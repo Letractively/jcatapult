@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.Currency;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.easymock.EasyMock;
 import org.jcatapult.servlet.ServletObjectsHolder;
@@ -41,7 +42,8 @@ public class MoneyTypeConverterTest {
         HttpServletRequest request = EasyMock.createNiceMock(HttpServletRequest.class);
         EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("currencyCode", "USD"));
         EasyMock.replay(request);
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(request));
 
         String[] values = {"1.99"};
         Map context = mapNV("conversion.property.fullName", "foo.bar");
@@ -56,7 +58,8 @@ public class MoneyTypeConverterTest {
     public void testToMoneyFailureSingleParameter() throws NoSuchMethodException {
         HttpServletRequest request = EasyMock.createNiceMock(HttpServletRequest.class);
         EasyMock.replay(request);
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(request));
 
         String[] values = {"1.5"};
         MoneyTypeConverter converter = new MoneyTypeConverter();
@@ -75,7 +78,8 @@ public class MoneyTypeConverterTest {
         HttpServletRequest request = EasyMock.createNiceMock(HttpServletRequest.class);
         EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("currencyCode", "US"));
         EasyMock.replay(request);
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(request));
 
         String values = "1.99";
         MoneyTypeConverter converter = new MoneyTypeConverter();
@@ -94,7 +98,8 @@ public class MoneyTypeConverterTest {
         HttpServletRequest request = EasyMock.createNiceMock(HttpServletRequest.class);
         EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("currencyCode", "BAD"));
         EasyMock.replay(request);
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(request));
 
         String values = "1.99";
         MoneyTypeConverter converter = new MoneyTypeConverter();
