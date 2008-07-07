@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<project name="jcatapult-core" default="jar">
+
+  <property environment="env"/>
+  <property name="plugin.dir" value="${env.JCATAPULT_HOME}/ant/plugins"/>
+
+  <!-- savant -->
+  <import file="${plugin.dir}/savant/1.0/savant.xml"/>
+
+  <!-- init  -->
+  <import file="${plugin.dir}/init/1.0/init.xml"/>
+
+  <!-- clean -->
+  <import file="${plugin.dir}/clean/1.0/clean.xml"/>
+
+  <!-- java compile -->
+  <import file="${plugin.dir}/java/1.0/compile.xml"/>
+
+  <!-- java jar -->
+  <import file="${plugin.dir}/java/1.0/jar.xml"/>
+
+  <!-- javadoc -->
+  <import file="${plugin.dir}/javadoc/1.0/javadoc.xml"/>
+
+  <!-- junit -->
+  <import file="${plugin.dir}/junit/1.0/junit-no-db.xml"/>
+
+  <!-- ide -->
+  <import file="${plugin.dir}/ide/1.0/ide.xml"/>
+
+  <!-- mysql -->
+  <import file="${plugin.dir}/mysql/1.0/mysql.xml"/>
+
+  <!-- svn -->
+  <import file="${plugin.dir}/svn/1.0/svn.xml"/>
+
+  <!-- release -->
+  <import file="${plugin.dir}/release-svn/1.0/jar.xml"/>
+  <import file="${plugin.dir}/release-jcatapult/1.0/release-jcatapult.xml"/>
+
+  <target name="all" description="Cleans, tests, and creates a jar" depends="test"/>
+
+  <macrodef name="jar-post">
+    <sequential>
+      <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}.jar">
+        <fileset dir="${dir.target.classes.test.unit}" includes="**/test/**/*"/>
+      </jar>
+
+      <!-- Source JAR -->
+      <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}-src.jar">
+        <fileset dir="${dir.src.java.test.unit}" includes="**/test/*"/>
+      </jar>
+   </sequential>
+  </macrodef>
+</project>
