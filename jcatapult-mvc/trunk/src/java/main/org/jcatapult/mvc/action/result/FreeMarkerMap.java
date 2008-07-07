@@ -28,6 +28,7 @@ import javax.servlet.http.HttpSession;
 
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.mvc.parameter.el.ExpressionException;
 
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
@@ -79,7 +80,11 @@ public class FreeMarkerMap implements TemplateHashModelEx {
         // First check the action
         Object value = null;
         if (action != null) {
-            value = expressionEvaluator.getValue(key, action);
+            try {
+                value = expressionEvaluator.getValue(key, action);
+            } catch (ExpressionException e) {
+                // Smother because the value is probably somewhere else
+            }
         }
 
         if (value == null) {
