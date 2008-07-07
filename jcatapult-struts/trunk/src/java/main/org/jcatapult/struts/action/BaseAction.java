@@ -33,7 +33,6 @@ import com.opensymphony.xwork2.ActionSupport;
 public abstract class BaseAction extends ActionSupport {
     protected PersistenceService persistenceService;
     protected Configuration configuration;
-    protected String actionName;
     protected String method;
     protected boolean validationClearing = true;
 
@@ -53,21 +52,20 @@ public abstract class BaseAction extends ActionSupport {
     }
 
     /**
-     * @return  Returns the action name. This is often useful when handling different requests to
-     *          the same method.
+     * @return  deprecated
      */
     public String getActionName() {
-        return actionName;
+        return null;
     }
 
     /**
-     * Sets the action name of the action. This is also injected by JCatapult.
+     * deprecated
      *
-     * @param   actionName The action name.
+     * @param   actionName deprecated
      */
-    @Inject(optional = true)
+    @Deprecated
     public void setActionName(@ActionName String actionName) {
-        this.actionName = actionName;
+        // stubbed for deprecation
     }
 
     /**

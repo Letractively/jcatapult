@@ -46,8 +46,13 @@ public abstract class WebBaseTest extends JPABaseTest {
     protected ConfigurationManager configurationManager;
     protected Configuration configuration;
     protected Container container;
-    protected boolean setupStruts = false;
     protected boolean get = true;
+    
+    /**
+     * Deprecated
+     */
+    protected boolean setupStruts = false;
+
 
     /**
      * Default constructor.
@@ -56,10 +61,11 @@ public abstract class WebBaseTest extends JPABaseTest {
     }
 
     /**
-     * Alternate constructor.
+     * deprecated
      *
-     * @param   setupStruts Determines if Struts is setup for testing or not. Defaults to true.
+     * @param   setupStruts deprecated
      */
+    @Deprecated
     protected WebBaseTest(boolean setupStruts) {
         this.setupStruts = setupStruts;
     }
@@ -71,48 +77,45 @@ public abstract class WebBaseTest extends JPABaseTest {
     @Override
     public void setUp() {
         super.setUp();
-        setUpStruts();
     }
 
     /**
-     * Sets up the Struts2 objects that might be required by some test cases such as the ValueStack
-     * and ActionContext.
+     * Deprecated
      */
+    @Deprecated
     protected void setUpStruts() {
-        if (setupStruts) {
-            ServletContext servletContext = EasyMock.createNiceMock(ServletContext.class);
-            EasyMock.replay(servletContext);
-
-            Map<String, String> params = new HashMap<String, String>();
-            Dispatcher du = new Dispatcher(servletContext, params);
-            du.init();
-            Dispatcher.setInstance(du);
-
-            // Reset the value stack
-            ValueStack stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-            stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
-            ActionContext ac = new ActionContext(stack.getContext());
-            ac.setName(getActionName());
-            ActionContext.setContext(ac);
-
-            configurationManager = du.getConfigurationManager();
-            configuration = configurationManager.getConfiguration();
-            container = configuration.getContainer();
-
-            ServletActionContext.setServletContext(servletContext);
-            ServletActionContext.setRequest(request);
-        }
+//        if (setupStruts) {
+//            ServletContext servletContext = EasyMock.createNiceMock(ServletContext.class);
+//            EasyMock.replay(servletContext);
+//
+//            Map<String, String> params = new HashMap<String, String>();
+//            Dispatcher du = new Dispatcher(servletContext, params);
+//            du.init();
+//            Dispatcher.setInstance(du);
+//
+//            // Reset the value stack
+//            ValueStack stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+//            stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
+//            ActionContext ac = new ActionContext(stack.getContext());
+//            ac.setName(getActionName());
+//            ActionContext.setContext(ac);
+//
+//            configurationManager = du.getConfigurationManager();
+//            configuration = configurationManager.getConfiguration();
+//            container = configuration.getContainer();
+//
+//            ServletActionContext.setServletContext(servletContext);
+//            ServletActionContext.setRequest(request);
+//        }
     }
 
     /**
-     * Returns the action name. This defaults to the string 'null' but
-     * should be overridden by concrete base tests to return the name of the action
-     * being tested.  This method was not made abstract because I didn't want to assume that
-     * all unit tests sub-classing WebBaseTest would necessarily be testing an Action.
+     * Deprecated
      *
      * @return the name of the action
      */
+    @Deprecated
     protected String getActionName() {
-        return "null";
+        return null;
     }
 }
