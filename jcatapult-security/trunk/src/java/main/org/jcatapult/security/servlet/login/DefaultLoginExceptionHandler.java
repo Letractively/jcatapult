@@ -18,12 +18,12 @@ package org.jcatapult.security.servlet.login;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.jcatapult.security.JCatapultSecurityException;
 import org.jcatapult.security.config.SecurityConfiguration;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 import org.jcatapult.servlet.WorkflowChain;
-import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;
 
@@ -61,9 +61,11 @@ public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
      */
     public void handle(JCatapultSecurityException exception, WorkflowChain chain)
     throws IOException, ServletException {
-        FacadeHttpServletRequest wrapper = new FacadeHttpServletRequest(request, failedLoginURI, null);
+        HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
+        HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
+        FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, failedLoginURI, null);
+        wrapper.setRequest(facade);
         request.setAttribute(EXCEPTION_KEY, exception);
-        ServletObjectsHolder.setServletRequest(wrapper);
         chain.continueWorkflow();
     }
 }

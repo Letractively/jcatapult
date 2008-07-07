@@ -59,7 +59,11 @@ public class DefaultLoginExceptionHandlerTest {
             }
         };
 
-        DefaultLoginExceptionHandler dleh = new DefaultLoginExceptionHandler(request, new DefaultSecurityConfiguration(c));
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(wrapper);        
+
+        DefaultLoginExceptionHandler dleh = new DefaultLoginExceptionHandler(wrapper, new DefaultSecurityConfiguration(c));
         dleh.handle(exception, wc);
         assertTrue(called.get());
         EasyMock.verify(c, request);

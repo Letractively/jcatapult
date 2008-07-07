@@ -17,19 +17,14 @@ package org.jcatapult.security.servlet;
 
 import org.jcatapult.security.UserAdapter;
 import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
-import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;
 
 /**
  * <p>
  * This class implements the SecurityContextProvider using the JCatapult security
- * framework. Mainly, this uses the implementations of the {@link UserAdapter}
- * and {@link CredentialStorage} interfaces in order to fulfill the methods. Since
- * the {@link CredentialStorage} is an HTTP servlet specific interface, this uses
- * the {@link ServletObjectsHolder} thread local storage that is used in the
- * {@link org.jcatapult.servlet.JCatapultFilter} in order to get access to the HTTP
- * classes that are required. This is somewhat of a hack, but it is very difficult
+ * framework. Mainly, this uses the implementations of the {@link UserAdapter} to
+ * fulfill the methods.
  * </p>
  *
  * @author Brian Pontarelli
