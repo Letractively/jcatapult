@@ -15,30 +15,18 @@
  */
 package org.jcatapult.mvc.servlet;
 
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletRequest;
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This request is a URI proxy.
+ * This interface defines the method that is used to prepare forms during
+ * result rendering. The Form tag invokes this workflow in order to handle
+ * the form preparation step using FormPreparers rather than actions.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class URIHttpServletRequest extends HttpServletRequestWrapper {
-    private String uri;
-
-    public URIHttpServletRequest(HttpServletRequest httpServletRequest, String uri) {
-        super(httpServletRequest);
-        this.uri = uri;
-    }
-
-    @Override
-    public String getRequestURI() {
-        return uri;
-    }
-
-    public void setRequestURI(String uri) {
-        this.uri = uri;
-    }
+@ImplementedBy(DefaultFormPreparerWorkflow.class)
+public interface FormPreparerWorkflow {
+    void prepare(String uri);
 }

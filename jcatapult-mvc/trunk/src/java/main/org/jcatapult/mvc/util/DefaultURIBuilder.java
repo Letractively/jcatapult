@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.action.config;
+package org.jcatapult.mvc.util;
 
 /**
  * <p>
@@ -30,13 +30,13 @@ package org.jcatapult.mvc.action.config;
  *
  * @author Brian Pontarelli
  */
-public class DefaultActionURIBuilder implements ActionURIBuilder {
+public class DefaultURIBuilder implements URIBuilder {
     /**
      * {@inheritDoc}
      */
-    public String build(Class<?> actionClass) {
+    public String build(Class<?> type) {
         // Determine the URI
-        String fullName = actionClass.getName();
+        String fullName = type.getName();
         int index = fullName.indexOf("action");
         String lessPackage = fullName.substring(index + 6).replace('.', '/');
 

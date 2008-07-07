@@ -48,7 +48,7 @@ public class Message implements TemplateMethodModel, TemplateDirectiveModel {
     @Inject
     public Message(MessageProvider messageProvider, ActionInvocationStore actionInvocationStore) {
         this.messageProvider = messageProvider;
-        this.action = actionInvocationStore.get().action();
+        this.action = actionInvocationStore.getCurrent().action();
     }
 
     /**

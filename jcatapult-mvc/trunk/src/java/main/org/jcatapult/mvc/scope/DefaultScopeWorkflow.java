@@ -58,7 +58,7 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         flashScope.transferFlash();
 
-        ActionInvocation actionInvocation = actionInvocationStore.get();
+        ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         Object action = actionInvocation.action();
 
         // Handle loading scoped members into the action

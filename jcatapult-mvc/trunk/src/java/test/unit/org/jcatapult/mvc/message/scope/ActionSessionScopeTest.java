@@ -54,11 +54,11 @@ public class ActionSessionScopeTest {
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
-            public ActionInvocation get() {
+            public ActionInvocation getCurrent() {
                 return new DefaultActionInvocation(action, "", null, null);
             }
 
-            public void set(ActionInvocation invocation) {
+            public void setCurrent(ActionInvocation invocation) {
             }
         });
         List<String> messages = scope.getActionMessages(MessageType.PLAIN);
@@ -76,11 +76,11 @@ public class ActionSessionScopeTest {
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
-            public ActionInvocation get() {
+            public ActionInvocation getCurrent() {
                 return new DefaultActionInvocation(action, "", null, null);
             }
 
-            public void set(ActionInvocation invocation) {
+            public void setCurrent(ActionInvocation invocation) {
             }
         });
         scope.addActionMessage(MessageType.PLAIN, "Test message");
@@ -101,11 +101,11 @@ public class ActionSessionScopeTest {
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
-            public ActionInvocation get() {
+            public ActionInvocation getCurrent() {
                 return new DefaultActionInvocation(action, "", null, null);
             }
 
-            public void set(ActionInvocation invocation) {
+            public void setCurrent(ActionInvocation invocation) {
             }
         });
         List<String> messages = scope.getActionMessages(MessageType.ERROR);
@@ -123,11 +123,11 @@ public class ActionSessionScopeTest {
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
-            public ActionInvocation get() {
+            public ActionInvocation getCurrent() {
                 return new DefaultActionInvocation(action, "", null, null);
             }
 
-            public void set(ActionInvocation invocation) {
+            public void setCurrent(ActionInvocation invocation) {
             }
         });
         scope.addActionMessage(MessageType.ERROR, "Test message");
@@ -151,11 +151,11 @@ public class ActionSessionScopeTest {
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
-            public ActionInvocation get() {
+            public ActionInvocation getCurrent() {
                 return new DefaultActionInvocation(action, "", null, null);
             }
 
-            public void set(ActionInvocation invocation) {
+            public void setCurrent(ActionInvocation invocation) {
             }
         });
         Map<String, List<String>> messages = scope.getFieldMessages(MessageType.PLAIN);
@@ -174,11 +174,11 @@ public class ActionSessionScopeTest {
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
-            public ActionInvocation get() {
+            public ActionInvocation getCurrent() {
                 return new DefaultActionInvocation(action, "", null, null);
             }
 
-            public void set(ActionInvocation invocation) {
+            public void setCurrent(ActionInvocation invocation) {
             }
         });
         scope.addFieldMessage(MessageType.PLAIN, "user.name", "Test message");
@@ -202,11 +202,11 @@ public class ActionSessionScopeTest {
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
-            public ActionInvocation get() {
+            public ActionInvocation getCurrent() {
                 return new DefaultActionInvocation(action, "", null, null);
             }
 
-            public void set(ActionInvocation invocation) {
+            public void setCurrent(ActionInvocation invocation) {
             }
         });
         Map<String, List<String>> messages = scope.getFieldMessages(MessageType.ERROR);
@@ -225,11 +225,11 @@ public class ActionSessionScopeTest {
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
-            public ActionInvocation get() {
+            public ActionInvocation getCurrent() {
                 return new DefaultActionInvocation(action, "", null, null);
             }
 
-            public void set(ActionInvocation invocation) {
+            public void setCurrent(ActionInvocation invocation) {
             }
         });
         scope.addFieldMessage(MessageType.ERROR, "user.name", "Test message");

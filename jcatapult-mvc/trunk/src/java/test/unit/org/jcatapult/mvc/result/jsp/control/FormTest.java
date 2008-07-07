@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.easymock.EasyMock;
 import org.jcatapult.container.ContainerResolver;
@@ -77,11 +78,13 @@ public class FormTest extends AbstractControlTest {
         EasyMock.expect(request.getRequestURI()).andReturn("/test");
         EasyMock.replay(request);
 
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+        ServletObjectsHolder.setServletRequest(wrapper);
+
         Form form = new Form(workflow);
         FreeMarkerService fms = new DefaultFreeMarkerService(makeConfiguration(), makeEnvironmenResolver(),
             new OverridingTemplateLoader(makeContainerResolver()));
-        form.setServices(Locale.US, request, makeActionInvocationStore(null, "/test"),
-            fms);
+        form.setServices(Locale.US, wrapper, makeActionInvocationStore(null, "/test"), fms);
         StringWriter writer = new StringWriter();
         form.renderStart(writer, mapNV("action", "/test", "method", "POST", "prepareAction", "/prepare"), new HashMap<String, String>());
         form.renderEnd(writer);

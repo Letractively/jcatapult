@@ -97,7 +97,7 @@ public class ActionSessionScope implements Scope {
 
         Map<String, List<String>> values;
         synchronized (actionSession) {
-            ActionInvocation invocation = actionInvocationStore.get();
+            ActionInvocation invocation = actionInvocationStore.getCurrent();
             if (invocation.action() == null) {
                 throw new IllegalStateException("Attempting to set an action session message without " +
                     "an action associated with the URL");
@@ -137,7 +137,7 @@ public class ActionSessionScope implements Scope {
 
         FieldMessages values;
         synchronized (actionSession) {
-            ActionInvocation invocation = actionInvocationStore.get();
+            ActionInvocation invocation = actionInvocationStore.getCurrent();
             if (invocation.action() == null) {
                 throw new IllegalStateException("Attempting to set an action session message without " +
                     "an action associated with the URL");
@@ -176,7 +176,7 @@ public class ActionSessionScope implements Scope {
 
         List<String> values;
         synchronized (actionSession) {
-            ActionInvocation invocation = actionInvocationStore.get();
+            ActionInvocation invocation = actionInvocationStore.getCurrent();
             if (invocation.action() == null) {
                 throw new IllegalStateException("Attempting to set an action session message without " +
                     "an action associated with the URL");
@@ -215,7 +215,7 @@ public class ActionSessionScope implements Scope {
 
         List<String> values;
         synchronized (actionSession) {
-            ActionInvocation invocation = actionInvocationStore.get();
+            ActionInvocation invocation = actionInvocationStore.getCurrent();
             if (invocation.action() == null) {
                 throw new IllegalStateException("Attempting to set an action session message without " +
                     "an action associated with the URL");

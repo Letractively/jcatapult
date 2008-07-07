@@ -82,8 +82,9 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
      * @throws  IOException If the chain throws an IOException.
      * @throws  ServletException If the chain throws a ServletException or if the result can't be found.
      */
+    @SuppressWarnings("unchecked")
     public void perform(WorkflowChain chain) throws IOException, ServletException {
-        ActionInvocation invocation = actionInvocationStore.get();
+        ActionInvocation invocation = actionInvocationStore.getCurrent();
 
         ResultInvocation resultInvocation = null;
         if (invocation.action() == null) {

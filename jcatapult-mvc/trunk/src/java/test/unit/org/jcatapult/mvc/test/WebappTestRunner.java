@@ -17,6 +17,7 @@ package org.jcatapult.mvc.test;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.mvc.message.MessageStore;
@@ -68,9 +69,11 @@ public class WebappTestRunner {
     void run(RequestBuilder builder, boolean post) throws IOException, ServletException {
         this.request = new MockHttpServletRequest(builder.getParameters(), builder.getUri(), "UTF-8",
             builder.getLocale(), post, session);
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(request));
 
         this.response = makeResponse();
+        ServletObjectsHolder.clearServletResponse();
         ServletObjectsHolder.setServletResponse(response);
 
         GuiceContainer.setGuiceModules(builder.getModules().toArray(new Module[builder.getModules().size()]));

@@ -15,6 +15,7 @@
  */
 package org.jcatapult.mvc.action;
 
+import java.util.Stack;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Inject;
@@ -27,6 +28,7 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class DefaultActionInvocationStore implements ActionInvocationStore {
+    public static final String ACTION_INVOCATION_STACK_KEY = "jcatapultActionInvocationStack";
     public static final String ACTION_INVOCATION_KEY = "jcatapultActionInvocation";
     private final HttpServletRequest request;
 
@@ -38,14 +40,39 @@ public class DefaultActionInvocationStore implements ActionInvocationStore {
     /**
      * {@inheritDoc}
      */
-    public ActionInvocation get() {
-        return (ActionInvocation) request.getAttribute(ACTION_INVOCATION_KEY);
+    public ActionInvocation getCurrent() {
+        Stack stack = (Stack) request.getAttribute(ACTION_INVOCATION_STACK_KEY);
+        if (stack == null) {
+            return null;
+        }
+
+        return (ActionInvocation) stack.peek();
     }
 
     /**
      * {@inheritDoc}
      */
-    public void set(ActionInvocation invocation) {
+    public void setCurrent(ActionInvocation invocation) {
+        Stack stack = (Stack) request.getAttribute(ACTION_INVOCATION_STACK_KEY);
+        if (stack == null) {
+            stack = new Stack();
+            request.setAttribute(ACTION_INVOCATION_STACK_KEY, stack);
+        }
+
+        stack.push(invocation);
         request.setAttribute(ACTION_INVOCATION_KEY, invocation);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void popCurrent() {
+        Stack stack = (Stack) request.getAttribute(ACTION_INVOCATION_STACK_KEY);
+        if (stack == null) {
+            return;
+        }
+
+        stack.pop();
+        request.removeAttribute(ACTION_INVOCATION_KEY);
     }
 }

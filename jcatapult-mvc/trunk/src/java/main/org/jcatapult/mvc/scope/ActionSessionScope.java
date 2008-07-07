@@ -59,7 +59,7 @@ public class ActionSessionScope implements Scope {
             return null;
         }
 
-        ActionInvocation ai = actionInvocationStore.get();
+        ActionInvocation ai = actionInvocationStore.getCurrent();
         if (ai.action() == null) {
             throw new IllegalStateException("Attempting to store a value in the action session but " +
                 "the current request URL isn't associated with an action class");
@@ -84,7 +84,7 @@ public class ActionSessionScope implements Scope {
             session.setAttribute(ACTION_SESSION_KEY, actionSession);
         }
 
-        ActionInvocation ai = actionInvocationStore.get();
+        ActionInvocation ai = actionInvocationStore.getCurrent();
         if (ai.action() == null) {
             throw new IllegalStateException("Attempting to store a value in the action session but " +
                 "the current request URL isn't associated with an action class");

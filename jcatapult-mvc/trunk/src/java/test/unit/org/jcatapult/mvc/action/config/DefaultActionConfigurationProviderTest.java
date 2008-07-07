@@ -25,6 +25,7 @@ import org.example.action.user.Index;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.jcatapult.mvc.Capture;
+import org.jcatapult.mvc.util.DefaultURIBuilder;
 
 /**
  * <p>
@@ -41,7 +42,7 @@ public class DefaultActionConfigurationProviderTest {
         context.setAttribute(eq(DefaultActionConfigurationProvider.ACTION_CONFIGURATION_KEY), c.capture());
         EasyMock.replay(context);
 
-        new DefaultActionConfigurationProvider(context, new DefaultActionURIBuilder());
+        new DefaultActionConfigurationProvider(context, new DefaultURIBuilder());
 
         Map<String, ActionConfiguration> config = (Map<String, ActionConfiguration>) c.object;
         assertNotNull(config.get("/simple"));

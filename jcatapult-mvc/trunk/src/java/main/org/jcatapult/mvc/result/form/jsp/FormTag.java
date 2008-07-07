@@ -15,7 +15,7 @@
  */
 package org.jcatapult.mvc.result.form.jsp;
 
-import org.jcatapult.mvc.result.form.control.Button;
+import org.jcatapult.mvc.result.form.control.Form;
 import org.jcatapult.mvc.result.jsp.AbstractControlTag;
 
 /**
@@ -25,7 +25,7 @@ import org.jcatapult.mvc.result.jsp.AbstractControlTag;
  *
  * @author  Brian Pontarelli
  */
-public class FormTag extends AbstractControlTag<Button> {
+public class FormTag extends AbstractControlTag<Form> {
     /**
      * Retrieves the tags accept attribute
      *
@@ -135,9 +135,27 @@ public class FormTag extends AbstractControlTag<Button> {
     }
 
     /**
-     * @return  The {@link org.jcatapult.mvc.result.form.control.Button} class.
+     * Retrieves the tags prepareURI attribute
+     *
+     * @return	Returns the tags prepareURI attribute
      */
-    protected Class<Button> controlClass() {
-        return Button.class;
+    public String getPrepareURI() {
+        return (String) attributes.get("prepareURI");
+    }
+
+    /**
+     * Populates the tags prepareURI attribute
+     *
+     * @param	prepareURI The value of the tags prepareURI attribute
+     */
+    public void setPrepareURI(String prepareURI) {
+        attributes.put("prepareURI", prepareURI);
+    }
+
+    /**
+     * @return  The {@link Form} class.
+     */
+    protected Class<Form> controlClass() {
+        return Form.class;
     }
 }

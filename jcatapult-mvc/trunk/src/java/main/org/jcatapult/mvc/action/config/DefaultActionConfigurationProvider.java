@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import javax.servlet.ServletContext;
 
 import org.jcatapult.mvc.action.annotation.Action;
+import org.jcatapult.mvc.util.URIBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -48,7 +49,7 @@ public class DefaultActionConfigurationProvider implements ActionConfigurationPr
     private final ServletContext context;
 
     @Inject
-    public DefaultActionConfigurationProvider(ServletContext context, ActionURIBuilder actionURIBuilder) {
+    public DefaultActionConfigurationProvider(ServletContext context, URIBuilder uriBuilder) {
         this.context = context;
 
         ClassClassLoaderResolver resolver = new ClassClassLoaderResolver();
@@ -62,7 +63,7 @@ public class DefaultActionConfigurationProvider implements ActionConfigurationPr
 
         Map<String, ActionConfiguration> configuration = new HashMap<String, ActionConfiguration>();
         for (Class<?> actionClass : actionClassses) {
-            String uri = actionURIBuilder.build(actionClass);
+            String uri = uriBuilder.build(actionClass);
             ActionConfiguration actionConfiguration = new DefaultActionConfiguration(actionClass, uri);
             configuration.put(uri, actionConfiguration);
             if (logger.isLoggable(Level.FINE)) {

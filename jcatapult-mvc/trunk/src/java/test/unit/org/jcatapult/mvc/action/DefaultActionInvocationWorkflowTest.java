@@ -58,7 +58,7 @@ public class DefaultActionInvocationWorkflowTest {
 
         ActionInvocation ai = new DefaultActionInvocation(null, "foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(ai);
+        EasyMock.expect(ais.getCurrent()).andReturn(ai);
         EasyMock.replay(ais);
 
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", null);
@@ -93,7 +93,7 @@ public class DefaultActionInvocationWorkflowTest {
         EasyMock.replay(response);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(new DefaultActionInvocation(null, "foo/bar", null, null));
+        EasyMock.expect(ais.getCurrent()).andReturn(new DefaultActionInvocation(null, "foo/bar", null, null));
         EasyMock.replay(ais);
 
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
@@ -127,7 +127,7 @@ public class DefaultActionInvocationWorkflowTest {
         Simple simple = new Simple();
         ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
 
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");
@@ -164,7 +164,7 @@ public class DefaultActionInvocationWorkflowTest {
         Simple simple = new Simple();
         ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, null, false, true, null );
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
 
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
@@ -197,7 +197,7 @@ public class DefaultActionInvocationWorkflowTest {
         Simple simple = new Simple();
         ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, new DefaultActionConfiguration(Simple.class, "/foo/bar"));
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
 
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
@@ -233,7 +233,7 @@ public class DefaultActionInvocationWorkflowTest {
         Simple simple = new Simple();
         ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
 
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");
@@ -272,7 +272,7 @@ public class DefaultActionInvocationWorkflowTest {
         MissingExecuteMethod action = new MissingExecuteMethod();
         ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
 
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
@@ -307,7 +307,7 @@ public class DefaultActionInvocationWorkflowTest {
         InvalidExecuteMethod action = new InvalidExecuteMethod();
         ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null, new DefaultActionConfiguration(InvalidExecuteMethod.class, "/foo/bar"));
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
 
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
@@ -342,7 +342,7 @@ public class DefaultActionInvocationWorkflowTest {
         ExecuteMethodThrowsException action = new ExecuteMethodThrowsException();
         ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
 
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
@@ -377,7 +377,7 @@ public class DefaultActionInvocationWorkflowTest {
         Extension action = new Extension();
         ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", "json", null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
 
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");
@@ -414,7 +414,7 @@ public class DefaultActionInvocationWorkflowTest {
         Post action = new Post();
         ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
 
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");

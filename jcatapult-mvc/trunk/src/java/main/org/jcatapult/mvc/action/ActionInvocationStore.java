@@ -20,9 +20,15 @@ import com.google.inject.ImplementedBy;
 /**
  * <p>
  * This class defines the mechanism used to locate action invocation objects.
- * During a request, the invocation is set using the {@link #set(ActionInvocation)}
- * method and then can be retrieved any number of times using the {@link #get()}
+ * During a request, the invocation is set using the {@link #setCurrent(ActionInvocation)}
+ * method and then can be retrieved any number of times using the {@link #getCurrent()}
  * method.
+ * </p>
+ *
+ * <p>
+ * Action invocations are always stored in a stack in order to allow different
+ * actions to be invoked on top of each other. This is useful for invoking actions
+ * from FTL files and JSP tags.
  * </p>
  *
  * @author  Brian Pontarelli
@@ -30,17 +36,23 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(DefaultActionInvocationStore.class)
 public interface ActionInvocationStore {
     /**
-     * Gets the action invocation. Once the action invocation is set using the {@link #set(ActionInvocation)}
-     * method, multiple calls to this method for a single request will always return the same value.
+     * Gets the current action invocation. Once the action invocation is set using the
+     * {@link #setCurrent(ActionInvocation)} method, multiple calls to this method for a single
+     * request will always return the same value.
      *
      * @return  The action invocation or null if it hasn't been set yet.
      */
-    ActionInvocation get();
+    ActionInvocation getCurrent();
 
     /**
      * Sets the invocation into the provider so that it can be fetched later.
      *
      * @param   invocation The invocation to set.
      */
-    void set(ActionInvocation invocation);
+    void setCurrent(ActionInvocation invocation);
+
+    /**
+     * Pops the current action from the stack.
+     */
+    void popCurrent();
 }

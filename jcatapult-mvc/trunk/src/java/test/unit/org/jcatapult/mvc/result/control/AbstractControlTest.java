@@ -89,7 +89,7 @@ public class AbstractControlTest {
     protected ActionInvocationStore makeActionInvocationStore(Object action, String uri) {
         ActionInvocation invocation = new DefaultActionInvocation(action, uri, null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.get()).andReturn(invocation);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
         return ais;
     }
