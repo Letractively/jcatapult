@@ -14,7 +14,7 @@
   <dependencies id="dependencies.project">
     <artifactGroup type="compile">
       <artifact group="ant.apache.org" project="ant" name="ant" version="1.7.0" type="jar"/>
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
     </artifactGroup>
   </dependencies>
 
