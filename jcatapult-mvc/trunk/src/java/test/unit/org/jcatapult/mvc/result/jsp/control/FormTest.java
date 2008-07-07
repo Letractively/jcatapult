@@ -58,7 +58,7 @@ public class FormTest extends AbstractControlTest {
         Form form = new Form(formPreparer);
         FreeMarkerService fms = new DefaultFreeMarkerService(makeConfiguration(), makeEnvironmenResolver(),
             new OverridingTemplateLoader(makeContainerResolver()));
-        form.setServices(Locale.US, makeRequest(), makeActionInvocationStore(null, "/test"),
+        form.setServices(Locale.US, makeRequest(false), makeActionInvocationStore(null, "/test"),
             fms);
         StringWriter writer = new StringWriter();
         form.renderStart(writer, mapNV("action", "/test", "method", "POST"), new HashMap<String, String>());

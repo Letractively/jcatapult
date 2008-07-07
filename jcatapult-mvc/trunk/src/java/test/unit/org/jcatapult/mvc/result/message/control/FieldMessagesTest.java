@@ -41,7 +41,7 @@ import static net.java.util.CollectionTools.*;
 public class FieldMessagesTest extends AbstractControlTest {
     @Test
     public void testFieldMessagePlain() {
-        HttpServletRequest request = makeRequest();
+        HttpServletRequest request = makeRequest(false);
         ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
         MessageStore ms = makeFieldMessageStore(false, "foo", "error1", "error2");
 
@@ -59,7 +59,7 @@ public class FieldMessagesTest extends AbstractControlTest {
 
     @Test
     public void testFieldMessageError() {
-        HttpServletRequest request = makeRequest();
+        HttpServletRequest request = makeRequest(false);
         ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
         MessageStore ms = makeFieldMessageStore(true, "foo", "error1", "error2");
 
@@ -77,7 +77,7 @@ public class FieldMessagesTest extends AbstractControlTest {
 
     @Test
     public void testFieldMessageNamedMissing() {
-        HttpServletRequest request = makeRequest();
+        HttpServletRequest request = makeRequest(false);
         ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
         MessageStore ms = makeFieldMessageStore(true, "bar", "error1", "error2");
 
@@ -92,7 +92,7 @@ public class FieldMessagesTest extends AbstractControlTest {
 
     @Test
     public void testFieldMessageNamed() {
-        HttpServletRequest request = makeRequest();
+        HttpServletRequest request = makeRequest(false);
         ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
         MessageStore ms = makeFieldMessageStore(true, "bar", "error1", "error2");
 

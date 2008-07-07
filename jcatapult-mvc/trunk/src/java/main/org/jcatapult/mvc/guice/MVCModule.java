@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.guice;
 
 import org.jcatapult.mvc.action.result.ForwardResult;
+import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
 import org.jcatapult.mvc.action.result.RedirectResult;
 import org.jcatapult.mvc.parameter.convert.DefaultConverterProvider;
 import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
@@ -62,6 +63,7 @@ public class MVCModule extends AbstractModule {
         configureResults();
         configureScopes();
         configureModels();
+        configureFreeMarker();
     }
 
     /**
@@ -122,5 +124,12 @@ public class MVCModule extends AbstractModule {
         bind(Textarea.class);
 
         requestStaticInjection(ForwardResult.class);
+    }
+
+    /**
+     * Sets up the JspTaglib handling and ServletContext for the FreeMarkerMap.
+     */
+    protected void configureFreeMarker() {
+        requestStaticInjection(FreeMarkerMap.class);
     }
 }

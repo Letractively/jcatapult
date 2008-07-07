@@ -20,6 +20,8 @@ import java.io.StringWriter;
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.mvc.result.message.control.Message;
 
+import static net.java.util.CollectionTools.mapNV;
+
 /**
  * <p>
  * This class is a JSP function that can retrieve messages from the
@@ -61,7 +63,8 @@ public class MessageFunction {
     protected static String getMessage(String key, String bundle) {
         StringWriter writer = new StringWriter();
         Message message = GuiceContainer.getInjector().getInstance(Message.class);
-        message.render(writer, key, bundle);
+        message.renderStart(writer, mapNV("key", key, "bundle", bundle), null);
+        message.renderEnd(writer);
         return writer.toString();
     }
 }

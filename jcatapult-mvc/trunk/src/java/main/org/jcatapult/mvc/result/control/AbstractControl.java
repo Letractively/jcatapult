@@ -190,6 +190,26 @@ public abstract class AbstractControl implements Control {
     }
 
     /**
+     * Determines the bundle name using the attribute first, then the request attribute named <code>
+     * jcatapultControlBundle</code> and then finally the action class name.
+     *
+     * @param   attributes The attributes.
+     * @return  The bundle name or null.
+     */
+    protected String determineBundleName(Map<String, Object> attributes) {
+        String bundleName = null;
+        if (attributes.get("bundle") != null) {
+            bundleName = (String) attributes.remove("bundle");
+        } else if (request.getAttribute("jcatapultControlBundle") != null) {
+            bundleName = (String) request.getAttribute("jcatapultControlBundle");
+        } else if (action != null) {
+            bundleName = action.getClass().getName();
+        }
+
+        return bundleName;
+    }
+
+    /**
      * @return  The name of the FreeMarker template that this control renders when it starts.
      */
     protected abstract String startTemplateName();

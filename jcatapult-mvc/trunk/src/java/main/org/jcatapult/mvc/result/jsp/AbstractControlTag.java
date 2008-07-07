@@ -40,6 +40,24 @@ public abstract class AbstractControlTag<T extends Control> extends TagSupport i
     private T control;
 
     /**
+     * Retrieves the tags bundle attribute.
+     *
+     * @return	Returns the tags bundle attribute.
+     */
+    public String getBundle() {
+        return (String) attributes.get("bundle");
+    }
+
+    /**
+     * Populates the tags bundle attribute.
+     *
+     * @param	bundle The value of the tags bundle attribute.
+     */
+    public void setBundle(String bundle) {
+        attributes.put("bundle", bundle);
+    }
+
+    /**
      * @return  The Control class that the tag renders. Sub-classes must implement this method in
      *          order to render a Control.
      */
@@ -62,7 +80,6 @@ public abstract class AbstractControlTag<T extends Control> extends TagSupport i
 
     @Override
     public int doStartTag() {
-        attributes.clear();
         control = GuiceContainer.getInjector().getInstance(controlClass());
         control.renderStart(pageContext.getOut(), attributes, parameterAttributes);
         return Tag.EVAL_PAGE;
@@ -71,6 +88,7 @@ public abstract class AbstractControlTag<T extends Control> extends TagSupport i
     @Override
     public int doEndTag() {
         control.renderEnd(pageContext.getOut());
+        attributes.clear();
         return Tag.EVAL_PAGE;
     }
 }
