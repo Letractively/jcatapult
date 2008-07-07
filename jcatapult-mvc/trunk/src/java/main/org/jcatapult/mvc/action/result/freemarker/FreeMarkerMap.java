@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.GenericServlet;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -37,7 +37,6 @@ import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.ExpressionException;
 
 import com.google.inject.Inject;
-import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
@@ -160,7 +159,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
         }
 
         try {
-            return BeansWrapper.getDefaultInstance().wrap(value);
+            return ObjectWrapper.DEFAULT_WRAPPER.wrap(value);
         } catch (TemplateModelException e) {
             throw new RuntimeException(e);
         }

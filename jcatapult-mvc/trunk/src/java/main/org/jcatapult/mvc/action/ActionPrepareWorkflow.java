@@ -13,20 +13,20 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.servlet;
+package org.jcatapult.mvc.action;
+
+import org.jcatapult.servlet.Workflow;
 
 import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This interface defines the method that is used to prepare forms during
- * result rendering. The Form tag invokes this workflow in order to handle
- * the form preparation step using FormPreparers rather than actions.
+ * This class defines a workflow that is used to prepare an action to have
+ * parameters set onto it and also to be invoked.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultFormPreparerWorkflow.class)
-public interface FormPreparerWorkflow {
-    void prepare(String uri);
+@ImplementedBy(DefaultActionPrepareWorkflow.class)
+public interface ActionPrepareWorkflow extends Workflow {
 }
