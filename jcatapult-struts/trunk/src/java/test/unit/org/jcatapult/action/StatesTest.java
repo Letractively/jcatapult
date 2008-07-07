@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.jcatapult.action.jcatapult.States;
 import org.junit.Assert;
 import org.junit.Test;
-import org.jcatapult.action.jcatapult.States;
 
 /**
  * <p>
