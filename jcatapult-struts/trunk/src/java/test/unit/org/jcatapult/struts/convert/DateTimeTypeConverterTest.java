@@ -17,6 +17,7 @@ package org.jcatapult.struts.convert;
 
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.easymock.EasyMock;
 import org.jcatapult.servlet.ServletObjectsHolder;
@@ -41,7 +42,8 @@ public class DateTimeTypeConverterTest extends JCatapultBaseTest {
         EasyMock.expect(request.getAttribute("foo.bar#attributes")).andReturn(mapNV("dateTimeFormat", "MM/dd/yyyy hh:mm aa"));
         request.setAttribute(EasyMock.eq("foo.bar#attributes"), EasyMock.eq(mapNV("dateTimeFormat", "MM/dd/yyyy hh:mm aa")));
         EasyMock.replay(request);
-        ServletObjectsHolder.setServletRequest(request);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(request));
 
         String[] values = {"10/20/2006 10:30 PM"};
         DateTimeTypeConverter converter = new DateTimeTypeConverter();
