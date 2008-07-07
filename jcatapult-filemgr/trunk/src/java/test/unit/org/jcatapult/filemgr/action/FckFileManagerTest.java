@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.easymock.EasyMock;
 import org.jcatapult.config.Configuration;
@@ -76,7 +77,8 @@ public class FckFileManagerTest extends BaseTest {
         HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(httpRequest.getContextPath()).andReturn("/foo/");
         EasyMock.replay(httpRequest);
-        ServletObjectsHolder.setServletRequest(httpRequest);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(httpRequest));
 
         FckFileManager fm = new FckFileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext));
