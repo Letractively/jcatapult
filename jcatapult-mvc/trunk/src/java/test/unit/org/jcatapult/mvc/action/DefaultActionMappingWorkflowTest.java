@@ -90,6 +90,7 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         Capture capture = new Capture();
         ActionInvocationStore store = EasyMock.createStrictMock(ActionInvocationStore.class);
         store.setCurrent((ActionInvocation) capture.capture());
+        store.popCurrent();
         EasyMock.replay(store);
 
         ObjectFactory factory = EasyMock.createStrictMock(ObjectFactory.class);

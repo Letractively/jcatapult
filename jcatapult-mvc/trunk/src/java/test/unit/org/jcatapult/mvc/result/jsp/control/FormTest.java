@@ -19,21 +19,21 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.easymock.EasyMock;
+import org.example.action.user.Edit;
 import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.freemarker.DefaultFreeMarkerService;
 import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.freemarker.OverridingTemplateLoader;
-import org.jcatapult.mvc.servlet.MVCWorkflow;
-import org.jcatapult.mvc.result.form.control.Form;
+import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.result.control.AbstractControlTest;
-import org.jcatapult.servlet.ServletObjectsHolder;
-import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.mvc.result.form.DefaultFormPreparer;
+import org.jcatapult.mvc.result.form.FormPreparer;
+import org.jcatapult.mvc.result.form.control.Form;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -49,7 +49,13 @@ import static net.java.util.CollectionTools.*;
 public class FormTest extends AbstractControlTest {
     @Test
     public void testNoPrepare() {
-        Form form = new Form(null);
+        ActionInvocation ai = new DefaultActionInvocation(null, "/test", null, null);
+        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(ais.getCurrent()).andReturn(ai);
+        EasyMock.replay(ais);
+
+        FormPreparer formPreparer = new DefaultFormPreparer(ais);
+        Form form = new Form(formPreparer);
         FreeMarkerService fms = new DefaultFreeMarkerService(makeConfiguration(), makeEnvironmenResolver(),
             new OverridingTemplateLoader(makeContainerResolver()));
         form.setServices(Locale.US, makeRequest(), makeActionInvocationStore(null, "/test"),
@@ -62,41 +68,34 @@ public class FormTest extends AbstractControlTest {
             "<form action=\"/test\" method=\"POST\">\n" +
             "</form>\n" +
             "</div>\n", writer.toString());
+
+        EasyMock.verify(ais);
     }
 
     @Test
     public void testPrepare() throws IOException, ServletException {
-        final AtomicBoolean called = new AtomicBoolean(false);
-        MVCWorkflow workflow = new MVCWorkflow() {
-            public void perform(WorkflowChain workflowChain) {
-                called.set(true);
-                assertEquals("/prepare", ServletObjectsHolder.getServletRequest().getRequestURI());
-            }
-        };
+        Edit action = new Edit();
+        ActionInvocation ai = new DefaultActionInvocation(action, "/test", null, null);
+        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(ais.getCurrent()).andReturn(ai);
+        EasyMock.replay(ais);
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getRequestURI()).andReturn("/test");
-        EasyMock.replay(request);
-
-        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
-        ServletObjectsHolder.setServletRequest(wrapper);
-
-        Form form = new Form(workflow);
+        FormPreparer formPreparer = new DefaultFormPreparer(ais);
+        Form form = new Form(formPreparer);
         FreeMarkerService fms = new DefaultFreeMarkerService(makeConfiguration(), makeEnvironmenResolver(),
             new OverridingTemplateLoader(makeContainerResolver()));
-        form.setServices(Locale.US, wrapper, makeActionInvocationStore(null, "/test"), fms);
+        form.setServices(Locale.US, null, makeActionInvocationStore(null, "/test"), fms);
         StringWriter writer = new StringWriter();
-        form.renderStart(writer, mapNV("action", "/test", "method", "POST", "prepareAction", "/prepare"), new HashMap<String, String>());
+        form.renderStart(writer, mapNV("action", "/test", "method", "POST"), new HashMap<String, String>());
         form.renderEnd(writer);
         assertEquals(
             "<div class=\"form\">\n" +
             "<form action=\"/test\" method=\"POST\">\n" +
             "</form>\n" +
             "</div>\n", writer.toString());
-        assertTrue(called.get());
-        assertEquals("/test", ServletObjectsHolder.getServletRequest().getRequestURI());
+        assertTrue(action.prepared);
 
-        EasyMock.verify(request);
+        EasyMock.verify(ais);
     }
 
     protected ContainerResolver makeContainerResolver() {

@@ -16,14 +16,9 @@
 package org.jcatapult.mvc.result.form.control;
 
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.jcatapult.mvc.action.DefaultActionMappingWorkflow;
 import org.jcatapult.mvc.result.control.AbstractControl;
-import org.jcatapult.mvc.servlet.MVCWorkflow;
-import org.jcatapult.mvc.servlet.URIHttpServletRequest;
-import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.mvc.result.form.FormPreparer;
 
 import com.google.inject.Inject;
 
@@ -36,11 +31,11 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class Form extends AbstractControl {
-    private final MVCWorkflow workflow;
+    private final FormPreparer formPreparer;
 
     @Inject
-    public Form(MVCWorkflow workflow) {
-        this.workflow = workflow;
+    public Form(FormPreparer formPreparer) {
+        this.formPreparer = formPreparer;
     }
 
     /**
@@ -52,29 +47,7 @@ public class Form extends AbstractControl {
      */
     @Override
     protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        final String uri = (String) attributes.remove("preparerURI");
-        if (uri != null) {
-            // Mock out the request for the new URI
-            HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
-            HttpServletRequest old = (HttpServletRequest) wrapper.getRequest();
-            String originalURI = old.getRequestURI();
-            URIHttpServletRequest proxy = new URIHttpServletRequest(old, uri);
-            proxy.setAttribute(DefaultActionMappingWorkflow.JCATAPULT_EXECUTE_RESULT, "false");
-            wrapper.setRequest(proxy);
-
-            // Invoke the workflow
-            try {
-                workflow.perform(new WorkflowChain() {
-                    public void continueWorkflow() {
-                    }
-                });
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            // Change back to the old URI
-            proxy.setRequestURI(originalURI);
-        }
+        formPreparer.prepare();
     }
 
     /**

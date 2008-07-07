@@ -15,7 +15,13 @@
  */
 package org.jcatapult.mvc.result.form;
 
-import javax.servlet.http.HttpServletRequestWrapper;
+import java.lang.reflect.Method;
+
+import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.result.form.annotation.FormPrepareMethod;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -25,25 +31,38 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * @author  Brian Pontarelli
  */
 public class DefaultFormPreparer implements FormPreparer {
-    private final PreparerMapper preparerMapper;
-    private final ParameterService parameterService;
-    private final ScopeService scopeService;
-    private final PreparerInvoker preparerInvoker;
-    private final HttpServletRequestWrapper wrapper;
-    
-    public void prepare(String uri) {
-        // Find the preparer
+    private final ActionInvocationStore actionInvocationStore;
 
-        // If it is null, throw exception
+    @Inject
+    public DefaultFormPreparer(ActionInvocationStore actionInvocationStore) {
+        this.actionInvocationStore = actionInvocationStore;
+    }
 
-        // Invoke the parameter setup on the preparer
+    /**
+     * {@inheritDoc}
+     */
+    public void prepare() {
+        // Get the action object
+        ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
+        Object action = actionInvocation.action();
+        if (action == null) {
+            return;
+        }
 
-        // Invoke the scope setup on the preparer
+        Class<?> actionClass = action.getClass();
+        while (actionClass != Object.class) {
+            Method[] methods = actionClass.getMethods();
+            for (Method method : methods) {
+                if (method.getAnnotation(FormPrepareMethod.class) != null) {
+                    try {
+                        method.invoke(action);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Unable to call FormPrepareMethod method [" + method + "]", e);
+                    }
+                }
+            }
 
-        // Invoke the preparer
-
-        // Post process scopes on the preparer
-
-        // Stuff the preparer into a request wrapper that can get values from it that aren't scoped
+            actionClass = actionClass.getSuperclass();
+        }
     }
 }
