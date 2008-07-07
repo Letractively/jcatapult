@@ -59,7 +59,12 @@ public class DefaultAuthorizationExceptionHandlerTest {
             }
         };
 
-        DefaultAuthorizationExceptionHandler dleh = new DefaultAuthorizationExceptionHandler(request, new DefaultSecurityConfiguration(c));
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(wrapper);
+
+        DefaultAuthorizationExceptionHandler dleh = new DefaultAuthorizationExceptionHandler(
+            wrapper, new DefaultSecurityConfiguration(c));
         dleh.handle(exception, wc);
         assertTrue(called.get());
         EasyMock.verify(c, request);

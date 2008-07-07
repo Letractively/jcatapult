@@ -18,11 +18,11 @@ package org.jcatapult.security.servlet.auth;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.security.config.SecurityConfiguration;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
-import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -52,9 +52,11 @@ public class DefaultAuthorizationExceptionHandler implements AuthorizationExcept
     }
 
     public void handle(AuthorizationException exception, WorkflowChain chain) throws ServletException, IOException {
-        FacadeHttpServletRequest wrapper = new FacadeHttpServletRequest(request, notAuthorizedURL, null);
+        HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
+        HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
+        FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, notAuthorizedURL, null);
+        wrapper.setRequest(facade);
         request.setAttribute(EXCEPTION_KEY, exception);
-        ServletObjectsHolder.setServletRequest(wrapper);
         chain.continueWorkflow();
     }
 }

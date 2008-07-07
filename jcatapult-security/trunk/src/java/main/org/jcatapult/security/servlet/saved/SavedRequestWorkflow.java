@@ -18,6 +18,7 @@ package org.jcatapult.security.servlet.saved;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.auth.NotLoggedInException;
@@ -27,7 +28,6 @@ import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 import static org.jcatapult.security.servlet.ServletTools.*;
 import org.jcatapult.security.servlet.auth.NotLoggedInHandler;
 import org.jcatapult.security.servlet.login.PostLoginHandler;
-import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 
@@ -94,8 +94,10 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
      */
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         // See if there is a saved request
-        HttpServletRequest httpRequest = savedRequestService.mockSavedRequest(request);
-        ServletObjectsHolder.setServletRequest(httpRequest);
+        HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
+        HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
+        HttpServletRequest savedRequest = savedRequestService.mockSavedRequest(previous);
+        wrapper.setRequest(savedRequest);
         chain.continueWorkflow();
     }
 
@@ -121,8 +123,10 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
         if (uri != null) {
             response.sendRedirect(getContextURI(request, uri));
         } else {
-            FacadeHttpServletRequest facade = new FacadeHttpServletRequest(request, successfulLoginURI, null);
-            ServletObjectsHolder.setServletRequest(facade);
+            HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
+            HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
+            FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, successfulLoginURI, null);
+            wrapper.setRequest(facade);
             workflowChain.continueWorkflow();
         }
     }
@@ -141,8 +145,10 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
     @SuppressWarnings("unchecked")
     public void handle(NotLoggedInException exception, WorkflowChain workflowChain) throws ServletException, IOException {
         savedRequestService.saveRequest(request);
-        HttpServletRequest httpRequest = new FacadeHttpServletRequest(request, notLoggedInURI, null);
-        ServletObjectsHolder.setServletRequest(httpRequest);
+        HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
+        HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
+        FacadeHttpServletRequest savedRequest = new FacadeHttpServletRequest(previous, notLoggedInURI, null);
+        wrapper.setRequest(savedRequest);
         workflowChain.continueWorkflow();
     }
 }
