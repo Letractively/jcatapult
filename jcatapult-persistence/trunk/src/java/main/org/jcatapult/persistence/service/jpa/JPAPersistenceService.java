@@ -17,6 +17,7 @@ package org.jcatapult.persistence.service.jpa;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -306,6 +307,51 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
+    public <T> List<T> queryAllWithNamedParameters(Class<T> type, String query, Map<String, Object> params) {
+        verify(type);
+        Query q = entityManager.createQuery(query);
+        addNamedParams(q, params);
+        return q.getResultList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T> List<T> queryWithNamedParameters(Class<T> type, String query, int start, int number, Map<String, Object> params) {
+        verify(type);
+        Query q = entityManager.createQuery(query);
+        addNamedParams(q, params);
+        q.setFirstResult(start);
+        q.setMaxResults(number);
+        return q.getResultList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T> T queryFirstWithNamedParameters(Class<T> type, String query, Map<String, Object> params) {
+        verify(type);
+        Query q = entityManager.createQuery(query);
+        q.setFirstResult(0);
+        q.setMaxResults(1);
+        addNamedParams(q, params);
+        List<T> results = q.getResultList();
+        if (results.size() > 0) {
+            return results.get(0);
+        }
+
+        return null;
+    }
+
+    public long queryCountWithNamedParameters(String query, Map<String, Object> params) {
+        Query q = entityManager.createQuery(query);
+        addNamedParams(q, params);
+        return (Long) q.getSingleResult();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public <T> List<T> namedQueryAll(Class<T> type, String query, Object... params) {
         verify(type);
         Query q = entityManager.createNamedQuery(query);
@@ -502,6 +548,18 @@ public class JPAPersistenceService implements PersistenceService {
             for (Object param : params) {
                 q.setParameter(count++, param);
             }
+        }
+    }
+
+    /**
+     * Sets the given parameters to the query. These are named parameters not positional parameters.
+     *
+     * @param   q The Query to set the parameters into.
+     * @param   params The parameters to set as named parameters into the query.
+     */
+    protected void addNamedParams(Query q, Map<String, Object> params) {
+        for (String name : params.keySet()) {
+            q.setParameter(name, params.get(name));
         }
     }
 }

@@ -16,6 +16,7 @@
 package org.jcatapult.persistence.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.jcatapult.persistence.domain.Identifiable;
 import org.jcatapult.persistence.domain.SoftDeletable;
@@ -188,12 +189,60 @@ public interface PersistenceService {
      * query rather than a object query.
      *
      * @param   query The EJB3 query language query string that returns a count.
-     * @param   params A list of parameters that are parameterized within the query string (e.g.
+     * @param   params A Map of named list of parameters that are parameterized within the query string (e.g.
      *          select user from User user where firstName = ?). These are 1 based within the query
      *          String.
      * @return  The number of results that executing the query would return.
      */
     long queryCount(String query, Object... params);
+
+    /**
+     * Executes the given query and returns all of the results from the query.
+     *
+     * @param   type The type of Objects to fetch.
+     * @param   query The EJB3 query language query string.
+     * @param   params A Map of named parameters that are parameterized within the query string (e.g.
+     *          select user from User user where firstName = :firstName).
+     * @return  A List of the Objects found in the database.
+     */
+    <T> List<T> queryAllWithNamedParameters(Class<T> type, String query, Map<String, Object> params);
+
+    /**
+     * Executes the given query and returns a subset of the results from the query. This method is
+     * useful for paginating over a search results from a query.
+     *
+     * @param   type The type of Objects to fetch.
+     * @param   query The EJB3 query language query string.
+     * @param   start The location in the total set of possible Objects to start from. This is zero
+     *          based.
+     * @param   number The number of results to return in this page.
+     * @param   params A Map of named parameters that are parameterized within the query string (e.g.
+     *          select user from User user where firstName = :firstName).
+     * @return  A List of the Objects found in the database.
+     */
+    <T> List<T> queryWithNamedParameters(Class<T> type, String query, int start, int number, Map<String, Object> params);
+
+    /**
+     * Executes the given query and returns the first result from the query.
+     *
+     * @param   type The type of Objects to fetch.
+     * @param   query The EJB3 query language query string.
+     * @param   params A Map of named parameters that are parameterized within the query string (e.g.
+     *          select user from User user where firstName = :firstName).
+     * @return  The first result if there are 1 or more results, otherwise null.
+     */
+    <T> T queryFirstWithNamedParameters(Class<T> type, String query, Map<String, Object> params);
+
+    /**
+     * Executes the given query and returns the count. This assumees that the query is a count
+     * query rather than a object query.
+     *
+     * @param   query The EJB3 query language query string that returns a count.
+     * @param   params A Map of named parameters that are parameterized within the query string (e.g.
+     *          select user from User user where firstName = :firstName).
+     * @return  The number of results that executing the query would return.
+     */
+    long queryCountWithNamedParameters(String query, Map<String, Object> params);
 
     /**
      * Executes the given named query and returns all the results from the query.
