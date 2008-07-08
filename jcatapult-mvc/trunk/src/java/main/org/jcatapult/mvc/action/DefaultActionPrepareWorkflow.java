@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import javax.servlet.ServletException;
 
-import org.jcatapult.mvc.action.annotation.PrepareMethod;
+import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -41,29 +41,25 @@ public class DefaultActionPrepareWorkflow implements ActionPrepareWorkflow {
     }
 
     /**
-     * Calls any method annotated with the {@link PrepareMethod} annotation.
+     * Calls any method annotated with the {@link org.jcatapult.mvc.action.annotation.ActionPrepareMethod} annotation.
      *
      * @param   workflowChain The workflow chain that is called after preparation.
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
     public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
-        Object action = actionInvocationStore.getCurrent();
+        Object action = actionInvocationStore.getCurrent().action();
         if (action != null) {
             Class<?> actionClass = action.getClass();
-            while (actionClass != Object.class) {
-                Method[] methods = actionClass.getMethods();
-                for (Method method : methods) {
-                    if (method.getAnnotation(PrepareMethod.class) != null) {
-                        try {
-                            method.invoke(action);
-                        } catch (Exception e) {
-                            throw new RuntimeException("Unable to call PrepareMethod method [" + method + "]", e);
-                        }
+            Method[] methods = actionClass.getMethods();
+            for (Method method : methods) {
+                if (method.getAnnotation(ActionPrepareMethod.class) != null) {
+                    try {
+                        method.invoke(action);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Unable to call PrepareMethod method [" + method + "]", e);
                     }
                 }
-
-                actionClass = actionClass.getSuperclass();
             }
         }
 

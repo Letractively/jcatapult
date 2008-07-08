@@ -93,7 +93,7 @@ public class FormTest extends AbstractControlTest {
             "<form action=\"/test\" method=\"POST\">\n" +
             "</form>\n" +
             "</div>\n", writer.toString());
-        assertTrue(action.prepared);
+        assertTrue(action.formPrepared);
 
         EasyMock.verify(ais);
     }

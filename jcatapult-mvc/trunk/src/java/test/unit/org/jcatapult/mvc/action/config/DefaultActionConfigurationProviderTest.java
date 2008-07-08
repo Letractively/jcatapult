@@ -22,10 +22,10 @@ import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 import org.example.action.Simple;
 import org.example.action.user.Index;
+import org.jcatapult.mvc.util.DefaultURIBuilder;
+import org.jcatapult.test.Capture;
 import static org.junit.Assert.*;
 import org.junit.Test;
-import org.jcatapult.mvc.Capture;
-import org.jcatapult.mvc.util.DefaultURIBuilder;
 
 /**
  * <p>

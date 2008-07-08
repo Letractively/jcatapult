@@ -29,6 +29,7 @@ public class Action {
     private int[] roleIds;
     private List<Integer> selectionIds;
     private Map<String, List<Integer>> choices;
+    private Map<String, Integer[]> associations;
 
     private User user;
 
@@ -62,5 +63,13 @@ public class Action {
 
     public void setChoices(Map<String, List<Integer>> choices) {
         this.choices = choices;
+    }
+
+    public Map<String, Integer[]> getAssociations() {
+        return associations;
+    }
+
+    public void setAssociations(Map<String, Integer[]> associations) {
+        this.associations = associations;
     }
 }

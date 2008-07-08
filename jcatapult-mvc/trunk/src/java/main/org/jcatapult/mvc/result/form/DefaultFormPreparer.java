@@ -50,19 +50,15 @@ public class DefaultFormPreparer implements FormPreparer {
         }
 
         Class<?> actionClass = action.getClass();
-        while (actionClass != Object.class) {
-            Method[] methods = actionClass.getMethods();
-            for (Method method : methods) {
-                if (method.getAnnotation(FormPrepareMethod.class) != null) {
-                    try {
-                        method.invoke(action);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Unable to call FormPrepareMethod method [" + method + "]", e);
-                    }
+        Method[] methods = actionClass.getMethods();
+        for (Method method : methods) {
+            if (method.getAnnotation(FormPrepareMethod.class) != null) {
+                try {
+                    method.invoke(action);
+                } catch (Exception e) {
+                    throw new RuntimeException("Unable to call FormPrepareMethod method [" + method + "]", e);
                 }
             }
-
-            actionClass = actionClass.getSuperclass();
         }
     }
 }

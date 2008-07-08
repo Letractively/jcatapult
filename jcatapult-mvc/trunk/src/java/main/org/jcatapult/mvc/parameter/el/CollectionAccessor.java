@@ -37,7 +37,7 @@ public class CollectionAccessor extends Accessor {
             MemberAccessor memberAccessor) {
         super(converterProvider, accessor);
         this.index = index;
-        super.type = ParameterTools.componentType(super.type, memberAccessor.toString());
+        super.type = TypeTools.componentType(super.type, memberAccessor.toString());
         this.memberAccessor = memberAccessor;
     }
 

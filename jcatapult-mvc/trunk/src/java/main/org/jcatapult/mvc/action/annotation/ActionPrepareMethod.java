@@ -30,5 +30,5 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface PrepareMethod {
+public @interface ActionPrepareMethod {
 }

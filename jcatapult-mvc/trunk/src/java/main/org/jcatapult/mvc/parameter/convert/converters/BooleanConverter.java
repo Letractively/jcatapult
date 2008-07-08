@@ -57,7 +57,7 @@ public class BooleanConverter extends AbstractPrimitiveConverter {
     /**
      * Returns value.toString().
      */
-    protected  String primitiveToString(Object value, Class convertFrom, Map<String, String> attributes)
+    protected String primitiveToString(Object value, Class convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         return value.toString();
     }

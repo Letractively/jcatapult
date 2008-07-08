@@ -17,6 +17,7 @@ package org.jcatapult.mvc.parameter.convert.converters;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import static java.util.Arrays.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -26,16 +27,16 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import static java.util.Arrays.asList;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.Converter;
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.el.TypeTools;
 
 import com.google.inject.Inject;
-import static net.java.util.CollectionTools.array;
-import static net.java.lang.ObjectTools.join;
+import static net.java.lang.ObjectTools.*;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -89,7 +90,7 @@ public class CollectionConverter extends AbstractConverter {
      */
     protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> dynamicAttributes)
     throws ConversionException, ConverterStateException {
-        Class<?> rawType = rawType(convertTo);
+        Class<?> rawType = TypeTools.rawType(convertTo);
         Class<?> parameter = parameterType(convertTo);
         Collection collection = makeCollection(rawType);
         if (parameter == null) {

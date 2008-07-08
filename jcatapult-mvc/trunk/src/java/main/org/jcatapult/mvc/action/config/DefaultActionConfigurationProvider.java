@@ -66,6 +66,7 @@ public class DefaultActionConfigurationProvider implements ActionConfigurationPr
             String uri = uriBuilder.build(actionClass);
             ActionConfiguration actionConfiguration = new DefaultActionConfiguration(actionClass, uri);
             configuration.put(uri, actionConfiguration);
+
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("Added action configuration for [" + actionClass + "] and the uri [" + uri + "]");
             }

@@ -15,11 +15,12 @@
  */
 package org.jcatapult.mvc.parameter.el;
 
-import java.lang.reflect.Type;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
-import java.util.Map;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * <p>
@@ -28,7 +29,7 @@ import java.util.Collection;
  *
  * @author Brian Pontarelli
  */
-public class ParameterTools {
+public class TypeTools {
     /**
      * Determines the component type. Lists is the first type, Map is the second type, etc.
      *
@@ -86,14 +87,14 @@ public class ParameterTools {
      * @return  The raw type.
      */
     public static Class<?> rawType(Type type) {
-        Class<?> rawType;
         if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) type;
-            rawType = (Class<?>) parameterizedType.getRawType();
-        } else {
-            rawType = (Class<?>) type;
+            type = ((ParameterizedType) type).getRawType();
+        } else if (type instanceof GenericArrayType) {
+            Class<?> componentType = (Class<?>) ((GenericArrayType) type).getGenericComponentType();
+            type = Array.newInstance(componentType, 0).getClass();
         }
 
-        return rawType;
+        return (Class<?>) type;
     }
+
 }

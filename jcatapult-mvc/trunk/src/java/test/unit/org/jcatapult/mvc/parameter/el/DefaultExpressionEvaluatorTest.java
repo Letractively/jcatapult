@@ -161,9 +161,11 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         evaluator.setValue("user.age", action, array("32"), null);
         evaluator.setValue("user.name", action, array("Brian"), null);
         evaluator.setValue("user.active", action, array("true"), null);
+        evaluator.setValue("user.male", action, null, null);
         assertEquals((Integer) 32, action.getUser().getAge());
         assertEquals("Brian", action.getUser().getName());
         assertTrue(action.getUser().isActive());
+        assertFalse(action.getUser().isMale());
 
         // Test collection property sets
         action.getUser().setAddresses(null);
@@ -232,6 +234,13 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         assertEquals(1, (int) action.getChoices().get("ids").get(0));
         assertEquals(2, (int) action.getChoices().get("ids").get(1));
         assertEquals(3, (int) action.getChoices().get("ids").get(2));
+
+        // Test arrays inside maps
+        evaluator.setValue("associations['ids']", action, array("1", "2", "3"), null);
+        assertEquals(3, action.getAssociations().get("ids").length);
+        assertEquals(1, (int) action.getAssociations().get("ids")[0]);
+        assertEquals(2, (int) action.getAssociations().get("ids")[1]);
+        assertEquals(3, (int) action.getAssociations().get("ids")[2]);
     }
 
     /**
