@@ -27,6 +27,8 @@ import org.jcatapult.persistence.PersistenceBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import static net.java.util.CollectionTools.mapNV;
+
 /**
  * <p>
  * This tests the entity bean service.
@@ -278,6 +280,64 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
         List<User> users = service.query(User.class, "select user from User user order by user.name", 3, 21);
 //        System.out.println("List is \n" + users);
+        assertEquals(21, users.size());
+        for (int i = 0; i < 21; i++) {
+            assertEquals("Fred" + alphabet[i + 3], users.get(i).getName());
+        }
+    }
+
+    @Test
+    public void testQueryAllWithNamedParameters() throws Exception {
+        clearTable("User");
+        executeSQL("insert into User (insert_date, update_date, name) " +
+            "values (now(), now(), 'Fred')");
+        executeSQL("insert into User (insert_date, update_date, name) " +
+            "values (now(), now(), 'George')");
+        executeSQL("insert into User (insert_date, update_date, name) " +
+            "values (now(), now(), 'Alan')");
+
+        // This tests that querying with an orderBy clause works
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
+        List<User> users = service.queryAllWithNamedParameters(User.class, "select user from User user where name = :name order by user.name",
+            mapNV("name", "Alan"));
+        assertEquals(1, users.size());
+        assertEquals("Alan", users.get(0).getName());
+    }
+
+    @Test
+    public void testQueryCountWithNamedParameters() throws Exception {
+        clearTable("User");
+        executeSQL("insert into User (insert_date, update_date, name) " +
+            "values (now(), now(), 'Fred')");
+        executeSQL("insert into User (insert_date, update_date, name) " +
+            "values (now(), now(), 'George')");
+        executeSQL("insert into User (insert_date, update_date, name) " +
+            "values (now(), now(), 'Alan')");
+
+        // This tests that querying with an orderBy clause works
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
+        long count = service.queryCountWithNamedParameters("select count(user) from User user where user.name = :name",
+            mapNV("name", "Alan"));
+        assertEquals(1, count);
+
+        count = service.queryCountWithNamedParameters("select count(user) from User user", mapNV());
+        assertEquals(3, count);
+    }
+
+    @Test
+    public void testQueryWithNamedParameters() throws Exception {
+        clearTable("User");
+        char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+            'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+        for (int i = 25; i >= 0; i--) {
+            executeSQL("insert into User (insert_date, update_date, name) " +
+                "values (now(), now(), 'Fred" + alphabet[i] + "')");
+        }
+
+        // This tests that querying with an orderBy clause works
+        JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
+        List<User> users = service.queryWithNamedParameters(User.class, "select user from User user where name like :name order by user.name", 3, 21,
+            mapNV("name", "%Fred%"));
         assertEquals(21, users.size());
         for (int i = 0; i < 21; i++) {
             assertEquals("Fred" + alphabet[i + 3], users.get(i).getName());
