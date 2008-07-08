@@ -123,6 +123,12 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
         }
 
         ActionConfiguration actionConfiguration = actionConfigurationProvider.lookup(uri);
+        if (actionConfiguration == null) {
+            // Try the index cases. If the URI is /foo, try /foo/index
+            String indexedURI = (uri.endsWith("/")) ? uri + "index" : uri + "/index";
+            actionConfiguration = actionConfigurationProvider.lookup(indexedURI);
+        }
+
         Object action = null;
         if (actionConfiguration != null) {
             action = objectFactory.create(actionConfiguration.actionClass());

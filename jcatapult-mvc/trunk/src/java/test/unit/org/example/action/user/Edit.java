@@ -17,6 +17,7 @@ package org.example.action.user;
 
 import org.example.domain.User;
 import org.jcatapult.mvc.action.annotation.Action;
+import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.result.form.annotation.FormPrepareMethod;
 import org.jcatapult.mvc.validation.annotation.Valid;
 
@@ -32,14 +33,20 @@ public class Edit {
     @Valid
     public User user;
 
-    public boolean prepared = false;
+    public boolean actionPrepared = false;
+    public boolean formPrepared = false;
 
     public String execute() {
         return "success";
     }
 
-    @FormPrepareMethod
+    @ActionPrepareMethod
     public void prepare() {
-        prepared = true;
+        actionPrepared = true;
+    }
+
+    @FormPrepareMethod
+    public void formPrepare() {
+        formPrepared = true;
     }
 }

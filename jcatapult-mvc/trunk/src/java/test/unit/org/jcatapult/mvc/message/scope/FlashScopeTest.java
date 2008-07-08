@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
-import org.jcatapult.mvc.Capture;
+import org.jcatapult.test.Capture;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

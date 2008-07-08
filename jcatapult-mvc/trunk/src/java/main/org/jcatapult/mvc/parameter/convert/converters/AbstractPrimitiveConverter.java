@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.el.TypeTools;
 
 /**
  * <p>
@@ -33,7 +34,7 @@ import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 public abstract class AbstractPrimitiveConverter extends AbstractConverter {
     protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
-        Class<?> rawType = rawType(convertTo);
+        Class<?> rawType = TypeTools.rawType(convertTo);
         if (value == null && rawType.isPrimitive()) {
             return defaultPrimitive(rawType, attributes);
         } else if (value == null) {
@@ -50,7 +51,7 @@ public abstract class AbstractPrimitiveConverter extends AbstractConverter {
 
     protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
-        Class<?> rawType = rawType(convertFrom);
+        Class<?> rawType = TypeTools.rawType(convertFrom);
         return primitiveToString(value, rawType, attributes);
     }
 

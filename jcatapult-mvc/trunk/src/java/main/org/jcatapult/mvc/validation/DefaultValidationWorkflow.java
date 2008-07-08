@@ -35,7 +35,7 @@ import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.parameter.el.ParameterTools;
+import org.jcatapult.mvc.parameter.el.TypeTools;
 import org.jcatapult.mvc.validation.annotation.Valid;
 import org.jcatapult.mvc.validation.annotation.ValidCollection;
 import org.jcatapult.mvc.validation.annotation.ValidMap;
@@ -191,7 +191,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
                     handleAnnotations(mapObj.getClass(), mapObj, keyedPath);
                 } else {
                     Type fieldType = field.getGenericType();
-                    Class<?> componentType = ParameterTools.componentFinalType(fieldType, keyedPath);
+                    Class<?> componentType = TypeTools.componentFinalType(fieldType, keyedPath);
                     handleAnnotations(componentType, null, keyedPath);
                 }
             }
@@ -199,7 +199,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
             ValidMap validMap = (ValidMap) annotation;
             String[] keys = validMap.keys();
             Type fieldType = field.getGenericType();
-            Class<?> componentType = ParameterTools.componentFinalType(fieldType, path + "." + field.getName());
+            Class<?> componentType = TypeTools.componentFinalType(fieldType, path + "." + field.getName());
             for (String key : keys) {
                 String keyedPath = newPath + "['" + key + "']";
                 handleAnnotations(componentType, null, keyedPath);
@@ -234,7 +234,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
                     handleAnnotations(o.getClass(), o, indexedPath);
                 } else {
                     Type fieldType = field.getGenericType();
-                    Class<?> componentType = ParameterTools.componentFinalType(fieldType, indexedPath);
+                    Class<?> componentType = TypeTools.componentFinalType(fieldType, indexedPath);
                     handleAnnotations(componentType, null, indexedPath);
                 }
             }
@@ -242,7 +242,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
             ValidCollection validCollection = (ValidCollection) annotation;
             int[] indexes = validCollection.indexes();
             Type fieldType = field.getGenericType();
-            Class<?> componentType = ParameterTools.componentFinalType(fieldType, newPath);
+            Class<?> componentType = TypeTools.componentFinalType(fieldType, newPath);
             for (int index : indexes) {
                 String indexedPath = newPath + "[" + index + "]";
                 handleAnnotations(componentType, null, indexedPath);

@@ -15,20 +15,20 @@
  */
 package org.jcatapult.mvc.message.scope;
 
+import static java.util.Arrays.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static java.util.Arrays.asList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 import org.example.action.user.Edit;
-import org.jcatapult.mvc.Capture;
-import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.test.Capture;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

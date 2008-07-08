@@ -16,7 +16,6 @@
 package org.jcatapult.mvc.parameter.el;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -124,7 +123,7 @@ public abstract class Accessor {
      * @return  The new value.
      */
     protected Object createValue(Object key, Context context) {
-        Class<?> typeClass = typeToClass(type);
+        Class<?> typeClass = TypeTools.rawType(type);
         Object value;
         if (Map.class == typeClass) {
             value = new HashMap();
@@ -153,21 +152,6 @@ public abstract class Accessor {
     }
 
     /**
-     * Converts the type to a Class. If the type is parameterized, gets the raw type. Otherwise,
-     * just casts.
-     *
-     * @param   type The type.
-     * @return  The class.
-     */
-    protected Class<?> typeToClass(Type type) {
-        if (type instanceof ParameterizedType) {
-            type = ((ParameterizedType) type).getRawType();
-        }
-
-        return (Class<?>) type;
-    }
-
-    /**
      * Converts the given value parameter (parameter) to a type that is accepted by the set method of
      * this property. This method attempts to convert the value regardless of the value being null.
      * However, this method short circuits and returns the value unchanged if value is runtime
@@ -182,8 +166,8 @@ public abstract class Accessor {
         Object newValue = values;
 
         // The converter does this, but pre-emptively checking these conditions will speed up conversion times
-        Class<?> typeClass = typeToClass(type);
-        if (values != null && !typeClass.isInstance(values)) {
+        Class<?> typeClass = TypeTools.rawType(type);
+        if (!typeClass.isInstance(values)) {
             Converter converter = converterProvider.lookup(typeClass);
             if (converter == null) {
                 throw new ConverterStateException("No type converter found for the type [" + typeClass.getName() + "]");

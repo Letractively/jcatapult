@@ -23,6 +23,7 @@ import java.util.Map;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.Converter;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.el.TypeTools;
 
 import net.java.lang.StringTools;
 
@@ -66,14 +67,14 @@ public abstract class AbstractConverter implements Converter {
     public Object convertFromStrings(String[] values, Type convertTo, Map<String, String> dynamicAttributes)
     throws ConversionException, ConverterStateException {
         // Handle null
-        if (values == null) {
-            return null;
-        }
+//        if (values == null) {
+//            return null;
+//        }
 
         // Handle a zero or one String
-        Class<?> rawType = rawType(convertTo);
-        if (values.length <= 1) {
-            String value = (values.length == 1) ? values[0] : null;
+        Class<?> rawType = TypeTools.rawType(convertTo);
+        if (values == null || values.length <= 1) {
+            String value = (values != null && values.length == 1) ? values[0] : null;
 
             if (rawType.isArray()) {
                 // Punt on multi-dimensional arrays
@@ -100,20 +101,6 @@ public abstract class AbstractConverter implements Converter {
         }
 
         return stringsToObject(values, convertTo, dynamicAttributes);
-    }
-
-    /**
-     * Gets the raw type from a parameterized type or just casts the type to a Class.
-     *
-     * @param   type The type.
-     * @return  The raw type.
-     */
-    protected Class<?> rawType(Type type) {
-        if (type instanceof ParameterizedType) {
-            type = ((ParameterizedType) type).getRawType();
-        }
-
-        return (Class<?>) type;
     }
 
     /**
@@ -155,7 +142,7 @@ public abstract class AbstractConverter implements Converter {
         }
 
         // Handle arrays
-        Class<?> rawType = rawType(convertFrom);
+        Class<?> rawType = TypeTools.rawType(convertFrom);
         if (rawType.isArray()) {
             return arrayToString(value, convertFrom, dynamicAttributes);
         }
@@ -181,7 +168,7 @@ public abstract class AbstractConverter implements Converter {
         }
 
         Object finalArray;
-        Class<?> rawType = rawType(convertTo);
+        Class<?> rawType = TypeTools.rawType(convertTo);
         if (StringTools.isTrimmedEmpty(value)) {
             finalArray = Array.newInstance(rawType.getComponentType(), 0);
         } else {
@@ -215,7 +202,7 @@ public abstract class AbstractConverter implements Converter {
         }
 
         Object finalArray;
-        Class<?> rawType = rawType(convertTo);
+        Class<?> rawType = TypeTools.rawType(convertTo);
         if (values.length == 0) {
             finalArray = Array.newInstance(rawType.getComponentType(), 0);
         } else {
@@ -243,14 +230,14 @@ public abstract class AbstractConverter implements Converter {
      */
     protected String arrayToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes)
     throws ConversionException {
-        Class<?> rawType = rawType(convertFrom);
+        Class<?> rawType = TypeTools.rawType(convertFrom);
         if (!rawType.isArray()) {
             throw new ConversionException("The convertFrom parameter must be an array type");
         }
 
-        if (value == null) {
-            return null;
-        }
+//        if (value == null) {
+//            return null;
+//        }
 
         if (!value.getClass().isArray()) {
             throw new ConversionException("The value is not an array");

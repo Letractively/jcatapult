@@ -20,11 +20,11 @@ import javax.servlet.ServletException;
 
 import org.easymock.EasyMock;
 import org.example.action.user.Edit;
-import org.jcatapult.mvc.Capture;
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.config.ActionConfigurationProvider;
 import org.jcatapult.mvc.action.config.DefaultActionConfiguration;
 import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.test.Capture;
 import org.jcatapult.test.JCatapultBaseTest;
 import org.jcatapult.test.servlet.MockHttpServletRequest;
 import static org.junit.Assert.*;
