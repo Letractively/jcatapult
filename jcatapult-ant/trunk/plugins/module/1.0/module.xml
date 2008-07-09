@@ -57,7 +57,7 @@
   <import file="${dir.plugin.module}/module-base.xml"/>
   <import file="${dir.plugin.module}/module-macros.xml"/>
 
-  <property name="dir.webapp.template" value="${env.JCATAPULT_HOME}/ant/tools/makeproject/webapp-template"/>
+  <property name="dir.webapp.template" value="${env.JCATAPULT_HOME}/ant/tools/makeproject/${jcatapult.webapp.template}"/>
 
   <!-- Pseudo-target -->
   <target name="app" description="Builds a test bed for the module"
