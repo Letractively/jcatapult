@@ -51,12 +51,11 @@ public abstract class AbstractControl implements Control {
     protected HttpServletRequest request;
     protected ActionInvocation actionInvocation;
     protected Object action;
-    private Map<String, Object> parameters;
+    protected Object root;
 
     @Inject
     public void setServices(@CurrentLocale Locale locale, HttpServletRequest request,
-        ActionInvocationStore actionInvocationStore,
-        FreeMarkerService freeMarkerService) {
+            ActionInvocationStore actionInvocationStore, FreeMarkerService freeMarkerService) {
         this.locale = locale;
         this.request = request;
         this.freeMarkerService = freeMarkerService;
@@ -79,11 +78,11 @@ public abstract class AbstractControl implements Control {
      */
     public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
         addAdditionalAttributes(attributes, dynamicAttributes);
-        parameters = makeParameters(attributes, dynamicAttributes);
+        root = makeRoot(makeParameters(attributes, dynamicAttributes));
 
         if (startTemplateName() != null) {
             String templateName = "/WEB-INF/control-templates/" + startTemplateName();
-            freeMarkerService.render(writer, templateName, parameters, locale);
+            freeMarkerService.render(writer, templateName, root, locale);
         }
     }
 
@@ -100,7 +99,7 @@ public abstract class AbstractControl implements Control {
     public void renderEnd(Writer writer) {
         if (endTemplateName() != null) {
             String templateName = "/WEB-INF/control-templates/" + endTemplateName();
-            freeMarkerService.render(writer, templateName, parameters, locale);
+            freeMarkerService.render(writer, templateName, root, locale);
         }
     }
 
@@ -114,15 +113,6 @@ public abstract class AbstractControl implements Control {
      * <li>attributes - The attributes</li>
      * <li>dynamic_attributes - The dynamic attributes</li>
      * <li>append_attributes - A FreeMarker method that appends attributes ({@link AppendAttributesMethod})</li>
-     * <li>request - The HttpServletRequest</li>
-     * <li>session - The HttpSession</li>
-     * <li>context - The ServletContext</li>
-     * <li>action_invocation - The action invocation</li>
-     * <li>action - The action object itself (which might be null)</li>
-     * <li>field_messages - Any messages associated with the control</li>
-     * <li>field_errors - Any errors associated with the control</li>
-     * <li>action_messages - Any messages associated with the current action invocation</li>
-     * <li>action_errors - Any errors associated with the current action invocation</li>
      * </ul>
      *
      * @param   attributes The attributes from the tag.
@@ -134,11 +124,18 @@ public abstract class AbstractControl implements Control {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("attributes", attributes);
         parameters.put("dynamic_attributes", dynamicAttributes);
-        parameters.put("action_invocation", actionInvocation);
-        parameters.put("action", action);
-        parameters.put("request", request);
-        parameters.put("locale", locale);
         parameters.put("append_attributes", new AppendAttributesMethod());
+        return parameters;
+    }
+
+    /**
+     * Converts the given parameters into a FreeMarker root node. This can be overridden by sub-classes
+     * to convert the Map or wrap it. This method simply returns the given Map.
+     *
+     * @param   parameters The parameters.
+     * @return  The root.
+     */
+    protected Object makeRoot(Map<String, Object> parameters) {
         return parameters;
     }
 

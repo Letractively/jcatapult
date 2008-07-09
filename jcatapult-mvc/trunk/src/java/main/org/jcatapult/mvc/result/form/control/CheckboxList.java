@@ -15,22 +15,25 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
+import com.google.inject.Inject;
+
 /**
  * <p>
- * This class is the control for a select box.
+ * This class is the control for a set of checkboxs.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class Select extends AbstractListInput {
-    public Select() {
+public class CheckboxList extends AbstractListInput {
+    @Inject
+    public CheckboxList() {
         super(true);
     }
 
     /**
-     * @return  select.ftl
+     * @return  checkbox-list.ftl
      */
     protected String endTemplateName() {
-        return "select.ftl";
+        return "checkbox-list.ftl";
     }
 }

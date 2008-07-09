@@ -22,7 +22,7 @@ import java.util.Map;
 import org.easymock.EasyMock;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.result.form.control.Select;
+import org.jcatapult.mvc.result.form.control.CheckboxList;
 import org.junit.Test;
 
 import static net.java.util.CollectionTools.*;
@@ -30,13 +30,13 @@ import net.java.util.Pair;
 
 /**
  * <p>
- * This tests the select control.
+ * This tests the checkboxlist control.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class SelectTest extends AbstractInputTest {
-    public SelectTest() {
+public class CheckboxListTest extends AbstractInputTest {
+    public CheckboxListTest() {
         super(true);
     }
 
@@ -45,19 +45,25 @@ public class SelectTest extends AbstractInputTest {
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.replay(ee);
 
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, null, "select", "foo.bar", "test", "Test",
+        CheckboxList checkboxlist = new CheckboxList();
+        checkboxlist.setExpressionEvaluator(ee);
+        run(checkboxlist, null, "checkbox-list", "foo.bar", "test", "Test",
             mapNV("name", "test", "class", "css-class", "bundle", "foo.bar", "items", asList("one", "two", "three")),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"input\">\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"test\" name=\"test\">\n" +
-            "    <option value=\"one\">one</option>\n" +
-            "    <option value=\"two\">two</option>\n" +
-            "    <option value=\"three\">three</option>\n" +
-            "  </select>\n" +
+            "  <input type=\"checkbox\" value=\"one\" class=\"css-class\" name=\"test\"/><span class=\"checkbox-text\">one</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"checkbox\" value=\"two\" class=\"css-class\" name=\"test\"/><span class=\"checkbox-text\">two</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"checkbox\" value=\"three\" class=\"css-class\" name=\"test\"/><span class=\"checkbox-text\">three</span>\n" +
             "</div>\n" +
             "</div>\n");
 
@@ -71,18 +77,20 @@ public class SelectTest extends AbstractInputTest {
         EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
         EasyMock.replay(ee);
 
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        CheckboxList checkboxlist = new CheckboxList();
+        checkboxlist.setExpressionEvaluator(ee);
+        run(checkboxlist, action, "checkbox-list", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"input\">\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
-            "    <option value=\"US\" selected=\"selected\">United States</option>\n" +
-            "    <option value=\"DE\">Germany</option>\n" +
-            "  </select>\n" +
+            "  <input type=\"checkbox\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">United States</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"checkbox\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n");
 
@@ -103,18 +111,20 @@ public class SelectTest extends AbstractInputTest {
         EasyMock.expect(ee.getValue("second", de)).andReturn("Germany");
         EasyMock.replay(ee);
 
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        CheckboxList checkboxlist = new CheckboxList();
+        checkboxlist.setExpressionEvaluator(ee);
+        run(checkboxlist, action, "checkbox-list", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "keyExpr", "first", "textExpr", "second", "items", array(us, de)),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"input\">\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
-            "    <option value=\"US\" selected=\"selected\">United States</option>\n" +
-            "    <option value=\"DE\">Germany</option>\n" +
-            "  </select>\n" +
+            "  <input type=\"checkbox\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">United States</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"checkbox\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n");
 
@@ -128,18 +138,20 @@ public class SelectTest extends AbstractInputTest {
         EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
         EasyMock.replay(ee);
 
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        CheckboxList checkboxlist = new CheckboxList();
+        checkboxlist.setExpressionEvaluator(ee);
+        run(checkboxlist, action, "checkbox-list", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
+            "<div class=\"input\">\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
-            "    <option value=\"US\" selected=\"selected\">United States</option>\n" +
-            "    <option value=\"DE\">Germany</option>\n" +
-            "  </select>\n" +
+            "  <input type=\"checkbox\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">United States</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"checkbox\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n", "Country is required", "Country must be cool");
         EasyMock.verify(ee);
