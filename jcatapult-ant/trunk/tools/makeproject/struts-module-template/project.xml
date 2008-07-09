@@ -11,7 +11,7 @@
   <property name="version.jcatapult" value="@JCATAPULT_VERSION@"/>
 
   <!-- Template to use for testing -->
-  <property name="jcatapult.template" value="struts-webapp-template"/>
+  <property name="jcatapult.webapp.template" value="struts-webapp-template"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile">
