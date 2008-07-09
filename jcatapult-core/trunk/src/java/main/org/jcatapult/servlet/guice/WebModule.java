@@ -17,6 +17,7 @@ package org.jcatapult.servlet.guice;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.servlet.ServletObjectsHolder;
@@ -74,6 +75,13 @@ public class WebModule extends AbstractModule {
         // Bind the servlet request
         bind(HttpServletRequest.class).toProvider(new Provider<HttpServletRequest>() {
             public HttpServletRequest get() {
+                return ServletObjectsHolder.getServletRequest();
+            }
+        });
+
+        // Bind the servlet request wrapper
+        bind(HttpServletRequestWrapper.class).toProvider(new Provider<HttpServletRequestWrapper>() {
+            public HttpServletRequestWrapper get() {
                 return ServletObjectsHolder.getServletRequest();
             }
         });
