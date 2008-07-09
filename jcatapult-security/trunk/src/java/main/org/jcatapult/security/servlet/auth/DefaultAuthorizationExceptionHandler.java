@@ -54,7 +54,7 @@ public class DefaultAuthorizationExceptionHandler implements AuthorizationExcept
     public void handle(AuthorizationException exception, WorkflowChain chain) throws ServletException, IOException {
         HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
         HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
-        FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, notAuthorizedURL, null);
+        FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, notAuthorizedURL, null, false);
         wrapper.setRequest(facade);
         request.setAttribute(EXCEPTION_KEY, exception);
         chain.continueWorkflow();

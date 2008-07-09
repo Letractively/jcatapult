@@ -63,7 +63,7 @@ public class DefaultLoginExceptionHandler implements LoginExceptionHandler {
     throws IOException, ServletException {
         HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
         HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
-        FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, failedLoginURI, null);
+        FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, failedLoginURI, null, true);
         wrapper.setRequest(facade);
         request.setAttribute(EXCEPTION_KEY, exception);
         chain.continueWorkflow();
