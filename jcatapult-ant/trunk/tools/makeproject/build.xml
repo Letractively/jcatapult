@@ -81,10 +81,24 @@
   </target>
 
   <!--
+    Creates a webapp module.
+  -->
+  <target name="create-struts-webapp" depends="-init" description="Creates a new Struts webapp project">
+    <create-project template="struts-webapp-template" jcatapult="true"/>
+  </target>
+
+  <!--
     Creates a module.
   -->
   <target name="create-module" depends="-init" description="Creates a new module project">
     <create-project template="module-template" jcatapult="true"/>
+  </target>
+
+  <!--
+    Creates a module.
+  -->
+  <target name="create-struts-module" depends="-init" description="Creates a new Struts module project">
+    <create-project template="struts-module-template" jcatapult="true"/>
   </target>
 
   <target name="svn-import"
