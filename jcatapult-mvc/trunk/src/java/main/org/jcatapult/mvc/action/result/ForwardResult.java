@@ -20,9 +20,7 @@ import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -31,14 +29,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.locale.annotation.CurrentLocale;
-import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 
 import com.google.inject.Inject;
-import freemarker.template.TemplateModel;
 
 /**
  * <p>
@@ -50,39 +46,22 @@ import freemarker.template.TemplateModel;
  */
 public class ForwardResult extends AbstractResult<Forward> {
     public static final String DIR = "/WEB-INF/content";
-    private static final Map<String, Class<? extends TemplateModel>> models = new HashMap<String, Class<? extends TemplateModel>>();
     private final Locale locale;
     private final ServletContext servletContext;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final FreeMarkerService freeMarkerService;
-    private final ObjectFactory objectFactory;
-
-    /**
-     * Initializes the list of control classes.
-     *
-     * @param   objectFactory The object factory.
-     */
-    @Inject
-    public static void initialize(ObjectFactory objectFactory) {
-        List<Class<? extends TemplateModel>> types = objectFactory.getAllForType(TemplateModel.class);
-        for (Class<? extends TemplateModel> type : types) {
-            models.put(type.getSimpleName().toLowerCase(), type);
-        }
-    }
 
     @Inject
     public ForwardResult(@CurrentLocale Locale locale, ServletContext servletContext,
             HttpServletRequest request, HttpServletResponse response,
-            ExpressionEvaluator expressionEvaluator, FreeMarkerService freeMarkerService,
-            ObjectFactory objectFactory) {
+            ExpressionEvaluator expressionEvaluator, FreeMarkerService freeMarkerService) {
         super(expressionEvaluator);
         this.locale = locale;
         this.servletContext = servletContext;
         this.request = request;
         this.response = response;
         this.freeMarkerService = freeMarkerService;
-        this.objectFactory = objectFactory;
     }
 
     /**
@@ -106,8 +85,8 @@ public class ForwardResult extends AbstractResult<Forward> {
             requestDispatcher.forward(wrapRequest(invocation, request), response);
         } else if (page.endsWith(".ftl")) {
             PrintWriter writer = response.getWriter();
-            FreeMarkerMap map = new FreeMarkerMap(request, expressionEvaluator,
-                invocation.action(), models, objectFactory);
+            FreeMarkerMap map = new FreeMarkerMap(request, expressionEvaluator, invocation.action(),
+                new HashMap<String, Object>());
             freeMarkerService.render(writer, page, map, locale);
         }
     }

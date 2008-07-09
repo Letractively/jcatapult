@@ -20,10 +20,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-
-import com.google.inject.Inject;
-
 /**
  * <p>
  * This class is the control for a select box.
@@ -32,11 +28,6 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class CountriesSelect extends Select {
-    @Inject
-    public CountriesSelect(ExpressionEvaluator expressionEvaluator) {
-        super(expressionEvaluator);
-    }
-
     /**
      * <p>
      * Adds the countries Map and then calls super.

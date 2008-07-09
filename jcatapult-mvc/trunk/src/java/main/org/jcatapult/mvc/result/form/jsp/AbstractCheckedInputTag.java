@@ -43,6 +43,7 @@ public abstract class AbstractCheckedInputTag<T extends Control> extends Abstrac
     public void setChecked(Boolean checked) {
         attributes.put("checked", checked);
     }
+    
     /**
      * Retrieves the tags defaultChecked attribute
      *

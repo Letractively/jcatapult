@@ -62,9 +62,11 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     private static final String SESSION = "Session";
     private static final String APPLICATION = "Application";
     private static final String JCATAPULT_TAGS = "jc";
-
     private static final String JSP_TAGLIBS = "JspTaglibs";
-    private static TaglibFactory TAGLIB_FACTORY;
+
+    private static final Map<String, Class<? extends TemplateModel>> models = new HashMap<String, Class<? extends TemplateModel>>();
+    private static TaglibFactory taglibFactory;
+    private static ObjectFactory objectFactory;
 
     private static ServletContext context;
     private final Map<String, Object> objects = new HashMap<String, Object>();
@@ -73,18 +75,27 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     private final Object action;
 
     /**
-     * Initializes the ServletContext and the JSP taglib support for FreeMaker.
+     * Initializes the ServletContext and the JSP taglib support for FreeMaker and also the TemplateModel
+     * classes that are bound into the ObjectFactory.
      *
      * @param   context The context.
+     * @param   objectFactory Used to get the template models.
      */
     @Inject
-    public static void initialize(ServletContext context) {
-        FreeMarkerMap.TAGLIB_FACTORY = new TaglibFactory(context);
+    public static void initialize(ServletContext context, ObjectFactory objectFactory) {
+        FreeMarkerMap.taglibFactory = new TaglibFactory(context);
         FreeMarkerMap.context = context;
+
+        List<Class<? extends TemplateModel>> types = objectFactory.getAllForType(TemplateModel.class);
+        for (Class<? extends TemplateModel> type : types) {
+            models.put(type.getSimpleName().toLowerCase(), type);
+        }
+
+        FreeMarkerMap.objectFactory = objectFactory;
     }
 
-    public FreeMarkerMap(HttpServletRequest request, ExpressionEvaluator expressionEvaluator,
-            Object action, Map<String, Class<? extends TemplateModel>> models, ObjectFactory objectFactory) {
+    public FreeMarkerMap(HttpServletRequest request, ExpressionEvaluator expressionEvaluator, Object action,
+            Map<String, Object> additionalValues) {
         objects.put(REQUEST, new HttpRequestHashModel(request, ObjectWrapper.DEFAULT_WRAPPER));
         objects.put(APPLICATION, new ServletContextHashModel(new GenericServlet() {
             public void service(ServletRequest servletRequest, ServletResponse servletResponse) {
@@ -102,12 +113,14 @@ public class FreeMarkerMap implements TemplateHashModelEx {
 
 
         }, ObjectWrapper.DEFAULT_WRAPPER));
-        objects.put(JSP_TAGLIBS, TAGLIB_FACTORY);
+        objects.put(JSP_TAGLIBS, taglibFactory);
         objects.put(JCATAPULT_TAGS, new ControlHashModel(objectFactory, models));
         HttpSession session = request.getSession(false);
         if (session != null) {
             objects.put(SESSION, new HttpSessionHashModel(session, ObjectWrapper.DEFAULT_WRAPPER));
         }
+
+        objects.putAll(additionalValues);
 
         this.request = request;
         this.expressionEvaluator = expressionEvaluator;
@@ -202,7 +215,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
             values.add(context.getAttribute(name));
         }
 
-        values.add(TAGLIB_FACTORY);
+        values.add(taglibFactory);
 
         return new SimpleCollection(values);
     }

@@ -16,8 +16,8 @@
 package org.jcatapult.mvc.guice;
 
 import org.jcatapult.mvc.action.result.ForwardResult;
-import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
 import org.jcatapult.mvc.action.result.RedirectResult;
+import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
 import org.jcatapult.mvc.parameter.convert.DefaultConverterProvider;
 import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
 import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
@@ -27,6 +27,7 @@ import org.jcatapult.mvc.parameter.convert.converters.NumberConverter;
 import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
 import org.jcatapult.mvc.result.form.control.Button;
 import org.jcatapult.mvc.result.form.control.Checkbox;
+import org.jcatapult.mvc.result.form.control.CheckboxList;
 import org.jcatapult.mvc.result.form.control.CountriesSelect;
 import org.jcatapult.mvc.result.form.control.File;
 import org.jcatapult.mvc.result.form.control.Form;
@@ -109,6 +110,7 @@ public class MVCModule extends AbstractModule {
         bind(ActionMessages.class);
         bind(Button.class);
         bind(Checkbox.class);
+        bind(CheckboxList.class);
         bind(CountriesSelect.class);
         bind(FieldMessages.class);
         bind(File.class);
