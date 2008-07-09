@@ -125,7 +125,7 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
         } else {
             HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
             HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
-            FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, successfulLoginURI, null);
+            FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, successfulLoginURI, null, false);
             wrapper.setRequest(facade);
             workflowChain.continueWorkflow();
         }
@@ -147,7 +147,7 @@ public class SavedRequestWorkflow implements PostLoginHandler, NotLoggedInHandle
         savedRequestService.saveRequest(request);
         HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
         HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
-        FacadeHttpServletRequest savedRequest = new FacadeHttpServletRequest(previous, notLoggedInURI, null);
+        FacadeHttpServletRequest savedRequest = new FacadeHttpServletRequest(previous, notLoggedInURI, null, false);
         wrapper.setRequest(savedRequest);
         workflowChain.continueWorkflow();
     }

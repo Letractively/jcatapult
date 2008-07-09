@@ -113,7 +113,7 @@ public class DefaultSavedRequestService implements SavedRequestService {
         SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(POST_LOGIN_KEY);
         if (saved != null && SecurityContext.getCurrentUser() != null) {
             session.removeAttribute(POST_LOGIN_KEY);
-            return new FacadeHttpServletRequest(request, null, saved.parameters);
+            return new FacadeHttpServletRequest(request, null, saved.parameters, true);
         }
 
         return request;

@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -39,12 +41,25 @@ import net.java.util.IteratorEnumeration;
 public class FacadeHttpServletRequest extends HttpServletRequestWrapper {
     private final String uri;
     private final Map<String, String[]> parameters;
+    private final boolean proxy;
 
+    /**
+     * Constructs a new request facade.
+     *
+     * @param   httpServletRequest The request to wrap.
+     * @param   uri The new URI.
+     * @param   parameters Any additional parameters.
+     * @param   proxy Determines if the parameter lookups are proxied to the wrapped request. When
+     *          this is true, they are proxied to the wrapped request if the parameter map passed to
+     *          the constructor doesn't contain the parameter. If this is false, only the parameter
+     *          map passed to the constructor is used.
+     */
     public FacadeHttpServletRequest(HttpServletRequest httpServletRequest, String uri,
-            Map<String, String[]> parameters) {
+            Map<String, String[]> parameters, boolean proxy) {
         super(httpServletRequest);
         this.uri = uri;
         this.parameters = parameters;
+        this.proxy = proxy;
     }
 
     @Override
@@ -81,21 +96,37 @@ public class FacadeHttpServletRequest extends HttpServletRequestWrapper {
             return parameters.get(key)[0];
         }
 
-        return super.getParameter(key);
+        if (proxy) {
+            return super.getParameter(key);
+        }
+
+        return null;
     }
 
     public Map getParameterMap() {
+        Map<String, String[]> complete = new HashMap<String, String[]>();
         if (parameters != null) {
-            Map<String, String[]> complete = new HashMap<String, String[]>(super.getParameterMap());
             complete.putAll(parameters);
-            return complete;
         }
 
-        return super.getParameterMap();
+        if (proxy) {
+            complete.putAll(super.getParameterMap());
+        }
+
+        return complete;
     }
 
     public Enumeration getParameterNames() {
-        return new IteratorEnumeration(getParameterMap().keySet().iterator());
+        Set<String> names = new HashSet<String>();
+        if (parameters != null) {
+            names.addAll(parameters.keySet());
+        }
+
+        if (proxy) {
+            names.addAll(super.getParameterMap().keySet());
+        }
+
+        return new IteratorEnumeration(names.iterator());
     }
 
     public String[] getParameterValues(String key) {
