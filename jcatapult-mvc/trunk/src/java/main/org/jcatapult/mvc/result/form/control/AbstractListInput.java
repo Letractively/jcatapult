@@ -31,7 +31,7 @@ import com.google.inject.Inject;
  * groups.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
 public abstract class AbstractListInput extends AbstractInput {
     protected ExpressionEvaluator expressionEvaluator;
@@ -80,7 +80,7 @@ public abstract class AbstractListInput extends AbstractInput {
         // Next, let's handle the items here. I'll create a Map that contains a simple inner class
         // that determines if the option is selected or not. This will allow me to get the text
         // as well
-        String keyExpr = (String) attributes.remove("keyExpr");
+        String valueExpr = (String) attributes.remove("valueExpr");
         String textExpr = (String) attributes.remove("textExpr");
         String l10nExpr = (String) attributes.remove("l10nExpr");
         Map<String, Option> options = new LinkedHashMap<String, Option>();
@@ -89,23 +89,23 @@ public abstract class AbstractListInput extends AbstractInput {
             if (items instanceof Collection) {
                 Collection c = (Collection) items;
                 for (Object o : c) {
-                    Object key = makeKey(o, null, keyExpr);
-                    options.put(key.toString(), makeOption(o, key, beanValue, attributes, textExpr, l10nExpr));
+                    Object value = makeValue(o, null, valueExpr);
+                    options.put(value.toString(), makeOption(o, value, beanValue, attributes, textExpr, l10nExpr));
                 }
             } else if (items instanceof Map) {
                 Map<?,?> m = (Map<?,?>) items;
                 for (Map.Entry entry : m.entrySet()) {
-                    Object key = makeKey(entry.getValue(), entry.getKey(), keyExpr);
-                    Option option = makeOption(entry.getValue(), key, beanValue, attributes, textExpr, l10nExpr);
-                    options.put(key.toString(), option);
+                    Object value = makeValue(entry.getValue(), entry.getKey(), valueExpr);
+                    Option option = makeOption(entry.getValue(), value, beanValue, attributes, textExpr, l10nExpr);
+                    options.put(value.toString(), option);
                 }
             } else if (items.getClass().isArray()) {
                 int length = Array.getLength(items);
                 for (int i = 0; i < length; i++) {
                     Object itemsValue = Array.get(items, i);
-                    Object key = makeKey(itemsValue, null, keyExpr);
-                    Option option = makeOption(itemsValue, key, beanValue, attributes, textExpr, l10nExpr);
-                    options.put(key.toString(), option);
+                    Object value = makeValue(itemsValue, null, valueExpr);
+                    Option option = makeOption(itemsValue, value, beanValue, attributes, textExpr, l10nExpr);
+                    options.put(value.toString(), option);
                 }
             }
         }
@@ -122,15 +122,15 @@ public abstract class AbstractListInput extends AbstractInput {
      * in the given Collection the option is set to selected.
      *
      * @param   itemsValue The current value from the items collection/array/map.
-     * @param   key The key that is the value of the option. This could have been from the items Map
-     *          or the keyExpr evaluation.
+     * @param   value The value of the option. This could have been from the items Map or the valueExpr
+     *          evaluation.
      * @param   beanValue The value from the bean, used to determine selected state.
      * @param   attributes used to get the text for the option.
      * @param   textExpr The textExpr attribute.
      * @param   l10nExpr The l10nExpr attribute.
      * @return  The option and never null.
      */
-    private Option makeOption(Object itemsValue, Object key, Object beanValue, Map<String, Object> attributes,
+    private Option makeOption(Object itemsValue, Object value, Object beanValue, Map<String, Object> attributes,
             String textExpr, String l10nExpr) {
         if (itemsValue == null) {
             return new Option("", false);
@@ -167,21 +167,21 @@ public abstract class AbstractListInput extends AbstractInput {
         }
 
         if (beanValue instanceof Collection) {
-            return new Option(text, ((Collection) beanValue).contains(itemsValue));
+            return new Option(text, ((Collection) beanValue).contains(value));
         }
 
         if (beanValue.getClass().isArray()) {
             int length = Array.getLength(beanValue);
             for (int i = 0; i < length; i++) {
                 Object arrayValue = Array.get(beanValue, i);
-                if (arrayValue != null && arrayValue.equals(itemsValue)) {
+                if (arrayValue != null && arrayValue.equals(value)) {
                     return new Option(text, true);
                 }
             }
         }
 
-        if (key != null) {
-            return new Option(text, beanValue.equals(key));
+        if (value != null) {
+            return new Option(text, beanValue.equals(value));
         }
 
         return new Option(text, beanValue.equals(itemsValue));
@@ -193,18 +193,18 @@ public abstract class AbstractListInput extends AbstractInput {
      *
      * @param   itemsValue The current value from the items collection/array/map used to determine the key.
      * @param   key The key from a items Map or null if items is not a Map.
-     * @param   keyExpr The keyExpr attribute.
+     * @param   valueExpr The valueExpr attribute.
      * @return  The key and never null. If the Object is null, this returns an empty String.
      */
-    private Object makeKey(Object itemsValue, Object key, String keyExpr) {
+    private Object makeValue(Object itemsValue, Object key, String valueExpr) {
         if (itemsValue == null) {
             return "";
         }
 
-        if (keyExpr != null) {
-            Object keyValue = expressionEvaluator.getValue(keyExpr, itemsValue);
-            if (keyValue != null) {
-                return keyValue;
+        if (valueExpr != null) {
+            Object value = expressionEvaluator.getValue(valueExpr, itemsValue);
+            if (value != null) {
+                return value;
             }
         }
 

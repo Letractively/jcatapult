@@ -106,7 +106,7 @@ public class SelectTest extends AbstractInputTest {
         Select select = new Select();
         select.setExpressionEvaluator(ee);
         run(select, action, "select", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
-            mapNV("name", "user.addresses['work'].country", "class", "css-class", "keyExpr", "first", "textExpr", "second", "items", array(us, de)),
+            mapNV("name", "user.addresses['work'].country", "class", "css-class", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
