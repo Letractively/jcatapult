@@ -13,25 +13,28 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp.control;
+package org.jcatapult.mvc.result.form.control;
 
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.result.form.control.AbstractButtonInput;
-import org.jcatapult.mvc.result.form.control.Button;
+import org.jcatapult.mvc.result.jsp.control.AbstractCheckedInputTest;
 
 /**
  * <p>
- * This tests the button control.
+ * This tests the checkbox control.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class ButtonTest extends AbstractButtonInputTest {
-    protected AbstractButtonInput getControl(ExpressionEvaluator ee) {
-        return new Button();
+public class CheckboxTest extends AbstractCheckedInputTest {
+    protected AbstractCheckedInput getControl(ExpressionEvaluator ee) {
+        return new Checkbox(ee);
     }
 
     protected String getType() {
-        return "button";
+        return "checkbox";
+    }
+
+    protected String getHiddenPrefix() {
+        return "__jc_cb";
     }
 }

@@ -13,26 +13,25 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp.control;
+package org.jcatapult.mvc.result.form.control;
 
 import org.easymock.EasyMock;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.result.form.control.AbstractInput;
-import org.jcatapult.mvc.result.form.control.Text;
+import org.jcatapult.mvc.result.jsp.control.AbstractInputTest;
 import org.junit.Test;
 
 import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
- * This tests the text control.
+ * This tests the textarea control.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class TextTest extends AbstractInputTest {
-    public TextTest() {
+public class TextareaTest extends AbstractInputTest {
+    public TextareaTest() {
         super(true);
     }
 
@@ -41,13 +40,13 @@ public class TextTest extends AbstractInputTest {
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.replay(ee);
 
-        AbstractInput input = new Text(ee);
-        run(input, null, "text", "foo.bar", "test", "Test",
+        AbstractInput input = new Textarea(ee);
+        run(input, null, "textarea", "foo.bar", "test", "Test",
             mapNV("name", "test", "class", "css-class", "bundle", "foo.bar"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
+            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"test\" name=\"test\"></textarea></div>\n" +
             "</div>\n");
 
         EasyMock.verify(ee);
@@ -60,13 +59,13 @@ public class TextTest extends AbstractInputTest {
         EasyMock.expect(ee.getValue("user.name", action, map("param", "param-value"))).andReturn("Brian");
         EasyMock.replay(ee);
 
-        AbstractInput input = new Text(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
+        AbstractInput input = new Textarea(ee);
+        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/></div>\n" +
+            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Brian</textarea></div>\n" +
             "</div>\n");
 
         EasyMock.verify(ee);
@@ -79,13 +78,13 @@ public class TextTest extends AbstractInputTest {
         EasyMock.expect(ee.getValue("user.name", action, map("param", "param-value"))).andReturn(null);
         EasyMock.replay(ee);
 
-        AbstractInput input = new Text(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
+        AbstractInput input = new Textarea(ee);
+        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"John\"/></div>\n" +
+            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">John</textarea></div>\n" +
             "</div>\n");
 
         EasyMock.verify(ee);
@@ -97,13 +96,13 @@ public class TextTest extends AbstractInputTest {
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.replay(ee);
 
-        AbstractInput input = new Text(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
+        AbstractInput input = new Textarea(ee);
+        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
+            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Barry</textarea></div>\n" +
             "</div>\n");
 
         EasyMock.verify(ee);
@@ -113,17 +112,17 @@ public class TextTest extends AbstractInputTest {
     public void testFieldErrors() {
         Edit action = new Edit();
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.name", action, map("param", "param-value"))).andReturn("Barry");
         EasyMock.replay(ee);
 
-        AbstractInput input = new Text(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
-            mapNV("name", "user.name", "class", "css-class"),
+        AbstractInput input = new Textarea(ee);
+        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
+            mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
-            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
+            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Barry</textarea></div>\n" +
             "</div>\n", "Name is required", "Name must be cool");
+
         EasyMock.verify(ee);
     }
 }
