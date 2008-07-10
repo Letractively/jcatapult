@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.result.control;
 
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
@@ -37,10 +38,16 @@ import com.google.inject.Inject;
  */
 public abstract class AbstractComponentControl extends AbstractControl {
     protected ExpressionEvaluator expressionEvaluator;
+    protected HttpServletResponse response;
 
     @Inject
     public void setExpressionEvaluator(ExpressionEvaluator expressionEvaluator) {
         this.expressionEvaluator = expressionEvaluator;
+    }
+
+    @Inject
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
     }
 
     /**
@@ -50,6 +57,6 @@ public abstract class AbstractComponentControl extends AbstractControl {
      * @return  The root, which is a {@link FreeMarkerMap}.
      */
     protected Object makeRoot(Map<String, Object> parameters) {
-        return new FreeMarkerMap(request, expressionEvaluator, action, parameters);
+        return new FreeMarkerMap(request, response, expressionEvaluator, action, parameters);
     }
 }

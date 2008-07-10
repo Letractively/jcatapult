@@ -68,6 +68,9 @@ public class ForwardResult extends AbstractResult<Forward> {
      * {@inheritDoc}
      */
     public void execute(Forward forward, ActionInvocation invocation) throws IOException, ServletException {
+        // Set the default content type for the response. This also activates SiteMesh
+        response.setContentType("text/html");
+
         String page = expand(forward.page(), invocation.action());
         if (!page.startsWith("/")) {
             // Strip off the last part of the URI since it is relative
@@ -85,7 +88,7 @@ public class ForwardResult extends AbstractResult<Forward> {
             requestDispatcher.forward(wrapRequest(invocation, request), response);
         } else if (page.endsWith(".ftl")) {
             PrintWriter writer = response.getWriter();
-            FreeMarkerMap map = new FreeMarkerMap(request, expressionEvaluator, invocation.action(),
+            FreeMarkerMap map = new FreeMarkerMap(request, response, expressionEvaluator, invocation.action(),
                 new HashMap<String, Object>());
             freeMarkerService.render(writer, page, map, locale);
         }
