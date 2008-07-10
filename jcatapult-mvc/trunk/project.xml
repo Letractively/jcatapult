@@ -12,7 +12,7 @@
   <!-- set to true if this libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="false"/>
 
-  <property name="version.jcatapult" value="1.0-RC6"/>
+  <property name="version.jcatapult" value="1.0-RC6-{integration}"/>
 
   <release>
     <publication name="jcatapult-mvc" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"
