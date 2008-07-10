@@ -40,8 +40,8 @@ import org.jcatapult.mvc.parameter.el.ExpressionException;
 import com.google.inject.Inject;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
-import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
+import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleCollection;
 import freemarker.template.TemplateCollectionModel;
@@ -59,10 +59,12 @@ import freemarker.template.TemplateModelException;
  * @author Brian Pontarelli
  */
 public class FreeMarkerMap implements TemplateHashModelEx {
-    private static final String REQUEST = "Request";
-    private static final String RESPONSE = "Response";
-    private static final String SESSION = "Session";
-    private static final String APPLICATION = "Application";
+    private static final String REQUEST_MODEL = "Request";
+    private static final String REQUEST = "request";
+    private static final String SESSION_MODEL = "Session";
+    private static final String SESSION = "session";
+    private static final String APPLICATION_MODEL = "Application";
+    private static final String APPLICATION = "application";
     private static final String JCATAPULT_TAGS = "jc";
     private static final String JSP_TAGLIBS = "JspTaglibs";
 
@@ -98,8 +100,14 @@ public class FreeMarkerMap implements TemplateHashModelEx {
 
     public FreeMarkerMap(HttpServletRequest request, HttpServletResponse response,
             ExpressionEvaluator expressionEvaluator, Object action, Map<String, Object> additionalValues) {
-        objects.put(REQUEST, new HttpRequestHashModel(request, response, ObjectWrapper.DEFAULT_WRAPPER));
-        objects.put(APPLICATION, new ServletContextHashModel(new GenericServlet() {
+        objects.put(REQUEST_MODEL, new HttpRequestHashModel(request, response, ObjectWrapper.DEFAULT_WRAPPER));
+        objects.put(REQUEST, request);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            objects.put(SESSION_MODEL, new HttpSessionHashModel(session, ObjectWrapper.DEFAULT_WRAPPER));
+            objects.put(SESSION, session);
+        }
+        objects.put(APPLICATION_MODEL, new ServletContextHashModel(new GenericServlet() {
             public void service(ServletRequest servletRequest, ServletResponse servletResponse) {
             }
 
@@ -115,12 +123,9 @@ public class FreeMarkerMap implements TemplateHashModelEx {
 
 
         }, ObjectWrapper.DEFAULT_WRAPPER));
+        objects.put(APPLICATION, context);
         objects.put(JSP_TAGLIBS, taglibFactory);
         objects.put(JCATAPULT_TAGS, new ControlHashModel(objectFactory, models));
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            objects.put(SESSION, new HttpSessionHashModel(session, ObjectWrapper.DEFAULT_WRAPPER));
-        }
 
         objects.putAll(additionalValues);
 

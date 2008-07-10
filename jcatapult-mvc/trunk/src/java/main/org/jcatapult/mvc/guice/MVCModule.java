@@ -33,12 +33,14 @@ import org.jcatapult.mvc.result.form.control.File;
 import org.jcatapult.mvc.result.form.control.Form;
 import org.jcatapult.mvc.result.form.control.Hidden;
 import org.jcatapult.mvc.result.form.control.Image;
+import org.jcatapult.mvc.result.form.control.MonthsSelect;
 import org.jcatapult.mvc.result.form.control.Password;
 import org.jcatapult.mvc.result.form.control.Radio;
 import org.jcatapult.mvc.result.form.control.Reset;
 import org.jcatapult.mvc.result.form.control.Submit;
 import org.jcatapult.mvc.result.form.control.Text;
 import org.jcatapult.mvc.result.form.control.Textarea;
+import org.jcatapult.mvc.result.form.control.YearsSelect;
 import org.jcatapult.mvc.result.message.control.ActionMessages;
 import org.jcatapult.mvc.result.message.control.FieldMessages;
 import org.jcatapult.mvc.result.message.control.Message;
@@ -118,12 +120,14 @@ public class MVCModule extends AbstractModule {
         bind(Hidden.class);
         bind(Image.class);
         bind(Message.class);
+        bind(MonthsSelect.class);
         bind(Password.class);
         bind(Radio.class);
         bind(Reset.class);
         bind(Submit.class);
         bind(Text.class);
         bind(Textarea.class);
+        bind(YearsSelect.class);
 
         requestStaticInjection(ForwardResult.class);
     }

@@ -22,7 +22,6 @@ import java.util.Map;
 import org.easymock.EasyMock;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.result.jsp.control.AbstractInputTest;
 import org.junit.Test;
 
 import static net.java.util.CollectionTools.*;
