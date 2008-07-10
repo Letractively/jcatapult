@@ -58,7 +58,6 @@ public class CredentialStorageWorkflowTest {
 
         CredentialStorageWorkflow csw = new CredentialStorageWorkflow(request, cs);
         csw.perform(wc);
-        assertNull(SecurityContext.getCurrentUser());
         assertTrue(called.get());
         EasyMock.verify(request, cs);
     }
@@ -88,7 +87,6 @@ public class CredentialStorageWorkflowTest {
 
         CredentialStorageWorkflow csw = new CredentialStorageWorkflow(request, cs);
         csw.perform(wc);
-        assertNull(SecurityContext.getCurrentUser());
         assertTrue(called.get());
         EasyMock.verify(request, cs);
     }

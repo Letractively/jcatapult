@@ -47,8 +47,7 @@ public class CredentialStorageWorkflow implements Workflow {
 
     /**
      * Looks up the user from the {@link CredentialStorage} and saves it to the context if it exists. In
-     * either case, it calls the chain to proceed and removes the object from the context after the chain
-     * has returned.
+     * either case, it calls the chain to proceed.
      *
      * @param   chain The workflow chain.
      * @throws  IOException If the chain throws.
@@ -59,6 +58,8 @@ public class CredentialStorageWorkflow implements Workflow {
         boolean existing = (userObject != null);
         if (existing) {
             EnhancedSecurityContext.login(userObject);
+        } else {
+            EnhancedSecurityContext.logout();
         }
 
         try {
@@ -70,8 +71,6 @@ public class CredentialStorageWorkflow implements Workflow {
             } else if (existing && EnhancedSecurityContext.getCurrentUser() == null) {
                 credentialStorage.remove(request);
             }
-
-            EnhancedSecurityContext.logout();
         }
     }
 
