@@ -42,7 +42,7 @@ public class CountriesSelect extends Select {
         Map<String, String> countries = new TreeMap<String, String>();
         Locale[] locales = Locale.getAvailableLocales();
         for (Locale l : locales) {
-            countries.put(l.getISO3Country(), l.getDisplayCountry(locale));
+            countries.put(l.getCountry(), l.getDisplayCountry(locale));
         }
 
         if (attributes.containsKey("includeBlank") && (Boolean) attributes.get("includeBlank")) {

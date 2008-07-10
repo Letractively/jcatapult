@@ -16,7 +16,6 @@
 package org.jcatapult.mvc.result.form.control;
 
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.result.jsp.control.AbstractButtonInputTest;
 
 /**
  * <p>
