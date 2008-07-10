@@ -29,6 +29,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.jcatapult.mvc.ObjectFactory;
@@ -59,6 +60,7 @@ import freemarker.template.TemplateModelException;
  */
 public class FreeMarkerMap implements TemplateHashModelEx {
     private static final String REQUEST = "Request";
+    private static final String RESPONSE = "Response";
     private static final String SESSION = "Session";
     private static final String APPLICATION = "Application";
     private static final String JCATAPULT_TAGS = "jc";
@@ -94,9 +96,9 @@ public class FreeMarkerMap implements TemplateHashModelEx {
         FreeMarkerMap.objectFactory = objectFactory;
     }
 
-    public FreeMarkerMap(HttpServletRequest request, ExpressionEvaluator expressionEvaluator, Object action,
-            Map<String, Object> additionalValues) {
-        objects.put(REQUEST, new HttpRequestHashModel(request, ObjectWrapper.DEFAULT_WRAPPER));
+    public FreeMarkerMap(HttpServletRequest request, HttpServletResponse response,
+            ExpressionEvaluator expressionEvaluator, Object action, Map<String, Object> additionalValues) {
+        objects.put(REQUEST, new HttpRequestHashModel(request, response, ObjectWrapper.DEFAULT_WRAPPER));
         objects.put(APPLICATION, new ServletContextHashModel(new GenericServlet() {
             public void service(ServletRequest servletRequest, ServletResponse servletResponse) {
             }
