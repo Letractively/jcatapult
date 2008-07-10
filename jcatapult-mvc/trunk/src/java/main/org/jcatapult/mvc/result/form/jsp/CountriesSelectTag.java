@@ -30,7 +30,7 @@ public class CountriesSelectTag extends SelectTag<CountriesSelect> {
      *
      * @return	Returns the tags includeBlank attribute
      */
-    public Boolean getIncludeblank() {
+    public Boolean getIncludeBlank() {
         return (Boolean) attributes.get("includeBlank");
     }
 

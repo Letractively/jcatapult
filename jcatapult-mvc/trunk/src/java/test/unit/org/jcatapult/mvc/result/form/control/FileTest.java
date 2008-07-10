@@ -13,12 +13,11 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp.control;
+package org.jcatapult.mvc.result.form.control;
 
 import org.example.action.user.Edit;
+import org.jcatapult.mvc.result.jsp.control.AbstractInputTest;
 import org.junit.Test;
-import org.jcatapult.mvc.result.form.control.AbstractInput;
-import org.jcatapult.mvc.result.form.control.File;
 
 import static net.java.util.CollectionTools.*;
 

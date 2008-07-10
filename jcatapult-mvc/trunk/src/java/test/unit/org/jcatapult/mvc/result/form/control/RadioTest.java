@@ -13,29 +13,28 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp.control;
+package org.jcatapult.mvc.result.form.control;
 
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.result.form.control.AbstractCheckedInput;
-import org.jcatapult.mvc.result.form.control.Checkbox;
+import org.jcatapult.mvc.result.jsp.control.AbstractCheckedInputTest;
 
 /**
  * <p>
- * This tests the checkbox control.
+ * This tests the radio control.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class CheckboxTest extends AbstractCheckedInputTest {
+public class RadioTest extends AbstractCheckedInputTest {
     protected AbstractCheckedInput getControl(ExpressionEvaluator ee) {
-        return new Checkbox(ee);
+        return new Radio(ee);
     }
 
     protected String getType() {
-        return "checkbox";
+        return "radio";
     }
 
     protected String getHiddenPrefix() {
-        return "__jc_cb";
+        return "__jc_rb";
     }
 }

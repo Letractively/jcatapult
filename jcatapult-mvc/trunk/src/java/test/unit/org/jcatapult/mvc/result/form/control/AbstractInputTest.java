@@ -13,15 +13,15 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp.control;
+package org.jcatapult.mvc.result.form.control;
 
 import java.io.StringWriter;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.config.Configuration;
 import org.easymock.EasyMock;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.freemarker.DefaultFreeMarkerService;
@@ -30,7 +30,6 @@ import org.jcatapult.freemarker.OverridingTemplateLoader;
 import org.jcatapult.l10n.MessageProvider;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.mvc.result.form.control.AbstractInput;
 import org.jcatapult.mvc.result.control.AbstractControlTest;
 import static org.junit.Assert.*;
 import org.junit.Ignore;

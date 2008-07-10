@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp.control;
+package org.jcatapult.mvc.result.form.control;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +23,6 @@ import java.util.Set;
 import org.easymock.EasyMock;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.result.form.control.AbstractCheckedInput;
 import org.junit.Ignore;
 import org.junit.Test;
 

@@ -13,25 +13,24 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp.control;
+package org.jcatapult.mvc.result.form.control;
 
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.result.form.control.Submit;
-import org.jcatapult.mvc.result.form.control.AbstractButtonInput;
+import org.jcatapult.mvc.result.jsp.control.AbstractButtonInputTest;
 
 /**
  * <p>
- * This tests the submit control.
+ * This tests the button control.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class SubmitTest extends AbstractButtonInputTest {
+public class ButtonTest extends AbstractButtonInputTest {
     protected AbstractButtonInput getControl(ExpressionEvaluator ee) {
-        return new Submit();
+        return new Button();
     }
 
     protected String getType() {
-        return "submit";
+        return "button";
     }
 }

@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.jsp.control;
+package org.jcatapult.mvc.result.form.control;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -33,7 +33,6 @@ import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.result.control.AbstractControlTest;
 import org.jcatapult.mvc.result.form.DefaultFormPreparer;
 import org.jcatapult.mvc.result.form.FormPreparer;
-import org.jcatapult.mvc.result.form.control.Form;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
