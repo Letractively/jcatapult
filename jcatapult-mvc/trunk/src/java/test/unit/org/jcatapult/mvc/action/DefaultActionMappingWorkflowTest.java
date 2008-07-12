@@ -26,7 +26,6 @@ import org.jcatapult.mvc.action.config.DefaultActionConfiguration;
 import org.jcatapult.servlet.WorkflowChain;
 import org.jcatapult.test.Capture;
 import org.jcatapult.test.JCatapultBaseTest;
-import org.jcatapult.test.servlet.MockHttpServletRequest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -46,7 +45,7 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         request.setParameter("__jc_a_cancel", "/admin/user/cancel");
         request.setParameter("cancel", "Cancel");
 
-        run(request, "/admin/user/cancel", null);
+        run("/admin/user/cancel", null);
     }
 
     @Test
@@ -57,7 +56,7 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         request.setParameter("__jc_a_cancel", "cancel");
         request.setParameter("cancel", "Cancel");
 
-        run(request, "/admin/user/cancel", null);
+        run("/admin/user/cancel", null);
     }
 
     @Test
@@ -68,7 +67,7 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         request.setParameter("__jc_a_cancel", "cancel");
         request.setParameter("submit", "Submit");
 
-        run(request, "/admin/user/edit", null);
+        run("/admin/user/edit", null);
     }
 
     @Test
@@ -79,10 +78,10 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         request.setParameter("__jc_a_cancel", "cancel");
         request.setParameter("submit", "Submit");
 
-        run(request, "/admin/user/edit", "xml");
+        run("/admin/user/edit", "xml");
     }
 
-    private void run(MockHttpServletRequest request, String uri, String extension) throws IOException, ServletException {
+    private void run(String uri, String extension) throws IOException, ServletException {
         ActionConfigurationProvider provider = EasyMock.createStrictMock(ActionConfigurationProvider.class);
         EasyMock.expect(provider.lookup(uri)).andReturn(new DefaultActionConfiguration(Edit.class, uri));
         EasyMock.replay(provider);
@@ -101,7 +100,7 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         chain.continueWorkflow();
         EasyMock.replay(chain);
 
-        DefaultActionMappingWorkflow workflow = new DefaultActionMappingWorkflow(request, provider, store, factory);
+        DefaultActionMappingWorkflow workflow = new DefaultActionMappingWorkflow(request, response, provider, store, factory);
         workflow.perform(chain);
 
         ActionInvocation ai = (ActionInvocation) capture.object;

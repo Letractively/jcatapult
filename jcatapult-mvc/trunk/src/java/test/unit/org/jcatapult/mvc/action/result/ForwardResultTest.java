@@ -21,6 +21,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
@@ -39,8 +40,12 @@ public class ForwardResultTest {
     public void testFullyQualified() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
 
+        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+        response.setContentType("text/html");
+        EasyMock.replay(response);
+
         RequestDispatcher dispatcher = EasyMock.createStrictMock(RequestDispatcher.class);
-        dispatcher.forward(request, null);
+        dispatcher.forward(request, response);
         EasyMock.replay(dispatcher);
 
         EasyMock.expect(request.getRequestDispatcher("/foo/bar.jsp")).andReturn(dispatcher);
@@ -50,7 +55,7 @@ public class ForwardResultTest {
         EasyMock.replay(context);
 
         Forward forward = new ForwardResult.ForwardImpl("/foo/bar.jsp", null);
-        ForwardResult forwardResult = new ForwardResult(Locale.CANADA, context, request, null, null, null);
+        ForwardResult forwardResult = new ForwardResult(Locale.CANADA, context, request, response, null, null);
         forwardResult.execute(forward, new DefaultActionInvocation(null, "/foo/bar", null, null));
 
         EasyMock.verify(context, dispatcher, request);
@@ -60,8 +65,12 @@ public class ForwardResultTest {
     public void testRelative() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
 
+        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+        response.setContentType("text/html");
+        EasyMock.replay(response);
+
         RequestDispatcher dispatcher = EasyMock.createStrictMock(RequestDispatcher.class);
-        dispatcher.forward(request, null);
+        dispatcher.forward(request, response);
         EasyMock.replay(dispatcher);
 
         EasyMock.expect(request.getRequestDispatcher("/WEB-INF/content/bar.jsp")).andReturn(dispatcher);
@@ -71,7 +80,7 @@ public class ForwardResultTest {
         EasyMock.replay(context);
 
         Forward forward = new ForwardResult.ForwardImpl("bar.jsp", null);
-        ForwardResult forwardResult = new ForwardResult(Locale.GERMAN, context, request, null, null, null);
+        ForwardResult forwardResult = new ForwardResult(Locale.GERMAN, context, request, response, null, null);
         forwardResult.execute(forward, new DefaultActionInvocation(null, "/action", null, null));
 
         EasyMock.verify(context, dispatcher, request);

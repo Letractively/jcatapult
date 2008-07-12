@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.action.result;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,5 +51,33 @@ public class RedirectResult extends AbstractResult<Redirect> {
 
         response.setStatus(perm ? 301 : 302);
         response.sendRedirect(page);
+    }
+
+    public static class RedirectImpl implements Redirect {
+        private final String code;
+        private final String uri;
+        private final boolean perm;
+
+        public RedirectImpl(String uri, String code, boolean perm) {
+            this.uri = uri;
+            this.code = code;
+            this.perm = perm;
+        }
+
+        public String code() {
+            return code;
+        }
+
+        public String uri() {
+            return uri;
+        }
+
+        public boolean perm() {
+            return perm;
+        }
+
+        public Class<? extends Annotation> annotationType() {
+            return Redirect.class;
+        }
     }
 }

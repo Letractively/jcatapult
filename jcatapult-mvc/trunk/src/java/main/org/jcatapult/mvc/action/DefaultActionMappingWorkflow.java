@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.config.ActionConfiguration;
@@ -47,18 +48,20 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
     public static final String JCATAPULT_EXECUTE_RESULT = "jcatapultExecuteResult";
 
     private final HttpServletRequest request;
+    private final HttpServletResponse response;
     private final ActionConfigurationProvider actionConfigurationProvider;
     private final ActionInvocationStore actionInvocationStore;
     private final ObjectFactory objectFactory;
 
     @Inject
-    public DefaultActionMappingWorkflow(HttpServletRequest request,
+    public DefaultActionMappingWorkflow(HttpServletRequest request, HttpServletResponse response,
             ActionConfigurationProvider actionConfigurationProvider,
             ActionInvocationStore actionInvocationStore, ObjectFactory objectFactory) {
+        this.request = request;
+        this.response = response;
         this.actionConfigurationProvider = actionConfigurationProvider;
         this.actionInvocationStore = actionInvocationStore;
         this.objectFactory = objectFactory;
-        this.request = request;
     }
 
     /**
@@ -124,9 +127,18 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
 
         ActionConfiguration actionConfiguration = actionConfigurationProvider.lookup(uri);
         if (actionConfiguration == null) {
-            // Try the index cases. If the URI is /foo, try /foo/index
-            String indexedURI = (uri.endsWith("/")) ? uri + "index" : uri + "/index";
-            actionConfiguration = actionConfigurationProvider.lookup(indexedURI);
+            // Try the index cases. If the URI is /foo/, look for an action config of /foo/index and
+            // use it. If the uri is /foo, look for a config of /foo/index and then send a redirect
+            // to /foo/
+            if (uri.endsWith("/")) {
+                actionConfiguration = actionConfigurationProvider.lookup(uri + "index");
+            } else {
+                actionConfiguration = actionConfigurationProvider.lookup(uri + "/index");
+                if (actionConfiguration != null) {
+                    response.sendRedirect(uri + "/");
+                    return;
+                }
+            }
         }
 
         Object action = null;

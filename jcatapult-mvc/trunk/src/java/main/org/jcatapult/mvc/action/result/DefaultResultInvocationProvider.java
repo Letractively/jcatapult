@@ -43,21 +43,20 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
 
     /**
      * <p>
-     * Delegates to the {@link ForwardResult#defaultForward(String)} method.
+     * Delegates to the {@link #defaultResult(String)} method.
      * </p>
      *
      * @param   uri The URI to append to the page.
-     * @return  The result invocation that is a forward or null if there isn't a forwardable resource
-     *          in the web application for the given URI.
+     * @return  The result invocation that is a forward or redirect, depending on the situation.
+     *          Or null if there isn't a forwardable resource in the web application for the given URI.
      */
     public ResultInvocation lookup(final String uri) {
-        // This is always a forward
-        Forward forward = forwardResult.defaultForward(uri);
-        if (forward == null) {
+        Annotation annotation = defaultResult(uri);
+        if (annotation == null) {
             return null;
         }
 
-        return new DefaultResultInvocation(forward, uri, null);
+        return new DefaultResultInvocation(annotation, uri, null);
     }
 
     /**
@@ -68,7 +67,7 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
      * <ol>
      * <li>Action annotations that are {@link ResultAnnotation}s, have a code method whose return
      *  value matches the result code</li>
-     * <li>Delegates to the {@link ForwardResult#defaultForward(String, String)} method. </li>
+     * <li>Delegates to the {@link #defaultResult(String, String)} method. </li>
      * </ol>
      *
      * @param   invocation The action invocation used to look for annotations.
@@ -102,8 +101,109 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
 
         }
 
-        Forward forward = forwardResult.defaultForward(uri, resultCode);
-        return new DefaultResultInvocation(forward, uri, resultCode);
+        Annotation annotation = defaultResult(uri, resultCode);
+        return new DefaultResultInvocation(annotation, uri, resultCode);
+    }
+
+
+    /**
+     * Locates the default Forward for a URI. This method is only used for action-less invocations.
+     *
+     * <ol>
+     * <li>/WEB-INF/content/&lt;uri>.jsp</li>
+     * <li>/WEB-INF/content/&lt;uri>.ftl</li>
+     * <li>/WEB-INF/content/&lt;uri>/index.jsp</li>
+     * <li>/WEB-INF/content/&lt;uri>/index.ftl</li>
+     * </ol>
+     *
+     * <p>
+     * If nothing is found this bombs out.
+     * </p>
+     *
+     * @param   uri The URI.
+     * @return  The Forward and or null if it doesn't exist.
+     */
+    protected Annotation defaultResult(final String uri) {
+        Forward forward;
+        if (uri.endsWith("/")) {
+            forward = forwardResult.findResult(uri + "index.jsp", null);
+            if (forward == null) {
+                forward = forwardResult.findResult(uri + "index.ftl", null);
+            }
+        } else {
+            // Check for the simple forward
+            forward = forwardResult.findResult(uri + ".jsp", null);
+            if (forward == null) {
+                forward = forwardResult.findResult(uri + ".ftl", null);
+            }
+
+            if (forward == null) {
+                forward = forwardResult.findResult(uri + "/index.jsp", null);
+                if (forward == null) {
+                    forward = forwardResult.findResult(uri + "/index.ftl", null);
+                }
+
+                if (forward != null) {
+                    return new RedirectResult.RedirectImpl(uri + "/", null, false);
+                }
+            }
+        }
+
+        return forward;
+    }
+
+    /**
+     * Locates the default Forward for a URI and result code from an action.
+     *
+     * <p>
+     * Checks for results using this search order:
+     * </p>
+     *
+     * <ol>
+     * <li>/WEB-INF/content/&lt;uri>-&lt;resultCode>.jsp</li>
+     * <li>/WEB-INF/content/&lt;uri>-&lt;resultCode>.ftl</li>
+     * <li>/WEB-INF/content/&lt;uri>.jsp</li>
+     * <li>/WEB-INF/content/&lt;uri>.ftl</li>
+     * <li>/WEB-INF/content/&lt;uri>/index.jsp</li>
+     * <li>/WEB-INF/content/&lt;uri>/index.ftl</li>
+     * </ol>
+     *
+     * <p>
+     * If nothing is found this bombs out.
+     * </p>
+     *
+     * @param   uri The URI.
+     * @param   resultCode The result code from the action invocation.
+     * @return  The Forward and never null.
+     * @throws  RuntimeException If the default forward could not be found.
+     */
+    public Annotation defaultResult(String uri, String resultCode) {
+        Forward forward;
+        if (uri.endsWith("/")) {
+            forward = forwardResult.findResult(uri + "index.jsp", resultCode);
+            if (forward == null) {
+                forward = forwardResult.findResult(uri + "index.ftl", resultCode);
+            }
+        } else {
+            // Look for JSP and FTL results to forward to
+            forward = forwardResult.findResult(uri + "-" + resultCode + ".jsp", resultCode);
+            if (forward == null) {
+                forward = forwardResult.findResult(uri + "-" + resultCode + ".ftl", resultCode);
+            }
+            if (forward == null) {
+                forward = forwardResult.findResult(uri + ".jsp", resultCode);
+            }
+            if (forward == null) {
+                forward = forwardResult.findResult(uri + ".ftl", resultCode);
+            }
+        }
+
+        if (forward == null) {
+            throw new RuntimeException("Unable to locate result for URI [" + uri + "] and result code [" +
+                resultCode + "]");
+        }
+
+        return forward;
     }
 
     private boolean matchesCode(String resultCode, Annotation annotation) {

@@ -37,6 +37,7 @@ import org.jcatapult.mvc.result.form.control.MonthsSelect;
 import org.jcatapult.mvc.result.form.control.Password;
 import org.jcatapult.mvc.result.form.control.Radio;
 import org.jcatapult.mvc.result.form.control.Reset;
+import org.jcatapult.mvc.result.form.control.Select;
 import org.jcatapult.mvc.result.form.control.Submit;
 import org.jcatapult.mvc.result.form.control.Text;
 import org.jcatapult.mvc.result.form.control.Textarea;
@@ -124,6 +125,7 @@ public class MVCModule extends AbstractModule {
         bind(Password.class);
         bind(Radio.class);
         bind(Reset.class);
+        bind(Select.class);
         bind(Submit.class);
         bind(Text.class);
         bind(Textarea.class);
