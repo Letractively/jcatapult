@@ -1,4 +1,4 @@
-﻿#summary The documentation home page.
+#summary The documentation home page.
 #labels Featured
 
 Here are the documentation pages that are available for the JCatapult framework. Some of the documentation has not yet been written. Please check back soon and it should be complete before 1.0 is released. If you are interested in helping build out or fix documentation, please contact Brian Pontarelli at *brian at inversoft.com*
@@ -21,7 +21,8 @@ Here are the documentation pages that are available for the JCatapult framework.
 
   * [GuideEntities Domains and entities]
   * [GuideDatabaseManagement Database management]
-  * [GuideActionView Actions and views]
+  * [GuideNewActionView Actions and views] (the new MVC)
+  * [GuideActionView Actions and views] (the Struts MVC)
   * [GuideServices Services]
   * [GuideDependencyInjection Dependency Injection]
 
@@ -54,34 +55,40 @@ Here are the documentation pages that are available for the JCatapult framework.
 
 Below are links to topics about a specific JCatapult technology, service or API.
 
-=== Ant ===
+== MVC ==
+
+  * [MVCWorkflow MVC workflow system]
+  * [MVCParameterMapping Parameter handling (AKA parameter mapping)]
+  * [MVCTypeConversion Type conversion]
+  * [MVCResults Results]
+  * [MVCForms Forms]
+  * [MVCValidation Validation]
+  * [MVCMessagesLocalization Messages, errors and localization]
+  * [MVCScopes Scopes]
+
+== Ant ==
 
   * [AntCreatingPlugins Creating ant plugins]
   * [AntDependencies Adding and removing project dependencies]
 
-=== Module ===
+== Module ==
 
   * [ModuleStaticResources Writing modules with static resources]
   * [ModuleAddingModules Adding pre-built modules]
 
-=== Scaffolder ===
+== Scaffolder ==
 
   * [ScaffolderCustomScaffolder Writing a custom scaffolder]
 
-=== Database Manager ===
+== Database Manager ==
 
   * [DatabaseManager JCatapult Database Manager]
 
-=== Struts ===
-
-  * [CommonActions Common actions (countries select box, month select box, etc)]
-  * [ParameterAttributes Parameter attributes extension to Struts]
-
-=== SiteMesh ===
+== SiteMesh ==
 
   * [SiteMeshDirectories JCatapult standard SiteMesh directories]
 
-=== File manager ===
+== File manager ==
 
   * [FileManagerOverview Overview]
   * [jCatapultFilemanagerConfiguration Configuration and Setup Guide]
@@ -93,7 +100,7 @@ Below are links to topics about a specific JCatapult technology, service or API.
 
 Below are links to various documents around JCatapult standard methodologies. These are broken into the various application lifecycle stages as well as best practices.
 
-=== Lifecycle ===
+== Lifecycle ==
 
   * [ProjectCreation Project creation]
   * [Scaffolding Scaffolding]
@@ -103,7 +110,7 @@ Below are links to various documents around JCatapult standard methodologies. Th
   * [RunningAModule Running a module]
   * [Releasing Releasing a version]
 
-=== Best Practices ===
+== Best Practices ==
 
   * [BestPracticesStruts Struts2/SmartURLs best practices]
   * [BestPracticesGuice Guice dependency injection best practices]
