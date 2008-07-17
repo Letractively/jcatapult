@@ -1,0 +1,69 @@
+#summary MVC Workflow Overview
+
+= MVC Workflow =
+
+The JCatapult MVC is part of the JCatapult Workflow processing engine. It is executed as a sub-workflow directly after the security workflow is invoked. Each stage of the MVC workflow handles a different aspect of the over-all request processing. Here are the steps on the MVC Workflow:
+
+  # Action Mapping
+  # Scope Processing
+  # Message Processing
+  # Action Preparation
+  # Parameter Processing
+  # Validation
+  # Action Invocation
+
+Each stage of the MVC workflow has two locations where operations are performed. These are known as *entry operations* and the *exit operations*. If you consider that the MVC workflow behaves the same as JEE filters, a workflow can perform operations prior to calling the next part of the workflow. It can also perform operations after the call to the next part of the workflow has returned. Here is an example workflow that illustrates this processing:
+
+{{{
+public class ExampleWorkflow implements Workflow {
+  public void perform(WorkflowChain chain) {
+    // Perform entry operations
+    ...
+
+    chain.continueWorkflow();
+
+    // Perform exit operations
+    ...
+  }
+}
+}}}
+
+= Action Mapping =
+
+This stage of the MVC workflow determines which action is being requested based on the request URI. In some cases, there is no action associated with the URI, but the JCatapult MVC still creates an action mapping known as an actionless invocation.
+
+Once the action mapping stage has completed a new `org.jcatapult.mvc.action.ActionInvocation` instance is placed into the `HttpServletRequest` under the key `jcatapultActionInvocation` so that it is accessible to the rest of the MVC workflow as well as the action and result.
+
+The ActionInvocations are also stored in the `HttpServletRequest` on a stack under the key `jcatapultActionInvocationStack`. The stack data structure allows the invocation of multiple actions during the same request without corrupting the state of the MVC.
+
+= Scope Processing = 
+
+This stage of the MVC workflow handles the population of scope fields into the action. Each field in the action that is annotated with a scope annotation is populated based on the specific scope during this stage.
+
+This stage also handles the storing of scoped fields as an *exit operation*. Each field in the action that is annotated with a scope annotation is stored into the specific scope.
+
+One additional operation that this stage handles is the Flash scope. Flashed values are stored in the session so that they are accessible across requests. The Scope Processing stage pulls all of the Flash values out of the session and moves them into the request as an *entry operation*. It also places new Flash values into the session during the *exit operation*.
+
+= Message Processing =
+
+This stage of the MVC workflow manages Flashed messages in a similar manner to the Flash values described in the previous section. As an *entry operation*, this workflow pulls all of the messages out of the session and stores them in the request. Unlike the Scope Processing workflow, new Flash messages are placed into the session using the `org.jcatapult.mvc.message.MessageStore` interface and not by this workflow.
+
+= Action Preparation =
+
+This stage of the MVC workflow prepares the action to be invoked. Action preparation allows the application to setup the action prior to having the parameters set into it. An example of a common preparation action would be to create new instances of certain action fields.
+
+This workflow finds all public methods on the action that are annotated with the `org.jcatapult.mvc.action.annotation.ActionPrepareMethod` annotation. Each of these methods are invoked during this stage.
+
+= Paramater Processing =
+
+This stage of the MVC workflow sets all of the HTTP request parameters into the action. This process uses an instance of the `org.jcatapult.mvc.parameter.el.ExpressionEvaluator` to handle the storing of the parameters into the action.
+
+= Validation =
+
+This stage of the MVC workflow performs validation on objects in the action. This process has two methods of validation. The first is using annotations inside classes that dictate how which values must be set on the objects for them to be valid. The second method is by invoking a validation method on the action directly. This method can perform any validation that is necessary. If the validation fails, the validation workflow sets a flag so that the action is not invoked but the result is still rendered.
+
+= Action Invocation =
+
+This is the final stage of the MVC workflow. It handles the invoking the action class and also rendering the result. This process determines the correct method to invoke on the action class based on a number of conventions. Likewise, it uses conventions and annotations on the action to determine the correct result to render. After this stage is finished processing, the MVC is complete. 
+
+If for some reason the action invocation workflow cannot find a result to render and there is not an action to invoke, it passes control back to the outer JCatapult Workflow. This normally passes control back to the JEE filter chain where the JEE servlet container can handle any errors.
