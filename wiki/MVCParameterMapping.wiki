@@ -4,6 +4,12 @@
 
 HTTP request parameters are set into the action classes by the JCatapult MVC. These parameters include any GET parameters from the URL as well as any form POST parameters from the HTTP message. Each parameter is used to populate values on the action class. This process is known as parameter mapping and has a number of steps that are described in this document.
 
+= Null Values =
+
+One important difference between the JCatapult MVC and many other MVCs is that it handles null and empty values as the same. HTML and XHTML specify that if a text field is left blank the parameter is sent to the server as an empty String. This can be confusing because empty String and null are two very different values.
+
+The JCatapult parameter mapping assumes that all empty String parameters are actual null. The only caveat to this are primitive values. If an empty String parameter is sent for a primitive, the default value of the primitive is used in place of null. This is covered more in the [MVCTypeConversion type conversion] documentation.
+
 = Naming =
 
 Parameter names are used to map directly to values inside Java objects. Let's take a simple action class (the package, imports, annotations and execute method have been left out for simplicity):
