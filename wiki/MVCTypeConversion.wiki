@@ -1,0 +1,239 @@
+#summary JCatapult MVC Type Conversion
+
+= Type Conversion =
+
+As part of the HTTP request parameter mapping process the JCatapult MVC performs type conversion between the String HTTP parameters and the type in the class that the parameter maps to.
+
+Here is an example action that would require type conversion:
+
+{{{
+public class CoolAction {
+  public int age;
+}
+}}}
+
+This class would map to the URI */cool* and if we passed in the age parameter it would be automatically converted to an integer by the JCatapult MVC. Here is an example URI that would send in a value for the age property:
+
+{{{
+/cool?age=42
+}}}
+
+By default, the JCatapult MVC automatically converters the HTTP parameter Strings to these types:
+
+  * boolean and Boolean
+  * byte and Byte
+  * char and Char
+  * short and Short
+  * int and Integer
+  * long and Long
+  * float and Float
+  * double and Double
+  * BigDecimal
+  * BigInteger
+  * File
+
+In addition to these types, JCatpault MVC also handles type conversion to arrays of these types and also Collections of these types. It also fully supports generic Collection types and will appropriately convert based on the type parameters of the generic Collection.
+
+Here is an example of an array/Collection action:
+
+{{{
+public class CoolAction {
+  public int[] ids;
+}
+}}}
+
+In this case, you could pass in a URI like this:
+
+{{{
+/cool?ids=1&ids=2&ids=3
+}}}
+
+You could change the action to be a generic Collection like this:
+
+{{{
+public class CoolAction {
+  public List<Integer> ids;
+}
+}}}
+
+In this case, JCatapult will create an ArrayList and then add to it each of the *ids* parameters converted to a String. Here are the types of Collections and the implementations that JCatapult MVC will use during type conversion:
+
+  * List - ArrayList
+  * Set - HashSet
+  * SortedSet - TreeSet
+  * Queue - LinkedList
+  * Other Collections are instantiated directly
+
+= Type Conversion Failure =
+
+If we take the first example above where the action contained a single field named age and consider what would happen if a user passed in a URI like this:
+
+{{{
+/cool?age=OLD
+}}}
+
+Obviously the String *OLD* can't be converted to an *int*. In this case the type conversion will fail and cause an error to be generated. The error is a field error and is associated with the field that the type conversion failed for. In order to provide an error message for this failure case, the message must be added to the resource bundle mechanism defined in the [MVCMessageLocalization message documentation]. The key for the message in the resource bundle is the name of the field plus the String *.conversionError*. Here is an example resource bundle for our age example:
+
+{{{
+age.conversionError=Invalid age
+}}}
+
+= Custom Type Converters =
+
+There are two types of type converters support by the JCatapult MVC, global and annotation converters. All of the conversions discussed above are global converters. They are used whenever a field is a particular type and don't require any additional configuration or annotation. These are a great way to provide type conversion for a type when there are not multiple ways to convert to that type.
+
+If there are multiple ways to convert to a type, you might consider writing an annotation based converter. These are similar to the JPA type converters because they use annotations to determine how to converter the values to and from Strings.
+
+== Global Converter ==
+
+In order to write a global converter, you must perform these steps:
+
+  # Implement the `org.jcatapult.mvc.parameter.convert.GlobalConverter` interface
+  # Annotate your converter with the `org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter` and specify what types your converter converts
+  # Add your converter to a Guice module
+
+Let's cover these steps in order. 
+
+=== GlobalConverter Interface ===
+
+First, you need implement the GlobalConverter interface. This interface only has two methods however by contract it must handle array conversions as well. In most cases you will want to extend the `org.jcatapult.mvc.parameter.convert.converters.AbstractGlobalConverter` because it handles these array cases. Here is an example of a converter:
+
+{{{
+public class MyConverter extends AbstractGlobalConverter {
+  protected Object stringToObject(String value, Type convertTo, Map<String, String> dynamicAttributes)  
+  throws ConversionException, ConverterStateException {
+    ...
+  }
+
+  protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> dynamicAttributes)  
+  throws ConversionException, ConverterStateException {
+    ...
+  }
+
+  protected String objectToString(Object value, Type convertTo, Map<String, String> dynamicAttributes)  
+  throws ConversionException, ConverterStateException {
+    ...
+  }
+}
+}}}
+
+Each method on the Converter interface and the AbstractGlobalConverter class can perform conversions for any number of types because the type is passed into the method. Also, these methods define two different exceptions that are thrown when the conversion fails.
+
+  * ConversionException - This exception denotes that the value being converted could not be converted to the specified type. The *age=OLD* example would throw a ConversionException since the String *OLD* cannot be converted to an int.
+
+  * ConverterStateException - This exception denotes that the converter was not properly configured, was missing a needed parameter to was unable to attempt the conversion. This becomes very useful if you are using Dynamic Attributes, which are covered later.
+
+=== GlobalConverter Annotation ===
+
+Next, add the GlobalConverter annotation to your type converter and use it to specify the types your converter can convert. Here is an example:
+
+{{{
+@GlobalConverter(forTypes = {Type1.class, Type2.class})
+public class MyConverter extends AbstractGlobalConverter {
+  ...
+}
+}}}
+
+This tells the JCatapult MVC that the MyConverter class is capable of converter to and from Type1 and Type2.
+
+=== Module Binding ===
+
+Lastly, you'll need to add your custom type converter to a Guice Module file. This binding allows the JCatapult MVC to find your type converter and register it for use. Here is an example Module:
+
+{{{
+public class MyModule extends AbstractModule {
+  protected void configure() {
+    bind(MyConverter.class);
+  }
+}
+}}}
+
+== Converter Annotation ==
+
+The other method of declaring a custom type converter is to use a type converter annotation. Annotations allow you to specify the exact type converter to use for a specific field. Here is an action that uses a type converter annotation:
+
+{{{
+@Action
+public class CoolAction {
+  @MyTypeConverterAnnotation
+  public MyType value;
+}
+}}}
+
+This action defines a field named *value* of the type *MyType*. The *MyTypeConverterAnnotation* annotation is a type converter annotation that informs the JCatapult MVC that it should use a specific type converter to convert to and from the *MyType* type.
+
+The steps you need to take in order to create a custom type converter annotation are:
+
+  # Create the annotation
+  # Implement the `org.jcatapult.mvc.parameter.convert.AnnotationConverter` interface
+
+=== Annotation ===
+
+First, create a new annotation for your type converter. This annotation must have RUNTIME retention and target FIELDs. This annotation must also be annotated with the `org.jcatapult.mvc.parameter.convert.annotation.ConverterAnnotation` so that JCatapult MVC will know that it is a type conversion annotation and which Converter implementation to use. Here is an example annotation:
+
+{{{
+@ConverterAnnotation(MyConverter.class)
+@Retention(RUNTIME)
+@Target(FIELD)
+public @interface MyTypeConverterAnnotation {
+}
+}}}
+
+=== AnnoationConverter ===
+
+First, you need implement the AnnotationConverter interface. This interface is almost identical to the GlobalConverter interface described above. There is only one major difference, each method also takes the annotation from the field. This allows your annotation to have attributes that can be used during conversion. In the same manner as the GlobalConverter, the AnnotationConverter has an abstract implementation that you will use in almost all cases. This class is the  `org.jcatapult.mvc.parameter.convert.converters.AbstractAnnotationConverter`. Here is an example of a converter:
+
+{{{
+public class MyConverter extends AbstractAnnotationlConverter<MyTypeConverterAnnotation> {
+  protected Object stringToObject(MyTypeConverterAnnotation annotation, String value, Type convertTo,
+      Map<String, String> dynamicAttributes)  
+  throws ConversionException, ConverterStateException {
+    ...
+  }
+
+  protected Object stringsToObject(MyTypeConverterAnnotation annotation, String[] values, Type convertTo, 
+      Map<String, String> dynamicAttributes)  
+  throws ConversionException, ConverterStateException {
+    ...
+  }
+
+  protected String objectToString(MyTypeConverterAnnotation annotation, Object value, Type convertTo, 
+      Map<String, String> dynamicAttributes)  
+  throws ConversionException, ConverterStateException {
+    ...
+  }
+}
+}}}
+
+The rest of the method signatures are the same as the GlobalConverter, including the exceptions, which are described above. Notice how each method takes the annotation as a parameter. This makes it simple to provide additional information to the converter for the specific field being annotated. If we change our annotation to contain an attribute, we can leverage that attribute from the converter.
+
+{{{
+@ConverterAnnotation(MyConverter.class)
+@Retention(RUNTIME)
+@Target(FIELD)
+public @interface MyTypeConverterAnnotation {
+  String name();
+}
+
+public class MyConverter extends AbstractAnnotationlConverter<MyTypeConverterAnnotation> {
+  protected Object stringToObject(MyTypeConverterAnnotation annotation, String value, Type convertTo,
+      Map<String, String> dynamicAttributes)  
+  throws ConversionException, ConverterStateException {
+    if (annotation.name().equals("Fred")) {
+      ...
+    }
+  }
+
+  ...
+}
+}}}
+
+Here is how an action might look that uses the new type converter annotation:
+
+{{{
+@Action
+public class CoolAction {
+  @MyTypeConverterAnnotation(name = "Fred")
+  public MyType myType;
+}
+}}}
