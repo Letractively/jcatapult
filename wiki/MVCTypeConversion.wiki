@@ -7,6 +7,7 @@ As part of the HTTP request parameter mapping process the JCatapult MVC performs
 Here is an example action that would require type conversion:
 
 {{{
+@Action
 public class CoolAction {
   public int age;
 }
@@ -37,6 +38,7 @@ In addition to these types, JCatpault MVC also handles type conversion to arrays
 Here is an example of an array/Collection action:
 
 {{{
+@Action
 public class CoolAction {
   public int[] ids;
 }
@@ -51,6 +53,7 @@ In this case, you could pass in a URI like this:
 You could change the action to be a generic Collection like this:
 
 {{{
+@Action
 public class CoolAction {
   public List<Integer> ids;
 }

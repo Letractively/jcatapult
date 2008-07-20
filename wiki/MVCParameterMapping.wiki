@@ -15,6 +15,7 @@ The JCatapult parameter mapping assumes that all empty String parameters are act
 Parameter names are used to map directly to values inside Java objects. Let's take a simple action class (the package, imports, annotations and execute method have been left out for simplicity):
 
 {{{
+@Action
 public class CoolAction {
   public String name;
 }
@@ -23,7 +24,7 @@ public class CoolAction {
 We can set the value of the name field using HTTP parameters. If we want to set the value of the name field to *Frank*, we might use a URI like this:
 
 {{{
-/cool-action?name=Frank
+/cool?name=Frank
 }}}
 
 == Nesting ==
@@ -35,6 +36,7 @@ public class User {
   public String name;
 }
 
+@Action
 public class CoolAction {
   public User user;
 }
@@ -43,7 +45,7 @@ public class CoolAction {
 The action now contains a reference to the `User` rather than the name. The name has been moved into the `User` class. In order to set the name of the user the URI would now look like this:
 
 {{{
-/cool-action?user.name=Frank
+/cool?user.name=Frank
 }}}
 
 === Object Creation ===
@@ -72,7 +74,7 @@ answer['secret'] = Map value with a key of new String("secret")
 If you wanted to set the second answer to `Spike` (assuming the question is something like "What's your pet's name?"), you would do so like this:
 
 {{{
-/cool-action?answer[2]=Spike
+/cool?answer[2]=Spike
 }}}
 
 == Generics ==
@@ -92,6 +94,7 @@ public class User {
   public Map<String, Address> addresses;
 }
 
+@Action
 public class CoolAction {
   public User user;
 }
@@ -100,7 +103,7 @@ public class CoolAction {
 Let's say that we want to populate the user and their address. We can do so using this URI:
 
 {{{
-/cool-action?user.address['home'].street=100+Main+st&user.address['home'].city=Springfield+user.address['home'].state=IO&user.address['home'].zipcode=11111&user.name=Frank
+/cool?user.address['home'].street=100+Main+st&user.address['home'].city=Springfield+user.address['home'].state=IO&user.address['home'].zipcode=11111&user.name=Frank
 }}}
 
 If we break this down, we have these individual parameters
