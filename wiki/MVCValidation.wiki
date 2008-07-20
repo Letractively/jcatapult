@@ -12,6 +12,7 @@ JCatapult provides two different methods of validation.
 Annotations provide a simple mechanism for validating objects inside the JCatapult framework. Annotations are placed onto member fields of a class and denote the specific constraint for that field. Here is an example of a simple action that uses a validation annotation:
 
 {{{
+@Action
 public class CoolAction {
   @Required
   public String name;
@@ -30,6 +31,7 @@ public class User {
   public String name;
 }
 
+@Action
 public class CoolAction {
   @Valid
   public User user;
@@ -43,6 +45,7 @@ If the @Valid annotation is left out, no validation would occur for the User obj
 Programmatic validation uses a method that has been annotated with the `org.jcatapult.mvc.validation.annotation.ValidateMethod` annotation. This annotation tells the JCatapult MVC that the method should be invoked during the validation stage. Here is an example of a validate method:
 
 {{{
+@Action
 public class CoolAction {
   public String name;
 
@@ -71,6 +74,7 @@ public class User {
   public String name;
 }
 
+@Action
 public class CoolAction {
   @Valid
   public User user;
@@ -91,6 +95,7 @@ public class User {
   public int age;
 }
 
+@Action
 public class CoolAction {
   @Valid
   public User user;
@@ -110,6 +115,7 @@ If the action is using a programmatic validate method, it must use the `org.jcat
 In order to use the MessageStore, you'll need to inject it into your action. Here is the programmatic validation example from above with the message handling added.
 
 {{{
+@Action
 public class CoolAction {
   private final MessageStore messageStore;
 
@@ -181,6 +187,7 @@ This validator checks if get character in the value is lowercase. You can perfor
 You can now use your custom validator in any class like this:
 
 {{{
+@Action
 public class MyAction {
   @Lowercase
   public String username;
