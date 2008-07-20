@@ -137,7 +137,6 @@ The JCatapult MVC makes is simple to add new validation annotations. Here are th
 
   # Create the annotation
   # Implement the Validator interface
-  # Add the binding to your module
 
 == Annotation ==
 
@@ -179,24 +178,7 @@ public class LowercaseValidator implements Validator<Lowercase> {
 }}}
 
 This validator checks if get character in the value is lowercase. You can perform any type of validation you want in you Validator implementations.
-
-== Binding ==
-
-The last step you must take to get your validator working is to add a binding in your applications Guice module to the Validator implementation. Let's assume your project has a Guice module like this:
-
-{{{
-package com.example.myapp.guice;
-
-import com.google.inject.AbstractModule;
-
-public class MyModule extends AbstractModule {
-  protected void configure() {
-    bind(LowercaseValidator.class);
-  }
-}
-}}}
-
-What this does is to signal to JCatpult that it needs to load and manage your new Validator. You can now use your custom validator in any class like this:
+You can now use your custom validator in any class like this:
 
 {{{
 public class MyAction {
