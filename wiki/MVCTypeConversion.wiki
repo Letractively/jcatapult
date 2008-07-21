@@ -172,7 +172,7 @@ The steps you need to take in order to create a custom type converter annotation
 
 === Annotation ===
 
-First, create a new annotation for your type converter. This annotation must have RUNTIME retention and target FIELDs. This annotation must also be annotated with the `org.jcatapult.mvc.parameter.convert.annotation.ConverterAnnotation` so that JCatapult MVC will know that it is a type conversion annotation and which Converter implementation to use. Here is an example annotation:
+First, create a new annotation for your type converter. This annotation must have RUNTIME retention and target FIELDs. This annotation also must be annotated with the `org.jcatapult.mvc.parameter.convert.annotation.ConverterAnnotation` so that JCatapult MVC will know that it is a type conversion annotation and which Converter implementation to use. Here is an example annotation:
 
 {{{
 @ConverterAnnotation(MyConverter.class)
