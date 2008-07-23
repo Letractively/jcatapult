@@ -1,47 +1,54 @@
-#summary JCatapult MVC Button Tags
+#summary JCatapult MVC Textarea Tag
 
-= Buttons =
+= Textarea =
 
-The JCatapult MVC has three different types of buttons:
+The *textarea* tag generates a textarea.
 
-  * button
-  * image
-  * submit
+= Association =
 
-Each of the buttons has the same attributes (the image tag has a few additional attributes). The only difference between them is the type of input tag that they generate. Here are the three types of HTML buttons that are generated:
+In most cases, a *textarea* tag is associated to a String property in the action. The value of the property is used when to populate the textarea when the form is rendered. The HTML generated might look like this:
 
 {{{
-button - <input type="button"/>
-image - <input type="image"/>
-submit - <input type="submit"/>
+<label>News story</label>
+<textarea name="content">
+The text here is from the property on the action.
+</textarea>
 }}}
 
-= Button Attributes =
+The association on the action would look like this:
 
-The button tag supports all of the common HTML attributes that are covered in the [MVCForms forms] documentation. In addition to those attributes, all of the button tags also support these attributes:
+{{{
+public class AddNews {
+  public String content;
+}
+}}}
 
-  * action - (String) Specify an alternate action to invoke (besides the action of the form) if the button is clicked
-  * name - (String) Used to lookup the localized text of the button
-  * value - (String) The value sent to the server if the button is clicked. In most cases you won't need this attribute and if you specify this attribute it might cause errors unless you add a property to your action with the same name as the button.
-  * size - (int) The size of the button
-  * alt - (String) A short description of the button (used in tool-tips)
-  * tabindex - (int) The tabindex of the button
-  * accesskey - (String) The access key of the button
-  * onfocus - (String) The button got the focus
-  * onblur - (String) The button lost focus
+When the form is submitted the *content* field in the action is populated with the value from the textarea.
 
-== Image button attributes ==
+= Attributes =
 
-These are the attributes that are only used by the image button.
+The *textarea* tag supports all of the common HTML attributes that are covered in the [MVCForms forms] documentation. In addition to those attributes, the tag also supports these attributes:
 
-  * src - (String) Used only for image buttons to set the image source
-  * usemap - (boolean) Used only for image buttons to indicate a client-side image map
-  * ismap - (boolean) Used only for image buttons to indicate a server-side image map
+  * name - (String) The action property that is associated with the textarea and used to populate the textarea when the form is rendered and also used to populate the associated property of the action when the form is submitted. The name is also used to lookup the localized label for the textarea from the resource bundle
+  * defaultValue - (String) Used to populate the textarea, if-and-only-if the value from the property in the action is null
+  * value - (String) This value overrides the value from the property in the action when the form is rendered. This attribute is rarely used because if the form fails validation the users input into the textarea will be lost
+  * cols - (int) The number of columns wide the textarea is
+  * rows - (int) The number of rows high the textarea is
+  * alt - (String) A short description of the textarea (used in tool-tips)
+  * tabindex - (int) The tabindex of the textarea
+  * accesskey - (String) The access key of the textarea
+  * onfocus - (String) The textarea got the focus
+  * onblur - (String) The textarea lost focus
 
 = Examples =
 
 {{{
-[@jc.submit name="login"/]
-[@jc.image name="register" src="/images/register-button.gif"/]
-[@jc.button name="cancel" action="cancel"/]
+<!-- Generate a textarea for the news story content -->
+[@jc.textarea name="content"/]
+}}}
+
+The resource bundle might look like this:
+
+{{{
+content=News story
 }}}

@@ -2,11 +2,11 @@
 
 = Months Select =
 
-The *monthsselect* tag generates a select box that is populated with the months of the year. The options of the select always have a value of the 1 based index of the month (i.e. May = 5, August = 8). The text of the Month is localized based on the current [MVCLocale Locale] of the MVC.
+The *monthsselect* tag generates a select box that is populated with the months of the year. The options of the select always have a value of the 1 based index of the month (i.e. May = 5, August = 8). The text of the option is localized based on the current [MVCLocale Locale] of the MVC.
 
 = Association =
 
-The *monthsselet* tag is usually always associated with an numeric or String property of the action. However, you could also create a custom type using a custom type converter. The HTML generated might look like this:
+The *monthsselect* tag is usually always associated with an numeric or String property of the action. However, you could also create a custom type using a custom type converter. The HTML generated might look like this:
 
 {{{
 <label>Month</label>

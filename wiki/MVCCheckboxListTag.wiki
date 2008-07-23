@@ -34,7 +34,7 @@ When the form is rendered, the checked state of each checkbox in the list is det
 
 The checkboxlist tag supports all of the common HTML attributes that are covered in the [MVCForms forms] documentation. In addition to those attributes, the checkboxlist tag also supports these attributes:
 
-  * name - (String) The action property that is associated with the checkboxes and used to determine if the checkboxes are checked when the form is rendered and also used to populate the associated property of the action when the form is submitted
+  * name - (String) The action property that is associated with the checkboxes and used to determine if the checkboxes are checked when the form is rendered and also used to populate the associated property of the action when the form is submitted.  This is also used to generate the localized label for the checkbox group
   * items - (Collection, Array or Map) The items used to build the checkboxes
   * valueExpr - (String) An expression that is used to retrieve the value of each checkbox from the objects in the *items*
   * l10nExpr - (String) An expression that is used to retrieve a localization key from the objects in the *items*. This key is then used to retrieve the text of each checkbox from the localized resource bundle

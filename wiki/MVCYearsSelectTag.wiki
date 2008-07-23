@@ -1,47 +1,63 @@
-#summary JCatapult MVC Button Tags
+#summary JCatapult MVC Years Select Tag
 
-= Buttons =
+= Years Select =
 
-The JCatapult MVC has three different types of buttons:
+The *yearsselect* tag generates a select box that is populated with years. The options of the select always have a value of the year (i.e. 2008, 2009, 2010). The text of the option is also the year. By default 10 years are displayed starting with the current year. This can be changed using various attributes.
 
-  * button
-  * image
-  * submit
+= Association =
 
-Each of the buttons has the same attributes (the image tag has a few additional attributes). The only difference between them is the type of input tag that they generate. Here are the three types of HTML buttons that are generated:
+The *yearsselect* tag is usually always associated with an numeric or String property of the action. However, you could also create a custom type using a custom type converter. The HTML generated might look like this:
 
 {{{
-button - <input type="button"/>
-image - <input type="image"/>
-submit - <input type="submit"/>
+<label>Year</label>
+<select name="creditCard.expirationYear">
+<option value="2008">2008</option>
+...
+</select>
 }}}
 
-= Button Attributes =
+The association on the action would look like this:
 
-The button tag supports all of the common HTML attributes that are covered in the [MVCForms forms] documentation. In addition to those attributes, all of the button tags also support these attributes:
+{{{
+public class Register {
+  public CreditCard creditCard;
+}
 
-  * action - (String) Specify an alternate action to invoke (besides the action of the form) if the button is clicked
-  * name - (String) Used to lookup the localized text of the button
-  * value - (String) The value sent to the server if the button is clicked. In most cases you won't need this attribute and if you specify this attribute it might cause errors unless you add a property to your action with the same name as the button.
-  * size - (int) The size of the button
-  * alt - (String) A short description of the button (used in tool-tips)
-  * tabindex - (int) The tabindex of the button
-  * accesskey - (String) The access key of the button
-  * onfocus - (String) The button got the focus
-  * onblur - (String) The button lost focus
+public class CreditCard {
+  public int expirationYear;
+}
+}}}
 
-== Image button attributes ==
+When the form is submitted the *creditCard.expirationYear* field in the action is populated with the value from the selected option.
 
-These are the attributes that are only used by the image button.
+= Selected State =
 
-  * src - (String) Used only for image buttons to set the image source
-  * usemap - (boolean) Used only for image buttons to indicate a client-side image map
-  * ismap - (boolean) Used only for image buttons to indicate a server-side image map
+When the form is rendered, the selected state of the options in the select box are determined by using the associated property from the action and the value of each option (the 1 based index of the months). If the value of the associated property matches the value of an option, that options selected state is set to selected.
+
+= Attributes =
+
+The yearsselect tag supports all of the common HTML attributes that are covered in the [MVCForms forms] documentation. In addition to those attributes, the tag also supports these attributes:
+
+  * name - (String) The action property that is associated with the yearsselect and used to determine if any options in the select box are selected when the form is rendered. It is also used to populate the associated property of the action when the form is submitted. The name is also used to lookup the localized label for the yearsselect from the resource bundle
+  * startYear - (int) The year to start from
+  * endYear - (int) The year to end on. This is ignored if the numberOfYears is specified
+  * numberOfYears - (int) The number of years to display
+  * size - (int) The size of the select box
+  * alt - (String) A short description of the select box (used in tool-tips)
+  * tabindex - (int) The tabindex of the select box
+  * accesskey - (String) The access key of the select box
+  * onfocus - (String) The select box got the focus
+  * onblur - (String) The select box lost focus
 
 = Examples =
 
 {{{
-[@jc.submit name="login"/]
-[@jc.image name="register" src="/images/register-button.gif"/]
-[@jc.button name="cancel" action="cancel"/]
+<!-- Generate a months select box -->
+[@jc.yearsselect name="creditCard.expirationYear"/]
+}}}
+
+The resource bundle might look like this:
+
+{{{
+creditCard.expirationYear=Expiration year of the credit card
 }}}
