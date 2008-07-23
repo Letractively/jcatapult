@@ -24,7 +24,7 @@ The tags that are provided by JCatapult MVC are:
   * [MVCMonthsSelectTag monthsselect] - Renders a seleectbox that contains months
   * [MVCPasswordTag password] - Renders a password input tag (i.e. <input type="password">)
   * [MVCRadioListTag radiolist] - Renders a group of radio buttons (i.e. <input type="radio">)
-  * [MVCResetTag reset] - Renders a reset button (i.e. <input type="reset">)
+  * [MVCButtonsTag reset] - Renders a reset button (i.e. <input type="reset">)
   * [MVCSelectTag select] - Renders a selectbox (i.e. <select>)
   * [MVCButtonTags submit] - Renders a submit button (i.e. <input type="submit">)
   * [MVCTextareaTag textarea] - Renders a textarea tag (i.e. <textarea>)
