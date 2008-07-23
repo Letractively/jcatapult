@@ -13,22 +13,26 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.form.jsp;
+package org.jcatapult.mvc.parameter.convert.annotation;
 
-import org.jcatapult.mvc.result.form.control.Radio;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 /**
  * <p>
- * This class is the JSP taglib for the radio control.
+ * This annotation must be placed on all implementations of the
+ * {@link org.jcatapult.mvc.parameter.convert.GlobalConverter} interface.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public class RadioTag extends AbstractCheckedInputTag<Radio> {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface GlobalConverter {
     /**
-     * @return  The {@link Radio} class.
+     * @return  Converters must define the types that they convert using this parameter.
      */
-    protected Class<Radio> controlClass() {
-        return Radio.class;
-    }
+    Class<?>[] forTypes();
 }

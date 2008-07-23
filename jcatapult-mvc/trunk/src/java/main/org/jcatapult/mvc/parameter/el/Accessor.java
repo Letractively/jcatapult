@@ -15,7 +15,9 @@
  */
 package org.jcatapult.mvc.parameter.el;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -30,10 +32,12 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.jcatapult.mvc.parameter.convert.AnnotationConverter;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
-import org.jcatapult.mvc.parameter.convert.Converter;
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.convert.GlobalConverter;
+import org.jcatapult.mvc.parameter.convert.annotation.ConverterAnnotation;
 
 import static net.java.lang.reflect.ReflectionTools.*;
 
@@ -159,16 +163,28 @@ public abstract class Accessor {
      *
      * @param   values The String values to convert.
      * @param   context The current context.
+     * @param   field The field that the conversion is occurring for. This is used to look for
+     *          conversion annotations.
      * @return  The value parameter converted to the correct type.
      * @throws  ConversionException If there was a problem converting the parameter.
      */
-    protected Object convert(final String[] values, Context context) throws ConversionException {
+    protected Object convert(final String[] values, Context context, Field field) throws ConversionException {
         Object newValue = values;
+
+        // First look for annotations
+        Annotation[] annotations = field.getAnnotations();
+        for (Annotation annotation : annotations) {
+            ConverterAnnotation converterAnnotation = annotation.annotationType().getAnnotation(ConverterAnnotation.class);
+            if (converterAnnotation != null) {
+                AnnotationConverter converter = converterProvider.lookup(annotation);
+                return converter.convertFromStrings(annotation, values, type, context.getAttributes());
+            }
+        }
 
         // The converter does this, but pre-emptively checking these conditions will speed up conversion times
         Class<?> typeClass = TypeTools.rawType(type);
         if (!typeClass.isInstance(values)) {
-            Converter converter = converterProvider.lookup(typeClass);
+            GlobalConverter converter = converterProvider.lookup(typeClass);
             if (converter == null) {
                 throw new ConverterStateException("No type converter found for the type [" + typeClass.getName() + "]");
             }

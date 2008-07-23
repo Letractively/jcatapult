@@ -15,7 +15,7 @@
  */
 package org.jcatapult.mvc.parameter.convert.converters;
 
-import org.jcatapult.mvc.parameter.convert.Converter;
+import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class StringConverterTest {
      */
     @Test
     public void testFromStrings() {
-        Converter converter = new StringConverter();
+        GlobalConverter converter = new StringConverter();
         String str = (String) converter.convertFromStrings(array((String) null), String.class, null);
         assertNull(str);
 
@@ -53,7 +53,7 @@ public class StringConverterTest {
      */
     @Test
     public void testToStrings() {
-        Converter converter = new StringConverter();
+        GlobalConverter converter = new StringConverter();
         String str = converter.convertToString(null, String.class, null);
         assertNull(str);
 

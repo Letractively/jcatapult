@@ -16,7 +16,7 @@
 package org.jcatapult.mvc.parameter.convert.converters;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
-import org.jcatapult.mvc.parameter.convert.Converter;
+import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -35,7 +35,7 @@ public class CharacterConverterTest {
      */
     @Test
     public void testFromStrings() {
-        Converter converter = new CharacterConverter();
+        GlobalConverter converter = new CharacterConverter();
         Character cw = (Character) converter.convertFromStrings(array((String) null), Character.class, null);
         assertNull(cw);
 
@@ -90,7 +90,7 @@ public class CharacterConverterTest {
      */
     @Test
     public void testToStrings() {
-        Converter converter = new BooleanConverter();
+        GlobalConverter converter = new BooleanConverter();
         String str = converter.convertToString(null, Character.class, null);
         assertNull(str);
 

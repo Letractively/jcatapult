@@ -121,7 +121,7 @@ public class MemberAccessor extends Accessor {
     }
 
     public void set(String[] values, Context context) {
-        set(convert(values, context), context);
+        set(convert(values, context, null), context);
     }
 
     public void set(Object value, Context context) {

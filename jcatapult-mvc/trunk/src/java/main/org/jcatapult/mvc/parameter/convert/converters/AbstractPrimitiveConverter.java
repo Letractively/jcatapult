@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.convert.AbstractGlobalConverter;
 import org.jcatapult.mvc.parameter.el.TypeTools;
 
 /**
@@ -31,7 +32,7 @@ import org.jcatapult.mvc.parameter.el.TypeTools;
  * @author  Brian Pontarelli
  */
 @SuppressWarnings("unchecked")
-public abstract class AbstractPrimitiveConverter extends AbstractConverter {
+public abstract class AbstractPrimitiveConverter extends AbstractGlobalConverter {
     protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         Class<?> rawType = TypeTools.rawType(convertTo);

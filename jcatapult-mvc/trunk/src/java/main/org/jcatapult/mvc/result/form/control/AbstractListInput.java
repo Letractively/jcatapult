@@ -73,6 +73,27 @@ public abstract class AbstractListInput extends AbstractInput {
     @Override
     protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
         Map<String, Object> parameters = super.makeParameters(attributes, dynamicAttributes);
+        Map<String, Option> options = new LinkedHashMap<String, Option>();
+
+        // Handle the header option
+        String headerValue = (String) attributes.remove("headerValue");
+        String headerL10n = (String) attributes.remove("headerL10n");
+        if (headerValue != null) {
+            String message = "";
+            if (headerL10n != null) {
+                String bundleName = determineBundleName(attributes);
+                if (bundleName == null) {
+                    throw new IllegalStateException("Unable to locate the localized text for a header " +
+                        "option in the select box named [" + attributes.get("name") + "]. If you " +
+                        "don't have an action class for the URL, you must define the bundle used " +
+                        "to localize the select using the bundle attribute.");
+                }
+
+                message = messageProvider.getMessage(bundleName, headerL10n);
+            }
+
+            options.put(headerValue, new Option(message, false));
+        }
 
         // Grab the value
         Object beanValue = action != null ? expressionEvaluator.getValue((String) attributes.get("name"), action) : null;
@@ -83,7 +104,6 @@ public abstract class AbstractListInput extends AbstractInput {
         String valueExpr = (String) attributes.remove("valueExpr");
         String textExpr = (String) attributes.remove("textExpr");
         String l10nExpr = (String) attributes.remove("l10nExpr");
-        Map<String, Option> options = new LinkedHashMap<String, Option>();
         Object items = attributes.remove("items");
         if (items != null) {
             if (items instanceof Collection) {

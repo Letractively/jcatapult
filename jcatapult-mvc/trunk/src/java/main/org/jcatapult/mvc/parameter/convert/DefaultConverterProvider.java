@@ -15,25 +15,28 @@
  */
 package org.jcatapult.mvc.parameter.convert;
 
+import java.lang.annotation.Annotation;
+import static java.util.Arrays.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import static java.util.Arrays.asList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jcatapult.mvc.ObjectFactory;
+import org.jcatapult.mvc.parameter.convert.annotation.ConverterAnnotation;
 
 import com.google.inject.Inject;
 
 /**
  * <p>
  * This class is the manager for all the Converters. It loads the
- * type converters from Guice. Therefore, if you want to supply a custom
- * type converter, just add it to a Guice module and place it in your
- * classpath. JCatapult will discover the module and load it up.
+ * global type converters from Guice. Therefore, if you want to
+ * supply a global custom type converter, just add it to a Guice
+ * module and place it in your classpath. JCatapult will discover
+ * the module and load it up.
  * </p>
  *
  * <p>
@@ -56,10 +59,10 @@ public class DefaultConverterProvider implements ConverterProvider {
 
     @Inject
     public static void initialize(ObjectFactory objectFactory) {
-        List<Class<? extends Converter>> types = objectFactory.getAllForType(Converter.class);
-        for (Class<? extends Converter> type : types) {
-            org.jcatapult.mvc.parameter.convert.annotation.Converter converter =
-                type.getAnnotation(org.jcatapult.mvc.parameter.convert.annotation.Converter.class);
+        List<Class<? extends GlobalConverter>> types = objectFactory.getAllForType(GlobalConverter.class);
+        for (Class<? extends GlobalConverter> type : types) {
+            org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter converter =
+                type.getAnnotation(org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter.class);
             Class<?>[] convertTypes = converter.forTypes();
             for (Class<?> convertType : convertTypes) {
                 if (logger.isLoggable(Level.FINE)) {
@@ -78,33 +81,30 @@ public class DefaultConverterProvider implements ConverterProvider {
 
     /**
      * <p>
-     * Returns the type converter for the given type. This converter is either
-     * the converter associated with the given type of associated with a super
-     * class of the given type (not interfaces). This principal also works with
-     * arrays. If the type is an array, then what happens is that the array type
-     * is asked for its component type using the method getComponentType and this
-     * type is used to query the manager. So, the converter registered for Number
-     * is returned Double[] is queried (because Double is queried and since no
-     * converter was register for it, then Number is checked).
+     * Returns the global type converter for the given type. This converter is either the converter
+     * associated with the given type of associated with a super class of the given type. This
+     * principle also works with arrays. If the type is an array, then what happens is that the
+     * array type is asked for its component type using the method getComponentType and this
+     * type is used to query the manager. So, the converter registered for Number is returned
+     * Double[] is queried (because Double is queried and since no converter was register for it,
+     * then Number is checked).
      * </p>
      *
      * <p>
-     * Normal types work the exact same way. First the type is checked and then
-     * its parents are checked until Object is reached, in which case null is
-     * returned.
+     * Normal types work the exact same way. First the type is checked and then its parents are
+     * checked until Object is reached, in which case null is returned.
      * </p>
      *
      * <p>
-     * Primitive values are treated as their wrapper classes. So, if int.class
-     * is passed into this method (queried) then either a converter registered
-     * for Integer, or Number or null is returned depending on what converters
-     * have been registered so far.
+     * Primitive values are treated as their wrapper classes. So, if int.class is passed into this
+     * method (queried) then either a converter registered for Integer, or Number or null is returned
+     * depending on what converters have been registered so far.
      * </p>
      *
      * @param   type The type to start with when looking for converters
      * @return  The converter or null if one was not found
      */
-    public Converter lookup(Class<?> type) {
+    public GlobalConverter lookup(Class<?> type) {
         Class<?> localType = type;
 
         // If it is an array, just use the component type because TypeConverters
@@ -120,7 +120,7 @@ public class DefaultConverterProvider implements ConverterProvider {
             if (converterType == null) {
                 localType = localType.getSuperclass();
             } else {
-                return (Converter) objectFactory.create(converterType);
+                return (GlobalConverter) objectFactory.create(converterType);
             }
         }
 
@@ -131,7 +131,7 @@ public class DefaultConverterProvider implements ConverterProvider {
             // First, check the interface
             Class<?> converterType = converters.get(inter);
             if (converterType != null) {
-                return (Converter) objectFactory.create(converterType);
+                return (GlobalConverter) objectFactory.create(converterType);
             }
 
             // Next, append the interfaces for this interface
@@ -148,5 +148,18 @@ public class DefaultConverterProvider implements ConverterProvider {
 
 
         return null;
+    }
+
+    /**
+     * <p>
+     * Returns the Converter for the given annotation.
+     * </p>
+     *
+     * @param   annotation The annotation.
+     * @return  The Converter.
+     */
+    public AnnotationConverter lookup(Annotation annotation) {
+        ConverterAnnotation ra = annotation.annotationType().getAnnotation(ConverterAnnotation.class);
+        return objectFactory.create(ra.value());
     }
 }

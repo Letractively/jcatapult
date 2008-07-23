@@ -39,7 +39,7 @@ public class DefaultConverterProviderTest extends JCatapultBaseTest {
     @Test
     public void testLookups() {
         ConverterProvider provider = new DefaultConverterProvider(new GuiceObjectFactory(GuiceContainer.getInjector()));
-        Converter tc = provider.lookup(Character.class);
+        GlobalConverter tc = provider.lookup(Character.class);
         assertSame(CharacterConverter.class, tc.getClass());
         tc = provider.lookup(Character.TYPE);
         assertSame(CharacterConverter.class, tc.getClass());

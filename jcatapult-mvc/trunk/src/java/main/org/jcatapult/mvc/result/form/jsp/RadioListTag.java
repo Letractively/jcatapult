@@ -15,16 +15,16 @@
  */
 package org.jcatapult.mvc.result.form.jsp;
 
-import org.jcatapult.mvc.result.form.control.CheckboxList;
+import org.jcatapult.mvc.result.form.control.RadioList;
 
 /**
  * <p>
- * This class is the JSP taglib for a set of checkbox controls.
+ * This class is the JSP taglib for the radio list control.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class CheckboxListTag extends AbstractInputTag<CheckboxList> {
+public class RadioListTag extends AbstractInputTag<RadioList> {
     /**
      * Retrieves the tag's items attribute
      *
@@ -44,7 +44,7 @@ public class CheckboxListTag extends AbstractInputTag<CheckboxList> {
     }
 
     /**
-     * Retrieves the tags valueExpr attribute. This is used to generate the value of the checkbox tags.
+     * Retrieves the tags valueExpr attribute. This is used to generate the value of the radio tags.
      * This is used inconjunction with the items list. If the items are not specified, then this
      * attribute is ignored.
      *
@@ -55,7 +55,7 @@ public class CheckboxListTag extends AbstractInputTag<CheckboxList> {
     }
 
     /**
-     * Populates the tags valueExpr attribute. This is used to generate the value of the checkbox tags.
+     * Populates the tags valueExpr attribute. This is used to generate the value of the radio tags.
      * This is used inconjunction with the items list. If the items are not specified, then this
      * attribute is ignored.
      *
@@ -66,10 +66,10 @@ public class CheckboxListTag extends AbstractInputTag<CheckboxList> {
     }
 
     /**
-     * Retrieves the tags textExpr attribute. This is used to generate the text of the checkbox tags.
+     * Retrieves the tags textExpr attribute. This is used to generate the text of the radio tags.
      * This is used inconjunction with the items list. If the items are not specified, then this
      * attribute is ignored. If the items are specified, this attribute should contain an expression
-     * that is evaluated to produce the text for the checkbox.
+     * that is evaluated to produce the text for the radio.
      *
      * @return	Returns the tags textExpr attribute.
      */
@@ -78,10 +78,10 @@ public class CheckboxListTag extends AbstractInputTag<CheckboxList> {
     }
 
     /**
-     * Populates the tags textExpr attribute. This is used to generate the text of the checkbox tags.
+     * Populates the tags textExpr attribute. This is used to generate the text of the radio tags.
      * This is used inconjunction with the items list. If the items are not specified, then this
      * attribute is ignored. If the items are specified, this attribute should contain an expression
-     * that is evaluated to produce the text for the checkbox.
+     * that is evaluated to produce the text for the radio.
      *
      * @param	textExpr The value of the tags textExpr attribute
      */
@@ -90,11 +90,11 @@ public class CheckboxListTag extends AbstractInputTag<CheckboxList> {
     }
 
     /**
-     * Retrieves the tags l10nExpr attribute. This is used to generate the text of the checkbox tags
+     * Retrieves the tags l10nExpr attribute. This is used to generate the text of the radio tags
      * This is used inconjunction with the items list. If the items are not specified, then this
      * attribute is ignored. If the list is specified, this attribute should contain an expression
      * that is evaluated to produce a localization key. This key is used with the
-     * {@link org.jcatapult.l10n.MessageProvider} to look up the text for the checkbox.
+     * {@link org.jcatapult.l10n.MessageProvider} to look up the text for the radio.
      *
      * @return	Returns the tags l10nExpr attribute.
      */
@@ -103,11 +103,11 @@ public class CheckboxListTag extends AbstractInputTag<CheckboxList> {
     }
 
     /**
-     * Populates the tags l10nExpr attribute. This is used to generate the text of the checkbox tags.
+     * Populates the tags l10nExpr attribute. This is used to generate the text of the radio tags.
      * This is used inconjunction with the items list. If the items are not specified, then this
      * attribute is ignored. If the list is specified, this attribute should contain an expression
      * that is evaluated to produce a localization key. This key is used with the
-     * {@link org.jcatapult.l10n.MessageProvider} to look up the text for the checkbox.
+     * {@link org.jcatapult.l10n.MessageProvider} to look up the text for the radio.
      *
      * @param	l10nExpr The value of the tags l10nExpr attribute
      */
@@ -116,9 +116,9 @@ public class CheckboxListTag extends AbstractInputTag<CheckboxList> {
     }
 
     /**
-     * @return  The {@link CheckboxList} class.
+     * @return  The {@link RadioList} class.
      */
-    protected Class<CheckboxList> controlClass() {
-        return CheckboxList.class;
+    protected Class<RadioList> controlClass() {
+        return RadioList.class;
     }
 }

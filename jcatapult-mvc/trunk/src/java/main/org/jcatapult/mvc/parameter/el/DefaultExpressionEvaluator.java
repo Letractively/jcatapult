@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
-import org.jcatapult.mvc.parameter.convert.Converter;
+import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 
@@ -102,7 +102,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
         }
 
         Class<?> type = value.getClass();
-        Converter converter = converterProvider.lookup(type);
+        GlobalConverter converter = converterProvider.lookup(type);
         if (converter == null) {
             throw new ConverterStateException("No type converter found for the type [" + type + "]");
         }

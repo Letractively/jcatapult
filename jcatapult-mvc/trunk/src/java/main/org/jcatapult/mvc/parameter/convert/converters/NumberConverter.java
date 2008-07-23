@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
-import org.jcatapult.mvc.parameter.convert.annotation.Converter;
+import org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter;
 
 /**
  * <p>
@@ -31,7 +31,7 @@ import org.jcatapult.mvc.parameter.convert.annotation.Converter;
  *
  * @author  Brian Pontarelli
  */
-@Converter(forTypes = {byte.class, short.class, int.class, long.class, float.class, double.class,
+@GlobalConverter(forTypes = {byte.class, short.class, int.class, long.class, float.class, double.class,
     Number.class, BigDecimal.class, BigInteger.class})
 @SuppressWarnings("unchecked")
 public class NumberConverter extends AbstractPrimitiveConverter {
