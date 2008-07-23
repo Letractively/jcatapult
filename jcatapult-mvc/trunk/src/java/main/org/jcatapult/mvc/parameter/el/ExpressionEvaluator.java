@@ -47,7 +47,7 @@ public interface ExpressionEvaluator {
 
     /**
      * Retrieves a value defined by the given expression from the given object and converts that
-     * value into a String using the appropriate {@link org.jcatapult.mvc.parameter.convert.Converter}.
+     * value into a String using the appropriate {@link org.jcatapult.mvc.parameter.convert.GlobalConverter}.
      *
      * @param   expression The expression that defines the value to get from the object.
      * @param   object The object to get the value from.
@@ -75,7 +75,7 @@ public interface ExpressionEvaluator {
      * Sets the given values into the given object using the given expression. The values given are
      * taken directly from the HttpServletRequest parameters. This performs any necessary conversions
      * from the String[] values to the type required by the expression and object given. Conversions
-     * are done by the appropriate {@link org.jcatapult.mvc.parameter.convert.Converter}.
+     * are done by the appropriate {@link org.jcatapult.mvc.parameter.convert.GlobalConverter}.
      *
      * @param   expression The expression.
      * @param   object The object.

@@ -148,6 +148,50 @@ public class SelectTag<T extends Select> extends AbstractInputTag<T> {
     }
 
     /**
+     * Retrieves the tags headerValue attribute. This attribute is the value of the header option for
+     * the select. Header options are the first option in the select.
+     *
+     * @return	Returns the tags headerValue attribute.
+     */
+    public String getHeaderValue() {
+        return (String) attributes.get("headerValue");
+    }
+
+    /**
+     * Sets the tags headerValue attribute. This attribute is the value of the header option for
+     * the select. Header options are the first option in the select.
+     *
+     * @param   headerValue The tags headerValue attribute.
+     */
+    public void setHeaderValue(String headerValue) {
+        attributes.put("headerValue", headerValue);
+    }
+
+    /**
+     * Retrieves the tags headerL110n attribute. This attribute is the localization key that is used
+     * to fetch the text for the header option. If this is left out, the header option will be blank.
+     * If it is included, there must be a message available from the MessageProvider using the bundle
+     * specified on the tag or the bundle using the Action class name.
+     *
+     * @return	Returns the tags headerL10n attribute.
+     */
+    public String getHeaderL10n() {
+        return (String) attributes.get("headerL10n");
+    }
+
+    /**
+     * Sets the tags headerL110n attribute. This attribute is the localization key that is used
+     * to fetch the text for the header option. If this is left out, the header option will be blank.
+     * If it is included, there must be a message available from the MessageProvider using the bundle
+     * specified on the tag or the bundle using the Action class name.
+     *
+     * @param   headerL10n The tags headerL10n attribute.
+     */
+    public void setHeaderL10n(String headerL10n) {
+        attributes.put("headerL10n", headerL10n);
+    }
+
+    /**
      * @return  The {@link Select} class.
      */
     protected Class<T> controlClass() {

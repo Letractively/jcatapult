@@ -29,9 +29,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
-import org.jcatapult.mvc.parameter.convert.Converter;
+import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.convert.AbstractGlobalConverter;
 import org.jcatapult.mvc.parameter.el.TypeTools;
 
 import com.google.inject.Inject;
@@ -47,9 +48,9 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-@org.jcatapult.mvc.parameter.convert.annotation.Converter(forTypes = {Collection.class})
+@org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter(forTypes = {Collection.class})
 @SuppressWarnings("unchecked")
-public class CollectionConverter extends AbstractConverter {
+public class CollectionConverter extends AbstractGlobalConverter {
     private final ConverterProvider provider;
 
     @Inject
@@ -96,7 +97,7 @@ public class CollectionConverter extends AbstractConverter {
         if (parameter == null) {
             collection.addAll(asList(values));
         } else {
-            Converter converter = provider.lookup(parameter);
+            GlobalConverter converter = provider.lookup(parameter);
             if (converter == null) {
                 throw new ConverterStateException("Unable to convert to the type [" + convertTo +
                     "] because the parameter type [" + parameter + "] doesn't have a Converter " +
@@ -130,7 +131,7 @@ public class CollectionConverter extends AbstractConverter {
         if (parameter == null) {
             return join(collection, ",");
         } else {
-            Converter converter = provider.lookup(parameter);
+            GlobalConverter converter = provider.lookup(parameter);
             if (converter == null) {
                 throw new ConverterStateException("Unable to convert to the type [" + convertFrom +
                     "] because the parameter type [" + parameter + "] doesn't have a Converter " +

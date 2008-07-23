@@ -19,7 +19,8 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
-import org.jcatapult.mvc.parameter.convert.annotation.Converter;
+import org.jcatapult.mvc.parameter.convert.AbstractGlobalConverter;
+import org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -33,9 +34,9 @@ import net.java.lang.StringTools;
  *
  * @author  Brian Pontarelli
  */
-@Converter(forTypes = {String.class})
+@GlobalConverter(forTypes = {String.class})
 @SuppressWarnings("unchecked")
-public class StringConverter extends AbstractConverter {
+public class StringConverter extends AbstractGlobalConverter {
     private boolean emptyIsNull = true;
 
     @Inject(optional = true)

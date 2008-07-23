@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
-import org.jcatapult.mvc.parameter.convert.annotation.Converter;
+import org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ import org.jcatapult.mvc.parameter.convert.annotation.Converter;
  *
  * @author  Brian Pontarelli
  */
-@Converter(forTypes = {Character.class, char.class})
+@GlobalConverter(forTypes = {Character.class, char.class})
 @SuppressWarnings("unchecked")
 public class CharacterConverter extends AbstractPrimitiveConverter {
     /**

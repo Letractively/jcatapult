@@ -15,27 +15,28 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import static java.util.Arrays.*;
-import java.util.LinkedHashMap;
+import static java.util.Arrays.asList;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
-import org.easymock.EasyMock;
-import org.example.action.user.Edit;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.junit.Test;
+import org.easymock.EasyMock;
+import org.example.action.user.Edit;
 
-import static net.java.util.CollectionTools.*;
+import static net.java.util.CollectionTools.mapNV;
+import static net.java.util.CollectionTools.array;
 import net.java.util.Pair;
 
 /**
  * <p>
- * This tests the select control.
+ * This tests the radio control.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class SelectTest extends AbstractInputTest {
-    public SelectTest() {
+public class RadioListTest extends AbstractInputTest {
+    public RadioListTest() {
         super(true);
     }
 
@@ -44,44 +45,25 @@ public class SelectTest extends AbstractInputTest {
         ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.replay(ee);
 
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, null, "select", "foo.bar", "test", "Test",
+        RadioList radioList = new RadioList();
+        radioList.setExpressionEvaluator(ee);
+        run(radioList, null, "radio-list", "foo.bar", "test", "Test",
             mapNV("name", "test", "class", "css-class", "bundle", "foo.bar", "items", asList("one", "two", "three")),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"input\">\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"test\" name=\"test\">\n" +
-            "    <option value=\"one\">one</option>\n" +
-            "    <option value=\"two\">two</option>\n" +
-            "    <option value=\"three\">three</option>\n" +
-            "  </select>\n" +
+            "  <input type=\"radio\" value=\"one\" class=\"css-class\" name=\"test\"/><span class=\"radio-text\">one</span>\n" +
             "</div>\n" +
-            "</div>\n");
-
-        EasyMock.verify(ee);
-    }
-
-    @Test
-    public void testHeaderOption() {
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.replay(ee);
-
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, null, "select", "foo.bar", "test", "Test",
-            mapNV("name", "test", "class", "css-class", "bundle", "foo.bar", "headerValue", "zero", "items", asList("one", "two", "three")),
-            "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
+            "</div>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"test\" name=\"test\">\n" +
-            "    <option value=\"zero\"></option>\n" +
-            "    <option value=\"one\">one</option>\n" +
-            "    <option value=\"two\">two</option>\n" +
-            "    <option value=\"three\">three</option>\n" +
-            "  </select>\n" +
+            "  <input type=\"radio\" value=\"two\" class=\"css-class\" name=\"test\"/><span class=\"radio-text\">two</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"radio\" value=\"three\" class=\"css-class\" name=\"test\"/><span class=\"radio-text\">three</span>\n" +
             "</div>\n" +
             "</div>\n");
 
@@ -95,18 +77,20 @@ public class SelectTest extends AbstractInputTest {
         EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
         EasyMock.replay(ee);
 
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        RadioList radioList = new RadioList();
+        radioList.setExpressionEvaluator(ee);
+        run(radioList, action, "radio-list", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"input\">\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
-            "    <option value=\"US\" selected=\"selected\">United States</option>\n" +
-            "    <option value=\"DE\">Germany</option>\n" +
-            "  </select>\n" +
+            "  <input type=\"radio\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n");
 
@@ -127,18 +111,20 @@ public class SelectTest extends AbstractInputTest {
         EasyMock.expect(ee.getValue("second", de)).andReturn("Germany");
         EasyMock.replay(ee);
 
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        RadioList radioList = new RadioList();
+        radioList.setExpressionEvaluator(ee);
+        run(radioList, action, "radio-list", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"input\">\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
-            "    <option value=\"US\" selected=\"selected\">United States</option>\n" +
-            "    <option value=\"DE\">Germany</option>\n" +
-            "  </select>\n" +
+            "  <input type=\"radio\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n");
 
@@ -152,18 +138,20 @@ public class SelectTest extends AbstractInputTest {
         EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
         EasyMock.replay(ee);
 
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        RadioList radioList = new RadioList();
+        radioList.setExpressionEvaluator(ee);
+        run(radioList, action, "radio-list", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
+            "<div class=\"input\">\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
-            "    <option value=\"US\" selected=\"selected\">United States</option>\n" +
-            "    <option value=\"DE\">Germany</option>\n" +
-            "  </select>\n" +
+            "  <input type=\"radio\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n", "Country is required", "Country must be cool");
         EasyMock.verify(ee);

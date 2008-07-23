@@ -13,26 +13,24 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.parameter.convert.annotation;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
+package org.jcatapult.mvc.result.form.control;
 
 /**
  * <p>
- * This annotation must be placed on all implementations of the
- * {@link org.jcatapult.mvc.parameter.convert.Converter} interface.
+ * This class is the control for a radio button.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Converter {
+public class RadioList extends AbstractListInput {
+    public RadioList() {
+        super(true);
+    }
+
     /**
-     * @return  Converters must define the types that they convert using this parameter.
+     * @return  radio-list.ftl
      */
-    Class<?>[] forTypes();
+    protected String endTemplateName() {
+        return "radio-list.ftl";
+    }
 }

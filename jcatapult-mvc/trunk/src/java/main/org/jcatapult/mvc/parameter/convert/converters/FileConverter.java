@@ -21,7 +21,8 @@ import java.util.Map;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
-import org.jcatapult.mvc.parameter.convert.annotation.Converter;
+import org.jcatapult.mvc.parameter.convert.AbstractGlobalConverter;
+import org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter;
 
 import static net.java.lang.ObjectTools.*;
 import net.java.lang.StringTools;
@@ -33,9 +34,9 @@ import net.java.lang.StringTools;
  *
  * @author Brian Pontarelli
  */
-@Converter(forTypes = {File.class})
+@GlobalConverter(forTypes = {File.class})
 @SuppressWarnings("unchecked")
-public class FileConverter extends AbstractConverter {
+public class FileConverter extends AbstractGlobalConverter {
     /**
      * Returns null if the value is null, otherwise this returns a new File of the value.
      *

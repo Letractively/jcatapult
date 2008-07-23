@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jcatapult.mvc.parameter.convert.Converter;
+import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -39,7 +39,7 @@ public class FileConverterTest {
     @Test
     public void testFromStrings() {
         Map<String, String> map = new HashMap<String, String>();
-        Converter converter = new FileConverter();
+        GlobalConverter converter = new FileConverter();
         File f = (File) converter.convertFromStrings(array((String) null), File.class, map);
         assertNull(f);
 
@@ -70,7 +70,7 @@ public class FileConverterTest {
      */
     @Test
     public void testToStrings() {
-        Converter converter = new FileConverter();
+        GlobalConverter converter = new FileConverter();
         String str = converter.convertToString(null, File.class, null);
         assertNull(str);
 

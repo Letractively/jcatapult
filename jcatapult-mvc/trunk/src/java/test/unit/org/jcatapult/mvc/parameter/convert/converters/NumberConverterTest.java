@@ -16,7 +16,7 @@
 package org.jcatapult.mvc.parameter.convert.converters;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
-import org.jcatapult.mvc.parameter.convert.Converter;
+import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -35,7 +35,7 @@ public class NumberConverterTest {
      */
     @Test
     public void testFromStrings() {
-        Converter converter = new NumberConverter();
+        GlobalConverter converter = new NumberConverter();
         Byte bw = (Byte) converter.convertFromStrings(array((String) null), Byte.class, null);
         assertNull(bw);
 
@@ -152,7 +152,7 @@ public class NumberConverterTest {
      */
     @Test
     public void testToStrings() {
-        Converter converter = new NumberConverter();
+        GlobalConverter converter = new NumberConverter();
         String str = converter.convertToString(null, Integer.class, null);
         assertNull(str);
 

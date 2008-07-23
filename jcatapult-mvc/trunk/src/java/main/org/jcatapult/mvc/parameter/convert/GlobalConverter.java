@@ -92,7 +92,7 @@ import java.util.Map;
  * <p>
  * In order to write a custom type converter, you need to implement this
  * interface AND also annotate your converter class with the
- * {@link org.jcatapult.mvc.parameter.convert.annotation.Converter} annotation
+ * {@link org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter} annotation
  * and specify in that annotation the types the Converter supports.
  * Next, you need to define the Converter in a Guice module that will
  * be discovered by JCatapult like this:
@@ -106,7 +106,7 @@ import java.util.Map;
  *
  * @author  Brian Pontarelli
  */
-public interface Converter {
+public interface GlobalConverter {
     /**
      * The default string that denotes different values in an array.
      */

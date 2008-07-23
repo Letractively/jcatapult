@@ -49,7 +49,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
      * </p>
      *
      * @param   annotation The annotation.
-     * @return  The Validator or null if one was not found
+     * @return  The Validator.
      */
     public Validator lookup(Class<? extends Annotation> annotation) {
         ValidatorAnnotation ra = annotation.getAnnotation(ValidatorAnnotation.class);

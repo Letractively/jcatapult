@@ -15,6 +15,8 @@
  */
 package org.jcatapult.mvc.parameter.convert;
 
+import java.lang.annotation.Annotation;
+
 import com.google.inject.ImplementedBy;
 
 /**
@@ -54,5 +56,15 @@ public interface ConverterProvider {
      * @param   type The type to start with when looking for converters
      * @return  The converter or null if one was not found
      */
-    Converter lookup(Class<?> type);
+    GlobalConverter lookup(Class<?> type);
+
+    /**
+     * <p>
+     * Returns the Converter for the given annotation.
+     * </p>
+     *
+     * @param   annotation The annotation.
+     * @return  The Converter.
+     */
+    AnnotationConverter lookup(Annotation annotation);
 }

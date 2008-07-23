@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
-import org.jcatapult.mvc.parameter.convert.annotation.Converter;
+import org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter;
 
 import net.java.lang.StringTools;
 
@@ -30,7 +30,7 @@ import net.java.lang.StringTools;
  *
  * @author Brian Pontarelli
  */
-@Converter(forTypes = {Boolean.class, boolean.class})
+@GlobalConverter(forTypes = {Boolean.class, boolean.class})
 @SuppressWarnings("unchecked")
 public class BooleanConverter extends AbstractPrimitiveConverter {
     /**

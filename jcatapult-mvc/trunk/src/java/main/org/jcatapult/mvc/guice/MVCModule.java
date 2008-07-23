@@ -16,7 +16,6 @@
 package org.jcatapult.mvc.guice;
 
 import org.jcatapult.mvc.action.result.ForwardResult;
-import org.jcatapult.mvc.action.result.RedirectResult;
 import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
 import org.jcatapult.mvc.parameter.convert.DefaultConverterProvider;
 import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
@@ -35,7 +34,7 @@ import org.jcatapult.mvc.result.form.control.Hidden;
 import org.jcatapult.mvc.result.form.control.Image;
 import org.jcatapult.mvc.result.form.control.MonthsSelect;
 import org.jcatapult.mvc.result.form.control.Password;
-import org.jcatapult.mvc.result.form.control.Radio;
+import org.jcatapult.mvc.result.form.control.RadioList;
 import org.jcatapult.mvc.result.form.control.Reset;
 import org.jcatapult.mvc.result.form.control.Select;
 import org.jcatapult.mvc.result.form.control.Submit;
@@ -45,11 +44,6 @@ import org.jcatapult.mvc.result.form.control.YearsSelect;
 import org.jcatapult.mvc.result.message.control.ActionMessages;
 import org.jcatapult.mvc.result.message.control.FieldMessages;
 import org.jcatapult.mvc.result.message.control.Message;
-import org.jcatapult.mvc.scope.ActionSessionScope;
-import org.jcatapult.mvc.scope.ContextScope;
-import org.jcatapult.mvc.scope.FlashScope;
-import org.jcatapult.mvc.scope.RequestScope;
-import org.jcatapult.mvc.scope.SessionScope;
 
 import com.google.inject.AbstractModule;
 
@@ -64,8 +58,6 @@ import com.google.inject.AbstractModule;
 public class MVCModule extends AbstractModule {
     protected void configure() {
         configureConverters();
-        configureResults();
-        configureScopes();
         configureModels();
         configureFreeMarker();
     }
@@ -83,25 +75,6 @@ public class MVCModule extends AbstractModule {
 
         // Inject the registry so that the Class to Class mapping is setup
         requestStaticInjection(DefaultConverterProvider.class);
-    }
-
-    /**
-     * Binds all the default results.
-     */
-    protected void configureResults() {
-        bind(ForwardResult.class);
-        bind(RedirectResult.class);
-    }
-
-    /**
-     * Binds all the default scopes.
-     */
-    protected void configureScopes() {
-        bind(RequestScope.class);
-        bind(SessionScope.class);
-        bind(ActionSessionScope.class);
-        bind(FlashScope.class);
-        bind(ContextScope.class);
     }
 
     /**
@@ -123,7 +96,7 @@ public class MVCModule extends AbstractModule {
         bind(Message.class);
         bind(MonthsSelect.class);
         bind(Password.class);
-        bind(Radio.class);
+        bind(RadioList.class);
         bind(Reset.class);
         bind(Select.class);
         bind(Submit.class);
