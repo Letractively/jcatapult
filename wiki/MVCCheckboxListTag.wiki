@@ -1,0 +1,68 @@
+#summary JCatapult MVC Checkbox List Tag
+
+= Checkbox List =
+
+The JCatapult MVC provides an easy mechanism for creating groups of checkboxes from collections. The *checkboxlist* tag takes as an attribute a collection that it iterates over to build the set of checkboxes. This collection can contain any objects and the text and value for each checkbox can be pulled from the Object. The text for a checkbox can also be pulled from a localized resource bundle.
+
+= Association =
+
+In most cases, a *checkboxlist* tag is associated to a collection or array on the action. This is because the user can select multiple checkboxes and each selected checkbox will have the same name. The HTML generated might look like this:
+
+{{{
+<label>User role</label>
+<input type="checkbox" name="roleIds" value="1"/>
+
+<label>Admin role</label>
+<input type="checkbox" name="roleIds" value="2"/>
+}}}
+
+The association on the action would look like this:
+
+{{{
+public class Register {
+  public int[] roleIds;
+}
+}}}
+
+When the form is submitted the *roleIds* field in the action is populated with the ids from the selected checkboxes.
+
+= Checked State =
+
+When the form is rendered, the checked state of each checkbox in the list is determined by using the associated property from the action and the value of each checkbox. If the associated property is an array or collection, each element in the array or collection is compared to the value of each checkbox. If the value of the checkbox is found in the array or collection, the checkbox is checked. Otherwise, the checkbox is left unchecked.
+
+= Attributes =
+
+The checkboxlist tag supports all of the common HTML attributes that are covered in the [MVCForms forms] documentation. In addition to those attributes, the checkboxlist tag also supports these attributes:
+
+  * name - (String) The action property that is associated with the checkboxes and used to determine if the checkboxes are checked when the form is rendered and also used to populate the associated property of the action when the form is submitted
+  * items - (Collection, Array or Map) The items used to build the checkboxes
+  * valueExpr - (String) An expression that is used to retrieve the value of each checkbox from the objects in the *items*
+  * l10nExpr - (String) An expression that is used to retrieve a localization key from the objects in the *items*. This key is then used to retrieve the text of each checkbox from the localized resource bundle
+  * textExpr - (String) An expression that is used to retrieve a the text for each checkbox from the objects in the *items*
+  * size - (int) The size of the checkboxes
+  * alt - (String) A short description of the checkboxes (used in tool-tips)
+  * tabindex - (int) The tabindex of the checkboxes
+  * accesskey - (String) The access key of the checkboxes
+  * onfocus - (String) The checkboxes got the focus
+  * onblur - (String) The checkboxes lost focus
+
+It is important to understand that attributes such as onfocus are applied to all of the checkboxes in the group.
+
+= Examples =
+
+{{{
+<!-- Generate a set of checkboxes for different roles a user can have -->
+[@jc.checkboxlist name="roleIds" items=roles valueExpr="id" l10nExpr="code"/]
+
+<!-- Generate a set of checkboxes for objects using nested properties in the expressions -->
+[@jc.checkboxlist name="someValue" items=objects valueExpr="some.nested.property" l10nExpr="some.other.nested.property"/]
+}}}
+
+The resource bundle might look like this:
+
+{{{
+# Example 1, assume that there are two Role objects in the items with the
+# codes of 'user' and 'admin'
+user=User role
+admin=Admin role
+}}}
