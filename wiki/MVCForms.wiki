@@ -16,7 +16,7 @@ The tags that are provided by JCatapult MVC are:
   * [MVCFormTag form] - Renders the HTML form
   * [MVCButtonTags button] - Renders a button (i.e. <input type="button">)
   * [MVCCheckboxListTag checkboxlist] - Renders a set of checkbox controls from a Collection
-  * [MVCheckboxTag checkbox] - Renders a single checkbox
+  * [MVCCheckboxTag checkbox] - Renders a single checkbox
   * [MVCCountriesSelectTag countriesselect] - Renders a selectbox that contains countries
   * [MVCFileTag file] - Renders a file upload control
   * [MVCHiddenTag hidden] - Renders a hidden input tag (i.e. <input type="hidden">)
@@ -24,7 +24,7 @@ The tags that are provided by JCatapult MVC are:
   * [MVCMonthsSelectTag monthsselect] - Renders a seleectbox that contains months
   * [MVCPasswordTag password] - Renders a password input tag (i.e. <input type="password">)
   * [MVCRadioListTag radiolist] - Renders a group of radio buttons (i.e. <input type="radio">)
-  * [MVCButtonsTag reset] - Renders a reset button (i.e. <input type="reset">)
+  * [MVCButtonTags reset] - Renders a reset button (i.e. <input type="reset">)
   * [MVCSelectTag select] - Renders a selectbox (i.e. <select>)
   * [MVCButtonTags submit] - Renders a submit button (i.e. <input type="submit">)
   * [MVCTextareaTag textarea] - Renders a textarea tag (i.e. <textarea>)
