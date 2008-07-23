@@ -32,6 +32,7 @@ By default, the JCatapult MVC automatically converters the HTTP parameter String
   * BigDecimal
   * BigInteger
   * File
+  * Locale
 
 In addition to these types, JCatpault MVC also handles type conversion to arrays of these types and also Collections of these types. It also fully supports generic Collection types and will appropriately convert based on the type parameters of the generic Collection.
 
