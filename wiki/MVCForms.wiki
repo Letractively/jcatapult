@@ -1,0 +1,198 @@
+#summary JCatapult MVC Forms
+
+= Forms =
+
+JCatapult MVC currently uses FreeMarker for the rendering HTML results. In order to providing an easy mechanism for creating forms and managing all of the complexity that comes along with forms, JCatapult provides a number of tags that can be used from any FreeMarker template. These tags provide support for:
+
+  * Localized labels
+  * Field error display
+  * Required field indicators (usually an asterisk)
+  * Pre-population from action properties
+
+= Tags =
+
+The tags that are provided by JCatapult MVC are:
+
+  * [MVCFormTag form] - Renders the HTML form
+  * [MVCButtonTags button] - Renders a button (i.e. <input type="button">)
+  * [MVCCheckboxListTag checkboxlist] - Renders a set of checkbox controls from a Collection
+  * [MVCheckboxTag checkbox] - Renders a single checkbox
+  * [MVCCountriesSelectTag countriesselect] - Renders a selectbox that contains countries
+  * [MVCFileTag file] - Renders a file upload control
+  * [MVCHiddenTag hidden] - Renders a hidden input tag (i.e. <input type="hidden">)
+  * [MVCButtonTags image] - Renders an image submit button
+  * [MVCMonthsSelectTag monthsselect] - Renders a seleectbox that contains months
+  * [MVCPasswordTag password] - Renders a password input tag (i.e. <input type="password">)
+  * [MVCRadioListTag radiolist] - Renders a group of radio buttons (i.e. <input type="radio">)
+  * [MVCResetTag reset] - Renders a reset button (i.e. <input type="reset">)
+  * [MVCSelectTag select] - Renders a selectbox (i.e. <select>)
+  * [MVCButtonTags submit] - Renders a submit button (i.e. <input type="submit">)
+  * [MVCTextareaTag textarea] - Renders a textarea tag (i.e. <textarea>)
+  * [MVCTextTag text] - Renders a text input tag (i.e. <input type="text">)
+  * [MVCYearsSelectTag yearsselect] - Renders a selectbox that contains years
+
+All of the JCatapult MVC tags can be used in the FreeMarker templates like this:
+
+{{{
+[#ftl/]
+[@jc.form action="some-action"]
+  [@jc.text name="firstName"/]
+[/@jc.form]
+}}}
+
+JCatapult provides the tags by adding a Hash to the template under the key *jc* that contains each tag as a FreeMarker directive. You can read more about these concepts in the FreeMarker documentation.
+
+= Association =
+
+JCatapult MVC behaves in much the same way that other MVCs do. Input tags are associated with a property in an action. When the form is submitted, JCatapult MVC places the values from the form input tags into the property they are associated with. Likewise, when the form is rendered, JCatapult MVC pulls values from the properties and uses it to populate the form. The tags that work in this manner are checkboxlist, checkbox, countriesselect, hidden, image, monthsselect, password, radio, reset, select, submit, textarea, text, and yearsselect.
+
+The way each tag is associated with a property in the action is via the *name* attribute of the tag. The name can be a property in the action or a nested property inside an object in the action. The action is always the starting point for association. Here is an example of a simple action that has a local property that we want to associate with a field on the form:
+
+{{{
+@Action
+public class RegisterAction {
+  public String login;
+  public String password;
+
+  ...
+}
+}}}
+
+This action is used for registering new users to the website. Here is the form that goes with the action:
+
+{{{
+[#ftl/]
+[@jc.form action="register"]
+  [@jc.text name="login"/]
+  [@jc.password name="password"/]
+  [@jc.submit name="register"/]
+[/@jc.form]
+}}}
+
+= Labels =
+
+You might have noticed that the form from our last examples didn't have any labels for the form fields. By default, JCatapult MVC uses the [MVCMessagesLocalization localization] resource bundles to generate labels. This process is also used to retrieve the text that is displayed on buttons. The *name* attribute of the tag is used as the key into the resource bundle for the labels and button text. Here is a sample resource bundle that contains the labels for our register form.
+
+{{{
+login=Enter a login name
+password=Select a password
+register=Register
+}}}
+
+= Common HTML Attributes =
+
+Each tag that JCatapult provides supports the full set of HTML attributes as they are defined in the W3C HTML specification. The only exception to this is the *name* attribute for some tags. The standard HTML attributes are:
+
+* Core Attributes *
+  * id - (String) The ID of the HTML element
+  * class - (String) The CSS class of the HTML element
+  * style - (String) The CSS style definition of the HTML element
+  * title - (String) The title of the element
+
+* Internationalization Attributes *
+  * lang - (String) The language of the HTML element
+  * dir - (String) The text direction of the text in the HTML element
+
+* Event Attributes *
+  * onclick - (String) A pointer button was clicked
+  * ondblclick - (String) A pointer button was double clicked
+  * onmousedown - (String) A pointer button was pressed down
+  * onmouseup - (String) A pointer button was released
+  * onmouseover - (String) A pointer was moved onto
+  * onmousemove - (String) A pointer was moved within
+  * onmouseout - (String) A pointer was moved away
+  * onkeypress - (String) A key was pressed and released
+  * onkeydown - (String) A key was pressed down
+  * onkeyup - (String) A key was released
+
+Here are additional HTML attributes that are supported by specific tags:
+
+* Form Tag Attributes *
+  * action - URI or URL of the server-side form handler
+  * method - A HTTP method used to submit the form
+  * enctype - The encoding type of the form
+  * accept - A list of MIME types for file upload
+  * name - The name of form for scripting
+  * accept-charset - A list of supported charsets
+  * onsubmit - The form was submitted
+  * onreset - The form was reset
+
+* Button Tag Attributes *
+  * value - The value sent to the server when the form is submitted
+  * type - The type of the button
+  * disabled - Determines if the button is disabled
+  * tabindex - The tab index of the button
+  * accesskey - The access key of the button
+  * onblur - The button was blurred
+  * onfocus - The button was focused
+
+* Checkbox Tag Attributes *
+  * name - The name sent to the server when the form is submitted and for scripting
+  * value - The value sent to the server when the form is submitted
+  * size - The size of the field
+  * checked - Determines if the checkbox is always checked or not (regardless of the property the checkbox is associated with)
+  * tabindex - The tab index of the button
+  * accesskey - The access key of the button
+  * onblur - The button was blurred
+  * onfocus - The button was focused
+  * onselect - Some text was selected
+  * onchange - The field was changed
+
+* File Tag Attributes *
+  * name - The name sent to the server when the form is submitted and for scripting
+  * value - The value sent to the server when the form is submitted
+  * size - The size of the field
+  * accept - A list of mime types accepted for file upload
+  * tabindex - The tab index of the button
+  * accesskey - The access key of the button
+  * onblur - The button was blurred
+  * onfocus - The button was focused
+  * onselect - Some text was selected
+  * onchange - The field was changed
+
+* Hidden Tag Attributes *
+  * name - The name sent to the server when the form is submitted and for scripting
+  * value - The value sent to the server when the form is submitted
+  * size - The size of the field
+  * checked - Determines if the checkbox is always checked or not (regardless of the property the checkbox is associated with)
+  * tabindex - The tab index of the button
+  * accesskey - The access key of the button
+  * onblur - The button was blurred
+  * onfocus - The button was focused
+  * onselect - Some text was selected
+  * onchange - The field was changed
+
+
+  * countriesselect - Renders a selectbox that contains countries
+  * file - Renders a file upload control
+  * hidden - Renders a hidden input tag (i.e. <input type="hidden">)
+  * image - Renders an image submit button
+  * monthsselect - Renders a seleectbox that contains months
+  * password - Renders a password input tag (i.e. <input type="password">)
+  * radio - Renders a radio button (i.e. <input type="radio">)
+  * reset - Renders a reset button (i.e. <input type="reset">)
+  * select - Renders a selectbox (i.e. <select>)
+  * submit - Renders a submit button (i.e. <input type="submit">)
+  * textarea - Renders a textarea tag (i.e. <textarea>)
+  * text - Renders a text input tag (i.e. <input type="text">)
+  * yearsselect - Renders a selectbox that contains years
+
+* Text Tag Attributes *
+  name        CDATA          #IMPLIED  -- submit as part of form --
+  value       CDATA          #IMPLIED  -- Specify for radio buttons and checkboxes --
+  checked     (checked)      #IMPLIED  -- for radio buttons and check boxes --
+  disabled    (disabled)     #IMPLIED  -- unavailable in this context --
+  readonly    (readonly)     #IMPLIED  -- for text and passwd --
+  size        CDATA          #IMPLIED  -- specific to each type of field --
+  maxlength   NUMBER         #IMPLIED  -- max chars for text fields --
+  src         %URI;          #IMPLIED  -- for fields with images --
+  alt         CDATA          #IMPLIED  -- short description --
+  usemap      %URI;          #IMPLIED  -- use client-side image map --
+  ismap       (ismap)        #IMPLIED  -- use server-side image map --
+  tabindex    NUMBER         #IMPLIED  -- position in tabbing order --
+  accesskey   %Character;    #IMPLIED  -- accessibility key character --
+  onfocus     %Script;       #IMPLIED  -- the element got the focus --
+  onblur      %Script;       #IMPLIED  -- the element lost the focus --
+  onselect    %Script;       #IMPLIED  -- some text was selected --
+  onchange    %Script;       #IMPLIED  -- the element value was changed --
+  accept      %ContentTypes; #IMPLIED  -- list of MIME types for file upload --

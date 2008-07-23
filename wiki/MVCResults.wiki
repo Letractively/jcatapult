@@ -4,6 +4,12 @@
 
 The JCatapult MVC handles results in two ways. First, using a standard set of conventions, results are found based on the request URI and possibly the result code from an action invocation. The other method is via annotations defined on action classes.
 
+= FreeMarker =
+
+Currently, JCatapult MVC uses FreeMarker for rendering HTML and other types of text results. FreeMarker has many advantages over JSPs, but mainly it allows JCatapult Modules to ship results inside JAR files, something that is impossible with JSPs.
+
+For more information about FreeMarker, visit the FreeMarker website at http://www.freemarker.org
+
 = Conventions =
 
 The default handling for any request URI is to find the appropriate FreeMarker result and render it. This is known as a Forward result, even though it doesn't use JEE RequestDispatcher to perform a forward to a JSP. 

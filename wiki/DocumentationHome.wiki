@@ -62,6 +62,7 @@ Below are links to topics about a specific JCatapult technology, service or API.
   * [MVCTypeConversion Type conversion]
   * [MVCResults Results]
   * [MVCForms Forms]
+  * [MVCLocale Locale]
   * [MVCValidation Validation]
   * [MVCMessagesLocalization Messages, errors and localization]
   * [MVCScopes Scopes]
