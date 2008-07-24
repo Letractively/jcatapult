@@ -1,0 +1,9 @@
+org.jcatapult.action.jcatapult
+org.jcatapult.domain.commerce
+org.jcatapult.guice
+org.jcatapult.struts.action
+org.jcatapult.struts.action.annotation
+org.jcatapult.struts.convert
+org.jcatapult.struts.fileupload
+org.jcatapult.struts.guice
+org.jcatapult.struts.interceptor
