@@ -3,13 +3,24 @@
     group="jcatapult.org"
     version="1.0-RC6">
 
-  <!-- import property file properties -->
+  <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
 
-  <!-- Compile properties -->
-  <property name="jdk.project" value="${jdk1.6}"/>
+  <!--
+    jcatapult-build.properties must contain the following:
+      svn.username=<username>
+      svn.password=<password>
+  -->
+  <properties file="${user.home}/google-code-build.properties"/>
 
-  <!-- set to true if this libary has hibernate entities and requires database creation -->
+  <!--
+    inversoft-org-release-build.properties must contain the following:
+      svn.release.username=<username>
+      svn.release.password=<password>
+  -->
+  <properties file="${user.home}/inversoft-org-release-build.properties"/>
+
+  <!-- MVC doesn't have any database code -->
   <property name="project.requires.database" value="false"/>
 
   <property name="version.jcatapult" value="1.0-RC6"/>
