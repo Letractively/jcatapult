@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+<project name="release-minor">
+
+  <target name="rel-minor-full-trunk-script" depends="-scm-init">
+    <echo>Executing full minor release scripts on trunk...</echo>
+    <rel_pre/>
+    <rel_check_project/>
+    <rel_set_branch_version/>
+    <rel_validate_version type="minor"/>
+    <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_check_changelog/>
+    <antcall target="test-unit"/>
+    <scm_tag_head tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <scm_branch_head branch="${branch.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_deploy_remote/>
+    <rel_post/>
+    <rel_cleanup/>
+  </target>
+
+  <!-- This scripts checks out a project, tests it, and then tags and branches trunk only -->
+  <target name="rel-minor-tag-trunk-script" depends="-scm-init">
+    <echo>Executing tag-only minor release scripts on trunk...</echo>
+    <rel_pre/>
+    <rel_check_project/>
+    <rel_set_branch_version/>
+    <rel_validate_version type="minor"/>
+    <scm_check_tag_available tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_check_changelog/>
+    <antcall target="test-unit"/>
+    <scm_tag_head tag="${project.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <scm_branch_head branch="${branch.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+    <rel_post/>
+    <rel_cleanup/>
+  </target>
+
+</project>
