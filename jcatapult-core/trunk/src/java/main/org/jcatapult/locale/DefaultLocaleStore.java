@@ -61,6 +61,11 @@ public class DefaultLocaleStore implements LocaleStore {
             locale = request.getLocale();
         }
 
+        // If it is found, store it in the JSTL context
+        if (locale != null) {
+            request.setAttribute("javax.servlet.jsp.jstl.fmt.locale", locale);
+        }
+
         return locale;
     }
 
