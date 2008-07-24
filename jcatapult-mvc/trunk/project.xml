@@ -23,6 +23,9 @@
   <!-- MVC doesn't have any database code -->
   <property name="project.requires.database" value="false"/>
 
+  <!-- compile properties -->
+  <property name="jdk.project" value="${jdk1.6}"/>
+
   <property name="version.jcatapult" value="1.0-RC6"/>
 
   <release>
