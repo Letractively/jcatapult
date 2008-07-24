@@ -172,12 +172,14 @@ public abstract class Accessor {
         Object newValue = values;
 
         // First look for annotations
-        Annotation[] annotations = field.getAnnotations();
-        for (Annotation annotation : annotations) {
-            ConverterAnnotation converterAnnotation = annotation.annotationType().getAnnotation(ConverterAnnotation.class);
-            if (converterAnnotation != null) {
-                AnnotationConverter converter = converterProvider.lookup(annotation);
-                return converter.convertFromStrings(annotation, values, type, context.getAttributes());
+        if (field != null) {
+            Annotation[] annotations = field.getAnnotations();
+            for (Annotation annotation : annotations) {
+                ConverterAnnotation converterAnnotation = annotation.annotationType().getAnnotation(ConverterAnnotation.class);
+                if (converterAnnotation != null) {
+                    AnnotationConverter converter = converterProvider.lookup(annotation);
+                    return converter.convertFromStrings(annotation, values, type, context.getAttributes());
+                }
             }
         }
 

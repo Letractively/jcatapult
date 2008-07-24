@@ -65,7 +65,7 @@ public class CollectionAccessor extends Accessor {
     }
 
     public void set(String[] values, Context context) {
-        set(convert(values, context, null), context);
+        set(convert(values, context, memberAccessor.field), context);
     }
 
     public void set(Object value, Context context) {
