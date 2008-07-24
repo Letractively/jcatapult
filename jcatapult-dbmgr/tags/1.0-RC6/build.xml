@@ -1,0 +1,160 @@
+<?xml version="1.0" ?>
+<!--
+  ~ Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+  ~ either express or implied. See the License for the specific
+  ~ language governing permissions and limitations under the License.
+  -->
+<project name="jcatapult-dbmgr">
+
+  <!-- <property file="${user.home}/build.properties"/> -->
+
+  <property environment="env"/>
+  <property name="plugin.dir" value="${env.JCATAPULT_HOME}/ant/plugins"/>
+
+  <!-- Savant -->
+  <import file="${plugin.dir}/savant/1.0/savant.xml"/>
+
+  <!-- Init -->
+  <import file="${plugin.dir}/init/1.0/init.xml"/>
+
+  <!-- Clean -->
+  <import file="${plugin.dir}/clean/1.0/clean.xml"/>
+
+  <!-- Java -->
+  <import file="${plugin.dir}/java/1.0/compile.xml"/>
+
+  <!-- Java jar -->
+  <import file="${plugin.dir}/java/1.0/jar.xml"/>
+
+  <!-- javadoc -->
+  <import file="${plugin.dir}/javadoc/1.0/javadoc.xml"/>
+
+  <!-- JUnit -->
+  <import file="${plugin.dir}/junit/1.0/junit.xml"/>
+  <import file="${plugin.dir}/cobertura/1.0/cobertura.xml"/>
+
+  <!-- SVN -->
+  <import file="${plugin.dir}/svn/1.0/svn.xml"/>
+
+  <!-- Release -->
+  <import file="${plugin.dir}/release-svn/1.0/jar.xml"/>
+  <import file="${plugin.dir}/release-jcatapult/1.0/release-jcatapult.xml"/>
+
+  <!-- IDE -->
+  <import file="${plugin.dir}/ide/1.0/ide.xml"/>
+
+  <macrodef name="compile-main-post">
+    <sequential>
+      <!-- copies db files to the target directory -->
+      <copy todir="${dir.target.classes.main}">
+        <fileset dir="${dir.src.db.main}" includes="**/*"/>
+      </copy>
+    </sequential>
+  </macrodef>
+
+  <!-- implemented to jar up the test modules -->
+  <macrodef name="jar-post">
+    <sequential>
+      <jar destfile="${dir.target.jars}/module1-1.2.jar">
+        <fileset dir="test/module1" includes="**/*"/>
+      </jar>
+      <jar destfile="${dir.target.jars}/module2-1.1.jar">
+        <fileset dir="test/module2" includes="**/*"/>
+      </jar>
+      <jar destfile="${dir.target.jars}/module3-2.1.jar">
+        <fileset dir="test/module3" includes="**/*"/>
+      </jar>
+      <jar destfile="${dir.target.jars}/module4-1.0.jar">
+        <fileset dir="test/module4" includes="**/*"/>
+      </jar>
+      <jar destfile="${dir.target.jars}/dependency1-1.0.jar">
+        <fileset dir="test/dependency1" includes="**/*"/>
+      </jar>
+      <jar destfile="${dir.target.jars}/dependency2-1.0.jar">
+        <fileset dir="test/dependency2" includes="**/*"/>
+      </jar>
+   </sequential>
+  </macrodef>
+
+  <!-- implemented to copy amd files over to amd -->
+  <macrodef name="test-unit-pre">
+    <sequential>
+      <copy file="test/module1/module1-1.2.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/module2/module2-1.1.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/module3/module3-2.1.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/module4/module4-1.0.jar.amd" todir="${dir.target.jars}"/>
+    </sequential>
+  </macrodef>
+
+  <target name="create-test-database">
+    <echo>Creating custom test databases...</echo>
+    <dependencypath pathid="classpath.project" dependencies="dependencies.project" workflow="workflow.project"
+                    transitive="true" types="compile,compile-test,run,run-test"/>
+    <sql driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/mysql"
+         userid="${db.username}" password="${db.password}" autocommit="true" expandproperties="true"
+         classpathref="classpath.project">
+
+      DROP DATABASE IF EXISTS mysql5_database_provider_test;
+      CREATE DATABASE mysql5_database_provider_test;
+      GRANT ALL PRIVILEGES on mysql5_database_provider_test.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on mysql5_database_provider_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS table_generator_test_project5;
+      CREATE DATABASE table_generator_test_project5;
+      GRANT ALL PRIVILEGES on table_generator_test_project5.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on table_generator_test_project5.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS table_generator_test_module1;
+      CREATE DATABASE table_generator_test_module1;
+      GRANT ALL PRIVILEGES on table_generator_test_module1.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on table_generator_test_module1.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS database_generator_test_project5;
+      CREATE DATABASE database_generator_test_project5;
+      GRANT ALL PRIVILEGES on database_generator_test_project5.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on database_generator_test_project5.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS database_generator_test_project4;
+      CREATE DATABASE database_generator_test_project4;
+      GRANT ALL PRIVILEGES on database_generator_test_project4.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on database_generator_test_project4.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS database_generator_test_project1;
+      CREATE DATABASE database_generator_test_project1;
+      GRANT ALL PRIVILEGES on database_generator_test_project1.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on database_generator_test_project1.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+      DROP DATABASE IF EXISTS database_manager_test;
+      CREATE DATABASE database_manager_test;
+      GRANT ALL PRIVILEGES on database_manager_test.* to 'dev'@'localhost' identified by 'dev';
+      GRANT ALL PRIVILEGES on database_manager_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+    </sql>
+    <!--<sql driver="org.postgresql.Driver" url="jdbc:postgresql://localhost/postgres"-->
+         <!--userid="postgres" password="postgres" autocommit="true" expandproperties="true"-->
+         <!--classpathref="classpath.project">-->
+
+      <!--DROP DATABASE IF EXISTS postgres8_database_provider_test;-->
+      <!--CREATE DATABASE postgres8_database_provider_test WITH OWNER dev;-->
+
+      <!--DROP DATABASE IF EXISTS database_migrator_test;-->
+      <!--CREATE DATABASE database_migrator_test WITH OWNER dev;-->
+
+      <!--DROP DATABASE IF EXISTS patcher_seeder_test;-->
+      <!--CREATE DATABASE patcher_seeder_test WITH OWNER dev;-->
+
+      <!--DROP DATABASE IF EXISTS table_creator_test;-->
+      <!--CREATE DATABASE table_creator_test WITH OWNER dev;-->
+    <!--</sql>-->
+  </target>
+</project>
