@@ -82,5 +82,7 @@ public class DefaultLocaleStore implements LocaleStore {
         } else {
             session.setAttribute(LOCALE_KEY, locale);
         }
+
+        request.setAttribute("javax.servlet.jsp.jstl.fmt.locale", locale);
     }
 }
