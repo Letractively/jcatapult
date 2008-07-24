@@ -52,7 +52,7 @@ public class IndexedAccessor extends MemberAccessor {
     }
 
     public void set(String[] values, Context context) {
-        set(convert(values, context, null), context);
+        set(convert(values, context, field), context);
     }
 
     public void set(Object value, Context context) {

@@ -74,7 +74,7 @@ public class MemberAccessor extends Accessor {
         return names;
     }
 
-    final Field field;
+    Field field;
     final PropertyInfo propertyInfo;
 
     public MemberAccessor(ConverterProvider converterProvider, MemberAccessor accessor) {
@@ -91,7 +91,13 @@ public class MemberAccessor extends Accessor {
             this.propertyInfo = null;
             this.field = findField(declaringClass, name);
         } else {
-            this.field = null;
+            try {
+                this.field = declaringClass.getDeclaredField(name);
+            } catch (NoSuchFieldException e) {
+                // We did our best and now we have to bail on the field
+                this.field = null;
+            }
+
             this.propertyInfo = bpi;
         }
 
@@ -121,7 +127,7 @@ public class MemberAccessor extends Accessor {
     }
 
     public void set(String[] values, Context context) {
-        set(convert(values, context, null), context);
+        set(convert(values, context, field), context);
     }
 
     public void set(Object value, Context context) {
