@@ -17,6 +17,9 @@
   <import file="${plugin.dir}/java/1.0/compile.xml"/>
   <import file="${plugin.dir}/java/1.0/jar.xml"/>
 
+  <!-- javadoc -->
+  <import file="${plugin.dir}/javadoc/1.0/javadoc.xml"/>
+
   <!-- JUnit -->
   <import file="${plugin.dir}/junit/1.0/junit-no-db.xml"/>
   <import file="${plugin.dir}/cobertura/1.0/cobertura.xml"/>
@@ -26,6 +29,7 @@
 
   <!-- Release -->
   <import file="${plugin.dir}/release-svn/1.0/jar.xml"/>
+  <import file="${plugin.dir}/release-jcatapult/1.0/release-jcatapult.xml"/>
 
   <!-- IDE -->
   <import file="${plugin.dir}/ide/1.0/ide.xml"/>
