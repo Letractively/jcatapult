@@ -1,2 +1,106 @@
+#summary JCatapult Release Process
+
+= Releasing =
+
+Releasing a JCatapult project consists of a number of steps. JCatapult supports projects that are stored in SubVersion repositories and is able to release those types of projects. Projects stored in other types of repositories will need to create their own scripts.
+
+== Versions ==
+
+JCatapult uses a standard versioning system for releases. This versioning system is as follows:
+
+  * Major - 1.0
+  * Minor - 1.1
+  * Patch - 1.1.1
+  * Alpha - 1.0-A1
+  * Beta - 1.0-B2
+  * Milestone - 1.0-M3
+  * Release Candidate - 1.0-RC4
+
+The version of your project is controlled by the version attribute on the root node of the `project.xml` file. In most cases, your project will go through this life-cycle:
+
+  # Release an initial alpha where the major version will be the first major release. This is usually *1.0-A1*
+  # Release a few alphas (1.0-A2, 1.0-A3)
+  # Release a few betas (1.0-B1, 1.0-B2)
+  # Release a few milestones (1.0-M1, etc)
+  # Release a few release candidates (1.0-RC1, etc)
+  # Release 1.0
+  # Release patches (1.0.1, 1.0.2)
+  # Repeat all of these steps for the next minor (1.1)
+
+Most projects rarely release major versions. In most cases projects will release numerous minor versions until a major is absolutely necessary. The reason for this is based on how JCatapult manages compatibility. In general, JCatapult treats all minor versions for the same major version as compatible. Never are separate major versions compatible. Here is an example:
+
+{{{
+1.0 - intial
+1.0.1 - compatible
+1.1 - compatible
+1.1.1 - compatible
+1.1.2 - compatible
+1.2 - compatible
+2.0 - NOT COMPATIBLE
+}}}
+
+For this reason, you should avoid release major versions frequently.
+
+=== Compatibility ===
+
+JCatapult conforms to the Java Language Specifications definition of runtime compatibility. This is defined here:
+
+http://java.sun.com/docs/books/jls/third_edition/html/binaryComp.html
+
+To summarize this lengthy document, it is only compatible if it doesn't require a re-compile and code changes. This means, you should be able to drop in a new version of a JAR file, restart the application, and it should run fine.
+
+== SubVersion ==
+
+Projects that are stored in SubVersion repositories can quickly and easily be released with JCatapult's Ant system. However, your project *MUST* conform to the standard SubVersion layout. This layout looks like this:
+
+{{{
+https://svn.example.com/your-project/trunk
+https://svn.example.com/your-project/tags
+https://svn.example.com/your-project/branches
+}}}
+
+To release a project stored in SubVersion, you first need to run though this check list and ensure everything has been completed:
+
+  * Is your project all checked in?
+  * Did you increment or set your version number in the `project.xml` file?
+  * Do all of your unit tests pass when you run `ant test`?
+
+You must also ensure that your project is not using an integration builds of any artifacts listed in the dependencies list of `project.xml`. The release process will fail if your project is using integration builds. If you are using integration builds you must release that project first.
+
+== Process ==
+
+The process that JCatapult takes to release a project consists of a number of steps that vary depending on the type of release being performed. Here are the different types of releases and the steps that are taken.
+
+=== SSL ===
+
+In some cases, you might want to publish artifacts to a repository that is using SSL for security. For example, the Inversoft SubVersion repository is protected by SSL inside Apache. In most cases, SSL certificates are not verified by a CA (Certificate Authority) and are instead self-signed. 
+
+Using self-signed certificates will cause JCatapult's release processing to fail. This is actually with Java's security framework throwing SecurityExceptions, because it believes that the certificate is a fake.
+
+There is an easy way to get around this. You need to add the certificate for your repository to the global keystore for your JDK. Here is how you do this:
+
+  # Open Firefox
+  # Go to the site that is using SSL (i.e. https://svn.example.com)
+  # Click on the lock down in the lower right corner of the browser window
+  # Click the "View certificate" button
+  # Click the details tab
+  # Click the export button to export the certificate
+  # Save the certificate in x.509 (PEM) format
+  # Go to a command prompt
+  # Add the certificate to the keystore
+
+Here is the command to add the certificate to your global keystore:
+
+*nix
+{{{
+$ keytool -import -keystore $JAVA_HOME/lib/security/cacerts -file <your-pem-export> -alias <anything>
+}}}
+
+Windows
+{{{
+c:\> keytool -import -keystore %JAVA_HOME%/lib/security/cacerts -file <your-pem-export> -alias <anything>
+}}}
+
 = JCatapult Release Scripts =
-JCatapult provides a mechanism for releasing projects via ant scripts located in the [AntReleaseSvnPlugin JCatapult Ant Release Plugin].
+
+The release handling is done inside the [AntReleaseSvnPlugin JCatapult Ant Release Plugin] of the JCatapult Ant build system. You can read up further on that documentation for more information.
