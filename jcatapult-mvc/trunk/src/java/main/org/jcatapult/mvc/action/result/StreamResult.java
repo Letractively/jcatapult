@@ -30,7 +30,7 @@ import net.java.lang.StringTools;
 
 /**
  * <p>
- * This result performs a HTTP redirect to a URL.
+ * This result writes bytes to the response output steam.
  * </p>
  *
  * @author  Brian Pontarelli
