@@ -16,13 +16,10 @@
 package org.jcatapult.mvc.parameter.convert;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Map;
 
-import org.jcatapult.mvc.parameter.convert.ConversionException;
-import org.jcatapult.mvc.parameter.convert.GlobalConverter;
-import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 import org.jcatapult.mvc.parameter.el.TypeTools;
 
 import net.java.lang.StringTools;
@@ -66,11 +63,6 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
      */
     public Object convertFromStrings(String[] values, Type convertTo, Map<String, String> dynamicAttributes)
     throws ConversionException, ConverterStateException {
-        // Handle null
-//        if (values == null) {
-//            return null;
-//        }
-
         // Handle a zero or one String
         Class<?> rawType = TypeTools.rawType(convertTo);
         if (values == null || values.length <= 1) {

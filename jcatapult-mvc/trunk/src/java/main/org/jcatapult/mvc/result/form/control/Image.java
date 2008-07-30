@@ -17,6 +17,8 @@ package org.jcatapult.mvc.result.form.control;
 
 import java.util.Map;
 
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+
 /**
  * <p>
  * This class is the control for an image button.
@@ -24,6 +26,10 @@ import java.util.Map;
  *
  * @author  Brian Pontarelli
  */
+@ControlAttributes(
+    required = {"name", "src"},
+    optional = {"action"}
+)
 public class Image extends AbstractButtonInput {
     /**
      * Calls super and then moves the ismap attribute out and if it is true set it back in as the

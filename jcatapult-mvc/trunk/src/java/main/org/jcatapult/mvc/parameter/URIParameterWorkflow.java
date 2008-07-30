@@ -13,29 +13,20 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.form.control;
+package org.jcatapult.mvc.parameter;
 
-import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+import org.jcatapult.servlet.Workflow;
+
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This class is the control for a input type=file.
+ * This class handles additional URI parameters that are parts of the
+ * URI that come after the action part of the URI.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-@ControlAttributes(
-    required = {"name"}
-)
-public class File extends AbstractInput {
-    public File() {
-        super(true);
-    }
-
-    /**
-     * @return  file.ftl
-     */
-    protected String endTemplateName() {
-        return "file.ftl";
-    }
+@ImplementedBy(DefaultURIParameterWorkflow.class)
+public interface URIParameterWorkflow extends Workflow {
 }

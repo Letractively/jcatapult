@@ -46,11 +46,11 @@ public class ImageTest extends AbstractButtonInputTest {
 
         AbstractButtonInput input = getControl(ee);
         run(input, action, getType(), "foo.bar", "test", "Test",
-            mapNV("name", "test", "value", "test-value", "class", "css-class", "bundle", "foo.bar", "ismap", true),
+            mapNV("name", "test", "src", "foo.jpg", "value", "test-value", "class", "css-class", "bundle", "foo.bar", "ismap", true),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_test\" value=\"\"/>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" ismap=\"ismap\" name=\"test\" value=\"Test\"/></div>\n" +
+            "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" ismap=\"ismap\" name=\"test\" src=\"foo.jpg\" value=\"Test\"/></div>\n" +
             "</div>\n");
 
         EasyMock.verify(ee);

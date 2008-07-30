@@ -16,10 +16,15 @@
 package org.jcatapult.mvc.action;
 
 import java.io.IOException;
+import static java.util.Arrays.*;
+import java.util.Collection;
+import java.util.Iterator;
 import javax.servlet.ServletException;
 
 import org.easymock.EasyMock;
+import org.example.action.ComplexRest;
 import org.example.action.user.Edit;
+import org.example.action.user.RESTEdit;
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.config.ActionConfigurationProvider;
 import org.jcatapult.mvc.action.config.DefaultActionConfiguration;
@@ -81,6 +86,97 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         run("/admin/user/edit", "xml");
     }
 
+    @Test
+    public void testURIParameters() throws IOException, ServletException {
+        request.setUri("/admin/user/rest-edit/12");
+        request.setPost(true);
+        request.setParameter("__jc_a_submit", "");
+        request.setParameter("__jc_a_cancel", "cancel");
+        request.setParameter("submit", "Submit");
+
+        ActionConfigurationProvider provider = EasyMock.createStrictMock(ActionConfigurationProvider.class);
+        EasyMock.expect(provider.lookup("/admin/user/rest-edit/12")).andReturn(null);
+        EasyMock.expect(provider.lookup("/admin/user/rest-edit/12/index")).andReturn(null);
+        EasyMock.expect(provider.lookup("/admin/user/rest-edit")).andReturn(new DefaultActionConfiguration(RESTEdit.class, "/admin/user/rest-edit"));
+        EasyMock.replay(provider);
+
+        Capture capture = new Capture();
+        ActionInvocationStore store = EasyMock.createStrictMock(ActionInvocationStore.class);
+        store.setCurrent((ActionInvocation) capture.capture());
+        store.popCurrent();
+        EasyMock.replay(store);
+
+        ObjectFactory factory = EasyMock.createStrictMock(ObjectFactory.class);
+        EasyMock.expect(factory.create(RESTEdit.class)).andReturn(new RESTEdit());
+        EasyMock.replay(factory);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultActionMappingWorkflow workflow = new DefaultActionMappingWorkflow(request, response, provider, store, factory);
+        workflow.perform(chain);
+
+        ActionInvocation ai = (ActionInvocation) capture.object;
+        assertEquals("/admin/user/rest-edit/12", ai.actionURI());
+        assertCollections(asList("12"), ai.uriParameters());
+        assertNull(ai.extension());
+        assertNotNull(ai.configuration());
+        assertTrue(ai.executeAction());
+        assertTrue(ai.executeResult());
+
+        EasyMock.verify(provider, store, factory, chain);
+    }
+
+    @Test
+    public void testURIParametersComplexWithWildcard() throws IOException, ServletException {
+        request.setUri("/complex-rest/brian/static/pontarelli/then/a/bunch/of/stuff");
+        request.setPost(true);
+        request.setParameter("__jc_a_submit", "");
+        request.setParameter("__jc_a_cancel", "cancel");
+        request.setParameter("submit", "Submit");
+
+        ActionConfigurationProvider provider = EasyMock.createStrictMock(ActionConfigurationProvider.class);
+        EasyMock.expect(provider.lookup("/complex-rest/brian/static/pontarelli/then/a/bunch/of/stuff")).andReturn(null);
+        EasyMock.expect(provider.lookup("/complex-rest/brian/static/pontarelli/then/a/bunch/of/stuff/index")).andReturn(null);
+        EasyMock.expect(provider.lookup("/complex-rest/brian/static/pontarelli/then/a/bunch/of")).andReturn(null);
+        EasyMock.expect(provider.lookup("/complex-rest/brian/static/pontarelli/then/a/bunch")).andReturn(null);
+        EasyMock.expect(provider.lookup("/complex-rest/brian/static/pontarelli/then/a")).andReturn(null);
+        EasyMock.expect(provider.lookup("/complex-rest/brian/static/pontarelli/then")).andReturn(null);
+        EasyMock.expect(provider.lookup("/complex-rest/brian/static/pontarelli")).andReturn(null);
+        EasyMock.expect(provider.lookup("/complex-rest/brian/static")).andReturn(null);
+        EasyMock.expect(provider.lookup("/complex-rest/brian")).andReturn(null);
+        EasyMock.expect(provider.lookup("/complex-rest")).andReturn(new DefaultActionConfiguration(ComplexRest.class, "/complex-rest"));
+        EasyMock.replay(provider);
+
+        Capture capture = new Capture();
+        ActionInvocationStore store = EasyMock.createStrictMock(ActionInvocationStore.class);
+        store.setCurrent((ActionInvocation) capture.capture());
+        store.popCurrent();
+        EasyMock.replay(store);
+
+        ObjectFactory factory = EasyMock.createStrictMock(ObjectFactory.class);
+        EasyMock.expect(factory.create(ComplexRest.class)).andReturn(new ComplexRest());
+        EasyMock.replay(factory);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultActionMappingWorkflow workflow = new DefaultActionMappingWorkflow(request, response, provider, store, factory);
+        workflow.perform(chain);
+
+        ActionInvocation ai = (ActionInvocation) capture.object;
+        assertEquals("/complex-rest/brian/static/pontarelli/then/a/bunch/of/stuff", ai.actionURI());
+        assertCollections(asList("brian", "static", "pontarelli", "then", "a", "bunch", "of", "stuff"), ai.uriParameters());
+        assertNull(ai.extension());
+        assertNotNull(ai.configuration());
+        assertTrue(ai.executeAction());
+        assertTrue(ai.executeResult());
+
+        EasyMock.verify(provider, store, factory, chain);
+    }
+
     private void run(String uri, String extension) throws IOException, ServletException {
         ActionConfigurationProvider provider = EasyMock.createStrictMock(ActionConfigurationProvider.class);
         EasyMock.expect(provider.lookup(uri)).andReturn(new DefaultActionConfiguration(Edit.class, uri));
@@ -111,5 +207,19 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         assertTrue(ai.executeResult());
 
         EasyMock.verify(provider, store, factory, chain);
+    }
+
+    private void assertCollections(Collection<String> strings, Collection<String> strings1) {
+        if (strings1.size() != strings.size()) {
+            fail(strings + " not equal to " + strings1);
+        }
+
+        Iterator<String> i1 = strings.iterator();
+        Iterator<String> i2 = strings1.iterator();
+        while (i1.hasNext()) {
+            if (!i1.next().equals(i2.next())) {
+                fail(strings + " not equal to " + strings1);
+            }
+        }
     }
 }

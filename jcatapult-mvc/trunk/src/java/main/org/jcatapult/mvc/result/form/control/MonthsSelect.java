@@ -21,6 +21,7 @@ import java.util.TreeMap;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 
 /**
  * <p>
@@ -29,10 +30,13 @@ import org.joda.time.format.DateTimeFormatter;
  *
  * @author  Brian Pontarelli
  */
+@ControlAttributes(
+    required = {"name"}
+)
 public class MonthsSelect extends Select {
     /**
      * <p>
-     * Adds the months Map and then calls super.
+     * Calls super then adds the months Map.
      * </p>
      *
      * @param   attributes The attributes.
@@ -40,7 +44,9 @@ public class MonthsSelect extends Select {
      *          an underscore.
      */
     @Override
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+        super.addAdditionalAttributes(attributes, dynamicAttributes);
+
         Map<Integer, String> months = new TreeMap<Integer, String>();
         DateTimeFormatter formatter = DateTimeFormat.forPattern("MMMM").withLocale(locale);
         for (int i = 1; i <= 12; i++) {
@@ -49,7 +55,5 @@ public class MonthsSelect extends Select {
         }
 
         attributes.put("items", months);
-
-        return super.makeParameters(attributes, dynamicAttributes);
     }
 }

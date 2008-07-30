@@ -33,4 +33,19 @@ public interface ActionConfiguration {
      * @return  The URI that the action is mapped to.
      */
     String uri();
+
+    /**
+     * Determines if this configuration can handle the given URI. Configuration objects provide
+     * additional handling for URI parameters and other cases and this method uses the full incoming
+     * URI to determine if the configuration can handle it.
+     *
+     * @param   uri The full incoming URI.
+     * @return  True if this configuration can handle the URI, false if not.
+     */
+    boolean canHandle(String uri);
+
+    /**
+     * @return  The URI parameter mapping pattern.
+     */
+    String uriParameterPattern();
 }

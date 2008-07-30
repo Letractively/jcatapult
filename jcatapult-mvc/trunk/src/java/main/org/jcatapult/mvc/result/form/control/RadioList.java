@@ -15,6 +15,8 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+
 /**
  * <p>
  * This class is the control for a radio button.
@@ -22,6 +24,9 @@ package org.jcatapult.mvc.result.form.control;
  *
  * @author  Brian Pontarelli
  */
+@ControlAttributes(
+    required = {"name", "items"}
+)
 public class RadioList extends AbstractListInput {
     public RadioList() {
         super(true);

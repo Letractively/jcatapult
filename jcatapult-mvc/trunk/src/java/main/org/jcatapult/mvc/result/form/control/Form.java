@@ -18,6 +18,7 @@ package org.jcatapult.mvc.result.form.control;
 import java.util.Map;
 
 import org.jcatapult.mvc.result.control.AbstractControl;
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 import org.jcatapult.mvc.result.form.FormPreparer;
 
 import com.google.inject.Inject;
@@ -30,6 +31,9 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
+@ControlAttributes(
+    required = {"action"}
+)
 public class Form extends AbstractControl {
     private final FormPreparer formPreparer;
 

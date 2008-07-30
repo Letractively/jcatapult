@@ -17,6 +17,8 @@ package org.jcatapult.mvc.result.form.control;
 
 import java.util.Map;
 
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+
 /**
  * <p>
  * This class is the control for a input type=password.
@@ -24,6 +26,9 @@ import java.util.Map;
  *
  * @author  Brian Pontarelli
  */
+@ControlAttributes(
+    required = {"name"}
+)
 public class Password extends AbstractInput {
     public Password() {
         super(true);

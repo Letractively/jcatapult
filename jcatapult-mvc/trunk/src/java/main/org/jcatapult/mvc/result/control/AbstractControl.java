@@ -27,6 +27,7 @@ import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 import org.jcatapult.mvc.result.form.control.AppendAttributesMethod;
 
 import com.google.inject.Inject;
@@ -35,6 +36,7 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
+import net.java.error.ErrorList;
 
 /**
  * <p>
@@ -77,6 +79,7 @@ public abstract class AbstractControl implements Control {
      *          an underscore.
      */
     public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+        verifyAttributes(attributes);
         addAdditionalAttributes(attributes, dynamicAttributes);
         root = makeRoot(makeParameters(attributes, dynamicAttributes));
 
@@ -215,4 +218,35 @@ public abstract class AbstractControl implements Control {
      * @return  The name of the FreeMarker template that this control renders when it ends.
      */
     protected abstract String endTemplateName();
+
+    /**
+     * @return  The control name, which is usually the simple class name all lowercased.
+     */
+    protected String controlName() {
+        return getClass().getSimpleName().toLowerCase();
+    }
+
+    /**
+     * Verifies that all the required attributes are correctly defined for the control.
+     *
+     * @param   attributes The attributes.
+     */
+    private void verifyAttributes(Map<String, Object> attributes) {
+        ErrorList errors = new ErrorList();
+        Class<?> type = getClass();
+        ControlAttributes ca = type.getAnnotation(ControlAttributes.class);
+        if (ca != null) {
+            String[] requiredAttributes = ca.required();
+            for (String requiredAttribute : requiredAttributes) {
+                if (!attributes.containsKey(requiredAttribute)) {
+                    errors.addError("The control [" + controlName() + "] is missing the required attribute [" +
+                        requiredAttribute + "]");
+                }
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException(errors.toString());
+        }
+    }
 }

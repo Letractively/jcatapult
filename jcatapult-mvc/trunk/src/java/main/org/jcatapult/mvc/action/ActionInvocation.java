@@ -15,6 +15,8 @@
  */
 package org.jcatapult.mvc.action;
 
+import java.util.Collection;
+
 import org.jcatapult.mvc.action.config.ActionConfiguration;
 
 /**
@@ -39,6 +41,11 @@ public interface ActionInvocation {
      * @return  The URI extension or null if there isn't one.
      */
     String extension();
+
+    /**
+     * @return  The additional parts of the URI that come after the action URI.
+     */
+    Collection<String> uriParameters();
 
     /**
      * @return  The action configuration for this invocation.
