@@ -20,6 +20,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+
 /**
  * <p>
  * This class is the control for a select box.
@@ -27,6 +29,10 @@ import java.util.TreeMap;
  *
  * @author  Brian Pontarelli
  */
+@ControlAttributes(
+    required = {"name"},
+    optional = {"includeBlank", "preferredCodes"}
+)
 public class CountriesSelect extends Select {
     /**
      * <p>
@@ -45,23 +51,21 @@ public class CountriesSelect extends Select {
             countries.put(l.getCountry(), l.getDisplayCountry(locale));
         }
 
+        Map<String, String> newCountries = new LinkedHashMap<String, String>();
         if (attributes.containsKey("includeBlank") && (Boolean) attributes.get("includeBlank")) {
-            countries.put("", "");
+            newCountries.put("", "");
         }
 
         String preferred = (String) attributes.get("preferredCodes");
         if (preferred != null) {
             String[] parts = preferred.split(",");
-            Map<String, String> newCountries = new LinkedHashMap<String, String>();
             for (String part : parts) {
                 newCountries.put(part.trim(), countries.remove(part.trim()));
             }
-
-            newCountries.putAll(countries);
-            countries = newCountries;
         }
 
-        attributes.put("items", countries);
+        newCountries.putAll(countries);
+        attributes.put("items", newCountries);
 
         return super.makeParameters(attributes, dynamicAttributes);
     }

@@ -31,4 +31,28 @@ import java.lang.annotation.ElementType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Action {
+    /**
+     * @return  The value of the action annotation is used to determines the URI suffix patterns that
+     *          the action class can handle. This is also known as RESTful URI handling. The pattern
+     *          is derived from the current WADL specification from Sun. The base URI for the action
+     *          is fixed based on the package and class name. However, everything after the base
+     *          can be set into properties or fields of the action class using the WADL pattern here.
+     *          The pattern is like this:<br/>
+     *          <br/>
+     *          <pre>
+     *          {id}
+     *          </pre>
+     *          <p>
+     *          If the classes base URI is /admin/user/edit, the full specification for the URI that
+     *          action can handle would be:
+     *          </p>
+     *          <pre>
+     *          /admin/user/edit/{id}
+     *          </pre>
+     *          <p>
+     *          If the URI is <strong>/admin/user/edit/42</strong>, the value of 42 would be set into
+     *          the action's <strong>id</strong> property or field.
+     *          </p>
+     */
+    String value() default "";
 }

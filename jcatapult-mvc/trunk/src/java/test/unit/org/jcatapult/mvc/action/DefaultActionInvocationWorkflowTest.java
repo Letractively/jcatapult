@@ -162,7 +162,7 @@ public class DefaultActionInvocationWorkflowTest {
         EasyMock.replay(response);
 
         Simple simple = new Simple();
-        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, null, false, true, null );
+        ActionInvocation invocation = new DefaultActionInvocation(simple, "/foo/bar", null, null, null, false, true, null );
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);

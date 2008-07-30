@@ -15,6 +15,8 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+
 /**
  * <p>
  * This class is the control for a submit button.
@@ -22,6 +24,10 @@ package org.jcatapult.mvc.result.form.control;
  *
  * @author  Brian Pontarelli
  */
+@ControlAttributes(
+    required = {"name"},
+    optional = {"action"}
+)
 public class Submit extends AbstractButtonInput {
     /**
      * @return  submit.ftl

@@ -15,6 +15,10 @@
  */
 package org.jcatapult.mvc.action;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 import org.jcatapult.mvc.action.config.ActionConfiguration;
 
 /**
@@ -30,6 +34,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     private final Object action;
     private final String uri;
     private final String extension;
+    private final Collection<String> uriParameters;
     private final ActionConfiguration configuration;
     private final boolean executeResult;
     private final boolean executeAction;
@@ -39,17 +44,19 @@ public class DefaultActionInvocation implements ActionInvocation {
         this.action = action;
         this.uri = uri;
         this.extension = extension;
+        this.uriParameters = new ArrayList<String>();
         this.configuration = configuration;
         this.executeAction = true;
         this.executeResult = true;
         this.resultCode = null;
     }
 
-    public DefaultActionInvocation(Object action, String uri, String extension, ActionConfiguration configuration,
-            boolean executeResult, boolean executeAction, String resultCode) {
+    public DefaultActionInvocation(Object action, String uri, String extension, Collection<String> uriParameters,
+            ActionConfiguration configuration, boolean executeResult, boolean executeAction, String resultCode) {
         this.action = action;
         this.uri = uri;
         this.extension = extension;
+        this.uriParameters = uriParameters;
         this.configuration = configuration;
         this.executeResult = executeResult;
         this.executeAction = executeAction;
@@ -66,6 +73,10 @@ public class DefaultActionInvocation implements ActionInvocation {
 
     public String extension() {
         return extension;
+    }
+
+    public Collection<String> uriParameters() {
+        return Collections.unmodifiableCollection(uriParameters);
     }
 
     public ActionConfiguration configuration() {

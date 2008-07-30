@@ -15,6 +15,8 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
+import java.util.Map;
+
 import org.easymock.EasyMock;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
@@ -56,11 +58,11 @@ public abstract class AbstractButtonInputTest extends AbstractInputTest {
 
         AbstractButtonInput input = getControl(ee);
         run(input, null, getType(), "foo.bar", "test", "Test",
-            mapNV("name", "test", "value", "test-value", "class", "css-class", "bundle", "foo.bar"),
+            params("name", "test", "value", "test-value", "class", "css-class", "bundle", "foo.bar"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_test\" value=\"\"/>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" name=\"test\" value=\"Test\"/></div>\n" +
+            "<div class=\"control-container\">" + tag() + "</div>\n" +
             "</div>\n");
 
         EasyMock.verify(ee);
@@ -73,11 +75,11 @@ public abstract class AbstractButtonInputTest extends AbstractInputTest {
 
         AbstractButtonInput input = getControl(ee);
         run(input, new Edit(), getType(), "org.example.action.user.Edit", "test", "Test",
-            mapNV("name", "test", "value", "test-value", "class", "css-class"),
+            params("name", "test", "value", "test-value", "class", "css-class"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_test\" value=\"\"/>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" name=\"test\" value=\"Test\"/></div>\n" +
+            "<div class=\"control-container\">" + tag() + "</div>\n" +
             "</div>\n");
 
         EasyMock.verify(ee);
@@ -90,13 +92,27 @@ public abstract class AbstractButtonInputTest extends AbstractInputTest {
 
         AbstractButtonInput input = getControl(ee);
         run(input, new Edit(), getType(), "org.example.action.user.Edit", "test", "Test",
-            mapNV("name", "test", "action", "/foo", "value", "test-value", "class", "css-class"),
+            params("name", "test", "action", "/foo", "value", "test-value", "class", "css-class"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_test\" value=\"/foo\"/>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" name=\"test\" value=\"Test\"/></div>\n" +
+            "<div class=\"control-container\">" + tag() + "</div>\n" +
             "</div>\n");
 
         EasyMock.verify(ee);
+    }
+
+    private Map<String, Object> params(String... args) {
+        Map<String, Object> map = mapNV(args);
+        if (getType().equals("image")) {
+            map.put("src", "foo.jpg");
+        }
+
+        return map;
+    }
+
+    private String tag() {
+        return "<input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" name=\"test\" " +
+            (getType().equals("image") ? "src=\"foo.jpg\" " : "")  + "value=\"Test\"/>";
     }
 }

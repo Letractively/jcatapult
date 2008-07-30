@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.result.form.control;
 
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 
 import com.google.inject.Inject;
 
@@ -26,6 +27,10 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
+@ControlAttributes(
+    required = {"name"},
+    optional = {"defaultValue"}
+)
 public class Text extends AbstractValueInput {
     @Inject
     public Text(ExpressionEvaluator expressionEvaluator) {

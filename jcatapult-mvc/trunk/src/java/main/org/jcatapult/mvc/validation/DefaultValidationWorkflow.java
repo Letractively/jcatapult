@@ -88,7 +88,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
                 validate(action);
                 if (messageStore.contains(MessageType.ERROR)) {
                     actionInvocationStore.setCurrent(new DefaultActionInvocation(action, actionInvocation.actionURI(),
-                        null, actionInvocation.configuration(), true, false, "input"));
+                        null, null, actionInvocation.configuration(), true, false, "input"));
                 }
             }
         }
@@ -127,7 +127,8 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
             for (Annotation annotation : annotations) {
                 if (annotation.annotationType().isAnnotationPresent(ValidatorAnnotation.class)) {
                     Object value = (object != null) ? expressionEvaluator.getValue(field.getName(), object) : null;
-                    validate(annotation, object, value, path + "." + field.getName());
+                    String newPath = path(path, field);
+                    validate(annotation, object, value, newPath);
                 } else if (annotation.annotationType() == Valid.class) {
                     handleObject(object, path, field);
                 } else if (annotation.annotationType() == ValidMap.class) {

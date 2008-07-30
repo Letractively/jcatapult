@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.LocalDate;
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 
 /**
  * <p>
@@ -28,10 +29,14 @@ import org.joda.time.LocalDate;
  *
  * @author  Brian Pontarelli
  */
+@ControlAttributes(
+    required = {"name"},
+    optional = {"startYear", "endYear", "numberOfYears"}
+)
 public class YearsSelect extends Select {
     /**
      * <p>
-     * Adds the years Map and then calls super.
+     * Calls super then adds the years Map.
      * </p>
      *
      * @param   attributes The attributes.
@@ -39,7 +44,9 @@ public class YearsSelect extends Select {
      *          an underscore.
      */
     @Override
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+        super.addAdditionalAttributes(attributes, dynamicAttributes);
+
         Integer start = (Integer) attributes.remove("startYear");
         Integer end = (Integer) attributes.remove("endYear");
         Integer numberOfYears = (Integer) attributes.remove("numberOfYears");
@@ -61,7 +68,5 @@ public class YearsSelect extends Select {
         }
 
         attributes.put("items", years);
-
-        return super.makeParameters(attributes, dynamicAttributes);
     }
 }

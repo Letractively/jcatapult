@@ -15,6 +15,8 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+
 import com.google.inject.Inject;
 
 /**
@@ -24,6 +26,9 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
+@ControlAttributes(
+    required = {"name", "items"}
+)
 public class CheckboxList extends AbstractListInput {
     @Inject
     public CheckboxList() {

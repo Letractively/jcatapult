@@ -15,10 +15,10 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.Collection;
 import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 

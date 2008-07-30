@@ -13,29 +13,26 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.form.control;
+package org.example.action;
 
-import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+import java.util.List;
+
+import org.jcatapult.mvc.action.annotation.Action;
 
 /**
  * <p>
- * This class is the control for a input type=file.
+ * This class is a simple edit action for testing.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-@ControlAttributes(
-    required = {"name"}
-)
-public class File extends AbstractInput {
-    public File() {
-        super(true);
-    }
+@Action("{firstName}/static/{lastName}/{*theRest}")
+public class ComplexRest {
+    public String firstName;
+    public String lastName;
+    public List<String> theRest;
 
-    /**
-     * @return  file.ftl
-     */
-    protected String endTemplateName() {
-        return "file.ftl";
+    public String execute() {
+        return "success";
     }
 }
