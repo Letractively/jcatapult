@@ -24,7 +24,8 @@ import org.jcatapult.mvc.action.result.XMLStreamResult;
 
 /**
  * <p>
- * This annotation marks a result from an action as a Streaming XML result using a xml string from the action.
+ * This annotation marks a result from an action as a Streaming XML result
+ * using a xml string from the action.
  * </p>
  *
  * @author jhumphrey

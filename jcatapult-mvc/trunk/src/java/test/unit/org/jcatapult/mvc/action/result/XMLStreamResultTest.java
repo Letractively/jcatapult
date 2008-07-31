@@ -1,22 +1,24 @@
 package org.jcatapult.mvc.action.result;
 
 import java.io.IOException;
-import java.io.ByteArrayInputStream;
 import java.lang.annotation.Annotation;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.action.result.annotation.Stream;
-import org.jcatapult.mvc.action.result.annotation.XMLStream;
-import org.jcatapult.mvc.action.DefaultActionInvocation;
-import org.jcatapult.test.servlet.MockServletOutputStream;
 import org.easymock.EasyMock;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.action.result.annotation.XMLStream;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.test.servlet.MockServletOutputStream;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
- * @author jhumphrey
+ * <p>
+ * This class tests the XML Stream result.
+ * </p>
+ *
+ * @author  jhumphrey
  */
 public class XMLStreamResultTest {
     @Test

@@ -34,10 +34,9 @@ import com.google.inject.Inject;
  * stream and sets the content type to "application/xhtml+xml"
  * </p>
  *
- * @author jhumphrey
+ * @author  jhumphrey
  */
 public class XMLStreamResult extends AbstractResult<XMLStream> {
-
     private final HttpServletResponse response;
 
     @Inject
@@ -55,7 +54,7 @@ public class XMLStreamResult extends AbstractResult<XMLStream> {
                 "property returned null or an Object that is not a String.");
         }
 
-        byte[] xmlBytes = ((String) object).getBytes();
+        byte[] xmlBytes = ((String) object).getBytes("UTF-8");
 
         response.setContentType("application/xhtml+xml");
         response.setContentLength(xmlBytes.length);
