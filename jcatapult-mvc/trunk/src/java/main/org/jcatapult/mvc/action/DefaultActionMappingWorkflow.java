@@ -125,6 +125,8 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
 
             if (actionConfiguration == null) {
                 uriParameters.clear();
+            } else {
+                uri = localURI;
             }
         }
 

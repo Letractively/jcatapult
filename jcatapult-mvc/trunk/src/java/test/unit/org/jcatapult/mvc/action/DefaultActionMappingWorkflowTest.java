@@ -118,7 +118,7 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         workflow.perform(chain);
 
         ActionInvocation ai = (ActionInvocation) capture.object;
-        assertEquals("/admin/user/rest-edit/12", ai.actionURI());
+        assertEquals("/admin/user/rest-edit", ai.actionURI());
         assertCollections(asList("12"), ai.uriParameters());
         assertNull(ai.extension());
         assertNotNull(ai.configuration());
@@ -167,7 +167,7 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         workflow.perform(chain);
 
         ActionInvocation ai = (ActionInvocation) capture.object;
-        assertEquals("/complex-rest/brian/static/pontarelli/then/a/bunch/of/stuff", ai.actionURI());
+        assertEquals("/complex-rest", ai.actionURI());
         assertCollections(asList("brian", "static", "pontarelli", "then", "a", "bunch", "of", "stuff"), ai.uriParameters());
         assertNull(ai.extension());
         assertNotNull(ai.configuration());
