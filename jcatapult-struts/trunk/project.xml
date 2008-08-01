@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-struts"
          group="jcatapult.org"
-         version="1.0-RC6">
+         version="1.0-RC7">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
@@ -27,6 +27,7 @@
   <property name="project.requires.database" value="false"/>
 
   <property name="version.jcatapult" value="1.0-RC6"/>
+  <property name="list.javadoc.packages" value="org.jcatapult.action.jcatapult.*,org.jcatapult.domain.commerce.*,org.jcatapult.struts.action"/>
 
   <release>
     <publication name="jcatapult-struts" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"
