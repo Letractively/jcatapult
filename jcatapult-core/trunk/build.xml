@@ -28,9 +28,6 @@
   <!-- ide -->
   <import file="${plugin.dir}/ide/1.0/ide.xml"/>
 
-  <!-- mysql -->
-  <import file="${plugin.dir}/mysql/1.0/mysql.xml"/>
-
   <!-- svn -->
   <import file="${plugin.dir}/svn/1.0/svn.xml"/>
 
