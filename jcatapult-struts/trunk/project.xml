@@ -27,7 +27,6 @@
   <property name="project.requires.database" value="false"/>
 
   <property name="version.jcatapult" value="1.0-RC6"/>
-  <property name="list.javadoc.packages" value="org.jcatapult.action.jcatapult.*,org.jcatapult.domain.commerce.*,org.jcatapult.struts.action"/>
 
   <release>
     <publication name="jcatapult-struts" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"
