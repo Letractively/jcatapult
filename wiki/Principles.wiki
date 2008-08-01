@@ -49,6 +49,6 @@ Although JCatapult provides a suite of useful tools that can greatly reduce deve
 
 JCatapult takes the methodologies of Service Oriented Architecture and applies them to web application development. The entire JCatapult platform is written as a collection of loosely coupled services. This makes it easy to extend or change nearly any part of the platform. It also means that any services you might already have can easily be adapted to work with JCatapult.
 
-== Summary ==
+= Summary =
 
 These principles make JCatapult a truly lightweight platform for developing web applications. Everything, including the platform itself, is pluggable. This means that if a developer encounters a requirement that JCatapult can fulfill, they just plug in the solution and move onto the next requirement. JCatapult's Modules take this a step further and add the ability to plug in entire sets of functionality quickly.
