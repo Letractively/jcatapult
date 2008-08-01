@@ -33,9 +33,10 @@
     </delete>
 
     <javadoc packagenames="${list.javadoc.packages}" excludepackagenames="${javadoc.excludes}"
-        sourcepath="${dir.src.java.main}" destdir="${dir.target.javadocs}" author="false" 
+        sourcepath="${dir.src.java.main}" destdir="${dir.target.javadocs}" author="true" 
         version="true" private="false" windowtitle="${javadoc.project.name} API" 
-        doctitle="${javadoc.project.name}" bottom="${javadoc.bottom}" source="${build.source}">
+        doctitle="${javadoc.project.name}" bottom="${javadoc.bottom}" source="${build.source}"
+        executable="${jdk.project}/bin/javadoc">
       <classpath refid="classpath.compile.main"/>
       <link href="${url.javadoc.javase}"/>
       <link href="${url.javadoc.javaee}"/>
