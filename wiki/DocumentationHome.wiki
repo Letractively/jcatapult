@@ -9,6 +9,7 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [BuildFromSource Build from source]
   * [Architecture]
   * [ProjectLayout Project layout]
+  * [Principles JCatapult Principles]
 
 = Guides =
 
