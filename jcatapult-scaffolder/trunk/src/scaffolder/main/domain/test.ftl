@@ -1,7 +1,7 @@
 package ${pkgName};
 
-import org.jcatapult.persistence.PersistenceService;
-import org.jcatapult.test.JPABaseTest;
+import org.jcatapult.persistence.service.PersistenceService;
+import org.jcatapult.persistence.test.JPABaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -24,7 +24,15 @@ public class ${className}Test extends JPABaseTest {
 
     @Test
     public void testEntity() {
+        ${className} instance = makeEntity();
+        persistenceService.persist(instance);
+    }
+
+    /**
+     * @return  A new instance of the ${className} class.
+     */
+    protected ${className} makeEntity() {
         ${className} instance = new ${className}();
-        assertTrue(persistenceService.persist(instance));
+        return instance;
     }
 }

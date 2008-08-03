@@ -68,7 +68,7 @@ public class DomainScaffolder extends AbstractScaffolder {
     executeFreemarkerTemplate("/domain.ftl", mainDirName + className + ".java", params);
     executeFreemarkerTemplate("/test.ftl", testDirName + className + "Test.java", params);
 
-    // Create this is a module
+    // If this is a module, add the entity entry into module.xml
     File moduleFile = new File("src/conf/main/META-INF/module.xml");
     if (moduleFile.exists()) {
       SortedSet set = new TreeSet();
