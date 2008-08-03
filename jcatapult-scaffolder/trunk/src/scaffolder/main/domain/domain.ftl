@@ -2,7 +2,7 @@ package ${pkgName};
 
 import javax.persistence.Entity;
 
-import org.jcatapult.domain.IdentifiableImpl;
+import org.jcatapult.persistence.domain.IdentifiableImpl;
 
 /**
  * <p>

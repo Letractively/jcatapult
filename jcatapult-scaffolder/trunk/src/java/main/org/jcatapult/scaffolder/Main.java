@@ -9,24 +9,20 @@
 package org.jcatapult.scaffolder;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
-import org.apache.commons.cli.BasicParser;
 import org.jcatapult.scaffolder.annotation.LongDescription;
 import org.jcatapult.scaffolder.annotation.ShortDescription;
 
@@ -75,7 +71,7 @@ public class Main {
                 scaffolder.execute();
             }
         } else if (commands.length == 2) {
-            File scaffolderDir = new File(scaffolderDirs.get(commands[1]), commands[1]);
+            File scaffolderDir = new File(scaffolderDirs.get(commands[1]).getParentFile(), commands[1]);
             Scaffolder scaffolder = makeScaffolder(commands[1], scaffolderDir);
             LongDescription description = scaffolder.getClass().getAnnotation(LongDescription.class);
             if (description != null) {
