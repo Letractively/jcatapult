@@ -51,12 +51,11 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionLessWithDefault() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getRequestURI()).andReturn("foo/bar");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
-        ActionInvocation ai = new DefaultActionInvocation(null, "foo/bar", null, null);
+        ActionInvocation ai = new DefaultActionInvocation(null, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.getCurrent()).andReturn(ai);
         EasyMock.replay(ais);
@@ -64,7 +63,7 @@ public class DefaultActionInvocationWorkflowTest {
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", null);
         ResultInvocation ri = new DefaultResultInvocation(annotation, "/foo/bar", null);
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
-        EasyMock.expect(rip.lookup("/foo/bar")).andReturn(ri);
+        EasyMock.expect(rip.lookup(ai)).andReturn(ri);
         EasyMock.replay(rip);
 
         Result result = EasyMock.createStrictMock(Result.class);
@@ -87,17 +86,17 @@ public class DefaultActionInvocationWorkflowTest {
     @Test
     public void testActionLessWithoutDefault() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getRequestURI()).andReturn("foo/bar");
         EasyMock.replay(request);
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
+        ActionInvocation ai = new DefaultActionInvocation(null, "/foo/bar", null, null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.getCurrent()).andReturn(new DefaultActionInvocation(null, "foo/bar", null, null));
+        EasyMock.expect(ais.getCurrent()).andReturn(ai);
         EasyMock.replay(ais);
 
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
-        EasyMock.expect(rip.lookup("/foo/bar")).andReturn(null);
+        EasyMock.expect(rip.lookup(ai)).andReturn(null);
         EasyMock.replay(rip);
 
         Result result = EasyMock.createStrictMock(Result.class);
@@ -133,7 +132,7 @@ public class DefaultActionInvocationWorkflowTest {
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");
         ResultInvocation ri = new DefaultResultInvocation(annotation, "/foo/bar", "success");
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
-        EasyMock.expect(rip.lookup(invocation, "/foo/bar", "success")).andReturn(ri);
+        EasyMock.expect(rip.lookup(invocation, "success")).andReturn(ri);
         EasyMock.replay(rip);
 
         Result result = EasyMock.createStrictMock(Result.class);
@@ -201,7 +200,7 @@ public class DefaultActionInvocationWorkflowTest {
         EasyMock.replay(ais);
 
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
-        EasyMock.expect(rip.lookup(invocation, "/foo/bar", "success")).andReturn(null);
+        EasyMock.expect(rip.lookup(invocation, "success")).andReturn(null);
         EasyMock.replay(rip);
 
         ResultProvider resultProvider = EasyMock.createStrictMock(ResultProvider.class);
@@ -239,7 +238,7 @@ public class DefaultActionInvocationWorkflowTest {
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");
         ResultInvocation ri = new DefaultResultInvocation(annotation, "/foo/bar", "success");
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
-        EasyMock.expect(rip.lookup(invocation, "/foo/bar", "success")).andReturn(ri);
+        EasyMock.expect(rip.lookup(invocation, "success")).andReturn(ri);
         EasyMock.replay(rip);
 
         ResultProvider resultProvider = EasyMock.createStrictMock(ResultProvider.class);
@@ -383,7 +382,7 @@ public class DefaultActionInvocationWorkflowTest {
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");
         ResultInvocation ri = new DefaultResultInvocation(annotation, "/foo/bar", "success");
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
-        EasyMock.expect(rip.lookup(invocation, "/foo/bar", "success")).andReturn(ri);
+        EasyMock.expect(rip.lookup(invocation, "success")).andReturn(ri);
         EasyMock.replay(rip);
 
         Result result = EasyMock.createStrictMock(Result.class);
@@ -420,7 +419,7 @@ public class DefaultActionInvocationWorkflowTest {
         Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");
         ResultInvocation ri = new DefaultResultInvocation(annotation, "/foo/bar", "success");
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
-        EasyMock.expect(rip.lookup(invocation, "/foo/bar", "success")).andReturn(ri);
+        EasyMock.expect(rip.lookup(invocation, "success")).andReturn(ri);
         EasyMock.replay(rip);
 
         Result result = EasyMock.createStrictMock(Result.class);

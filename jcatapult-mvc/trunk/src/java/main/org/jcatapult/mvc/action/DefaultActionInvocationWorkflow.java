@@ -89,12 +89,7 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
         ResultInvocation resultInvocation = null;
         if (invocation.action() == null) {
             // Try a default result mapping just for the URI
-            String uri = request.getRequestURI();
-            if (!uri.startsWith("/")) {
-                uri = "/" + uri;
-            }
-
-            resultInvocation = resultInvocationProvider.lookup(uri);
+            resultInvocation = resultInvocationProvider.lookup(invocation);
             if (resultInvocation == null) {
                 chain.continueWorkflow();
                 return;
@@ -108,7 +103,7 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
             }
 
             if (invocation.executeResult()) {
-                resultInvocation = resultInvocationProvider.lookup(invocation, invocation.actionURI(), resultCode);
+                resultInvocation = resultInvocationProvider.lookup(invocation, resultCode);
                 if (resultInvocation == null) {
                     response.setStatus(404);
                     throw new ServletException("Missing result for action class [" +
