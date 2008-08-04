@@ -96,7 +96,6 @@ public class MockServletContext implements ServletContext {
 
     public Set getResourcePaths(String path) {
         if (path.equals(WEB_INF_LIB)) {
-            System.out.println("Classpath is " + classPath.getNames());
             Set<String> finalPaths = new HashSet<String>();
             Set<String> urls = new HashSet(classPath.getNames());
             for (String url : urls) {
