@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import static java.util.Arrays.*;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +42,10 @@ import net.java.util.IteratorEnumeration;
  *
  * @author Brian Pontarelli
  */
+@SuppressWarnings("unchecked")
 public class MockHttpServletRequest implements HttpServletRequest {
     protected final Map<String, Object> attributes = new HashMap<String, Object>();
+    protected final Map<String, List<String>> headers = new HashMap<String, List<String>>();
     protected final MockHttpSession session;
     protected final Map<String, List<String>> parameters;
     protected String uri;
@@ -310,31 +313,51 @@ public class MockHttpServletRequest implements HttpServletRequest {
     /**
      */
     public long getDateHeader(String name) {
-        throw new UnsupportedOperationException();
+        List<String> values = headers.get(name);
+        if (values == null || values.size() == 0) {
+            return -1;
+        }
+
+        return Long.parseLong(values.get(0));
     }
 
     /**
      */
     public String getHeader(String name) {
-        throw new UnsupportedOperationException();
+        List<String> values = headers.get(name);
+        if (values == null || values.size() == 0) {
+            return null;
+        }
+
+        return values.get(0);
     }
 
     /**
      */
     public Enumeration getHeaderNames() {
-        throw new UnsupportedOperationException();
+        return new IteratorEnumeration(headers.keySet().iterator());
     }
 
     /**
      */
     public Enumeration getHeaders(String name) {
-        throw new UnsupportedOperationException();
+        List<String> values = headers.get(name);
+        if (values == null || values.size() == 0) {
+            return new IteratorEnumeration(Collections.emptyList().iterator());
+        }
+
+       return new IteratorEnumeration(values.iterator());
     }
 
     /**
      */
     public int getIntHeader(String name) {
-        throw new UnsupportedOperationException();
+        List<String> values = headers.get(name);
+        if (values == null || values.size() == 0) {
+            return -1;
+        }
+
+        return Integer.parseInt(values.get(0));
     }
 
     /**
@@ -501,6 +524,21 @@ public class MockHttpServletRequest implements HttpServletRequest {
     //                          Modification Methods
     //-------------------------------------------------------------------------
 
+    /**
+     * Allows a header to be added.
+     *
+     * @param   name The header name.
+     * @param   value The header value.
+     */
+    public void addHeader(String name, String value) {
+        List<String> values = headers.get(name);
+        if (values == null) {
+            values = new ArrayList<String>();
+            headers.put(name, values);
+        }
+
+        values.add(value);
+    }
 
     /**
      * Sets the request parameter with the given name to the given value
