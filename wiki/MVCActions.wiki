@@ -1,0 +1,123 @@
+#summary JCatapult MVC Actions
+
+= Actions =
+
+The JCatapult MVC provides a simple way to create new actions and map them to URIs. Actions are mapped to URIs based on the name of the class and the package the class is in. The translation is spelled out in these steps:
+
+  * Actions are located by inspecting the classpath for any packages named `action`
+  * Packages that are found are called the *base action packages*
+  * These packages are inspected for classes that are annotated with the `org.jcatapult.mvc.action.annotation.Action` annotation
+  * All sub-packages are also inspect for action classes
+  * Any classes found are translated into URLs using the package name and class name
+
+The package and class name are translated into a URI using this process:
+
+  * Drop the *base action package* from the fully qualified class name
+  * Replace periods with forward slashes
+  * Drop 'Action' from the end of the name (if applicable)
+  * Split on camel case
+  * Join using dashes
+  * Lower case the entire thing
+
+== Examples ==
+
+Here are some examples of how actions are mapped to URIs by JCatapult.
+
+|| *Class* || *URL* ||
+|| com.example.actions.Index || /index ||
+|| com.example.actions.users.List || /users/list ||
+|| com.example.actions.waterProducts.SpeedBoat || /water-products/speed-boat ||
+
+= Action Classes =
+
+Action classes are simple Java classes and don't need to extend or implement anything. This means that you can create your own base-classes that can be reused within your application and don't need to rely on the framework base-classes for functionality.
+
+In order to mark a class as an action, you simply annotate the class with the `org.jcatapult.mvc.action.annotation.Action` annotation. Here is an example class:
+
+{{{
+package com.example.action.profile;
+
+import org.jcatapult.mvc.action.annotation.Action;
+
+@Action
+public class Summary {
+}
+}}}
+
+== Methods ==
+
+The JCatapult MVC be default invokes the method named *execute* that returns a String. The return value of the method is also known as the result code of the action. Here is the same example from above with the execute method.
+
+{{{
+package com.example.action.profile;
+
+import org.jcatapult.mvc.action.annotation.Action;
+
+@Action
+public class Summary {
+  public String execute() {
+    // Perform work here
+    return "success";
+  }
+}
+}}}
+
+Here the `Summary` action is return a result code of *success*.
+
+== HTTP Method ==
+
+JCatapult provides a simple mechanism for handling the difference between an HTTP GET and POST inside your action. To handle these two different cases, you must remove the execute method from your action class and replace it with two methods named *get* and *post* respectively. Here is an action with get and post handlers.
+
+{{{
+package com.example.action.profile;
+
+import org.jcatapult.mvc.action.annotation.Action;
+
+@Action
+public class Summary {
+  public String get() {
+    // Perform GET work here
+    return "success";
+  }
+
+  public String post() {
+    // Perform POST work here
+    return "success";
+  }
+}
+}}}
+
+== Extensions ==
+
+It is also possible to handle requests differently using URI extensions. All of the examples so far have used URIs that didn't have extensions. If you add an extension onto the URI, the JCatapult MVC will invoke a method with the same name as the extension. Let's say you want to provide a different handling for an AJAX request versus a standard browser GET. You would accomplish this using the same URI with a different extension like this:
+
+|| Standard || /profile/summary ||
+|| AJAX || /profile/summary.ajax ||
+
+Inside your action class, you can handle this new extension using a new method with the same name like this:
+
+{{{
+package com.example.action.profile;
+
+import org.jcatapult.mvc.action.annotation.Action;
+
+@Action
+public class Summary {
+  public String get() {
+    // Perform GET work here
+    return "success";
+  }
+
+  public String post() {
+    // Perform POST work here
+    return "success";
+  }
+
+  public String ajax() {
+    // Perform AJAX work here
+    return "success";
+  }
+}
+}}}
+
+However, if there is no method with the same name as the extension, the JCatapult MVC will fall back to either the *get* or *post* method or the *execute* method.

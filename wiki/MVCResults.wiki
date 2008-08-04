@@ -14,7 +14,16 @@ For more information about FreeMarker, visit the FreeMarker website at http://ww
 
 The default handling for any request URI is to find the appropriate FreeMarker result and render it. This is known as a Forward result, even though it doesn't use JEE RequestDispatcher to perform a forward to a JSP. 
 
-The location of the FreeMarker template that is rendered is based on the request URI, result code and a base path. The result code is the String return value from an action invocation. If the incoming request URI does not map to an action class, the result code defaults to *success*.
+The location of the FreeMarker template that is rendered is based on the request URI, the URI extension, result code, and a base path. The result code is the String return value from an action invocation. The extension is the portion of the URI following a . (dot) character. Here is an example URI:
+
+{{{
+/profile/summary.ajax
+
+URI: /profile/summary
+Extension: ajax
+}}}
+
+If the incoming request URI does not map to an action class, the result code defaults to *success*.
 
 The base path used by the JCatapult MVC is:
 
@@ -25,16 +34,28 @@ The base path used by the JCatapult MVC is:
 All of the FreeMarker results are always stored under this base path. Their specific path is simply the base path, plus the incoming request URI and the result code. If the request URI is:
 
 {{{
-/admin/user/edit
+/admin/user/edit.ajax
 }}}
 
 and the result code from the action class is *success*, the default location of the FreeMarker result would be:
 
 {{{
+/WEB-INF/content/admin/user/edit-ajax-success.ftl
+}}}
+
+This would also be the same default result if there was no action associated with the request URI (remember that the default result code is always *success*). However, if this file doesn't exist, the JCatapult MVC then looks for a result without the result code, followed by a result without the extension but including the result code, followed by a result without the extension or result code. The second location for the default FreeMarker result would be:
+
+{{{
+/WEB-INF/content/admin/user/edit-ajax.ftl
+}}}
+
+followed by:
+
+{{{
 /WEB-INF/content/admin/user/edit-success.ftl
 }}}
 
-This would also be the same default result if there was no action associated with the request URI (remember that the default result code is always *success*). However, if this file doesn't exist, the JCatapult MVC then looks for a result without using the result code. The second location for the default FreeMarker result would be:
+followed by:
 
 {{{
 /WEB-INF/content/admin/user/edit.ftl
@@ -42,6 +63,8 @@ This would also be the same default result if there was no action associated wit
 
 The search order is always:
 
+  # <base-path>/<request-uri>-<extension>-<result-code>.ftl
+  # <base-path>/<request-uri>-<extension>.ftl
   # <base-path>/<request-uri>-<result-code>.ftl
   # <base-path>/<request-uri>.ftl
 

@@ -59,6 +59,7 @@ Below are links to topics about a specific JCatapult technology, service or API.
 == MVC ==
 
   * [MVCWorkflow MVC workflow system]
+  * [MVCActions Actions and URI mapping]
   * [MVCParameterMapping Parameter handling (AKA parameter mapping)]
   * [MVCTypeConversion Type conversion]
   * [MVCResults Results]
