@@ -33,18 +33,17 @@ public interface ResultInvocationProvider {
     /**
      * Determines the result invocation for the given URI and result code.
      *
-     * @param   uri The URI.
+     * @param invocation
      * @return  The result invocation for the URI or null if nothing could be found or inferred.
      */
-    ResultInvocation lookup(String uri);
+    ResultInvocation lookup(ActionInvocation invocation);
 
     /**
      * Determines the result invocation for the given action invocation, URI and result code.
      *
      * @param   invocation The ActionInvocation which is used to look for annotations.
-     * @param   uri The URI.
      * @param   resultCode The result code or null of there isn't a result code.
      * @return  The result invocation for the URI or null if nothing could be found or inferred.
      */
-    ResultInvocation lookup(ActionInvocation invocation, String uri, String resultCode);
+    ResultInvocation lookup(ActionInvocation invocation, String resultCode);
 }
