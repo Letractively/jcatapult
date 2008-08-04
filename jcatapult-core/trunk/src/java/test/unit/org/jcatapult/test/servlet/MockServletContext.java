@@ -18,10 +18,13 @@ package org.jcatapult.test.servlet;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.RequestDispatcher;
@@ -29,6 +32,7 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import net.java.lang.ClassPath;
 import net.java.util.IteratorEnumeration;
 
 /**
@@ -38,14 +42,23 @@ import net.java.util.IteratorEnumeration;
  *
  * @author Brian Pontarelli
  */
+@SuppressWarnings("unchecked")
 public class MockServletContext implements ServletContext {
+    private static final String WEB_INF_LIB = "/WEB-INF/lib";
     protected final Map<String, Object> attributes = new HashMap<String, Object>();
     protected File webDir;
+    protected ClassPath classPath;
 
     public MockServletContext() {
+        try {
+            classPath = ClassPath.getCurrentClassPath();
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to determine current classpath");
+        }
     }
 
     public MockServletContext(File webDir) {
+        this();
         this.webDir = webDir;
     }
 
@@ -81,21 +94,66 @@ public class MockServletContext implements ServletContext {
         return null;
     }
 
-    public Set getResourcePaths(String s) {
-        return null;
+    public Set getResourcePaths(String path) {
+        if (path.equals(WEB_INF_LIB)) {
+            System.out.println("Classpath is " + classPath.getNames());
+            Set<String> finalPaths = new HashSet<String>();
+            Set<String> urls = new HashSet(classPath.getNames());
+            for (String url : urls) {
+                int index = url.lastIndexOf("/");
+                if (index >= 0 && index != url.length() - 1) {
+                    finalPaths.add(WEB_INF_LIB + "/" + url.substring(index + 1));
+                } else if (index != url.length() - 1) { // Only if it is a file not a directory
+                    finalPaths.add(WEB_INF_LIB + "/" + url);
+                }
+            }
+
+            return finalPaths;
+        } else {
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
+
+            Set<String> urls = new HashSet<String>();
+            File f = new File(webDir, path);
+            if (f.isDirectory()) {
+                File[] files = f.listFiles();
+                for (File file : files) {
+                    try {
+                        urls.add(file.toURI().toURL().toExternalForm());
+                    } catch (MalformedURLException e) {
+                        // Ignore
+                    }
+                }
+            }
+
+            return urls;
+        }
     }
 
     public URL getResource(String path) throws MalformedURLException {
-        if (path.startsWith("/")) {
-            path = path.substring(1);
-        }
+        if (path.startsWith(WEB_INF_LIB)) {
+            String jarFile = path.substring(WEB_INF_LIB.length());
+            List<String> entries = classPath.getNames();
+            for (String entry : entries) {
+                if (entry.endsWith(jarFile)) {
+                    return new File(entry).toURI().toURL();
+                }
+            }
 
-        File f = new File(webDir, path);
-        if (f.isFile()) {
-            return f.toURI().toURL();
-        }
+            return null;
+        } else {
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
 
-        return null;
+            File f = new File(webDir, path);
+            if (f.isFile()) {
+                return f.toURI().toURL();
+            }
+
+            return null;
+        }
     }
 
     public InputStream getResourceAsStream(String path) {
