@@ -94,4 +94,11 @@ public class DefaultActionInvocation implements ActionInvocation {
     public String resultCode() {
         return resultCode;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String uri() {
+        return uri + (extension != null ? "." + extension : "");
+    }
 }
