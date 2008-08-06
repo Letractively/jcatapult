@@ -227,8 +227,8 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
         }
 
         if (forward == null) {
-            throw new RuntimeException("Unable to locate result for URI [" + uri + "] and result code [" +
-                resultCode + "]");
+            throw new RuntimeException("Unable to locate result for URI [" + invocation.uri() +
+                "] and result code [" + resultCode + "]");
         }
 
         return forward;

@@ -67,4 +67,9 @@ public interface ActionInvocation {
      *          {@link #executeAction()} method.
      */
     String resultCode();
+
+    /**
+     * @return  The URI, including the extension if there is one.
+     */
+    String uri();
 }
