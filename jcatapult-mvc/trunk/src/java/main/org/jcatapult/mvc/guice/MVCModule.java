@@ -21,7 +21,11 @@ import org.jcatapult.mvc.parameter.convert.DefaultConverterProvider;
 import org.jcatapult.mvc.parameter.convert.converters.BooleanConverter;
 import org.jcatapult.mvc.parameter.convert.converters.CharacterConverter;
 import org.jcatapult.mvc.parameter.convert.converters.CollectionConverter;
+import org.jcatapult.mvc.parameter.convert.converters.DateTimeConverter;
+import org.jcatapult.mvc.parameter.convert.converters.EnumConverter;
 import org.jcatapult.mvc.parameter.convert.converters.FileConverter;
+import org.jcatapult.mvc.parameter.convert.converters.LocalDateConverter;
+import org.jcatapult.mvc.parameter.convert.converters.MoneyConverter;
 import org.jcatapult.mvc.parameter.convert.converters.NumberConverter;
 import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
 import org.jcatapult.mvc.result.form.control.Button;
@@ -68,10 +72,14 @@ public class MVCModule extends AbstractModule {
     protected void configureConverters() {
         bind(BooleanConverter.class);
         bind(CharacterConverter.class);
+        bind(CollectionConverter.class);
+        bind(DateTimeConverter.class);
+        bind(EnumConverter.class);
         bind(FileConverter.class);
+        bind(LocalDateConverter.class);
+        bind(MoneyConverter.class);
         bind(NumberConverter.class);
         bind(StringConverter.class);
-        bind(CollectionConverter.class);
 
         // Inject the registry so that the Class to Class mapping is setup
         requestStaticInjection(DefaultConverterProvider.class);
