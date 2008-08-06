@@ -70,7 +70,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     @Override
     public <T> T getValue(String expression, Object object) throws ExpressionException {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(converterProvider, atoms);
+        Context context = new Context(converterProvider, expression, atoms);
         context.init(object);
         while (context.hasNext()) {
             Atom atom = context.next();
@@ -107,7 +107,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
             throw new ConverterStateException("No type converter found for the type [" + type + "]");
         }
 
-        return converter.convertToString(value, (Class<Object>) type, attributes);
+        return converter.convertToString(value, type, attributes, expression);
     }
 
     /**
@@ -117,7 +117,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
 
     public void setValue(String expression, Object object, Object value) throws ExpressionException {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(converterProvider, atoms);
+        Context context = new Context(converterProvider, expression, atoms);
         context.init(object);
         while (context.hasNext()) {
             Atom atom = context.next();
@@ -151,7 +151,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     public void setValue(String expression, Object object, String[] values, Map<String, String> attributes)
     throws ConversionException, ConverterStateException, ExpressionException {
         List<Atom> atoms = parse(expression);
-        Context context = new Context(converterProvider, atoms, request, locale, attributes);
+        Context context = new Context(converterProvider, expression, atoms, request, locale, attributes);
         context.init(object);
         while (context.hasNext()) {
             Atom atom = context.next();

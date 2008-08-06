@@ -32,6 +32,7 @@ import net.java.lang.ObjectTools;
  * @author Brian Pontarelli
  */
 public class Context {
+    private final String expression;
     private final List<Atom> atoms;
     private final HttpServletRequest request;
     private final Map<String, String> attributes;
@@ -43,8 +44,9 @@ public class Context {
     private Accessor accessor;
     private int index;
 
-    public Context(ConverterProvider converterProvider, List<Atom> atoms, HttpServletRequest request,
-            Locale locale, Map<String, String> attributes) {
+    public Context(ConverterProvider converterProvider, String expression, List<Atom> atoms,
+            HttpServletRequest request, Locale locale, Map<String, String> attributes) {
+        this.expression = expression;
         this.atoms = atoms;
         this.request = request;
         this.locale = locale;
@@ -52,8 +54,15 @@ public class Context {
         this.converterProvider = converterProvider;
     }
 
-    public Context(ConverterProvider converterProvider, List<Atom> atoms) {
-        this(converterProvider, atoms, null, null, null);
+    public Context(ConverterProvider converterProvider, String expression, List<Atom> atoms) {
+        this(converterProvider, expression, atoms, null, null, null);
+    }
+
+    /**
+     * @return  The full expression that this context is managing.
+     */
+    public String getExpression() {
+        return expression;
     }
 
     public void init(Object object) {

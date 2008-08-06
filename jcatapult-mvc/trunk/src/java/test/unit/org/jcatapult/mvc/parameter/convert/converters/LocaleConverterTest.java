@@ -37,26 +37,26 @@ public class LocaleConverterTest {
     @Test
     public void testFromStrings() {
         GlobalConverter converter = new LocaleConverter();
-        Locale locale = (Locale) converter.convertFromStrings(array((String) null), Locale.class, null);
+        Locale locale = (Locale) converter.convertFromStrings(array((String) null), Locale.class, null, "testExpr");
         assertNull(locale);
 
-        locale = (Locale) converter.convertFromStrings(array("en"), Locale.class, null);
+        locale = (Locale) converter.convertFromStrings(array("en"), Locale.class, null, "testExpr");
         assertEquals("en", locale.getLanguage());
 
-        locale = (Locale) converter.convertFromStrings(array("en_US"), Locale.class, null);
-        assertEquals("en", locale.getLanguage());
-        assertEquals("US", locale.getCountry());
-
-        locale = (Locale) converter.convertFromStrings(array("en", "US"), Locale.class, null);
+        locale = (Locale) converter.convertFromStrings(array("en_US"), Locale.class, null, "testExpr");
         assertEquals("en", locale.getLanguage());
         assertEquals("US", locale.getCountry());
 
-        locale = (Locale) converter.convertFromStrings(array("en_US_UTF8"), Locale.class, null);
+        locale = (Locale) converter.convertFromStrings(array("en", "US"), Locale.class, null, "testExpr");
+        assertEquals("en", locale.getLanguage());
+        assertEquals("US", locale.getCountry());
+
+        locale = (Locale) converter.convertFromStrings(array("en_US_UTF8"), Locale.class, null, "testExpr");
         assertEquals("en", locale.getLanguage());
         assertEquals("US", locale.getCountry());
         assertEquals("UTF8", locale.getVariant());
 
-        locale = (Locale) converter.convertFromStrings(array("en", "US", "UTF8"), Locale.class, null);
+        locale = (Locale) converter.convertFromStrings(array("en", "US", "UTF8"), Locale.class, null, "testExpr");
         assertEquals("en", locale.getLanguage());
         assertEquals("US", locale.getCountry());
         assertEquals("UTF8", locale.getVariant());
@@ -68,10 +68,10 @@ public class LocaleConverterTest {
     @Test
     public void testToStrings() {
         GlobalConverter converter = new LocaleConverter();
-        String str = converter.convertToString(null, Locale.class, null);
+        String str = converter.convertToString(null, Locale.class, null, "testExpr");
         assertNull(str);
 
-        str = converter.convertToString(Locale.US, Locale.class, null);
+        str = converter.convertToString(Locale.US, Locale.class, null, "testExpr");
         assertEquals("en_US", str);
     }
 }

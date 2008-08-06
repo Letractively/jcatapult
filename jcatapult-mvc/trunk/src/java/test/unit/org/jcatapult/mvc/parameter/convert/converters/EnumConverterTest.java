@@ -15,8 +15,6 @@
  */
 package org.jcatapult.mvc.parameter.convert.converters;
 
-import java.util.Locale;
-
 import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -37,17 +35,17 @@ public class EnumConverterTest {
     @Test
     public void testFromStrings() {
         GlobalConverter converter = new EnumConverter();
-        TestEnum e = (TestEnum) converter.convertFromStrings(array((String) null), TestEnum.class, null);
+        TestEnum e = (TestEnum) converter.convertFromStrings(array((String) null), TestEnum.class, null, "testExpr");
         assertNull(e);
 
-        e = (TestEnum) converter.convertFromStrings(array("value1"), TestEnum.class, null);
+        e = (TestEnum) converter.convertFromStrings(array("value1"), TestEnum.class, null, "testExpr");
         assertSame(e, TestEnum.value1);
 
-        e = (TestEnum) converter.convertFromStrings(array("value2"), TestEnum.class, null);
+        e = (TestEnum) converter.convertFromStrings(array("value2"), TestEnum.class, null, "testExpr");
         assertSame(e, TestEnum.value2);
 
         try {
-            converter.convertFromStrings(array("value1", "value2"), TestEnum.class, null);
+            converter.convertFromStrings(array("value1", "value2"), TestEnum.class, null, "testExpr");
             fail("Should have failed");
         } catch (UnsupportedOperationException e1) {
             // Expected
@@ -60,10 +58,10 @@ public class EnumConverterTest {
     @Test
     public void testToStrings() {
         GlobalConverter converter = new EnumConverter();
-        String str = converter.convertToString(null, TestEnum.class, null);
+        String str = converter.convertToString(null, TestEnum.class, null, "testExpr");
         assertNull(str);
 
-        str = converter.convertToString(TestEnum.value1, TestEnum.class, null);
+        str = converter.convertToString(TestEnum.value1, TestEnum.class, null, "testExpr");
         assertEquals("value1", str);
     }
 }

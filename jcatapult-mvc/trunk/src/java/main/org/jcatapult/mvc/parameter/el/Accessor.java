@@ -178,7 +178,7 @@ public abstract class Accessor {
                 ConverterAnnotation converterAnnotation = annotation.annotationType().getAnnotation(ConverterAnnotation.class);
                 if (converterAnnotation != null) {
                     AnnotationConverter converter = converterProvider.lookup(annotation);
-                    return converter.convertFromStrings(annotation, values, type, context.getAttributes());
+                    return converter.convertFromStrings(annotation, values, type, context.getAttributes(), context.getExpression());
                 }
             }
         }
@@ -191,7 +191,7 @@ public abstract class Accessor {
                 throw new ConverterStateException("No type converter found for the type [" + typeClass.getName() + "]");
             }
 
-            newValue = converter.convertFromStrings(values, type, context.getAttributes());
+            newValue = converter.convertFromStrings(values, type, context.getAttributes(), context.getExpression());
         }
 
         return newValue;

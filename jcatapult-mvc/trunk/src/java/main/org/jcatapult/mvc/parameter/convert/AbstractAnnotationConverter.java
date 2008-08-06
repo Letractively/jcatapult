@@ -56,12 +56,13 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
      * @param   values The values to convert.
      * @param   convertTo The type to convert to.
      * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    public Object convertFromStrings(T annotation, String[] values, Type convertTo, Map<String, String> dynamicAttributes)
+    public Object convertFromStrings(T annotation, String[] values, Type convertTo, Map<String, String> dynamicAttributes, String expression)
     throws ConversionException, ConverterStateException {
         // Handle a zero or one String
         Class<?> rawType = TypeTools.rawType(convertTo);
@@ -75,10 +76,10 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
                         " conversion to multi-dimensional arrays of type [" + convertTo + "]");
                 }
 
-                return stringToArray(annotation, value, convertTo, dynamicAttributes);
+                return stringToArray(annotation, value, convertTo, dynamicAttributes, expression);
             }
 
-            return stringToObject(annotation, value, convertTo, dynamicAttributes);
+            return stringToObject(annotation, value, convertTo, dynamicAttributes, expression);
         }
 
         // Handle multiple strings
@@ -89,10 +90,10 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
                     " conversion to multi-dimensional arrays of type [" + convertTo + "]");
             }
 
-            return stringsToArray(annotation, values, convertTo, dynamicAttributes);
+            return stringsToArray(annotation, values, convertTo, dynamicAttributes, expression);
         }
 
-        return stringsToObject(annotation, values, convertTo, dynamicAttributes);
+        return stringsToObject(annotation, values, convertTo, dynamicAttributes, expression);
     }
 
     /**
@@ -117,12 +118,14 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
      * @param   value The value to convert.
      * @param   convertFrom The original Type of the value.
      * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    public String convertToString(T annotation, Object value, Type convertFrom, Map<String, String> dynamicAttributes)
+    public String convertToString(T annotation, Object value, Type convertFrom, Map<String, String> dynamicAttributes,
+            String expression)
     throws ConversionException {
         // Handle null
         if (value == null) {
@@ -137,10 +140,10 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
         // Handle arrays
         Class<?> rawType = TypeTools.rawType(convertFrom);
         if (rawType.isArray()) {
-            return arrayToString(annotation, value, convertFrom, dynamicAttributes);
+            return arrayToString(annotation, value, convertFrom, dynamicAttributes, expression);
         }
 
-        return objectToString(annotation, value, convertFrom, dynamicAttributes);
+        return objectToString(annotation, value, convertFrom, dynamicAttributes, expression);
     }
 
     /**
@@ -150,12 +153,14 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
      * @param   value The value to convert to an array.
      * @param   convertTo The array type to convert to.
      * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected Object stringToArray(T annotation, String value, Type convertTo, Map<String, String> dynamicAttributes)
+    protected Object stringToArray(T annotation, String value, Type convertTo, Map<String, String> dynamicAttributes,
+            String expression)
     throws ConversionException {
         if (value == null) {
             return null;
@@ -170,7 +175,7 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
             finalArray = Array.newInstance(rawType.getComponentType(), parts.length);
             for (int i = 0; i < parts.length; i++) {
                 Object singleValue = stringToObject(annotation, parts[i], rawType.getComponentType(),
-                    dynamicAttributes);
+                    dynamicAttributes, expression);
                 Array.set(finalArray, i, singleValue);
             }
         }
@@ -185,12 +190,14 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
      * @param   values The values to convert to an array.
      * @param   convertTo The array type to convert to.
      * @param   dynamicAttributes The dynamic attributes to assist in the conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected Object stringsToArray(T annotation, String[] values, Type convertTo, Map<String, String> dynamicAttributes)
+    protected Object stringsToArray(T annotation, String[] values, Type convertTo, Map<String, String> dynamicAttributes,
+            String expression)
     throws ConversionException {
         if (values == null) {
             return null;
@@ -204,7 +211,7 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
             finalArray = Array.newInstance(rawType.getComponentType(), values.length);
             for (int i = 0; i < values.length; i++) {
                 Object singleValue = stringToObject(annotation, values[i], rawType.getComponentType(),
-                    dynamicAttributes);
+                    dynamicAttributes, expression);
                 Array.set(finalArray, i, singleValue);
             }
         }
@@ -219,12 +226,14 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
      * @param   value The array value to convert to a String.
      * @param   convertFrom The array type to convert from.
      * @param   dynamicAttributes The dynamic attributes to assist in the conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected String arrayToString(T annotation, Object value, Type convertFrom, Map<String, String> dynamicAttributes)
+    protected String arrayToString(T annotation, Object value, Type convertFrom, Map<String, String> dynamicAttributes,
+        String expression)
     throws ConversionException {
         Class<?> rawType = TypeTools.rawType(convertFrom);
         if (!rawType.isArray()) {
@@ -260,12 +269,14 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
      * @param   value The String value to convert.
      * @param   convertTo The type to convert to.
      * @param   dynamicAttributes The dynamic attributes to assist in the conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected abstract Object stringToObject(T annotation, String value, Type convertTo, Map<String, String> dynamicAttributes)
+    protected abstract Object stringToObject(T annotation, String value, Type convertTo, Map<String, String> dynamicAttributes,
+        String expression)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -276,12 +287,14 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
      * @param   values The String values to convert.
      * @param   convertTo The type to convert to.
      * @param   dynamicAttributes The dynamic attributes to assist in the conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected abstract Object stringsToObject(T annotation, String[] values, Type convertTo, Map<String, String> dynamicAttributes)
+    protected abstract Object stringsToObject(T annotation, String[] values, Type convertTo, Map<String, String> dynamicAttributes,
+        String expression)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -291,11 +304,13 @@ public abstract class AbstractAnnotationConverter<T extends Annotation> implemen
      * @param   value The Object value to convert.
      * @param   convertFrom The type to convert from.
      * @param   dynamicAttributes The dynamic attributes to assist in the conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected abstract String objectToString(T annotation, Object value, Type convertFrom, Map<String, String> dynamicAttributes)
+    protected abstract String objectToString(T annotation, Object value, Type convertFrom,
+            Map<String, String> dynamicAttributes, String expression)
     throws ConversionException, ConverterStateException;
 }

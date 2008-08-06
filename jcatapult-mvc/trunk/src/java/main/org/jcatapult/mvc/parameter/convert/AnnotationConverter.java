@@ -132,6 +132,7 @@ public interface AnnotationConverter<T extends Annotation> {
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If there was a problem converting the given value to the
      *          given type.
@@ -139,7 +140,7 @@ public interface AnnotationConverter<T extends Annotation> {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    Object convertFromStrings(T annotation, String[] values, Type convertTo, Map<String, String> attributes)
+    Object convertFromStrings(T annotation, String[] values, Type convertTo, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException;
 
     /**
