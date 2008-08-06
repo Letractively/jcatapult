@@ -40,28 +40,28 @@ public class FileConverterTest {
     public void testFromStrings() {
         Map<String, String> map = new HashMap<String, String>();
         GlobalConverter converter = new FileConverter();
-        File f = (File) converter.convertFromStrings(array((String) null), File.class, map);
+        File f = (File) converter.convertFromStrings(array((String) null), File.class, map, "testExpr");
         assertNull(f);
 
-        f = (File) converter.convertFromStrings(array(""), File.class, map);
+        f = (File) converter.convertFromStrings(array(""), File.class, map, "testExpr");
         assertNull(f);
 
-        f = (File) converter.convertFromStrings(array("/tmp"), File.class, map);
+        f = (File) converter.convertFromStrings(array("/tmp"), File.class, map, "testExpr");
         assertEquals("/tmp", f.getAbsolutePath());
 
-        f = (File) converter.convertFromStrings(array("/tmp", "jcatapult"), File.class, map);
+        f = (File) converter.convertFromStrings(array("/tmp", "jcatapult"), File.class, map, "testExpr");
         assertEquals("/tmp/jcatapult", f.getAbsolutePath());
 
-        f = (File) converter.convertFromStrings(array("project.xml"), File.class, map);
+        f = (File) converter.convertFromStrings(array("project.xml"), File.class, map, "testExpr");
         assertEquals(new File("project.xml").getAbsolutePath(), f.getAbsolutePath());
 
-        File[] fa = (File[]) converter.convertFromStrings(array("project.xml", "build.xml"), File[].class, map);
+        File[] fa = (File[]) converter.convertFromStrings(array("project.xml", "build.xml"), File[].class, map, "testExpr");
         assertEquals(new File("project.xml").getAbsolutePath(), fa[0].getAbsolutePath());
         assertEquals(new File("build.xml").getAbsolutePath(), fa[1].getAbsolutePath());
 
         // Test parentDir
         map.put("parentDir", "/tmp");
-        f = (File) converter.convertFromStrings(array("project.xml"), File.class, map);
+        f = (File) converter.convertFromStrings(array("project.xml"), File.class, map, "testExpr");
         assertEquals(new File("/tmp/project.xml").getAbsolutePath(), f.getAbsolutePath());
     }
 
@@ -71,10 +71,10 @@ public class FileConverterTest {
     @Test
     public void testToStrings() {
         GlobalConverter converter = new FileConverter();
-        String str = converter.convertToString(null, File.class, null);
+        String str = converter.convertToString(null, File.class, null, "testExpr");
         assertNull(str);
 
-        str = converter.convertToString(new File("project.xml"), File.class, null);
+        str = converter.convertToString(new File("project.xml"), File.class, null, "testExpr");
         assertEquals(new File("project.xml").getAbsolutePath(), str);
     }
 }

@@ -138,6 +138,7 @@ public interface GlobalConverter {
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If there was a problem converting the given value to the
      *          given type.
@@ -145,7 +146,7 @@ public interface GlobalConverter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    Object convertFromStrings(String[] values, Type convertTo, Map<String, String> attributes)
+    Object convertFromStrings(String[] values, Type convertTo, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -170,6 +171,7 @@ public interface GlobalConverter {
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
+     * @param expression
      * @return  The converted value.
      * @throws  ConversionException If there was a problem converting the given value to the
      *          given type.
@@ -177,6 +179,6 @@ public interface GlobalConverter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    String convertToString(Object value, Type convertFrom, Map<String, String> attributes)
+    String convertToString(Object value, Type convertFrom, Map<String, String> attributes, String expression)
     throws ConversionException;
 }

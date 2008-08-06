@@ -154,11 +154,13 @@ public abstract class AbstractControl implements Control {
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
     throws IOException, TemplateException {
         DefaultObjectWrapper objectWrapper = new DefaultObjectWrapper();
-        Map<String, String> parameterAttributes = new HashMap<String, String>();
-        for (Object o : params.keySet()) {
-            String key = (String) o;
+        Map<String, String> dynamicAttributes = new HashMap<String, String>();
+        for (Iterator<String> i = params.keySet().iterator(); i.hasNext();) {
+            String key = i.next();
             if (key.startsWith("_")) {
-                parameterAttributes.put(key.substring(1), params.get(key).toString());
+                Object value = params.get(key);
+                dynamicAttributes.put(key.substring(1), value.toString());
+                i.remove();
             }
         }
 
@@ -171,7 +173,7 @@ public abstract class AbstractControl implements Control {
             }
         }
 
-        renderStart(env.getOut(), map, parameterAttributes);
+        renderStart(env.getOut(), map, dynamicAttributes);
         if (body != null) {
             body.render(env.getOut());
         }

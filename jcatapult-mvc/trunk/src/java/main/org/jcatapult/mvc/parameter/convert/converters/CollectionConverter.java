@@ -66,14 +66,16 @@ public class CollectionConverter extends AbstractGlobalConverter {
      * @param   value The value.
      * @param   convertTo The type to convert to.
      * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected Object stringToObject(String value, Type convertTo, Map<String, String> dynamicAttributes)
+    protected Object stringToObject(String value, Type convertTo, Map<String, String> dynamicAttributes,
+            String expression)
     throws ConversionException, ConverterStateException {
-        return stringsToObject(array(value), convertTo, dynamicAttributes);
+        return stringsToObject(array(value), convertTo, dynamicAttributes, expression);
     }
 
     /**
@@ -84,12 +86,14 @@ public class CollectionConverter extends AbstractGlobalConverter {
      * @param   values The values.
      * @param   convertTo The type to convert to.
      * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> dynamicAttributes)
+    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> dynamicAttributes,
+            String expression)
     throws ConversionException, ConverterStateException {
         Class<?> rawType = TypeTools.rawType(convertTo);
         Class<?> parameter = parameterType(convertTo);
@@ -105,7 +109,7 @@ public class CollectionConverter extends AbstractGlobalConverter {
             }
 
             for (String value : values) {
-                collection.add(converter.convertFromStrings(array(value), parameter, dynamicAttributes));
+                collection.add(converter.convertFromStrings(array(value), parameter, dynamicAttributes, expression));
             }
         }
 
@@ -119,12 +123,14 @@ public class CollectionConverter extends AbstractGlobalConverter {
      * @param   value The value.
      * @param   convertFrom The type to convert from.
      * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
+     * @param   expression The full path to the expression that is causing the conversion.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected String objectToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes)
+    protected String objectToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes,
+            String expression)
     throws ConversionException, ConverterStateException {
         Collection collection = (Collection) value;
         Class<?> parameter = parameterType(convertFrom);
@@ -140,7 +146,7 @@ public class CollectionConverter extends AbstractGlobalConverter {
 
             StringBuilder build = new StringBuilder();
             for (Object o : collection) {
-                String str = converter.convertToString(o, parameter, dynamicAttributes);
+                String str = converter.convertToString(o, parameter, dynamicAttributes, expression);
                 if (build.length() > 0) {
                     build.append(",");
                 }

@@ -33,7 +33,7 @@ import org.jcatapult.mvc.parameter.el.TypeTools;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractPrimitiveConverter extends AbstractGlobalConverter {
-    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
+    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
         Class<?> rawType = TypeTools.rawType(convertTo);
         if (value == null && rawType.isPrimitive()) {
@@ -45,12 +45,12 @@ public abstract class AbstractPrimitiveConverter extends AbstractGlobalConverter
         return stringToPrimitive(value, rawType, attributes);
     }
 
-    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes)
+    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
         throw new ConverterStateException("The primitive converter doesn't support String[] to Object conversion.");
     }
 
-    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
+    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
         Class<?> rawType = TypeTools.rawType(convertFrom);
         return primitiveToString(value, rawType, attributes);

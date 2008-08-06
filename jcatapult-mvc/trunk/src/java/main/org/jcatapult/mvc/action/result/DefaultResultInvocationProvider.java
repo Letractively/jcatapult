@@ -16,6 +16,9 @@
 package org.jcatapult.mvc.action.result;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import static java.util.Arrays.*;
+import java.util.List;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
@@ -78,7 +81,7 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
     public ResultInvocation lookup(ActionInvocation invocation, String resultCode) {
         String uri = invocation.actionURI();
         Object action = invocation.action();
-        Annotation[] annotations = action.getClass().getAnnotations();
+        List<Annotation> annotations = getAllAnnotations(action.getClass());
         for (Annotation annotation : annotations) {
             if (annotation.annotationType().isAnnotationPresent(ResultAnnotation.class)) {
                 if (matchesCode(resultCode, annotation)) {
@@ -105,6 +108,21 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
         return new DefaultResultInvocation(annotation, uri, resultCode);
     }
 
+    /**
+     * Finds all of the annotations for the class, including those on parent classes.
+     *
+     * @param   type The type to start from.
+     * @return  The list of annotations.
+     */
+    private List<Annotation> getAllAnnotations(Class<?> type) {
+        List<Annotation> annotations = new ArrayList<Annotation>();
+        while (type != Object.class) {
+            annotations.addAll(asList(type.getAnnotations()));
+            type = type.getSuperclass();
+        }
+
+        return annotations;
+    }
 
     /**
      * Locates the default Forward for an action invocation. This method is only used for action-less

@@ -41,8 +41,9 @@ public class FileConverter extends AbstractGlobalConverter {
      * Returns null if the value is null, otherwise this returns a new File of the value.
      *
      * @param   attributes Can contain the parentDir attribute which if the String is relative will
+     * @param expression
      */
-    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
+    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
         if (StringTools.isTrimmedEmpty(value)) {
             return null;
@@ -65,16 +66,16 @@ public class FileConverter extends AbstractGlobalConverter {
     /**
      * Joins the values and then sends the new joined String to the stringToObject method.
      */
-    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes)
+    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
         String joined = join(values, File.separator);
-        return stringToObject(joined, convertTo, attributes);
+        return stringToObject(joined, convertTo, attributes, expression);
     }
 
     /**
      * Returns the absolute path of the file.
      */
-    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
+    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
         File file = (File) value;
         return file.getAbsolutePath();

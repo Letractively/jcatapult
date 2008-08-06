@@ -46,7 +46,7 @@ public class MoneyConverter extends AbstractGlobalConverter {
         this.emptyIsNull = emptyIsNull;
     }
 
-    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
+    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
         if (emptyIsNull && StringTools.isTrimmedEmpty(value)) {
             return null;
@@ -72,14 +72,14 @@ public class MoneyConverter extends AbstractGlobalConverter {
         return toMoney(value, code);
     }
 
-    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes)
+    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
         throw new UnsupportedOperationException("You are attempting to map a form field that contains " +
             "multiple parameters to a property on the action class that is of type Money. This isn't " +
             "allowed.");
     }
 
-    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
+    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
         return ((Money) value).toNumericString();
     }

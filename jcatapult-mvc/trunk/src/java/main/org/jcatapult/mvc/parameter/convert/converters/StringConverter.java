@@ -44,7 +44,7 @@ public class StringConverter extends AbstractGlobalConverter {
         this.emptyIsNull = emptyIsNull;
     }
 
-    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes)
+    protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes, String expression)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         if (emptyIsNull && StringTools.isTrimmedEmpty(value)) {
             return null;
@@ -53,12 +53,12 @@ public class StringConverter extends AbstractGlobalConverter {
         return value;
     }
 
-    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes)
+    protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes, String expression)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         return join(values, ",");
     }
 
-    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
+    protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes, String expression)
     throws org.jcatapult.mvc.parameter.convert.ConversionException, ConverterStateException {
         return value.toString();
     }
