@@ -16,15 +16,14 @@
 package org.jcatapult.mvc.parameter.convert.converters;
 
 import java.lang.reflect.Type;
+import java.util.Currency;
 import java.util.Map;
 
+import org.jcatapult.domain.commerce.Money;
 import org.jcatapult.mvc.parameter.convert.AbstractGlobalConverter;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 import org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter;
-import org.joda.time.LocalDate;
-import org.joda.time.ReadablePartial;
-import org.joda.time.format.DateTimeFormat;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -32,14 +31,14 @@ import net.java.lang.StringTools;
 
 /**
  * <p>
- * This converts to and from LocalDate.
+ * This converts to and from Money.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@GlobalConverter(forTypes = {LocalDate.class})
+@GlobalConverter(forTypes = {Money.class})
 @SuppressWarnings("unchecked")
-public class LocalDateConverter extends AbstractGlobalConverter {
+public class MoneyConverter extends AbstractGlobalConverter {
     private boolean emptyIsNull = true;
 
     @Inject(optional = true)
@@ -53,38 +52,43 @@ public class LocalDateConverter extends AbstractGlobalConverter {
             return null;
         }
 
-        String format = attributes.get("dateTimeFormat");
-        if (format == null) {
-            throw new ConverterStateException("You must provide the dateTimeFormat dynamic attribute. " +
-                "If you are using a text field it will look like this: [@jc.text _dateTimeFormat=\"MM/dd/yyyy\"]");
+        String code = attributes.get("currencyCode");
+        if (code == null) {
+            throw new ConverterStateException("You must provide the currencyCode dynamic attribute. " +
+                "If you are using a text field it will look like this: [@jc.text _currencyCode=\"USD\"]");
         }
 
-        return toLocalDate(value, format);
+        Currency currency;
+        try {
+            currency = Currency.getInstance(code);
+        } catch (Exception e) {
+            throw new ConverterStateException("Invalid currencyCode [" + code + "]");
+        }
+
+        if (value.startsWith(currency.getSymbol())) {
+            value = value.substring(1);
+        }
+
+        return toMoney(value, code);
     }
 
     protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
         throw new UnsupportedOperationException("You are attempting to map a form field that contains " +
-            "multiple parameters to a property on the action class that is of type LocalDate. This isn't " +
+            "multiple parameters to a property on the action class that is of type Money. This isn't " +
             "allowed.");
     }
 
     protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
-        String format = attributes.get("dateTimeFormat");
-        if (format == null) {
-            throw new ConverterStateException("You must provide the dateTimeFormat dynamic attribute. " +
-                "If you are using a text field it will look like this: [@jc.text _dateTimeFormat=\"MM/dd/yyyy\"]");
-        }
-
-        return DateTimeFormat.forPattern(format).print((ReadablePartial) value);
+        return ((Money) value).toNumericString();
     }
 
-    private LocalDate toLocalDate(String value, String format) {
+    private Money toMoney(String value, String code) {
         try {
-            return DateTimeFormat.forPattern(format).parseDateTime(value).toLocalDate();
-        } catch (IllegalArgumentException e) {
-            throw new ConversionException("Invalid date [" + value + "] for format [" + format + "]", e);
+            return Money.valueOf(value, Currency.getInstance(code));
+        } catch (NumberFormatException e) {
+            throw new ConversionException("Invalid Money [" + value + "]", e);
         }
     }
 }
