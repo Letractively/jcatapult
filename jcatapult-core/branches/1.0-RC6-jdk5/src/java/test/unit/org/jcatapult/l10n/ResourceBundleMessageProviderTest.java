@@ -20,6 +20,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import static net.java.util.CollectionTools.*;
 
@@ -30,6 +31,7 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
+@Ignore
 public class ResourceBundleMessageProviderTest {
     @Test
     public void testSearch() {

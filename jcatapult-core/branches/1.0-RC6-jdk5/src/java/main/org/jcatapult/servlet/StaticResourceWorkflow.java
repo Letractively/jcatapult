@@ -93,7 +93,6 @@ public class StaticResourceWorkflow implements Workflow {
      *          chain throws an IOException.
      * @throws  ServletException If the chain throws.
      */
-    @Override
     public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
         String uri = request.getRequestURI();
         boolean handled = false;
