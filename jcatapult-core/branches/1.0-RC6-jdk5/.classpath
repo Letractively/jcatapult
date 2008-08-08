@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+    <classpathentry kind="src" path="src/conf/main" />
+    <classpathentry kind="src" path="src/conf/test/integration" output="target/classes/test/integration" />
+    <classpathentry kind="src" path="src/conf/test/unit" output="target/classes/test/unit" />
+    <classpathentry kind="src" path="src/java/main" />
+    <classpathentry kind="src" path="src/java/test/integration" output="target/classes/test/integration" />
+    <classpathentry kind="src" path="src/java/test/unit" output="target/classes/test/unit" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/com/google/code/guice/guice/1.0/guice-1.0.jar" sourcepath="/SAVANT_REPOSITORY/com/google/code/guice/guice/1.0/guice-1.0-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar" sourcepath="/SAVANT_REPOSITORY/javax/persistence/persistence-api/1.0/persistence-api-1.0-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar" sourcepath="/SAVANT_REPOSITORY/javax/servlet/servlet-api/2.4/servlet-api-2.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/net/java/dev/java-net-commons/java-net-commons/1.5/java-net-commons-1.5.jar" sourcepath="/SAVANT_REPOSITORY/net/java/dev/java-net-commons/java-net-commons/1.5/java-net-commons-1.5-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/apache/commons/commons-collections/3.1/commons-collections-3.1.jar" sourcepath="/SAVANT_REPOSITORY/org/apache/commons/commons-collections/3.1/commons-collections-3.1-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/apache/commons/commons-configuration/1.4/commons-configuration-1.4.jar" sourcepath="/SAVANT_REPOSITORY/org/apache/commons/commons-configuration/1.4/commons-configuration-1.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/apache/commons/commons-lang/2.3/commons-lang-2.3.jar" sourcepath="/SAVANT_REPOSITORY/org/apache/commons/commons-lang/2.3/commons-lang-2.3-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/apache/commons/commons-logging/1.1/commons-logging-1.1.jar" sourcepath="/SAVANT_REPOSITORY/org/apache/commons/commons-logging/1.1/commons-logging-1.1-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/easymock/easymock/2.2/easymock-2.2.jar" sourcepath="/SAVANT_REPOSITORY/org/easymock/easymock/2.2/easymock-2.2-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/freemarker/freemarker/2.3.12/freemarker-2.3.12.jar" sourcepath="/SAVANT_REPOSITORY/org/freemarker/freemarker/2.3.12/freemarker-2.3.12-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/hsqldb/hsqldb/1.8.9/hsqldb-1.8.9.jar" sourcepath="/SAVANT_REPOSITORY/org/hsqldb/hsqldb/1.8.9/hsqldb-1.8.9-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/joda/joda-time/joda-time/1.4/joda-time-1.4.jar" sourcepath="/SAVANT_REPOSITORY/org/joda/joda-time/joda-time/1.4/joda-time-1.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/junit/junit/4.4/junit-4.4.jar" sourcepath="/SAVANT_REPOSITORY/org/junit/junit/4.4/junit-4.4-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/objectweb/asm/asm/3.1/asm-3.1.jar" sourcepath="/SAVANT_REPOSITORY/org/objectweb/asm/asm/3.1/asm-3.1-src.jar" />
+    <classpathentry kind="output" path="target/classes/main" />
+</classpath>
+
