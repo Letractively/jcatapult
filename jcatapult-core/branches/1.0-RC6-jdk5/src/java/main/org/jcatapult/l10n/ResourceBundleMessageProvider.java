@@ -24,7 +24,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
 import java.util.ResourceBundle;
-import static java.util.ResourceBundle.Control.*;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -69,7 +68,6 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class ResourceBundleMessageProvider implements MessageProvider {
-    private static final ResourceBundle.Control CONTROL = getNoFallbackControl(FORMAT_DEFAULT);
     private final Locale locale;
 
     @Inject
@@ -111,7 +109,7 @@ public class ResourceBundleMessageProvider implements MessageProvider {
         Queue<String> names = determineBundles(bundle);
         for (String name : names) {
             try {
-                ResourceBundle rb = ResourceBundle.getBundle(name, locale, CONTROL);
+                ResourceBundle rb = ResourceBundle.getBundle(name, locale, this.getClass().getClassLoader());
                 return rb.getString(key);
             } catch (Exception e) {
             }

@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
-         name="jcatapult-core"
+         name="jcatapult-core-jdk5"
          group="jcatapult.org"
-         version="1.0-RC7">
+         version="1.0-RC6">
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -24,7 +24,7 @@
   <property name="project.requires.database" value="false"/>
 
   <!-- compile properties -->
-  <property name="jdk.project" value="${jdk1.6}"/>
+  <property name="jdk.project" value="${jdk1.5}"/>
 
   <release>
     <publication name="jcatapult-core" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"
@@ -43,7 +43,7 @@
       <artifact group="commons.apache.org" project="commons-lang" name="commons-lang" version="2.3" type="jar"/>
       <artifact group="freemarker.org" project="freemarker" name="freemarker" version="2.3.12" type="jar"/>
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons-jdk5" name="java-net-commons-jdk5" version="1.5" type="jar"/>
       <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-compile">
@@ -65,6 +65,7 @@
     <fetchWorkflow>
       <process type="unifiedLocalCache"/>
       <process type="unified" url="http://savant.inversoft.org/"/>
+      <process type="unified" url="http://savant.texturemedia.net/"/>
     </fetchWorkflow>
     <publishWorkflow>
       <process type="unifiedLocalCache"/>
