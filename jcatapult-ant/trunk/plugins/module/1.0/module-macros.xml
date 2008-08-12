@@ -20,6 +20,7 @@
   <path id="classpath.module">
     <fileset dir="${dir.plugin.module}/lib" includes="*.jar"/>
     <pathelement location="${dir.plugin.module}/../../libraries/jdom-1.0.jar"/>
+    <pathelement location="${dir.plugin.module}/../../libraries/savant-core-2.0-M4.jar"/>
   </path>
 
   <property name="module-macros.dir.scripts.groovy" value="${dir.plugin.module}/scripts/groovy"/>
@@ -54,70 +55,53 @@
 
     I can grab everything after "user-module-" and up to the .jar extension.
   -->
-  <macrodef name="module_determine_version">
-    <attribute name="url"/>
-    <attribute name="name"/>
-
+  <macrodef name="module_properties">
+    <attribute name="group"/>
+    <attribute name="project"/>
     <sequential>
-      <get src="@{url}" dest="versions.xml"/>
       <groovy>
+        <classpath>
+          <path refid="classpath.module"/>
+        </classpath>
         <![CDATA[
-        import net.java.io.FileTools;
-        import net.java.util.Version;
-        import java.util.List;
-        import java.util.ArrayList;
-        import java.util.Collections;
-        import java.util.Map;
-        import java.util.HashMap;
+        import org.inversoft.savant.dep.*
+        import org.inversoft.savant.context.*
+        import org.inversoft.savant.context.xml.DefaultProjectConfigBuilder
 
-        // Read it in
-        def lines = FileTools.read("versions.xml").toString().split("\n");
+        DefaultProjectConfigBuilder builder = new DefaultProjectConfigBuilder()
+        ProjectConfig projectConfig = builder.build(new File("project.xml"))
 
-        // map:  key is Version, value is dir
-        Map<Version, String> versions = new HashMap<Version, String>();
+        // Create a new deps set
+        ArtifactGroup artifactGroup = new ArtifactGroup("compile", Integer.MAX_VALUE)
+        artifactGroup.addArtifact(new Artifact("@{group}", "@{project}", "@{project}", "{latest}", "jar"))
+        Dependencies deps = new Dependencies("add-module-deps")
+        deps.addArtifactGroup(artifactGroup)
 
-        lines.each {
-          def matcher = (it =~ /a href="(.*?)"/)
-          if (matcher.find()) {
-            def str = matcher[0][1];
-            if (str.endsWith("/")) {
-              def dir = str.substring(0, str.length() - 1);
+        // Add it to the project
+        projectConfig.addDependencies(deps)
 
-              // try to create a Version object.
-              // if an exception is thrown, it's not a proper Version
-              try {
-                  versions.put(new Version(dir), dir);
-              } catch (IllegalArgumentException e) {
-                  // not a valid version, don't worry about it
-              }
-            }
-          }
+        // Resolve the module
+        SavantContext context = new DefaultSavantContext(projectConfig, new File("."), new File("."))
+        DependencyResolveMediator mediator = new DependencyResolveMediator()
+        try {
+          mediator.mediate(context, "add-module-deps", null, ["compile"] as Set, false)
+        } catch (Exception e) {
+          ant.fail("Unable to find module")
         }
 
-        new File("versions.xml").delete();
-
-        // sort the versions to get the highest
-        List<Version> versionKeys = new ArrayList<Version>(versions.keySet());
-        Collections.sort(versionKeys);
-
-        // get the highest
-        String highest = versions.get(versionKeys.get(versionKeys.size() - 1));
-
-        if (highest != null) {
-          properties["module.version"] = highest;
-          ant.echo("Determined latest module version to be ${highest}.");
-        } else {
-          ant.fail("Module doesn't have any releases yet.");
-        }
+        // Get the artifact back out and grab the version and the file
+        Artifact artifact = artifactGroup.getArtifacts().toList()[0]
+        properties["module.version"] = artifact.getVersion()
+        properties["module.file"] = context.getArtifactFile(artifact).getAbsolutePath()
         ]]>
       </groovy>
     </sequential>
   </macrodef>
 
   <macrodef name="module_add_dependency">
-    <attribute name="name"/>
+    <attribute name="group"/>
+    <attribute name="project"/>
     <attribute name="version"/>
-    <attribute name="url"/>
     <sequential>
       <groovy>
         <classpath>
@@ -151,37 +135,9 @@
         elem = xpath.selectSingleNode(doc.getRootElement());
         Element artifact = new Element("artifact", "http://www.inversoft.org/schemas/savant-2.0/project");
 
-        // extract the group from the url
-        URL moduleURL = null;
-        try {
-          moduleURL = new URL("@{url}");
-        } catch (MalformedURLException e) {
-          ant.fail("@{url} is not a valid URL path");
-        }
-
-
-        // break the URL down into the context path
-        String path = moduleURL.getPath();
-
-        // parse the context path to reverse it and delimit the tokens with a period
-        String[] urlPathTokens = path.split("/");
-        StringBuffer groupBuffer = new StringBuffer();
-        if (urlPathTokens.length > 0) {
-            for (int i = urlPathTokens.length - 1; i > -1 ; i--) {
-                if (!urlPathTokens[i].equals("@{name}")) {
-                  groupBuffer.append(urlPathTokens[i]);
-                  if (i > 1) {
-                      groupBuffer.append(".");
-                  }
-                }
-            }
-        }
-
-        String group = groupBuffer.toString();
-
-        artifact.setAttribute("group", group);
-        artifact.setAttribute("project", "@{name}");
-        artifact.setAttribute("name", "@{name}");
+        artifact.setAttribute("group", "@{group}");
+        artifact.setAttribute("project", "@{project}");
+        artifact.setAttribute("name", "@{project}");
         artifact.setAttribute("version", "@{version}");
         artifact.setAttribute("type", "jar");
 
