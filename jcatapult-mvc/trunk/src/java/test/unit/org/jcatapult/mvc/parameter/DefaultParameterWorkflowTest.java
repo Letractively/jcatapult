@@ -88,4 +88,49 @@ public class DefaultParameterWorkflowTest {
 
         EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
     }
+
+    /**
+     * Tests radio buttons and checkboxes.
+     */
+    @Test
+    public void testRadioButtonsCheckBoxes() throws IOException, ServletException {
+        Action action = new Action();
+
+        Map<String, String[]> values = new HashMap<String, String[]>();
+        values.put("__jc_cb_user.checkbox['null']", array(""));
+        values.put("__jc_cb_user.checkbox['default']", array("false"));
+        values.put("__jc_rb_user.radio['null']", array(""));
+        values.put("__jc_rb_user.radio['default']", array("false"));
+
+        final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameterMap()).andReturn(values);
+        EasyMock.replay(request);
+
+        ExpressionEvaluator expressionEvaluator = EasyMock.createNiceMock(ExpressionEvaluator.class);
+        expressionEvaluator.setValue(eq("user.checkbox['null']"), same(action), eq((String[]) null), eq(new HashMap<String, String>()));
+        expressionEvaluator.setValue(eq("user.checkbox['default']"), same(action), aryEq(array("false")), eq(new HashMap<String, String>()));
+        expressionEvaluator.setValue(eq("user.radio['null']"), same(action), eq((String[]) null), eq(new HashMap<String, String>()));
+        expressionEvaluator.setValue(eq("user.radio['default']"), same(action), aryEq(array("false")), eq(new HashMap<String, String>()));
+        EasyMock.replay(expressionEvaluator);
+
+        ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
+        EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.replay(invocation);
+
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
+
+        MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
+        EasyMock.replay(messageStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator);
+        workflow.perform(chain);
+
+        EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
+    }
 }
