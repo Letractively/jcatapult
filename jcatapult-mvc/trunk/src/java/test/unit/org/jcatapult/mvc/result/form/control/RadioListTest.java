@@ -65,7 +65,8 @@ public class RadioListTest extends AbstractInputTest {
             "<div class=\"control-container\">\n" +
             "  <input type=\"radio\" value=\"three\" class=\"css-class\" name=\"test\"/><span class=\"radio-text\">three</span>\n" +
             "</div>\n" +
-            "</div>\n");
+            "</div>\n" +
+            "<input type=\"hidden\" name=\"__jc_rb_test\" value=\"\"/>\n");
 
         EasyMock.verify(ee);
     }
@@ -92,7 +93,8 @@ public class RadioListTest extends AbstractInputTest {
             "<div class=\"control-container\">\n" +
             "  <input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
             "</div>\n" +
-            "</div>\n");
+            "</div>\n" +
+            "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"\"/>\n");
 
         EasyMock.verify(ee);
     }
@@ -126,7 +128,8 @@ public class RadioListTest extends AbstractInputTest {
             "<div class=\"control-container\">\n" +
             "  <input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
             "</div>\n" +
-            "</div>\n");
+            "</div>\n" +
+            "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"\"/>\n");
 
         EasyMock.verify(ee);
     }
@@ -153,7 +156,37 @@ public class RadioListTest extends AbstractInputTest {
             "<div class=\"control-container\">\n" +
             "  <input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
             "</div>\n" +
-            "</div>\n", "Country is required", "Country must be cool");
+            "</div>\n" +
+            "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"\"/>\n",
+            "Country is required", "Country must be cool");
+        EasyMock.verify(ee);
+    }
+
+    @Test
+    public void testUncheckedValue() {
+        Edit action = new Edit();
+        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
+        EasyMock.replay(ee);
+
+        RadioList radioList = new RadioList();
+        radioList.setExpressionEvaluator(ee);
+        run(radioList, action, "radio-list", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+            mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany"), "uncheckedValue", "US"),
+            "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
+            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"radio\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\">\n" +
+            "  <input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"US\"/>\n",
+            "Country is required", "Country must be cool");
         EasyMock.verify(ee);
     }
 

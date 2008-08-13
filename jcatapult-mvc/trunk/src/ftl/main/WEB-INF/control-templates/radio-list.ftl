@@ -8,3 +8,4 @@
 </div>
 </div>
 [/#list]
+<input type="hidden" name="__jc_rb_${attributes['name']}" value="${uncheckedValue}"/>

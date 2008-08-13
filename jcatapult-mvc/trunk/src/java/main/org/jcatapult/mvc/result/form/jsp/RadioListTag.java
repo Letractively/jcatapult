@@ -116,6 +116,24 @@ public class RadioListTag extends AbstractInputTag<RadioList> {
     }
 
     /**
+     * Retrieves the tags uncheckedValue attribute
+     *
+     * @return	Returns the tags uncheckedValue attribute
+     */
+    public String getUncheckedValue() {
+        return (String) attributes.get("uncheckedValue");
+    }
+
+    /**
+     * Populates the tags uncheckedValue attribute
+     *
+     * @param	uncheckedValue The value of the tags uncheckedValue attribute
+     */
+    public void setUncheckedValue(String uncheckedValue) {
+        attributes.put("uncheckedValue", uncheckedValue);
+    }
+
+    /**
      * @return  The {@link RadioList} class.
      */
     protected Class<RadioList> controlClass() {

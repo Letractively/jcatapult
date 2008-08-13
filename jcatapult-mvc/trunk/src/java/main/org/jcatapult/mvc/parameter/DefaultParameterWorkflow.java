@@ -114,15 +114,15 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         Map<String, String[]> parameters = request.getParameterMap();
 
         // Pull out the check box, radio button and action parameter
-        Set<String> checkBoxes = new HashSet<String>();
-        Set<String> radioButtons = new HashSet<String>();
+        Map<String, String[]> checkBoxes = new HashMap<String, String[]>();
+        Map<String, String[]> radioButtons = new HashMap<String, String[]>();
         Set<String> actions = new HashSet<String>();
         Map<String, Struct> structs = new HashMap<String, Struct>();
         for (String key : parameters.keySet()) {
             if (key.startsWith(CHECKBOX_PREFIX)) {
-                checkBoxes.add(key.substring(CHECKBOX_PREFIX.length()));
+                checkBoxes.put(key.substring(CHECKBOX_PREFIX.length()), parameters.get(key));
             } else if (key.startsWith(RADIOBUTTON_PREFIX)) {
-                radioButtons.add(key.substring(RADIOBUTTON_PREFIX.length()));
+                radioButtons.put(key.substring(RADIOBUTTON_PREFIX.length()), parameters.get(key));
             } else if (key.startsWith(ACTION_PREFIX)) {
                 actions.add(key.substring(ACTION_PREFIX.length()));
             } else {
@@ -148,17 +148,12 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         }
 
         // Remove all the existing checkbox, radio and action keys
-        checkBoxes.removeAll(structs.keySet());
-        radioButtons.removeAll(structs.keySet());
+        checkBoxes.keySet().removeAll(structs.keySet());
+        radioButtons.keySet().removeAll(structs.keySet());
 
-        // Add back in any left overs as null values
-        for (String checkBox : checkBoxes) {
-            structs.put(checkBox, new Struct());
-        }
-
-        for (String radioButton : radioButtons) {
-            structs.put(radioButton, new Struct());
-        }
+        // Add back in any left overs
+        addUncheckedValues(checkBoxes, structs);
+        addUncheckedValues(radioButtons, structs);
 
         // Remove actions from the parameter as they should be ignored right now
         structs.keySet().removeAll(actions);
@@ -178,8 +173,26 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         return true;
     }
 
+    private void addUncheckedValues(Map<String, String[]> map, Map<String, Struct> structs) {
+        for (String key : map.keySet()) {
+            String[] values = map.get(key);
+            if (values != null && values.length == 1 && values[0].equals("")) {
+                structs.put(key, new Struct());
+            } else {
+                structs.put(key, new Struct(values));
+            }
+        }
+    }
+
     private class Struct {
         Map<String, String> attributes = new HashMap<String, String>();
         String[] values;
+
+        private Struct() {
+        }
+
+        private Struct(String[] values) {
+            this.values = values;
+        }
     }
 }

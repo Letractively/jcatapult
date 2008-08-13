@@ -43,7 +43,7 @@ public abstract class AbstractCheckedInputTag<T extends Control> extends Abstrac
     public void setChecked(Boolean checked) {
         attributes.put("checked", checked);
     }
-    
+
     /**
      * Retrieves the tags defaultChecked attribute
      *
@@ -58,7 +58,25 @@ public abstract class AbstractCheckedInputTag<T extends Control> extends Abstrac
      *
      * @param	defaultChecked The value of the tags defaultChecked attribute
      */
-    public void setDefaultValue(Boolean defaultChecked) {
+    public void setDefaultChecked(Boolean defaultChecked) {
         attributes.put("defaultChecked", defaultChecked);
+    }
+
+    /**
+     * Retrieves the tags uncheckedValue attribute
+     *
+     * @return	Returns the tags uncheckedValue attribute
+     */
+    public String getUncheckedValue() {
+        return (String) attributes.get("uncheckedValue");
+    }
+
+    /**
+     * Populates the tags uncheckedValue attribute
+     *
+     * @param	uncheckedValue The value of the tags uncheckedValue attribute
+     */
+    public void setUncheckedValue(String uncheckedValue) {
+        attributes.put("uncheckedValue", uncheckedValue);
     }
 }

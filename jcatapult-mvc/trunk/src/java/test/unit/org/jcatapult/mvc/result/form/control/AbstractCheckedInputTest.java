@@ -182,4 +182,23 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
 
         EasyMock.verify(ee);
     }
+
+    @Test
+    public void testUncheckedValue() {
+        Edit action = new Edit();
+        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.expect(ee.getValue("user.male", action)).andReturn(null);
+        EasyMock.replay(ee);
+
+        AbstractCheckedInput input = getControl(ee);
+        run(input, action, getType(), "org.example.action.user.Edit", "user.male", "Male?",
+            mapNV("name", "user.male", "class", "css-class", "value", "true", "uncheckedValue", "false"),
+            "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"label-container\"><label for=\"user_male\" class=\"label\"><span class=\"error\">Male? (Must be male, Check this box dude!)</span></label></div>\n" +
+            "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"" + getHiddenPrefix() + "_user.male\" value=\"false\"/></div>\n" +
+            "</div>\n", "Must be male", "Check this box dude!");
+
+        EasyMock.verify(ee);
+    }
 }
