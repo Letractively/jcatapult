@@ -15,19 +15,23 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+
+import static net.java.lang.StringTools.*;
 
 /**
  * <p>
  * This class is the control for a select box.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ControlAttributes(
     required = {"name"},
@@ -45,28 +49,49 @@ public class CountriesSelect extends Select {
      */
     @Override
     protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        Map<String, String> countries = new TreeMap<String, String>();
-        Locale[] locales = Locale.getAvailableLocales();
-        for (Locale l : locales) {
-            countries.put(l.getCountry(), l.getDisplayCountry(locale));
-        }
+        LinkedHashMap<String, String> countries = new LinkedHashMap<String, String>();
 
-        Map<String, String> newCountries = new LinkedHashMap<String, String>();
         if (attributes.containsKey("includeBlank") && (Boolean) attributes.get("includeBlank")) {
-            newCountries.put("", "");
+            countries.put("", "");
         }
 
         String preferred = (String) attributes.get("preferredCodes");
         if (preferred != null) {
             String[] parts = preferred.split(",");
             for (String part : parts) {
-                newCountries.put(part.trim(), countries.remove(part.trim()));
+                Locale locale = new Locale("", part);
+                countries.put(part, locale.getDisplayCountry(locale));
             }
         }
 
-        newCountries.putAll(countries);
-        attributes.put("items", newCountries);
+        SortedSet<Locale> alphabetical = new TreeSet<Locale>(new LocaleComparator(locale));
+        Locale[] locales = Locale.getAvailableLocales();
+        for (Locale locale : locales) {
+            if (!isTrimmedEmpty(locale.getCountry()) && !isTrimmedEmpty(locale.getDisplayCountry(locale))) {
+                alphabetical.add(locale);
+            }
+        }
+
+        for (Locale locale : alphabetical) {
+            if (!countries.containsKey(locale.getCountry())) {
+                countries.put(locale.getCountry(), locale.getDisplayCountry(this.locale));
+            }
+        }
+
+        attributes.put("items", countries);
 
         return super.makeParameters(attributes, dynamicAttributes);
+    }
+
+    public static class LocaleComparator implements Comparator<Locale> {
+        private Locale displayLocale;
+
+        public LocaleComparator(Locale displayLocale) {
+            this.displayLocale = displayLocale;
+        }
+
+        public int compare(Locale l1, Locale l2) {
+            return l1.getDisplayCountry(displayLocale).compareTo(l2.getDisplayCountry(displayLocale));
+        }
     }
 }
