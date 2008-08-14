@@ -130,7 +130,7 @@ public class AuthorizeNetCommerceService implements CommerceService {
             build.append("x_card_code=").append(creditCard.getSvn()).append("&");
             build.append("x_first_name=").append(creditCard.getFirstName()).append("&");
             build.append("x_last_name=").append(creditCard.getLastName()).append("&");
-            build.append("x_address=").append(creditCard.getAddress().getStreet1()).append("&");
+            build.append("x_address=").append(creditCard.getAddress().getStreet()).append("&");
             build.append("x_city=").append(creditCard.getAddress().getCity()).append("&");
             build.append("x_state=").append(creditCard.getAddress().getState()).append("&");
             build.append("x_zip=").append(creditCard.getAddress().getPostalCode()).append("&");
