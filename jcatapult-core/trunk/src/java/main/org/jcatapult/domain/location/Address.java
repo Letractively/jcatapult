@@ -32,14 +32,8 @@ import javax.persistence.MappedSuperclass;
 public class Address implements Serializable {
     private final static int serialVersionUID = 1;
 
-    @Column(nullable = false)
-    private String street1;
-
-    @Column(nullable = true)
-    private String street2;
-
-    @Column(nullable = true)
-    private String street3;
+    @Column(nullable = false, length = 512)
+    private String street;
 
     @Column(nullable = false)
     private String city;
@@ -47,34 +41,21 @@ public class Address implements Serializable {
     @Column(nullable = true)
     private String state;
 
+    @Column(nullable = true)
+    private String district;
+
     @Column(nullable = false)
     private String country;
 
     @Column(nullable = true, name = "postal_code")
     private String postalCode;
 
-    public String getStreet1() {
-        return street1;
+    public String getStreet() {
+        return street;
     }
 
-    public void setStreet1(String street1) {
-        this.street1 = street1;
-    }
-
-    public String getStreet2() {
-        return street2;
-    }
-
-    public void setStreet2(String street2) {
-        this.street2 = street2;
-    }
-
-    public String getStreet3() {
-        return street3;
-    }
-
-    public void setStreet3(String street3) {
-        this.street3 = street3;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public String getCity() {
@@ -91,6 +72,14 @@ public class Address implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     public String getCountry() {
