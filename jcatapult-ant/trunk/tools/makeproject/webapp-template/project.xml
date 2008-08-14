@@ -6,9 +6,6 @@
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
 
-  <!-- deploy properties -->
-  <property name="deploy.target.server" value="qa"/>
-
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
   <property name="version.jcatapult" value="@JCATAPULT_VERSION@"/>
