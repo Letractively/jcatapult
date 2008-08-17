@@ -58,17 +58,24 @@ public class DefaultLoginWorkflow implements LoginWorkflow {
     }
 
     public void perform(WorkflowChain chain) throws IOException, ServletException {
+        String username = request.getParameter(userNameParameter);
+        String password = request.getParameter(passwordParameter);
         if (request.getRequestURI().equals(loginURI)) {
-            String userName = request.getParameter(userNameParameter);
-            String password = request.getParameter(passwordParameter);
-            if (userName == null || password == null) {
+            if (username == null || password == null) {
                 throw new ServletException("The login form must have a username and password field named " +
                     "[" + userNameParameter + "] and [" + passwordParameter + "] respectively.");
             }
 
             try {
-                loginService.login(userName, password, request.getParameterMap());
+                loginService.login(username, password, request.getParameterMap());
                 loginHandler.handle(chain);
+            } catch (JCatapultSecurityException e) {
+                exceptionHandler.handle(e, chain);
+            }
+        } else if (username != null || password != null) {
+            try {
+                loginService.login(username, password, request.getParameterMap());
+                chain.continueWorkflow();
             } catch (JCatapultSecurityException e) {
                 exceptionHandler.handle(e, chain);
             }
