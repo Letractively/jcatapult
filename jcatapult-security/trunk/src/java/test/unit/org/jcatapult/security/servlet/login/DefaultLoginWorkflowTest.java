@@ -36,7 +36,7 @@ import org.junit.Test;
  *
  * @author  Brian Pontarelli
  */
-public class LoginWorkflowTest {
+public class DefaultLoginWorkflowTest {
     @Test
     public void testIncorrectURI() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
@@ -53,7 +53,7 @@ public class LoginWorkflowTest {
         wc.continueWorkflow();
         EasyMock.replay(wc);
 
-        LoginWorkflow lw = new LoginWorkflow(request, null, new DefaultSecurityConfiguration(c), null, null);
+        DefaultLoginWorkflow lw = new DefaultLoginWorkflow(request, null, new DefaultSecurityConfiguration(c), null, null);
         lw.perform(wc);
 
         EasyMock.verify(c, request, wc);
@@ -87,7 +87,7 @@ public class LoginWorkflowTest {
         plh.handle(wc);
         EasyMock.replay(plh);
 
-        LoginWorkflow lw = new LoginWorkflow(request, ls, new DefaultSecurityConfiguration(c), null, plh);
+        DefaultLoginWorkflow lw = new DefaultLoginWorkflow(request, ls, new DefaultSecurityConfiguration(c), null, plh);
         lw.perform(wc);
 
         EasyMock.verify(c, request, wc, ls, plh);
@@ -121,7 +121,7 @@ public class LoginWorkflowTest {
         leh.handle(exception, wc);
         EasyMock.replay(leh);
 
-        LoginWorkflow lw = new LoginWorkflow(request, ls, new DefaultSecurityConfiguration(c), leh, null);
+        DefaultLoginWorkflow lw = new DefaultLoginWorkflow(request, ls, new DefaultSecurityConfiguration(c), leh, null);
         lw.perform(wc);
 
         EasyMock.verify(c, request, wc, ls, leh);

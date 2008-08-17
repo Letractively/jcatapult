@@ -17,10 +17,8 @@ package org.jcatapult.security.servlet.login;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.jcatapult.security.servlet.saved.SavedRequestWorkflow;
+import org.jcatapult.security.servlet.saved.DefaultSavedRequestWorkflow;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.ImplementedBy;
@@ -33,7 +31,7 @@ import com.google.inject.ImplementedBy;
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(SavedRequestWorkflow.class)
+@ImplementedBy(DefaultSavedRequestWorkflow.class)
 public interface PostLoginHandler {
     /**
      * Handles a successful login.

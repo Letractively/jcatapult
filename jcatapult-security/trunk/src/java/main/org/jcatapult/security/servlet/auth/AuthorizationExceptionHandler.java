@@ -17,8 +17,6 @@ package org.jcatapult.security.servlet.auth;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.servlet.WorkflowChain;
@@ -28,7 +26,7 @@ import com.google.inject.ImplementedBy;
 /**
  * <p>
  * This interface handles authorization exceptions that are thrown by the
- * {@link org.jcatapult.security.auth.Authorizer} out to the {@link AuthorizationWorkflow}.
+ * {@link org.jcatapult.security.auth.Authorizer} out to the {@link DefaultAuthorizationWorkflow}.
  * </p>
  *
  * @author Brian Pontarelli

@@ -31,7 +31,7 @@ import com.google.inject.Inject;
  * <p>
  * This class handles authorization exceptions that are thrown by
  * the implementation of the {@link org.jcatapult.security.auth.Authorizer}
- * that are caught by the {@link AuthorizationWorkflow}. This class
+ * that are caught by the {@link DefaultAuthorizationWorkflow}. This class
  * handles the exception by creating a request that is handled by Struts
  * action. The URI for the action that is invoked by Struts is controlled
  * by the configuration parameter named <code>jcatapult.security.authorization.restricted-uri</code>.

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.ServletException;
 
-import org.jcatapult.security.servlet.auth.AuthorizationWorkflow;
+import org.jcatapult.security.servlet.auth.DefaultAuthorizationWorkflow;
 import org.jcatapult.security.servlet.login.LoginWorkflow;
 import org.jcatapult.security.servlet.saved.SavedRequestWorkflow;
 import org.jcatapult.servlet.SubWorkflowChain;
@@ -43,9 +43,9 @@ import com.google.inject.Inject;
  * </p>
  *
  * <ol>
- * <li>{@link CredentialStorageWorkflow}</li>
- * <li>{@link LoginWorkflow}</li>
- * <li>{@link AuthorizationWorkflow}</li>
+ * <li>{@link DefaultCredentialStorageWorkflow}</li>
+ * <li>{@link org.jcatapult.security.servlet.login.DefaultLoginWorkflow}</li>
+ * <li>{@link org.jcatapult.security.servlet.auth.DefaultAuthorizationWorkflow}</li>
  * </ol>
  *
  * @author  Brian Pontarelli
@@ -55,12 +55,12 @@ public class SecurityWorkflow implements Workflow {
     private final SavedRequestWorkflow savedRequestWorkflow;
     //    private final RememberMeWorkflow rememberMeWorkflow;
     private final LoginWorkflow loginWorkflow;
-    private final AuthorizationWorkflow authorizationWorkflow;
+    private final DefaultAuthorizationWorkflow authorizationWorkflow;
 
     @Inject
     public SecurityWorkflow(CredentialStorageWorkflow credentialStorageWorkflow,
             SavedRequestWorkflow savedRequestWorkflow, LoginWorkflow loginWorkflow,
-            AuthorizationWorkflow authorizationWorkflow) {
+            DefaultAuthorizationWorkflow authorizationWorkflow) {
         this.credentialStorageWorkflow = credentialStorageWorkflow;
         this.savedRequestWorkflow = savedRequestWorkflow;
         this.loginWorkflow = loginWorkflow;

@@ -49,7 +49,7 @@ import static net.java.util.Pair.*;
  *
  * @author  Brian Pontarelli
  */
-public class SavedRequestWorkflowTest {
+public class DefaultSavedRequestWorkflowTest {
     @Test
     public void testMainWorkflowNoSavedRequest() throws IOException, ServletException {
         Configuration c = EasyMock.createStrictMock(Configuration.class);
@@ -58,7 +58,7 @@ public class SavedRequestWorkflowTest {
         EasyMock.replay(c);
 
         HttpSession session = EasyMock.createStrictMock(HttpSession.class);
-        EasyMock.expect(session.getAttribute(SavedRequestWorkflow.POST_LOGIN_KEY)).andReturn(null);
+        EasyMock.expect(session.getAttribute(DefaultSavedRequestWorkflow.POST_LOGIN_KEY)).andReturn(null);
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -72,7 +72,7 @@ public class SavedRequestWorkflowTest {
         wc.continueWorkflow();
         EasyMock.replay(wc);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(new HttpServletRequestWrapper(request), response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
+        DefaultSavedRequestWorkflow srw = new DefaultSavedRequestWorkflow(new HttpServletRequestWrapper(request), response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.perform(wc);
         EasyMock.verify(c, request, response, session);
     }
@@ -86,8 +86,8 @@ public class SavedRequestWorkflowTest {
 
         SavedHttpRequest sr = new SavedHttpRequest(null, new HashMap<String, String[]>());
         HttpSession session = EasyMock.createStrictMock(HttpSession.class);
-        EasyMock.expect(session.getAttribute(SavedRequestWorkflow.POST_LOGIN_KEY)).andReturn(sr);
-        session.removeAttribute(SavedRequestWorkflow.POST_LOGIN_KEY);
+        EasyMock.expect(session.getAttribute(DefaultSavedRequestWorkflow.POST_LOGIN_KEY)).andReturn(sr);
+        session.removeAttribute(DefaultSavedRequestWorkflow.POST_LOGIN_KEY);
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -109,7 +109,7 @@ public class SavedRequestWorkflowTest {
         ServletObjectsHolder.clearServletRequest();
         ServletObjectsHolder.setServletRequest(wrapper);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(wrapper, response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
+        DefaultSavedRequestWorkflow srw = new DefaultSavedRequestWorkflow(wrapper, response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.perform(wc);
         assertTrue(ServletObjectsHolder.getServletRequest().getRequest() instanceof FacadeHttpServletRequest);
         EasyMock.verify(c, request, response, session);
@@ -124,9 +124,9 @@ public class SavedRequestWorkflowTest {
 
         SavedHttpRequest sr = new SavedHttpRequest("/foo", map(p("id", new String[]{"1"})));
         HttpSession session = EasyMock.createStrictMock(HttpSession.class);
-        EasyMock.expect(session.getAttribute(SavedRequestWorkflow.LOGIN_KEY)).andReturn(sr);
-        session.removeAttribute(SavedRequestWorkflow.LOGIN_KEY);
-        session.setAttribute(SavedRequestWorkflow.POST_LOGIN_KEY, sr);
+        EasyMock.expect(session.getAttribute(DefaultSavedRequestWorkflow.LOGIN_KEY)).andReturn(sr);
+        session.removeAttribute(DefaultSavedRequestWorkflow.LOGIN_KEY);
+        session.setAttribute(DefaultSavedRequestWorkflow.POST_LOGIN_KEY, sr);
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -138,7 +138,7 @@ public class SavedRequestWorkflowTest {
         response.sendRedirect("/context/foo");
         EasyMock.replay(response);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(new HttpServletRequestWrapper(request), response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
+        DefaultSavedRequestWorkflow srw = new DefaultSavedRequestWorkflow(new HttpServletRequestWrapper(request), response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.handle(null);
         EasyMock.verify(c, request, response, session);
     }
@@ -151,7 +151,7 @@ public class SavedRequestWorkflowTest {
         EasyMock.replay(c);
 
         HttpSession session = EasyMock.createStrictMock(HttpSession.class);
-        EasyMock.expect(session.getAttribute(SavedRequestWorkflow.LOGIN_KEY)).andReturn(null);
+        EasyMock.expect(session.getAttribute(DefaultSavedRequestWorkflow.LOGIN_KEY)).andReturn(null);
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -174,7 +174,7 @@ public class SavedRequestWorkflowTest {
         ServletObjectsHolder.clearServletRequest();
         ServletObjectsHolder.setServletRequest(wrapper);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(wrapper, response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
+        DefaultSavedRequestWorkflow srw = new DefaultSavedRequestWorkflow(wrapper, response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.handle(wc);
         assertTrue(called.get());
         EasyMock.verify(c, request, response, session);
@@ -189,8 +189,8 @@ public class SavedRequestWorkflowTest {
 
         SavedHttpRequest sr = new SavedHttpRequest("/foo", null);
         HttpSession session = EasyMock.createStrictMock(HttpSession.class);
-        EasyMock.expect(session.getAttribute(SavedRequestWorkflow.LOGIN_KEY)).andReturn(sr);
-        session.removeAttribute(SavedRequestWorkflow.LOGIN_KEY);
+        EasyMock.expect(session.getAttribute(DefaultSavedRequestWorkflow.LOGIN_KEY)).andReturn(sr);
+        session.removeAttribute(DefaultSavedRequestWorkflow.LOGIN_KEY);
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -202,7 +202,7 @@ public class SavedRequestWorkflowTest {
         response.sendRedirect("/context/foo");
         EasyMock.replay(response);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(new HttpServletRequestWrapper(request), response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
+        DefaultSavedRequestWorkflow srw = new DefaultSavedRequestWorkflow(new HttpServletRequestWrapper(request), response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.handle(null);
         EasyMock.verify(c, request, response, session);
     }
@@ -215,7 +215,7 @@ public class SavedRequestWorkflowTest {
         EasyMock.replay(c);
 
         HttpSession session = EasyMock.createStrictMock(HttpSession.class);
-        session.setAttribute(EasyMock.eq(SavedRequestWorkflow.LOGIN_KEY), EasyMock.eq(new SavedHttpRequest("/foo/bar?id=1", null)));
+        session.setAttribute(EasyMock.eq(DefaultSavedRequestWorkflow.LOGIN_KEY), EasyMock.eq(new SavedHttpRequest("/foo/bar?id=1", null)));
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -242,7 +242,7 @@ public class SavedRequestWorkflowTest {
         ServletObjectsHolder.clearServletRequest();
         ServletObjectsHolder.setServletRequest(wrapper);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(wrapper, response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
+        DefaultSavedRequestWorkflow srw = new DefaultSavedRequestWorkflow(wrapper, response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.handle(new NotLoggedInException(), wc);
         EasyMock.verify(c, request, response, session);
         assertTrue(called.get());
@@ -257,7 +257,7 @@ public class SavedRequestWorkflowTest {
 
         Map<String, String[]> params = map(p("id", new String[]{"1"}));
         HttpSession session = EasyMock.createStrictMock(HttpSession.class);
-        session.setAttribute(EasyMock.eq(SavedRequestWorkflow.LOGIN_KEY), EasyMock.eq(new SavedHttpRequest("/foo/bar", params)));
+        session.setAttribute(EasyMock.eq(DefaultSavedRequestWorkflow.LOGIN_KEY), EasyMock.eq(new SavedHttpRequest("/foo/bar", params)));
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -283,7 +283,7 @@ public class SavedRequestWorkflowTest {
         ServletObjectsHolder.clearServletRequest();
         ServletObjectsHolder.setServletRequest(wrapper);
 
-        SavedRequestWorkflow srw = new SavedRequestWorkflow(wrapper, response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
+        DefaultSavedRequestWorkflow srw = new DefaultSavedRequestWorkflow(wrapper, response, new DefaultSecurityConfiguration(c), new DefaultSavedRequestService());
         srw.handle(new NotLoggedInException(), wc);
         EasyMock.verify(c, request, response, session);
         assertTrue(called.get());
