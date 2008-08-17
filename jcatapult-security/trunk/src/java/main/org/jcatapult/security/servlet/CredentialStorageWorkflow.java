@@ -15,65 +15,19 @@
  */
 package org.jcatapult.security.servlet;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.servlet.Workflow;
-import org.jcatapult.servlet.WorkflowChain;
 
-import com.google.inject.Inject;
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This class provides a simple mechanism for locating an existing user
- * object using the {@link CredentialStorage} and then storing it into
- * the {@link JCatapultSecurityContextProvider}, which is the default
- * implementation of the {@link org.jcatapult.security.spi.EnhancedSecurityContextProvider}.
+ * This interface defines the credential storage workflow that is used to
+ * load and store credentials from a persistent storage location, i.e. the
+ * session.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class CredentialStorageWorkflow implements Workflow {
-    private final HttpServletRequest request;
-    private final CredentialStorage credentialStorage;
-
-    @Inject
-    public CredentialStorageWorkflow(HttpServletRequest request, CredentialStorage credentialStorage) {
-        this.request = request;
-        this.credentialStorage = credentialStorage;
-    }
-
-    /**
-     * Looks up the user from the {@link CredentialStorage} and saves it to the context if it exists. In
-     * either case, it calls the chain to proceed.
-     *
-     * @param   chain The workflow chain.
-     * @throws  IOException If the chain throws.
-     * @throws  ServletException If the chain throws.
-     */
-    public void perform(WorkflowChain chain) throws IOException, ServletException {
-        Object userObject = credentialStorage.locate(request);
-        boolean existing = (userObject != null);
-        if (existing) {
-            EnhancedSecurityContext.login(userObject);
-        } else {
-            EnhancedSecurityContext.logout();
-        }
-
-        try {
-            chain.continueWorkflow();
-        } finally {
-            // If the user didn't exist before and now it does, store it.
-            if (!existing && EnhancedSecurityContext.getCurrentUser() != null) {
-                credentialStorage.store(EnhancedSecurityContext.getCurrentUser(), request);
-            } else if (existing && EnhancedSecurityContext.getCurrentUser() == null) {
-                credentialStorage.remove(request);
-            }
-        }
-    }
-
-    public void destroy() {
-    }
+@ImplementedBy(DefaultCredentialStorageWorkflow.class)
+public interface CredentialStorageWorkflow extends Workflow {
 }

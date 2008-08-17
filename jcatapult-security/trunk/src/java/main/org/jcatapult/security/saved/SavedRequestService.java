@@ -22,7 +22,7 @@ import com.google.inject.ImplementedBy;
 /**
  * <p>
  * This interface defines the service methods to handling Saved HTTP
- * requests. This is used by the {@link org.jcatapult.security.servlet.saved.SavedRequestWorkflow}
+ * requests. This is used by the {@link org.jcatapult.security.servlet.saved.DefaultSavedRequestWorkflow}
  * but can also be used by registration services for applications that
  * would like to also handle Saved HTTP requests.
  * </p>

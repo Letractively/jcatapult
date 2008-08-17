@@ -34,7 +34,7 @@ import org.junit.Test;
  *
  * @author Brian Pontarelli
  */
-public class CredentialStorageWorkflowTest {
+public class DefaultCredentialStorageWorkflowTest {
     @Test
     public void testExisting() throws IOException, ServletException {
         Object user = new Object();
@@ -56,7 +56,7 @@ public class CredentialStorageWorkflowTest {
             }
         };
 
-        CredentialStorageWorkflow csw = new CredentialStorageWorkflow(request, cs);
+        DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
         csw.perform(wc);
         assertTrue(called.get());
         EasyMock.verify(request, cs);
@@ -85,7 +85,7 @@ public class CredentialStorageWorkflowTest {
             }
         };
 
-        CredentialStorageWorkflow csw = new CredentialStorageWorkflow(request, cs);
+        DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
         csw.perform(wc);
         assertTrue(called.get());
         EasyMock.verify(request, cs);
@@ -114,7 +114,7 @@ public class CredentialStorageWorkflowTest {
             }
         };
 
-        CredentialStorageWorkflow csw = new CredentialStorageWorkflow(request, cs);
+        DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
         csw.perform(wc);
         assertNull(EnhancedSecurityContext.getCurrentUser());
         assertTrue(called.get());

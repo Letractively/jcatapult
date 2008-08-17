@@ -15,69 +15,18 @@
  */
 package org.jcatapult.security.servlet.login;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.jcatapult.security.JCatapultSecurityException;
-import org.jcatapult.security.config.SecurityConfiguration;
-import org.jcatapult.security.login.LoginService;
 import org.jcatapult.servlet.Workflow;
-import org.jcatapult.servlet.WorkflowChain;
 
-import com.google.inject.Inject;
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This workflow logs the user into an application if the incoming URI
- * is the correct URI and the username and password are correct for
- * the user.
+ * This workflow defines the portion of the security processing that
+ * logins the user into the application.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class LoginWorkflow implements Workflow {
-    private final HttpServletRequest request;
-    private final LoginService loginService;
-    private final LoginExceptionHandler exceptionHandler;
-    private final PostLoginHandler loginHandler;
-    private final String loginURI;
-    private final String userNameParameter;
-    private final String passwordParameter;
-
-    @Inject
-    public LoginWorkflow(HttpServletRequest request, LoginService loginService,
-            SecurityConfiguration configuration, LoginExceptionHandler exceptionHandler,
-            PostLoginHandler loginHandler) {
-        this.request = request;
-        this.loginService = loginService;
-        this.exceptionHandler = exceptionHandler;
-        this.loginHandler = loginHandler;
-        this.loginURI = configuration.getLoginURI();
-        this.userNameParameter = configuration.getUsernameParameter();
-        this.passwordParameter = configuration.getPasswordParameter();
-    }
-
-    public void perform(WorkflowChain chain) throws IOException, ServletException {
-        if (request.getRequestURI().equals(loginURI)) {
-            String userName = request.getParameter(userNameParameter);
-            String password = request.getParameter(passwordParameter);
-            if (userName == null || password == null) {
-                throw new ServletException("The login form must have a username and password field named " +
-                    "[" + userNameParameter + "] and [" + passwordParameter + "] respectively.");
-            }
-
-            try {
-                loginService.login(userName, password, request.getParameterMap());
-                loginHandler.handle(chain);
-            } catch (JCatapultSecurityException e) {
-                exceptionHandler.handle(e, chain);
-            }
-        } else {
-            chain.continueWorkflow();
-        }
-    }
-
-    public void destroy() {
-    }
+@ImplementedBy(DefaultLoginWorkflow.class)
+public interface LoginWorkflow extends Workflow {
 }

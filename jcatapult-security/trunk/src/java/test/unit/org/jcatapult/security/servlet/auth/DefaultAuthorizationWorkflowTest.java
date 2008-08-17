@@ -35,7 +35,7 @@ import org.junit.Test;
  *
  * @author  Brian Pontarelli
  */
-public class AuthorizationWorkflowTest {
+public class DefaultAuthorizationWorkflowTest {
     @Test
     public void testUnauthorized() throws IOException, ServletException {
         Object user = new Object();
@@ -57,7 +57,7 @@ public class AuthorizationWorkflowTest {
         aeh.handle(ue, null);
         EasyMock.replay(aeh);
 
-        AuthorizationWorkflow aw = new AuthorizationWorkflow(request, a, null, aeh);
+        DefaultAuthorizationWorkflow aw = new DefaultAuthorizationWorkflow(request, a, null, aeh);
         aw.perform(null);
         EasyMock.verify(a, request, aeh);
     }
@@ -83,7 +83,7 @@ public class AuthorizationWorkflowTest {
         nlih.handle(nlie, null);
         EasyMock.replay(nlih);
 
-        AuthorizationWorkflow aw = new AuthorizationWorkflow(request, a, nlih, null);
+        DefaultAuthorizationWorkflow aw = new DefaultAuthorizationWorkflow(request, a, nlih, null);
         aw.perform(null);
         EasyMock.verify(a, request, nlih);
     }
@@ -107,7 +107,7 @@ public class AuthorizationWorkflowTest {
         EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
         EnhancedSecurityContext.login(user);
 
-        AuthorizationWorkflow aw = new AuthorizationWorkflow(request, a, null, null);
+        DefaultAuthorizationWorkflow aw = new DefaultAuthorizationWorkflow(request, a, null, null);
         aw.perform(wc);
         EasyMock.verify(a, request);
     }
