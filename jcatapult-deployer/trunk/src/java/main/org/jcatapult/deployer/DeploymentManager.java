@@ -177,6 +177,9 @@ public class DeploymentManager {
             // query user for input
             DeploymentInfo deploymentInfo = cliManager.manage(props, project);
 
+            // set the deploy props into the deployment info bean
+            deploymentInfo.setDeploy(props);
+
             // validate that the deployer domain dir exists
             File deploymentDomainDir = new File(DEPLOY_ROOT_DIR, deploymentInfo.getDeployDomain());
             if (!(deploymentDomainDir.exists() && deploymentDomainDir.isDirectory())) {
