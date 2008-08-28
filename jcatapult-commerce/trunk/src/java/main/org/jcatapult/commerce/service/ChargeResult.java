@@ -25,22 +25,31 @@ package org.jcatapult.commerce.service;
 public class ChargeResult {
     private final String transactionID;
     private final CommerceError error;
-    private final String gatewayResponseCode;
-    private final String gatewayApprovalCode;
-    private final String gatewayErrorCode;
+    private final int gatewayResponseCode;
+    private final int gatewayErrorCode;
     private final String gatewayErrorMessage;
+    private final String gatewayApprovalCode;
     private final String gatewayAVSCode;
 
-    public ChargeResult(String transactionID, CommerceError error, String gatewayResponseCode,
-            String gatewayApprovalCode, String gatewayErrorCode, String gatewayErrorMessage,
-            String gatewayAVSCode) {
+    public ChargeResult(String transactionID, String gatewayApprovalCode, String gatewayAVSCode) {
         this.transactionID = transactionID;
-        this.error = error;
-        this.gatewayResponseCode = gatewayResponseCode;
         this.gatewayApprovalCode = gatewayApprovalCode;
-        this.gatewayErrorCode = gatewayErrorCode;
-        this.gatewayErrorMessage = gatewayErrorMessage;
         this.gatewayAVSCode = gatewayAVSCode;
+        this.gatewayResponseCode = 1;
+        this.gatewayErrorCode = -1;
+        this.gatewayErrorMessage = null;
+        this.error = null;
+    }
+
+    public ChargeResult(CommerceError error, int gatewayErrorCode, String gatewayErrorMessage,
+            int gatewayResponseCode, String gatewayAVSCode) {
+        this.gatewayResponseCode = gatewayResponseCode;
+        this.gatewayAVSCode = gatewayAVSCode;
+        this.gatewayErrorMessage = gatewayErrorMessage;
+        this.gatewayErrorCode = gatewayErrorCode;
+        this.error = error;
+        this.gatewayApprovalCode = null;
+        this.transactionID = null;
     }
 
     /**
@@ -62,7 +71,7 @@ public class ChargeResult {
     /**
      * @return  Gateway specific response code.
      */
-    public String getGatewayResponseCode() {
+    public int getGatewayResponseCode() {
         return gatewayResponseCode;
     }
 
@@ -76,7 +85,7 @@ public class ChargeResult {
     /**
      * @return  Gateway specific error code or null if the transaction was successful.
      */
-    public String getGatewayErrorCode() {
+    public int getGatewayErrorCode() {
         return gatewayErrorCode;
     }
 
