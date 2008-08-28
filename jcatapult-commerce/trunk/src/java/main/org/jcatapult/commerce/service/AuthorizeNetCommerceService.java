@@ -172,19 +172,33 @@ public class AuthorizeNetCommerceService implements CommerceService {
         }
 
         int responseCode = Integer.valueOf(parts[0]);
-        String transactionID = null;
-        CommerceError error = null;
-        if (responseCode == 1) {
-            transactionID = parts[6];
-        } else {
-            error = getError(parts[0], parts[2], parts[3], parts[4], parts[5]);
-        }
+        int reasonCode = Integer.valueOf(parts[2]);
+        String reasonText = parts[3];
+        String authCode = parts[4];
+        String avsCode = parts[5];
+        String txnID = parts[6];
 
         if (verify) {
+            CommerceError error = null;
+            if (responseCode == 2) {
+                error = CommerceError.DECLINED;
+            } else if (responseCode == 3) {
+                error = getError(reasonCode);
+            }
+
             return new VerifyResult(error);
         }
 
-        return new ChargeResult(transactionID, error, parts[0], parts[2], parts[3], parts[4], parts[5]);
+        ChargeResult result;
+        if (responseCode == 1) {
+            result = new ChargeResult(txnID, authCode, avsCode);
+        } else if (responseCode == 2) {
+            result = new ChargeResult(CommerceError.DECLINED, reasonCode, reasonText, responseCode, avsCode);
+        } else {
+            result = new ChargeResult(getError(reasonCode), reasonCode, reasonText, responseCode, avsCode);
+        }
+
+        return result;
     }
 
     private String[] split(String response) {
@@ -210,17 +224,8 @@ public class AuthorizeNetCommerceService implements CommerceService {
         return values.toArray(new String[values.size()]);
     }
 
-    private CommerceError getError(String responseCode, String reasonCode, String reasonText,
-            String approvalCode, String avsCode) {
-        logger.info("Response from AIM code [" + responseCode + "] reasonCode [" + reasonCode +
-            "] reasonText [" + reasonText + "] approvalCode [" + approvalCode + "] [" + avsCode + "]");
-
-        int rc = Integer.valueOf(reasonCode);
-        if (Integer.valueOf(responseCode) == 2) {
-            return CommerceError.DECLINED;
-        }
-
-        switch (rc) {
+    private CommerceError getError(int reasonCode) {
+        switch (reasonCode) {
             case 5:
                 logger.severe("Amount got jacked up or something! FIX THIS!");
                 // TODO raise alarm!
