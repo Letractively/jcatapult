@@ -185,6 +185,47 @@ public class CreditCard implements Serializable {
         return false;
     }
 
+    /**
+     * Compares the address to the object for equality. This comparison uses the number, expiration
+     * month and year, first and last names, and the address.
+     *
+     * @param   o The object to compare against.
+     * @return  True if the object is a CreditCard and it is equal.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CreditCard)) return false;
+
+        CreditCard that = (CreditCard) o;
+
+        if (!address.equals(that.address)) return false;
+        if (!expirationMonth.equals(that.expirationMonth)) return false;
+        if (!expirationYear.equals(that.expirationYear)) return false;
+        if (!firstName.equals(that.firstName)) return false;
+        if (!lastName.equals(that.lastName)) return false;
+        if (!number.equals(that.number)) return false;
+
+        return true;
+    }
+
+    /**
+     * Generates a hash code using the number, expiration month and year, first and last names, and
+     * the address.
+     *
+     * @return  The hash code.
+     */
+    @Override
+    public int hashCode() {
+        int result = number.hashCode();
+        result = 31 * result + expirationMonth.hashCode();
+        result = 31 * result + expirationYear.hashCode();
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + address.hashCode();
+        return result;
+    }
+
     private static int[] lookup = {0, 2, 4, 6, 8, 1, 3, 5, 7, 9};
 
     private boolean isValid(String number) {
@@ -203,4 +244,5 @@ public class CreditCard implements Serializable {
 
         return (sum % 10 == 0);
     }
+
 }

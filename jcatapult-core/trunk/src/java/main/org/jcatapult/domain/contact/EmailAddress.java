@@ -113,6 +113,13 @@ public class EmailAddress implements Serializable {
         return address.split("@")[0];
     }
 
+    /**
+     * Compares the email to the given object for equality. This only compares the address fields.
+     *
+     * @param   o The object to compare for equality.
+     * @return  The if the object is an email and is equal.
+     */
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -124,6 +131,12 @@ public class EmailAddress implements Serializable {
         return true;
     }
 
+    /**
+     * Generates a hash code from the address field.
+     *
+     * @return  The hashcode.
+     */
+    @Override
     public int hashCode() {
         return address.hashCode();
     }
