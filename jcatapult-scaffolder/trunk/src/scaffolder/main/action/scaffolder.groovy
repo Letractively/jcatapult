@@ -24,6 +24,13 @@ public class ActionScaffolder extends AbstractScaffolder {
       System.exit(1);
     }
 
+    String jsonStr = ask("Does this action return JSON (yes/no)?", "", "Invalid response", "yes");
+    while (!jsonStr.equals("yes") && !jsonStr.equals("no")) {
+      println("Invalid response");
+      jsonStr = ask("Does this action return JSON (yes/no)?", "", "Invalid response", "yes");
+    }
+    boolean json = jsonStr.equals("yes");
+
     String pkgName = actionPackage(uri);
     String action = actionClass(uri);
     String actionTest = action + "Test";
@@ -53,7 +60,7 @@ public class ActionScaffolder extends AbstractScaffolder {
       }
     }
 
-    executeTemplates(uri, pkgName, action, result);
+    executeTemplates(uri, pkgName, action, result, json);
   }
 
   private String actionPackage(String uri) {
@@ -73,22 +80,24 @@ public class ActionScaffolder extends AbstractScaffolder {
     char[] ca = str.toCharArray();
     boolean dash = false;
     ca.each { c ->
-      if (dash) {
+      if (c == '-') {
+        dash = true;
+      } else if (dash) {
         build.append(Character.toUpperCase(c));
+        dash = false;
       } else {
         build.append(c);
+        dash = false;
       }
-
-      dash = (c == '-');
     }
 
     return build.toString().replace("/", ".");
   }
 
-  private void executeTemplates(String uri, String pkgName, String className, String result) {
+  private void executeTemplates(String uri, String pkgName, String className, String result, boolean json) {
 
     // Create the index action
-    def params = [uri: uri, pkgName: pkgName, className: className];
+    def params = [uri: uri, pkgName: pkgName, className: className, json: json];
 
     // Make the directory for all the actions
     String mainDirName = "src/java/main/" + pkgName.replace(".", "/") + "/";
