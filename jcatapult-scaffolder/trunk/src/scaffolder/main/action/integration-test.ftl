@@ -1,9 +1,11 @@
+[#ftl/]
 package ${pkgName};
 
 import java.io.IOException;
 import javax.servlet.ServletException;
 
 import org.jcatapult.mvc.test.WebappTestRunner;
+import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -14,7 +16,7 @@ import org.junit.Test;
  *
  * @author Brian Pontarelli
  */
-public class ${className}IntegrationTest {
+public class ${className}IntegrationTest extends JCatapultBaseTest {
     @Test
     public void testExecute() throws IOException, ServletException {
         WebappTestRunner runner = new WebappTestRunner();
@@ -23,6 +25,10 @@ public class ${className}IntegrationTest {
             post();
 
         String result = runner.response.getStream().toString();
+        [#if json]
+        assertTrue(result.contains("\"success\": true"));
+        [#else]
         assertTrue(result.contains("<html>"));
+        [/#if]
     }
 }
