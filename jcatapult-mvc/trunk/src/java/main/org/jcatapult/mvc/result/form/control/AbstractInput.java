@@ -21,7 +21,6 @@ import org.jcatapult.l10n.MessageProvider;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.result.control.AbstractControl;
-import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 
 import com.google.inject.Inject;
 
@@ -94,8 +93,8 @@ public abstract class AbstractInput extends AbstractControl {
     @Override
     protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
         Map<String, Object> map = super.makeParameters(attributes, dynamicAttributes);
-        String name = (String) attributes.get("name");
         if (labeled) {
+            String name = (String) attributes.get("name");
             String bundleName = determineBundleName(attributes);
             if (bundleName == null) {
                 throw new IllegalStateException("Unable to locate the label message for the field named [" +
@@ -104,12 +103,26 @@ public abstract class AbstractInput extends AbstractControl {
                     "form tag.");
             }
 
-            String label = messageProvider.getMessage(bundleName, name, locale, dynamicAttributes);
-            if (label != null) {
-                map.put("label", label);
-            } else {
-                throw new IllegalStateException("Missing localized label for the field named [" + name + "]");
+            String labelKey = (String) attributes.remove("labelKey");
+            String label = null;
+            if (labelKey != null) {
+                label = messageProvider.getMessage(bundleName, labelKey, locale, dynamicAttributes);
             }
+
+            if (label == null) {
+                label = messageProvider.getMessage(bundleName, name, locale, dynamicAttributes);
+            }
+
+            if (label == null) {
+                throw new IllegalStateException("Missing localized label for the field named [" +
+                    name + "]. You must define the label in the resource bundle under under the " +
+                    "key [" + name + "], which is the name of the field, or using the [labelKey] " +
+                    "attribute " + (labelKey != null ? "(which is currently set to [" + labelKey + "] " +
+                    "but there is no label in for that key in the resource bundle) " : "") + "to " +
+                    "specify an alternate key into the resource bundle.");
+            }
+
+            map.put("label", label);
 
             // Add the field messages and errors as a list or null
             map.put("field_messages", messageStore.getFieldMessages(MessageType.PLAIN).get(name));
