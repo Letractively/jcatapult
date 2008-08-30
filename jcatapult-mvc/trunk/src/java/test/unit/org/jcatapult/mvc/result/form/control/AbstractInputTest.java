@@ -77,7 +77,7 @@ public class AbstractInputTest extends AbstractControlTest {
      * @param   action The action or null.
      * @param   template The name of the template.
      * @param   bundle The bundle for the message provider.
-     * @param   key The key passed to the message provider.
+     * @param   key The key passed to the message provider when looking for the label.
      * @param   message The message returned from the message provider.
      * @param   attributes The attributes passed to the control.
      * @param   result The expected result.
@@ -87,7 +87,7 @@ public class AbstractInputTest extends AbstractControlTest {
             String message, Map<String, Object> attributes, String result, String... errors) {
         HttpServletRequest request = makeRequest(!attributes.containsKey("bundle"));
         ActionInvocationStore ais = makeActionInvocationStore(action, "/test");
-        MessageStore ms = makeFieldMessageStore(true, key, errors);
+        MessageStore ms = makeFieldMessageStore(true, (String) attributes.get("name"), errors);
         Configuration configuration = makeConfiguration();
         EnvironmentResolver env = makeEnvironmenResolver();
         ContainerResolver containerResolver = makeContainerResolver(template);

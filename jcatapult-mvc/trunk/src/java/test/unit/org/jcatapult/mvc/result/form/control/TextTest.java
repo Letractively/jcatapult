@@ -124,4 +124,22 @@ public class TextTest extends AbstractInputTest {
             "</div>\n", "Name is required", "Name must be cool");
         EasyMock.verify(ee);
     }
+
+    @Test
+    public void testLabelKey() {
+        Edit action = new Edit();
+        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.expect(ee.getValue("user.name", action, map("param", "param-value"))).andReturn("Barry");
+        EasyMock.replay(ee);
+
+        AbstractInput input = new Text(ee);
+        run(input, action, "text", "org.example.action.user.Edit", "label-key", "Your name",
+            mapNV("name", "user.name", "class", "css-class", "labelKey", "label-key"),
+            "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
+            "</div>\n", "Name is required", "Name must be cool");
+        EasyMock.verify(ee);
+    }
 }
