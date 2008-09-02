@@ -31,7 +31,34 @@ import org.jcatapult.deployer.net.SSHExec;
 public abstract class BaseDeployer implements Deployer {
 
     /**
-     * <p>Perfrms a secure copy</p>
+     * <p>Perfrms a secure copy.  This method should be used if a port other than the default 22 is desired</p>
+     *
+     * @param host the host to scp to
+     * @param port the port.  If zero is specified, the port defaults to 22.
+     * @param username the username of the host account
+     * @param password the password associated to the host account
+     * @param file the file to scp
+     * @param to the directory to scp to
+     */
+    public void scp(String host, int port, String username, String password, File file, String to) {
+
+        System.out.print("SCPing [" + file.getAbsolutePath() + "] to host [" + host + "]...");
+
+        SSHOptions options = new SSHOptions();
+        options.host = host;
+        options.username = username;
+        options.password = password;
+        if (port > 0) {
+            options.port = port;
+        }
+        new SCP(options).execute(file, to);
+
+        System.out.println("done.");
+
+    }
+
+    /**
+     * <p>Perfrms a secure copy.  This method should be used if the default port, 22, is desired</p>
      *
      * @param host the host to scp to
      * @param username the username of the host account
@@ -40,21 +67,36 @@ public abstract class BaseDeployer implements Deployer {
      * @param to the directory to scp to
      */
     public void scp(String host, String username, String password, File file, String to) {
-
-        System.out.print("SCPing [" + file.getAbsolutePath() + "] to host [" + host + "]...");
-
-        SSHOptions options = new SSHOptions();
-        options.host = host;
-        options.username = username;
-        options.password = password;
-        new SCP(options).execute(file, to);
-
-        System.out.println("done.");
-
+        scp(host, 0, username, password, file, to);
     }
 
     /**
-     * <p>Executes a command via SSH</p>
+     * <p>Executes a command via SSH.  This method should be used if a port other than the default 22 is desired</p>
+     *
+     * @param host the host
+     * @param port the port
+     * @param username the host username
+     * @param password the username password
+     * @param command the command to execute
+     * @return the result of the executed command
+     */
+    public String sshExec(String host, int port, String username, String password, String command) {
+
+        System.out.println("Executing [" + command + "] on host [" + host + "]");
+
+        SSHOptions options = new SSHOptions();
+        options.host = host;
+        if (port > 0) {
+            options.port = port;
+        }
+        options.username = username;
+        options.password = password;
+
+        return new SSHExec(options).execute(command);
+    }
+
+    /**
+     * <p>Executes a command via SSH.  This method should be used if the default port, 22, is desired</p>
      *
      * @param host the host
      * @param username the host username
@@ -63,14 +105,6 @@ public abstract class BaseDeployer implements Deployer {
      * @return the result of the executed command
      */
     public String sshExec(String host, String username, String password, String command) {
-
-        System.out.println("Executing [" + command + "] on host [" + host + "]");
-
-        SSHOptions options = new SSHOptions();
-        options.host = host;
-        options.username = username;
-        options.password = password;
-
-        return new SSHExec(options).execute(command);
+        return sshExec(host, 0, username, password, command);
     }
 }
