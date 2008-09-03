@@ -18,6 +18,7 @@ package org.jcatapult.mvc.parameter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletException;
@@ -83,6 +84,12 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
             // Next, process them
             for (String key : structs.keySet()) {
                 Struct struct = structs.get(key);
+
+                // If there are no values to set, skip it
+                if (struct.values == null) {
+                    continue;
+                }
+
                 try {
                     expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
                 } catch (ConversionException ce) {
@@ -117,7 +124,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         Map<String, String[]> checkBoxes = new HashMap<String, String[]>();
         Map<String, String[]> radioButtons = new HashMap<String, String[]>();
         Set<String> actions = new HashSet<String>();
-        Map<String, Struct> structs = new HashMap<String, Struct>();
+        Map<String, Struct> structs = new LinkedHashMap<String, Struct>();
         for (String key : parameters.keySet()) {
             if (key.startsWith(CHECKBOX_PREFIX)) {
                 checkBoxes.put(key.substring(CHECKBOX_PREFIX.length()), parameters.get(key));

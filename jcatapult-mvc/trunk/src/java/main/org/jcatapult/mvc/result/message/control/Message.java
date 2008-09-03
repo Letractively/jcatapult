@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jcatapult.l10n.MessageProvider;
+import org.jcatapult.l10n.MissingMessageException;
 import org.jcatapult.mvc.result.control.AbstractControl;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 
@@ -41,7 +42,7 @@ import static net.java.util.CollectionTools.*;
  */
 @ControlAttributes(
     required = {"key"},
-    optional = {"bundle"}
+    optional = {"bundle", "default"}
 )
 public class Message extends AbstractControl implements TemplateMethodModel, TemplateDirectiveModel {
     private final MessageProvider messageProvider;
@@ -66,8 +67,20 @@ public class Message extends AbstractControl implements TemplateMethodModel, Tem
         }
 
         String key = (String) attributes.remove("key");
+        String defaultMesg = (String) attributes.remove("default");
 
-        String message = messageProvider.getMessage(bundle, key);
+        String message;
+        try {
+            message = messageProvider.getMessage(bundle, key);
+        } catch (MissingMessageException e) {
+            message = defaultMesg;
+        }
+
+        if (message == null) {
+            throw new IllegalStateException("The message for the key [" + key + "] is missing and " +
+                "there was no default set using the [default] attribute.");
+        }
+        
         attributes.put("message", message);
     }
 

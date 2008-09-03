@@ -17,6 +17,7 @@ package org.jcatapult.mvc.parameter;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,18 +50,18 @@ public class DefaultParameterWorkflowTest {
     public void testSimpleParameters() throws IOException, ServletException {
         Action action = new Action();
 
-        Map<String, String[]> values = new HashMap<String, String[]>();
+        Map<String, String[]> values = new LinkedHashMap<String, String[]>();
         values.put("user.addresses['home'].city", array("Boulder"));
         values.put("user.age", array("32"));
-        values.put("user.inches", array("tall"));
         values.put("user.age@dateFormat", array("MM/dd/yyyy"));
+        values.put("user.inches", array("tall"));
         values.put("user.name", array("")); // This should be stripped out and the ExpressionEvaluator never called for it
 
         final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getParameterMap()).andReturn(values);
         EasyMock.replay(request);
 
-        ExpressionEvaluator expressionEvaluator = EasyMock.createNiceMock(ExpressionEvaluator.class);
+        ExpressionEvaluator expressionEvaluator = EasyMock.createStrictMock(ExpressionEvaluator.class);
         expressionEvaluator.setValue(eq("user.addresses['home'].city"), same(action), aryEq(array("Boulder")), eq(new HashMap<String, String>()));
         expressionEvaluator.setValue(eq("user.age"), same(action), aryEq(array("32")), eq(map("dateFormat", "MM/dd/yyyy")));
         expressionEvaluator.setValue(eq("user.inches"), same(action), aryEq(array("tall")), eq(new HashMap<String, String>()));
@@ -107,9 +108,7 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(request);
 
         ExpressionEvaluator expressionEvaluator = EasyMock.createNiceMock(ExpressionEvaluator.class);
-        expressionEvaluator.setValue(eq("user.checkbox['null']"), same(action), eq((String[]) null), eq(new HashMap<String, String>()));
         expressionEvaluator.setValue(eq("user.checkbox['default']"), same(action), aryEq(array("false")), eq(new HashMap<String, String>()));
-        expressionEvaluator.setValue(eq("user.radio['null']"), same(action), eq((String[]) null), eq(new HashMap<String, String>()));
         expressionEvaluator.setValue(eq("user.radio['default']"), same(action), aryEq(array("false")), eq(new HashMap<String, String>()));
         EasyMock.replay(expressionEvaluator);
 
