@@ -54,21 +54,6 @@ public class Environment implements Validatable {
                 "wish to deploy to.\nex: <environment name=\"staging\">");
         }
 
-        if (StringTools.isEmpty(host)) {
-            errorList.addError("The deploy xml configuration file 'environment' descriptor content must contain a 'host' descriptor with the content set to the host" +
-                "you are deploying to.\nex: <host>staging.jatapult.org</host>");
-        }
-
-        if (StringTools.isEmpty(hostUsername)) {
-            errorList.addError("The deploy xml configuration file 'environment' descriptor content must contain a 'host-username' descriptor with the content set to the username" +
-                "of the host you are deploying to.\nex: <host-username>staging-username</host-username>");
-        }
-
-        if (StringTools.isEmpty(hostPassword)) {
-            errorList.addError("The deploy xml configuration file 'environment' descriptor content must contain a 'host-password' descriptor with the content set to the password" +
-                "of the host-username.\nex: <host-password>staging-password</host-password>");
-        }
-
         return errorList;
     }
 
