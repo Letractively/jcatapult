@@ -38,25 +38,25 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         this.cjs = cjs;
     }
 
-//    @Test
-//    public void testProject1HighestVersion() {
-//        ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-//
-//        Version highest = sortStrat.determineHighestScriptVersion(getProjectArtifact("project1", null));
-//
-//        Assert.assertEquals(new Version("1.1"), highest);
-//    }
-
-//    @Test
-//    public void testModule1HighestVersion() throws IOException {
-//        ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
-//
-//        Version highest = sortStrat.determineHighestScriptVersion(getModuleArtifact("module1", "1.2", new Version("0.0.0"), cjs));
-//
-//        Assert.assertEquals(new Version("1.2"), highest);
-//    }
-
     @Test
+    public void testProject6Sort() {
+        {
+            ArtifactScriptVersionSortStrategyImpl sortStrat = new ArtifactScriptVersionSortStrategyImpl();
+            Queue<SQLScript> scripts = sortStrat.sort(getProjectArtifact("project6", null), false);
+            Assert.assertEquals("tables.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.0-A1-seed.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.0-A2-alter-something.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.0-A2-seed.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.0-A3.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.0-B1-seed.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.0-M1-seed.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.0-RC1-seed.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.0-anAlter.sql", scripts.remove().getFilename());
+            Assert.assertEquals("1.0-aSeed.sql", scripts.remove().getFilename());
+        }
+    }
+
+//    @Test
     public void testProject1Sort() {
 
         // test with database version set to null
@@ -103,7 +103,7 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         }
     }
 
-    @Test
+//    @Test
     public void testModule1Sort() throws IOException {
 
         // test with database version set to null
@@ -167,7 +167,7 @@ public class ArtifactScriptVersionSortStrategyImplTest extends BaseTest {
         }
     }
 
-    @Test
+//    @Test
     public void testModule1SortSeedOnly() throws IOException {
 
         // test with database version set to null

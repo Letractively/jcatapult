@@ -27,6 +27,7 @@ import org.jcatapult.dbmgr.domain.ProjectContext;
 import org.jcatapult.dbmgr.domain.SQLScript;
 import org.jcatapult.dbmgr.domain.SQLScriptType;
 import static org.jcatapult.dbmgr.domain.SQLScriptType.*;
+import org.jcatapult.dbmgr.utils.ScriptUtils;
 
 /**
  * Service to interact with JCatapult Project {@link org.jcatapult.dbmgr.domain.Artifact} objects
@@ -78,7 +79,6 @@ public class ProjectArtifactService extends BaseArtifactService {
         // iterate through all the sql files
         for (File sqlFile : sqlFiles) {
             SQLScript sqlScript = new SQLScript();
-            sqlScript.setFilename(sqlFile.getName());
 
             // set the input stream.  if this throws an exception,
             // treat this as a critical error and throw a runtime exception.
@@ -91,7 +91,7 @@ public class ProjectArtifactService extends BaseArtifactService {
 
             sqlScript.setFilename(sqlFile.getName());
             sqlScript.setType(type);
-            sqlScript.setVersion(extractVersion(sqlScript.getFilename()));
+            sqlScript.setVersion(ScriptUtils.extractVersionFromFileName(sqlScript.getFilename()));
 
             // add to set
             sqlScripts.add(sqlScript);
