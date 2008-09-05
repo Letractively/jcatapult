@@ -68,7 +68,7 @@ Seed files are placed into the _src/db/main/seed_ directory. The seed files them
 1.0-seed-user-data.sql
 }}}
 
-The only part of the name that is required by JCatapult is the version. The rest can be anything you like.
+The only part of the name that is required by JCatapult is the version and that it end with '.sql'. The rest can be anything you like.
 
 Seed files should contain valid SQL insert, update and/or delete statements that setup the data in database so that it is usable by the application. These files should not change the database structure at all. We cover changing the structure later.
 
