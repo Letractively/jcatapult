@@ -29,23 +29,4 @@ public abstract class BaseArtifactService implements ArtifactService {
 
     private static final Logger logger = Logger.getLogger(BaseArtifactService.class.getName());
 
-    /**
-     * Extracts the version number from the sql seed and patch scripts
-     *
-     * @param filename the sql filename
-     * @return Version object
-     */
-    protected Version extractVersion(String filename) {
-        String versionStr = filename.split("-", 2)[0];
-
-        // since tables.sql is versionless, assign Version.ZERO as it's version.  This will insure
-        // that it's always at the front of the sorted set of sql scripts (if applicable)
-        if (versionStr.equals("tables.sql")) {
-            Version v = Version.ZERO;
-            logger.finest("The tables.sql script is versionless and, therefore, has been assigned version [" + v + "]");
-            return v;
-        }
-        logger.finest("Extracted version string [" + versionStr + "] from sql script filename [" + filename + "]");
-        return new Version(versionStr);
-    }
 }

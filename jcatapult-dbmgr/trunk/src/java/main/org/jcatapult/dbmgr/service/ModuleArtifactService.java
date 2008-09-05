@@ -28,6 +28,7 @@ import org.jcatapult.dbmgr.domain.ModuleJar;
 import org.jcatapult.dbmgr.domain.SQLScript;
 import org.jcatapult.dbmgr.domain.SQLScriptType;
 import static org.jcatapult.dbmgr.domain.SQLScriptType.*;
+import org.jcatapult.dbmgr.utils.ScriptUtils;
 
 /**
  * Service to interact with JCatapult Module {@link org.jcatapult.dbmgr.domain.Artifact} objects
@@ -91,7 +92,7 @@ public class ModuleArtifactService extends BaseArtifactService {
             String filename = jarEntry.getName().substring(index + 1);
             sqlScript.setFilename(filename);
             sqlScript.setType(type);
-            sqlScript.setVersion(extractVersion(sqlScript.getFilename()));
+            sqlScript.setVersion(ScriptUtils.extractVersionFromFileName(sqlScript.getFilename()));
 
             // add script to set
             sqlScripts.add(sqlScript);
