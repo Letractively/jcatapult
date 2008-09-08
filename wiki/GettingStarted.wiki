@@ -5,6 +5,10 @@
 
 This document describes how to get up and running with JCatapult.
 
+= Java =
+
+JCatapult requires Java version 6 (1.6) to use. You can download that from Sun's Java website at http://java.sun.com or use the standard method for your operating system. For example, OS X provides Java 6 downloads from the developer site and Linux has most JDKs in their repositories (via apt or yum).
+
 = JCatapult Distribution Installation =
   * Download the most current version of the JCatapult Distribution from the [http://code.google.com/p/jcatapult/downloads/list Downloads] page.
 
@@ -21,7 +25,7 @@ After you download and install Ant, please create an ANT_HOME environment variab
 = Tomcat =
 
 == Installation ==
-Currently, JCatapult requires the use of Tomcat 5.5 or later for running applications in development. This will change in the future to support Jetty and many other application servers. For now, though, you will need to download Apache Tomcat from http://tomcat.apache.org. Tomcat requires that you configure the CATALINA_HOME environment variable to point to the Tomcat installation directory.
+Currently, JCatapult requires the use of Tomcat 5.5 (Tomcat 6.0 will not work with JCatapult yet) for running applications in development. This will change in the future to support Jetty and many other application servers. For now, though, you will need to download Apache Tomcat from http://tomcat.apache.org. Tomcat requires that you configure the CATALINA_HOME environment variable to point to the Tomcat installation directory.
 
 *NOTE FOR WINDOWS USERS:* JCatapult requires that you install Tomcat using the non-service based installation. Running Tomcat as a Windows service will not work with JCatapult. You must use the ZIP file installation of Tomcat to work with JCatapult.
 
@@ -64,7 +68,7 @@ Because JCatapult uses JNDI to connect to MySQL and this JNDI entry is defined i
 
 == JDK 1.6 Configuration ==
 
-jCatapult requires a file named build.properties to be created inside your home directory. This file points jCatapult to the location of the JDK for the project. This allows the project to clearly define which JDK it is using (which might be different for other applications) and the JDK used to run the JCatapult Ant build system. This file should contain entries for each of the JDKs you plan to use. Here is an example:
+JCatapult requires a file named build.properties to be created inside your user home directory. This file points JCatapult to the location of the JDK for the project. This allows the project to clearly define which JDK it is using (which might be different for other applications) and the JDK used to run the JCatapult Ant build system. This file should contain entries for each of the JDKs you plan to use. Here is an example:
 
 *Linux/Unix version*
 {{{
@@ -84,7 +88,7 @@ jdk1.6=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home
 jdk1.5=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home
 }}}
 
-By default, jCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring jCatapult to use that JDK.
+By default, JCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring JCatapult to use that JDK.
 
 == Database Credential Configuration ==
 
