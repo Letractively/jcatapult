@@ -30,7 +30,7 @@ Currently, JCatapult requires the use of Tomcat 5.5 (Tomcat 6.0 will not work wi
 *NOTE FOR WINDOWS USERS:* JCatapult requires that you install Tomcat using the non-service based installation. Running Tomcat as a Windows service will not work with JCatapult. You must use the ZIP file installation of Tomcat to work with JCatapult.
 
 == SSL Configuration ==
-jCatapult assumes your webapp will require the use of SSL and as a result sets the 8443 connector by default in the jCatault Ant Tomcat-plugin server.xml file.  You must run the java keytool app in your user home to create the .keystore file if you haven't yet done so.  Refer to the tomcat [http://tomcat.apache.org/tomcat-5.5-doc/ssl-howto.html SSL Configuration HOW-TO] to create your .keystore file successfully.
+JCatapult assumes your webapp will require the use of SSL and as a result sets the 8443 connector by default in the JCatault Ant Tomcat-plugin server.xml file.  You must run the java keytool app in your user home to create the .keystore file if you haven't yet done so.  Refer to the tomcat [http://tomcat.apache.org/tomcat-5.5-doc/ssl-howto.html SSL Configuration HOW-TO] to create your .keystore file successfully.
 
 If your webapp does not require an SSL connection, then you can override the default server.xml by providing your own in your project without the 8443 connector and implementing the tomcat plugin's deploy_local_post macrodef inside your project's build.xml.  An example implementation has been provided below and assumes you will be overriding the default server.xml with one in your project located at deploy/tomcat/main/conf/server.xml
 
@@ -55,11 +55,11 @@ Currently, JCatapult requires the use of MySQL for projects that use a database.
 
 === Port ===
 
-jCatapult's databasing capabilities currently only work with MySQL's default port setting of 3306.  We recognize that some systems might already have databases configured on this port and, therefore, plan on adding support to configure this setting in the future.
+JCatapult's databasing capabilities currently only work with MySQL's default port setting of 3306.  We recognize that some systems might already have databases configured on this port and, therefore, plan on adding support to configure this setting in the future.
 
 === Environment ===
 
-It's highly recommended to create an environment variable that references the MySQL home directory and adding the mysql home bin directory to your path.  This is optional and not a requirement for jCatapult to function properly but this will make it much easier for you to run the MySQL client from the command line.
+It's highly recommended to create an environment variable that references the MySQL home directory and adding the mysql home bin directory to your path.  This is optional and not a requirement for JCatapult to function properly but this will make it much easier for you to run the MySQL client from the command line.
 
 === MySQL Connector Driver ===
 Because JCatapult uses JNDI to connect to MySQL and this JNDI entry is defined in Tomcat's context.xml, you must place the MySQL connector driver in the the tomcat installation's `common/lib` directory.  Because the version of this driver changes periodically, we recommend that you download the most current version from here -> [http://dev.mysql.com/downloads/connector/j/5.0.html]
@@ -92,7 +92,7 @@ By default, JCatapult uses JDK 6 and therefore we suggest downloading, installin
 
 == Database Credential Configuration ==
 
-In order to successfully create databases for jCatapult projects, jCatapult requires that 2 properties be defined:
+In order to successfully create databases for JCatapult projects, JCatapult requires that 2 properties be defined:
 
   * db.username
   * db.password
