@@ -1,0 +1,8 @@
+<project name="clean">
+  <target name="clean" description="Cleans out all intermediate and temp files">
+    <!-- Remove the symlink so we don't clobber crap -->
+    <unlink link="${dir.target.web}/WEB-INF/classes/WEB-INF/content" failonerror="false"/>
+    <unlink link="${dir.target.web}/component/${project.name}/${project.version}" failonerror="false"/>
+    <delete dir="${dir.target}"/>
+  </target>
+</project>
