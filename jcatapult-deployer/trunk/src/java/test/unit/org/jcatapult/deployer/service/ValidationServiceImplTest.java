@@ -79,7 +79,7 @@ public class ValidationServiceImplTest extends DeploymentBaseTest {
 
         ErrorList errorList = props.validate();
 
-        Assert.assertEquals(4, errorList.size());
+        Assert.assertEquals(1, errorList.size());
 
         testOutput(vs.validate(props));
     }
@@ -96,7 +96,7 @@ public class ValidationServiceImplTest extends DeploymentBaseTest {
 
         ErrorList errorList = props.validate();
 
-        Assert.assertEquals(3, errorList.size());
+        Assert.assertEquals(0, errorList.size());
 
         testOutput(vs.validate(props));
     }
