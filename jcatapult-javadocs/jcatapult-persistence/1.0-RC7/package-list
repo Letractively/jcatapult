@@ -1,0 +1,10 @@
+org.jcatapult.domain.commerce
+org.jcatapult.persistence
+org.jcatapult.persistence.domain
+org.jcatapult.persistence.guice
+org.jcatapult.persistence.service
+org.jcatapult.persistence.service.jpa
+org.jcatapult.persistence.servlet.jpa
+org.jcatapult.persistence.txn
+org.jcatapult.persistence.txn.annotation
+org.jcatapult.persistence.txn.jpa
