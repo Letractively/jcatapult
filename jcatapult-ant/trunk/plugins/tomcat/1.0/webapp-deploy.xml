@@ -19,6 +19,8 @@
   <dirname property="deploy.dir" file="${ant.file.webapp-deploy}"/>
   <import file="${deploy.dir}/base-deploy.xml"/>
 
+  <property name="tomcat.context.path" value="ROOT"/>
+
   <target name="-deploy-local-init"/>
 
   <target name="deploy-local" description="Deploys the application locally" depends="-deploy-local-init">
@@ -33,7 +35,7 @@
       copying the context.xml file into the Engine/Host directory and calling it ROOT, which
       tomcat assumes is the default webapp.
     -->
-    <copy file="deploy/tomcat/main/conf/context.xml" tofile="target/tomcat/conf/Catalina/localhost/ROOT.xml">
+    <copy file="deploy/tomcat/main/conf/context.xml" tofile="target/tomcat/conf/Catalina/localhost/${tomcat.context.path}.xml">
       <filterset>
         <filter token="USERNAME" value="${db.username}"/>
         <filter token="PASSWORD" value="${db.password}"/>
