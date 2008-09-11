@@ -20,6 +20,8 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.MappedSuperclass;
 
+import static net.java.lang.StringTools.isTrimmedEmpty;
+
 /**
  * <p>
  * This class is a simple address object.
@@ -32,22 +34,22 @@ import javax.persistence.MappedSuperclass;
 public class Address implements Serializable {
     private final static int serialVersionUID = 1;
 
-    @Column(nullable = false, length = 512)
+    @Column(length = 512)
     private String street;
 
-    @Column(nullable = false)
+    @Column()
     private String city;
 
-    @Column(nullable = true)
+    @Column()
     private String state;
 
-    @Column(nullable = true)
+    @Column()
     private String district;
 
-    @Column(nullable = false)
+    @Column()
     private String country;
 
-    @Column(nullable = true, name = "postal_code")
+    @Column(name = "postal_code")
     private String postalCode;
 
     public String getStreet() {
@@ -112,14 +114,15 @@ public class Address implements Serializable {
 
         Address address = (Address) o;
 
-        if (!city.equals(address.city)) return false;
-        if (!country.equals(address.country)) return false;
+        if (city != null ? !city.equals(address.city) : address.city != null) return false;
+        if (country != null ? !country.equals(address.country) : address.country != null)
+            return false;
         if (district != null ? !district.equals(address.district) : address.district != null)
             return false;
         if (postalCode != null ? !postalCode.equals(address.postalCode) : address.postalCode != null)
             return false;
         if (state != null ? !state.equals(address.state) : address.state != null) return false;
-        if (!street.equals(address.street)) return false;
+        if (street != null ? !street.equals(address.street) : address.street != null) return false;
 
         return true;
     }
@@ -131,12 +134,20 @@ public class Address implements Serializable {
      */
     @Override
     public int hashCode() {
-        int result = street.hashCode();
-        result = 31 * result + city.hashCode();
+        int result = street != null ? street.hashCode() : 0;
+        result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (district != null ? district.hashCode() : 0);
-        result = 31 * result + country.hashCode();
+        result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);
         return result;
+    }
+
+    /**
+     * @return  True if this address has any fields with data, false otherwise.
+     */
+    public boolean isContainsData() {
+        return !isTrimmedEmpty(street) || !isTrimmedEmpty(state) || !isTrimmedEmpty(district) ||
+            !isTrimmedEmpty(city) || !isTrimmedEmpty(country) || !isTrimmedEmpty(postalCode);
     }
 }

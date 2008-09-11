@@ -15,9 +15,14 @@
  */
 package org.jcatapult.l10n;
 
+import java.io.File;
 import java.util.Locale;
 import java.util.Map;
 
+import org.easymock.EasyMock;
+import org.jcatapult.config.Configuration;
+import org.jcatapult.test.servlet.MockServletContext;
+import org.jcatapult.container.ServletContainerResolver;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -33,32 +38,50 @@ import static net.java.util.CollectionTools.*;
 public class ResourceBundleMessageProviderTest {
     @Test
     public void testSearch() {
-        ResourceBundleMessageProvider provider = new ResourceBundleMessageProvider(Locale.US);
-        assertEquals("American English Message", provider.getMessage("org.jcatapult.l10n.Test", "key"));
-        assertEquals("Package Message", provider.getMessage("org.jcatapult.l10n.NonExistent", "key"));
-        assertEquals("Super Package Message", provider.getMessage("org.jcatapult.badPackage.Test", "key"));
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getLong("jcatapult.l10n.reload-check-seconds", 1)).andReturn(1l).times(2);
+        EasyMock.replay(config);
 
-        provider = new ResourceBundleMessageProvider(Locale.GERMAN);
-        assertEquals("Default Message", provider.getMessage("org.jcatapult.l10n.Test", "key"));
+        MockServletContext context = new MockServletContext(new File("src/java/test/unit"));
+
+        ResourceBundleMessageProvider provider = new ResourceBundleMessageProvider(Locale.US, new WebControl(new ServletContainerResolver(context), config));
+        assertEquals("American English Message", provider.getMessage("/l10n/Test", "key"));
+        assertEquals("Package Message", provider.getMessage("/l10n/NonExistent", "key"));
+        assertEquals("Super Package Message", provider.getMessage("/badPackage/Test", "key"));
+
+        provider = new ResourceBundleMessageProvider(Locale.GERMAN, new WebControl(new ServletContainerResolver(context), config));
+        assertEquals("Default Message", provider.getMessage("/l10n/Test", "key"));
     }
 
     @Test
     public void testFormat() {
-        Map<String, String> attributes = map("c", "c", "a", "a");
-        ResourceBundleMessageProvider provider = new ResourceBundleMessageProvider(Locale.US);
-        assertEquals("American English Message b a c", provider.getMessage("org.jcatapult.l10n.Test", "format_key", attributes, "b"));
-        assertEquals("Package Message b a c", provider.getMessage("org.jcatapult.l10n.NonExistent", "format_key", attributes, "b"));
-        assertEquals("Super Package Message b a c", provider.getMessage("org.jcatapult.badPackage.Test", "format_key", attributes, "b"));
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getLong("jcatapult.l10n.reload-check-seconds", 1)).andReturn(1l).times(2);
+        EasyMock.replay(config);
 
-        provider = new ResourceBundleMessageProvider(Locale.GERMAN);
-        assertEquals("Default Message b a c", provider.getMessage("org.jcatapult.l10n.Test", "format_key", attributes, "b"));
+        MockServletContext context = new MockServletContext(new File("src/java/test/unit"));
+
+        Map<String, String> attributes = map("c", "c", "a", "a");
+        ResourceBundleMessageProvider provider = new ResourceBundleMessageProvider(Locale.US, new WebControl(new ServletContainerResolver(context), config));
+        assertEquals("American English Message b a c", provider.getMessage("/l10n/Test", "format_key", attributes, "b"));
+        assertEquals("Package Message b a c", provider.getMessage("/l10n/NonExistent", "format_key", attributes, "b"));
+        assertEquals("Super Package Message b a c", provider.getMessage("/badPackage/Test", "format_key", attributes, "b"));
+
+        provider = new ResourceBundleMessageProvider(Locale.GERMAN, new WebControl(new ServletContainerResolver(context), config));
+        assertEquals("Default Message b a c", provider.getMessage("/l10n/Test", "format_key", attributes, "b"));
     }
 
     @Test
     public void testMissing() {
-        ResourceBundleMessageProvider provider = new ResourceBundleMessageProvider(Locale.US);
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getLong("jcatapult.l10n.reload-check-seconds", 1)).andReturn(1l);
+        EasyMock.replay(config);
+
+        MockServletContext context = new MockServletContext(new File("src/java/test/unit"));
+
+        ResourceBundleMessageProvider provider = new ResourceBundleMessageProvider(Locale.US, new WebControl(new ServletContainerResolver(context), config));
         try {
-            provider.getMessage("org.jcatapult.l10n.Test", "bad_key");
+            provider.getMessage("/l10n/Test", "bad_key");
             fail("Should have failed");
         } catch (MissingMessageException e) {
             // Expected

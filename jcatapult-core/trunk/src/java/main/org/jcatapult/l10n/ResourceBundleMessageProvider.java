@@ -22,9 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Queue;
 import java.util.ResourceBundle;
-import static java.util.ResourceBundle.Control.*;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -34,29 +34,28 @@ import com.google.inject.Inject;
 
 /**
  * <p>
- * This implements the MessageProvider using ResourceBundles. However, it adds
- * the additional step of looking for multiple bundle if the message isn't
- * initially found. The search method is:
+ * This implements the MessageProvider using ResourceBundles inside the
+ * web context. It also adds the additional step of looking for multiple
+ * bundles if the message isn't initially found. The search method is:
  * </p>
  *
  * <pre>
- * bundle = com.example.action.Foo
+ * uri = /foo/bar
  * locale = en_US
  *
- * com.example.action.Foo_en_US
- * com.example.action.Foo_en
- * com.example.action.Foo
- * com.example.action.package_en_US
- * com.example.action.package_en
- * com.example.action.package
- * com.example.package_en_US
- * com.example.package_en
- * com.example.package
- * ...
+ * /WEB-INF/message/foo/bar_en_US
+ * /WEB-INF/message/foo/bar_en
+ * /WEB-INF/message/foo/bar
+ * /WEB-INF/message/foo/package_en_US
+ * /WEB-INF/message/foo/package_en
+ * /WEB-INF/message/foo/package
+ * /WEB-INF/message/package_en_US
+ * /WEB-INF/message/package_en
+ * /WEB-INF/message/package
  * </pre>
  *
  * <p>
- * This continues to look up packages until if finds the message.
+ * This stops when /WEB-INF/message is hit.
  * </p>
  *
  * <p>
@@ -69,20 +68,21 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class ResourceBundleMessageProvider implements MessageProvider {
-    private static final ResourceBundle.Control CONTROL = getNoFallbackControl(FORMAT_DEFAULT);
     private final Locale locale;
+    private final ResourceBundle.Control control;
 
     @Inject
-    public ResourceBundleMessageProvider(@CurrentLocale Locale locale) {
+    public ResourceBundleMessageProvider(@CurrentLocale Locale locale, ResourceBundle.Control control) {
         this.locale = locale;
+        this.control = control;
     }
 
     /**
      * {@inheritDoc}
      */
-    public String getMessage(String bundle, String key, Map<String, String> attributes, Object... values)
+    public String getMessage(String uri, String key, Map<String, String> attributes, Object... values)
     throws MissingMessageException {
-        String message = findMessage(bundle, key);
+        String message = findMessage(uri, key);
         List<Object> params = new ArrayList<Object>(asList(values));
         SortedSet<String> sortedKeys = new TreeSet<String>(attributes.keySet());
         for (String sortedKey : sortedKeys) {
@@ -95,8 +95,8 @@ public class ResourceBundleMessageProvider implements MessageProvider {
     /**
      * {@inheritDoc}
      */
-    public String getMessage(String bundle, String key, Object... values) throws MissingMessageException {
-        String message = findMessage(bundle, key);
+    public String getMessage(String uri, String key, Object... values) throws MissingMessageException {
+        String message = findMessage(uri, key);
         return MessageFormat.format(message, values);
     }
 
@@ -111,9 +111,9 @@ public class ResourceBundleMessageProvider implements MessageProvider {
         Queue<String> names = determineBundles(bundle);
         for (String name : names) {
             try {
-                ResourceBundle rb = ResourceBundle.getBundle(name, locale, CONTROL);
+                ResourceBundle rb = ResourceBundle.getBundle(name, locale, control);
                 return rb.getString(key);
-            } catch (Exception e) {
+            } catch (MissingResourceException e) {
             }
         }
 
@@ -125,11 +125,11 @@ public class ResourceBundleMessageProvider implements MessageProvider {
         Queue<String> names = new LinkedList<String>();
         names.offer(bundle);
 
-        int index = bundle.lastIndexOf('.');
+        int index = bundle.lastIndexOf('/');
         while (index != -1) {
             bundle = bundle.substring(0, index);
-            names.offer(bundle + ".package");
-            index = bundle.lastIndexOf('.');
+            names.offer(bundle + "/package");
+            index = bundle.lastIndexOf('/');
         }
 
         return names;
