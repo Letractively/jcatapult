@@ -78,7 +78,7 @@ public class CheckboxListTest extends AbstractInputTest {
 
         CheckboxList checkboxlist = new CheckboxList();
         checkboxlist.setExpressionEvaluator(ee);
-        run(checkboxlist, action, "checkbox-list", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        run(checkboxlist, action, "checkbox-list", "/test", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
@@ -112,7 +112,7 @@ public class CheckboxListTest extends AbstractInputTest {
 
         CheckboxList checkboxlist = new CheckboxList();
         checkboxlist.setExpressionEvaluator(ee);
-        run(checkboxlist, action, "checkbox-list", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        run(checkboxlist, action, "checkbox-list", "/test", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
@@ -139,7 +139,7 @@ public class CheckboxListTest extends AbstractInputTest {
 
         CheckboxList checkboxlist = new CheckboxList();
         checkboxlist.setExpressionEvaluator(ee);
-        run(checkboxlist, action, "checkbox-list", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        run(checkboxlist, action, "checkbox-list", "/test", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +

@@ -59,7 +59,7 @@ public class TextTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Text(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
+        run(input, action, "text", "/test", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -78,7 +78,7 @@ public class TextTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Text(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
+        run(input, action, "text", "/test", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -96,7 +96,7 @@ public class TextTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Text(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
+        run(input, action, "text", "/test", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -115,7 +115,7 @@ public class TextTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Text(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "user.name", "Your name",
+        run(input, action, "text", "/test", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -133,7 +133,7 @@ public class TextTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Text(ee);
-        run(input, action, "text", "org.example.action.user.Edit", "label-key", "Your name",
+        run(input, action, "text", "/test", "label-key", "Your name",
             mapNV("name", "user.name", "class", "css-class", "labelKey", "label-key"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +

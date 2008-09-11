@@ -47,7 +47,7 @@ public class PasswordTest extends AbstractInputTest {
     @Test
     public void testAction() {
         AbstractInput input = new Password();
-        run(input, new Edit(), "password", "org.example.action.user.Edit", "user.password", "Password",
+        run(input, new Edit(), "password", "/test", "user.password", "Password",
             mapNV("name", "user.password", "class", "css-class", "value", "password"),
             "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -59,7 +59,7 @@ public class PasswordTest extends AbstractInputTest {
     @Test
     public void testFieldErrors() {
         AbstractInput input = new Password();
-        run(input, new Edit(), "password", "org.example.action.user.Edit", "user.password", "Password",
+        run(input, new Edit(), "password", "/test", "user.password", "Password",
             mapNV("name", "user.password", "class", "css-class", "value", "password"),
             "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +

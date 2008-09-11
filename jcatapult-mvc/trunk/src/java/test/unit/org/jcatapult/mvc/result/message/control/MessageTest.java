@@ -42,7 +42,7 @@ public class MessageTest extends AbstractControlTest {
     @Test
     public void testMessageAction() {
         MessageProvider provider = EasyMock.createStrictMock(MessageProvider.class);
-        EasyMock.expect(provider.getMessage("org.example.action.user.Edit", "key")).andReturn("message");
+        EasyMock.expect(provider.getMessage("/edit", "key")).andReturn("message");
         EasyMock.replay(provider);
 
         ActionInvocation ai = new DefaultActionInvocation(new Edit(), "/edit", null, null);

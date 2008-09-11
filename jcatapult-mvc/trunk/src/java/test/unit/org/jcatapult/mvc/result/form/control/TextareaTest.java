@@ -59,7 +59,7 @@ public class TextareaTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Textarea(ee);
-        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
+        run(input, action, "textarea", "/test", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -78,7 +78,7 @@ public class TextareaTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Textarea(ee);
-        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
+        run(input, action, "textarea", "/test", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -96,7 +96,7 @@ public class TextareaTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Textarea(ee);
-        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
+        run(input, action, "textarea", "/test", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -114,7 +114,7 @@ public class TextareaTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractInput input = new Textarea(ee);
-        run(input, action, "textarea", "org.example.action.user.Edit", "user.name", "Your name",
+        run(input, action, "textarea", "/test", "user.name", "Your name",
             mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
             "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +

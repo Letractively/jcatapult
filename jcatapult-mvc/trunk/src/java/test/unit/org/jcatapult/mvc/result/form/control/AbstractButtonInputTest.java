@@ -74,7 +74,7 @@ public abstract class AbstractButtonInputTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractButtonInput input = getControl(ee);
-        run(input, new Edit(), getType(), "org.example.action.user.Edit", "test", "Test",
+        run(input, new Edit(), getType(), "/test", "test", "Test",
             params("name", "test", "value", "test-value", "class", "css-class"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_test\" value=\"\"/>\n" +
@@ -91,7 +91,7 @@ public abstract class AbstractButtonInputTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractButtonInput input = getControl(ee);
-        run(input, new Edit(), getType(), "org.example.action.user.Edit", "test", "Test",
+        run(input, new Edit(), getType(), "/test", "test", "Test",
             params("name", "test", "action", "/foo", "value", "test-value", "class", "css-class"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_test\" value=\"/foo\"/>\n" +

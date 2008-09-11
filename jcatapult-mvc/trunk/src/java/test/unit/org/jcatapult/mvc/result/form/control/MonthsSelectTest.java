@@ -76,7 +76,7 @@ public class MonthsSelectTest extends AbstractInputTest {
 
         MonthsSelect select = new MonthsSelect();
         select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "month", "Month",
+        run(select, action, "select", "/test", "month", "Month",
             mapNV("name", "month", "class", "css-class"),
             "<input type=\"hidden\" name=\"month@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +

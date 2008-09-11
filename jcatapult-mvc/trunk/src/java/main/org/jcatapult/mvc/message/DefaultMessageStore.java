@@ -55,10 +55,10 @@ public class DefaultMessageStore implements MessageStore {
     /**
      * {@inheritDoc}
      */
-    public void addConversionError(String field, String bundle, Map<String, String> dynamicAttributes, Object... values)
+    public void addConversionError(String field, String uri, Map<String, String> dynamicAttributes, Object... values)
     throws MissingMessageException {
         String key = field + ".conversionError";
-        String message = messageProvider.getMessage(bundle, key, dynamicAttributes, (Object[]) values);
+        String message = messageProvider.getMessage(uri, key, dynamicAttributes, (Object[]) values);
         Scope scope = scopeProvider.lookup(MessageScope.REQUEST);
         scope.addFieldMessage(MessageType.ERROR, field, message);
     }
@@ -66,9 +66,9 @@ public class DefaultMessageStore implements MessageStore {
     /**
      * {@inheritDoc}
      */
-    public void addFieldMessage(MessageScope scope, String field, String bundle, String key, Object... values)
+    public void addFieldMessage(MessageScope scope, String field, String uri, String key, Object... values)
     throws MissingMessageException {
-        String message = messageProvider.getMessage(bundle, key, (Object[]) values);
+        String message = messageProvider.getMessage(uri, key, (Object[]) values);
         Scope s = scopeProvider.lookup(scope);
         s.addFieldMessage(MessageType.PLAIN, field, message);
     }
@@ -79,20 +79,15 @@ public class DefaultMessageStore implements MessageStore {
     public void addFieldMessage(MessageScope scope, String field, String key, Object... values)
     throws MissingMessageException {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
-        if (actionInvocation.action() == null) {
-            throw new IllegalStateException("Attempting to add an field message without a bundle name " +
-                "but the current request URL is not associated with an action class");
-        }
-
-        addFieldMessage(scope, field, actionInvocation.action().getClass().getName(), key, values);
+        addFieldMessage(scope, field, actionInvocation.uri(), key, values);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void addFieldError(MessageScope scope, String field, String bundle, String key, Object... values)
+    public void addFieldError(MessageScope scope, String field, String uri, String key, Object... values)
     throws MissingMessageException {
-        String message = messageProvider.getMessage(bundle, key, (Object[]) values);
+        String message = messageProvider.getMessage(uri, key, (Object[]) values);
         Scope s = scopeProvider.lookup(scope);
         s.addFieldMessage(MessageType.ERROR, field, message);
     }
@@ -103,20 +98,15 @@ public class DefaultMessageStore implements MessageStore {
     public void addFieldError(MessageScope scope, String field, String key, Object... values)
     throws MissingMessageException {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
-        if (actionInvocation.action() == null) {
-            throw new IllegalStateException("Attempting to add an field error without a bundle name " +
-                "but the current request URL is not associated with an action class");
-        }
-
-        addFieldError(scope, field, actionInvocation.action().getClass().getName(), key, values);
+        addFieldError(scope, field, actionInvocation.uri(), key, values);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void addActionMessage(MessageScope scope, String bundle, String key, Object... values)
+    public void addActionMessage(MessageScope scope, String uri, String key, Object... values)
     throws MissingMessageException {
-        String message = messageProvider.getMessage(bundle, key, (Object[]) values);
+        String message = messageProvider.getMessage(uri, key, (Object[]) values);
         Scope s = scopeProvider.lookup(scope);
         s.addActionMessage(MessageType.PLAIN, message);
     }
@@ -127,20 +117,15 @@ public class DefaultMessageStore implements MessageStore {
     public void addActionMessage(MessageScope scope, String key, Object... values)
     throws MissingMessageException {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
-        if (actionInvocation.action() == null) {
-            throw new IllegalStateException("Attempting to add an action message without a bundle name " +
-                "but the current request URL is not associated with an action class");
-        }
-
-        addActionMessage(scope, actionInvocation.action().getClass().getName(), key, values);
+        addActionMessage(scope, actionInvocation.uri(), key, values);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void addActionError(MessageScope scope, String bundle, String key, Object... values)
+    public void addActionError(MessageScope scope, String uri, String key, Object... values)
     throws MissingMessageException {
-        String message = messageProvider.getMessage(bundle, key, (Object[]) values);
+        String message = messageProvider.getMessage(uri, key, (Object[]) values);
         Scope s = scopeProvider.lookup(scope);
         s.addActionMessage(MessageType.ERROR, message);
     }
@@ -151,12 +136,7 @@ public class DefaultMessageStore implements MessageStore {
     public void addActionError(MessageScope scope, String key, Object... values)
     throws MissingMessageException {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
-        if (actionInvocation.action() == null) {
-            throw new IllegalStateException("Attempting to add an action error without a bundle name " +
-                "but the current request URL is not associated with an action class");
-        }
-
-        addActionError(scope, actionInvocation.action().getClass().getName(), key, values);
+        addActionError(scope, actionInvocation.uri(), key, values);
     }
 
     /**
