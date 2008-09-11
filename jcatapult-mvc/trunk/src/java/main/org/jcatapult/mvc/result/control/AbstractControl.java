@@ -199,13 +199,13 @@ public abstract class AbstractControl implements Control {
      * @return  The bundle name or null.
      */
     protected String determineBundleName(Map<String, Object> attributes) {
-        String bundleName = null;
+        String bundleName;
         if (attributes.get("bundle") != null) {
             bundleName = (String) attributes.remove("bundle");
         } else if (request.getAttribute("jcatapultControlBundle") != null) {
             bundleName = (String) request.getAttribute("jcatapultControlBundle");
-        } else if (action != null) {
-            bundleName = action.getClass().getName();
+        } else {
+            bundleName = actionInvocation.uri();
         }
 
         return bundleName;

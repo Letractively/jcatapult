@@ -39,17 +39,17 @@ public interface MessageStore {
      * error message.
      *
      * @param   field The name of the field that the conversion error failed for.
-     * @param   bundle The name of the bundle that the error is pulled from.
+     * @param   uri The URI (path) that is used to locate the bundle to pull the error from.
      * @param   dynamicAttributes The dynamic attributes, which might be useful for error messaging
      *          stuff.
      * @param   values The values attempting to be set into the field.
      * @throws  MissingMessageException If the conversion message is missing.
      */
-    void addConversionError(String field, String bundle, Map<String, String> dynamicAttributes, Object... values)
+    void addConversionError(String field, String uri, Map<String, String> dynamicAttributes, Object... values)
     throws MissingMessageException;
 
     /**
-     * Adds a field message which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
+     * Adds a field message, which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
      *
      * @param   scope The scope that the message should be placed into.
      * @param   field The field that the message is associated with.
@@ -62,68 +62,62 @@ public interface MessageStore {
     throws MissingMessageException;
 
     /**
-     * Adds a field message which is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The name of the bundle
-     * is the same as the class name of the current action that the request is associated with. If
-     * there is no action, this method will throw an exception.
+     * Adds a field message, which is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The
+     * uri used to look up the message is the current request URI.
      *
      * @param   scope The scope that the message should be placed into.
      * @param   field The field that the message is associated with.
      * @param   key The key in the bundle.
      * @param   values The values used to format the message.
      * @throws  MissingMessageException If the message is missing.
-     * @throws  IllegalStateException If there is no action class associated with the current request.
      */
     void addFieldMessage(MessageScope scope, String field, String key, Object... values)
-    throws MissingMessageException, IllegalStateException;
-
-    /**
-     * Adds a field error which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
-     *
-     * @param   scope The scope that the error should be placed into.
-     * @param   field The field that the error is associated with.
-     * @param   bundle The bundle the error should be pulled from.
-     * @param   key The key in the bundle.
-     * @param   values The values used to format the error.
-     * @throws  MissingMessageException If the error is missing.
-     */
-    void addFieldError(MessageScope scope, String field, String bundle, String key, Object... values)
     throws MissingMessageException;
 
     /**
-     * Adds a field error which is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The name of the bundle
-     * is the same as the class name of the current action that the request is associated with. If
-     * there is no action, this method will throw an exception.
+     * Adds a field error, which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
+     *
+     * @param   scope The scope that the error should be placed into.
+     * @param   field The field that the error is associated with.
+     * @param   uri The URI (path) that is used to locate the bundle to pull the error from.
+     * @param   key The key in the bundle.
+     * @param   values The values used to format the error.
+     * @throws  MissingMessageException If the error is missing.
+     */
+    void addFieldError(MessageScope scope, String field, String uri, String key, Object... values)
+    throws MissingMessageException;
+
+    /**
+     * Adds a field error, which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.The
+     * uri used to look up the message is the current request URI.
      *
      * @param   scope The scope that the error should be placed into.
      * @param   field The field that the error is associated with.
      * @param   key The key in the bundle.
      * @param   values The values used to format the error.
      * @throws  MissingMessageException If the error is missing.
-     * @throws  IllegalStateException If there is no action class associated with the current request.
      */
     void addFieldError(MessageScope scope, String field, String key, Object... values) throws MissingMessageException;
 
     /**
-     * Adds an action message which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
+     * Adds an action message, which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
      *
      * @param   scope The scope that the message should be placed into.
-     * @param   bundle The bundle the message should be pulled from.
+     * @param   uri The URI (path) that is used to locate the bundle to pull the error from.
      * @param   key The key in the bundle.
      * @param   values The values used to format the message.
      * @throws  MissingMessageException If the message is missing.
      */
-    void addActionMessage(MessageScope scope, String bundle, String key, Object... values) throws MissingMessageException;
+    void addActionMessage(MessageScope scope, String uri, String key, Object... values) throws MissingMessageException;
 
     /**
-     * Adds an action message which is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The name of the bundle
-     * is the same as the class name of the current action that the request is associated with. If
-     * there is no action, this method will throw an exception.
+     * Adds an action message, which is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The
+     * uri used to look up the message is the current request URI.
      *
      * @param   scope The scope that the message should be placed into.
      * @param   key The key in the bundle.
      * @param   values The values used to format the message.
      * @throws  MissingMessageException If the message is missing.
-     * @throws  IllegalStateException If there is no action class associated with the current request.
      */
     void addActionMessage(MessageScope scope, String key, Object... values) throws MissingMessageException;
 
@@ -131,23 +125,21 @@ public interface MessageStore {
      * Adds an action error which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
      *
      * @param   scope The scope that the error should be placed into.
-     * @param   bundle The bundle the error should be pulled from.
+     * @param   uri The URI (path) that is used to locate the bundle to pull the error from.
      * @param   key The key in the bundle.
      * @param   values The values used to format the error.
      * @throws  MissingMessageException If the error is missing.
      */
-    void addActionError(MessageScope scope, String bundle, String key, Object... values) throws MissingMessageException;
+    void addActionError(MessageScope scope, String uri, String key, Object... values) throws MissingMessageException;
 
     /**
-     * Adds an action errorwhich is pulled from the {@link org.jcatapult.l10n.MessageProvider}. The name of the bundle
-     * is the same as the class name of the current action that the request is associated with. If
-     * there is no action, this method will throw an exception.
+     * Adds an action error, which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.The
+     * uri used to look up the message is the current request URI.
      *
      * @param   scope The scope that the error should be placed into.
      * @param   key The key in the bundle.
      * @param   values The values used to format the error.
      * @throws  MissingMessageException If the error is missing.
-     * @throws  IllegalStateException If there is no action class associated with the current request.
      */
     void addActionError(MessageScope scope, String key, Object... values) throws MissingMessageException;
 

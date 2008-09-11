@@ -116,7 +116,7 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractCheckedInput input = getControl(ee);
-        run(input, action, getType(), "org.example.action.user.Edit", "user.male", "Male?",
+        run(input, action, getType(), "/test", "user.male", "Male?",
             mapNV("name", "user.male", "value", value, "class", "css-class"),
             "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -135,7 +135,7 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractCheckedInput input = getControl(ee);
-        run(input, action, getType(), "org.example.action.user.Edit", "user.male", "Male?",
+        run(input, action, getType(), "/test", "user.male", "Male?",
             mapNV("name", "user.male", "defaultChecked", true, "class", "css-class", "value", true),
             "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -153,7 +153,7 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractCheckedInput input = getControl(ee);
-        run(input, action, getType(), "org.example.action.user.Edit", "user.male", "Male?",
+        run(input, action, getType(), "/test", "user.male", "Male?",
             mapNV("name", "user.male", "checked", true, "class", "css-class", "value", "true"),
             "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -172,7 +172,7 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractCheckedInput input = getControl(ee);
-        run(input, action, getType(), "org.example.action.user.Edit", "user.male", "Male?",
+        run(input, action, getType(), "/test", "user.male", "Male?",
             mapNV("name", "user.male", "class", "css-class", "value", "true"),
             "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -191,7 +191,7 @@ public abstract class AbstractCheckedInputTest extends AbstractInputTest {
         EasyMock.replay(ee);
 
         AbstractCheckedInput input = getControl(ee);
-        run(input, action, getType(), "org.example.action.user.Edit", "user.male", "Male?",
+        run(input, action, getType(), "/test", "user.male", "Male?",
             mapNV("name", "user.male", "class", "css-class", "value", "true", "uncheckedValue", "false"),
             "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +

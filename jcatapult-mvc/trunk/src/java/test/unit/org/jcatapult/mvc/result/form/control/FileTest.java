@@ -47,7 +47,7 @@ public class FileTest extends AbstractInputTest {
     @Test
     public void testAction() {
         AbstractInput input = new File();
-        run(input, new Edit(), "file", "org.example.action.user.Edit", "user.profile", "Your profile",
+        run(input, new Edit(), "file", "/test", "user.profile", "Your profile",
             mapNV("name", "user.profile", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.profile@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -59,7 +59,7 @@ public class FileTest extends AbstractInputTest {
     @Test
     public void testFieldErrors() {
         AbstractInput input = new File();
-        run(input, new Edit(), "file", "org.example.action.user.Edit", "user.profile", "Your profile",
+        run(input, new Edit(), "file", "/test", "user.profile", "Your profile",
             mapNV("name", "user.profile", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.profile@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +

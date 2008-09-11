@@ -61,7 +61,7 @@ public class DefaultValidationWorkflowTest extends JCatapultBaseTest {
     public void testAllNull() throws IOException, ServletException {
         Edit action = new Edit();
         request.setPost(true);
-        actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/", null, null));
+        actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
         DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
             expressionEvaluator, validatorProvider, messageStore);
 
@@ -93,7 +93,7 @@ public class DefaultValidationWorkflowTest extends JCatapultBaseTest {
         action.user.getAddress("work").setCity("Boulder");
         action.user.getAddress("work").setStreet("Main");
         action.user.getAddress("work").setCountry("US");
-        actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/", null, null));
+        actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
         DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
             expressionEvaluator, validatorProvider, messageStore);
 

@@ -61,11 +61,6 @@ public class Message extends AbstractControl implements TemplateMethodModel, Tem
     @Override
     protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
         String bundle = determineBundleName(attributes);
-        if (bundle == null) {
-            throw new IllegalStateException("The current URI doesn't have an action class " +
-                "associated with it and the bundle attribute is null.");
-        }
-
         String key = (String) attributes.remove("key");
         String defaultMesg = (String) attributes.remove("default");
 
@@ -80,7 +75,7 @@ public class Message extends AbstractControl implements TemplateMethodModel, Tem
             throw new IllegalStateException("The message for the key [" + key + "] is missing and " +
                 "there was no default set using the [default] attribute.");
         }
-        
+
         attributes.put("message", message);
     }
 

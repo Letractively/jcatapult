@@ -100,7 +100,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(ais);
 
         MessageProvider mp = EasyMock.createStrictMock(MessageProvider.class);
-        EasyMock.expect(mp.getMessage("org.example.action.user.Edit", "key", values)).andReturn("message");
+        EasyMock.expect(mp.getMessage("/foo/bar", "key", values)).andReturn("message");
         EasyMock.replay(mp);
 
         Scope scope = EasyMock.createStrictMock(Scope.class);
@@ -152,7 +152,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(ais);
 
         MessageProvider mp = EasyMock.createStrictMock(MessageProvider.class);
-        EasyMock.expect(mp.getMessage("org.example.action.user.Edit", "key", values)).andReturn("message");
+        EasyMock.expect(mp.getMessage("/foo/bar", "key", values)).andReturn("message");
         EasyMock.replay(mp);
 
         Scope scope = EasyMock.createStrictMock(Scope.class);
@@ -204,7 +204,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(ais);
 
         MessageProvider mp = EasyMock.createStrictMock(MessageProvider.class);
-        EasyMock.expect(mp.getMessage("org.example.action.user.Edit", "key", values)).andReturn("message");
+        EasyMock.expect(mp.getMessage("/foo/bar", "key", values)).andReturn("message");
         EasyMock.replay(mp);
 
         Scope scope = EasyMock.createStrictMock(Scope.class);
@@ -256,7 +256,7 @@ public class DefaultMessageStoreTest {
         EasyMock.replay(ais);
 
         MessageProvider mp = EasyMock.createStrictMock(MessageProvider.class);
-        EasyMock.expect(mp.getMessage("org.example.action.user.Edit", "key", values)).andReturn("message");
+        EasyMock.expect(mp.getMessage("/foo/bar", "key", values)).andReturn("message");
         EasyMock.replay(mp);
 
         Scope scope = EasyMock.createStrictMock(Scope.class);

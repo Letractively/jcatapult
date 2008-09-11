@@ -97,7 +97,7 @@ public class SelectTest extends AbstractInputTest {
 
         Select select = new Select();
         select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        run(select, action, "select", "/test", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -129,7 +129,7 @@ public class SelectTest extends AbstractInputTest {
 
         Select select = new Select();
         select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        run(select, action, "select", "/test", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -154,7 +154,7 @@ public class SelectTest extends AbstractInputTest {
 
         Select select = new Select();
         select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "user.addresses['work'].country", "Country",
+        run(select, action, "select", "/test", "user.addresses['work'].country", "Country",
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +

@@ -74,7 +74,7 @@ public class YearsSelectTest extends AbstractInputTest {
 
         YearsSelect select = new YearsSelect();
         select.setExpressionEvaluator(ee);
-        run(select, action, "select", "org.example.action.user.Edit", "year", "Year",
+        run(select, action, "select", "/test", "year", "Year",
             mapNV("name", "year", "class", "css-class", "startYear", 2001, "endYear", 2006),
             "<input type=\"hidden\" name=\"year@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
