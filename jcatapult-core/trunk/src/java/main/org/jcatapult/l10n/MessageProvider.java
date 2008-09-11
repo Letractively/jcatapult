@@ -34,7 +34,7 @@ public interface MessageProvider {
      * Finds a message with the given key and for the given locale. This should then process the message
      * using the attributes and values given in order to token replace and format the message correctly.
      *
-     * @param   bundle The name of the bundle to pull the message from. This might be a ResourceBundle
+     * @param   location The name of the location to pull the message from. This might be a ResourceBundle
      *          or a database or a table name, etc.
      * @param   key The key of the message.
      * @param   attributes Any additional attributes for the message.
@@ -42,18 +42,18 @@ public interface MessageProvider {
      * @return  The message.
      * @throws  MissingMessageException If the message is missing.
      */
-    String getMessage(String bundle, String key, Map<String, String> attributes, Object... values)
+    String getMessage(String location, String key, Map<String, String> attributes, Object... values)
     throws MissingMessageException;
 
     /**
      * Finds a message with the given key and for the given locale.
      *
-     * @param   bundle The name of the bundle to pull the message from. This might be a ResourceBundle
+     * @param   location The name of the location to pull the message from. This might be a ResourceBundle
      *          or a database or a table name, etc.
      * @param   key The key of the message.
      * @param   values Any additional values for the message.
      * @return  The message.
      * @throws  MissingMessageException If the message is missing.
      */
-    String getMessage(String bundle, String key, Object... values) throws MissingMessageException;
+    String getMessage(String location, String key, Object... values) throws MissingMessageException;
 }
