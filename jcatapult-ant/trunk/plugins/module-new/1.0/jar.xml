@@ -75,6 +75,16 @@
       <fileset dir="${dir.web}/WEB-INF/content" includes="**/*"/>
     </copy>
 
+    <!-- Copy the messages to the correct locations -->
+    <copy todir="${dir.target.classes.main}/WEB-INF/message" failonerror="false">
+      <fileset dir="${dir.web}/WEB-INF/message" includes="**/*"/>
+    </copy>
+
+    <!-- Copy the emails to the correct locations -->
+    <copy todir="${dir.target.classes.main}/WEB-INF/email" failonerror="false">
+      <fileset dir="${dir.web}/WEB-INF/email" includes="**/*"/>
+    </copy>
+
     <!-- Copy the static files into the struts location -->
     <copy todir="${dir.target.classes.main}/module/${project.name}" failonerror="false">
       <fileset dir="${dir.web}/module/${project.name}" includes="**/*"/>
