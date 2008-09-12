@@ -61,23 +61,23 @@ public class WebControl extends ResourceBundle.Control {
     /**
      * Only properties.
      *
-     * @param   baseName Not used.
+     * @param   uri Not used.
      * @return  An array containing only "java.properties".
      */
     @Override
-    public List<String> getFormats(String baseName) {
+    public List<String> getFormats(String uri) {
         return asList("java.properties");
     }
 
     /**
      * Always returns null because there are no fallback locales.
      *
-     * @param   baseName Not used.
+     * @param   uri Not used.
      * @param   locale Not used.
      * @return  Always null.
      */
     @Override
-    public Locale getFallbackLocale(String baseName, Locale locale) {
+    public Locale getFallbackLocale(String uri, Locale locale) {
         return null;
     }
 
@@ -86,7 +86,7 @@ public class WebControl extends ResourceBundle.Control {
      * doesn't work because the application is a WAR, this uses the getResourceAsStream method on
      * the ServletContext.
      *
-     * @param   baseName The current URI.
+     * @param   uri The current URI.
      * @param   locale Not used.
      * @param   format Not used.
      * @param   loader Not used.
@@ -96,27 +96,29 @@ public class WebControl extends ResourceBundle.Control {
      * @throws  IllegalArgumentException If the bundle doesn't exist.
      */
     @Override
-    public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
+    public ResourceBundle newBundle(String uri, Locale locale, String format, ClassLoader loader, boolean reload)
     throws IOException {
         // Create the bundle from the WEB-INF/messages folder. basename is the uri
-        String name = name(baseName, locale);
+        String name = name(uri, locale);
         String realPath = containerResolver.getRealPath(name);
         if (realPath != null) {
             File file = new File(realPath);
-            return new PropertyResourceBundle(new FileInputStream(file));
+            if (file.isFile()) {
+                return new PropertyResourceBundle(new FileInputStream(file));
+            }
         }
 
         URL url = containerResolver.getResource(name);
         if (url == null) {
             // Otherwise, check the classpath
-            url = loader.getResource(name);
+            url = loader.getResource(name.substring(1));
         }
 
         if (url != null) {
             return new PropertyResourceBundle(url.openStream());
         }
 
-        throw new IllegalArgumentException("Invalid bundle [" + baseName + "]");
+        throw new IllegalArgumentException("Invalid bundle [" + uri + "]");
     }
 
     /**
@@ -135,7 +137,7 @@ public class WebControl extends ResourceBundle.Control {
      * Returns true if the ServletContext getRealPath method returns non-null for the bundle name
      * and the file has been modified since the last load.
      *
-     * @param   baseName The current URI, used to construct the bundle name.
+     * @param   uri The current URI, used to construct the bundle name.
      * @param   locale Not used.
      * @param   format Not used.
      * @param   loader Not used.
@@ -144,9 +146,9 @@ public class WebControl extends ResourceBundle.Control {
      * @return  True if the file needs a reload.
      */
     @Override
-    public boolean needsReload(String baseName, Locale locale, String format, ClassLoader loader, ResourceBundle bundle, long loadTime) {
+    public boolean needsReload(String uri, Locale locale, String format, ClassLoader loader, ResourceBundle bundle, long loadTime) {
         // Create the bundle from the WEB-INF/messages folder. basename is the uri
-        String name = name(baseName, locale);
+        String name = name(uri, locale);
         String realPath = containerResolver.getRealPath(name);
         if (realPath != null) {
             File file = new File(realPath);
@@ -160,11 +162,16 @@ public class WebControl extends ResourceBundle.Control {
     /**
      * Makes the file name.
      *
-     * @param   baseName The base name.
+     * @param   uri The current URI.
      * @param   locale The locale.
      * @return  The file name.
      */
-    private String name(String baseName, Locale locale) {
-        return "/WEB-INF/message" + toBundleName(baseName, locale) + ".properties";
+    private String name(String uri, Locale locale) {
+        // Normaly URIs like /foo/ to /foo/index
+        if (uri.endsWith("/")) {
+            uri = uri + "index";
+        }
+
+        return "/WEB-INF/message" + toBundleName(uri, locale) + ".properties";
     }
 }
