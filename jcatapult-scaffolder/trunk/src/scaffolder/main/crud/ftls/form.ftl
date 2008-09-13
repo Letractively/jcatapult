@@ -24,20 +24,20 @@ ${r"[#ftl]"}
     Notice here.
   </div>
   <!-- Save off the information for edits -->
-  [@s.hidden name="${type.fieldName}.id"/]
+  [@jc.hidden name="${type.fieldName}.id"/]
 
   <@inputs type ""/>
 
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-  [@jc.select list=${field.pluralName} name="${field.name}ID" valueExpr="id" <@listValue field/> required=true/]
+  [@jc.select items=${field.pluralName} name="${field.name}ID" valueExpr="id" <@listValue field/> required=true/]
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany")>
-  [@jc.checkboxlist list=${field.pluralName} name="${field.name}IDs" listKey="id" <@listValue field/> required="true"/]
+  [@jc.checkboxlist items=${field.pluralName} name="${field.name}IDs" valueExpr="id" <@listValue field/> required=true/]
   </#if>
 </#list>
 
   <div id="form-controls">
-    [@jc.submit name="Save"/]
+    [@jc.submit name="save"/]
     <a href="${uri}/">Cancel</a>
   </div>
 [/@jc.form]

@@ -99,6 +99,7 @@ public class CrudScaffolder extends AbstractScaffolder {
     // Create the actions
     executeFreemarkerTemplate("/actions/add.ftl", actionDirName + "Add.java", params);
     executeFreemarkerTemplate("/actions/delete.ftl", actionDirName + "Delete.java", params);
+    executeFreemarkerTemplate("/actions/details.ftl", actionDirName + "Details.java", params);
     executeFreemarkerTemplate("/actions/edit.ftl", actionDirName + "Edit.java", params);
     executeFreemarkerTemplate("/actions/index.ftl", actionDirName + "Index.java", params);
     executeFreemarkerTemplate("/actions/package-info.ftl", actionDirName + "package-info.java", params);
@@ -129,6 +130,7 @@ public class CrudScaffolder extends AbstractScaffolder {
 
     executeFreemarkerTemplate("/ftls/add.ftl", webDirName + "add.ftl", params);
     executeFreemarkerTemplate("/ftls/edit.ftl", webDirName + "edit.ftl", params);
+    executeFreemarkerTemplate("/ftls/details.ftl", webDirName + "details.ftl", params);
     executeFreemarkerTemplate("/ftls/index.ftl", webDirName + "index.ftl", params);
     executeFreemarkerTemplate("/ftls/form.ftl", webDirName + "form.ftl", params);
 
@@ -140,6 +142,7 @@ public class CrudScaffolder extends AbstractScaffolder {
     // Create the action unit tests
     executeFreemarkerTemplate("/unit-tests/add.ftl", actionTestDirName + "AddTest.java", params);
     executeFreemarkerTemplate("/unit-tests/delete.ftl", actionTestDirName + "DeleteTest.java", params);
+    executeFreemarkerTemplate("/unit-tests/details.ftl", actionTestDirName + "DetailsTest.java", params);
     executeFreemarkerTemplate("/unit-tests/edit.ftl", actionTestDirName + "EditTest.java", params);
     executeFreemarkerTemplate("/unit-tests/index.ftl", actionTestDirName + "IndexTest.java", params);
 
@@ -160,6 +163,7 @@ public class CrudScaffolder extends AbstractScaffolder {
     executeFreemarkerTemplate("/integration-tests/add.ftl", actionIntegrationTestDirName + "AddIntegrationTest.java", params);
     executeFreemarkerTemplate("/integration-tests/base.ftl", actionIntegrationTestDirName + "BaseIntegrationTest.java", params);
     executeFreemarkerTemplate("/integration-tests/delete.ftl", actionIntegrationTestDirName + "DeleteIntegrationTest.java", params);
+    executeFreemarkerTemplate("/integration-tests/details.ftl", actionIntegrationTestDirName + "DetailsIntegrationTest.java", params);
     executeFreemarkerTemplate("/integration-tests/edit.ftl", actionIntegrationTestDirName + "EditIntegrationTest.java", params);
     executeFreemarkerTemplate("/integration-tests/index.ftl", actionIntegrationTestDirName + "IndexIntegrationTest.java", params);
   }

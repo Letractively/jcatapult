@@ -21,17 +21,19 @@ ${field.name}IDs=${field.plainEnglishName}
   </#if>
 </#list>
 <@labels type ""/>
+save=Save
 
 #
 # Errors
 #
 <#macro fieldErrors localType prefix>
   <#list localType.allFields as field>
-    <#if field.mainType.hasAnnotation("org.jcatapult.mvc.validation.annotation.Required")>
+    <#if field.hasAnnotation("org.jcatapult.mvc.validation.annotation.Required")>
 ${prefix}${localType.fieldName}.${field.name}.required=Please supply the ${field.plainEnglishName} for the ${type.name}.
-    <#elseif field.mainType.hasAnnotation("javax.persistence.Embeddable")>
+    <#elseif field.hasAnnotation("javax.persistence.Embeddable")>
       <@fieldErrors field.mainType prefix + localType.fieldName + "." />
     </#if>
   </#list>
 </#macro>
 <@fieldErrors type ""/>
+missing=${type.name} is missing

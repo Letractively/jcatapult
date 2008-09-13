@@ -27,7 +27,12 @@ public class ${type.name}ServiceImplTest extends JPABaseTest {
     }
 
     @Test
-    public void testPersist() {
+    public void testPersist() throws Exception {
+        <#if type.hasAnnotation("javax.persistence.Table") && type.getAnnotation("javax.persistence.Table").parameters['name']??>
+        clearTable("${type.getAnnotation("javax.persistence.Table").parameters['name']}");
+        <#else>
+        clearTable("${type.name}");
+        </#if>
         make${type.name}();
     }
 
