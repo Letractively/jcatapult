@@ -29,7 +29,7 @@ ${r"[#ftl]"}
 <html>
 <head><title>${type.name} | Index</title></head>
 <body>
-[@s.form action="delete" method="POST" theme="simple"]
+[@jc.form action="delete" method="POST"]
   <table id="listing">
     <tr>
       <@headers type ""/>
@@ -38,7 +38,7 @@ ${r"[#ftl]"}
     [#list ${type.pluralFieldName} as ${type.fieldName}]
       <tr>
         <@values type ""/>
-        <td class="[#if ${type.fieldName}_index % 2 == 0]even[#else]odd[/#if] delete-row">[@s.checkbox name="ids" fieldValue="${g.jspEL(type.fieldName + '.id')}"/]</td>
+        <td class="[#if ${type.fieldName}_index % 2 == 0]even[#else]odd[/#if] delete-row">[@jc.checkbox name="ids" value="${g.jspEL(type.fieldName + '.id')}"/]</td>
       </tr>
     [/#list]
 
@@ -49,66 +49,9 @@ ${r"[#ftl]"}
     [/#if]
   </table>
   <div id="listing-controls">
-    <a href="add"><button>ADD AN ${type.fieldName?upper_case}</button></a>
-    [@s.submit type="button" value="DELETE"/]
+    <a href="add">Add</a>
+    [@jc.submit name="delete"/]
   </div>
-  [#if totalCount % numberPerPage > 0]
-    [#assign extra = 1]
-  [#else]
-    [#assign extra = 0]
-  [/#if]
-  [#assign totalPages = (totalCount / numberPerPage) + extra]
-  [#if totalPages?int > 1 && !showAll]
-    <div id="pagination-controls">
-      [#if page > 1]
-        <a href="index?page=${g.jspEL('page - 1')}&numberPerPage=${g.jspEL('numberPerPage')}">Prev</a> |
-      [/#if]
-      [#if page == 1]
-        Prev |
-      [/#if]
-
-      [#if page - 5 < 1]
-        [#assign start = 1]
-      [#else]
-        [#assign start = page - 5]
-      [/#if]
-
-      [#assign end = page - 1]
-      [#if end > start]
-        [#list start..end as i]
-          <a href="index?page=${g.jspEL('i')}&numberPerPage=${g.jspEL('numberPerPage')}">${g.jspEL('i')}</a> |
-        [/#list]
-      [/#if]
-      ${g.jspEL('page')} |
-
-      [#assign start = page + 1]
-      [#if page + 5 > totalPages]
-        [#assign end = totalPages]
-      [#else]
-        [#assign end = page + 5]
-      [/#if]
-      [#if end > start]
-        [#list start..end as i]
-          <a href="index?page=${g.jspEL('i')}&numberPerPage=${g.jspEL('numberPerPage')}">${g.jspEL('i')}</a> |
-        [/#list]
-      [/#if]
-
-      [#if totalCount > (page * numberPerPage)]
-        <a href="index?page=${g.jspEL('page + 1')}&numberPerPage=${g.jspEL('numberPerPage')}">Next</a>
-      [/#if]
-      [#if totalCount <= (page * numberPerPage)]
-        Next
-      [/#if]
-    </div>
-  [/#if]
-  [#if totalCount > 25]
-    <div id="number-per-page">
-      Number per page
-      <a href="index?numberPerPage=25">25</a> |
-      <a href="index?numberPerPage=100">100</a> |
-      <a href="index?showAll=true">Show all</a><br/>
-    </div>
-  [/#if]
-[/@s.form]
+[/@jc.form]
 </body>
 </html>

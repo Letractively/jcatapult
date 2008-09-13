@@ -21,12 +21,12 @@ import java.util.Set;
  *
  * @author  Brian Pontarelli
  */
-public class URLPrefixCompletor extends BetterSimpleCompletor {
-    public URLPrefixCompletor() throws IOException {
-        this("WEB-INF/content");
+public class URIPrefixCompletor extends BetterSimpleCompletor {
+    public URIPrefixCompletor() throws IOException {
+        this("web/WEB-INF/content");
     }
 
-    public URLPrefixCompletor(String webDir) throws IOException {
+    public URIPrefixCompletor(String webDir) throws IOException {
         super(getDirNames(webDir));
         setDelimiter("/");
     }

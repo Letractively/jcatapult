@@ -14,7 +14,7 @@ import org.junit.Test;
  * This class performs the integration test for the ${className} action.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Scaffolder
  */
 public class ${className}IntegrationTest extends JCatapultBaseTest {
     @Test

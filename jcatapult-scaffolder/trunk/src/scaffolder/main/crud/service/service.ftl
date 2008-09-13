@@ -4,6 +4,7 @@ package ${servicePackage};
 import java.util.List;
 
 import com.google.inject.ImplementedBy;
+
 import ${type.fullName};
 <@global.importFields />
 
@@ -17,22 +18,19 @@ import ${type.fullName};
 @ImplementedBy(${type.name}ServiceImpl.class)
 public interface ${type.name}Service {
     /**
-     * Gets all of the ${type.pluralName} sorted using the given column name.
+     * Gets all of the ${type.pluralName}.
      *
-     * @param   sortProperty (Optional) The sort property on the {@link ${type.name}} object.
      * @return  The List of ${type.pluralName}.
      */
-    List<${type.name}> find(String sortProperty);
+    List<${type.name}> find();
 
     /**
-     * Gets a page of the ${type.pluralName} sorted using the given column name.
+     * Locates the ${type.name} with the given id.
      *
-     * @param   page The page of ${type.pluralName} to fetch (1 based).
-     * @param   numberPerPage The number of ${type.pluralName} to fetch (1 based).
-     * @param   sortProperty (Optional) The sort property on the {@link ${type.name}} object.
-     * @return  The List of ${type.pluralName}.
+     * @param   id The ID of the ${type.name}.
+     * @return  The ${type.name} or null if it doesn't exist or has been deleted.
      */
-    List<${type.name}> find(int page, int numberPerPage, String sortProperty);
+    ${type.name} findById(Integer id);
 
     /**
      * @return  The total number of ${type.pluralName}.
@@ -45,9 +43,9 @@ public interface ${type.name}Service {
      * @param   ${type.fieldName} The ${type.name} to save or update.
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-     * @param   ${field.name}Id The id of the ${field.name} of the ${type.name}.
+     * @param   ${field.name}ID The id of the ${field.name} of the ${type.name}.
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany")>
-     * @param   ${field.name}Ids The list of IDs for the ${field.name} of the ${type.name}.
+     * @param   ${field.name}IDs The list of IDs for the ${field.name} of the ${type.name}.
   </#if>
 </#list>
      */
@@ -88,11 +86,4 @@ public interface ${type.name}Service {
 
   </#if>
 </#list>
-    /**
-     * Locates the ${type.name} with the given id.
-     *
-     * @param   id The ID of the ${type.name}.
-     * @return  The ${type.name} or null if it doesn't exist or has been deleted.
-     */
-    ${type.name} getById(Integer id);
 }

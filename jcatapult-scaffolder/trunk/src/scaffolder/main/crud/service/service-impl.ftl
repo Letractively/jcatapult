@@ -4,7 +4,7 @@ package ${servicePackage};
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jcatapult.persistence.PersistenceService;
+import org.jcatapult.persistence.service.PersistenceService;
 
 import com.google.inject.Inject;
 import ${type.fullName};
@@ -28,33 +28,22 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
     /**
      * {@inheritDoc}
      */
-    public List<${type.name}> find(int page, int number, String sortProperty) {
-        if (sortProperty == null) {
-            sortProperty = getDefaultSortProperty();
-        }
-
-        page--;
-
-        return persistenceService.query(${type.name}.class, "select obj from ${type.name} obj " +
-<#if type.isA("org.jcatapult.domain.SoftDeletable")>
-            "where obj.deleted = false " +
-</#if>
-            "order by obj." + sortProperty, page * number, number);
+    public List<${type.name}> find() {
+        return persistenceService.queryAll(${type.name}.class, "select obj from ${type.name} obj <#if type.isA("org.jcatapult.domain.SoftDeletable")>where obj.deleted = false</#if>");
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<${type.name}> find(String sortProperty) {
-        if (sortProperty == null) {
-            sortProperty = getDefaultSortProperty();
+    public ${type.name} findById(Integer id) {
+        ${type.name} ${type.fieldName} = persistenceService.findById(${type.name}.class, id);
+    <#if type.isA("org.jcatapult.domain.SoftDeletable")>
+        if (${type.fieldName} != null && ${type.fieldName}.isDeleted()) {
+            return null;
         }
 
-        return persistenceService.queryAll(${type.name}.class, "select obj from ${type.name} obj " +
-<#if type.isA("org.jcatapult.domain.SoftDeletable")>
-            "where obj.deleted = false " +
-</#if>
-            "order by obj." + sortProperty);
+    </#if>
+        return ${type.fieldName};
     }
 
     /**
@@ -87,14 +76,14 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name != "java.util.Map">
         List<${field.genericTypes[0].name}> ${field.pluralName} = new ArrayList<${field.genericTypes[0].name}>();
-        for (Integer id : ${field.name}Ids) {
+        for (Integer id : ${field.name}IDs) {
             ${field.pluralName}.add(persistenceService.findById(${field.genericTypes[0].name}.class, id));
         }
         ${type.fieldName}.set${field.methodName}(${field.pluralName});
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name == "java.util.Map">
         List<${field.genericTypes[1].name}> ${field.pluralName} = new ArrayList<${field.genericTypes[1].name}>();
-        for (Integer id : ${field.name}Ids) {
+        for (Integer id : ${field.name}IDs) {
             ${field.pluralName}.add(persistenceService.findById(${field.genericTypes[1].name}.class, id));
         }
         ${type.fieldName}.set${field.methodName}(${field.pluralName});
@@ -147,17 +136,4 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
 
   </#if>
 </#list>
-    /**
-     * {@inheritDoc}
-     */
-    public ${type.name} getById(Integer id) {
-        ${type.name} ${type.fieldName} = persistenceService.findById(${type.name}.class, id);
-<#if type.isA("org.jcatapult.domain.SoftDeletable")>
-        if (${type.fieldName} != null && ${type.fieldName}.isDeleted()) {
-            return null;
-        }
-
-</#if>
-        return ${type.fieldName};
-    }
 }

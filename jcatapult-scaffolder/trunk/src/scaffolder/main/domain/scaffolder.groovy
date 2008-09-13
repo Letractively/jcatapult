@@ -8,8 +8,8 @@ import org.jdom.output.Format
 import org.jdom.output.XMLOutputter
 
 /**
-* This class is a simple CRUD scaffolder for JCatapult.
-*/
+ * This class is a simple CRUD scaffolder for JCatapult.
+ */
 @ShortDescription("Creates a single domain object.")
 @LongDescription(
 """Creates a single domain object. This also handles a number of additional operations
@@ -82,8 +82,8 @@ public class DomainScaffolder extends AbstractScaffolder {
       Document moduleDoc = new SAXBuilder().build(moduleFile);
       Element persistenceElem = moduleDoc.getRootElement().getChild("persistence");
       if (persistenceElem == null) {
-        println("Project doesn't define a <persistence> element in the module.xml file. Skipping entity management");
-        return;
+        persistenceElem = new Element("persistence");
+        moduleDoc.getRootElement().addContent(persistenceElem);
       }
 
       persistenceElem.removeChildren("clas");

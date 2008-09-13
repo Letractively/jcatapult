@@ -1,9 +1,11 @@
+<#import "/global/macros.ftl" as global>
 package ${actionPackage};
 
-import org.apache.struts2.convention.annotation.Result;
-import org.jcatapult.struts.action.BaseAction;
+import org.jcatapult.mvc.action.annotation.Action;
+import org.jcatapult.mvc.action.result.annotation.Redirect;
 
 import com.google.inject.Inject;
+
 import ${servicePackage}.${type.name}Service;
 
 /**
@@ -11,12 +13,13 @@ import ${servicePackage}.${type.name}Service;
  * This class is the action that deletes one or more ${type.name}(s)
  * </p>
  *
- * @author Scaffolder
+ * @author  Scaffolder
  */
-@Result(name = "success", location = "index", type = "redirectAction")
-public class Delete extends BaseAction {
+@Action
+@Redirect(uri = "${uri}/")
+public class Delete {
     private final ${type.name}Service ${type.fieldName}Service;
-    private int[] ids;
+    public int[] ids;
 
     @Inject
     public Delete(${type.name}Service ${type.fieldName}Service) {
@@ -31,12 +34,11 @@ public class Delete extends BaseAction {
         this.ids = ids;
     }
 
-    @Override
-    public String execute() {
+    public String post() {
         if (ids != null && ids.length > 0) {
             ${type.fieldName}Service.deleteMany(ids);
         }
 
-        return SUCCESS;
+        return "success";
     }
 }
