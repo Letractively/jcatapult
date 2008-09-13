@@ -12,12 +12,12 @@ import ${type.fullName};
 
 /**
  * <p>
- * This class tests the edit action.
+ * This class tests the details action.
  * </p>
  *
  * @author  Scaffolder
  */
-public class EditIntegrationTest extends BaseIntegrationTest {
+public class DetailsIntegrationTest extends BaseIntegrationTest {
 
     /**
      * Tests get.
@@ -26,35 +26,23 @@ public class EditIntegrationTest extends BaseIntegrationTest {
     public void testGet() throws IOException, ServletException {
         ${type.name} ${type.fieldName} = make${type.name}();
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("${uri}/edit").
+        runner.test("${uri}/details").
             withParameter("id", "" + ${type.fieldName}.getId()).
             get();
 
         String result = runner.response.getStream().toString();
-        assertTrue(result.contains("<form"));
+        assertTrue(result.contains("<html>"));
     }
 
     /**
-     * Tests post.
+     * Tests missing.
      */
     @Test
-    public void testPost() throws IOException, ServletException {
+    public void testMissing() throws IOException, ServletException {
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("${uri}/edit").
-<#list type.allFields as field>
-  <#if field.mainType.fullName == "java.lang.String" && !field.hasAnnotation("javax.persistence.Transient")>
-            withParameter("${type.fieldName}.${field.name}", "test ${field.name}").
-  </#if>
-</#list>
-<#list type.allFields as field>
-  <#if field.hasAnnotation("javax.persistence.ManyToMany")>
-            withParameter("${field.name}IDs", "1").
-            withParameter("${field.name}IDs", "2").
-            withParameter("${field.name}IDs", "3").
-  </#if>
-</#list>
-            // Add additional parameters here
-            post();
+        runner.test("${uri}/details").
+            withParameter("id", "42").
+            get();
 
         String result = runner.response.getRedirect();
         assertEquals("${uri}/", result);

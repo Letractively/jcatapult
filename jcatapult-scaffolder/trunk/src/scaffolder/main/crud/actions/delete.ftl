@@ -18,12 +18,12 @@ import ${servicePackage}.${type.name}Service;
 @Action
 @Redirect(uri = "${uri}/")
 public class Delete {
-    private final ${type.name}Service ${type.fieldName}Service;
+    private final ${type.name}Service service;
     public int[] ids;
 
     @Inject
-    public Delete(${type.name}Service ${type.fieldName}Service) {
-        this.${type.fieldName}Service = ${type.fieldName}Service;
+    public Delete(${type.name}Service service) {
+        this.service = service;
     }
 
     public int[] getIds() {
@@ -36,7 +36,7 @@ public class Delete {
 
     public String post() {
         if (ids != null && ids.length > 0) {
-            ${type.fieldName}Service.deleteMany(ids);
+            service.deleteMany(ids);
         }
 
         return "success";

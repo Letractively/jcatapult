@@ -17,12 +17,12 @@ import ${servicePackage}.${type.name}Service;
 
 /**
  * <p>
- * This class tests the edit action.
+ * This class tests the details action.
  * </p>
  *
  * @author  Scaffolder
  */
-public class EditTest {
+public class DetailsTest {
 
     /**
      * Tests get.
@@ -37,9 +37,8 @@ public class EditTest {
         messageStore.addActionError(MessageScope.FLASH, "missing");
         EasyMock.replay(messageStore);
 
-        Edit action = new Edit();
+        Details action = new Details(service, messageStore);
         action.id = 1;
-        action.setServices(service, messageStore);
 
         String result = action.get();
         assertEquals("error", result);
@@ -59,45 +58,11 @@ public class EditTest {
         MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
         EasyMock.replay(messageStore);
 
-        Edit action = new Edit();
-        action.setServices(service, messageStore);
+        Details action = new Details(service, messageStore);
         action.id = 1;
 
         String result = action.get();
-        assertEquals("input", result);
-        EasyMock.verify(service, messageStore);
-    }
-
-    /**
-     * Tests post.
-     */
-    @Test
-    public void testPost() {
-<#list type.allFields as field>
-  <#if field.hasAnnotation("javax.persistence.ManyToMany")>
-        Integer[] ${field.name}IDs = new Integer[]{1, 2, 3};
-  </#if>
-</#list>
-
-        ${type.name} ${type.fieldName} = new ${type.name}();
-        ${type.name}Service service = EasyMock.createStrictMock(${type.name}Service.class);
-        service.persist(${type.fieldName}<@global.idValues />);
-        EasyMock.replay(service);
-
-        Edit action = new Edit();
-        action.setServices(service, null);
-        action.${type.fieldName} = ${type.fieldName};
-<#list type.allFields as field>
-  <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-        action.${field.name}ID = 1;
-  </#if>
-  <#if field.hasAnnotation("javax.persistence.ManyToMany")>
-        action.${field.name}IDs = ${field.name}IDs;
-  </#if>
-</#list>
-
-        String result = action.post();
         assertEquals("success", result);
-        EasyMock.verify(service);
+        EasyMock.verify(service, messageStore);
     }
 }

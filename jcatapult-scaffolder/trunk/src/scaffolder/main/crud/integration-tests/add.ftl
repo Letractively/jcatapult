@@ -36,7 +36,19 @@ public class AddIntegrationTest extends BaseIntegrationTest {
     public void testPost() throws IOException, ServletException {
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("${uri}/add").
-            // Add parameters here
+<#list type.allFields as field>
+  <#if field.mainType.fullName == "java.lang.String" && !field.hasAnnotation("javax.persistence.Transient")>
+            withParameter("${type.fieldName}.${field.name}", "test ${field.name}").
+  </#if>
+</#list>
+<#list type.allFields as field>
+  <#if field.hasAnnotation("javax.persistence.ManyToMany")>
+            withParameter("${field.name}IDs", "1").
+            withParameter("${field.name}IDs", "2").
+            withParameter("${field.name}IDs", "3").
+  </#if>
+</#list>
+            // Add additional parameters here
             post();
 
         String result = runner.response.getRedirect();

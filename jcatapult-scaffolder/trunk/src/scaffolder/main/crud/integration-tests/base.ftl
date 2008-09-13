@@ -3,6 +3,7 @@ package ${actionPackage};
 
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.test.JPABaseTest;
+import org.junit.Ignore;
 
 import com.google.inject.Inject;
 
@@ -15,6 +16,7 @@ import ${type.fullName};
  *
  * @author  Scaffolder
  */
+@Ignore
 public abstract class BaseIntegrationTest extends JPABaseTest {
     @Inject PersistenceService persistenceService;
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
+import org.jcatapult.mvc.action.result.annotation.Redirects;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.validation.annotation.Valid;
 import org.jcatapult.persistence.domain.Identifiable;
@@ -23,7 +24,10 @@ import ${type.fullName};
  * @author  Scaffolder
  */
 @Action("{id}")
-@Redirect(uri = "${uri}/")
+@Redirects({
+    @Redirect(uri = "${uri}/"),
+    @Redirect(code = "error", uri = "${uri}/")
+})
 public class Edit extends Prepare {
     @Valid
     public ${type.name} ${type.fieldName};
@@ -38,7 +42,7 @@ public class Edit extends Prepare {
     public String get() {
         ${type.fieldName} = service.findById(id);
         if (${type.fieldName} == null) {
-            messageStore.addActionError(MessageScope.REQUEST, "missing");
+            messageStore.addActionError(MessageScope.FLASH, "missing");
             return "error";
         }
 
