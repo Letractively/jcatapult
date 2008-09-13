@@ -4,14 +4,16 @@ package ${actionPackage};
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.struts2.convention.annotation.Result;
-import org.jcatapult.domain.Identifiable;
-import org.jcatapult.struts.action.BaseAction;
+import org.jcatapult.mvc.action.annotation.Action;
+import org.jcatapult.mvc.action.result.annotation.Redirect;
+import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.mvc.validation.annotation.Valid;
+import org.jcatapult.persistence.domain.Identifiable;
 
 import com.google.inject.Inject;
+
 import ${type.fullName};
 <@global.importFields />
-import ${servicePackage}.${type.name}Service;
 
 /**
  * <p>
@@ -20,53 +22,49 @@ import ${servicePackage}.${type.name}Service;
  *
  * @author  Scaffolder
  */
-@Result(name = "error", location = "index.<#if module>ftl<#else>jsp</#if>")
-public class Edit extends BaseAction {
-    private final ${type.name}Service ${type.fieldName}Service;
-    private Integer id;
-    private ${type.name} ${type.fieldName};
+@Action("{id}")
+@Redirect(uri = "${uri}/")
+public class Edit extends Prepare {
+    @Valid
+    public ${type.name} ${type.fieldName};
+    public int id;
     <@global.idVariables />
 
-    @Inject
-    public Edit(${type.name}Service ${type.fieldName}Service) {
-        this.${type.fieldName}Service = ${type.fieldName}Service;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public ${type.name} get${type.name}() {
-        return ${type.fieldName};
-    }
-
-    <@global.idProperties setters=false/>
-
-    @Override
-    public String execute() {
-        ${type.fieldName} = ${type.fieldName}Service.getById(id);
+    /**
+     * Renders the edit form.
+     *
+     * @return  The {@code input} code if the ${type.name} was found for the ID. Otherwise, {@code error}.
+     */
+    public String get() {
+        ${type.fieldName} = service.findById(id);
         if (${type.fieldName} == null) {
-            addActionError("That ${type.name} has been deleted.");
-            return ERROR;
+            messageStore.addActionError(MessageScope.REQUEST, "missing");
+            return "error";
         }
 
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-        ${field.name}Id = ${type.fieldName}.get${field.methodName}().getId();
+        ${field.name}ID = ${type.fieldName}.get${field.methodName}().getId();
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany")>
-        List<Integer> ${field.name}Ids = new ArrayList<Integer>();
+        List<Integer> ${field.name}IDs = new ArrayList<Integer>();
         for (Identifiable identifiable : ${type.fieldName}.get${field.methodName}()) {
-            ${field.name}Ids.add(identifiable.getId());
+            ${field.name}IDs.add(identifiable.getId());
         }
-        this.${field.name}Ids = ${field.name}Ids.toArray(new Integer[${field.name}Ids.size()]);
+        this.${field.name}IDs = ${field.name}IDs.toArray(new Integer[${field.name}IDs.size()]);
 
   </#if>
 </#list>
-        return SUCCESS;
+        return "input";
+    }
+
+    /**
+     * Handles the form submission.
+     *
+     * @return  The {@code success} code if the ${type.name} was updated.
+     */
+    public String post() {
+        service.persist(${type.fieldName}<@global.idParams/>);
+        return "success";
     }
 }

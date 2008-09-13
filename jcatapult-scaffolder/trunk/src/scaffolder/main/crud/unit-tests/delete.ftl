@@ -24,7 +24,7 @@ public class DeleteTest {
         EasyMock.replay(service);
 
         Delete delete = new Delete(service);
-        String result = delete.execute();
+        String result = delete.post();
         assertEquals("success", result);
         EasyMock.verify(service);
     }
@@ -40,8 +40,9 @@ public class DeleteTest {
         EasyMock.replay(service);
 
         Delete delete = new Delete(service);
-        delete.setIds(ids);
-        String result = delete.execute();
+        delete.ids = ids;
+
+        String result = delete.post();
         assertEquals("success", result);
         EasyMock.verify(service);
     }

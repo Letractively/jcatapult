@@ -1,7 +1,9 @@
+import net.java.lang.StringTools
 import org.jcatapult.scaffolder.AbstractScaffolder
+import org.jcatapult.scaffolder.URIPrefixCompletor
 import org.jcatapult.scaffolder.annotation.LongDescription
 import org.jcatapult.scaffolder.annotation.ShortDescription
-import net.java.lang.StringTools
+import org.jcatapult.scaffolder.URIPrefixCompletor
 
 /**
 * This class is a simple CRUD scaffolder for JCatapult.
@@ -18,7 +20,7 @@ import net.java.lang.StringTools
 """)
 public class ActionScaffolder extends AbstractScaffolder {
   public void execute() {
-    String uri = ask("Enter the URI of the action", "", "Invalid URI", "");
+    String uri = ask("Enter the URI of the action", "", "Invalid URI", "", new URIPrefixCompletor());
     if (!uri.startsWith("/")) {
       println("URI must fully qualified rather than relative.");
       System.exit(1);
@@ -38,7 +40,7 @@ public class ActionScaffolder extends AbstractScaffolder {
     // Verify
     String actionClass = pkgName + "." + action;
     String actionTestClass = pkgName + "." + actionTest;
-    String result = uri + ".ftl";
+    String result = uri.endsWith("/") ? uri + "index.ftl" : uri + ".ftl";
 
     String verify = null;
     while (verify != "yes") {
@@ -70,6 +72,10 @@ public class ActionScaffolder extends AbstractScaffolder {
   }
 
   private String actionClass(String uri) {
+    if (uri.endsWith("/")) {
+      uri = uri + "index";
+    }
+
     int lastIndex = uri.lastIndexOf("/");
     String className = toJava(uri.substring(lastIndex + 1));
     return StringTools.capitalize(className);
@@ -112,12 +118,8 @@ public class ActionScaffolder extends AbstractScaffolder {
     executeFreemarkerTemplate("/unit-test.ftl", unitTestDirName + className + "Test.java", params);
     executeFreemarkerTemplate("/integration-test.ftl", integrationTestDirName + className + "IntegrationTest.java", params);
 
-    // If this is a module, add the entity entry into module.xml
-    String webDirName = "src/web/main";
-    if (!new File(webDirName).isDirectory()) {
-      webDirName = "web/WEB-INF/content";
-    }
-
+    // Output the result file
+    String webDirName = "web/WEB-INF/content";
     new File(webDirName + result).getParentFile().mkdirs();
     executeFreemarkerTemplate("/ftl.ftl", webDirName + result, params);
   }

@@ -3,9 +3,9 @@
   <#list localType.allFields as field>
     <#if !field.static && !field.final && field.name != "id" && field.mainType.simpleType &&
             field.mainType.fullName != "boolean" && field.mainType.fullName != "java.lang.Boolean">
-  [@s.textfield key="${prefix}${localType.fieldName}.${field.name}" required="${g.required(field)?string}"/]
+  [@jc.text name="${prefix}${localType.fieldName}.${field.name}" required=${g.required(field)?string}/]
     <#elseif !field.static && !field.final && field.name != "id" && (field.mainType.fullName == "boolean" || field.mainType.fullName == "java.lang.Boolean")>
-  [@s.checkbox key="${prefix}${localType.fieldName}.${field.name}" required="${g.required(field)?string}"/]
+  [@jc.checkbox name="${prefix}${localType.fieldName}.${field.name}" required=${g.required(field)?string}/]
     <#elseif !field.static && !field.final && !field.mainType.primitive && field.mainType.hasAnnotation("javax.persistence.Embeddable")>
       <@inputs field.mainType prefix + localType.fieldName + "." />
     </#if>
@@ -14,35 +14,30 @@
 <#macro listValue field>
   <#assign prop = g.firstPropertyName(field)/>
   <#if prop != "">
-    listValue="${prop}"<#t/>
+    textExpr="${prop}"<#t/>
   </#if>
 </#macro>
 ${r"[#ftl]"}
 <h2>[#if actionType == 'update']Updating[#else]Adding[/#if] a ${type.name}</h2>
-[@s.form action="${r"${actionType}"}" method="POST" theme="semantic"]
+[@jc.form action=actionType method="POST"]
   <div id="form-notice">
     Notice here.
   </div>
-  <!-- Save off the information for updates and deletes -->
-  [@s.hidden name="ids" value="%{${type.fieldName}.id}"/]
+  <!-- Save off the information for edits -->
   [@s.hidden name="${type.fieldName}.id"/]
 
   <@inputs type ""/>
 
-  [@s.action name="prepare" id="prepare"/]
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-  [@s.select list="%{#prepare.${field.pluralName}}" key="${field.name}Id" listKey="id" <@listValue field/> required="true"/]
+  [@jc.select list=${field.pluralName} name="${field.name}ID" valueExpr="id" <@listValue field/> required=true/]
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany")>
-  [@s.checkboxlist list="%{#prepare.${field.pluralName}}" key="${field.name}Ids" listKey="id" <@listValue field/> required="true"/]
+  [@jc.checkboxlist list=${field.pluralName} name="${field.name}IDs" listKey="id" <@listValue field/> required="true"/]
   </#if>
 </#list>
 
   <div id="form-controls">
-    [@s.submit value="Save"/]
-    [#if actionType =="update"]
-      [@s.submit action="delete" value="Delete"/]
-    [/#if]
-    [@s.submit name="redirect:index" value="Cancel"/]
+    [@jc.submit name="Save"/]
+    <a href="${uri}/">Cancel</a>
   </div>
-[/@s.form]
+[/@jc.form]

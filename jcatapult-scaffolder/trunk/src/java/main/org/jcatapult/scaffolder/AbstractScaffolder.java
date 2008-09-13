@@ -238,14 +238,14 @@ public abstract class AbstractScaffolder implements Scaffolder {
     }
 
     /**
-     * Based on the simple class name, this creates a URL that is the same convention as the SEO URL
-     * generation from the Struts2 convention plugin. This breaks on camel case, inserts dashes and
-     * lower cases everything.
+     * Based on the simple class name, this creates a URI that is the same convention as the SEO URL
+     * generation from the JCatapult MVC. This breaks on camel case, inserts dashes and lower cases
+     * everything.
      *
      * @param   simpleClassName The simple class name, without the package.
-     * @return  The URL.
+     * @return  The URI.
      */
-    protected String makeURL(String simpleClassName) {
+    protected String makeURI(String simpleClassName) {
         char[] ca = simpleClassName.toCharArray();
         StringBuilder build = new StringBuilder();
         boolean upper = false;
@@ -263,15 +263,13 @@ public abstract class AbstractScaffolder implements Scaffolder {
     }
 
     /**
-     * Based on the simple class name, this creates a URL that is the same convention as the SEO URL
-     * generation from the Struts2 convention plugin. This breaks on camel case, inserts dashes and
-     * lower cases everything.
+     * Based on the URI, this creates a package name.
      *
-     * @param   dashedURL The simple class name, without the package.
-     * @return  The URL.
+     * @param   dashedURI The URI.
+     * @return  The package name.
      */
-    protected String makePackageName(String dashedURL) {
-        String[] parts = dashedURL.split("-");
+    protected String makePackageName(String dashedURI) {
+        String[] parts = dashedURI.split("-");
         StringBuilder build = new StringBuilder(parts[0]);
         for (int i = 1; i < parts.length; i++) {
             String part = parts[i];

@@ -3,11 +3,12 @@ package ${actionPackage};
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
-import org.jcatapult.struts.action.BaseAction;
+import org.jcatapult.mvc.message.MessageStore;
+import org.jcatapult.mvc.result.form.annotation.FormPrepareMethod;
 
 import com.google.inject.Inject;
+
 <@global.importFields />
 import ${servicePackage}.${type.name}Service;
 
@@ -18,48 +19,32 @@ import ${servicePackage}.${type.name}Service;
  *
  * @author  Brian Pontarelli
  */
-public class Prepare extends BaseAction {
-    private static final Logger logger = Logger.getLogger(Prepare.class.getName());
-    private final ${type.name}Service ${type.fieldName}Service;
+public abstract class Prepare {
+    protected ${type.name}Service service;
+    public MessageStore messageStore;
+
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-    private List<${field.mainType.name}> ${field.pluralName} = new ArrayList<${field.mainType.name}>();
+    public List<${field.mainType.name}> ${field.pluralName} = new ArrayList<${field.mainType.name}>();
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name != "java.util.Map">
-    private List<${field.genericTypes[0].name}> ${field.pluralName} = new ArrayList<${field.genericTypes[0].name}>();
+    public List<${field.genericTypes[0].name}> ${field.pluralName} = new ArrayList<${field.genericTypes[0].name}>();
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name == "java.util.Map">
-    private List<${field.genericTypes[1].name}> ${field.pluralName} = new ArrayList<${field.genericTypes[1].name}>();
+    public List<${field.genericTypes[1].name}> ${field.pluralName} = new ArrayList<${field.genericTypes[1].name}>();
   </#if>
 </#list>
 
     @Inject
-    public Prepare(${type.name}Service ${type.fieldName}Service) {
-        this.${type.fieldName}Service = ${type.fieldName}Service;
+    public void setServices(${type.name}Service service, MessageStore messageStore) {
+        this.service = service;
+        this.messageStore = messageStore;
     }
 
-<#list type.allFields as field>
-  <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-    public List<${field.mainType.name}> get${field.pluralMethodName}() {
-        return ${field.pluralName};
-    }
-
-  <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name != "java.util.Map">
-    public List<${field.genericTypes[0].name}> get${field.pluralMethodName}() {
-        return ${field.pluralName};
-    }
-
-  <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name == "java.util.Map">
-    public List<${field.genericTypes[1].name}> get${field.pluralMethodName}() {
-        return ${field.pluralName};
-    }
-
-  </#if>
-</#list>
-    public String execute() {
+    @FormPrepareMethod
+    public void prepare() {
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToOne") || field.hasAnnotation("javax.persistence.ManyToMany")>
-        ${field.pluralName} = ${type.fieldName}Service.get${field.pluralMethodName}();
+        ${field.pluralName} = service.get${field.pluralMethodName}();
   </#if>
 </#list>
-        return SUCCESS;
     }
 }

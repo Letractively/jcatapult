@@ -3,7 +3,7 @@ package ${servicePackage};
 
 import java.util.List;
 
-import org.jcatapult.test.WebBaseTest;
+import org.jcatapult.persistence.test.JPABaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ import ${type.fullName};
  *
  * @author Scaffolder
  */
-public class ${type.name}ServiceImplTest extends WebBaseTest {
+public class ${type.name}ServiceImplTest extends JPABaseTest {
     private ${type.name}Service service;
 
     @Inject
@@ -33,7 +33,7 @@ public class ${type.name}ServiceImplTest extends WebBaseTest {
 
     @Test
     public void testFind() {
-        List<${type.name}> list = service.find(null);
+        List<${type.name}> list = service.find();
         assertEquals(1, list.size());
         verify(list.get(0));
     }
@@ -42,7 +42,7 @@ public class ${type.name}ServiceImplTest extends WebBaseTest {
     public void testDelete() {
         ${type.name} ${type.fieldName} = make${type.name}();
         service.delete(${type.fieldName}.getId());
-        ${type.name} removed = service.getById(${type.fieldName}.getId());
+        ${type.name} removed = service.findById(${type.fieldName}.getId());
         assertNull(removed);
     }
 
@@ -52,11 +52,11 @@ public class ${type.name}ServiceImplTest extends WebBaseTest {
         ${type.name} ${type.fieldName}2 = make${type.name}();
         ${type.name} ${type.fieldName}3 = make${type.name}();
         service.deleteMany(new int[]{${type.fieldName}.getId(), ${type.fieldName}2.getId(), ${type.fieldName}3.getId()});
-        ${type.name} removed = service.getById(${type.fieldName}.getId());
+        ${type.name} removed = service.findById(${type.fieldName}.getId());
         assertNull(removed);
-        removed = service.getById(${type.fieldName}2.getId());
+        removed = service.findById(${type.fieldName}2.getId());
         assertNull(removed);
-        removed = service.getById(${type.fieldName}3.getId());
+        removed = service.findById(${type.fieldName}3.getId());
         assertNull(removed);
     }
 
@@ -102,7 +102,7 @@ public class ${type.name}ServiceImplTest extends WebBaseTest {
 </#list>
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToMany")>
-        Integer[] ${field.name}Ids = new Integer[]{1, 2, 3};
+        Integer[] ${field.name}IDs = new Integer[]{1, 2, 3};
   </#if>
 </#list>
 

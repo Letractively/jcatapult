@@ -3,7 +3,6 @@ package ${actionPackage};
 
 import static junit.framework.Assert.*;
 
-import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -12,20 +11,31 @@ import ${servicePackage}.${type.name}Service;
 
 /**
  * <p>
- * This class tests the save action.
+ * This class tests the add action.
  * </p>
  *
  * @author  Scaffolder
  */
-public class SaveTest {
+public class AddTest {
+
     /**
-     * Tests save.
+     * Tests get.
      */
     @Test
-    public void testSave() {
+    public void testGet() {
+        Add action = new Add();
+        String result = action.get();
+        assertEquals("input", result);
+    }
+
+    /**
+     * Tests post.
+     */
+    @Test
+    public void testPost() {
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToMany")>
-        Integer[] ${field.name}Ids = new Integer[]{1, 2, 3};
+        Integer[] ${field.name}IDs = new Integer[]{1, 2, 3};
   </#if>
 </#list>
         ${type.name} ${type.fieldName} = new ${type.name}();
@@ -33,21 +43,19 @@ public class SaveTest {
         service.persist(${type.fieldName}<@global.idValues />);
         EasyMock.replay(service);
 
-        Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.replay(configuration);
-
-        Save save = new Save(service, configuration);
-        save.set${type.name}(${type.fieldName});
+        Add action = new Add();
+        action.setServices(service, null);
+        action.${type.fieldName} = ${type.fieldName};
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-        save.set${field.methodName}Id(1);
+        action.${field.name}ID = 1;
   </#if>
   <#if field.hasAnnotation("javax.persistence.ManyToMany")>
-        save.set${field.methodName}Ids(${field.name}Ids);
+        action.${field.name}IDs = ${field.name}IDs;
   </#if>
 </#list>
-        String result = save.execute();
+        String result = action.post();
         assertEquals("success", result);
-        EasyMock.verify(service, configuration);
+        EasyMock.verify(service);
     }
 }

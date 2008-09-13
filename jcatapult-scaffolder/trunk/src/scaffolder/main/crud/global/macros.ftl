@@ -13,48 +13,19 @@ import ${field.genericTypes[1].fullName};
 <#macro idVariables>
   <#list type.allFields as field>
     <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-    private Integer ${field.name}Id;
+    public Integer ${field.name}ID;
     </#if>
     <#if field.hasAnnotation("javax.persistence.ManyToMany")>
-    private Integer[] ${field.name}Ids;
+    public Integer[] ${field.name}IDs;
     </#if>
   </#list>
 </#macro>
 
-<#macro idProperties setters>
-  <#list type.allFields as field>
-    <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-    public Integer get${field.methodName}Id() {
-        return ${field.name}Id;
-    }
-    <#if setters>
+<#macro idParams><#list type.allFields as field><#if field.hasAnnotation("javax.persistence.ManyToOne")>, ${field.name}ID</#if><#if field.hasAnnotation("javax.persistence.ManyToMany")>, ${field.name}IDs</#if></#list></#macro>
 
-    public void set${field.methodName}Id(Integer id) {
-        this.${field.name}Id = id;
-    }
-    </#if>
+<#macro idParamsList><#list type.allFields as field><#if field.hasAnnotation("javax.persistence.ManyToOne")>, Integer ${field.name}ID</#if><#if field.hasAnnotation("javax.persistence.ManyToMany")>, Integer[] ${field.name}IDs</#if></#list></#macro>
 
-    </#if>
-    <#if field.hasAnnotation("javax.persistence.ManyToMany")>
-    public Integer[] get${field.methodName}Ids() {
-        return ${field.name}Ids;
-    }
-    <#if setters>
-
-    public void set${field.methodName}Ids(Integer[] ids) {
-        this.${field.name}Ids = ids;
-    }
-    </#if>
-
-    </#if>
-  </#list>
-</#macro>
-
-<#macro idParams><#list type.allFields as field><#if field.hasAnnotation("javax.persistence.ManyToOne")>, ${field.name}Id</#if><#if field.hasAnnotation("javax.persistence.ManyToMany")>, ${field.name}Ids</#if></#list></#macro>
-
-<#macro idParamsList><#list type.allFields as field><#if field.hasAnnotation("javax.persistence.ManyToOne")>, Integer ${field.name}Id</#if><#if field.hasAnnotation("javax.persistence.ManyToMany")>, Integer[] ${field.name}Ids</#if></#list></#macro>
-
-<#macro idValues><#list type.allFields as field><#if field.hasAnnotation("javax.persistence.ManyToOne")>, 1</#if><#if field.hasAnnotation("javax.persistence.ManyToMany")>, ${field.name}Ids</#if></#list></#macro>
+<#macro idValues><#list type.allFields as field><#if field.hasAnnotation("javax.persistence.ManyToOne")>, 1</#if><#if field.hasAnnotation("javax.persistence.ManyToMany")>, ${field.name}IDs</#if></#list></#macro>
 
 <#function firstPropertyName field>
   <#if field.hasAnnotation("javax.persistence.ManyToOne")>
@@ -76,9 +47,7 @@ import ${field.genericTypes[1].fullName};
 <#function jspEL value><#return '$' + '{' + value + '}'/></#function>
 
 <#function required field>
-  <#assign column = field.getAnnotation("javax.persistence.Column")!""/>
-  <#if (column == "" && field.mainType.primitive && field.mainType.fullName != "boolean") ||
-          (column != "" && !column.parameters['nullable']!true)>
+  <#if field.hasAnnotation("org.jcatapult.mvc.validation.annotation.Required")>
     <#return true/>
   </#if>
   <#return false/>
