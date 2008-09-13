@@ -39,7 +39,7 @@ ${r"[#ftl]"}
     [#list ${type.pluralFieldName} as ${type.fieldName}]
       <tr>
         <@values type ""/>
-        <td class="[#if ${type.fieldName}_index % 2 == 0]even[#else]odd[/#if] edit-row"><a href="edit?id=${g.jspEL(type.fieldName + "id")}">Edit</a></td>
+        <td class="[#if ${type.fieldName}_index % 2 == 0]even[#else]odd[/#if] edit-row"><a href="edit?id=${g.jspEL(type.fieldName + ".id")}">Edit</a></td>
         <td class="[#if ${type.fieldName}_index % 2 == 0]even[#else]odd[/#if] delete-row">[@jc.checkbox name="ids" value="${g.jspEL(type.fieldName + '.id')}"/]</td>
       </tr>
     [/#list]
