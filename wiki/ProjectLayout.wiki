@@ -70,7 +70,7 @@ web                              <- Web resources
  |   |- decorators               <- SiteMesh decorators
  |   |   |- ...
  |   |
- |   |- includes                 <- Standard include files for SiteMesh/JSPs
+ |   |- message                  <- Localization and internationalization messages
  |   |   |- ...
  |   |
 }}}
@@ -148,7 +148,7 @@ src
  |- conf
  |   |- main                     <- Main configuration
  |   |   |- META-INF
- |   |   |   |- persistence.xml  <- JPA configuration file
+ |   |   |   |- module.xml       <- Module configuration file
  |   |
  |   |- test
  |   |   |- unit                 <- Unit test configuration
@@ -157,17 +157,21 @@ src
  |   |   |- integration          <- Integration test configuration
  |   |   |   |- ...
  |
- |- web                          <- Web resources like FreeMarker templates and such
- |   |- main
- |   |   |- ...
- |   |
- |   |- test
- |   |   |- ...
+web                              <- Web resources
  |
- |- static                       <- Static web resources like CSS, images, JavaScript
- |   |- main
+ |- module                       <- Static web resources like CSS, images, JavaScript
+ | 
+ |- WEB-INF
+ |   |- config                   <- Testing configuration files (FOR TESTING ONLY)
  |   |   |- ...
  |   |
- |   |- test
+ |   |- content                  <- Module content JSPs/FreeMarker
  |   |   |- ...
+ |   |
+ |   |- decorators               <- SiteMesh decorators (FOR TESTING ONLY)
+ |   |   |- ...
+ |   |
+ |   |- message                  <- Localization and internationalization messages
+ |   |   |- ...
+ |   |
 }}}
