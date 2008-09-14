@@ -17,40 +17,15 @@
 -->
 
 <!--
-  This build file is quite complex so I'll document it here.
+  This creates a module JAR file by packaging up the classes from
+  target/classes/main and these web directories:
 
-  First off, this overrides the app and jar targets because modules
-  have special requirements. These requirements are:
+    web/WEB-INF/message
+    web/WEB-INF/email
+    web/WEB-INF/content
 
-  1. The module needs a web application constructed from scratch
-     because it only contains JSPs and classes. It doesn't contain
-     the web.xml and all the other web files necessary to run a web
-     application in Tomcat.
-  2. The module doesn't contain a persistence.xml file. This is
-     done so that the modules can define everything in a single
-     file called module.xml. If the module had a persistence.xml
-     file it could never end up in the classpath, otherwise it might
-     override an applications file.
-
-  In order to handle all of this, I create a test only JAR file that
-  contains only the persistence.xml file. This test JAR is built using
-  a persistence.xml file from this plugin in the files/META-INF directory.
-  The JAR is created in the overridden jar target.
-
-  The steps to create the JAR are:
-
-  1. Copy the persistence.xml from this plugin directories files/META-INF
-     directory to a tmp dir. This file is token replaced so that the
-     JNDI name of the JDBC connection pool is correctly setup for testing.
-  2. The entity classes from the module.xml file are appended to
-     the persistence.xml file using a macro named module_add_entities
-     that is define in the module-macros.xml file.
-  3. The test JAR file is then created containing only the persistence.xml
-     file that was created.
-
-  This test JAR is then copied into the testing web application when it
-  is created. This allows the testing web application to run with the
-  correct JPA configuration.
+  This also creates a simple testing JAR file that contains the JPA
+  persistence.xml for module testing in development.
 -->
 <project name="jar">
   <dirname property="dir.plugin.module" file="${ant.file.jar}"/>
@@ -112,9 +87,6 @@
     <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}.jar">
       <fileset dir="${dir.target.classes.test.unit}" includes="META-INF/**/*"/>
     </jar>
-<!-- I moved the persistence.xml to the unit test output dir for debugging in IDEs
-    <delete dir="${java.target}/META-INF"/>
--->
 
      <!--Publish everything except the special test JAR-->
     <publish publishWorkflow="workflow.publish.local" integrationbuild="true"/>

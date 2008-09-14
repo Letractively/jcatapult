@@ -10,20 +10,19 @@
   <property name="jdk.project" value="${jdk1.6}"/>
   <property name="version.jcatapult" value="@JCATAPULT_VERSION@"/>
 
-   <!-- database props -->
+  <!-- Database properties -->
   <property name="project.requires.database" value="true"/>
   <property name="project.contains.domain" value="true"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
-      <!-- Most applications don't need the servlet-api, but if your application does, uncomment it here -->
-      <!--<artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>-->
+      <artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="compile">
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="hibernate.org" project="hibernate-annotations" name="hibernate-annotations" version="3.3.1" type="jar" />
+      <artifact group="hibernate.org" project="hibernate-annotations" name="hibernate-annotations" version="3.3.1" type="jar"/>
 
-      <!-- jcat deps -->
+      <!-- jcatapult deps -->
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-mvc" name="jcatapult-mvc" version="${version.jcatapult}" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence" version="${version.jcatapult}" type="jar"/>
