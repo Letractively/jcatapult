@@ -77,6 +77,17 @@ public class Form extends AbstractControl {
     @Override
     public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
         String action = (String) attributes.get("action");
+
+        // Handle relative URIs such as 'delete' with a current URI of '/user/' will result in
+        // a new URI of '/user/delete'
+        if (!action.startsWith("/")) {
+            String currentURI = currentInvocation().uri();
+            int index = currentURI.lastIndexOf("/");
+            if (index >= 1) {
+                action = currentURI.substring(0, index) + "/" + action;
+            }
+        }
+
         ActionInvocation current = actionInvocationStore.getCurrent();
 
         ActionInvocation actionInvocation = actionMapper.map(action, false);
