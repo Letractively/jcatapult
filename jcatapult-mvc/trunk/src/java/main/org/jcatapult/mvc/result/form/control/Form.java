@@ -15,8 +15,12 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
+import java.io.Writer;
 import java.util.Map;
 
+import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.action.ActionMapper;
 import org.jcatapult.mvc.result.control.AbstractControl;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 import org.jcatapult.mvc.result.form.FormPreparer;
@@ -36,10 +40,15 @@ import com.google.inject.Inject;
 )
 public class Form extends AbstractControl {
     private final FormPreparer formPreparer;
+    private final ActionInvocationStore actionInvocationStore;
+    private final ActionMapper actionMapper;
+    private boolean differentURI = false;
 
     @Inject
-    public Form(FormPreparer formPreparer) {
+    public Form(FormPreparer formPreparer, ActionInvocationStore actionInvocationStore, ActionMapper actionMapper) {
         this.formPreparer = formPreparer;
+        this.actionInvocationStore = actionInvocationStore;
+        this.actionMapper = actionMapper;
     }
 
     /**
@@ -51,12 +60,51 @@ public class Form extends AbstractControl {
      */
     @Override
     protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        formPreparer.prepare();
-
         // Move the bundle attribute into the request
         if (attributes.containsKey("bundle")) {
             request.setAttribute("jcatapultControlBundle", attributes.remove("bundle"));
         }
+    }
+
+    /**
+     * Overrides the renderStart in order to change the current ActionInvocation if the action for the
+     * form is different than the current invocation action.
+     *
+     * @param   writer The writer to output to.
+     * @param   attributes The attributes.
+     * @param   dynamicAttributes The dynamic attributes from the tag.
+     */
+    @Override
+    public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+        String action = (String) attributes.get("action");
+        ActionInvocation current = actionInvocationStore.getCurrent();
+
+        ActionInvocation actionInvocation = actionMapper.map(action, false);
+        if (actionInvocation == null || actionInvocation.action() == null) {
+            throw new IllegalArgumentException("The form action [" + action + "] is not a valid URI " +
+                "that maps to an action class by the JCatapult MVC.");
+        } else if (current == null || current.action() == null ||
+                !current.action().getClass().equals(actionInvocation.action().getClass())){
+            actionInvocationStore.setCurrent(actionInvocation);
+            differentURI = true;
+        }
+
+        formPreparer.prepare();
+        super.renderStart(writer, attributes, dynamicAttributes);
+    }
+
+    /**
+     * Overrides the renderEnd method to pop the action invocation of the form from the stack.
+     *
+     * @param   writer The writer to output to.
+     */
+    @Override
+    public void renderEnd(Writer writer) {
+        if (differentURI) {
+            actionInvocationStore.popCurrent();
+        }
+
+        super.renderEnd(writer);
     }
 
     /**

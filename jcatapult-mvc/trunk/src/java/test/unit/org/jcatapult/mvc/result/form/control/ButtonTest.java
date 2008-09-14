@@ -15,7 +15,13 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.example.action.user.Edit;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.result.form.ControlBaseTest;
+import org.junit.Test;
+
+import com.google.inject.Inject;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -24,12 +30,41 @@ import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
  *
  * @author  Brian Pontarelli
  */
-public class ButtonTest extends AbstractButtonInputTest {
-    protected AbstractButtonInput getControl(ExpressionEvaluator ee) {
-        return new Button();
+public class ButtonTest extends ControlBaseTest {
+    @Inject private Button button;
+
+    @Test
+    public void testActionLess() {
+        ais.setCurrent(new DefaultActionInvocation(null, "/button", null, null));
+        run(button,
+            mapNV("name", "button", "value", "test-value", "class", "css-class", "bundle", "/button-bundle"),
+            "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_button\" value=\"\"/>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\"><input type=\"button\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button-Bundle\"/></div>\n" +
+            "</div>\n");
     }
 
-    protected String getType() {
-        return "button";
+    @Test
+    public void testAction() {
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
+        run(button,
+            mapNV("name", "button", "value", "test-value", "class", "css-class"),
+            "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_button\" value=\"\"/>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\"><input type=\"button\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testActionAttribute() {
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
+        run(button,
+            mapNV("name", "button", "action", "/foo", "value", "test-value", "class", "css-class"),
+            "<input type=\"hidden\" name=\"__jc_a_button\" value=\"/foo\"/>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\"><input type=\"button\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
+            "</div>\n");
     }
 }

@@ -57,6 +57,6 @@ public abstract class AbstractComponentControl extends AbstractControl {
      * @return  The root, which is a {@link FreeMarkerMap}.
      */
     protected Object makeRoot(Map<String, Object> parameters) {
-        return new FreeMarkerMap(request, response, expressionEvaluator, action, parameters);
+        return new FreeMarkerMap(request, response, expressionEvaluator, currentAction(), parameters);
     }
 }

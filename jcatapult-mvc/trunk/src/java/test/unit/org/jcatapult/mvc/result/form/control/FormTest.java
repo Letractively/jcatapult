@@ -17,25 +17,17 @@ package org.jcatapult.mvc.result.form.control;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Locale;
 import javax.servlet.ServletException;
 
-import org.easymock.EasyMock;
 import org.example.action.user.Edit;
-import org.jcatapult.container.ContainerResolver;
-import org.jcatapult.freemarker.DefaultFreeMarkerService;
-import org.jcatapult.freemarker.FreeMarkerService;
-import org.jcatapult.freemarker.OverridingTemplateLoader;
-import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.example.action.user.Index;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
-import org.jcatapult.mvc.result.control.AbstractControlTest;
-import org.jcatapult.mvc.result.form.DefaultFormPreparer;
-import org.jcatapult.mvc.result.form.FormPreparer;
+import org.jcatapult.mvc.result.form.ControlBaseTest;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -45,63 +37,56 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class FormTest extends AbstractControlTest {
+public class FormTest extends ControlBaseTest {
+    @Inject Form form;
+
     @Test
     public void testNoPrepare() {
-        ActionInvocation ai = new DefaultActionInvocation(null, "/test", null, null);
-        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.getCurrent()).andReturn(ai);
-        EasyMock.replay(ais);
+        request.setUri("/user/");
+        Index index = new Index();
+        ais.setCurrent(new DefaultActionInvocation(index, "/user/", null, null));
 
-        FormPreparer formPreparer = new DefaultFormPreparer(ais);
-        Form form = new Form(formPreparer);
-        FreeMarkerService fms = new DefaultFreeMarkerService(makeConfiguration(), makeEnvironmenResolver(),
-            new OverridingTemplateLoader(makeContainerResolver()));
-        form.setServices(Locale.US, makeRequest(false), makeActionInvocationStore(null, "/test"),
-            fms);
-        StringWriter writer = new StringWriter();
-        form.renderStart(writer, mapNV("action", "/test", "method", "POST"), new HashMap<String, String>());
-        form.renderEnd(writer);
-        assertEquals(
+        run(form,
+            mapNV("action", "/user/", "method", "POST"),
             "<div class=\"form\">\n" +
-            "<form action=\"/test\" method=\"POST\">\n" +
+            "<form action=\"/user/\" method=\"POST\">\n" +
             "</form>\n" +
-            "</div>\n", writer.toString());
-
-        EasyMock.verify(ais);
+            "</div>\n");
     }
 
     @Test
     public void testPrepare() throws IOException, ServletException {
-        Edit action = new Edit();
-        ActionInvocation ai = new DefaultActionInvocation(action, "/test", null, null);
-        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.getCurrent()).andReturn(ai);
-        EasyMock.replay(ais);
+        request.setUri("/user/edit");
+        Edit edit = new Edit();
+        ais.setCurrent(new DefaultActionInvocation(edit, "/user/edit", null, null));
 
-        FormPreparer formPreparer = new DefaultFormPreparer(ais);
-        Form form = new Form(formPreparer);
-        FreeMarkerService fms = new DefaultFreeMarkerService(makeConfiguration(), makeEnvironmenResolver(),
-            new OverridingTemplateLoader(makeContainerResolver()));
-        form.setServices(Locale.US, null, makeActionInvocationStore(null, "/test"), fms);
-        StringWriter writer = new StringWriter();
-        form.renderStart(writer, mapNV("action", "/test", "method", "POST"), new HashMap<String, String>());
-        form.renderEnd(writer);
-        assertEquals(
+        run(form,
+            mapNV("action", "/user/edit", "method", "POST"),
             "<div class=\"form\">\n" +
-            "<form action=\"/test\" method=\"POST\">\n" +
+            "<form action=\"/user/edit\" method=\"POST\">\n" +
             "</form>\n" +
-            "</div>\n", writer.toString());
-        assertTrue(action.formPrepared);
-
-        EasyMock.verify(ais);
+            "</div>\n");
+        assertTrue(edit.formPrepared);
     }
 
-    protected ContainerResolver makeContainerResolver() {
-        ContainerResolver containerResolver = EasyMock.createStrictMock(ContainerResolver.class);
-        EasyMock.expect(containerResolver.getRealPath("WEB-INF/control-templates/form-start_en_US.ftl")).andReturn("src/ftl/main/WEB-INF/control-templates/form-start.ftl");
-        EasyMock.expect(containerResolver.getRealPath("WEB-INF/control-templates/form-end_en_US.ftl")).andReturn("src/ftl/main/WEB-INF/control-templates/form-end.ftl");
-        EasyMock.replay(containerResolver);
-        return containerResolver;
+    @Test
+    public void testActionIsDifferentURI() throws IOException, ServletException {
+        request.setUri("/user/");
+        Index index = new Index();
+        ais.setCurrent(new DefaultActionInvocation(index, "/user/", null, null));
+
+        StringWriter writer = new StringWriter();
+        form.renderStart(writer, mapNV("action", "/user/edit", "method", "POST"), map("param", "param-value"));
+
+        Edit edit = (Edit) ais.getCurrent().action();
+        assertTrue(edit.formPrepared);
+
+        form.renderEnd(writer);
+        assertSame(Index.class, ais.getCurrent().action().getClass());
+        assertEquals(
+            "<div class=\"form\">\n" +
+            "<form action=\"/user/edit\" method=\"POST\">\n" +
+            "</form>\n" +
+            "</div>\n", writer.toString());
     }
 }

@@ -52,8 +52,8 @@ public abstract class AbstractValueInput extends AbstractInput {
 
         String name = (String) attributes.get("name");
         String value;
-        if (!attributes.containsKey("value") && action != null) {
-            value = expressionEvaluator.getValue(name, action, dynamicAttributes);
+        if (!attributes.containsKey("value") && currentAction() != null) {
+            value = expressionEvaluator.getValue(name, currentAction(), dynamicAttributes);
             if (value == null) {
                 value = (String) attributes.get("defaultValue");
             }

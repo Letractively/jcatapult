@@ -16,8 +16,12 @@
 package org.jcatapult.mvc.result.form.control;
 
 import org.example.action.user.Edit;
+import org.jcatapult.mvc.result.form.ControlBaseTest;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.message.scope.MessageScope;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -27,16 +31,15 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class FileTest extends AbstractInputTest {
-    public FileTest() {
-        super(true);
-    }
+public class FileTest extends ControlBaseTest {
+    @Inject File file;
 
     @Test
     public void testActionLess() {
-        AbstractInput input = new File();
-        run(input, null, "file", "foo.bar", "test", "Test",
-            mapNV("name", "test", "class", "css-class", "bundle", "foo.bar"),
+        ais.setCurrent(new DefaultActionInvocation(null, "/file", null, null));
+
+        run(file,
+            mapNV("name", "test", "class", "css-class", "bundle", "/file-bundle"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
@@ -46,8 +49,10 @@ public class FileTest extends AbstractInputTest {
 
     @Test
     public void testAction() {
-        AbstractInput input = new File();
-        run(input, new Edit(), "file", "/test", "user.profile", "Your profile",
+        Edit action = new Edit();
+        ais.setCurrent(new DefaultActionInvocation(action, "/file", null, null));
+
+        run(file,
             mapNV("name", "user.profile", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.profile@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -58,13 +63,18 @@ public class FileTest extends AbstractInputTest {
 
     @Test
     public void testFieldErrors() {
-        AbstractInput input = new File();
-        run(input, new Edit(), "file", "/test", "user.profile", "Your profile",
+        Edit action = new Edit();
+        ais.setCurrent(new DefaultActionInvocation(action, "/file", null, null));
+
+        messageStore.addFieldError(MessageScope.REQUEST, "user.profile", "fieldError1");
+        messageStore.addFieldError(MessageScope.REQUEST, "user.profile", "fieldError2");
+
+        run(file,
             mapNV("name", "user.profile", "class", "css-class"),
             "<input type=\"hidden\" name=\"user.profile@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_profile\" class=\"label\"><span class=\"error\">Your profile (Profile is required, Profile must be cool)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"file\" class=\"css-class\" id=\"user_profile\" name=\"user.profile\"/></div>\n" +
-            "</div>\n", "Profile is required", "Profile must be cool");
+            "</div>\n");
     }
 }

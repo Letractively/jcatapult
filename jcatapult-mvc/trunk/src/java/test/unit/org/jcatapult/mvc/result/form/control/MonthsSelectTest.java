@@ -15,11 +15,13 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import org.easymock.EasyMock;
 import org.example.action.user.Edit;
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.example.domain.User;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.result.form.ControlBaseTest;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -29,20 +31,14 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class MonthsSelectTest extends AbstractInputTest {
-    public MonthsSelectTest() {
-        super(true);
-    }
+public class MonthsSelectTest extends ControlBaseTest {
+    @Inject MonthsSelect monthsSelect;
 
     @Test
     public void testActionLess() {
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.replay(ee);
-
-        MonthsSelect select = new MonthsSelect();
-        select.setExpressionEvaluator(ee);
-        run(select, null, "select", "foo.bar", "test", "Test",
-            mapNV("name", "test", "class", "css-class", "bundle", "foo.bar"),
+        ais.setCurrent(new DefaultActionInvocation(null, "/months-select", null, null));
+        run(monthsSelect,
+            mapNV("name", "test", "class", "css-class", "bundle", "/months-select-bundle"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
@@ -63,26 +59,22 @@ public class MonthsSelectTest extends AbstractInputTest {
             "  </select>\n" +
             "</div>\n" +
             "</div>\n");
-
-        EasyMock.verify(ee);
     }
 
     @Test
     public void testAction() {
-        Edit action = new Edit();
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("month", action)).andReturn(5);
-        EasyMock.replay(ee);
+        Edit edit = new Edit();
+        edit.user = new User();
+        edit.user.setMonth(5);
 
-        MonthsSelect select = new MonthsSelect();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "/test", "month", "Month",
-            mapNV("name", "month", "class", "css-class"),
-            "<input type=\"hidden\" name=\"month@param\" value=\"param-value\"/>\n" +
+        ais.setCurrent(new DefaultActionInvocation(edit, "/months-select", null, null));
+        run(monthsSelect,
+            mapNV("name", "user.month", "class", "css-class"),
+            "<input type=\"hidden\" name=\"user.month@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"month\" class=\"label\">Month</label></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_month\" class=\"label\">Month</label></div>\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"month\" name=\"month\">\n" +
+            "  <select class=\"css-class\" id=\"user_month\" name=\"user.month\">\n" +
             "    <option value=\"1\">January</option>\n" +
             "    <option value=\"2\">February</option>\n" +
             "    <option value=\"3\">March</option>\n" +
@@ -98,7 +90,5 @@ public class MonthsSelectTest extends AbstractInputTest {
             "  </select>\n" +
             "</div>\n" +
             "</div>\n");
-
-        EasyMock.verify(ee);
     }
 }

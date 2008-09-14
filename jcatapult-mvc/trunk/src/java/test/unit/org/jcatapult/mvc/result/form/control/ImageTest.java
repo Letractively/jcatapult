@@ -15,11 +15,12 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import org.easymock.EasyMock;
 import org.example.action.user.Edit;
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.result.form.ControlBaseTest;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -29,30 +30,54 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class ImageTest extends AbstractButtonInputTest {
-    protected AbstractButtonInput getControl(ExpressionEvaluator ee) {
-        return new Image();
+public class ImageTest extends ControlBaseTest {
+    @Inject private Image image;
+
+    @Test
+    public void testActionLess() {
+        ais.setCurrent(new DefaultActionInvocation(null, "/image", null, null));
+        run(image,
+            mapNV("name", "image", "value", "test-value", "class", "css-class", "bundle", "/image-bundle", "src", "foo.gif"),
+            "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image-Bundle\"/></div>\n" +
+            "</div>\n");
     }
 
-    protected String getType() {
-        return "image";
+    @Test
+    public void testAction() {
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
+        run(image,
+            mapNV("name", "image", "value", "test-value", "class", "css-class", "src", "foo.gif"),
+            "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testActionAttribute() {
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
+        run(image,
+            mapNV("name", "image", "action", "/foo", "value", "test-value", "class", "css-class", "src", "foo.gif"),
+            "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_image\" value=\"/foo\"/>\n" +
+            "<div class=\"input\">\n" +
+            "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "</div>\n");
     }
 
     @Test
     public void testIsmap() {
-        Edit action = new Edit();
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.replay(ee);
-
-        AbstractButtonInput input = getControl(ee);
-        run(input, action, getType(), "foo.bar", "test", "Test",
-            mapNV("name", "test", "src", "foo.jpg", "value", "test-value", "class", "css-class", "bundle", "foo.bar", "ismap", true),
-            "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<input type=\"hidden\" name=\"__jc_a_test\" value=\"\"/>\n" +
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
+        run(image,
+            mapNV("name", "image", "value", "test-value", "class", "css-class", "ismap", true, "src", "foo.gif"),
+            "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"" + getType() + "\" class=\"css-class\" id=\"test\" ismap=\"ismap\" name=\"test\" src=\"foo.jpg\" value=\"Test\"/></div>\n" +
+            "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" ismap=\"ismap\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
             "</div>\n");
-
-        EasyMock.verify(ee);
     }
 }

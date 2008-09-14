@@ -15,10 +15,12 @@
  */
 package org.example.domain;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jcatapult.mvc.validation.annotation.Required;
 import org.jcatapult.mvc.validation.annotation.ValidMap;
@@ -41,6 +43,14 @@ public class User {
     private List<User> siblings = new ArrayList<User>();
     @Required
     private String[] securityQuestions;
+
+    private int month;
+    private File profile;
+
+    private int[] intIDs;
+    private Set<String> setIDs;
+    private List<Integer> listIDs;
+    private Boolean maleWrapper;
 
     private boolean active;
 
@@ -123,5 +133,53 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public int[] getIntIDs() {
+        return intIDs;
+    }
+
+    public void setIntIDs(int[] intIDs) {
+        this.intIDs = intIDs;
+    }
+
+    public Set<String> getSetIDs() {
+        return setIDs;
+    }
+
+    public void setSetIDs(Set<String> setIDs) {
+        this.setIDs = setIDs;
+    }
+
+    public List<Integer> getListIDs() {
+        return listIDs;
+    }
+
+    public void setListIDs(List<Integer> listIDs) {
+        this.listIDs = listIDs;
+    }
+
+    public Boolean getMaleWrapper() {
+        return maleWrapper;
+    }
+
+    public void setMaleWrapper(Boolean maleWrapper) {
+        this.maleWrapper = maleWrapper;
+    }
+
+    public File getProfile() {
+        return profile;
+    }
+
+    public void setProfile(File profile) {
+        this.profile = profile;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
     }
 }
