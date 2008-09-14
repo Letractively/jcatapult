@@ -24,7 +24,7 @@ import org.example.action.user.Edit;
 import org.example.domain.User;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.message.scope.MessageScope;
-import org.jcatapult.mvc.result.form.ControlBaseTest;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
 import com.google.inject.Inject;

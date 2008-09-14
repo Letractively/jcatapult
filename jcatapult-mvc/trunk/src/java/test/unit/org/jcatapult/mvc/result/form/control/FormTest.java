@@ -22,7 +22,7 @@ import javax.servlet.ServletException;
 import org.example.action.user.Edit;
 import org.example.action.user.Index;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
-import org.jcatapult.mvc.result.form.ControlBaseTest;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;

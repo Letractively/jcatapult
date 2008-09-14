@@ -15,21 +15,13 @@
  */
 package org.jcatapult.mvc.result.message.control;
 
-import java.io.StringWriter;
-import java.util.Locale;
-import javax.servlet.http.HttpServletRequest;
-
-import org.easymock.EasyMock;
 import org.example.action.user.Edit;
-import org.jcatapult.l10n.MessageProvider;
-import org.jcatapult.l10n.MissingMessageException;
-import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
-import org.jcatapult.mvc.result.control.AbstractControlTest;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -39,104 +31,51 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class MessageTest extends AbstractControlTest {
+public class MessageTest extends ControlBaseTest {
+    @Inject Message message;
+
     @Test
     public void testMessageAction() {
-        MessageProvider provider = EasyMock.createStrictMock(MessageProvider.class);
-        EasyMock.expect(provider.getMessage("/edit", "key")).andReturn("message");
-        EasyMock.replay(provider);
-
-        ActionInvocation ai = new DefaultActionInvocation(new Edit(), "/edit", null, null);
-        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.getCurrent()).andReturn(ai);
-        EasyMock.replay(ais);
-
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getAttribute("jcatapultControlBundle")).andReturn(null);
-        EasyMock.replay(request);
-
-        StringWriter writer = new StringWriter();
-        Message message = new Message(provider);
-        message.setServices(Locale.US, request, ais, makeFreeMarkerService("message"));
-        message.renderStart(writer, mapNV("key", "key"), null);
-        message.renderEnd(writer);
-        assertEquals("message", writer.toString());
-        EasyMock.verify(provider, ais);
+        Edit action = new Edit();
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+        run(message,
+            mapNV("key", "key"),
+            "American English Message"
+        );
     }
 
     @Test
     public void testMessageBundle() {
-        MessageProvider provider = EasyMock.createStrictMock(MessageProvider.class);
-        EasyMock.expect(provider.getMessage("bundle", "key")).andReturn("message");
-        EasyMock.replay(provider);
-
-        ActionInvocation ai = new DefaultActionInvocation(new Edit(), "/edit", null, null);
-        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.getCurrent()).andReturn(ai);
-        EasyMock.replay(ais);
-
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getAttribute("jcatapultControlBundle")).andReturn(null);
-        EasyMock.replay(request);
-
-        StringWriter writer = new StringWriter();
-        Message message = new Message(provider);
-        message.setServices(Locale.US, request, ais, makeFreeMarkerService("message"));
-        message.renderStart(writer, mapNV("key", "key", "bundle", "bundle"), null);
-        message.renderEnd(writer);
-        assertEquals("message", writer.toString());
-        EasyMock.verify(provider, ais);
+        Edit action = new Edit();
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+        run(message,
+            mapNV("key", "key", "bundle", "/user/edit-bundle"),
+            "Bundle Message"
+        );
     }
 
     @Test
     public void testMessageFailure() {
-        MessageProvider provider = EasyMock.createStrictMock(MessageProvider.class);
-        EasyMock.expect(provider.getMessage("/edit", "key")).andThrow(new MissingMessageException());
-        EasyMock.replay(provider);
-
-        ActionInvocation ai = new DefaultActionInvocation(null, "/edit", null, null);
-        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.getCurrent()).andReturn(ai);
-        EasyMock.replay(ais);
-
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getAttribute("jcatapultControlBundle")).andReturn(null);
-        EasyMock.replay(request);
-
-        StringWriter writer = new StringWriter();
-        Message message = new Message(provider);
-        message.setServices(Locale.US, request, ais, makeFreeMarkerService("message"));
+        Edit action = new Edit();
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
         try {
-            message.renderStart(writer, mapNV("key", "key"), null);
-            message.renderEnd(writer);
+            run(message,
+            mapNV("key", "bad"),
+                "Bundle message"
+            );
             fail("Should have failed");
         } catch (IllegalStateException e) {
             // Expected
         }
-        EasyMock.verify(provider, ais);
     }
 
     @Test
     public void testDefaultMessage() {
-        MessageProvider provider = EasyMock.createStrictMock(MessageProvider.class);
-        EasyMock.expect(provider.getMessage("/edit", "key")).andThrow(new MissingMessageException());
-        EasyMock.replay(provider);
-
-        ActionInvocation ai = new DefaultActionInvocation(null, "/edit", null, null);
-        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
-        EasyMock.expect(ais.getCurrent()).andReturn(ai);
-        EasyMock.replay(ais);
-
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getAttribute("jcatapultControlBundle")).andReturn(null);
-        EasyMock.replay(request);
-
-        StringWriter writer = new StringWriter();
-        Message message = new Message(provider);
-        message.setServices(Locale.US, request, ais, makeFreeMarkerService("message"));
-        message.renderStart(writer, mapNV("key", "key", "default", "Message"), null);
-        message.renderEnd(writer);
-        assertEquals("Message", writer.toString());        
-        EasyMock.verify(provider, ais);
+        Edit action = new Edit();
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+        run(message,
+            mapNV("key", "bad", "default", "Message"),
+            "Message"
+        );
     }
 }

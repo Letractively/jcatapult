@@ -98,7 +98,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     throws ExpressionException {
         Object value = getValue(expression, object);
         if (value == null) {
-            return "";
+            return null;
         }
 
         Class<?> type = value.getClass();

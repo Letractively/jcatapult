@@ -15,11 +15,13 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import org.easymock.EasyMock;
 import org.example.action.user.Edit;
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.example.domain.User;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -29,20 +31,14 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class YearsSelectTest extends AbstractInputTest {
-    public YearsSelectTest() {
-        super(true);
-    }
+public class YearsSelectTest extends ControlBaseTest {
+    @Inject YearsSelect yearsSelect;
 
     @Test
     public void testActionLess() {
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.replay(ee);
-
-        YearsSelect select = new YearsSelect();
-        select.setExpressionEvaluator(ee);
-        run(select, null, "select", "foo.bar", "test", "Test",
-            mapNV("name", "test", "class", "css-class", "bundle", "foo.bar"),
+        ais.setCurrent(new DefaultActionInvocation(null, "/years-select", null, null));
+        run(yearsSelect,
+            mapNV("name", "test", "class", "css-class", "bundle", "/years-select-bundle"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
@@ -61,26 +57,22 @@ public class YearsSelectTest extends AbstractInputTest {
             "  </select>\n" +
             "</div>\n" +
             "</div>\n");
-
-        EasyMock.verify(ee);
     }
 
     @Test
     public void testAction() {
-        Edit action = new Edit();
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("year", action)).andReturn(2003);
-        EasyMock.replay(ee);
+        Edit edit = new Edit();
+        edit.user = new User();
+        edit.user.setYear(2003);
 
-        YearsSelect select = new YearsSelect();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "/test", "year", "Year",
-            mapNV("name", "year", "class", "css-class", "startYear", 2001, "endYear", 2006),
-            "<input type=\"hidden\" name=\"year@param\" value=\"param-value\"/>\n" +
+        ais.setCurrent(new DefaultActionInvocation(edit, "/years-select", null, null));
+        run(yearsSelect,
+            mapNV("name", "user.year", "class", "css-class", "startYear", 2001, "endYear", 2006),
+            "<input type=\"hidden\" name=\"user.year@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"year\" class=\"label\">Year</label></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_year\" class=\"label\">Year</label></div>\n" +
             "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"year\" name=\"year\">\n" +
+            "  <select class=\"css-class\" id=\"user_year\" name=\"user.year\">\n" +
             "    <option value=\"2001\">2001</option>\n" +
             "    <option value=\"2002\">2002</option>\n" +
             "    <option value=\"2003\" selected=\"selected\">2003</option>\n" +
@@ -90,7 +82,5 @@ public class YearsSelectTest extends AbstractInputTest {
             "  </select>\n" +
             "</div>\n" +
             "</div>\n");
-
-        EasyMock.verify(ee);
     }
 }

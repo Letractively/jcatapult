@@ -15,17 +15,20 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import static java.util.Arrays.asList;
-import java.util.Map;
+import static java.util.Arrays.*;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.junit.Test;
-import org.easymock.EasyMock;
 import org.example.action.user.Edit;
+import org.example.domain.Address;
+import org.example.domain.User;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
+import org.junit.Test;
 
-import static net.java.util.CollectionTools.mapNV;
-import static net.java.util.CollectionTools.array;
+import com.google.inject.Inject;
+import static net.java.util.CollectionTools.*;
 import net.java.util.Pair;
 
 /**
@@ -35,20 +38,14 @@ import net.java.util.Pair;
  *
  * @author  Brian Pontarelli
  */
-public class RadioListTest extends AbstractInputTest {
-    public RadioListTest() {
-        super(true);
-    }
+public class RadioListTest extends ControlBaseTest {
+    @Inject RadioList radioList;
 
     @Test
     public void testActionLess() {
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.replay(ee);
-
-        RadioList radioList = new RadioList();
-        radioList.setExpressionEvaluator(ee);
-        run(radioList, null, "radio-list", "foo.bar", "test", "Test",
-            mapNV("name", "test", "class", "css-class", "bundle", "foo.bar", "items", asList("one", "two", "three")),
+        ais.setCurrent(new DefaultActionInvocation(null, "/radio-list", null, null));
+        run(radioList,
+            mapNV("name", "test", "class", "css-class", "bundle", "/radio-list-bundle", "items", asList("one", "two", "three")),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"input\">\n" +
@@ -67,20 +64,18 @@ public class RadioListTest extends AbstractInputTest {
             "</div>\n" +
             "</div>\n" +
             "<input type=\"hidden\" name=\"__jc_rb_test\" value=\"\"/>\n");
-
-        EasyMock.verify(ee);
     }
 
     @Test
     public void testAction() {
+        Address address = new Address();
+        address.setCountry("US");
         Edit action = new Edit();
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
-        EasyMock.replay(ee);
+        action.user = new User();
+        action.user.setAddress("work", address);
 
-        RadioList radioList = new RadioList();
-        radioList.setExpressionEvaluator(ee);
-        run(radioList, action, "radio-list", "/test", "user.addresses['work'].country", "Country",
+        ais.setCurrent(new DefaultActionInvocation(action, "/radio-list", null, null));
+        run(radioList,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
@@ -95,27 +90,22 @@ public class RadioListTest extends AbstractInputTest {
             "</div>\n" +
             "</div>\n" +
             "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"\"/>\n");
-
-        EasyMock.verify(ee);
     }
 
     @Test
     public void testExpressions() {
+        Address address = new Address();
+        address.setCountry("US");
+        Edit action = new Edit();
+        action.user = new User();
+        action.user.setAddress("work", address);
+
+        ais.setCurrent(new DefaultActionInvocation(action, "/radio-list", null, null));
+
         Pair<String, String> us = new Pair<String, String>("US", "United States");
         Pair<String, String> de = new Pair<String, String>("DE", "Germany");
 
-        Edit action = new Edit();
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
-        EasyMock.expect(ee.getValue("first", us)).andReturn("US");
-        EasyMock.expect(ee.getValue("second", us)).andReturn("United States");
-        EasyMock.expect(ee.getValue("first", de)).andReturn("DE");
-        EasyMock.expect(ee.getValue("second", de)).andReturn("Germany");
-        EasyMock.replay(ee);
-
-        RadioList radioList = new RadioList();
-        radioList.setExpressionEvaluator(ee);
-        run(radioList, action, "radio-list", "/test", "user.addresses['work'].country", "Country",
+        run(radioList,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
@@ -130,20 +120,21 @@ public class RadioListTest extends AbstractInputTest {
             "</div>\n" +
             "</div>\n" +
             "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"\"/>\n");
-
-        EasyMock.verify(ee);
     }
 
     @Test
     public void testFieldErrors() {
+        Address address = new Address();
+        address.setCountry("US");
         Edit action = new Edit();
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
-        EasyMock.replay(ee);
+        action.user = new User();
+        action.user.setAddress("work", address);
 
-        RadioList radioList = new RadioList();
-        radioList.setExpressionEvaluator(ee);
-        run(radioList, action, "radio-list", "/test", "user.addresses['work'].country", "Country",
+        ais.setCurrent(new DefaultActionInvocation(action, "/radio-list", null, null));
+        messageStore.addFieldError(MessageScope.REQUEST, "user.addresses['work'].country", "fieldError1");
+        messageStore.addFieldError(MessageScope.REQUEST, "user.addresses['work'].country", "fieldError2");
+
+        run(radioList,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
@@ -157,21 +148,22 @@ public class RadioListTest extends AbstractInputTest {
             "  <input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n" +
-            "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"\"/>\n",
-            "Country is required", "Country must be cool");
-        EasyMock.verify(ee);
+            "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"\"/>\n");
     }
 
     @Test
     public void testUncheckedValue() {
+        Address address = new Address();
+        address.setCountry("US");
         Edit action = new Edit();
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
-        EasyMock.replay(ee);
+        action.user = new User();
+        action.user.setAddress("work", address);
 
-        RadioList radioList = new RadioList();
-        radioList.setExpressionEvaluator(ee);
-        run(radioList, action, "radio-list", "/test", "user.addresses['work'].country", "Country",
+        ais.setCurrent(new DefaultActionInvocation(action, "/radio-list", null, null));
+        messageStore.addFieldError(MessageScope.REQUEST, "user.addresses['work'].country", "fieldError1");
+        messageStore.addFieldError(MessageScope.REQUEST, "user.addresses['work'].country", "fieldError2");
+
+        run(radioList,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany"), "uncheckedValue", "US"),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
@@ -185,9 +177,7 @@ public class RadioListTest extends AbstractInputTest {
             "  <input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n" +
-            "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"US\"/>\n",
-            "Country is required", "Country must be cool");
-        EasyMock.verify(ee);
+            "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"US\"/>\n");
     }
 
     public static <T> Map<T, T> lmap(T... values) {

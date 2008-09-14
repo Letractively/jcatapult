@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.form;
+package org.jcatapult.mvc.result.control;
 
 import java.io.StringWriter;
 import java.util.Map;
