@@ -96,7 +96,7 @@ public abstract class AbstractListInput extends AbstractInput {
         }
 
         // Grab the value
-        Object beanValue = action != null ? expressionEvaluator.getValue((String) attributes.get("name"), action) : null;
+        Object beanValue = currentAction() != null ? expressionEvaluator.getValue((String) attributes.get("name"), currentAction()) : null;
 
         // Next, let's handle the items here. I'll create a Map that contains a simple inner class
         // that determines if the option is selected or not. This will allow me to get the text

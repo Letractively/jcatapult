@@ -51,8 +51,7 @@ public abstract class AbstractControl implements Control {
     protected Locale locale;
     protected FreeMarkerService freeMarkerService;
     protected HttpServletRequest request;
-    protected ActionInvocation actionInvocation;
-    protected Object action;
+    protected ActionInvocationStore actionInvocationStore;
     protected Object root;
 
     @Inject
@@ -61,8 +60,7 @@ public abstract class AbstractControl implements Control {
         this.locale = locale;
         this.request = request;
         this.freeMarkerService = freeMarkerService;
-        this.actionInvocation = actionInvocationStore.getCurrent();
-        this.action = this.actionInvocation.action();
+        this.actionInvocationStore = actionInvocationStore;
     }
 
     /**
@@ -205,7 +203,7 @@ public abstract class AbstractControl implements Control {
         } else if (request.getAttribute("jcatapultControlBundle") != null) {
             bundleName = (String) request.getAttribute("jcatapultControlBundle");
         } else {
-            bundleName = actionInvocation.uri();
+            bundleName = currentInvocation().uri();
         }
 
         return bundleName;
@@ -226,6 +224,20 @@ public abstract class AbstractControl implements Control {
      */
     protected String controlName() {
         return getClass().getSimpleName().toLowerCase();
+    }
+
+    /**
+     * @return  The current action invocation.
+     */
+    protected ActionInvocation currentInvocation() {
+        return actionInvocationStore.getCurrent();
+    }
+
+    /**
+     * @return  The current action or null.
+     */
+    protected Object currentAction() {
+        return currentInvocation().action();
     }
 
     /**

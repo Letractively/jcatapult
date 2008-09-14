@@ -57,7 +57,7 @@ public class Textarea extends AbstractInput {
         super.addAdditionalAttributes(attributes, dynamicAttributes);
 
         String name = (String) attributes.get("name");
-        Object action = actionInvocation.action();
+        Object action = currentInvocation().action();
         String value;
         if (!attributes.containsKey("value") && action != null) {
             value = expressionEvaluator.getValue(name, action, dynamicAttributes);
