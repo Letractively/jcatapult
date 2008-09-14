@@ -125,15 +125,4 @@ db.password=
 
 The last step is to add 'userX' with password empty string to your mysql database (if they do not yet exist).  Use the following mysql documentation to help you with adding your new user credentials to your mysql datbase [http://dev.mysql.com/doc/refman/5.0/en/adding-users.html Adding New User Accounts to MySQL]
 
-NOTE:  You'll notice that no password (empty string) was specified for our example 'userX'.  Inconjunction with setting your username equal to your user home account, providing empty string as your password will expedite accessing the mysql client from the command line.  Once your user is added, you'll only have to type 'mysql' to access your mysql client rather than having to provide both the username and password. 
-
-
-= Junction =
-
-*Windows users only*
-
-JCatapult makes use of the Windows _junction point_ support. Windows _junction points_ are identical to Unix/Linux symbolic links. In order to make full use of JCatapult you must install the _junction_ executable. To install _junction_ download the installer from Microsoft at:
-
-http://www.microsoft.com/technet/sysinternals/FileAndDisk/Junction.mspx
-
-Run the installer and you should be all setup to use _junction points_ within JCatapult.
+NOTE:  You'll notice that no password (empty string) was specified for our example 'userX'.  Inconjunction with setting your username equal to your user home account, providing empty string as your password will expedite accessing the mysql client from the command line.  Once your user is added, you'll only have to type 'mysql' to access your mysql client rather than having to provide both the username and password.
