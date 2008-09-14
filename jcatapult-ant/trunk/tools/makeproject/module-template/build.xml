@@ -11,10 +11,10 @@
   <import file="${plugin.dir}/init/1.0/init-module.xml"/>
 
   <!-- Clean -->
-  <import file="${plugin.dir}/module/1.0/clean.xml"/>
+  <import file="${plugin.dir}/clean/1.0/clean.xml"/>
 
-  <!-- Module stuff -->
-  <import file="${plugin.dir}/module/1.0/module.xml"/>
+  <!-- Module -->
+  <import file="${plugin.dir}/module/1.0/jar.xml"/>
 
   <!-- Java base -->
   <import file="${plugin.dir}/java/1.0/compile.xml"/>
@@ -34,5 +34,5 @@
   <import file="${plugin.dir}/svn/1.0/svn.xml"/>
   <import file="${plugin.dir}/ide/1.0/ide.xml"/>
   <import file="${plugin.dir}/mysql/1.0/mysql.xml"/>
-  <import file="${plugin.dir}/tomcat/1.0/module-deploy.xml"/>
+  <import file="${plugin.dir}/tomcat/1.0/webapp-deploy.xml"/>
 </project>

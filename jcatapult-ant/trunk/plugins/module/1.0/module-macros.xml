@@ -23,8 +23,6 @@
     <pathelement location="${dir.plugin.module}/../../libraries/savant-core-2.0-M4.jar"/>
   </path>
 
-  <property name="module-macros.dir.scripts.groovy" value="${dir.plugin.module}/scripts/groovy"/>
-
   <!--
     This determines the version of the module using the url to the module within a Savant repsitory.
 
