@@ -21,6 +21,8 @@ ${field.name}IDs=${field.plainEnglishName}
   </#if>
 </#list>
 <@labels type ""/>
+ids=
+delete=Delete
 save=Save
 
 #
