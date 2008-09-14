@@ -16,8 +16,13 @@
 package org.jcatapult.mvc.result.form.control;
 
 import org.example.action.user.Edit;
+import org.example.domain.User;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.message.scope.MessageScope;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -27,16 +32,14 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class PasswordTest extends AbstractInputTest {
-    public PasswordTest() {
-        super(true);
-    }
+public class PasswordTest extends ControlBaseTest {
+    @Inject Password password;
 
     @Test
     public void testActionLess() {
-        AbstractInput input = new Password();
-        run(input, null, "password", "foo.bar", "test", "Test",
-            mapNV("name", "test", "class", "css-class", "value", "password", "bundle", "foo.bar"),
+        ais.setCurrent(new DefaultActionInvocation(null, "/password", null, null));
+        run(password,
+            mapNV("name", "test", "class", "css-class", "value", "password", "bundle", "/password-bundle"),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
@@ -46,8 +49,12 @@ public class PasswordTest extends AbstractInputTest {
 
     @Test
     public void testAction() {
-        AbstractInput input = new Password();
-        run(input, new Edit(), "password", "/test", "user.password", "Password",
+        Edit edit = new Edit();
+        edit.user = new User();
+        edit.user.setPassword("Test");
+
+        ais.setCurrent(new DefaultActionInvocation(edit, "/password", null, null));
+        run(password,
             mapNV("name", "user.password", "class", "css-class", "value", "password"),
             "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -58,13 +65,21 @@ public class PasswordTest extends AbstractInputTest {
 
     @Test
     public void testFieldErrors() {
-        AbstractInput input = new Password();
-        run(input, new Edit(), "password", "/test", "user.password", "Password",
+        Edit edit = new Edit();
+        edit.user = new User();
+        edit.user.setPassword("Test");
+
+        ais.setCurrent(new DefaultActionInvocation(edit, "/password", null, null));
+
+        messageStore.addFieldError(MessageScope.REQUEST, "user.password", "fieldError1");
+        messageStore.addFieldError(MessageScope.REQUEST, "user.password", "fieldError2");
+
+        run(password,
             mapNV("name", "user.password", "class", "css-class", "value", "password"),
             "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_password\" class=\"label\"><span class=\"error\">Password (Password is required, Password must be cool)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
-            "</div>\n", "Password is required", "Password must be cool");
+            "</div>\n");
     }
 }

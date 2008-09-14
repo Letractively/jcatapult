@@ -95,7 +95,6 @@ public class CollectionAccessor extends Accessor {
             int length = Array.getLength(object);
             int indexInt = Integer.parseInt(index);
             if (length <= indexInt) {
-                System.out.println("Padding " + length + " to " + indexInt);
                 Object newArray = Array.newInstance(object.getClass().getComponentType(), indexInt + 1);
                 System.arraycopy(object, 0, newArray, 0, length);
                 object = newArray;

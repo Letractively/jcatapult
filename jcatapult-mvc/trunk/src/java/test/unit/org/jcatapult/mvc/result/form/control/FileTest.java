@@ -16,7 +16,7 @@
 package org.jcatapult.mvc.result.form.control;
 
 import org.example.action.user.Edit;
-import org.jcatapult.mvc.result.form.ControlBaseTest;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.junit.Test;

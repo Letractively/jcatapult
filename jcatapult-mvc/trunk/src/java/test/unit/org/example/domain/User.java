@@ -45,7 +45,9 @@ public class User {
     private String[] securityQuestions;
 
     private int month;
+    private int year;
     private File profile;
+    private String password;
 
     private int[] intIDs;
     private Set<String> setIDs;
@@ -181,5 +183,21 @@ public class User {
 
     public void setMonth(int month) {
         this.month = month;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 }

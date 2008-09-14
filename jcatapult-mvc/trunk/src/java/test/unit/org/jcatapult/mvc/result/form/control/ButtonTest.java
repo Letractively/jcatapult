@@ -17,7 +17,7 @@ package org.jcatapult.mvc.result.form.control;
 
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
-import org.jcatapult.mvc.result.form.ControlBaseTest;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -31,7 +31,7 @@ import static net.java.util.CollectionTools.*;
  * @author  Brian Pontarelli
  */
 public class ButtonTest extends ControlBaseTest {
-    @Inject private Button button;
+    @Inject Button button;
 
     @Test
     public void testActionLess() {
@@ -62,6 +62,7 @@ public class ButtonTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
         run(button,
             mapNV("name", "button", "action", "/foo", "value", "test-value", "class", "css-class"),
+            "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"/foo\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"button\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +

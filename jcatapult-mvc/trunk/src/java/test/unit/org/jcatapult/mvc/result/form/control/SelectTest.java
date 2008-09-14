@@ -19,11 +19,15 @@ import static java.util.Arrays.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.easymock.EasyMock;
 import org.example.action.user.Edit;
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.example.domain.Address;
+import org.example.domain.User;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 import net.java.util.Pair;
 
@@ -34,20 +38,14 @@ import net.java.util.Pair;
  *
  * @author  Brian Pontarelli
  */
-public class SelectTest extends AbstractInputTest {
-    public SelectTest() {
-        super(true);
-    }
+public class SelectTest extends ControlBaseTest {
+    @Inject Select select;
 
     @Test
     public void testActionLess() {
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.replay(ee);
-
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, null, "select", "foo.bar", "test", "Test",
-            mapNV("name", "test", "class", "css-class", "bundle", "foo.bar", "items", asList("one", "two", "three")),
+        ais.setCurrent(new DefaultActionInvocation(null, "/select", null, null));
+        run(select,
+            mapNV("name", "test", "class", "css-class", "bundle", "/select-bundle", "items", asList("one", "two", "three")),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
@@ -59,19 +57,13 @@ public class SelectTest extends AbstractInputTest {
             "  </select>\n" +
             "</div>\n" +
             "</div>\n");
-
-        EasyMock.verify(ee);
     }
 
     @Test
     public void testHeaderOption() {
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.replay(ee);
-
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, null, "select", "foo.bar", "test", "Test",
-            mapNV("name", "test", "class", "css-class", "bundle", "foo.bar", "headerValue", "zero", "items", asList("one", "two", "three")),
+        ais.setCurrent(new DefaultActionInvocation(null, "/select", null, null));
+        run(select,
+            mapNV("name", "test", "class", "css-class", "bundle", "/select-bundle", "headerValue", "zero", "items", asList("one", "two", "three")),
             "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
@@ -84,20 +76,19 @@ public class SelectTest extends AbstractInputTest {
             "  </select>\n" +
             "</div>\n" +
             "</div>\n");
-
-        EasyMock.verify(ee);
     }
 
     @Test
     public void testAction() {
+        Address address = new Address();
+        address.setCountry("US");
         Edit action = new Edit();
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
-        EasyMock.replay(ee);
+        action.user = new User();
+        action.user.setAddress("work", address);
 
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "/test", "user.addresses['work'].country", "Country",
+        ais.setCurrent(new DefaultActionInvocation(action, "/select", null, null));
+
+        run(select,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -109,27 +100,22 @@ public class SelectTest extends AbstractInputTest {
             "  </select>\n" +
             "</div>\n" +
             "</div>\n");
-
-        EasyMock.verify(ee);
     }
 
     @Test
     public void testExpressions() {
+        Address address = new Address();
+        address.setCountry("US");
+        Edit action = new Edit();
+        action.user = new User();
+        action.user.setAddress("work", address);
+
+        ais.setCurrent(new DefaultActionInvocation(action, "/select", null, null));
+
         Pair<String, String> us = new Pair<String, String>("US", "United States");
         Pair<String, String> de = new Pair<String, String>("DE", "Germany");
 
-        Edit action = new Edit();
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
-        EasyMock.expect(ee.getValue("first", us)).andReturn("US");
-        EasyMock.expect(ee.getValue("second", us)).andReturn("United States");
-        EasyMock.expect(ee.getValue("first", de)).andReturn("DE");
-        EasyMock.expect(ee.getValue("second", de)).andReturn("Germany");
-        EasyMock.replay(ee);
-
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "/test", "user.addresses['work'].country", "Country",
+        run(select,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -141,20 +127,21 @@ public class SelectTest extends AbstractInputTest {
             "  </select>\n" +
             "</div>\n" +
             "</div>\n");
-
-        EasyMock.verify(ee);
     }
 
     @Test
     public void testFieldErrors() {
+        Address address = new Address();
+        address.setCountry("US");
         Edit action = new Edit();
-        ExpressionEvaluator ee = EasyMock.createStrictMock(ExpressionEvaluator.class);
-        EasyMock.expect(ee.getValue("user.addresses['work'].country", action)).andReturn("US");
-        EasyMock.replay(ee);
+        action.user = new User();
+        action.user.setAddress("work", address);
 
-        Select select = new Select();
-        select.setExpressionEvaluator(ee);
-        run(select, action, "select", "/test", "user.addresses['work'].country", "Country",
+        ais.setCurrent(new DefaultActionInvocation(action, "/select", null, null));
+        messageStore.addFieldError(MessageScope.REQUEST, "user.addresses['work'].country", "fieldError1");
+        messageStore.addFieldError(MessageScope.REQUEST, "user.addresses['work'].country", "fieldError2");
+
+        run(select,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
@@ -165,8 +152,7 @@ public class SelectTest extends AbstractInputTest {
             "    <option value=\"DE\">Germany</option>\n" +
             "  </select>\n" +
             "</div>\n" +
-            "</div>\n", "Country is required", "Country must be cool");
-        EasyMock.verify(ee);
+            "</div>\n");
     }
 
     public static <T> Map<T, T> lmap(T... values) {

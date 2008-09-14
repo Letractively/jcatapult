@@ -15,20 +15,13 @@
  */
 package org.jcatapult.mvc.result.message.control;
 
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Locale;
-import javax.servlet.http.HttpServletRequest;
-
-import org.easymock.EasyMock;
-import org.jcatapult.freemarker.DefaultFreeMarkerService;
-import org.jcatapult.freemarker.OverridingTemplateLoader;
-import org.jcatapult.mvc.action.ActionInvocationStore;
-import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.mvc.result.control.AbstractControlTest;
-import static org.junit.Assert.*;
+import org.example.action.user.Edit;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -38,78 +31,73 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class FieldMessagesTest extends AbstractControlTest {
-    @Test
-    public void testFieldMessagePlain() {
-        HttpServletRequest request = makeRequest(false);
-        ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
-        MessageStore ms = makeFieldMessageStore(false, "foo", "error1", "error2");
+public class FieldMessagesTest extends ControlBaseTest {
+    @Inject FieldMessages fieldMessages;
 
-        StringWriter writer = new StringWriter();
-        FieldMessages message = new FieldMessages(ms);
-        message.setServices(Locale.US, request, ais, makeFreeMarkerService());
-        message.renderStart(writer, mapNV("errors", false), new HashMap<String, String>());
-        message.renderEnd(writer);
-        assertEquals("<ul class=\"field-errors\">\n" +
+    @Test
+    public void testFieldMessages() {
+        Edit action = new Edit();
+
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+
+        messageStore.addFieldMessage(MessageScope.REQUEST, "field", "fieldError1");
+        messageStore.addFieldMessage(MessageScope.REQUEST, "field", "fieldError2");
+        run(fieldMessages,
+            mapNV("errors", false),
+            "<ul class=\"field-errors\">\n" +
             "  <li class=\"field-error\">error1</li>\n" +
             "  <li class=\"field-error\">error2</li>\n" +
-            "</ul>\n", writer.toString());
-        EasyMock.verify(request, ais, ms);
+            "</ul>\n"
+        );
     }
 
     @Test
     public void testFieldMessageError() {
-        HttpServletRequest request = makeRequest(false);
-        ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
-        MessageStore ms = makeFieldMessageStore(true, "foo", "error1", "error2");
+        Edit action = new Edit();
 
-        StringWriter writer = new StringWriter();
-        FieldMessages message = new FieldMessages(ms);
-        message.setServices(Locale.US, request, ais, makeFreeMarkerService());
-        message.renderStart(writer, mapNV("errors", true), new HashMap<String, String>());
-        message.renderEnd(writer);
-        assertEquals("<ul class=\"field-errors\">\n" +
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+
+        messageStore.addFieldError(MessageScope.REQUEST, "field", "fieldError1");
+        messageStore.addFieldError(MessageScope.REQUEST, "field", "fieldError2");
+
+        run(fieldMessages,
+            mapNV("errors", true),
+            "<ul class=\"field-errors\">\n" +
             "  <li class=\"field-error\">error1</li>\n" +
             "  <li class=\"field-error\">error2</li>\n" +
-            "</ul>\n", writer.toString());
-        EasyMock.verify(request, ais, ms);
+            "</ul>\n"
+        );
     }
 
     @Test
     public void testFieldMessageNamedMissing() {
-        HttpServletRequest request = makeRequest(false);
-        ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
-        MessageStore ms = makeFieldMessageStore(true, "bar", "error1", "error2");
+        Edit action = new Edit();
 
-        StringWriter writer = new StringWriter();
-        FieldMessages message = new FieldMessages(ms);
-        message.setServices(Locale.US, request, ais, makeFreeMarkerService());
-        message.renderStart(writer, mapNV("errors", true, "fields", "foo"), new HashMap<String, String>());
-        message.renderEnd(writer);
-        assertEquals("", writer.toString());
-        EasyMock.verify(request, ais, ms);
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+
+        messageStore.addFieldMessage(MessageScope.REQUEST, "field", "fieldError1");
+        messageStore.addFieldMessage(MessageScope.REQUEST, "field", "fieldError2");
+
+        run(fieldMessages,
+            mapNV("errors", false, "fields", "missing"),
+            ""
+        );
     }
 
     @Test
     public void testFieldMessageNamed() {
-        HttpServletRequest request = makeRequest(false);
-        ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
-        MessageStore ms = makeFieldMessageStore(true, "bar", "error1", "error2");
+        Edit action = new Edit();
 
-        StringWriter writer = new StringWriter();
-        FieldMessages message = new FieldMessages(ms);
-        message.setServices(Locale.US, request, ais, makeFreeMarkerService());
-        message.renderStart(writer, mapNV("errors", true, "fields", "foo,bar"), new HashMap<String, String>());
-        message.renderEnd(writer);
-        assertEquals("<ul class=\"field-errors\">\n" +
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+
+        messageStore.addFieldMessage(MessageScope.REQUEST, "field", "fieldError1");
+        messageStore.addFieldMessage(MessageScope.REQUEST, "field", "fieldError2");
+        run(fieldMessages,
+            mapNV("errors", false, "fields", "field"),
+            "<ul class=\"field-errors\">\n" +
             "  <li class=\"field-error\">error1</li>\n" +
             "  <li class=\"field-error\">error2</li>\n" +
-            "</ul>\n", writer.toString());
-        EasyMock.verify(request, ais, ms);
-    }
-
-    private DefaultFreeMarkerService makeFreeMarkerService() {
-        return new DefaultFreeMarkerService(makeConfiguration(), makeEnvironmenResolver(),
-            new OverridingTemplateLoader(makeContainerResolver("field-messages")));
+            "</ul>\n"
+        );
     }
 }

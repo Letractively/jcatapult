@@ -15,20 +15,13 @@
  */
 package org.jcatapult.mvc.result.message.control;
 
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Locale;
-import javax.servlet.http.HttpServletRequest;
-
-import org.easymock.EasyMock;
-import org.jcatapult.freemarker.DefaultFreeMarkerService;
-import org.jcatapult.freemarker.OverridingTemplateLoader;
-import org.jcatapult.mvc.action.ActionInvocationStore;
-import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.mvc.result.control.AbstractControlTest;
-import static org.junit.Assert.*;
+import org.example.action.user.Edit;
+import org.jcatapult.mvc.action.DefaultActionInvocation;
+import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -38,45 +31,42 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class ActionMessagesTest extends AbstractControlTest {
-    @Test
-    public void testActionMessagePlain() {
-        HttpServletRequest request = makeRequest(false);
-        ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
-        MessageStore ms = makeActionMessageStore(false, "error1", "error2");
+public class ActionMessagesTest extends ControlBaseTest {
+    @Inject ActionMessages actionMessages;
 
-        StringWriter writer = new StringWriter();
-        ActionMessages message = new ActionMessages(ms);
-        message.setServices(Locale.US, request, ais, makeFreeMarkerService());
-        message.renderStart(writer, mapNV("errors", false), new HashMap<String, String>());
-        message.renderEnd(writer);
-        assertEquals("<ul class=\"action-errors\">\n" +
+    @Test
+    public void testActionMessages() {
+        Edit action = new Edit();
+
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+
+        messageStore.addActionMessage(MessageScope.REQUEST, "actionError1");
+        messageStore.addActionMessage(MessageScope.REQUEST, "actionError2");
+
+        run(actionMessages,
+            mapNV("errors", false),
+            "<ul class=\"action-errors\">\n" +
             "  <li class=\"action-error\">error1</li>\n" +
             "  <li class=\"action-error\">error2</li>\n" +
-            "</ul>\n", writer.toString());
-        EasyMock.verify(request, ais, ms);
+            "</ul>\n"
+        );
     }
 
     @Test
     public void testActionMessageError() {
-        HttpServletRequest request = makeRequest(false);
-        ActionInvocationStore ais = makeActionInvocationStore(null, "/test");
-        MessageStore ms = makeActionMessageStore(true, "error1", "error2");
+        Edit action = new Edit();
 
-        StringWriter writer = new StringWriter();
-        ActionMessages message = new ActionMessages(ms);
-        message.setServices(Locale.US, request, ais, makeFreeMarkerService());
-        message.renderStart(writer, mapNV("errors", true), new HashMap<String, String>());
-        message.renderEnd(writer);
-        assertEquals("<ul class=\"action-errors\">\n" +
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+
+        messageStore.addActionError(MessageScope.REQUEST, "actionError1");
+        messageStore.addActionError(MessageScope.REQUEST, "actionError2");
+
+        run(actionMessages,
+            mapNV("errors", true),
+            "<ul class=\"action-errors\">\n" +
             "  <li class=\"action-error\">error1</li>\n" +
             "  <li class=\"action-error\">error2</li>\n" +
-            "</ul>\n", writer.toString());
-        EasyMock.verify(request, ais, ms);
-    }
-
-    private DefaultFreeMarkerService makeFreeMarkerService() {
-        return new DefaultFreeMarkerService(makeConfiguration(), makeEnvironmenResolver(),
-            new OverridingTemplateLoader(makeContainerResolver("action-messages")));
+            "</ul>\n"
+        );
     }
 }
