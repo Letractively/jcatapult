@@ -15,9 +15,14 @@
 
   <path id="classpath.makeproject">
     <fileset dir="${dir.plugin.makeproject}/lib" includes="*.jar"/>
+    <pathelement location="${plugin.dir}/libraries/ant-contrib-1.0b2.jar"/>
+    <!--<pathelement location="${plugin.dir}/libraries/ganymed-1.1.4.jar"/>-->
     <pathelement location="${plugin.dir}/libraries/groovy-all-1.5.2.jar"/>
     <pathelement location="${plugin.dir}/libraries/java-net-commons-1.4.4.jar"/>
-    <pathelement location="${plugin.dir}/libraries/ant-contrib-1.0b2.jar"/>
+    <pathelement location="${plugin.dir}/libraries/jdom-1.0.jar"/>
+    <!--<pathelement location="${plugin.dir}/libraries/log4j-1.2.9.jar"/>-->
+    <pathelement location="${plugin.dir}/libraries/savant-core-2.0-M4.jar"/>
+    <!--<pathelement location="${plugin.dir}/libraries/svnkit-1.1.4.jar"/>-->
   </path>
 
   <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="classpath.makeproject"/>
@@ -185,8 +190,7 @@ You will be prompted for the following information:
       <if>
         <equals arg1="@{jcatapult}" arg2="true"/>
         <then>
-          <determine_version url="http://jcatapult.googlecode.com/svn/jcatapult-core/tags/"
-                             property="version.jcatapult"/>
+          <determine_version property="version.jcatapult"/>
         </then>
       </if>
 
@@ -217,51 +221,50 @@ You will be prompted for the following information:
   </macrodef>
 
   <macrodef name="determine_version">
-    <attribute name="url"/>
     <attribute name="property"/>
     <sequential>
-      <get src="@{url}" dest="${basedir}/versions.xml"/>
       <groovy>
         <classpath>
-          <pathelement location="${plugin.dir}/libraries/java-net-commons-1.3.13.jar"/>
+          <path refid="classpath.makeproject"/>
         </classpath>
-        import net.java.io.FileTools;
-        import net.java.util.Version;
+        <![CDATA[
+        import org.inversoft.savant.dep.*
+        import org.inversoft.savant.context.*
+        import org.inversoft.savant.context.xml.DefaultProjectConfigBuilder
 
-        // Read it in
-        def lines = FileTools.read("${properties['basedir']}/versions.xml").toString().split("\n");
+        DefaultProjectConfigBuilder builder = new DefaultProjectConfigBuilder()
+        String jcatapultHome = System.getenv().get("JCATAPULT_HOME");
+        ProjectConfig projectConfig = builder.build(new File("${jcatapultHome}/ant/tools/makeproject/make-project-savant.xml"))
 
-        // Find the best and then store it in a variable if it was found. If there are no releases
-        // this will fail.
-        def best = null;
-        def bestStr = null;
-        lines.each {
-          def matcher = (it =~ /&lt;li>&lt;a href="(.*?)\/"/)
-          if (matcher.find()) {
-            def str = matcher[0][1];
-            try {
-              def ver = new Version(str);
-              if (best == null || ver.compareTo(best) > 0) {
-                best = ver;
-                bestStr = str;
-              }
-            } catch (e) {
-              // Smother, this is the .. or something else
-            }
-          }
+        // Create a new deps set
+        ArtifactGroup artifactGroup = new ArtifactGroup("compile", Integer.MAX_VALUE)
+        artifactGroup.addArtifact(new Artifact("jcatapult.org", "jcatapult-core", "jcatapult-core", "{latest}", "jar"))
+        Dependencies deps = new Dependencies("jcatapult-deps")
+        deps.addArtifactGroup(artifactGroup)
+
+        // Add it to the project
+        projectConfig.addDependencies(deps)
+
+        // Resolve the module
+        SavantContext context = new DefaultSavantContext(projectConfig, new File("."), new File("."))
+        DependencyResolveMediator mediator = new DependencyResolveMediator()
+        try {
+          mediator.mediate(context, "jcatapult-deps", null, ["compile"] as Set, false)
+        } catch (Exception e) {
+          ant.fail("Unable to find JCatapult version")
         }
 
-        new File(properties["basedir"] + "/versions.xml").delete();
-
-        String moduleName = "@{url}";
-        String propName = "@{property}";
-        if (best != null) {
-          properties[propName] = bestStr;
-          ant.echo("Determined latest ${moduleName} version to be ${bestStr}.");
-        } else {
-          properties[propName] = "1.0-M1-{integration}";
-          ant.echo("WARNING: ${moduleName} doesn't have any releases, assuming 1.0-M1-{integration}");
+        // Get the artifact back out and grab the version and the file
+        Artifact artifact = artifactGroup.getArtifacts().toList()[0]
+        String propName = "@{property}"
+        String version = artifact.getVersion()
+        int index = version.lastIndexOf("-IB")
+        if (index > 0) {
+          version = version.substring(0, index) + "-{integration}"
         }
+
+        properties[propName] = version
+        ]]>
       </groovy>
     </sequential>
   </macrodef>
