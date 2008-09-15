@@ -24,6 +24,7 @@ import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.result.control.AbstractControl;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 
 import com.google.inject.Inject;
 
@@ -35,7 +36,9 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 @ControlAttributes(
-    required = {"errors"}
+    required = {
+        @ControlAttribute(name = "errors", types = {boolean.class, Boolean.class})
+    }
 )
 public class FieldMessages extends AbstractControl {
     private final MessageStore messageStore;

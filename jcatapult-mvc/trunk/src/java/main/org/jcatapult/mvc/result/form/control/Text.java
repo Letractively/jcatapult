@@ -17,6 +17,7 @@ package org.jcatapult.mvc.result.form.control;
 
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 
 import com.google.inject.Inject;
 
@@ -28,8 +29,17 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 @ControlAttributes(
-    required = {"name"},
-    optional = {"defaultValue"}
+    required = {
+        @ControlAttribute(name = "name")
+    },
+    optional = {
+        @ControlAttribute(name = "disabled", types = {boolean.class, Boolean.class}),
+        @ControlAttribute(name = "meaxlength", types = {int.class, Integer.class}),
+        @ControlAttribute(name = "readonly", types = {boolean.class, Boolean.class}),
+        @ControlAttribute(name = "required", types = {boolean.class, Boolean.class}),
+        @ControlAttribute(name = "size", types = {int.class, Integer.class}),
+        @ControlAttribute(name = "tabindex", types = {int.class, Integer.class})
+    }
 )
 public class Text extends AbstractValueInput {
     @Inject

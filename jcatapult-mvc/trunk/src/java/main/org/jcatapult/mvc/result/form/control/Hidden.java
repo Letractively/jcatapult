@@ -17,6 +17,7 @@ package org.jcatapult.mvc.result.form.control;
 
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 
 import com.google.inject.Inject;
 
@@ -28,7 +29,9 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 @ControlAttributes(
-    required = {"name"}
+    required = {
+        @ControlAttribute(name = "name")
+    }
 )
 public class Hidden extends AbstractValueInput {
     @Inject

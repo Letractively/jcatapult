@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.result.form.control;
 
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 
 /**
  * <p>
@@ -25,7 +26,15 @@ import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
  * @author  Brian Pontarelli
  */
 @ControlAttributes(
-    required = {"name"}
+    required = {
+        @ControlAttribute(name = "name")
+    },
+    optional = {
+        @ControlAttribute(name = "disabled", types = {boolean.class, Boolean.class}),
+        @ControlAttribute(name = "required", types = {boolean.class, Boolean.class}),
+        @ControlAttribute(name = "size", types = {int.class, Integer.class}),
+        @ControlAttribute(name = "tabindex", types = {int.class, Integer.class})
+    }
 )
 public class File extends AbstractInput {
     public File() {

@@ -25,6 +25,7 @@ import org.jcatapult.l10n.MessageProvider;
 import org.jcatapult.l10n.MissingMessageException;
 import org.jcatapult.mvc.result.control.AbstractControl;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 
 import com.google.inject.Inject;
 import freemarker.template.TemplateDirectiveModel;
@@ -41,8 +42,9 @@ import static net.java.util.CollectionTools.*;
  * @author  Brian Pontarelli
  */
 @ControlAttributes(
-    required = {"key"},
-    optional = {"bundle", "default"}
+    required = {
+        @ControlAttribute(name = "key")
+    }
 )
 public class Message extends AbstractControl implements TemplateMethodModel, TemplateDirectiveModel {
     private final MessageProvider messageProvider;
