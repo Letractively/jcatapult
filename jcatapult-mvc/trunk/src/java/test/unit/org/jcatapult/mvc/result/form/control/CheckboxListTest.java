@@ -39,7 +39,7 @@ import net.java.util.Pair;
  * @author  Brian Pontarelli
  */
 public class CheckboxListTest extends ControlBaseTest {
-    @Inject private CheckboxList checkboxList;
+    @Inject CheckboxList checkboxList;
 
     @Test
     public void testActionLess() {

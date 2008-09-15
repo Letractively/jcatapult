@@ -27,6 +27,7 @@ import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 import org.jcatapult.mvc.result.form.control.AppendAttributesMethod;
 
@@ -241,7 +242,7 @@ public abstract class AbstractControl implements Control {
     }
 
     /**
-     * Verifies that all the required attributes are correctly defined for the control.
+     * Verifies that all the attributes are correctly defined for the control.
      *
      * @param   attributes The attributes.
      */
@@ -250,17 +251,54 @@ public abstract class AbstractControl implements Control {
         Class<?> type = getClass();
         ControlAttributes ca = type.getAnnotation(ControlAttributes.class);
         if (ca != null) {
-            String[] requiredAttributes = ca.required();
-            for (String requiredAttribute : requiredAttributes) {
-                if (!attributes.containsKey(requiredAttribute)) {
-                    errors.addError("The control [" + controlName() + "] is missing the required attribute [" +
-                        requiredAttribute + "]");
-                }
-            }
+            ControlAttribute[] requiredAttributes = ca.required();
+            verifyAttributes(attributes, requiredAttributes, true, errors);
+            verifyAttributes(attributes, requiredAttributes, false, errors);
         }
 
         if (!errors.isEmpty()) {
             throw new IllegalArgumentException(errors.toString());
         }
+    }
+
+    private void verifyAttributes(Map<String, Object> attributes, ControlAttribute[] controlAttributes,
+            boolean required, ErrorList errors) {
+        for (ControlAttribute controlAttribute : controlAttributes) {
+            Object value = attributes.get(controlAttribute.name());
+            if (value == null && required) {
+                errors.addError("The control [" + controlName() + "] is missing the required attribute [" +
+                    controlAttribute.name() + "]");
+            } else if (value != null) {
+                Class<?>[] attributeTypes = controlAttribute.types();
+                boolean found = false;
+                for (Class<?> attributeType : attributeTypes) {
+                    found |= attributeType.isInstance(value);
+                    if (found) {
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    errors.addError("The control [" + controlName() + "] has an invalid attribute [" +
+                        controlAttribute.name() + "]. It must be an instance of [" +
+                        toTypeListString(attributeTypes) + "]");
+                }
+            }
+        }
+    }
+
+    private String toTypeListString(Class<?>[] attributeTypes) {
+        StringBuilder build = new StringBuilder();
+        for (int i = 0; i < attributeTypes.length; i++) {
+            Class<?> attributeType = attributeTypes[i];
+            build.append(attributeType.toString());
+            if (i == attributeTypes.length - 2) {
+                build.append(", or ");
+            } else if (i > 0) {
+                build.append(", ");
+            }
+        }
+
+        return build.toString();
     }
 }

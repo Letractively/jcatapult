@@ -23,6 +23,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 
 import static net.java.lang.StringTools.*;
 
@@ -34,8 +35,18 @@ import static net.java.lang.StringTools.*;
  * @author Brian Pontarelli
  */
 @ControlAttributes(
-    required = {"name"},
-    optional = {"includeBlank", "preferredCodes"}
+    required = {
+        @ControlAttribute(name = "name")
+    },
+    optional = {
+        @ControlAttribute(name = "disabled", types = {boolean.class, Boolean.class}),
+        @ControlAttribute(name = "multiple", types = {boolean.class, Boolean.class}),
+        @ControlAttribute(name = "readonly", types = {boolean.class, Boolean.class}),
+        @ControlAttribute(name = "required", types = {boolean.class, Boolean.class}),
+        @ControlAttribute(name = "size", types = {int.class, Integer.class}),
+        @ControlAttribute(name = "tabindex", types = {int.class, Integer.class}),
+        @ControlAttribute(name = "includeBlank", types = {boolean.class, Boolean.class})
+    }
 )
 public class CountriesSelect extends Select {
     /**
