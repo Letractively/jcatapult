@@ -86,8 +86,10 @@ public class Form extends AbstractControl {
         if (!action.startsWith("/")) {
             String currentURI = currentInvocation().uri();
             int index = currentURI.lastIndexOf("/");
-            if (index >= 1) {
+            if (index >= 0) {
                 action = currentURI.substring(0, index) + "/" + action;
+            } else if (currentURI.equals("")) {
+                action = "/" + action;
             }
         }
 
