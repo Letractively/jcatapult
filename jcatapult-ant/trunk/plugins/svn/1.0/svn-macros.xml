@@ -133,6 +133,44 @@
     </sequential>
   </macrodef>
 
+  <!-- Exports head -->
+  <macrodef name="scm_export_head">
+    <attribute name="dir"/>
+    <attribute name="username"/>
+    <attribute name="password"/>
+    <attribute name="url"/>
+
+    <sequential>
+      <scm_export url="@{url}/trunk" dir="@{dir}" username="@{username}" password="@{password}"/>
+    </sequential>
+  </macrodef>
+
+  <!-- Exports a branch -->
+  <macrodef name="scm_export_branch">
+    <attribute name="dir"/>
+    <attribute name="branch"/>
+    <attribute name="username"/>
+    <attribute name="password"/>
+    <attribute name="url"/>
+
+    <sequential>
+      <scm_export url="@{url}/branches/@{branch}" dir="@{dir}" username="@{username}" password="@{password}"/>
+    </sequential>
+  </macrodef>
+
+  <!-- Exports a branch -->
+  <macrodef name="scm_export_tag">
+    <attribute name="dir"/>
+    <attribute name="tag"/>
+    <attribute name="username"/>
+    <attribute name="password"/>
+    <attribute name="url"/>
+
+    <sequential>
+      <scm_export url="@{url}/tags/@{tag}" dir="@{dir}" username="@{username}" password="@{password}"/>
+    </sequential>
+  </macrodef>
+
   <!-- checks that a version tag doesn't already exist -->
   <macrodef name="scm_check_tag_available">
     <attribute name="tag"/>
