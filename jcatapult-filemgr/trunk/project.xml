@@ -37,7 +37,7 @@
       <artifact group="opensymphony.com" project="xwork" name="xwork" version="2.1.1" type="jar"/>
       <artifact group="struts.apache.org" project="struts2-convention-plugin" name="struts2-convention-plugin" version="2.1.3" type="jar"/>
     </artifactGroup>
-    <artifactGroup type="test-run">
+    <artifactGroup type="run">
       <artifact group="hibernate.org" project="hibernate-entitymanager" name="hibernate-entitymanager" version="3.3.2" type="jar"/>
       <artifact group="joda-time.joda.org" project="joda-time-jsptags" name="joda-time-jsptags" version="1.0" type="jar"/>
       <artifact group="opensymphony.com" project="sitemesh" name="sitemesh" version="2.3" type="jar"/>
