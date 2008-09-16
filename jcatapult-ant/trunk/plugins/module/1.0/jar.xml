@@ -31,65 +31,90 @@
   <dirname property="dir.plugin.module" file="${ant.file.jar}"/>
   <import file="${dir.plugin.module}/module-macros.xml"/>
 
-  <!-- Override the JAR target because we need to create the files JAR and copy the src/db files over to META-INF -->
-  <target name="-jar-init">
-    <mkdir dir="${dir.target.jars}"/>
-  </target>
+  <macrodef name="jar-init">
+    <sequential>
+      <mkdir dir="${dir.target.jars}"/>
+    </sequential>
+  </macrodef>
 
-  <target name="jar" depends="compile,-jar-init" description="Creates the project JAR files.">
+  <macrodef name="jar-local">
+    <sequential>
 
-    <!-- copy src/db/main sql files into META-INF/sql -->
-    <property name="dir.target.sql.main" value="${dir.target.classes.main}/META-INF/sql"/>
-    <mkdir dir="${dir.target.sql.main}"/>
-    <copy todir="${dir.target.sql.main}" failonerror="false">
-      <fileset dir="${dir.src.db.main}" includes="**/*"/>
-    </copy>
+      <!-- copy src/db/main sql files into META-INF/sql -->
+      <property name="dir.target.sql.main" value="${dir.target.classes.main}/META-INF/sql"/>
+      <mkdir dir="${dir.target.sql.main}"/>
+      <copy todir="${dir.target.sql.main}" failonerror="false">
+        <fileset dir="${dir.src.db.main}" includes="**/*"/>
+      </copy>
 
-    <!-- Copy the freemarker templates to the correct locations -->
-    <copy todir="${dir.target.classes.main}/WEB-INF/content" failonerror="false">
-      <fileset dir="${dir.web}/WEB-INF/content" includes="**/*"/>
-    </copy>
+      <!-- Copy the freemarker templates to the correct locations -->
+      <copy todir="${dir.target.classes.main}/WEB-INF/content" failonerror="false">
+        <fileset dir="${dir.web}/WEB-INF/content" includes="**/*"/>
+      </copy>
 
-    <!-- Copy the messages to the correct locations -->
-    <copy todir="${dir.target.classes.main}/WEB-INF/message" failonerror="false">
-      <fileset dir="${dir.web}/WEB-INF/message" includes="**/*"/>
-    </copy>
+      <!-- Copy the messages to the correct locations -->
+      <copy todir="${dir.target.classes.main}/WEB-INF/message" failonerror="false">
+        <fileset dir="${dir.web}/WEB-INF/message" includes="**/*"/>
+      </copy>
 
-    <!-- Copy the emails to the correct locations -->
-    <copy todir="${dir.target.classes.main}/WEB-INF/email" failonerror="false">
-      <fileset dir="${dir.web}/WEB-INF/email" includes="**/*"/>
-    </copy>
+      <!-- Copy the emails to the correct locations -->
+      <copy todir="${dir.target.classes.main}/WEB-INF/email" failonerror="false">
+        <fileset dir="${dir.web}/WEB-INF/email" includes="**/*"/>
+      </copy>
 
-    <!-- Copy the static files into the struts location -->
-    <copy todir="${dir.target.classes.main}/module/${project.name}" failonerror="false">
-      <fileset dir="${dir.web}/module/${project.name}" includes="**/*"/>
-    </copy>
+      <!-- Copy the static files into the struts location -->
+      <copy todir="${dir.target.classes.main}/module/${project.name}" failonerror="false">
+        <fileset dir="${dir.web}/module/${project.name}" includes="**/*"/>
+      </copy>
 
-    <jar destfile="${dir.target.jars}/${project.name}-${project.version}.jar">
-      <manifest>
-        <attribute name="Implementation-Version" value="${project.version}"/>
-      </manifest>
-      <fileset dir="${dir.target.classes.main}" includes="**/*"/>
-    </jar>
+      <jar destfile="${dir.target.jars}/${project.name}-${project.version}.jar">
+        <manifest>
+          <attribute name="Implementation-Version" value="${project.version}"/>
+        </manifest>
+        <fileset dir="${dir.target.classes.main}" includes="**/*"/>
+      </jar>
 
-    <!-- delete the META-INF/sql directory.  This is deleted so that these files are not found by the
-          jcatapult database migration api -->
-    <delete dir="${dir.target.sql.main}"/>
+      <!-- delete the META-INF/sql directory.  This is deleted so that these files are not found by the
+            jcatapult database migration api -->
+      <delete dir="${dir.target.sql.main}"/>
 
-    <!-- Source JAR -->
-    <jar destfile="${dir.target.jars}/${project.name}-${project.version}-src.jar">
-      <fileset dir="${dir.src.java.main}" includes="**/*"/>
-    </jar>
+      <!-- Source JAR -->
+      <jar destfile="${dir.target.jars}/${project.name}-${project.version}-src.jar">
+        <fileset dir="${dir.src.java.main}" includes="**/*"/>
+      </jar>
 
-    <!-- Special test only JAR with the persistence.xml -->
-    <module_create_persistence moduleFile="${dir.src.conf.main}/module.xml"
-                               persistenceDir="${dir.target.classes.test.unit}"/>
-    <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}.jar">
-      <fileset dir="${dir.target.classes.test.unit}" includes="META-INF/**/*"/>
-    </jar>
+      <!-- Special test only JAR with the persistence.xml -->
+      <module_create_persistence moduleFile="${dir.src.conf.main}/module.xml"
+                                 persistenceDir="${dir.target.classes.test.unit}"/>
+      <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}.jar">
+        <fileset dir="${dir.target.classes.test.unit}" includes="META-INF/**/*"/>
+      </jar>
+    </sequential>
+  </macrodef>
 
-     <!--Publish everything except the special test JAR-->
-    <publish publishWorkflow="workflow.publish.local" integrationbuild="true"/>
-    <echo message="Done"/>
+  <macrodef name="jar-publish">
+    <sequential>
+      <publish publishWorkflow="workflow.publish.local" integrationbuild="true"/>
+    </sequential>
+  </macrodef>
+
+  <!-- Pre process for overriding -->
+  <macrodef name="jar-pre">
+    <sequential>
+    </sequential>
+  </macrodef>
+
+  <!-- Post process for overriding -->
+  <macrodef name="jar-post">
+    <sequential>
+    </sequential>
+  </macrodef>
+
+  <target name="jar" depends="compile" description="Creates the project JAR file.">
+    <jar-init/>
+    <jar-pre/>
+    <jar-local/>
+    <jar-post/>
+    <jar-publish/>
   </target>
 </project>
