@@ -84,4 +84,6 @@
     <fail message="You must be in a working directory that is checkout of from trunk or a branch"
         if="fail"/>
   </target>
+
+  <target name="foo" depends="-scm-init"/>
 </project>

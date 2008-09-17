@@ -116,7 +116,7 @@
             <not><available file="${deploy.archive}"/></not>
             <then>
               <echo>Deploy archive does not exists at location ${deploy.archive}.  Checking out from source control...</echo>
-              <scm_export_tag dir="${dir.checkout}" tag="${input.tag.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+              <scm_check_out_tag dir="${dir.checkout}" tag="${input.tag.version}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
               <rel_fork dir="${dir.checkout}" target="rel-deploy-script"/>
             </then>
             <else>
@@ -137,7 +137,7 @@
             <equals arg1="${version.type}" arg2="major"/>
             <then>
               <!-- check out trunk -->
-              <scm_export_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+              <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
               <if>
                 <equals arg1="@{relType}" arg2="tag"/>
                 <then>
@@ -160,7 +160,7 @@
                   <equals arg1="${scm.location}" arg2="trunk"/>
                   <then>
                     <!-- check out trunk -->
-                    <scm_export_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                    <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
                     <if>
                       <equals arg1="@{relType}" arg2="tag"/>
                       <then>
@@ -192,13 +192,13 @@
                       <equals arg1="${scm.location}" arg2="trunk"/>
                       <then>
                         <!-- check out trunk -->
-                        <scm_export_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                        <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
                         <rel_fork dir="${dir.checkout}" target="rel-patch-tag-trunk-script"/>
                       </then>
                       <else>
                         <!-- check out branch -->
                         <rel_set_branch_version/>
-                        <scm_export_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                        <scm_check_out_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
                         <rel_fork dir="${dir.checkout}" target="rel-patch-tag-branch-script"/>
                       </else>
                     </if>
@@ -209,12 +209,12 @@
                       <if>
                         <equals arg1="${scm.location}" arg2="trunk"/>
                         <then>
-                          <scm_export_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                          <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
                           <rel_fork dir="${dir.checkout}" target="rel-patch-full-trunk-script"/>
                         </then>
                         <else>
                           <rel_set_branch_version/>
-                          <scm_export_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                          <scm_check_out_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
                           <rel_fork dir="${dir.checkout}" target="rel-patch-full-branch-script"/>
                         </else>
                       </if>
@@ -235,13 +235,13 @@
                       <equals arg1="${scm.location}" arg2="trunk"/>
                       <then>
                         <!-- check out trunk -->
-                        <scm_export_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                        <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
                         <rel_fork dir="${dir.checkout}" target="rel-snapshot-tag-trunk-script"/>
                       </then>
                       <else>
                         <!-- check out branch -->
                         <rel_set_branch_version/>
-                        <scm_export_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                        <scm_check_out_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
                         <rel_fork dir="${dir.checkout}" target="rel-snapshot-tag-branch-script"/>
                       </else>
                     </if>
@@ -252,12 +252,12 @@
                       <if>
                         <equals arg1="${scm.location}" arg2="trunk"/>
                         <then>
-                          <scm_export_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                          <scm_check_out_head dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
                           <rel_fork dir="${dir.checkout}" target="rel-snapshot-full-trunk-script"/>
                         </then>
                         <else>
                           <rel_set_branch_version/>
-                          <scm_export_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
+                          <scm_check_out_branch branch="${branch.version}" dir="${dir.checkout}" username="${svn.username}" password="${svn.password}" url="${svn.repo.url}"/>
                           <rel_fork dir="${dir.checkout}" target="rel-snapshot-full-branch-script"/>
                         </else>
                       </if>
