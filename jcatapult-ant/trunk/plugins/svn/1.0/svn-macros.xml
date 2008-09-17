@@ -297,16 +297,16 @@
   </macrodef>
 
   <macrodef name="scm_export" description="Exports a repository.">
-    <attribute name="src" description="The source URL to copy from."/>
-    <attribute name="dest" description="The destintation URL to copy into."/>
+    <attribute name="url" description="The source URL to export."/>
+    <attribute name="dir" description="The directory to export to."/>
     <attribute name="username" description="The subversion username"/>
     <attribute name="password" description="The subversion password"/>
 
     <sequential>
-      <echo message="Exporting @{src} to @{dest}"/>
+      <echo message="Exporting @{url} to @{dir}"/>
 
       <svn username="@{username}" password="@{password}">
-        <export srcUrl="@{src}" destPath="@{dest}"/>
+        <export srcUrl="@{url}" destPath="@{dir}"/>
       </svn>
     </sequential>
   </macrodef>
