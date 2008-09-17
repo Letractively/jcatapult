@@ -9,7 +9,7 @@ for p in $(cat $dir/projects); do
   fi
 
   cd $p
-  if ! ant clean jar; then
+  if ! ant clean test; then
     echo "Build failed for $p"
     exit 1
   fi
