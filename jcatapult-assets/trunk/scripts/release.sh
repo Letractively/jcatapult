@@ -7,6 +7,9 @@ fi
 
 version=$1
 dir=$(dirname $0)
+cd $dir
+dir=$PWD
+cd -
 projects=$(cat $dir/projects)
 
 #
