@@ -26,7 +26,7 @@
   -->
   <properties file="${user.home}/inversoft-org-release-build.properties"/>
 
-  <property name="version.jcatapult" value="1.0-RC8"/>
+  <property name="version.jcatapult" value="1.0-RC8-{integration}"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="run"/>
