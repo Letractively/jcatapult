@@ -91,20 +91,20 @@
                         username="${svn.username}" password="${svn.password}"/>
 
     <!--export ant/plugins -->
-    <scm_export dest="${dir.dist.ant}/plugins" username="${svn.username}" password="${svn.password}"
-                src="https://jcatapult.googlecode.com/svn/jcatapult-ant/tags/${release.jcatapult.version}/plugins"/>
+    <scm_export dir="${dir.dist.ant}/plugins" username="${svn.username}" password="${svn.password}"
+                url="https://jcatapult.googlecode.com/svn/jcatapult-ant/tags/${release.jcatapult.version}/plugins"/>
 
     <!--export ant/tools -->
-    <scm_export dest="${dir.dist.ant}/tools" username="${svn.username}" password="${svn.password}"
-                src="https://jcatapult.googlecode.com/svn/jcatapult-ant/tags/${release.jcatapult.version}/tools"/>
+    <scm_export dir="${dir.dist.ant}/tools" username="${svn.username}" password="${svn.password}"
+                url="https://jcatapult.googlecode.com/svn/jcatapult-ant/tags/${release.jcatapult.version}/tools"/>
 
     <!--export scaffolder -->
-    <scm_export dest="${dir.export.scaffolder}" username="${svn.username}" password="${svn.password}"
-                src="https://jcatapult.googlecode.com/svn/jcatapult-scaffolder/tags/${release.jcatapult.version}"/>
+    <scm_export dir="${dir.export.scaffolder}" username="${svn.username}" password="${svn.password}"
+                url="https://jcatapult.googlecode.com/svn/jcatapult-scaffolder/tags/${release.jcatapult.version}"/>
 
     <!--export deployer -->
-    <scm_export dest="${dir.export.deployer}" username="${svn.username}" password="${svn.password}"
-                src="https://jcatapult.googlecode.com/svn/jcatapult-deployer/tags/${release.jcatapult.version}"/>
+    <scm_export dir="${dir.export.deployer}" username="${svn.username}" password="${svn.password}"
+                url="https://jcatapult.googlecode.com/svn/jcatapult-deployer/tags/${release.jcatapult.version}"/>
 
     <!--build the scaffolder -->
     <rel_fork dir="${dir.export.scaffolder}" target="jar"/>
