@@ -16,6 +16,9 @@
   <!-- java compile -->
   <import file="${plugin.dir}/java/1.0/compile.xml"/>
 
+  <!-- Javadoc -->
+  <import file="${plugin.dir}/javadoc/1.0/javadoc.xml"/>
+
   <!-- java jar -->
   <import file="${plugin.dir}/java/1.0/jar.xml"/>
 
