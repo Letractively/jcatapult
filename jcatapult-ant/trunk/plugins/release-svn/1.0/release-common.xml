@@ -353,7 +353,7 @@
       <if>
         <os family="windows"/>
         <then>
-          <exec executable="${ant.home}\bin\ant.bat" dir="@{dir}">
+          <exec executable="${ant.home}\bin\ant.bat" dir="@{dir}" failonerror="true">
             <arg value="-Dcreate.db=${create.db}"/>
             <arg value="-Dignore.tests=${ignore.tests}"/>
             <arg value="-Ddebug=${debug}"/>
@@ -364,7 +364,7 @@
           </exec>
         </then>
         <else>
-          <exec executable="ant" dir="@{dir}">
+          <exec executable="ant" dir="@{dir}" failonerror="true">
             <arg value="-Dcreate.db=${create.db}"/>
             <arg value="-Dignore.tests=${ignore.tests}"/>
             <arg value="-Ddebug=${debug}"/>
