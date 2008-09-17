@@ -26,7 +26,7 @@
   <!-- compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
 
-  <property name="version.jcatapult" value="1.0-RC8"/>
+  <property name="version.jcatapult" value="1.0-RC8-{integration}"/>
 
   <release>
     <publication name="jcatapult-mvc" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"
