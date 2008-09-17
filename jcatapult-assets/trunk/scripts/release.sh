@@ -10,6 +10,7 @@ dir=$(dirname $0)
 cd $dir
 dir=$PWD
 cd -
+echo "Working from release script dir $dir"
 projects=$(cat $dir/projects)
 
 #
