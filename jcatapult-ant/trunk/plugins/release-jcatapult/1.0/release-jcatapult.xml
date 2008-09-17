@@ -79,6 +79,8 @@
                         username="${svn.username}" password="${svn.password}"/>
     <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-dbmgr"
                         username="${svn.username}" password="${svn.password}"/>
+    <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-mvc"
+                        username="${svn.username}" password="${svn.password}"/>
     <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-filemgr"
                         username="${svn.username}" password="${svn.password}"/>
     <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-commerce"
