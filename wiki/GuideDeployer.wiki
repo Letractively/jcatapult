@@ -43,7 +43,7 @@ The environment represents a specific location within a domain where your web ap
 Both the Domain and Environment information are configured via an xml file and, by convention, script execution expects the path of this configuration file to be relative to the project root at the following location:
 
 {{{
-deploy/remote/deploy.xml
+<project-root>/deploy/remote/deploy.xml
 }}}
 
 An example deploy xml configuration file is included below:
