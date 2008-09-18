@@ -53,8 +53,6 @@
     <property name="dir.export.scaffolder" value="${dir.dist.scaffolder}/scaffolder-export"/>
     <property name="dir.dist.deployer" value="${dir.dist}/deployer"/>
     <property name="dir.export.deployer" value="${dir.dist.deployer}/deployer-export"/>
-    <property name="dir.dist.savant" value="${dir.dist}/savant"/>
-    <property name="dir.dist.groovy" value="${dir.dist}/groovy"/>
     <property name="dir.jcatapult.dist" value="${dir.jcatapult.cache}/jcatapult-dist"/>
 
     <!-- make all the directories -->
@@ -63,8 +61,6 @@
     <mkdir dir="${dir.dist.ant}"/>
     <mkdir dir="${dir.dist.scaffolder}"/>
     <mkdir dir="${dir.dist.deployer}"/>
-    <mkdir dir="${dir.dist.savant}"/>
-    <mkdir dir="${dir.dist.groovy}"/>
 
     <!-- check that tags are available -->
     <scm_tag_validation tag="${release.jcatapult.version}" url="https://jcatapult.googlecode.com/svn/jcatapult-scaffolder"
