@@ -46,7 +46,7 @@
 
   <macrodef name="app-dependencies">
     <sequential>
-      <artifactcopy todir="${dir.web}/WEB-INF/lib" flatten="true" types="compile,run,domains"
+      <artifactcopy todir="${dir.web}/WEB-INF/lib" flatten="true" types="compile,run"
                     workflow="workflow.project" dependencies="dependencies.project"/>
     </sequential>
   </macrodef>
