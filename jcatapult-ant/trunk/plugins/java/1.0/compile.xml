@@ -24,7 +24,7 @@
       Fetch artifacts but DON'T grab transitive dependencies because this should be explicitly the
       artifacts that are required to compile this project and NOT transitive deps.
     -->
-    <dependencypath pathid="classpath.compile.main" types="compile-only,compile,domains" transitive="false"
+    <dependencypath pathid="classpath.compile.main" types="compile-only,compile" transitive="false"
                     workflow="workflow.project" dependencies="dependencies.project"/>
   </target>
 
