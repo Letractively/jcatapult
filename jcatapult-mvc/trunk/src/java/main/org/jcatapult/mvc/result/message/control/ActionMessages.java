@@ -48,13 +48,11 @@ public class ActionMessages extends AbstractControl {
     /**
      * Adds the action messages.
      *
-     * @param   attributes Not used.
-     * @param   dynamicAttributes Not used.
      * @return  The parameters with the action messages added.
      */
     @Override
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        Map<String, Object> parameters = super.makeParameters(attributes, dynamicAttributes);
+    protected Map<String, Object> makeParameters() {
+        Map<String, Object> parameters = super.makeParameters();
         parameters.put("action_messages", messageStore.getActionMessages(MessageType.PLAIN));
         parameters.put("action_errors", messageStore.getActionMessages(MessageType.ERROR));
         return parameters;

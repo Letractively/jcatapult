@@ -54,12 +54,9 @@ public class CountriesSelect extends Select {
      * Adds the countries Map and then calls super.
      * </p>
      *
-     * @param   attributes The attributes.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
     @Override
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+    protected Map<String, Object> makeParameters() {
         LinkedHashMap<String, String> countries = new LinkedHashMap<String, String>();
 
         if (attributes.containsKey("includeBlank") && (Boolean) attributes.get("includeBlank")) {
@@ -91,7 +88,7 @@ public class CountriesSelect extends Select {
 
         attributes.put("items", countries);
 
-        return super.makeParameters(attributes, dynamicAttributes);
+        return super.makeParameters();
     }
 
     public static class LocaleComparator implements Comparator<Locale> {

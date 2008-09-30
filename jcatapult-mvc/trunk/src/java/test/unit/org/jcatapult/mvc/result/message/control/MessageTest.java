@@ -40,7 +40,7 @@ public class MessageTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
         run(message,
             mapNV("key", "key"),
-            "American English Message"
+            null, "American English Message"
         );
     }
 
@@ -50,7 +50,7 @@ public class MessageTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
         run(message,
             mapNV("key", "key", "bundle", "/user/edit-bundle"),
-            "Bundle Message"
+            null, "Bundle Message"
         );
     }
 
@@ -61,7 +61,7 @@ public class MessageTest extends ControlBaseTest {
         try {
             run(message,
             mapNV("key", "bad"),
-                "Bundle message"
+                null, "Bundle message"
             );
             fail("Should have failed");
         } catch (IllegalStateException e) {
@@ -75,7 +75,7 @@ public class MessageTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
         run(message,
             mapNV("key", "bad", "default", "Message"),
-            "Message"
+            null, "Message"
         );
     }
 }

@@ -15,7 +15,6 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
@@ -53,10 +52,9 @@ public abstract class AbstractComponentControl extends AbstractControl {
     /**
      * Converts the given parameters into a FreeMarkerMap root node.
      *
-     * @param   parameters The parameters.
      * @return  The root, which is a {@link FreeMarkerMap}.
      */
-    protected Object makeRoot(Map<String, Object> parameters) {
+    protected Object makeRoot() {
         return new FreeMarkerMap(request, response, expressionEvaluator, currentAction(), parameters);
     }
 }

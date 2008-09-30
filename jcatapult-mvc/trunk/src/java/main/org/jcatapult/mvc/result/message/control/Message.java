@@ -24,11 +24,10 @@ import java.util.Map;
 import org.jcatapult.l10n.MessageProvider;
 import org.jcatapult.l10n.MissingMessageException;
 import org.jcatapult.mvc.result.control.AbstractControl;
-import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 
 import com.google.inject.Inject;
-import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateMethodModel;
 import freemarker.template.TemplateModelException;
 import static net.java.util.CollectionTools.*;
@@ -46,7 +45,7 @@ import static net.java.util.CollectionTools.*;
         @ControlAttribute(name = "key")
     }
 )
-public class Message extends AbstractControl implements TemplateMethodModel, TemplateDirectiveModel {
+public class Message extends AbstractControl implements TemplateMethodModel {
     private final MessageProvider messageProvider;
 
     @Inject
@@ -57,11 +56,9 @@ public class Message extends AbstractControl implements TemplateMethodModel, Tem
     /**
      * Determines the bundle and then gets the message and puts it into the attributes.
      *
-     * @param   attributes Used to get the bundle and store the message.
-     * @param   dynamicAttributes Not used.
      */
     @Override
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+    protected void addAdditionalAttributes() {
         String bundle = determineBundleName(attributes);
         String key = (String) attributes.remove("key");
         String defaultMesg = (String) attributes.remove("default");

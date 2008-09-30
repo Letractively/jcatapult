@@ -57,12 +57,9 @@ public class Form extends AbstractControl {
     /**
      * If the user supplied a prepare action URI, that action is inokved.
      *
-     * @param   attributes The attributes of the tag.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
     @Override
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+    protected void addAdditionalAttributes() {
         // Move the bundle attribute into the request
         if (attributes.containsKey("bundle")) {
             request.setAttribute("jcatapultControlBundle", attributes.remove("bundle"));

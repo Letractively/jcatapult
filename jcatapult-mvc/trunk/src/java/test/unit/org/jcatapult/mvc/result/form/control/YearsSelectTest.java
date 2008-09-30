@@ -39,7 +39,7 @@ public class YearsSelectTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(null, "/years-select", null, null));
         run(yearsSelect,
             mapNV("name", "test", "class", "css-class", "bundle", "/years-select-bundle"),
-            "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\">\n" +
@@ -68,7 +68,7 @@ public class YearsSelectTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(edit, "/years-select", null, null));
         run(yearsSelect,
             mapNV("name", "user.year", "class", "css-class", "startYear", 2001, "endYear", 2006),
-            "<input type=\"hidden\" name=\"user.year@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.year@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_year\" class=\"label\">Year</label></div>\n" +
             "<div class=\"control-container\">\n" +

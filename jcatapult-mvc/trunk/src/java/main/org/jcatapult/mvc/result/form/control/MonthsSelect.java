@@ -50,13 +50,10 @@ public class MonthsSelect extends Select {
      * Calls super then adds the months Map.
      * </p>
      *
-     * @param   attributes The attributes.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
     @Override
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        super.addAdditionalAttributes(attributes, dynamicAttributes);
+    protected void addAdditionalAttributes() {
+        super.addAdditionalAttributes();
 
         Map<Integer, String> months = new TreeMap<Integer, String>();
         DateTimeFormatter formatter = DateTimeFormat.forPattern("MMMM").withLocale(locale);

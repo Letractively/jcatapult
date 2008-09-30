@@ -66,13 +66,10 @@ public abstract class AbstractListInput extends AbstractInput {
      *  from the items Map, the expression attributes or the current items value.</li>
      * </ul>
      *
-     * @param   attributes The attributes.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
     @Override
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        Map<String, Object> parameters = super.makeParameters(attributes, dynamicAttributes);
+    protected Map<String, Object> makeParameters() {
+        Map<String, Object> parameters = super.makeParameters();
         Map<String, Option> options = new LinkedHashMap<String, Option>();
 
         // Handle the header option

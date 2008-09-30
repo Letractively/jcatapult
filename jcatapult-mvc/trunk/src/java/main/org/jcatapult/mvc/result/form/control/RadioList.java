@@ -49,13 +49,11 @@ public class RadioList extends AbstractListInput {
     /**
      * Removes the uncheckedValue attribute and moves it to the parameters.
      *
-     * @param   attributes The attributes to the tag.
-     * @param   dynamicAttributes Not used.
      * @return  The Map.
      */
     @Override
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        Map<String, Object> params = super.makeParameters(attributes, dynamicAttributes);
+    protected Map<String, Object> makeParameters() {
+        Map<String, Object> params = super.makeParameters();
         String uncheckedValue = (String) attributes.remove("uncheckedValue");
         if (uncheckedValue != null) {
             params.put("uncheckedValue", uncheckedValue);

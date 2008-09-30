@@ -48,7 +48,7 @@ public class FormTest extends ControlBaseTest {
 
         run(form,
             mapNV("action", "/user/", "method", "POST"),
-            "<div class=\"form\">\n" +
+            null, "<div class=\"form\">\n" +
             "<form action=\"/user/\" method=\"POST\">\n" +
             "</form>\n" +
             "</div>\n");
@@ -62,7 +62,7 @@ public class FormTest extends ControlBaseTest {
 
         run(form,
             mapNV("action", "/user/edit", "method", "POST"),
-            "<div class=\"form\">\n" +
+            null, "<div class=\"form\">\n" +
             "<form action=\"/user/edit\" method=\"POST\">\n" +
             "</form>\n" +
             "</div>\n");

@@ -25,6 +25,7 @@ import org.jcatapult.mvc.parameter.convert.converters.DateTimeConverter;
 import org.jcatapult.mvc.parameter.convert.converters.EnumConverter;
 import org.jcatapult.mvc.parameter.convert.converters.FileConverter;
 import org.jcatapult.mvc.parameter.convert.converters.LocalDateConverter;
+import org.jcatapult.mvc.parameter.convert.converters.LocaleConverter;
 import org.jcatapult.mvc.parameter.convert.converters.MoneyConverter;
 import org.jcatapult.mvc.parameter.convert.converters.NumberConverter;
 import org.jcatapult.mvc.parameter.convert.converters.StringConverter;
@@ -77,6 +78,7 @@ public class MVCModule extends AbstractModule {
         bind(EnumConverter.class);
         bind(FileConverter.class);
         bind(LocalDateConverter.class);
+        bind(LocaleConverter.class);
         bind(MoneyConverter.class);
         bind(NumberConverter.class);
         bind(StringConverter.class);

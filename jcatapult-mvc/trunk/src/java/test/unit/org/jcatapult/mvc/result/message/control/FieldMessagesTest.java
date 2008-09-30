@@ -44,7 +44,7 @@ public class FieldMessagesTest extends ControlBaseTest {
         messageStore.addFieldMessage(MessageScope.REQUEST, "field", "fieldError2");
         run(fieldMessages,
             mapNV("errors", false),
-            "<ul class=\"field-errors\">\n" +
+            null, "<ul class=\"field-errors\">\n" +
             "  <li class=\"field-error\">error1</li>\n" +
             "  <li class=\"field-error\">error2</li>\n" +
             "</ul>\n"
@@ -62,7 +62,7 @@ public class FieldMessagesTest extends ControlBaseTest {
 
         run(fieldMessages,
             mapNV("errors", true),
-            "<ul class=\"field-errors\">\n" +
+            null, "<ul class=\"field-errors\">\n" +
             "  <li class=\"field-error\">error1</li>\n" +
             "  <li class=\"field-error\">error2</li>\n" +
             "</ul>\n"
@@ -80,7 +80,7 @@ public class FieldMessagesTest extends ControlBaseTest {
 
         run(fieldMessages,
             mapNV("errors", false, "fields", "missing"),
-            ""
+            null, ""
         );
     }
 
@@ -94,7 +94,7 @@ public class FieldMessagesTest extends ControlBaseTest {
         messageStore.addFieldMessage(MessageScope.REQUEST, "field", "fieldError2");
         run(fieldMessages,
             mapNV("errors", false, "fields", "field"),
-            "<ul class=\"field-errors\">\n" +
+            null, "<ul class=\"field-errors\">\n" +
             "  <li class=\"field-error\">error1</li>\n" +
             "  <li class=\"field-error\">error2</li>\n" +
             "</ul>\n"

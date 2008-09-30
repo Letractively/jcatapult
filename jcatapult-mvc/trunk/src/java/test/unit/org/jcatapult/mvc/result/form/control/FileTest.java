@@ -40,7 +40,7 @@ public class FileTest extends ControlBaseTest {
 
         run(file,
             mapNV("name", "test", "class", "css-class", "bundle", "/file-bundle"),
-            "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\"><input type=\"file\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
@@ -54,7 +54,7 @@ public class FileTest extends ControlBaseTest {
 
         run(file,
             mapNV("name", "user.profile", "class", "css-class"),
-            "<input type=\"hidden\" name=\"user.profile@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.profile@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_profile\" class=\"label\">Your profile</label></div>\n" +
             "<div class=\"control-container\"><input type=\"file\" class=\"css-class\" id=\"user_profile\" name=\"user.profile\"/></div>\n" +
@@ -71,7 +71,7 @@ public class FileTest extends ControlBaseTest {
 
         run(file,
             mapNV("name", "user.profile", "class", "css-class"),
-            "<input type=\"hidden\" name=\"user.profile@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.profile@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_profile\" class=\"label\"><span class=\"error\">Your profile (Profile is required, Profile must be cool)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"file\" class=\"css-class\" id=\"user_profile\" name=\"user.profile\"/></div>\n" +

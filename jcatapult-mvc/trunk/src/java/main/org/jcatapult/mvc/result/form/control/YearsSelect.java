@@ -17,7 +17,6 @@ package org.jcatapult.mvc.result.form.control;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
@@ -52,13 +51,10 @@ public class YearsSelect extends Select {
      * Calls super then adds the years Map.
      * </p>
      *
-     * @param   attributes The attributes.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
     @Override
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        super.addAdditionalAttributes(attributes, dynamicAttributes);
+    protected void addAdditionalAttributes() {
+        super.addAdditionalAttributes();
 
         Integer start = (Integer) attributes.remove("startYear");
         Integer end = (Integer) attributes.remove("endYear");

@@ -43,13 +43,10 @@ public abstract class AbstractCheckedInput extends AbstractInput {
      * Adds a boolean attribute named checked if the value associated with the control is equal to
      * the value of the tag.
      *
-     * @param   attributes The checked boolean is put into this Map.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
     @Override
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        super.addAdditionalAttributes(attributes, dynamicAttributes);
+    protected void addAdditionalAttributes() {
+        super.addAdditionalAttributes();
         String name = (String) attributes.get("name");
         Object action = currentInvocation().action();
         if (!attributes.containsKey("checked") && action != null) {
@@ -97,13 +94,11 @@ public abstract class AbstractCheckedInput extends AbstractInput {
     /**
      * Removes the uncheckedValue attribute and moves it to the parameters.
      *
-     * @param   attributes The attributes to the tag.
-     * @param   dynamicAttributes Not used.
      * @return  The Map.
      */
     @Override
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        Map<String, Object> params = super.makeParameters(attributes, dynamicAttributes);
+    protected Map<String, Object> makeParameters() {
+        Map<String, Object> params = super.makeParameters();
         String uncheckedValue = (String) attributes.remove("uncheckedValue");
         if (uncheckedValue != null) {
             params.put("uncheckedValue", uncheckedValue);
