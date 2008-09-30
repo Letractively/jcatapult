@@ -30,7 +30,7 @@ function test_project() {
     exit 1
   fi
 
-  if ! ant clean test > /dev/null; then
+  if ! ant clean test >> /tmp/jcatapult-release.log; then
     echo "Project tests failed. Unable to release"
     exit 1
   fi
@@ -63,7 +63,7 @@ function update_version() {
 function release_project() {
   cd $1
 
-  if ! ant rel < $dir/release-input > /dev/null; then
+  if ! ant rel < $dir/release-input >> /tmp/jcatapult-release.log; then
     echo "Release of $1 failed"
     exit 1
   fi
