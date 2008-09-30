@@ -19,7 +19,7 @@
   <dirname property="dir.plugin.savant" file="${ant.file.savant}"/>
   <path id="classpath.savant">
     <fileset dir="${dir.plugin.savant}/lib" includes="*.jar"/>
-    <pathelement location="${dir.plugin.savant}/../../libraries/java-net-commons-1.4.4.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/java-net-commons-1.5.1.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/savant-core-2.0-M4.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/ant-ext-2.0-M4.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/jdom-1.0.jar"/>
