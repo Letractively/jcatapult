@@ -36,12 +36,13 @@ import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.result.ControlHashModel;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.ExpressionException;
+import org.jcatapult.mvc.result.control.Control;
 
 import com.google.inject.Inject;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
-import freemarker.ext.servlet.ServletContextHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
+import freemarker.ext.servlet.ServletContextHashModel;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleCollection;
 import freemarker.template.TemplateCollectionModel;
@@ -69,6 +70,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     private static final String JSP_TAGLIBS = "JspTaglibs";
 
     private static final Map<String, Class<? extends TemplateModel>> models = new HashMap<String, Class<? extends TemplateModel>>();
+    private static final Map<String, Class<? extends Control>> controls = new HashMap<String, Class<? extends Control>>();
     private static TaglibFactory taglibFactory;
     private static ObjectFactory objectFactory;
 
@@ -93,6 +95,11 @@ public class FreeMarkerMap implements TemplateHashModelEx {
         List<Class<? extends TemplateModel>> types = objectFactory.getAllForType(TemplateModel.class);
         for (Class<? extends TemplateModel> type : types) {
             models.put(type.getSimpleName().toLowerCase(), type);
+        }
+
+        List<Class<? extends Control>> controlTypess = objectFactory.getAllForType(Control.class);
+        for (Class<? extends Control> controlType : controlTypess) {
+            controls.put(controlType.getSimpleName().toLowerCase(), controlType);
         }
 
         FreeMarkerMap.objectFactory = objectFactory;
@@ -125,9 +132,16 @@ public class FreeMarkerMap implements TemplateHashModelEx {
         }, ObjectWrapper.DEFAULT_WRAPPER));
         objects.put(APPLICATION, context);
         objects.put(JSP_TAGLIBS, taglibFactory);
-        objects.put(JCATAPULT_TAGS, new ControlHashModel(objectFactory, models));
+        objects.put(JCATAPULT_TAGS, new ControlHashModel(objectFactory, controls));
 
         objects.putAll(additionalValues);
+
+        // Add any additional FreeMarker models that are registered
+        for (String key : models.keySet()) {
+            if (!objects.containsKey(key)) {
+                objects.put(key, objectFactory.create(models.get(key)));
+            }
+        }
 
         this.request = request;
         this.expressionEvaluator = expressionEvaluator;

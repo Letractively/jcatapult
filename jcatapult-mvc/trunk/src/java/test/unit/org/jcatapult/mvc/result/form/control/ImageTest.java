@@ -38,7 +38,7 @@ public class ImageTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(null, "/image", null, null));
         run(image,
             mapNV("name", "image", "value", "test-value", "class", "css-class", "bundle", "/image-bundle", "src", "foo.gif"),
-            "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image-Bundle\"/></div>\n" +
@@ -50,7 +50,7 @@ public class ImageTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
         run(image,
             mapNV("name", "image", "value", "test-value", "class", "css-class", "src", "foo.gif"),
-            "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
@@ -62,7 +62,7 @@ public class ImageTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
         run(image,
             mapNV("name", "image", "action", "/foo", "value", "test-value", "class", "css-class", "src", "foo.gif"),
-            "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"/foo\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
@@ -74,7 +74,7 @@ public class ImageTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
         run(image,
             mapNV("name", "image", "value", "test-value", "class", "css-class", "ismap", true, "src", "foo.gif"),
-            "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" ismap=\"ismap\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +

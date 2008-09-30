@@ -15,10 +15,8 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -32,11 +30,6 @@ import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 import org.jcatapult.mvc.result.form.control.AppendAttributesMethod;
 
 import com.google.inject.Inject;
-import freemarker.core.Environment;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
 import net.java.error.ErrorList;
 
 /**
@@ -53,6 +46,9 @@ public abstract class AbstractControl implements Control {
     protected FreeMarkerService freeMarkerService;
     protected HttpServletRequest request;
     protected ActionInvocationStore actionInvocationStore;
+    protected Map<String, Object> attributes;
+    protected Map<String, String> dynamicAttributes;
+    protected Map<String, Object> parameters;
     protected Object root;
 
     @Inject
@@ -78,14 +74,28 @@ public abstract class AbstractControl implements Control {
      *          an underscore.
      */
     public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        verifyAttributes(attributes);
-        addAdditionalAttributes(attributes, dynamicAttributes);
-        root = makeRoot(makeParameters(attributes, dynamicAttributes));
+        this.attributes = attributes;
+        this.dynamicAttributes = dynamicAttributes;
+
+        verifyAttributes();
+        addAdditionalAttributes();
+        this.parameters = makeParameters();
+        this.root = makeRoot();
 
         if (startTemplateName() != null) {
             String templateName = "/WEB-INF/control-templates/" + startTemplateName();
             freeMarkerService.render(writer, templateName, root, locale);
         }
+    }
+
+    /**
+     * This implementation just calls the Body implementation to render the body.
+     *
+     * @param   writer The writer to write the body to.
+     * @param   body The body.
+     */
+    public void renderBody(Writer writer, Body body) {
+        body.render(writer);
     }
 
     /**
@@ -117,12 +127,9 @@ public abstract class AbstractControl implements Control {
      * <li>append_attributes - A FreeMarker method that appends attributes ({@link AppendAttributesMethod})</li>
      * </ul>
      *
-     * @param   attributes The attributes from the tag.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      * @return  The Parameters Map.
      */
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+    protected Map<String, Object> makeParameters() {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("attributes", attributes);
         parameters.put("dynamic_attributes", dynamicAttributes);
@@ -134,60 +141,18 @@ public abstract class AbstractControl implements Control {
      * Converts the given parameters into a FreeMarker root node. This can be overridden by sub-classes
      * to convert the Map or wrap it. This method simply returns the given Map.
      *
-     * @param   parameters The parameters.
      * @return  The root.
      */
-    protected Object makeRoot(Map<String, Object> parameters) {
+    protected Object makeRoot() {
         return parameters;
-    }
-
-    /**
-     * Chains to the {@link #renderStart(Writer, Map, Map)} method and the {@link Control#renderEnd(java.io.Writer)}
-     *
-     * @param   env The FreeMarker environment.
-     * @param   params The parameters passed to this control in the FTL file.
-     * @param   loopVars Loop variables (not really used).
-     * @param   body The body of the directive.
-     */
-    @SuppressWarnings("unchecked")
-    public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
-    throws IOException, TemplateException {
-        DefaultObjectWrapper objectWrapper = new DefaultObjectWrapper();
-        Map<String, String> dynamicAttributes = new HashMap<String, String>();
-        for (Iterator<String> i = params.keySet().iterator(); i.hasNext();) {
-            String key = i.next();
-            if (key.startsWith("_")) {
-                Object value = params.get(key);
-                dynamicAttributes.put(key.substring(1), value.toString());
-                i.remove();
-            }
-        }
-
-        Map<String, Object> map = new HashMap<String, Object>(params.size());
-        for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            Object value = entry.getValue();
-            if (value != null) {
-                map.put((String) entry.getKey(), objectWrapper.unwrap((TemplateModel) value));
-            }
-        }
-
-        renderStart(env.getOut(), map, dynamicAttributes);
-        if (body != null) {
-            body.render(env.getOut());
-        }
-        renderEnd(env.getOut());
     }
 
     /**
      * Sub-classes can implement this method to add additional attributes. This is primarily used
      * by control tags to determine values, checked states, selected options, etc.
      *
-     * @param   attributes The attributes.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+    protected void addAdditionalAttributes() {
     }
 
     /**
@@ -244,9 +209,8 @@ public abstract class AbstractControl implements Control {
     /**
      * Verifies that all the attributes are correctly defined for the control.
      *
-     * @param   attributes The attributes.
      */
-    private void verifyAttributes(Map<String, Object> attributes) {
+    private void verifyAttributes() {
         ErrorList errors = new ErrorList();
         Class<?> type = getClass();
         ControlAttributes ca = type.getAnnotation(ControlAttributes.class);

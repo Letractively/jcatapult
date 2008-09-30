@@ -51,13 +51,11 @@ public class FieldMessages extends AbstractControl {
     /**
      * Adds the field messages.
      *
-     * @param   attributes The attributes.
-     * @param   dynamicAttributes The dynamic attributes. Dynamic attributes start with underscores.
      * @return  The parameters.
      */
     @Override
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        Map<String, Object> parameters = super.makeParameters(attributes, dynamicAttributes);
+    protected Map<String, Object> makeParameters() {
+        Map<String, Object> parameters = super.makeParameters();
         parameters.put("field_messages", trim(messageStore.getFieldMessages(MessageType.PLAIN), (String) attributes.get("fields")));
         parameters.put("field_errors", trim(messageStore.getFieldMessages(MessageType.ERROR), (String) attributes.get("fields")));
         return parameters;

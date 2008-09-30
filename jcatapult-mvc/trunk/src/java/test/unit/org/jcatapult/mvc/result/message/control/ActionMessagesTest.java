@@ -45,7 +45,7 @@ public class ActionMessagesTest extends ControlBaseTest {
 
         run(actionMessages,
             mapNV("errors", false),
-            "<ul class=\"action-errors\">\n" +
+            null, "<ul class=\"action-errors\">\n" +
             "  <li class=\"action-error\">error1</li>\n" +
             "  <li class=\"action-error\">error2</li>\n" +
             "</ul>\n"
@@ -63,7 +63,7 @@ public class ActionMessagesTest extends ControlBaseTest {
 
         run(actionMessages,
             mapNV("errors", true),
-            "<ul class=\"action-errors\">\n" +
+            null, "<ul class=\"action-errors\">\n" +
             "  <li class=\"action-error\">error1</li>\n" +
             "  <li class=\"action-error\">error2</li>\n" +
             "</ul>\n"

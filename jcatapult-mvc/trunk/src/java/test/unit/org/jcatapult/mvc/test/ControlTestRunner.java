@@ -13,51 +13,59 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.result.control;
+package org.jcatapult.mvc.test;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.io.IOException;
-import java.util.Map;
 
+import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.mvc.action.ActionInvocationStore;
-import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.test.JCatapultBaseTest;
+import org.jcatapult.mvc.result.control.Body;
+import org.jcatapult.mvc.result.control.Control;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
-
-import com.google.inject.Inject;
-import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
- * This class is a base test for the controls.
+ * This class is a test helper that assists in testing custom controls.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@Ignore
-public class ControlBaseTest extends JCatapultBaseTest {
-    @Inject protected ActionInvocationStore ais;
-    @Inject protected MessageStore messageStore;
+public class ControlTestRunner {
+    /**
+     * Tests the given control and returns a builder that can be used to build up attributes, the
+     * body, etc.
+     *
+     * @param   control The control.
+     * @return  The ControlBuilder.
+     */
+    public ControlBuilder test(Control control) {
+        return new ControlBuilder(control);
+    }
 
     /**
      * Runs the control and verifies the output.
      *
-     * @param   control The control to run.
-     * @param   attributes The attributes passed to the control.
-     * @param   body The body.
-     * @param   expected The expected output.
+     * @param   builder The builder.
      */
-    protected void run(Control control, Map<String, Object> attributes, final String body, String expected) {
+    static void run(final ControlBuilder builder) {
+        // Setup the action invocation if it isn't null
+        ActionInvocationStore ais = GuiceContainer.getInjector().getInstance(ActionInvocationStore.class);
+        if (builder.actionInvocation != null) {
+            ais.setCurrent(builder.actionInvocation);
+        }
+
+        // Run the control
+        Control control = builder.control;
         StringWriter writer = new StringWriter();
-        control.renderStart(writer, attributes, map("param", "param-value"));
-        
-        if (body != null) {
+        control.renderStart(writer, builder.attributes, builder.dynamicAttributes);
+
+        if (builder.body != null) {
             control.renderBody(writer, new Body() {
                 public void render(Writer writer) {
                     try {
-                        writer.write(body);
+                        writer.write(builder.body);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -66,6 +74,6 @@ public class ControlBaseTest extends JCatapultBaseTest {
         }
 
         control.renderEnd(writer);
-        assertEquals(expected, writer.toString());
+        assertEquals(builder.result, writer.toString());
     }
 }

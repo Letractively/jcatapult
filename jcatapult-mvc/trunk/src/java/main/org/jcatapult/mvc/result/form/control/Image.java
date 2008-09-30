@@ -15,8 +15,6 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import java.util.Map;
-
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 
@@ -44,13 +42,10 @@ public class Image extends AbstractButtonInput {
      * Calls super and then moves the ismap attribute out and if it is true set it back in as the
      * String <code>ismap</code>.
      *
-     * @param   attributes The attributes to check for the ismap attribute.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
     @Override
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        super.addAdditionalAttributes(attributes, dynamicAttributes);
+    protected void addAdditionalAttributes() {
+        super.addAdditionalAttributes();
         Boolean ismap = (Boolean) attributes.remove("ismap");
         if (ismap != null && ismap) {
             attributes.put("ismap", "ismap");

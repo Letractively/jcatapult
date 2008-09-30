@@ -15,8 +15,6 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import java.util.Map;
-
 import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 
@@ -48,12 +46,9 @@ public class Password extends AbstractInput {
     /**
      * Removes the value attribute for security.
      *
-     * @param   attributes The attributes.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        super.addAdditionalAttributes(attributes, dynamicAttributes);
+    protected void addAdditionalAttributes() {
+        super.addAdditionalAttributes();
         attributes.remove("value");
     }
 

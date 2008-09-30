@@ -46,7 +46,7 @@ public class SelectTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(null, "/select", null, null));
         run(select,
             mapNV("name", "test", "class", "css-class", "bundle", "/select-bundle", "items", asList("one", "two", "three")),
-            "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\">\n" +
@@ -64,7 +64,7 @@ public class SelectTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(null, "/select", null, null));
         run(select,
             mapNV("name", "test", "class", "css-class", "bundle", "/select-bundle", "headerValue", "zero", "items", asList("one", "two", "three")),
-            "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\">\n" +
@@ -90,7 +90,7 @@ public class SelectTest extends ControlBaseTest {
 
         run(select,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
-            "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
             "<div class=\"control-container\">\n" +
@@ -117,7 +117,7 @@ public class SelectTest extends ControlBaseTest {
 
         run(select,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
-            "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
             "<div class=\"control-container\">\n" +
@@ -143,7 +143,7 @@ public class SelectTest extends ControlBaseTest {
 
         run(select,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
-            "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
             "<div class=\"control-container\">\n" +

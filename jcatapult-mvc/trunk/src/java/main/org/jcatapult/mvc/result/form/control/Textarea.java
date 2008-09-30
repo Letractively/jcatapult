@@ -15,8 +15,6 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import java.util.Map;
-
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
@@ -59,13 +57,10 @@ public class Textarea extends AbstractInput {
      * value attribute is missing, the value associated with the control is null and there is a
      * <strong>defaultValue</strong> attribute, it is used.
      *
-     * @param   attributes The value String is put into this Map.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+    protected void addAdditionalAttributes() {
         // Call super to handle the ID
-        super.addAdditionalAttributes(attributes, dynamicAttributes);
+        super.addAdditionalAttributes();
 
         String name = (String) attributes.get("name");
         Object action = currentAction();

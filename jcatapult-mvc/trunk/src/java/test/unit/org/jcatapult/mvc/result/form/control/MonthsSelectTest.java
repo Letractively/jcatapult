@@ -39,7 +39,7 @@ public class MonthsSelectTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(null, "/months-select", null, null));
         run(monthsSelect,
             mapNV("name", "test", "class", "css-class", "bundle", "/months-select-bundle"),
-            "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\">\n" +
@@ -70,7 +70,7 @@ public class MonthsSelectTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(edit, "/months-select", null, null));
         run(monthsSelect,
             mapNV("name", "user.month", "class", "css-class"),
-            "<input type=\"hidden\" name=\"user.month@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.month@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_month\" class=\"label\">Month</label></div>\n" +
             "<div class=\"control-container\">\n" +

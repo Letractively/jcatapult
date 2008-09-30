@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.result.control.Control;
+import org.jcatapult.mvc.result.control.FreeMarkerControlProxy;
 
 import freemarker.template.SimpleCollection;
 import freemarker.template.TemplateCollectionModel;
@@ -41,11 +42,11 @@ import freemarker.template.TemplateModelException;
  */
 public class ControlHashModel implements TemplateHashModelEx {
     private final ObjectFactory objectFactory;
-    private final Map<String, Class<? extends TemplateModel>> models;
+    private final Map<String, Class<? extends Control>> controls;
 
-    public ControlHashModel(ObjectFactory objectFactory, Map<String, Class<? extends TemplateModel>> models) {
+    public ControlHashModel(ObjectFactory objectFactory, Map<String, Class<? extends Control>> controls) {
         this.objectFactory = objectFactory;
-        this.models = models;
+        this.controls = controls;
     }
 
     public TemplateCollectionModel keys() throws TemplateModelException {
@@ -53,17 +54,17 @@ public class ControlHashModel implements TemplateHashModelEx {
     }
 
     public int size() {
-        return models.size();
+        return controls.size();
     }
 
     public boolean isEmpty() {
-        return models.isEmpty();
+        return controls.isEmpty();
     }
 
     public TemplateModel get(String key) {
-        Class<? extends TemplateModel> type = models.get(key);
+        Class<? extends Control> type = controls.get(key);
         if (type != null) {
-            return objectFactory.create(type);
+            return new FreeMarkerControlProxy(objectFactory.create(type));
         }
 
         return null;
@@ -74,13 +75,13 @@ public class ControlHashModel implements TemplateHashModelEx {
     }
 
     public Set<String> keySet() {
-        return new HashSet<String>(models.keySet());
+        return new HashSet<String>(controls.keySet());
     }
 
     public Collection<?> valueCollection() {
         List<TemplateModel> all = new ArrayList<TemplateModel>();
-        for (String name : models.keySet()) {
-            all.add(objectFactory.create(models.get(name)));
+        for (String name : controls.keySet()) {
+            all.add(new FreeMarkerControlProxy(objectFactory.create(controls.get(name))));
         }
 
         return all;

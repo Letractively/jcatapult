@@ -38,7 +38,7 @@ public class ButtonTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(null, "/button", null, null));
         run(button,
             mapNV("name", "button", "value", "test-value", "class", "css-class", "bundle", "/button-bundle"),
-            "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"button\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button-Bundle\"/></div>\n" +
@@ -50,7 +50,7 @@ public class ButtonTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
         run(button,
             mapNV("name", "button", "value", "test-value", "class", "css-class"),
-            "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"button\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
@@ -62,7 +62,7 @@ public class ButtonTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
         run(button,
             mapNV("name", "button", "action", "/foo", "value", "test-value", "class", "css-class"),
-            "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"/foo\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"control-container\"><input type=\"button\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +

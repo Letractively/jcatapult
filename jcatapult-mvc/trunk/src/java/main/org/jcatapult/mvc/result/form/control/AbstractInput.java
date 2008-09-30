@@ -58,11 +58,8 @@ public abstract class AbstractInput extends AbstractControl {
     /**
      * Adds a default ID if one doesn't exist.
      *
-     * @param   attributes The attributes from the tag.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      */
-    protected void addAdditionalAttributes(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
+    protected void addAdditionalAttributes() {
         String id = (String) attributes.get("id");
         if (id == null) {
             id = makeID((String) attributes.get("name"));
@@ -85,14 +82,11 @@ public abstract class AbstractInput extends AbstractControl {
      * tags. This also moves the <code>labelposition</code> attribute from the tag to the returned
      * Map (removes it from the attributes).
      *
-     * @param   attributes The attributes from the tag.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      * @return  The parameter map.
      */
     @Override
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        Map<String, Object> map = super.makeParameters(attributes, dynamicAttributes);
+    protected Map<String, Object> makeParameters() {
+        Map<String, Object> map = super.makeParameters();
         if (labeled) {
             String name = (String) attributes.get("name");
             String bundleName = determineBundleName(attributes);

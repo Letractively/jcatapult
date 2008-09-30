@@ -34,14 +34,11 @@ public abstract class AbstractButtonInput extends AbstractInput {
      * Calls the super method and then moves the label parameter to the value attribute since the
      * value is viewable by the user.
      *
-     * @param   attributes Passed to super.
-     * @param   dynamicAttributes The dynamic attributes from the tag. Dynamic attributes start with
-     *          an underscore.
      * @return  The fixed parameters map.
      */
     @Override
-    protected Map<String, Object> makeParameters(Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        Map<String, Object> parameters = super.makeParameters(attributes, dynamicAttributes);
+    protected Map<String, Object> makeParameters() {
+        Map<String, Object> parameters = super.makeParameters();
         Object label = parameters.remove("label");
         attributes.put("value", label);
 

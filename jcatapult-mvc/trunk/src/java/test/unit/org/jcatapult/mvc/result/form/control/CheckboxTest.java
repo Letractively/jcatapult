@@ -46,7 +46,7 @@ public class CheckboxTest extends ControlBaseTest {
 
         run(checkbox,
             mapNV("name", "test", "value", "test-value", "required", true, "class", "css-class", "bundle", "/checkbox-bundle"),
-            "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test<span class=\"required\">*</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"checkbox\" class=\"css-class\" id=\"test\" name=\"test\" value=\"test-value\"/><input type=\"hidden\" name=\"__jc_cb_test\" value=\"\"/></div>\n" +
@@ -98,7 +98,7 @@ public class CheckboxTest extends ControlBaseTest {
     protected void testAction(String property, boolean flag, String value) {
         run(checkbox,
             mapNV("name", property, "value", value, "class", "css-class"),
-            "<input type=\"hidden\" name=\"" + property + "@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"" + property + "@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"" + property.replace(".", "_") + "\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"checkbox\" " + (flag ? "checked=\"checked\" " : "") +
@@ -114,7 +114,7 @@ public class CheckboxTest extends ControlBaseTest {
 
         run(checkbox,
             mapNV("name", "user.maleWrapper", "defaultChecked", true, "class", "css-class", "value", true),
-            "<input type=\"hidden\" name=\"user.maleWrapper@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.maleWrapper@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_maleWrapper\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"checkbox\" checked=\"checked\" class=\"css-class\" id=\"user_maleWrapper\" name=\"user.maleWrapper\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.maleWrapper\" value=\"\"/></div>\n" +
@@ -128,7 +128,7 @@ public class CheckboxTest extends ControlBaseTest {
 
         run(checkbox,
             mapNV("name", "user.male", "checked", true, "class", "css-class", "value", "true"),
-            "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"checkbox\" checked=\"checked\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.male\" value=\"\"/></div>\n" +
@@ -145,7 +145,7 @@ public class CheckboxTest extends ControlBaseTest {
 
         run(checkbox,
             mapNV("name", "user.male", "class", "css-class", "value", "true"),
-            "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_male\" class=\"label\"><span class=\"error\">Male? (Must be male, Check this box dude!)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"checkbox\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.male\" value=\"\"/></div>\n" +
@@ -159,7 +159,7 @@ public class CheckboxTest extends ControlBaseTest {
 
         run(checkbox,
             mapNV("name", "user.maleWrapper", "class", "css-class", "value", "true", "uncheckedValue", "false"),
-            "<input type=\"hidden\" name=\"user.maleWrapper@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.maleWrapper@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_maleWrapper\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"checkbox\" class=\"css-class\" id=\"user_maleWrapper\" name=\"user.maleWrapper\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.maleWrapper\" value=\"false\"/></div>\n" +

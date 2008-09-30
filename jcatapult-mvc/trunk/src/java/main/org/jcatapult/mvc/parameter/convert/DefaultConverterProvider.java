@@ -65,8 +65,8 @@ public class DefaultConverterProvider implements ConverterProvider {
                 type.getAnnotation(org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter.class);
             Class<?>[] convertTypes = converter.forTypes();
             for (Class<?> convertType : convertTypes) {
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.fine("Registering converter class [" + converter.getClass() + "] for type [" + convertType + "]");
+                if (logger.isLoggable(Level.SEVERE)) {
+                    logger.severe("Registering converter class [" + converter.getClass() + "] for type [" + convertType + "]");
                 }
 
                 converters.put(convertType, type);

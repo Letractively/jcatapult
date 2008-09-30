@@ -18,8 +18,6 @@ package org.jcatapult.mvc.result.control;
 import java.io.Writer;
 import java.util.Map;
 
-import freemarker.template.TemplateDirectiveModel;
-
 /**
  * <p>
  * This interface defines a control is called from a JSP tag
@@ -29,7 +27,7 @@ import freemarker.template.TemplateDirectiveModel;
  *
  * @author  Brian Pontarelli
  */
-public interface Control extends TemplateDirectiveModel {
+public interface Control {
     /**
      * Renders the start of the control. If the control doesn't have a start and an end, this method
      * should be empty.
@@ -43,6 +41,14 @@ public interface Control extends TemplateDirectiveModel {
      *          currency codes.
      */
     void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> dynamicAttributes);
+
+    /**
+     * Renders the body of the control.
+     *
+     * @param   writer The writer to write the body to.
+     * @param   body The body.
+     */
+    void renderBody(Writer writer, Body body);
 
     /**
      * Renders the end of the control. If the control doesn't have a start and an end, this method

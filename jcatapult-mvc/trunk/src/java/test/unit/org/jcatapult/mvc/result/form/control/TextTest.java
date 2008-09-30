@@ -40,7 +40,7 @@ public class TextTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(null, "/text", null, null));
         run(text,
             mapNV("name", "test", "class", "css-class", "bundle", "/text-bundle"),
-            "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
@@ -56,7 +56,7 @@ public class TextTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/text", null, null));
         run(text,
             mapNV("name", "user.name", "class", "css-class"),
-            "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/></div>\n" +
@@ -76,7 +76,7 @@ public class TextTest extends ControlBaseTest {
 
         run(text,
             mapNV("name", "user.name", "class", "css-class"),
-            "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
@@ -91,7 +91,7 @@ public class TextTest extends ControlBaseTest {
 
         run(text,
             mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"),
-            "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"John\"/></div>\n" +
@@ -108,7 +108,7 @@ public class TextTest extends ControlBaseTest {
 
         run(text,
             mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
-            "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
@@ -125,7 +125,7 @@ public class TextTest extends ControlBaseTest {
 
         run(text,
             mapNV("name", "user.name", "class", "css-class", "labelKey", "label-key"),
-            "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
+            null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"input\">\n" +
             "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Foo bar</label></div>\n" +
             "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/></div>\n" +
