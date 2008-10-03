@@ -37,7 +37,7 @@
 
   <target name="-rel-init"/>
 
-  <!-- overridden to perform jive specific remote deployment -->
+  <!-- macrodef to deploy to the jcatapult archive -->
   <macrodef name="rel_deploy_remote">
     <sequential>
       <!-- pre macro -->
