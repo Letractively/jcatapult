@@ -52,7 +52,7 @@ public class DatabaseTools {
 
         // if the dbName is empty then assume <projectName>_test
         if (dbName == null || dbName.isEmpty()) {
-            dbName = projectName + "_test";
+            dbName = projectName.replace('-', '_').replace('.', '_') + "_test";
         }
 
         String url = "jdbc:mysql://localhost:3306/" + dbName + "?user=dev&password=dev";
@@ -72,7 +72,7 @@ public class DatabaseTools {
         dataSource.setURL(url);
         dataSource.setAutoReconnect(true);
 
-        String jndiName = "java:comp/env/jdbc/" + projectName.replace("-", "_");
+        String jndiName = "java:comp/env/jdbc/" + projectName;
         jndi.bind(jndiName, dataSource);
 
         logger.info("DB Url [" + url + "]");
@@ -102,6 +102,7 @@ public class DatabaseTools {
                     "you are running ant tests from inside the project and that your project has this " +
                     "file.");
         }
-        return dom.getDocumentElement().getAttribute("name").trim().replace('-', '_');
+
+        return dom.getDocumentElement().getAttribute("name").trim();
     }
 }
