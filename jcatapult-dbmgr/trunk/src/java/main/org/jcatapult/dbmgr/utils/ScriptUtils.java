@@ -17,7 +17,6 @@ public class ScriptUtils {
      * @return Version object
      */
     public static Version extractVersionFromFileName(String fileName) {
-
         Version v;
 
         if (!ScriptUtils.isValidFileNameFormat(fileName)) {
@@ -44,14 +43,6 @@ public class ScriptUtils {
         return v;
     }
 
-
-    public void test(String str) {
-        String two = "(?>alpha|ALPHA|beta|BETA|milestone|MILESTONE|rc|RC|snapshot|SNAPSHOT)([0-9]+)?)";
-        String one = "((TWO|((a|A|b|B|m|M)[0-9]+)?)";
-        String regex = "(-ONE)?";
-        System.out.println(str.matches(regex));
-    }
-
     /**
      * <p>The regular expression string used to match against a Version number</p>
      *
@@ -59,7 +50,6 @@ public class ScriptUtils {
      */
     public static String getVersionRegEx() {
         return "[0-9]+\\Q.\\E[0-9]+(\\Q.\\E[0-9]+)?(-((?>alpha|ALPHA|beta|BETA|milestone|MILESTONE|rc|RC|snapshot|SNAPSHOT)(([0-9]+)?)|(a|A|b|B|m|M)[0-9]+))?";
-
     }
 
     /**
@@ -102,10 +92,7 @@ public class ScriptUtils {
 
         // test 4: make sure that the filename starts with a valid version number
         String[] tokens = fileName.split(ScriptUtils.getVersionRegEx());
-        if (tokens[0].equals("")) {
-            return true;
-        }
+        return tokens[0].equals("");
 
-        return false;
     }
 }
