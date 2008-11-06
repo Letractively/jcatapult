@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 
 import org.jcatapult.mvc.action.annotation.Action;
@@ -65,7 +65,23 @@ public class DefaultActionConfigurationProvider implements ActionConfigurationPr
         for (Class<?> actionClass : actionClassses) {
             String uri = uriBuilder.build(actionClass);
             ActionConfiguration actionConfiguration = new DefaultActionConfiguration(actionClass, uri);
-            configuration.put(uri, actionConfiguration);
+
+            if (configuration.containsKey(uri)) {
+                boolean previousOverrideable = configuration.get(uri).actionClass().getAnnotation(Action.class).overridable();
+                boolean thisOverrideable = actionClass.getAnnotation(Action.class).overridable();
+                if ((previousOverrideable && thisOverrideable) || (!previousOverrideable && !thisOverrideable)) {
+                    throw new IllegalStateException("Duplicate action found for URI [" + uri + "]. The " +
+                        "first action class found was [" + configuration.get(uri).actionClass() + "]. " +
+                        "The second action class found was [" + actionClass + "]. Either both classes " +
+                        "are marked as overridable or neither is marked as overridable. You can fix " +
+                        "this by only marking one of the classes with the overridable flag on the " +
+                        "Action annotation.");
+                } else if (previousOverrideable) {
+                    configuration.put(uri, actionConfiguration);
+                }
+            } else {
+                configuration.put(uri, actionConfiguration);
+            }
 
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("Added action configuration for [" + actionClass + "] and the uri [" + uri + "]");
