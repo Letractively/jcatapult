@@ -16,9 +16,7 @@
 package org.jcatapult.email.service;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -30,12 +28,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -43,6 +39,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.jcatapult.config.Configuration;
 import org.jcatapult.domain.contact.EmailAddress;
@@ -71,9 +69,7 @@ import net.java.lang.StringTools;
  *
  * <table>
  * <tr><th>Name</th><th>Description</th><th>Optional</th><th>Default if optional</th></tr>
- * <tr><td>jcatapult.email.username</td><td>The user name for the SMTP server.</td><td><b>false</b></td><td>N/A</td></tr>
- * <tr><td>jcatapult.email.password</td><td>The password for the SMTP server.</td><td><b>false</b></td><td>N/A</td></tr>
- * <tr><td>jcatapult.email.smtp-host</td><td>The SMTP host.</td><td>true</td><td>localhost</td></tr>
+ * <tr><td>jcatapult.email.jndi-name</td><td>The JNDI name under which the Mail session is stored (relative to the environment root of java:comp/env).</td><td><b>true</b></td><td>mail/Session</td></tr>
  * <tr><td>jcatapult.email.thread-pool.core-size</td><td>The initial size of the thread pool for asynchronous
  *  handling of the email sending.</td><td>true</td><td>1</td></tr>
  * <tr><td>jcatapult.email.thread-pool.maximum-size</td><td>The maximum size of the thread pool for asynchronous
@@ -126,60 +122,13 @@ public class JavaMailEmailTransportService implements EmailTransportService {
     @Inject
     @SuppressWarnings({"unchecked"})
     public JavaMailEmailTransportService(Configuration configuration) {
-        Iterator<String> keysIter = configuration.getKeys();
-        Properties props = new Properties();
-        while (keysIter.hasNext()) {
-            String key = keysIter.next();
-            if (key.startsWith("jcatapult.email.")) {
-                String emailKey = "mail.smtp." + key.substring("jcatapult.email.".length());
-                String value = configuration.getString(key);
-                props.setProperty(emailKey, value);
-            }
+        String name = configuration.getString("jcatapult.email.jndi-name", "mail/Session");
+        try {
+            InitialContext context = new InitialContext();
+            session = (Session) context.lookup("java:comp/env/" + name);
+        } catch (NamingException e) {
+            throw new IllegalStateException("Invalid JNDI reference for the mail session [" + name + "]");
         }
-
-        // Set the auth
-        final String username = configuration.getString("jcatapult.email.username");
-        final String password = configuration.getString("jcatapult.email.password");
-        Authenticator auth = null;
-        if (username != null && password != null) {
-            auth = new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username, password);
-                }
-            };
-
-            props.put("mail.user", username);
-            props.put("mail.smtp.auth", "true");
-        }
-
-        // Setup TLS
-        boolean tls = configuration.getBoolean("jcatapult.email.tls", false);
-        if (tls) {
-            props.put("mail.smtp.starttls.enable", "true");
-        }
-
-        // Setup SSL
-        boolean ssl = configuration.getBoolean("jcatapult.email.ssl", false);
-        if (ssl) {
-            String port = configuration.getString("jcatapult.email.port", "465");
-            props.put("mail.smtp.ssl", "true");
-            props.put("mail.smtp.socketFactory.port", port);
-            props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-            props.put("mail.smtp.socketFactory.fallback", "false");
-        }
-
-        // Set the SMTP host
-        String smtpHost = configuration.getString("jcatapult.email.smtp-host");
-        if (smtpHost != null) {
-            props.setProperty("mail.smtp.host", smtpHost);
-            props.setProperty("mail.host", smtpHost);
-        }
-
-        // Set the protocol for the JavaMail client
-        props.setProperty("mail.transport.protocol", "smtp");
-        props.setProperty("mail.smtp.localhost", "localhost");
-
-        session = Session.getInstance(props, auth);
 
         // Create the thread pool executor
         int corePoolSize = configuration.getInt("jcatapult.email.thread-pool.core-size", 1);

@@ -15,8 +15,9 @@
  */
 package org.jcatapult.email.service;
 
-import java.util.Collections;
+import java.util.Properties;
 import java.util.concurrent.Future;
+import javax.mail.Session;
 
 import org.easymock.EasyMock;
 import org.jcatapult.config.Configuration;
@@ -24,8 +25,11 @@ import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.domain.Attachment;
 import org.jcatapult.email.domain.Email;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import net.java.naming.MockJNDI;
 
 /**
  * <p>
@@ -36,15 +40,27 @@ import org.junit.Test;
  */
 
 public class JavaMailEmailTransportServiceTest {
+    @BeforeClass
+    public static void setupJNDI() {
+        // Set the auth
+        Properties props = new Properties();
+        props.setProperty("mail.smtp.host", "localhost");
+        props.setProperty("mail.host", "localhost");
+
+        // Set the protocol for the JavaMail client
+        props.setProperty("mail.transport.protocol", "smtp");
+        props.setProperty("mail.smtp.localhost", "localhost");
+
+        Session session = Session.getInstance(props, null);
+        MockJNDI jndi = new MockJNDI();
+        jndi.activate();
+        jndi.bind("java:comp/env/mail/Session", session);
+    }
+
     @Test
     public void testSendEmail() throws Exception {
         Configuration config = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(config.getKeys()).andReturn(Collections.<String>emptyList().iterator());
-        EasyMock.expect(config.getString("jcatapult.email.username")).andReturn(null);
-        EasyMock.expect(config.getString("jcatapult.email.password")).andReturn(null);
-        EasyMock.expect(config.getBoolean("jcatapult.email.tls", false)).andReturn(false);
-        EasyMock.expect(config.getBoolean("jcatapult.email.ssl", false)).andReturn(false);
-        EasyMock.expect(config.getString("jcatapult.email.smtp-host")).andReturn(null);
+        EasyMock.expect(config.getString("jcatapult.email.jndi-name", "mail/Session")).andReturn("mail/Session");
         EasyMock.expect(config.getInt("jcatapult.email.thread-pool.core-size", 1)).andReturn(1);
         EasyMock.expect(config.getInt("jcatapult.email.thread-pool.maximum-size", 5)).andReturn(5);
         EasyMock.expect(config.getInt("jcatapult.email.thread-pool.keep-alive", 500)).andReturn(500);
@@ -65,12 +81,7 @@ public class JavaMailEmailTransportServiceTest {
     @Test
     public void testSendEmailWithAttachments() throws Exception {
         Configuration config = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(config.getKeys()).andReturn(Collections.<String>emptyList().iterator());
-        EasyMock.expect(config.getString("jcatapult.email.username")).andReturn(null);
-        EasyMock.expect(config.getString("jcatapult.email.password")).andReturn(null);
-        EasyMock.expect(config.getBoolean("jcatapult.email.tls", false)).andReturn(false);
-        EasyMock.expect(config.getBoolean("jcatapult.email.ssl", false)).andReturn(false);
-        EasyMock.expect(config.getString("jcatapult.email.smtp-host")).andReturn(null);
+        EasyMock.expect(config.getString("jcatapult.email.jndi-name", "mail/Session")).andReturn("mail/Session");
         EasyMock.expect(config.getInt("jcatapult.email.thread-pool.core-size", 1)).andReturn(1);
         EasyMock.expect(config.getInt("jcatapult.email.thread-pool.maximum-size", 5)).andReturn(5);
         EasyMock.expect(config.getInt("jcatapult.email.thread-pool.keep-alive", 500)).andReturn(500);
@@ -92,12 +103,7 @@ public class JavaMailEmailTransportServiceTest {
     @Ignore
     public void testSendEmailRemote() throws Exception {
         Configuration config = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(config.getKeys()).andReturn(Collections.<String>emptyList().iterator());
-        EasyMock.expect(config.getString("jcatapult.email.username")).andReturn(null); // This needs to be set to test
-        EasyMock.expect(config.getString("jcatapult.email.password")).andReturn(null); // So does this. DON'T CHECK IN
-        EasyMock.expect(config.getBoolean("jcatapult.email.tls", false)).andReturn(false);
-        EasyMock.expect(config.getBoolean("jcatapult.email.ssl", false)).andReturn(false);
-        EasyMock.expect(config.getString("jcatapult.email.smtp-host")).andReturn("mail.jcatapult.org");
+        EasyMock.expect(config.getString("jcatapult.email.jndi-name", "mail/Session")).andReturn("mail/Session");
         EasyMock.expect(config.getInt("jcatapult.email.thread-pool.core-size", 1)).andReturn(1);
         EasyMock.expect(config.getInt("jcatapult.email.thread-pool.maximum-size", 5)).andReturn(5);
         EasyMock.expect(config.getInt("jcatapult.email.thread-pool.keep-alive", 500)).andReturn(500);
