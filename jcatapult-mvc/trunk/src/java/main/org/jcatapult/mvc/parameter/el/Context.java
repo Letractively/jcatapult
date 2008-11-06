@@ -33,7 +33,7 @@ import net.java.lang.ObjectTools;
  */
 public class Context {
     private final String expression;
-    private final List<Atom> atoms;
+    private final List<String> atoms;
     private final HttpServletRequest request;
     private final Map<String, String> attributes;
     private final Locale locale;
@@ -44,7 +44,7 @@ public class Context {
     private Accessor accessor;
     private int index;
 
-    public Context(ConverterProvider converterProvider, String expression, List<Atom> atoms,
+    public Context(ConverterProvider converterProvider, String expression, List<String> atoms,
             HttpServletRequest request, Locale locale, Map<String, String> attributes) {
         this.expression = expression;
         this.atoms = atoms;
@@ -54,7 +54,7 @@ public class Context {
         this.converterProvider = converterProvider;
     }
 
-    public Context(ConverterProvider converterProvider, String expression, List<Atom> atoms) {
+    public Context(ConverterProvider converterProvider, String expression, List<String> atoms) {
         this(converterProvider, expression, atoms, null, null, null);
     }
 
@@ -99,17 +99,17 @@ public class Context {
 
     public Object createValue() {
         // Peek at the next atom, in case this is an array
-        Object key = hasNext() ? peek().getName(): null;
-        Object value = accessor.createValue(key, this);
+        Object key = hasNext() ? peek() : null;
+        Object value = accessor.createValue(key);
         accessor.set(object, value, this);
         return value;
     }
 
-    public Atom peek() {
+    public String peek() {
         return atoms.get(index);
     }
 
-    public Atom next() {
+    public String next() {
         return atoms.get(index++);
     }
 

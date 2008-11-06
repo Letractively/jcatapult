@@ -24,9 +24,9 @@ import org.example.domain.Address;
 import org.example.domain.AddressField;
 import org.example.domain.User;
 import org.example.domain.UserField;
+import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
-import org.jcatapult.test.JCatapultBaseTest;
 
 import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
@@ -64,6 +64,7 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         action.getUser().setAge(32);
         action.getUser().setName("Brian");
         action.getUser().setActive(true);
+
         assertEquals(32, evaluator.getValue("user.age", action));
         assertEquals("Brian", evaluator.getValue("user.name", action));
         assertTrue((Boolean) evaluator.getValue("user.active", action));
@@ -121,6 +122,7 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         action.user.age = 32;
         action.user.name = "Brian";
         action.user.active = true;
+
         assertEquals(32, evaluator.getValue("user.age", action));
         assertEquals("Brian", evaluator.getValue("user.name", action));
         assertTrue((Boolean) evaluator.getValue("user.active", action));
@@ -158,6 +160,7 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         // Test nested property set and type conversion
         Action action = new Action();
         action.setUser(null);
+
         evaluator.setValue("user.age", action, array("32"), null);
         evaluator.setValue("user.name", action, array("Brian"), null);
         evaluator.setValue("user.active", action, array("true"), null);
@@ -302,4 +305,188 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         String result = evaluator.expand("My name is ${user.name}", action);
         assertEquals("My name is Fred", result);
     }
+
+    @Test
+    public void testPerformance() throws InterruptedException {
+        // Set cases
+
+        Object action = new ActionField();
+        long start = System.currentTimeMillis();
+        evaluator.setValue("user.age", action, array("32"), null);
+        long end = System.currentTimeMillis();
+        System.out.println("Setting field time was " + (end - start));
+
+        start = System.currentTimeMillis();
+        evaluator.setValue("user.addresses['home'].zipcode", action, array("80020"), null);
+        end = System.currentTimeMillis();
+        System.out.println("Setting field time was " + (end - start));
+
+        action = new Action();
+        start = System.currentTimeMillis();
+        evaluator.setValue("user.age", action, array("32"), null);
+        end = System.currentTimeMillis();
+        System.out.println("Setting property time was " + (end - start));
+
+        start = System.currentTimeMillis();
+        evaluator.setValue("user.addresses['home'].zipcode", action, array("80020"), null);
+        end = System.currentTimeMillis();
+        System.out.println("Setting proeprty time was " + (end - start));
+
+        // Get cases
+
+        action = new ActionField();
+        ((ActionField) action).user = new UserField();
+        ((ActionField) action).user.age = 10;
+        start = System.currentTimeMillis();
+        evaluator.getValue("user.age", action);
+        end = System.currentTimeMillis();
+        System.out.println("Getting field time was " + (end - start));
+
+        ((ActionField) action).user = new UserField();
+        ((ActionField) action).user.addresses.put("home", new AddressField());
+        ((ActionField) action).user.addresses.get("home").zipcode = "80020";
+        start = System.currentTimeMillis();
+        evaluator.getValue("user.addresses['home'].zipcode", action);
+        end = System.currentTimeMillis();
+        System.out.println("Getting field time was " + (end - start));
+
+        action = new Action();
+        ((Action) action).setUser(new User());
+        ((Action) action).getUser().setAge(10);
+        start = System.currentTimeMillis();
+        evaluator.getValue("user.age", action);
+        end = System.currentTimeMillis();
+        System.out.println("Getting property time was " + (end - start));
+
+        ((Action) action).setUser(new User());
+        ((Action) action).getUser().getAddresses().put("home", new Address());
+        ((Action) action).getUser().getAddresses().get("home").setZipcode("80020");
+        start = System.currentTimeMillis();
+        evaluator.getValue("user.addresses['home'].zipcode", action);
+        end = System.currentTimeMillis();
+        System.out.println("Getting property time was " + (end - start));
+
+        // Loop
+
+        action = new ActionField();
+        ((ActionField) action).user = new UserField();
+        ((ActionField) action).user.addresses.put("home", new AddressField());
+        ((ActionField) action).user.addresses.get("home").zipcode = "80020";
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 50; i++) {
+            evaluator.getValue("user.addresses['home'].zipcode", action);
+        }
+        end = System.currentTimeMillis();
+        System.out.println("50 times was " + (end - start));
+
+        JCThread[] threads = new JCThread[50];
+        for (int i = 0; i < 50; i++) {
+            threads[i] = new JCThread();
+            threads[i].setName("" + i);
+            threads[i].start();
+        }
+
+        for (int i = 0; i < 50; i++) {
+            threads[i].join();
+        }
+    }
+
+//    @Test
+//    public void testMvel() throws InterruptedException {
+//        // Set cases
+//
+//        // Get cases
+//
+//        // Get cases
+//
+//        Object action = new ActionField();
+//        ((ActionField) action).user = new UserField();
+//        ((ActionField) action).user.age = 10;
+//        long start = System.currentTimeMillis();
+//        MVEL.eval("user.age", action);
+//        long end = System.currentTimeMillis();
+//        System.out.println("MVEL Getting field time was " + (end - start));
+//
+//        ((ActionField) action).user = new UserField();
+//        ((ActionField) action).user.addresses.put("home", new AddressField());
+//        ((ActionField) action).user.addresses.get("home").zipcode = "80020";
+//        start = System.currentTimeMillis();
+//        MVEL.eval("user.addresses['home'].zipcode", action);
+//        end = System.currentTimeMillis();
+//        System.out.println("MVEL Getting field time was " + (end - start));
+//
+//        action = new Action();
+//        ((Action) action).setUser(new User());
+//        ((Action) action).getUser().setAge(10);
+//        start = System.currentTimeMillis();
+//        MVEL.eval("user.age", action);
+//        end = System.currentTimeMillis();
+//        System.out.println("MVEL Getting property time was " + (end - start));
+//
+//        ((Action) action).setUser(new User());
+//        ((Action) action).getUser().getAddresses().put("home", new Address());
+//        ((Action) action).getUser().getAddresses().get("home").setZipcode("80020");
+//        start = System.currentTimeMillis();
+//        MVEL.eval("user.addresses['home'].zipcode", action);
+//        end = System.currentTimeMillis();
+//        System.out.println("MVEL Getting property time was " + (end - start));
+//
+//        // Loop
+//
+//        action = new ActionField();
+//        ((ActionField) action).user = new UserField();
+//        ((ActionField) action).user.addresses.put("home", new AddressField());
+//        ((ActionField) action).user.addresses.get("home").zipcode = "80020";
+//        start = System.currentTimeMillis();
+//        for (int i = 0; i < 50; i++) {
+//            MVEL.eval("user.addresses['home'].zipcode", action);
+//        }
+//        end = System.currentTimeMillis();
+//        System.out.println("MVEL 50 times was " + (end - start));
+//
+//        MVELThread[] threads = new MVELThread[50];
+//        for (int i = 0; i < 50; i++) {
+//            threads[i] = new MVELThread();
+//            threads[i].setName("" + i);
+//            threads[i].start();
+//        }
+//
+//        for (int i = 0; i < 50; i++) {
+//            threads[i].join();
+//        }
+//    }
+
+    public class JCThread extends Thread {
+        @Override
+        public void run() {
+
+            Object action = new ActionField();
+            ((ActionField) action).user = new UserField();
+            ((ActionField) action).user.addresses.put("home", new AddressField());
+            ((ActionField) action).user.addresses.get("home").zipcode = "80020";
+            long start = System.currentTimeMillis();
+            for (int i = 0; i < 50000; i++) {
+                evaluator.getValue("user.addresses['home'].zipcode", action);
+            }
+            long end = System.currentTimeMillis();
+            System.out.println("50000 times for " + this.getName() + " was " + (end - start) + " should be around 6500ms");
+        }
+    }
+
+//    public class MVELThread extends Thread {
+//        @Override
+//        public void run() {
+//
+//            Object action = new ActionField();
+//            ((ActionField) action).user = new UserField();
+//            ((ActionField) action).user.addresses.put("home", new AddressField());
+//            ((ActionField) action).user.addresses.get("home").zipcode = "80020";
+//            long start = System.currentTimeMillis();
+//            for (int i = 0; i < 50000; i++) {
+//                MVEL.eval("user.addresses['home'].zipcode", action);
+//            }
+//            long end = System.currentTimeMillis();
+//            System.out.println("MVEL 50000 times for " + this.getName() + " was " + (end - start));
+//        }
+//    }
 }

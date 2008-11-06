@@ -46,6 +46,7 @@
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
       <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
+      <!--<artifact group="mvel.codehaus.org" project="mvel" name="mvel" version="2.0-beta1" type="jar"/>-->
     </artifactGroup>
     <artifactGroup type="run"/>
     <artifactGroup type="test-compile">

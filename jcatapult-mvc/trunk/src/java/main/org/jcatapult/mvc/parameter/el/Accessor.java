@@ -123,10 +123,9 @@ public abstract class Accessor {
      *
      * @param   key This is only used when creating arrays. It is the next atom, which is always
      *          the size of the array.
-     * @param   context The current context.
      * @return  The new value.
      */
-    protected Object createValue(Object key, Context context) {
+    protected Object createValue(Object key) {
         Class<?> typeClass = TypeTools.rawType(type);
         Object value;
         if (Map.class == typeClass) {

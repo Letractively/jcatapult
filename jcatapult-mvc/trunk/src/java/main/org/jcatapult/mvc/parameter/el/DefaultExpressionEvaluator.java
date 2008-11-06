@@ -18,18 +18,19 @@ package org.jcatapult.mvc.parameter.el;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.WeakHashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
-import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 
 import com.google.inject.Inject;
 import net.java.variable.ExpanderException;
@@ -52,6 +53,7 @@ import net.java.variable.VariableExpander;
  */
 @SuppressWarnings("unchecked")
 public class DefaultExpressionEvaluator implements ExpressionEvaluator {
+    private static final Map<String, char[]> expressionCache = new WeakHashMap<String, char[]>(15);
     private final Locale locale;
     private final HttpServletRequest request;
     private final ConverterProvider converterProvider;
@@ -67,14 +69,13 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     /**
      * {@inheritDoc}
      */
-    @Override
     public <T> T getValue(String expression, Object object) throws ExpressionException {
-        List<Atom> atoms = parse(expression);
+        List<String> atoms = parse(expression);
         Context context = new Context(converterProvider, expression, atoms);
         context.init(object);
         while (context.hasNext()) {
-            Atom atom = context.next();
-            context.initAccessor(atom.getName());
+            String atom = context.next();
+            context.initAccessor(atom);
             if (context.skip()) {
                 continue;
             }
@@ -93,7 +94,6 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     /**
      * {@inheritDoc}
      */
-    @Override
     public String getValue(String expression, Object object, Map<String, String> attributes)
     throws ExpressionException {
         Object value = getValue(expression, object);
@@ -113,15 +113,13 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     /**
      * {@inheritDoc}
      */
-    @Override
-
     public void setValue(String expression, Object object, Object value) throws ExpressionException {
-        List<Atom> atoms = parse(expression);
+        List<String> atoms = parse(expression);
         Context context = new Context(converterProvider, expression, atoms);
         context.init(object);
         while (context.hasNext()) {
-            Atom atom = context.next();
-            context.initAccessor(atom.getName());
+            String atom = context.next();
+            context.initAccessor(atom);
             if (context.skip()) {
                 if (!context.hasNext()) {
                     throw new ExpressionException("Encountered an indexed property without an index in the " +
@@ -147,15 +145,14 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     /**
      * {@inheritDoc}
      */
-    @Override
     public void setValue(String expression, Object object, String[] values, Map<String, String> attributes)
     throws ConversionException, ConverterStateException, ExpressionException {
-        List<Atom> atoms = parse(expression);
+        List<String> atoms = parse(expression);
         Context context = new Context(converterProvider, expression, atoms, request, locale, attributes);
         context.init(object);
         while (context.hasNext()) {
-            Atom atom = context.next();
-            context.initAccessor(atom.getName());
+            String atom = context.next();
+            context.initAccessor(atom);
             if (context.skip()) {
                 if (!context.hasNext()) {
                     throw new ExpressionException("Encountered an indexed property without an index in the " +
@@ -219,63 +216,117 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
      * @return  A new ArrayList of PropertyInfo objects.
      * @throws  ExpressionException If the property string is invalid.
      */
-    private List<Atom> parse(String expression) throws ExpressionException {
-        List<Atom> info = new ArrayList<Atom>();
-        StringTokenizer ts = new StringTokenizer(expression, ".");
-
-        while (ts.hasMoreTokens()) {
-            // Grab the indices from the property
-            info.addAll(createAtoms(ts.nextToken()));
+    private List<String> parse(String expression) throws ExpressionException {
+        Parser parser = new Parser(toCharArray(expression));
+        List<String> info = new ArrayList<String>();
+        for (String s : parser) {
+            info.add(s);
         }
 
         return info;
     }
 
-    /**
-     * Given the expression string, the indices and name are extracted and returned in one or more new
-     * Atoms. If the given expression string does not contain any indices, this returns a single atom.
-     * Otherwise, it returns multiple atoms.
-     *
-     * @param   expression The expression to parse into one or more atoms.
-     * @return  The atoms.
-     * @throws  ExpressionException If the property name contains an invalid indices or an unclosed indices
-     *          notation (i.e. '[1').
-     */
-    private List<Atom> createAtoms(String expression) throws ExpressionException {
-        // Determine whether or not the property is indexed or not
-        List<Atom> atoms = new ArrayList<Atom>();
-        int bracet = expression.indexOf('[');
-        int firstBracet = bracet;
-        if (bracet == -1) {
-            atoms.add(new Atom(expression));
-            return atoms;
+    protected char[] toCharArray(String expression) {
+        char[] expr;
+        synchronized (expressionCache) {
+            if ((expr = expressionCache.get(expression)) == null) {
+                expr = expression.toCharArray();
+                expressionCache.put(expression, expr);
+            }
         }
 
-        atoms.add(new Atom(expression.substring(0, firstBracet)));
-        while (bracet != -1) {
-            int bracetTwo = expression.indexOf(']', bracet);
-            if (bracetTwo == -1) {
-                throw new ExpressionException("The bean property name string: " + expression
-                    + " contains an invalid indices");
-            }
+        return expr;
+    }
 
-            String indexStr = expression.substring(bracet + 1, bracetTwo);
-            int length = indexStr.length();
-            char ch = indexStr.charAt(0);
-            if (ch == '"' || ch == '\'') {
-                char lastCh = indexStr.charAt(length - 1);
-                if (lastCh != '"' && lastCh != '\'') {
-                    throw new ExpressionException("Invalid indices value: " + indexStr);
+    private class Parser implements Iterable<String> {
+        private final char[] expression;
+
+        public Parser(char[] expression) {
+            this.expression = expression;
+        }
+
+        public Iterator<String> iterator() {
+            return new Iterator<String>() {
+                int index;
+                int position;
+                char[] ca = new char[128];
+                boolean insideBracket = false;
+                boolean insideQuote = false;
+
+                public boolean hasNext() {
+                    return index < expression.length;
                 }
 
-                atoms.add(new Atom(indexStr.substring(1, length - 1)));
-            } else {
-                atoms.add(new Atom(indexStr));
-            }
+                public String next() {
+                    for (; index < expression.length; index++) {
+                        if (expression[index]  == '.' && !insideQuote) {
+                            if (insideBracket || insideQuote) {
+                                throw new ExpressionException("The expression string [" +
+                                    new String(expression) + "] contains an invalid indices");
+                            }
 
-            bracet = expression.indexOf('[', bracetTwo);
+                            if (position == 0) {
+                                throw new ExpressionException("The expression string [" +
+                                    new String(expression) + "] is invalid.");
+                            }
+
+                            String result = new String(ca, 0, position);
+                            index++;
+                            position = 0;
+                            return result;
+                        } else if (expression[index]  == '[' && !insideQuote) {
+                            if (insideBracket) {
+                                throw new ExpressionException("The expression string [" +
+                                    new String(expression) + "] contains an invalid indices");
+                            }
+
+                            String result = new String(ca, 0, position);
+                            insideBracket = true;
+                            index++;
+                            position = 0;
+                            return result;
+                        } else if (expression[index]  == ']' && !insideQuote) {
+                            if (!insideBracket) {
+                                throw new ExpressionException("The expression string [" +
+                                    new String(expression) + "] contains an invalid indices");
+                            }
+
+                            // Gobble up the period if there is one
+                            index++;
+                            if (index < expression.length && expression[index] == '.') {
+                                index++;
+                            }
+
+                            insideBracket = false;
+                            String result = new String(ca, 0, position);
+                            position = 0;
+                            return result;
+                        } else if (expression[index] == '\'' || expression[index] == '\"') {
+                            if (!insideBracket) {
+                                throw new ExpressionException("The expression string [" +
+                                    new String(expression) + "] is invalid.");
+                            }
+
+                            insideQuote = !insideQuote;
+                        } else {
+                            ca[position++] = expression[index];
+                        }
+                    }
+
+                    if (position > 0) {
+                        String result = new String(ca, 0, position);
+                        index++;
+                        position = 0;
+                        return result;
+                    }
+
+                    return null;
+                }
+
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
         }
-
-        return atoms;
     }
 }
