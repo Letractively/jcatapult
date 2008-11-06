@@ -15,4 +15,8 @@
             username="dev" password="dev" driverClassName="com.mysql.jdbc.Driver"
             url="jdbc:mysql://localhost:3306/@UNDERSCORED_PROJECT_NAME@?relaxAutoCommit=true&amp;characterEncoding=utf8"/>
 
+  <!-- Mail session -->
+  <!--
+    <Resource name="mail/Session" auth="Container" type="javax.mail.Session" mail.smtp.host="localhost" />
+  -->
 </Context>

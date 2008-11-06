@@ -38,8 +38,8 @@
         <fileset dir="${dir.target.jars}" includes="**/*"/>
       </copy>
       <copy todir="${dir.web}/WEB-INF/classes" failonerror="no" overwrite="yes">
-        <fileset dir="${dir.src.conf.main}" includes="logging.properties">
-        </fileset>
+        <fileset dir="${dir.src.conf.main}" includes="logging.properties"/>
+        <fileset dir="${dir.src.conf.main}" includes="log4j.properties"/>
       </copy>
     </sequential>
   </macrodef>
@@ -56,4 +56,10 @@
     <sequential>
     </sequential>
   </macrodef>
+
+  <target name="tar-webapp" depends="app">
+    <tar destfile="target/web.tar.gz" compression="gzip">
+      <tarfileset prefix="web" dir="web"/>
+    </tar>
+  </target>
 </project>

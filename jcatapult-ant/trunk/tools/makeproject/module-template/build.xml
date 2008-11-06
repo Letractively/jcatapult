@@ -41,4 +41,5 @@
   <!-- Misc. -->
   <import file="${plugin.dir}/svn/1.0/svn.xml"/>
   <import file="${plugin.dir}/ide/1.0/ide.xml"/>
+  <import file="${plugin.dir}/security/1.0/password.xml"/>
 </project>
