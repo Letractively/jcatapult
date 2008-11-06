@@ -158,6 +158,17 @@ public class EntityManagerProxy implements EntityManager {
     protected void init() {
         if (entityManager == null) {
             entityManager = EntityManagerContext.get();
+            if (entityManager == null) {
+                throw new IllegalStateException("The EntityManagerContext is null. This is the " +
+                    "ThreadLocal that is used by JCatapult to provide OSIV support for JPA. This " +
+                    "might occur for a few reasons.\n\n First, you might be running a unit test and " +
+                    "are extending from JCatapultBaseTest rather than JPABaseTest. The " +
+                    "JCatapultBaseTest doesn't setup JPA for testing and if you are using JPA or " +
+                    "the PersistenceService in your unit test, you need to extend the JPABaseTest " +
+                    "instead.\n\n Second, you application might be misconfigured or have the JPA " +
+                    "workflow turned off. This is highly unlikely, but possible and you should " +
+                    "probably post an email to the users list for assistance.");
+            }
         }
     }
 }
