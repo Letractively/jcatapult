@@ -60,11 +60,9 @@ import net.java.lang.StringTools;
  * </p>
  *
  * <p>
- * The JavaMail session is created in the constructor and stored as a member
- * variable of the class. In order to create the session, the configuration
- * is used to load up the username and password for the SMTP server as well
- * as any other JavaMail configuration that is possible. Here are the configuration
- * keys that can be used.
+ * The JavaMail session is stored in the JNDI tree and configured via the JEE container.
+ * This allows changes to be made in a much simpler and more transparent manner. It also
+ * follows the same convention as the JDBC configuration for JPA.
  * </p>
  *
  * <table>
@@ -77,34 +75,6 @@ import net.java.lang.StringTools;
  * <tr><td>jcatapult.email.thread-pool.keep-alive</td><td>The keep alive time (in milliseconds) to have threads
  *  stick around being idle prior to being thrown out.</td><td>true</td><td>500 milliseconds</td></tr>
  * </table>
- *
- * <p>
- * Besides these custom properties, you can also specify any properties that
- * are supported by the JavaMail specification. However, these properties
- * need to be prepended with email in order to be loaded. For example, if
- * you want to specify a default from address, you would add a property like
- * this:
- * </p>
- *
- * <pre>
- * email.mail.from = fred@example.com
- * </pre>
- *
- * <p>
- * If you are using an XML configuration it would look like this:
- * </p>
- *
- * <pre>
- * &lt;config>
- *   &lt;jcatapult>
- *     &lt;email>
- *       &lt;mail>
- *         &lt;from>fred@example.com&lt;/from>
- *       &lt;/mail>
- *     &lt;/email>
- *   &lt;/jcatapult>
- * &lt;/config>
- * </pre>
  *
  * @author Brian Pontarelli
  */
