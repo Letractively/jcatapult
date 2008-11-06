@@ -62,7 +62,12 @@
         <fileset dir="${dir.web}/WEB-INF/email" includes="**/*"/>
       </copy>
 
-      <!-- Copy the static files into the struts location -->
+      <!-- Copy the control templates to the correct locations -->
+      <copy todir="${dir.target.classes.main}/WEB-INF/control-templates" failonerror="false">
+        <fileset dir="${dir.web}/WEB-INF/control-templates" includes="**/*"/>
+      </copy>
+
+      <!-- Copy the static files into the correct location -->
       <copy todir="${dir.target.classes.main}/module/${project.name}" failonerror="false">
         <fileset dir="${dir.web}/module/${project.name}" includes="**/*"/>
       </copy>
