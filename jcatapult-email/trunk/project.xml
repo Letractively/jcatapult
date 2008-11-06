@@ -25,14 +25,15 @@
   <property name="version.jcatapult" value="1.0-{integration}"/>
 
   <dependencies id="dependencies.project">
+    <artifactGroup type="compile-only">
+      <artifact group="mail.javax" project="mail" name="javamail" version="1.4" type="jar"/>
+    </artifactGroup>
     <artifactGroup type="compile">
-      <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}" type="jar"/>
       <artifact group="freemarker.org" project="freemarker" name="freemarker" version="2.3.12" type="jar"/>
-      <artifact group="mail.javax" project="mail" name="javamail" version="1.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-compile">
       <artifact group="easymock.org" project="easymock" name="easymock" version="2.2" type="jar"/>
