@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.Calendar;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -57,13 +58,16 @@ import com.google.inject.Inject;
  */
 public class StaticResourceWorkflow implements Workflow {
     private static final Logger logger = Logger.getLogger(StaticResourceWorkflow.class.getName());
+    private final ServletContext context;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final String[] staticPrefixes;
     private final boolean enabled;
 
     @Inject
-    public StaticResourceWorkflow(HttpServletRequest request, HttpServletResponse response, Configuration configuration) {
+    public StaticResourceWorkflow(ServletContext context, HttpServletRequest request,
+            HttpServletResponse response, Configuration configuration) {
+        this.context = context;
         this.request = request;
         this.response = response;
         this.staticPrefixes = getPrefixes(configuration);
@@ -93,7 +97,6 @@ public class StaticResourceWorkflow implements Workflow {
      *          chain throws an IOException.
      * @throws  ServletException If the chain throws.
      */
-    @Override
     public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
         String uri = request.getRequestURI();
         boolean handled = false;
@@ -128,6 +131,11 @@ public class StaticResourceWorkflow implements Workflow {
      */
     protected boolean findStaticResource(String uri, HttpServletRequest request, HttpServletResponse response)
     throws IOException {
+        if (context.getResource(uri) != null) {
+            // It is in the webapp, just return false and let the container deal with it
+            return false;
+        }
+
         // check for if-modified-since, prior to any other headers
         long ifModifiedSince = 0;
         try {

@@ -16,13 +16,14 @@
 package org.jcatapult.servlet;
 
 import java.io.IOException;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jcatapult.config.Configuration;
 import org.easymock.EasyMock;
+import org.jcatapult.config.Configuration;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -43,6 +44,10 @@ public class StaticResourceWorkflowTest {
     @Test
     public void testNewRequest() throws IOException, ServletException {
         Configuration configuration = makeConfiguration();
+
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(context.getResource("/component/2.1.1/test.jpg")).andReturn(null);
+        EasyMock.replay(context);
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/component/2.1.1/test.jpg");
@@ -69,7 +74,7 @@ public class StaticResourceWorkflowTest {
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
         EasyMock.replay(wc);
 
-        StaticResourceWorkflow srw = new StaticResourceWorkflow(req, res, configuration);
+        StaticResourceWorkflow srw = new StaticResourceWorkflow(context, req, res, configuration);
         srw.perform(wc);
         EasyMock.verify(configuration, req, res, wc);
 
@@ -86,6 +91,10 @@ public class StaticResourceWorkflowTest {
     public void testCacheRequest() throws IOException, ServletException {
         Configuration configuration = makeConfiguration();
 
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(context.getResource("/component/2.1.1/test.jpg")).andReturn(null);
+        EasyMock.replay(context);
+
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/component/2.1.1/test.jpg");
         EasyMock.expect(req.getDateHeader("If-Modified-Since")).andReturn(1l);
@@ -99,7 +108,7 @@ public class StaticResourceWorkflowTest {
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
         EasyMock.replay(wc);
 
-        StaticResourceWorkflow srw = new StaticResourceWorkflow(req, res, configuration);
+        StaticResourceWorkflow srw = new StaticResourceWorkflow(context, req, res, configuration);
         srw.perform(wc);
         EasyMock.verify(configuration, req, res, wc);
     }
@@ -114,6 +123,10 @@ public class StaticResourceWorkflowTest {
     public void testBadRequest() throws IOException, ServletException {
         Configuration configuration = makeConfiguration();
 
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(context.getResource("/component/2.1.1/bad.jpg")).andReturn(null);
+        EasyMock.replay(context);
+
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/component/2.1.1/bad.jpg");
         EasyMock.expect(req.getDateHeader("If-Modified-Since")).andReturn(0l);
@@ -126,7 +139,7 @@ public class StaticResourceWorkflowTest {
         wc.continueWorkflow();
         EasyMock.replay(wc);
 
-        StaticResourceWorkflow srw = new StaticResourceWorkflow(req, res, configuration);
+        StaticResourceWorkflow srw = new StaticResourceWorkflow(context, req, res, configuration);
         srw.perform(wc);
         EasyMock.verify(configuration, req, res, wc);
     }
@@ -141,6 +154,9 @@ public class StaticResourceWorkflowTest {
     public void testNormal() throws IOException, ServletException {
         Configuration configuration = makeConfiguration();
 
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.replay(context);
+
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/foo/bar");
         EasyMock.replay(req);
@@ -152,7 +168,7 @@ public class StaticResourceWorkflowTest {
         wc.continueWorkflow();
         EasyMock.replay(wc);
 
-        StaticResourceWorkflow srw = new StaticResourceWorkflow(req, res, configuration);
+        StaticResourceWorkflow srw = new StaticResourceWorkflow(context, req, res, configuration);
         srw.perform(wc);
         EasyMock.verify(configuration, req, res, wc);
     }
