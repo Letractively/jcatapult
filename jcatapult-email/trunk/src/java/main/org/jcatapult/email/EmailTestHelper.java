@@ -46,6 +46,7 @@ import com.google.inject.AbstractModule;
 public class EmailTestHelper {
     private static ThreadLocal<Queue<Email>> emailResult = new ThreadLocal<Queue<Email>>();
     private static ThreadLocal<Future<Email>> future = new ThreadLocal<Future<Email>>();
+    private static EmailTransportService service;
 
     /**
      * Returns the email results for the last test run. This is a thread safe retrieval.
@@ -67,7 +68,7 @@ public class EmailTestHelper {
         emailResult.remove();
         future.set(new MockFuture(false));
 
-        final EmailTransportService ets = new EmailTransportService() {
+        service = new EmailTransportService() {
             public Future<Email> sendEmail(Email email) {
                 if (emailResult.get() == null) {
                     emailResult.set(new LinkedList<Email>());
@@ -88,9 +89,16 @@ public class EmailTestHelper {
 
         test.addModules(new AbstractModule() {
             protected void configure() {
-                bind(EmailTransportService.class).toInstance(ets);
+                bind(EmailTransportService.class).toInstance(service);
             }
         });
+    }
+
+    /**
+     * @return  Returns the mocked out EmailTransportService that was created in the {@link #setup(JCatapultBaseTest)}.
+     */
+    public static EmailTransportService getService() {
+        return service;
     }
 
     /**
