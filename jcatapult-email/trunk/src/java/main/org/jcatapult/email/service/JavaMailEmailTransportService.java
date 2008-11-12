@@ -97,7 +97,13 @@ public class JavaMailEmailTransportService implements EmailTransportService {
             InitialContext context = new InitialContext();
             session = (Session) context.lookup("java:comp/env/" + name);
         } catch (NamingException e) {
-            throw new IllegalStateException("Invalid JNDI reference for the mail session [" + name + "]");
+            throw new IllegalStateException("Invalid JNDI reference for the mail session [" + name +
+                "]. This happens for three reasons: First, you are running the webapp and forgot to " +
+                "uncomment the mail session in the deploy/tomcat/main/conf/context.xml file; Second, " +
+                "you are running a unit test and forgot to call the EmailTestHelper.setup(this); " +
+                "method; Third, you running an integration test and forgot to both call the " +
+                "EmailTestHelper.setup(this) method AND add a mcok to the WebTestRunner like " +
+                "withMock(EmailTransportService.class, EmailTestHelper.getService())");
         }
 
         // Create the thread pool executor
