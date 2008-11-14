@@ -78,6 +78,7 @@ public class DefaultFreeMarkerService implements FreeMarkerService {
         int checkSeconds = configuration.getInt("jcatapult.freemarker-service.check-seconds", defaultSeconds);
         this.freeMarkerConfiguration.setTemplateUpdateDelay(checkSeconds);
         this.freeMarkerConfiguration.setTemplateLoader(loader);
+        this.freeMarkerConfiguration.setDefaultEncoding("UTF-8");
     }
 
     /**
