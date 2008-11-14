@@ -69,7 +69,7 @@ public class ForwardResult extends AbstractResult<Forward> {
      */
     public void execute(Forward forward, ActionInvocation invocation) throws IOException, ServletException {
         // Set the default content type for the response. This also activates SiteMesh
-        response.setContentType("text/html");
+        response.setContentType("text/html; charset=UTF-8");
 
         String page = expand(forward.page(), invocation.action());
         if (!page.startsWith("/")) {
