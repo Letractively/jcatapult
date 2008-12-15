@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="jcatapult-commerce" default="jar">
+<project name="commerce" default="jar">
 
   <property environment="env"/>
   <property name="plugin.dir" value="${env.JCATAPULT_HOME}/ant/plugins"/>
