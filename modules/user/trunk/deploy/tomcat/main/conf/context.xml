@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="${rundir}" allowLinking="true">
+  <Resource name="environment" auth="Container" type="org.jcatapult.environment.Environment"
+            factory="org.apache.naming.factory.BeanFactory" environment="development"/>
+  <Resource name="jdbc/user" auth="Container" type="javax.sql.DataSource"
+            maxActive="100" maxIdle="3" maxWait="10000"
+            username="dev" password="dev" driverClassName="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/user?autoReconnect=true"/>
+</Context>

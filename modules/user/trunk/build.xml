@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<project name="user-module">
+
+  <property environment="env"/>
+
+  <property name="plugin.dir" value="${env.JCATAPULT_HOME}/ant/plugins"/>
+
+  <!-- Dependencies -->
+  <import file="${plugin.dir}/savant/1.0/savant.xml"/>
+
+  <!-- Initialization -->
+  <import file="${plugin.dir}/init/1.0/init.xml"/>
+
+  <!-- J2EE -->
+  <import file="${plugin.dir}/j2ee/1.0/clean.xml"/>
+  <import file="${plugin.dir}/j2ee/1.0/j2ee.xml"/>
+
+  <!-- Tomcat -->
+  <import file="${plugin.dir}/tomcat/1.0/webapp-deploy.xml"/>
+
+  <!-- module stuff -->
+  <import file="${plugin.dir}/module/1.0/jar.xml"/>
+
+  <!-- Java base -->
+  <import file="${plugin.dir}/java/1.0/compile.xml"/>
+
+  <!-- Releasing -->
+  <import file="${plugin.dir}/release-svn/1.0/jar.xml"/>
+
+  <!-- Hibernate stuff -->
+  <import file="${plugin.dir}/hibernate/1.0/hibernate.xml"/>
+
+  <!-- Security stuff -->
+  <import file="${plugin.dir}/security/1.0/password.xml"/>
+
+  <!-- Testing -->
+  <import file="${plugin.dir}/junit/1.0/junit.xml"/>
+  <import file="${plugin.dir}/cobertura/1.0/cobertura.xml"/>
+
+  <!-- Misc. -->
+  <import file="${plugin.dir}/svn/1.0/svn.xml"/>
+  <import file="${plugin.dir}/ide/1.0/ide.xml"/>
+  <import file="${plugin.dir}/mysql/1.0/mysql.xml"/>
+  <import file="${plugin.dir}/tomcat/1.0/webapp-deploy.xml"/>
+
+</project>
