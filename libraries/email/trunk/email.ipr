@@ -295,12 +295,12 @@
     </group>
   </component>
   <component name="ProjectDetails">
-    <option name="projectName" value="jcatapult-email" />
+    <option name="projectName" value="email" />
   </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/jcatapult-email.iml" filepath="$PROJECT_DIR$/jcatapult-email.iml" />
+      <module fileurl="file://$PROJECT_DIR$/email.iml" filepath="$PROJECT_DIR$/email.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
@@ -491,8 +491,5 @@
       <option name="useAlternate" value="false" />
     </LanguageOptions>
   </component>
-  <UsedPathMacros>
-    <macro name="SAVANT_REPOSITORY" />
-  </UsedPathMacros>
 </project>
 
