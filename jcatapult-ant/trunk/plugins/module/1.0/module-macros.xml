@@ -20,7 +20,7 @@
   <path id="classpath.module">
     <fileset dir="${dir.plugin.module}/lib" includes="*.jar"/>
     <pathelement location="${dir.plugin.module}/../../libraries/jdom-1.0.jar"/>
-    <pathelement location="${dir.plugin.module}/../../libraries/savant-core-2.0-M4.jar"/>
+    <pathelement location="${dir.plugin.module}/../../libraries/savant-core-2.0-RC3.jar"/>
   </path>
 
   <!--
