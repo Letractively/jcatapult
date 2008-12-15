@@ -20,41 +20,41 @@
   <path id="classpath.savant">
     <fileset dir="${dir.plugin.savant}/lib" includes="*.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/java-net-commons-1.5.1.jar"/>
-    <pathelement location="${dir.plugin.savant}/../../libraries/savant-core-2.0-M4.jar"/>
-    <pathelement location="${dir.plugin.savant}/../../libraries/ant-ext-2.0-M4.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/savant-core-2.0-RC3.jar"/>
+    <pathelement location="${dir.plugin.savant}/../../libraries/ant-ext-2.0-RC3.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/jdom-1.0.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/ganymed-1.1.4.jar"/>
     <pathelement location="${dir.plugin.savant}/../../libraries/svnkit-1.1.4.jar"/>
   </path>
 
   <!-- Dependency tasks -->
-  <taskdef name="artifactcopy" classname="org.inversoft.savant.dep.ant.taskdefs.ArtifactCopyTask"
+  <taskdef name="artifactcopy" classname="org.inversoft.savant.ant.dep.taskdefs.ArtifactCopyTask"
            classpathref="classpath.savant" loaderref="savant"/>
-  <taskdef name="dependencyclean" classname="org.inversoft.savant.dep.ant.taskdefs.DependencyCleanTask"
+  <taskdef name="dependencyclean" classname="org.inversoft.savant.ant.dep.taskdefs.DependencyCleanTask"
            classpathref="classpath.savant" loaderref="savant"/>
-  <taskdef name="dependencyresolve" classname="org.inversoft.savant.dep.ant.taskdefs.DependencyResolveTask"
+  <taskdef name="dependencyresolve" classname="org.inversoft.savant.ant.dep.taskdefs.DependencyResolveTask"
            classpathref="classpath.savant" loaderref="savant"/>
-  <taskdef name="dependencypath" classname="org.inversoft.savant.dep.ant.taskdefs.DependencyPathTask"
+  <taskdef name="dependencypath" classname="org.inversoft.savant.ant.dep.taskdefs.DependencyPathTask"
            classpathref="classpath.savant" loaderref="savant"/>
-  <taskdef name="j2eedeploy" classname="org.inversoft.savant.dep.ant.taskdefs.J2EEArtifactDeployTask"
+  <taskdef name="j2eedeploy" classname="org.inversoft.savant.ant.dep.taskdefs.J2EEArtifactDeployTask"
            classpathref="classpath.savant" loaderref="savant"/>
-  <taskdef name="j2eeclean" classname="org.inversoft.savant.dep.ant.taskdefs.J2EEArtifactCleanTask"
+  <taskdef name="j2eeclean" classname="org.inversoft.savant.ant.dep.taskdefs.J2EEArtifactCleanTask"
            classpathref="classpath.savant" loaderref="savant"/>
-  <taskdef name="publish" classname="org.inversoft.savant.dep.ant.taskdefs.PublishTask" classpathref="classpath.savant"
+  <taskdef name="publish" classname="org.inversoft.savant.ant.dep.taskdefs.PublishTask" classpathref="classpath.savant"
            loaderref="savant"/>
-  <taskdef name="checkintegrationbuild" classname="org.inversoft.savant.dep.ant.taskdefs.CheckIntegrationBuildTask" classpathref="classpath.savant"
+  <taskdef name="checkintegrationbuild" classname="org.inversoft.savant.ant.dep.taskdefs.CheckIntegrationBuildTask" classpathref="classpath.savant"
            loaderref="savant"/>
   <taskdef name="savantinit" classname="org.inversoft.savant.ant.taskdefs.SavantInitTask" classpathref="classpath.savant"
            loaderref="savant"/>
 
   <!-- Dependecy types -->
-  <typedef name="artifact" classname="org.inversoft.savant.dep.ant.types.ArtifactType" classpathref="classpath.savant"
+  <typedef name="artifact" classname="org.inversoft.savant.ant.dep.types.ArtifactType" classpathref="classpath.savant"
            loaderref="savant"/>
 
   <!-- Other standard tasks -->
-  <taskdef name="uncopy" classname="org.inversoft.savant.dep.ant.taskdefs.UncopyTask" classpathref="classpath.savant"
+  <taskdef name="uncopy" classname="org.inversoft.savant.ant.dep.taskdefs.UncopyTask" classpathref="classpath.savant"
            loaderref="savant"/>
-  <taskdef name="macroforeach" classname="org.inversoft.savant.dep.ant.taskdefs.MacroForeachTask"
+  <taskdef name="macroforeach" classname="org.inversoft.savant.ant.dep.taskdefs.MacroForeachTask"
            classpathref="classpath.savant" loaderref="savant"/>
 
   <!-- Initialize Savant -->

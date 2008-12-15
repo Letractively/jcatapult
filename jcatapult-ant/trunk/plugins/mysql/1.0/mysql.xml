@@ -20,7 +20,7 @@
   <path id="classpath.plugin.mysql">
     <fileset dir="${dir.plugin.mysql}/lib" includes="*.jar"/>
     <pathelement location="${dir.plugin.mysql}/../../libraries/java-net-commons-1.5.1.jar"/>
-    <pathelement location="${dir.plugin.mysql}/../../libraries/savant-core-2.0-M4.jar"/>
+    <pathelement location="${dir.plugin.mysql}/../../libraries/savant-core-2.0-RC3.jar"/>
     <pathelement location="${dir.plugin.mysql}/../../libraries/log4j-1.2.9.jar"/>
     <pathelement location="${dir.plugin.mysql}/../../libraries/jdom-1.0.jar"/>
     <pathelement location="${dir.plugin.mysql}/../../libraries/svnkit-1.1.4.jar"/>
