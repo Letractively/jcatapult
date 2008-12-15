@@ -1,15 +1,28 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
          name="user"
-         group="modules.jcatapult.inversoft.com"
-         version="1.0.1">
+         group="modules.jcatapult.org"
+         version="1.0">
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
-  <properties file="${user.home}/inversoft-build.properties"/>
+
+  <!--
+    jcatapult-build.properties must contain the following:
+      svn.username=<username>
+      svn.password=<password>
+  -->
+  <properties file="${user.home}/google-code-build.properties"/>
+
+  <!--
+    inversoft-org-release-build.properties must contain the following:
+      svn.release.username=<username>
+      svn.release.password=<password>
+  -->
+  <properties file="${user.home}/inversoft-org-release-build.properties"/>
 
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult" value="1.0-{integration}"/>
+  <property name="version.jcatapult" value="1.0-RC9-{integration}"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
@@ -19,15 +32,24 @@
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
       <artifact group="hibernate.org" project="hibernate-annotations" name="hibernate-annotations" version="3.3.1" type="jar"/>
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.4.4" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-commerce" name="jcatapult-commerce" version="${version.jcatapult}" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-email" name="jcatapult-email" version="${version.jcatapult}" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-mvc" name="jcatapult-mvc" version="${version.jcatapult}" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence" version="${version.jcatapult}" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-security" name="jcatapult-security" version="${version.jcatapult}" type="jar"/>
-      <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
-      <artifact group="libraries.inversoft.com" project="inversoft-crud" name="inversoft-crud" version="1.0.2-{integration}" type="jar"/>
-      <artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>
+
+        <!-- jcatapult core -->
+        <artifact group="jcatapult.org" project="jcatapult-mvc" name="jcatapult-mvc" version="${version.jcatapult}" type="jar"/>
+        <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence" version="${version.jcatapult}" type="jar"/>
+        <artifact group="jcatapult.org" project="jcatapult-security" name="jcatapult-security" version="${version.jcatapult}" type="jar"/>
+
+        <!-- jcatapult libs -->
+        <artifact group="libraries.jcatapult.org" project="commerce" name="commerce" version="1.0-{integration}" type="jar"/>
+        <artifact group="libraries.jcatapult.org" project="email" name="email" version="1.0-{integration}" type="jar"/>
+        <artifact group="libraries.jcatapult.org" project="crud" name="crud" version="1.0-{integration}" type="jar"/>
+
+        <!-- joda -->
+        <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
+
+        <!-- java persistence-->
+        <artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>
+
     </artifactGroup>
     <artifactGroup type="run">
       <artifact group="hibernate.org" project="hibernate-entitymanager" name="hibernate-entitymanager" version="3.3.2" type="jar"/>
