@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
+ */
+package com.inversoft.module.user.action.account;
+
+import org.easymock.EasyMock;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+import com.inversoft.module.user.BaseTest;
+import com.inversoft.module.user.domain.DefaultUser;
+import com.inversoft.module.user.service.UserService;
+
+/**
+ * <p>
+ * This class tests the summary action.
+ * </p>
+ *
+ * @author Brian Pontarelli
+ */
+public class SummaryTest extends BaseTest {
+    @Test
+    public void testLoad() {
+        DefaultUser user = new DefaultUser();
+
+        UserService userService = EasyMock.createStrictMock(UserService.class);
+        EasyMock.expect(userService.findByLogin("test")).andReturn(user);
+        EasyMock.replay(userService);
+
+        Summary summary = new Summary(userService);
+        assertEquals("success", summary.execute());
+        assertSame(user, summary.user);
+    }
+}

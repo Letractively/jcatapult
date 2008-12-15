@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright (c) 2001-2008, Inversoft, All Rights Reserved
+  -->
+<config>
+  <jcatapult>
+    <commerce>
+      <aim>
+        <url>https://secure.authorize.net/gateway/transact.dll</url>
+        <username>3w5Epz2jxUex</username>
+        <password>35Q88ezxp3wXJ2af</password>
+        <test>true</test>
+      </aim>
+    </commerce>
+  </jcatapult>
+  <inversoft>
+    <modules>
+      <user>
+        <fields>
+          <name>true</name>
+          <name-required>true</name-required>
+          <business>true</business>
+          <business-required>true</business-required>
+          <home-address>true</home-address>
+          <home-address-required>true</home-address-required>
+          <work-address>true</work-address>
+          <work-address-required>true</work-address-required>
+          <home-phone>true</home-phone>
+          <home-phone-required>true</home-phone-required>
+          <work-phone>true</work-phone>
+          <work-phone-required>true</work-phone-required>
+          <cell-phone>true</cell-phone>
+          <cell-phone-required>true</cell-phone-required>
+          <email-options>true</email-options>
+        </fields>
+      </user>
+    </modules>
+  </inversoft>
+</config>
