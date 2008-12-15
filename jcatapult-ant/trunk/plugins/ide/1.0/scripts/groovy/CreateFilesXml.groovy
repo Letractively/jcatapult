@@ -21,7 +21,7 @@ buf.append("<files>");
 for (String lib in libs) {
   lib = lib.replace("\\", "/");
   String home = System.getProperty("user.home").replace("\\", "/");
-  String path = lib.replace(home + "/.savant_repository/", "");
+  String path = lib.replace(home + "/.savant/repository/", "");
   String src = path.replace(".jar", "-src.jar");
   int index = path.lastIndexOf("/");
   String name = path.substring(index + 1);
