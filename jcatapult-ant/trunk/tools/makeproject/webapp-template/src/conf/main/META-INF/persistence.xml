@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
     version="1.0">
   <persistence-unit name="punit">
-    <non-jta-data-source>java:comp/env/jdbc/@UNDERSCORED_PROJECT_NAME@</non-jta-data-source>
+    <non-jta-data-source>java:comp/env/jdbc/@PROJECT_NAME@</non-jta-data-source>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
       <!--<property name="hibernate.hbm2ddl.auto" value="create"/>-->
