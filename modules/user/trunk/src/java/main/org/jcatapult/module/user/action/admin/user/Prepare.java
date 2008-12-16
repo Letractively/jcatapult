@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2007, Inversoft LLC, All Rights Reserved
  */
-package com.inversoft.module.user.action.admin.user;
+package org.jcatapult.module.user.action.admin.user;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.result.form.annotation.FormPrepareMethod;
 
-import com.inversoft.module.user.action.BaseUserFormAction;
+import org.jcatapult.module.user.action.BaseUserFormAction;
 
 /**
  * <p>

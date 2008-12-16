@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action.account.creditCard;
+package org.jcatapult.module.user.action.account.creditCard;
 
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Forward;
@@ -12,8 +12,8 @@ import org.jcatapult.security.SecurityContext;
 
 import com.google.inject.Inject;
 
-import com.inversoft.module.user.service.UpdateResult;
-import com.inversoft.module.user.service.UserService;
+import org.jcatapult.module.user.service.UpdateResult;
+import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>

@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.guice;
+package org.jcatapult.module.user.guice;
 
 import org.jcatapult.security.UserAdapter;
 import org.jcatapult.security.guice.SecurityModule;
 import org.jcatapult.security.login.AuthenticationService;
 
-import com.inversoft.module.user.security.DefaultAuthenticationService;
-import com.inversoft.module.user.security.DefaultUserAdapter;
+import org.jcatapult.module.user.security.DefaultAuthenticationService;
+import org.jcatapult.module.user.security.DefaultUserAdapter;
 
 /**
  * <p>

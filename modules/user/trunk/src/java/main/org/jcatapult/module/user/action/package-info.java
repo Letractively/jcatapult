@@ -121,4 +121,4 @@
  * </dd>
  * </dl>
  */
-package com.inversoft.module.user.action;
+package org.jcatapult.module.user.action;

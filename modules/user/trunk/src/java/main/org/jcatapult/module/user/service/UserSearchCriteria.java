@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.service;
+package org.jcatapult.module.user.service;
 
-import com.inversoft.crud.service.AbstractSearchCriteria;
-import com.inversoft.module.user.domain.User;
+import org.jcatapult.crud.service.AbstractSearchCriteria;
+import org.jcatapult.module.user.domain.User;
 
 /**
  * <p>

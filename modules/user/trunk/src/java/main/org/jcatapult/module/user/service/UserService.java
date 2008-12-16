@@ -1,4 +1,4 @@
-package com.inversoft.module.user.service;
+package org.jcatapult.module.user.service;
 
 import java.net.InetAddress;
 import java.util.List;
@@ -7,9 +7,9 @@ import java.util.Map;
 import com.google.inject.ImplementedBy;
 import net.java.error.ErrorList;
 
-import com.inversoft.module.user.domain.AuditableCreditCard;
-import com.inversoft.module.user.domain.Role;
-import com.inversoft.module.user.domain.User;
+import org.jcatapult.module.user.domain.AuditableCreditCard;
+import org.jcatapult.module.user.domain.Role;
+import org.jcatapult.module.user.domain.User;
 
 /**
  * <p>

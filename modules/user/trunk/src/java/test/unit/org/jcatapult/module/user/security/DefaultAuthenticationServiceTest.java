@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.security;
+package org.jcatapult.module.user.security;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.google.inject.Inject;
 
-import com.inversoft.module.user.BaseTest;
-import com.inversoft.module.user.domain.DefaultUser;
+import org.jcatapult.module.user.BaseTest;
+import org.jcatapult.module.user.domain.DefaultUser;
 
 /**
  * <p>

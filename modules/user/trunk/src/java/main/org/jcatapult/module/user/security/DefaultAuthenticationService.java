@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2007, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.security;
+package org.jcatapult.module.user.security;
 
 import java.util.Map;
 
@@ -9,8 +9,8 @@ import org.jcatapult.security.login.AuthenticationService;
 
 import com.google.inject.Inject;
 
-import com.inversoft.module.user.domain.User;
-import com.inversoft.module.user.service.UserService;
+import org.jcatapult.module.user.domain.User;
+import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>

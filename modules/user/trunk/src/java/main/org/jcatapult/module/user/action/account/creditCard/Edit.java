@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action.account.creditCard;
+package org.jcatapult.module.user.action.account.creditCard;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -18,9 +18,9 @@ import org.joda.time.YearMonthDay;
 import com.google.inject.Inject;
 import net.java.lang.StringTools;
 
-import com.inversoft.module.user.domain.AuditableCreditCard;
-import com.inversoft.module.user.service.CreditCardUpdateResult;
-import com.inversoft.module.user.service.UserService;
+import org.jcatapult.module.user.domain.AuditableCreditCard;
+import org.jcatapult.module.user.service.CreditCardUpdateResult;
+import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>

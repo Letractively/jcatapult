@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action;
+package org.jcatapult.module.user.action;
 
 import org.jcatapult.mvc.action.annotation.Action;
 
 import com.google.inject.Inject;
 
-import com.inversoft.module.user.service.UserService;
+import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>

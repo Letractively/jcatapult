@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action;
+package org.jcatapult.module.user.action;
 
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
@@ -14,9 +14,9 @@ import org.jcatapult.security.EnhancedSecurityContext;
 
 import com.google.inject.Inject;
 
-import com.inversoft.module.user.domain.User;
-import com.inversoft.module.user.service.UpdateResult;
-import com.inversoft.module.user.service.UserService;
+import org.jcatapult.module.user.domain.User;
+import org.jcatapult.module.user.service.UpdateResult;
+import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>

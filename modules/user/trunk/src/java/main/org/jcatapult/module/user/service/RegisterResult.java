@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.service;
+package org.jcatapult.module.user.service;
 
 /**
  * <p>

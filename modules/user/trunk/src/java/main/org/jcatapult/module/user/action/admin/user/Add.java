@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action.admin.user;
+package org.jcatapult.module.user.action.admin.user;
 
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.scope.MessageScope;
 
-import com.inversoft.module.user.action.BaseUserFormAction;
+import org.jcatapult.module.user.action.BaseUserFormAction;
 
 /**
  * <p>

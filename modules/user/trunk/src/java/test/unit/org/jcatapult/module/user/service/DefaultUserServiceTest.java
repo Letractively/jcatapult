@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.service;
+package org.jcatapult.module.user.service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -14,14 +14,14 @@ import org.jcatapult.email.EmailTestHelper;
 
 import com.google.inject.Inject;
 
-import com.inversoft.module.user.BaseTest;
-import com.inversoft.module.user.domain.Address;
-import com.inversoft.module.user.domain.DefaultRole;
-import com.inversoft.module.user.domain.DefaultUser;
-import com.inversoft.module.user.domain.Name;
-import com.inversoft.module.user.domain.PhoneNumber;
-import com.inversoft.module.user.domain.Role;
-import com.inversoft.module.user.domain.User;
+import org.jcatapult.module.user.BaseTest;
+import org.jcatapult.module.user.domain.Address;
+import org.jcatapult.module.user.domain.DefaultRole;
+import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.module.user.domain.Name;
+import org.jcatapult.module.user.domain.PhoneNumber;
+import org.jcatapult.module.user.domain.Role;
+import org.jcatapult.module.user.domain.User;
 
 /**
  * <p>

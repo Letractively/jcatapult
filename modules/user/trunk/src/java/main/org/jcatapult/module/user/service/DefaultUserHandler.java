@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.service;
+package org.jcatapult.module.user.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,13 +23,13 @@ import net.java.validate.EmailValidator;
 import net.java.validate.RequiredValidator;
 import net.java.validate.Validator;
 
-import com.inversoft.module.user.domain.Address;
-import com.inversoft.module.user.domain.AuditableCreditCard;
-import com.inversoft.module.user.domain.DefaultRole;
-import com.inversoft.module.user.domain.DefaultUser;
-import com.inversoft.module.user.domain.PhoneNumber;
-import com.inversoft.module.user.domain.Role;
-import com.inversoft.module.user.domain.UserProperty;
+import org.jcatapult.module.user.domain.Address;
+import org.jcatapult.module.user.domain.AuditableCreditCard;
+import org.jcatapult.module.user.domain.DefaultRole;
+import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.module.user.domain.PhoneNumber;
+import org.jcatapult.module.user.domain.Role;
+import org.jcatapult.module.user.domain.UserProperty;
 
 /**
  * <p>

@@ -1,4 +1,4 @@
-package com.inversoft.module.user.service;
+package org.jcatapult.module.user.service;
 
 /**
  * <p>

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2007, Inversoft LLC, All Rights Reserved
  */
-package com.inversoft.module.user.domain;
+package org.jcatapult.module.user.domain;
 
 import java.io.Serializable;
 import javax.persistence.Column;

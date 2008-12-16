@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action.admin.user;
+package org.jcatapult.module.user.action.admin.user;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -13,7 +13,7 @@ import org.jcatapult.email.EmailTestHelper;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import com.inversoft.module.user.BaseIntegrationTest;
+import org.jcatapult.module.user.BaseIntegrationTest;
 
 /**
  * <p>

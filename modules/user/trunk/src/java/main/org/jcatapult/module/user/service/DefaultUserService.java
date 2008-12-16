@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.service;
+package org.jcatapult.module.user.service;
 
 import java.net.InetAddress;
 import java.security.SecureRandom;
@@ -29,9 +29,9 @@ import net.java.error.ErrorList;
 import net.java.lang.StringTools;
 import static net.java.lang.StringTools.*;
 
-import com.inversoft.module.user.domain.AuditableCreditCard;
-import com.inversoft.module.user.domain.Role;
-import com.inversoft.module.user.domain.User;
+import org.jcatapult.module.user.domain.AuditableCreditCard;
+import org.jcatapult.module.user.domain.Role;
+import org.jcatapult.module.user.domain.User;
 
 /**
  * <p>
