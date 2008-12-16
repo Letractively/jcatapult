@@ -222,7 +222,7 @@
       <copy todir="@{persistenceDir}" failonerror="yes" overwrite="yes">
         <fileset dir="${dir.plugin.module}/files" includes="**/*"/>
         <filterset>
-          <filter token="PROJECT_NAME" value="${underscored.project.name}"/>
+          <filter token="PROJECT_NAME" value="${project.name}"/>
         </filterset>
       </copy>
       <dependencypath pathid="classpath.project" workflow="workflow.project"
