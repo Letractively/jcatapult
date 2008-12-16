@@ -163,6 +163,15 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
             }
         }
 
+        // Handle HEAD requests using a GET
+        if (method == null && httpMethod.equals("HEAD")) {
+            try {
+                method = action.getClass().getMethod("GET");
+            } catch (NoSuchMethodException e) {
+                // Ignore
+            }
+        }
+
         if (method == null) {
             try {
                 method = action.getClass().getMethod("execute");
@@ -173,7 +182,9 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
 
         if (method == null) {
             throw new ServletException("The action class [" + action.getClass() + "] is missing a " +
-                "valid execute method.");
+                "valid execute method. The class can define a method with the same names as the " +
+                "HTTP method (which is currently [" + httpMethod.toLowerCase() + "]) or it can define " +
+                "a default method named [execute].");
         }
 
         verify(method);
