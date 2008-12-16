@@ -3,6 +3,12 @@
          group="libraries.jcatapult.org"
          version="1.0">
 
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
 
@@ -25,7 +31,7 @@
 
   <!-- compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult" value="1.0-{integration}"/>
+  <property name="version.jcatapult" value="1.0-RC9-{integration}"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
