@@ -41,7 +41,7 @@ public class ForwardResultTest {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
 
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
-        response.setContentType("text/html");
+        response.setContentType("text/html; charset=UTF-8");
         EasyMock.replay(response);
 
         RequestDispatcher dispatcher = EasyMock.createStrictMock(RequestDispatcher.class);
@@ -66,7 +66,7 @@ public class ForwardResultTest {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
 
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
-        response.setContentType("text/html");
+        response.setContentType("text/html; charset=UTF-8");
         EasyMock.replay(response);
 
         RequestDispatcher dispatcher = EasyMock.createStrictMock(RequestDispatcher.class);
