@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.domain;
+package org.jcatapult.module.user.domain;
 
 import java.io.Serializable;
 import java.util.HashMap;

@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action.admin.user;
+package org.jcatapult.module.user.action.admin.user;
 
 import org.jcatapult.mvc.action.annotation.Action;
 
 import com.google.inject.Inject;
 
-import com.inversoft.crud.action.BaseSearchAction;
-import com.inversoft.module.user.domain.User;
-import com.inversoft.module.user.service.UserHandler;
-import com.inversoft.module.user.service.UserSearchCriteria;
+import org.jcatapult.crud.action.BaseSearchAction;
+import org.jcatapult.module.user.domain.User;
+import org.jcatapult.module.user.service.UserHandler;
+import org.jcatapult.module.user.service.UserSearchCriteria;
 
 /**
  * <p>

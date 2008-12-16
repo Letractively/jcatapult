@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.service;
+package org.jcatapult.module.user.service;
 
 import org.easymock.EasyMock;
 import org.jcatapult.config.Configuration;
@@ -10,10 +10,10 @@ import org.junit.Test;
 
 import net.java.error.ErrorList;
 
-import com.inversoft.module.user.domain.Address;
-import com.inversoft.module.user.domain.DefaultUser;
-import com.inversoft.module.user.domain.Name;
-import com.inversoft.module.user.domain.PhoneNumber;
+import org.jcatapult.module.user.domain.Address;
+import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.module.user.domain.Name;
+import org.jcatapult.module.user.domain.PhoneNumber;
 
 /**
  * <p>

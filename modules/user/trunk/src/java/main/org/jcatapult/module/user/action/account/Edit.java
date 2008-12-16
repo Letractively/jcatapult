@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action.account;
+package org.jcatapult.module.user.action.account;
 
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
@@ -9,9 +9,9 @@ import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.security.SecurityContext;
 
-import com.inversoft.module.user.action.BaseUserFormAction;
-import com.inversoft.module.user.service.UpdateResult;
-import com.inversoft.module.user.service.UserService;
+import org.jcatapult.module.user.action.BaseUserFormAction;
+import org.jcatapult.module.user.service.UpdateResult;
+import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>
@@ -74,7 +74,7 @@ public class Edit extends BaseUserFormAction {
      *
      * @return  The result, either {@code error} or {@code success}. {@code error} is only returned
      *          if the update failed according to the method
-     *          {@link UserService#update(com.inversoft.module.user.domain.User, String)}.
+     *          {@link UserService#update(org.jcatapult.module.user.domain.User, String)}.
      */
     public String post() {
         UpdateResult result = userService.update(user, password);

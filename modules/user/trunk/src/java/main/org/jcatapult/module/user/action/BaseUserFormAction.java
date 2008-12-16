@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action;
+package org.jcatapult.module.user.action;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +14,9 @@ import com.google.inject.Inject;
 import net.java.error.ErrorList;
 import net.java.error.PropertyError;
 
-import com.inversoft.module.user.domain.User;
-import com.inversoft.module.user.service.UserConfiguration;
-import com.inversoft.module.user.service.UserService;
+import org.jcatapult.module.user.domain.User;
+import org.jcatapult.module.user.service.UserConfiguration;
+import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>

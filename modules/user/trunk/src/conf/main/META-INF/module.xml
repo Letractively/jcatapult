@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <module name="inversoft-user-module">
   <persistence>
-    <class>com.inversoft.module.user.domain.Address</class>
-    <class>com.inversoft.module.user.domain.AuditableCreditCard</class>
-    <class>com.inversoft.module.user.domain.EmailAddress</class>
-    <class>com.inversoft.module.user.domain.DefaultRole</class>
-    <class>com.inversoft.module.user.domain.DefaultUser</class>
-    <class>com.inversoft.module.user.domain.PhoneNumber</class>
-    <class>com.inversoft.module.user.domain.UserProperty</class>
+    <class>org.jcatapult.module.user.domain.Address</class>
+    <class>org.jcatapult.module.user.domain.AuditableCreditCard</class>
+    <class>org.jcatapult.module.user.domain.EmailAddress</class>
+    <class>org.jcatapult.module.user.domain.DefaultRole</class>
+    <class>org.jcatapult.module.user.domain.DefaultUser</class>
+    <class>org.jcatapult.module.user.domain.PhoneNumber</class>
+    <class>org.jcatapult.module.user.domain.UserProperty</class>
   </persistence>
 </module>

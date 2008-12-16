@@ -1,4 +1,4 @@
-package com.inversoft.module.user.action.admin.user;
+package org.jcatapult.module.user.action.admin.user;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +9,11 @@ import org.jcatapult.test.Capture;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import com.inversoft.crud.service.SearchService;
-import com.inversoft.module.user.domain.DefaultUser;
-import com.inversoft.module.user.domain.User;
-import com.inversoft.module.user.service.UserHandler;
-import com.inversoft.module.user.service.UserSearchCriteria;
+import org.jcatapult.crud.service.SearchService;
+import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.module.user.domain.User;
+import org.jcatapult.module.user.service.UserHandler;
+import org.jcatapult.module.user.service.UserSearchCriteria;
 
 /**
  * <p>

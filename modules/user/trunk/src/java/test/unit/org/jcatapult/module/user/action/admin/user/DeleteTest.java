@@ -1,10 +1,10 @@
-package com.inversoft.module.user.action.admin.user;
+package org.jcatapult.module.user.action.admin.user;
 
 import org.easymock.EasyMock;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import com.inversoft.module.user.service.UserService;
+import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>

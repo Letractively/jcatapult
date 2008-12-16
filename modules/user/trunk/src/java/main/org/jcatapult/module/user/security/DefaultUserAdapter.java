@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.security;
+package org.jcatapult.module.user.security;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.jcatapult.security.UserAdapter;
 
-import com.inversoft.module.user.domain.Role;
-import com.inversoft.module.user.domain.User;
+import org.jcatapult.module.user.domain.Role;
+import org.jcatapult.module.user.domain.User;
 
 /**
  * <p>

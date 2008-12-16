@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2007, Inversoft LLC, All Rights Reserved
  */
-package com.inversoft.module.user.domain;
+package org.jcatapult.module.user.domain;
 
 import org.junit.Assert;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import com.inversoft.module.user.BaseTest;
+import org.jcatapult.module.user.BaseTest;
 
 /**
  * <p>

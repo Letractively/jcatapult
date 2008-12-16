@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.domain;
+package org.jcatapult.module.user.domain;
 
 import java.util.List;
 import java.util.Set;

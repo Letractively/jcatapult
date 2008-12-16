@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action;
+package org.jcatapult.module.user.action;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,7 +14,7 @@ import org.jcatapult.security.saved.SavedRequestService;
 
 import com.google.inject.Inject;
 
-import com.inversoft.module.user.service.RegisterResult;
+import org.jcatapult.module.user.service.RegisterResult;
 
 /**
  * <p>

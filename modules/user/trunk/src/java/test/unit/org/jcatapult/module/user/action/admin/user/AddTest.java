@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.module.user.action.admin.user;
+package org.jcatapult.module.user.action.admin.user;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +14,10 @@ import org.junit.Test;
 
 import net.java.error.ErrorList;
 
-import com.inversoft.module.user.BaseTest;
-import com.inversoft.module.user.domain.Address;
-import com.inversoft.module.user.domain.DefaultUser;
-import com.inversoft.module.user.service.UserService;
+import org.jcatapult.module.user.BaseTest;
+import org.jcatapult.module.user.domain.Address;
+import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>
