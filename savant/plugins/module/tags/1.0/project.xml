@@ -1,0 +1,43 @@
+<project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
+    name="module"
+    group="plugins.savant.jcatapult..org"
+    version="1.0">
+
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="plugin" version="1.0.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+
+  <!-- import property file properties -->
+  <properties file="${user.home}/build.properties"/>
+  <properties file="${user.home}/google-code-build.properties"/>
+  <properties file="${user.home}/inversoft-org-release-build.properties"/>
+
+  <dependencies id="dependencies.project">
+    <artifactGroup type="run">
+      <artifact group="jaxen.codehaus.org" name="jaxen" version="1.1.1"/>
+      <artifact group="jdom.org" name="jdom" version="1.1"/>
+    </artifactGroup>
+    <artifactGroup type="compile"/>
+    <artifactGroup type="test-run"/>
+    <artifactGroup type="test-compile"/>
+  </dependencies>
+
+  <workflow id="workflow.project">
+    <fetchWorkflow>
+      <process type="unifiedLocalCache"/>
+      <process type="unified" url="http://savant.inversoft.org/"/>
+    </fetchWorkflow>
+    <publishWorkflow>
+      <process type="unifiedLocalCache"/>
+    </publishWorkflow>
+  </workflow>
+
+  <publishWorkflow id="workflow.publish.local">
+    <process type="unifiedLocalCache"/>
+  </publishWorkflow>
+
+  <publishWorkflow id="workflow.publish.remote">
+    <process type="unifiedSVN" repository="https://svn.inversoft.org/savant-deps"
+             username="${svn.release.username}" password="${svn.release.password}"/>
+  </publishWorkflow>
+</project>
