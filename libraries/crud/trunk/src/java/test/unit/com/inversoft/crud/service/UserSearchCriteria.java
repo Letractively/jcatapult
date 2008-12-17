@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.crud.service;
+package org.jcatapult.crud.service;
 
 import net.java.lang.StringTools;
 
-import com.inversoft.crud.domain.User;
+import org.jcatapult.crud.domain.User;
 
 /**
  * <p>
