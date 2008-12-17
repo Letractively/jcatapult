@@ -19,6 +19,8 @@
   <dirname property="dir.plugin.dbmgr" file="${ant.file.dbmgr}"/>
   <dependencypath pathid="classpath.plugin.dbmgr" dependencies="dependencies.project"
       workflow="workflow.project" projectfile="${dir.plugin.dbmgr}/project.xml"/>
+  <dependencypath pathid="classpath.project" dependencies="dependencies.project"
+      workflow="workflow.project"/>
 
   <macrodef name="database_manager">
     <attribute name="url"/>
