@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.crud.domain;
+package org.jcatapult.crud.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.crud.service;
+package org.jcatapult.crud.service;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.google.inject.Inject;
 
-import com.inversoft.crud.domain.User;
+import org.jcatapult.crud.domain.User;
 
 /**
  * <p>
