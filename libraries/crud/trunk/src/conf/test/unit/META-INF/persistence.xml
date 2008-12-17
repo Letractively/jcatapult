@@ -4,7 +4,7 @@
     version="1.0">
   <persistence-unit name="punit">
     <non-jta-data-source>java:comp/env/jdbc/crud</non-jta-data-source>
-    <class>com.inversoft.crud.domain.User</class>
+    <class>org.jcatapult.crud.domain.User</class>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
       <!--<property name="hibernate.show_sql" value="true"/>-->

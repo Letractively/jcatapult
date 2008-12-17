@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.crud.action;
+package org.jcatapult.crud.action;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.jcatapult.mvc.scope.annotation.ActionSession;
 
 import com.google.inject.Inject;
 
-import com.inversoft.crud.service.SearchCriteria;
-import com.inversoft.crud.service.SearchService;
+import org.jcatapult.crud.service.SearchCriteria;
+import org.jcatapult.crud.service.SearchService;
 
 /**
  * <p>
