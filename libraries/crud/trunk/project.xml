@@ -1,14 +1,15 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
-    name="crud"
+    name="jcatapult-crud"
     group="libraries.jcatapult.org"
     version="1.0">
 
-  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0.1"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="mysql" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="mysql" version="1.0.1"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+  <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0-{integration}"/>
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
