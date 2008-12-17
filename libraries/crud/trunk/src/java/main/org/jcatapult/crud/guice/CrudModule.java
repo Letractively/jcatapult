@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.crud.guice;
+package org.jcatapult.crud.guice;
 
 import com.google.inject.AbstractModule;
 
-import com.inversoft.crud.control.SearchResults;
+import org.jcatapult.crud.control.SearchResults;
 
 /**
  * <p>

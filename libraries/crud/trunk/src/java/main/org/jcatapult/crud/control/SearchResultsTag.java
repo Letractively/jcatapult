@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.crud.control;
+package org.jcatapult.crud.control;
 
 import org.jcatapult.mvc.result.jsp.AbstractControlTag;
 

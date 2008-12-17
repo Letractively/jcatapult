@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
  */
-package com.inversoft.crud.service;
+package org.jcatapult.crud.service;
 
 import java.util.List;
 
