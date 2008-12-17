@@ -18,11 +18,11 @@
     group="jcatapult.org"
     version="1.0-RC9">
 	
-  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0.1"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="mysql" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="mysql" version="1.0.1"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
 
   <!-- import property file properties -->
@@ -56,7 +56,7 @@
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
       <artifact group="mysql.com" project="mysql-connector-java" name="mysql-connector-java" version="5.1.6" type="jar"/>
       <artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>
-      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-M4" type="jar"/>
+      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-RC3" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-run">
       <artifact group="hsqldb.org" project="hsqldb" name="hsqldb" version="1.8.9" type="jar"/>
