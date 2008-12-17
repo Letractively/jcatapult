@@ -40,9 +40,9 @@
         <artifact group="jcatapult.org" project="jcatapult-security" name="jcatapult-security" version="${version.jcatapult}" type="jar"/>
 
         <!-- jcatapult libs -->
-        <artifact group="libraries.jcatapult.org" project="commerce" name="commerce" version="1.0-{integration}" type="jar"/>
-        <artifact group="libraries.jcatapult.org" project="email" name="email" version="1.0-{integration}" type="jar"/>
-        <artifact group="libraries.jcatapult.org" project="crud" name="crud" version="1.0-{integration}" type="jar"/>
+        <artifact group="libraries.jcatapult.org" project="commerce" name="commerce" version="1.0-RC9-{integration}" type="jar"/>
+        <artifact group="libraries.jcatapult.org" project="email" name="email" version="1.0-RC9-{integration}" type="jar"/>
+        <artifact group="libraries.jcatapult.org" project="crud" name="crud" version="1.0-RC9-{integration}" type="jar"/>
 
         <!-- joda -->
         <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
