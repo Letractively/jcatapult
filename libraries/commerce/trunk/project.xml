@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="commerce"
          group="libraries.jcatapult.org"
-         version="1.0">
+         version="1.0-RC9">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
@@ -38,7 +38,6 @@
       <artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="compile">
-      <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
       <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
