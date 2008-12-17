@@ -76,7 +76,7 @@
               <file url="file:///home/bpontarelli/dev/inversoft/java-website/src/conf/main/META-INF/persistence.xml" />
             </files>
           </module>
-          <module name="user" />
+          <module name="jcatapult-user-module" />
         </modules>
       </facet-type>
       <facet-type id="web">
@@ -86,7 +86,7 @@
               <file url="file:///home/bpontarelli/dev/inversoft/java-website/web/WEB-INF/web.xml" />
             </files>
           </module>
-          <module name="user" />
+          <module name="jcatapult-user-module" />
         </modules>
       </facet-type>
     </autodetection-disabled>
@@ -839,12 +839,12 @@
     </group>
   </component>
   <component name="ProjectDetails">
-    <option name="projectName" value="user" />
+    <option name="projectName" value="jcatapult-user-module" />
   </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/user.iml" filepath="$PROJECT_DIR$/user.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jcatapult-user-module.iml" filepath="$PROJECT_DIR$/jcatapult-user-module.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">

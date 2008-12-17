@@ -1,5 +1,5 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
-         name="user"
+         name="jcatapult-user-module"
          group="modules.jcatapult.org"
          version="1.0">
   
