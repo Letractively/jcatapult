@@ -1,0 +1,245 @@
+<!--
+  This is a stand alone build file and can be called from
+  anywhere using the -f option like this:
+
+  ant -f /foo/bar/ant/plugins/project-0.1/build.xml
+
+  You can also change into this plugins directory and execute
+  ant from there.
+-->
+<project name="make-project">
+  <dirname property="dir.plugin.make-project" file="${ant.file.make-project}"/>
+
+  <path id="classpath.makeproject">
+    <fileset dir="${dir.plugin.make-project}/lib" includes="*.jar"/>
+  </path>
+
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="classpath.makeproject"/>
+  <typedef resource="org/jcatapult/ant/jcatapult.properties" classpathref="classpath.makeproject"/>
+  <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpathref="classpath.makeproject"/>
+
+  <property file="${user.home}/build.properties"/>
+
+  <import file="${dir.plugin.make-project}/svn-macros.xml"/>
+
+  <!--
+    Gets all the required project information
+  -->
+  <target name="-init">
+    <input message="Enter project name" addproperty="create.project.name"/>
+    <input message="Enter directory to create the project in or press enter to use the current directory"
+           addproperty="create.project.dir" defaultvalue="${user.dir}"/>
+
+    <condition property="bad.project.name">
+      <contains string="${create.project.name}" substring="_"/>
+    </condition>
+    <fail message="Project names cannot contain any _ (underscore) characters" if="bad.project.name"/>
+
+    <!-- Changes dashes to underscores -->
+    <groovy>
+      String projectName = properties["create.project.name"];
+      properties["underscored.project.name"] = projectName.replace("-", "_").replace(".", "_");
+    </groovy>
+
+    <input message="Enter package name that the project will use (i.e. com.example.project)"
+           addproperty="create.package.name"/>
+
+    <!-- Creates a directory from the package name -->
+    <groovy>
+      String packageDir = properties["create.package.name"];
+      properties["dir.package"] = packageDir.replace(".", "/");
+    </groovy>
+
+    <input message="Enter the group name for the project (i.e. example.com)" addproperty="create.group.name"/>
+
+    <input message="Really create [${create.project.name}] in [${create.project.dir}/${create.project.name}]?"
+           validargs="y,n" addproperty="do.create"/>
+    <condition property="do.abort">
+      <equals arg1="n" arg2="${do.create}"/>
+    </condition>
+    <fail if="do.abort"/>
+  </target>
+
+  <!--
+    Creates a library module.
+  -->
+  <target name="library" depends="-init" description="Creates a new library project">
+    <create-project template="library-template" jcatapult="false"/>
+  </target>
+
+  <!--
+    Creates a webapp module.
+  -->
+  <target name="webapp" depends="-init" description="Creates a new webapp project">
+    <create-project template="webapp-template" jcatapult="true"/>
+  </target>
+
+  <!--
+    Creates a module.
+  -->
+  <target name="module" depends="-init" description="Creates a new module project">
+    <create-project template="module-template" jcatapult="true"/>
+  </target>
+
+  <target name="svn-import"
+          description="Imports a local project directory into a remote subversion repository.  This target creates the trunk, tags, and branches directory for you.">
+
+    <echo>
+svn-import is an interactive tool to help you import a local project directory into a remote subversion
+repository. Please ensure that you are NOT in the project directory currently. If you are in the
+project directory this command might fail (on Windows) or you might think you are in the checked
+directory once the command exits, but you won't be.
+
+
+You will be prompted for the following information:
+
+    1. The project name as it exists on disk and will exist in the SVN repository.
+    2. The absolute path to where your project lives on your hard drive.
+           ex: /home/someuser/myprojects/projectX
+    3. The URL to where your project directory will be imported to without the project name.
+           ex: https://svn.someuser.com/myprojects
+    4. The subversion repository username
+    5. The subversion repository password
+    </echo>
+
+    <input message="Enter the project name" addproperty="svn-import.project.name"/>
+    <input message="Enter the absolute path to project directory root" addproperty="svn-import.project.path"
+           defaultvalue="${user.dir}/${svn-import.project.name}"/>
+    <input message="Enter the remote subversion repository url (WITHOUT the project name)"
+           addproperty="svn-import.url"/>
+    <input message="Enter the subversion repository username" addproperty="svn-import.username"/>
+    <input message="Enter the subversion repository password" addproperty="svn-import.password"/>
+
+    <input message="Really import [${svn-import.project.path}] to [${svn-import.url}/${svn-import.project.name}]?"
+           validargs="y,n" addproperty="do.import"/>
+    <condition property="do.abort">
+      <equals arg1="n" arg2="${do.import}"/>
+    </condition>
+    <fail if="do.abort"/>
+
+    <delete dir="${user.home}/.jcatapult/project-svn-import"/>
+    <delete dir="${svn-import.project.path}/target"/>
+    <delete dir="${svn-import.project.path}/web/WEB-INF/lib"/>
+    <delete dir="${svn-import.project.path}/web/WEB-INF/classes"/>
+    <delete>
+      <fileset dir="${svn-import.project.path}" includes="*.iws"/>
+    </delete>
+
+    <echo>Importing [${svn-import.project.path}] to [${svn-import.url}/${svn-import.project.name}/trunk]...</echo>
+    <scm_import url="${svn-import.url}/${svn-import.project.name}/trunk" dir="${svn-import.project.path}"
+                username="${svn-import.username}" password="${svn-import.password}"/>
+    <scm_mkdir url="${svn-import.url}/${svn-import.project.name}/tags" username="${svn-import.username}"
+               password="${svn-import.password}"/>
+    <scm_mkdir url="${svn-import.url}/${svn-import.project.name}/branches" username="${svn-import.username}"
+               password="${svn-import.password}"/>
+
+    <echo>Backing up project to [${user.home}/.jcatapult/project-svn-import]...</echo>
+    <move file="${svn-import.project.path}" todir="${user.home}/.jcatapult/project-svn-import"/>
+
+    <echo>Checking out trunk to [${svn-import.project.path}]...</echo>
+    <scm_checkout url="${svn-import.url}/${svn-import.project.name}/trunk" dir="${svn-import.project.path}"
+                  username="${svn-import.username}" password="${svn-import.password}"/>
+  </target>
+
+  <!--
+    Creates the structure and copies the template over, setting up any files
+    like IDE files and replacing tokens.
+  -->
+  <macrodef name="create-project">
+    <attribute name="template"/>
+    <attribute name="jcatapult"/>
+    <sequential>
+      <mkdir dir="${create.project.dir}/${create.project.name}"/>
+
+      <!-- Source directories -->
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/main/${dir.package}/action"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/main/${dir.package}/domain"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/main/${dir.package}/service"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/test/integration/${dir.package}"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/test/unit/${dir.package}/action"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/test/unit/${dir.package}/domain"/>
+      <mkdir dir="${create.project.dir}/${create.project.name}/src/java/test/unit/${dir.package}/service"/>
+
+      <!-- Figure out the versions of jcatapult-Core -->
+      <if>
+        <equals arg1="@{jcatapult}" arg2="true"/>
+        <then>
+          <determine_version property="version.jcatapult"/>
+        </then>
+      </if>
+
+      <copy todir="${create.project.dir}/${create.project.name}">
+        <fileset dir="${basedir}/@{template}" includes="**/*" excludes="@{template}*"/>
+        <filterset>
+          <filter token="GROUP_NAME" value="${create.group.name}"/>
+          <filter token="PACKAGE_NAME" value="${create.package.name}"/>
+          <filter token="PROJECT_NAME" value="${create.project.name}"/>
+          <filter token="UNDERSCORED_PROJECT_NAME" value="${underscored.project.name}"/>
+          <filter token="JCATAPULT_VERSION" value="${version.jcatapult}"/>
+        </filterset>
+      </copy>
+      <copy todir="${create.project.dir}/${create.project.name}">
+        <fileset dir="${basedir}/@{template}" includes="@{template}*" excludes="*.iws"/>
+        <mapper type="regexp" from=".*\.(.*)" to="${create.project.name}.\1"/>
+      </copy>
+
+      <!-- Replace 'template' with {create.project.name} in IJ files -->
+      <replace file="${create.project.dir}/${create.project.name}/${create.project.name}.ipr" token="@{template}"
+               value="${create.project.name}"/>
+      <replace file="${create.project.dir}/${create.project.name}/${create.project.name}.iml" token="@{template}"
+               value="${create.project.name}"/>
+
+      <!-- Generate better iml and classpath IDE files -->
+      <ant dir="${create.project.dir}/${create.project.name}" target="ide"/>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="determine_version">
+    <attribute name="property"/>
+    <sequential>
+      <groovy>
+        <classpath>
+          <path refid="classpath.makeproject"/>
+        </classpath>
+        <![CDATA[
+        import org.inversoft.savant.dep.*
+        import org.inversoft.savant.context.*
+        import org.inversoft.savant.context.xml.DefaultProjectConfigBuilder
+
+        DefaultProjectConfigBuilder builder = new DefaultProjectConfigBuilder()
+        String jcatapultHome = System.getenv().get("JCATAPULT_HOME");
+        ProjectConfig projectConfig = builder.build(new File("${jcatapultHome}/ant/tools/makeproject/make-project-savant.xml"))
+
+        // Create a new deps set
+        ArtifactGroup artifactGroup = new ArtifactGroup("compile", Integer.MAX_VALUE)
+        artifactGroup.addArtifact(new Artifact("jcatapult.org", "jcatapult-core", "jcatapult-core", "{latest}", "jar"))
+        Dependencies deps = new Dependencies("jcatapult-deps")
+        deps.addArtifactGroup(artifactGroup)
+
+        // Add it to the project
+        projectConfig.addDependencies(deps)
+
+        // Resolve the module
+        SavantContext context = new DefaultSavantContext(projectConfig, new File("."), new File("."))
+        DependencyResolveMediator mediator = new DependencyResolveMediator()
+        try {
+          mediator.mediate(context, "jcatapult-deps", null, ["compile"] as Set, false)
+        } catch (Exception e) {
+          ant.fail("Unable to find JCatapult version")
+        }
+
+        // Get the artifact back out and grab the version and the file
+        Artifact artifact = artifactGroup.getArtifacts().toList()[0]
+        String propName = "@{property}"
+        String version = artifact.getVersion()
+        int index = version.lastIndexOf("-IB")
+        if (index > 0) {
+          version = version.substring(0, index) + "-{integration}"
+        }
+
+        properties[propName] = version
+        ]]>
+      </groovy>
+    </sequential>
+  </macrodef>
+</project>
