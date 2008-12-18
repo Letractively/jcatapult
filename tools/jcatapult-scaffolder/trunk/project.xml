@@ -55,7 +55,7 @@
       <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.94" type="jar"/>
     </artifactGroup>
     <artifactGroup type="run">
-      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-M3" type="jar"/>
+      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-RC3" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-compile">
       <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
