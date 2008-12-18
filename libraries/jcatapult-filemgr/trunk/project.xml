@@ -1,7 +1,13 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
          name="jcatapult-filemgr"
-         group="jcatapult.org"
-         version="1.0">
+         group="libraries.jcatapult.org"
+         version="1.0-RC9">
+
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
 
   <!-- Properties from home dir -->
   <properties file="${user.home}/build.properties"/>
@@ -26,29 +32,20 @@
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
-      <artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
+      <artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4"/>
     </artifactGroup>
     <artifactGroup type="compile">
-      <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
-      <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-struts" name="jcatapult-struts" version="${version.jcatapult}" type="jar"/>
-      <artifact group="opensymphony.com" project="xwork" name="xwork" version="2.1.1" type="jar"/>
-      <artifact group="struts.apache.org" project="struts2-convention-plugin" name="struts2-convention-plugin" version="2.1.3" type="jar"/>
+      <artifact group="guice.code.google.com" name="guice" version="1.0"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5"/>
+      <artifact group="jcatapult.org" name="jcatapult-core" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" name="jcatapult-mvc" version="${version.jcatapult}"/>
     </artifactGroup>
     <artifactGroup type="run">
-      <artifact group="hibernate.org" project="hibernate-entitymanager" name="hibernate-entitymanager" version="3.3.2" type="jar"/>
-      <artifact group="joda-time.joda.org" project="joda-time-jsptags" name="joda-time-jsptags" version="1.0" type="jar"/>
-      <artifact group="opensymphony.com" project="sitemesh" name="sitemesh" version="2.3" type="jar"/>
-      <artifact group="struts.apache.org" project="struts2-core" name="struts2-core" version="2.1.3" type="jar"/>
-      <artifact group="taglibs.jakarta.apache.org" project="standard" name="standard" version="1.1.2" type="jar"/>
-      <artifact group="servlet.javax" project="jstl" name="jstl" version="1.1" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-compile">
-      <artifact group="easymock.org" project="easymock" name="easymock" version="2.2" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}" type="jar"/>
-      <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
+      <artifact group="easymock.org" project="easymock" name="easymock" version="2.2"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
+      <artifact group="junit.org" project="junit" name="junit" version="4.4"/>
     </artifactGroup>
   </dependencies>
 
