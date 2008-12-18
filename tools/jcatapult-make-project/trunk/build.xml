@@ -208,7 +208,7 @@ You will be prompted for the following information:
 
         DefaultProjectConfigBuilder builder = new DefaultProjectConfigBuilder()
         String jcatapultHome = System.getenv().get("JCATAPULT_HOME");
-        ProjectConfig projectConfig = builder.build(new File("${jcatapultHome}/ant/tools/makeproject/make-project-savant.xml"))
+        ProjectConfig projectConfig = builder.build(new File("${jcatapultHome}/tools/make-project/make-project-savant.xml"))
 
         // Create a new deps set
         ArtifactGroup artifactGroup = new ArtifactGroup("compile", Integer.MAX_VALUE)
