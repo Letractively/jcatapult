@@ -28,7 +28,7 @@
 
   <!-- compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult" value="1.0-RC9-{integration}"/>
+  <property name="version.jcatapult" value="1.0-RC9"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
