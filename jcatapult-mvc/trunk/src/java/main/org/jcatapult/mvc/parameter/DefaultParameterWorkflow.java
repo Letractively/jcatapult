@@ -29,6 +29,7 @@ import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.mvc.parameter.el.ExpressionException;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -79,11 +80,29 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
 
         if (action != null) {
             // First grab the structs and then save them to the request
-            Map<String, Struct> structs = getValuesToSet(request);
+            Parameters params = getValuesToSet(request);
 
-            // Next, process them
-            for (String key : structs.keySet()) {
-                Struct struct = structs.get(key);
+            // Next, process the optional
+            for (String key : params.optional.keySet()) {
+                Struct struct = params.optional.get(key);
+
+                // If there are no values to set, skip it
+                if (struct.values == null) {
+                    continue;
+                }
+
+                try {
+                    expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
+                } catch (ConversionException ce) {
+                    messageStore.addConversionError(key, action.getClass().getName(), struct.attributes, (Object[]) struct.values);
+                } catch (ExpressionException ee) {
+                    // Ignore, these are optional
+                }
+            }
+
+            // Next, process the required
+            for (String key : params.required.keySet()) {
+                Struct struct = params.required.get(key);
 
                 // If there are no values to set, skip it
                 if (struct.values == null) {
@@ -117,15 +136,17 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
      * @return  The parameters to set into the aciton.
      */
     @SuppressWarnings("unchecked")
-    protected Map<String, Struct> getValuesToSet(HttpServletRequest request) {
+    protected Parameters getValuesToSet(HttpServletRequest request) {
+        Parameters result = new Parameters();
         Map<String, String[]> parameters = request.getParameterMap();
 
         // Pull out the check box, radio button and action parameter
         Map<String, String[]> checkBoxes = new HashMap<String, String[]>();
         Map<String, String[]> radioButtons = new HashMap<String, String[]>();
         Set<String> actions = new HashSet<String>();
-        Map<String, Struct> structs = new LinkedHashMap<String, Struct>();
         for (String key : parameters.keySet()) {
+            boolean optional = (key.endsWith(".x") || key.endsWith(".y"));
+
             if (key.startsWith(CHECKBOX_PREFIX)) {
                 checkBoxes.put(key.substring(CHECKBOX_PREFIX.length()), parameters.get(key));
             } else if (key.startsWith(RADIOBUTTON_PREFIX)) {
@@ -135,10 +156,21 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
             } else {
                 int index = key.indexOf("@");
                 String parameter = (index > 0) ? key.substring(0, index) : key;
-                Struct s = structs.get(parameter);
+
+                Struct s;
+                if (optional) {
+                    s = result.optional.get(parameter);
+                } else {
+                    s = result.required.get(parameter);
+                }
+
                 if (s == null) {
                     s = new Struct();
-                    structs.put(parameter, s);
+                    if (optional) {
+                        result.optional.put(parameter, s);
+                    } else {
+                        result.required.put(parameter, s);
+                    }
                 }
 
                 if (index > 0) {
@@ -155,17 +187,20 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         }
 
         // Remove all the existing checkbox, radio and action keys
-        checkBoxes.keySet().removeAll(structs.keySet());
-        radioButtons.keySet().removeAll(structs.keySet());
+        checkBoxes.keySet().removeAll(result.optional.keySet());
+        checkBoxes.keySet().removeAll(result.required.keySet());
+        radioButtons.keySet().removeAll(result.optional.keySet());
+        radioButtons.keySet().removeAll(result.required.keySet());
 
         // Add back in any left overs
-        addUncheckedValues(checkBoxes, structs);
-        addUncheckedValues(radioButtons, structs);
+        addUncheckedValues(checkBoxes, result);
+        addUncheckedValues(radioButtons, result);
 
         // Remove actions from the parameter as they should be ignored right now
-        structs.keySet().removeAll(actions);
+        result.optional.keySet().removeAll(actions);
+        result.required.keySet().removeAll(actions);
 
-        return structs;
+        return result;
     }
 
     private boolean empty(String[] values) {
@@ -180,19 +215,24 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         return true;
     }
 
-    private void addUncheckedValues(Map<String, String[]> map, Map<String, Struct> structs) {
+    private void addUncheckedValues(Map<String, String[]> map, Parameters parameters) {
         for (String key : map.keySet()) {
             String[] values = map.get(key);
             if (values != null && values.length == 1 && values[0].equals("")) {
-                structs.put(key, new Struct());
+                parameters.required.put(key, new Struct());
             } else {
-                structs.put(key, new Struct(values));
+                parameters.required.put(key, new Struct(values));
             }
         }
     }
 
+    private class Parameters {
+        private Map<String, Struct> required = new LinkedHashMap<String, Struct>();
+        private Map<String, Struct> optional = new LinkedHashMap<String, Struct>();
+    }
+
     private class Struct {
-        Map<String, String> attributes = new HashMap<String, String>();
+        Map<String, String> attributes = new LinkedHashMap<String, String>();
         String[] values;
 
         private Struct() {
