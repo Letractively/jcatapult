@@ -1,10 +1,10 @@
 @echo off
 
 ::
-:: Run ant jar first
+:: Run svnt jar first
 ::
 echo Running ant build
-call ant jar> output
+call svnt jar> output
 del output
 
 ::
