@@ -1,4 +1,0 @@
-The jars currently in this lib directory were copied from the
-JAX-WS 2.1.1 and JAXB 2.1.4 distributions, with jars from JAXB
-superceding jars from JAX-WS.  The jar filenames were changed
-to include version numbers following our conventions.
