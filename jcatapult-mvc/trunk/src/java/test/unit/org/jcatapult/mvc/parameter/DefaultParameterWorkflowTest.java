@@ -30,6 +30,7 @@ import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.mvc.parameter.el.ExpressionException;
 import org.jcatapult.servlet.WorkflowChain;
 import org.junit.Test;
 
@@ -110,6 +111,51 @@ public class DefaultParameterWorkflowTest {
         ExpressionEvaluator expressionEvaluator = EasyMock.createNiceMock(ExpressionEvaluator.class);
         expressionEvaluator.setValue(eq("user.checkbox['default']"), same(action), aryEq(array("false")), eq(new HashMap<String, String>()));
         expressionEvaluator.setValue(eq("user.radio['default']"), same(action), aryEq(array("false")), eq(new HashMap<String, String>()));
+        EasyMock.replay(expressionEvaluator);
+
+        ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
+        EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.replay(invocation);
+
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
+
+        MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
+        EasyMock.replay(messageStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator);
+        workflow.perform(chain);
+
+        EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
+    }
+
+    /**
+     * Tests image submit button which will try to set the x and y values into the action, but they
+     * should be optional and therefore throw exceptions that are ignored.
+     */
+    @Test
+    public void testImageSubmitButton() throws IOException, ServletException {
+        Action action = new Action();
+
+        Map<String, String[]> values = new HashMap<String, String[]>();
+        values.put("__jc_a_submit", array(""));
+        values.put("submit.x", array("1"));
+        values.put("submit.y", array("2"));
+
+        final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameterMap()).andReturn(values);
+        EasyMock.replay(request);
+
+        ExpressionEvaluator expressionEvaluator = EasyMock.createNiceMock(ExpressionEvaluator.class);
+        expressionEvaluator.setValue(eq("submit.x"), same(action), aryEq(array("1")), eq(new HashMap<String, String>()));
+        expectLastCall().andThrow(new ExpressionException("Not property x"));
+        expressionEvaluator.setValue(eq("submit.y"), same(action), aryEq(array("2")), eq(new HashMap<String, String>()));
+        expectLastCall().andThrow(new ExpressionException("Not property y"));
         EasyMock.replay(expressionEvaluator);
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
