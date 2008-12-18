@@ -9,7 +9,7 @@
   <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="mysql" version="1.0.1"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
-  <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0-{integration}"/>
+  <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0"/>
 
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
@@ -34,7 +34,7 @@
   <!-- set to true if this libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="true"/>
 
-  <property name="version.jcatapult" value="1.0-RC9-{integration}"/>
+  <property name="version.jcatapult" value="1.0-RC9"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
