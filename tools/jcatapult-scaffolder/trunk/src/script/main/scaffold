@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Run ant jar first
-echo "Running the Ant build"
-if ! ant jar > /dev/null 2>&1; then
-  echo "Build failed"
+# Run svnt jar first
+echo "Running the Savant build"
+if ! svnt jar > /dev/null 2>&1; then
+  echo "Build failed.  The JCatapult Scaffolder requires that the Savant dependency management system be installed.  Please refer to the Savant 'Getting Started' documentation for reference (http://code.google.com/p/savant-build/wiki/GettingStarted)"
   exit 1
 fi
 
