@@ -3,7 +3,7 @@
 # Run svnt jar first
 echo "Running the Savant build"
 if ! svnt jar > /dev/null 2>&1; then
-  echo "Build failed.  Please ensure that your project compiles successfully and that installed the Savant dependency management system.  For Savant install instructions, please reference 'Getting Started' documentation for reference the getting started docs here -> (http://code.google.com/p/savant-build/wiki/GettingStarted)"
+  echo "Build failed.  Please ensure that your project compiles successfully by running 'svnt compile'."
   exit 1
 fi
 
