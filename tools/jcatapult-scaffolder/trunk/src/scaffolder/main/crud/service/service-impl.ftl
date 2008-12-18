@@ -71,7 +71,7 @@ public class ${type.name}ServiceImpl implements ${type.name}Service {
     public void persist(${type.name} ${type.fieldName}<@global.idParamsList />) {
 <#list type.allFields as field>
   <#if field.hasAnnotation("javax.persistence.ManyToOne")>
-        ${field.mainType.name} ${field.name} = persistenceService.findById(${field.mainType.name}.class, ${field.name}Id);
+        ${field.mainType.name} ${field.name} = persistenceService.findById(${field.mainType.name}.class, ${field.name}ID);
         ${type.fieldName}.set${field.methodName}(${field.name});
 
   <#elseif field.hasAnnotation("javax.persistence.ManyToMany") && field.mainType.name != "java.util.Map">
