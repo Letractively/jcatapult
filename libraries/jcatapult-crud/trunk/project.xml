@@ -99,6 +99,6 @@
   -->
   <publishWorkflow id="workflow.publish.remote">
     <process type="unifiedSVN" repository="https://svn.inversoft.org/savant-deps"
-             username="${svn.username}" password="${svn.password}"/>
+             username="${svn.release.username}" password="${svn.release.password}"/>
    </publishWorkflow>
 </project>
