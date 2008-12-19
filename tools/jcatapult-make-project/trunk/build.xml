@@ -190,7 +190,9 @@ You will be prompted for the following information:
                value="${create.project.name}"/>
 
       <!-- Generate better iml and classpath IDE files -->
-      <ant dir="${create.project.dir}/${create.project.name}" target="ide"/>
+      <exec executable="svnt" dir="${create.project.dir}/${create.project.name}">
+        <arg line="ide"/>
+      </exec>
     </sequential>
   </macrodef>
 
@@ -223,8 +225,10 @@ You will be prompted for the following information:
         SavantContext context = new DefaultSavantContext(projectConfig, new File("."), new File("."))
         DependencyResolveMediator mediator = new DependencyResolveMediator()
         try {
-          mediator.mediate(context, "jcatapult-deps", null, ["compile"] as Set, false)
+          mediator.mediate(context, "jcatapult-deps", "workflow.project", ["compile"] as Set, false)
         } catch (Exception e) {
+          e.printStackTrace()
+          ant.echo("Exception is ${e.getMessage()}")
           ant.fail("Unable to find JCatapult version")
         }
 
