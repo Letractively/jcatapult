@@ -18,6 +18,7 @@ package org.jcatapult.mvc.parameter.el;
 import java.beans.Introspector;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,7 +40,7 @@ import static net.java.lang.reflect.ReflectionTools.*;
  */
 public class MemberAccessor extends Accessor {
     private static final Map<String, MethodVerifier> verifiers = new HashMap<String, MethodVerifier>();
-    private static Map<Class, Map<String, PropertyInfo>> cache = new WeakHashMap<Class, Map<String, PropertyInfo>>();
+    private static final Map<Class, Map<String, PropertyInfo>> cache = new WeakHashMap<Class, Map<String, PropertyInfo>>();
     private static final Method ERROR;
 
     static {
@@ -144,6 +145,42 @@ public class MemberAccessor extends Accessor {
     }
 
     /**
+     * This first checks for the annotation on the method and then the field. If this member is a field
+     * it doesn't check for any getter or setter.
+     *
+     * @param   type The annotation type.
+     * @return  The annotation or null.
+     */
+    @Override
+    protected <T extends Annotation> T getAnnotation(Class<T> type) {
+        if (propertyInfo != null) {
+            Map<String, Method> methods = propertyInfo.getMethods();
+            for (Method method : methods.values()) {
+                if (method.isAnnotationPresent(type)) {
+                    return method.getAnnotation(type);
+                }
+            }
+
+            // Get the field for the property
+            String name = propertyInfo.getName();
+            try {
+                Field field = declaringClass.getField(name);
+                if (field.isAnnotationPresent(type)) {
+                    return field.getAnnotation(type);
+                }
+            } catch (NoSuchFieldException nsfe) {
+                // Smother
+            }
+        }
+
+        if (field != null && field.isAnnotationPresent(type)) {
+            return field.getAnnotation(type);
+        }
+
+        return null;
+    }
+
+    /**
      * @return  Returns this.
      */
     public MemberAccessor getMemberAccessor() {
@@ -175,8 +212,7 @@ public class MemberAccessor extends Accessor {
 
             boolean errorMethods = false;
             Method[] methods = beanClass.getMethods();
-            for (int i = 0; i < methods.length; i++) {
-                Method method = methods[i];
+            for (Method method : methods) {
                 PropertyName name = getPropertyNames(method);
                 if (name == null) {
                     continue;

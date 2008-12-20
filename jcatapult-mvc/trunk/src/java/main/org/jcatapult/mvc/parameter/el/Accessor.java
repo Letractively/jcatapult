@@ -72,6 +72,8 @@ public abstract class Accessor {
 
     protected abstract void set(Object value, Context context);
 
+    protected abstract <T extends Annotation> T getAnnotation(Class<T> type);
+
     public final Object get(Object object, Context context) {
         this.object = object;
         return get(context);

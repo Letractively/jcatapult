@@ -71,6 +71,7 @@ public class DefaultParameterWorkflowTest {
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
         EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.expect(invocation.uri()).andReturn("/test");
         EasyMock.replay(invocation);
 
         ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -78,7 +79,7 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(actionInvocationStore);
 
         MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
-        messageStore.addConversionError(eq("user.inches"), eq("org.example.domain.Action"), eq(new HashMap<String, String>()), eq("tall"));
+        messageStore.addConversionError(eq("user.inches"), eq("/test"), eq(new HashMap<String, String>()), eq("tall"));
         EasyMock.replay(messageStore);
 
         WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);

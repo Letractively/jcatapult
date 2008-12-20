@@ -49,6 +49,28 @@ public interface MessageStore {
     throws MissingMessageException;
 
     /**
+     * Adds a file upload size error, which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.The
+     * uri used to look up the message is the current request URI.
+     *
+     * @param   field The field that the file was being set into.
+     * @param   uri The request URI.
+     * @param   size The file size that was too large.
+     * @throws  MissingMessageException If the file size message is missing.
+     */
+    void addFileUploadSizeError(String field, String uri, long size) throws MissingMessageException;
+
+    /**
+     * Adds a file content type error, which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.The
+     * uri used to look up the message is the current request URI.
+     *
+     * @param   field The field that the file was being set into.
+     * @param   uri The request URI.
+     * @param   contentType The file content type that is invalid.
+     * @throws  MissingMessageException If the file size message is missing.
+     */
+    void addFileUploadContentTypeError(String field, String uri, String contentType) throws MissingMessageException;
+
+    /**
      * Adds a field message, which is pulled from the {@link org.jcatapult.l10n.MessageProvider}.
      *
      * @param   scope The scope that the message should be placed into.

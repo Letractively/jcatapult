@@ -15,25 +15,34 @@
  */
 package org.jcatapult.mvc.parameter;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.ExpressionException;
+import org.jcatapult.mvc.parameter.fileupload.FileInfo;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import net.java.util.Pair;
 
 /**
  * <p>
@@ -74,13 +83,20 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
      *
      * @param   chain The workflow chain.
      */
+    @SuppressWarnings("unchecked")
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         Object action = actionInvocation.action();
+        String method = request.getMethod().toLowerCase();
+        String contentType = request.getContentType() != null ? request.getContentType().toLowerCase() : "";
 
-        if (action != null) {
+        if (action != null && (!method.equals("post") ||
+                (method.equals("post") && (contentType.startsWith("application/x-www-form-urlencoded") ||
+                    contentType.startsWith("multipart/"))))) {
+            Map<String, String[]> parameters = request.getParameterMap();
+
             // First grab the structs and then save them to the request
-            Parameters params = getValuesToSet(request);
+            Parameters params = getValuesToSet(parameters);
 
             // Next, process the optional
             for (String key : params.optional.keySet()) {
@@ -112,9 +128,11 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
                 try {
                     expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
                 } catch (ConversionException ce) {
-                    messageStore.addConversionError(key, action.getClass().getName(), struct.attributes, (Object[]) struct.values);
+                    messageStore.addConversionError(key, actionInvocation.uri(), struct.attributes, (Object[]) struct.values);
                 }
             }
+        } else if (action != null) {
+            // TODO Handle setting the request body onto the action  
         }
 
         chain.continueWorkflow();
@@ -126,19 +144,56 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     public void destroy() {
     }
 
+    protected Pair<Map<String, FileInfo>, Map<String, String[]>> handleFiles() {
+        Map<String, FileInfo> files = new HashMap<String, FileInfo>();
+        Map<String, List<String>> params = new HashMap<String, List<String>>();
+
+        FileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        try {
+            List items = upload.parseRequest(request);
+            for (Object item : items) {
+                FileItem fileItem = (FileItem) item;
+                String name = fileItem.getFieldName();
+                if (fileItem.isFormField()) {
+                    String fileName = fileItem.getName();
+                    String contentType = fileItem.getContentType();
+                    File file = File.createTempFile("jcatapult", "fileupload");
+                    fileItem.write(file);
+                    files.put(name, new FileInfo(file, fileName, contentType));
+                } else {
+                    String value = fileItem.getString();
+                    List<String> list = params.get(name);
+                    if (list == null) {
+                        list = new ArrayList<String>();
+                        params.put(name, list);
+                    }
+
+                    list.add(value);
+                }
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to handle file uploads", e);
+        }
+
+        Map<String, String[]> finalParams = new HashMap<String, String[]>();
+        for (String key : params.keySet()) {
+            finalParams.put(key, params.get(key).toArray(new String[params.get(key).size()]));
+        }
+        return Pair.p(files, finalParams);
+    }
+
     /**
      * Cleanses the HTTP request parameters by removing all the special JCatapult MVC marker parameters
      * for checkboxes, radio buttons and actions. It also adds into the parameters null values for
      * any un-checked checkboxes and un-selected radio buttons. It also collects all of the dynamic
      * attributes for each parameter using the {@code @} delimiter character.
      *
-     * @param   request The request.
+     * @param   parameters The request parameters.
      * @return  The parameters to set into the aciton.
      */
-    @SuppressWarnings("unchecked")
-    protected Parameters getValuesToSet(HttpServletRequest request) {
+    protected Parameters getValuesToSet(Map<String, String[]> parameters) {
         Parameters result = new Parameters();
-        Map<String, String[]> parameters = request.getParameterMap();
 
         // Pull out the check box, radio button and action parameter
         Map<String, String[]> checkBoxes = new HashMap<String, String[]>();

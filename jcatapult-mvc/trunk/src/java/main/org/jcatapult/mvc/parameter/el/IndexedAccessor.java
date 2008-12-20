@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.parameter.el;
 
 import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
 
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 

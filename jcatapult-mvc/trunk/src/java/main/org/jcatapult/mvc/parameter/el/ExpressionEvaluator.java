@@ -15,9 +15,10 @@
  */
 package org.jcatapult.mvc.parameter.el;
 
+import java.lang.annotation.Annotation;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collection;
 
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
@@ -120,4 +121,15 @@ public interface ExpressionEvaluator {
      * @return  The list of member values.
      */
     Collection<Object> getAllMemberValues(Object obj);
+
+    /**
+     * Returns the annotation on the given expression end-point. The end point might be a method or
+     * a field.
+     *
+     * @param   type The type of the annotation.
+     * @param   expression The expression.
+     * @param   object The object.
+     * @return  The annotation or null.
+     */
+    <T extends Annotation> T getAnnotation(Class<T> type, String expression, Object action);
 }
