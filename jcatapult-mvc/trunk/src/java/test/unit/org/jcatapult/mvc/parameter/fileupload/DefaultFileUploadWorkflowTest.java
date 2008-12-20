@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.parameter.fileupload;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import org.easymock.IArgumentMatcher;
 import org.jcatapult.config.Configuration;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.fileupload.annotation.FileUpload;
 import org.jcatapult.servlet.WorkflowChain;
@@ -90,7 +92,6 @@ public class DefaultFileUploadWorkflowTest {
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
         EasyMock.expect(invocation.action()).andReturn(action);
-        EasyMock.expect(invocation.uri()).andReturn("/test");
         EasyMock.replay(invocation);
 
         ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -104,7 +105,211 @@ public class DefaultFileUploadWorkflowTest {
         DefaultFileUploadWorkflow workflow = new DefaultFileUploadWorkflow(new HttpServletRequestWrapper(request), actionInvocationStore, null, expressionEvaluator, config);
         workflow.perform(chain);
 
-        EasyMock.verify(request, config, chain);
+        EasyMock.verify(request, config, chain, actionInvocationStore, invocation, expressionEvaluator);
+    }
+
+    @Test
+    public void testFilesNoAnnotationSizeError() throws IOException, ServletException {
+        String body = FileTools.read("src/java/test/unit/org/jcatapult/mvc/parameter/fileupload/http-test-body.txt").toString();
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("POST");
+        EasyMock.expect(request.getContentType()).andReturn("multipart/form-data, boundary=AaB03x").times(2);
+        EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
+        EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
+        EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.replay(request);
+
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getStringArray("jcatapult.mvc.file-upload.allowed-content-types")).andReturn(new String[0]);
+        EasyMock.expect(config.getLong("jcatapult.mvc.file-upload.max-size", 1024000)).andReturn(1l);
+        EasyMock.replay(config);
+
+        Object action = new Object();
+        ExpressionEvaluator expressionEvaluator = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.expect(expressionEvaluator.getAnnotation(FileUpload.class, "userfile", action)).andReturn(null);
+        EasyMock.replay(expressionEvaluator);
+
+        ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
+        EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.expect(invocation.uri()).andReturn("/test");
+        EasyMock.replay(invocation);
+
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
+
+        MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
+        messageStore.addFileUploadSizeError("userfile", "/test", 4);
+        EasyMock.replay(messageStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultFileUploadWorkflow workflow = new DefaultFileUploadWorkflow(new HttpServletRequestWrapper(request), actionInvocationStore, messageStore, expressionEvaluator, config);
+        workflow.perform(chain);
+
+        EasyMock.verify(request, config, chain, actionInvocationStore, invocation, expressionEvaluator, messageStore);
+    }
+
+    @Test
+    public void testFilesNoAnnotationContentTypeError() throws IOException, ServletException {
+        String body = FileTools.read("src/java/test/unit/org/jcatapult/mvc/parameter/fileupload/http-test-body.txt").toString();
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("POST");
+        EasyMock.expect(request.getContentType()).andReturn("multipart/form-data, boundary=AaB03x").times(2);
+        EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
+        EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
+        EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.replay(request);
+
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getStringArray("jcatapult.mvc.file-upload.allowed-content-types")).andReturn(new String[]{"test/xml"});
+        EasyMock.expect(config.getLong("jcatapult.mvc.file-upload.max-size", 1024000)).andReturn(10l);
+        EasyMock.replay(config);
+
+        Object action = new Object();
+        ExpressionEvaluator expressionEvaluator = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.expect(expressionEvaluator.getAnnotation(FileUpload.class, "userfile", action)).andReturn(null);
+        EasyMock.replay(expressionEvaluator);
+
+        ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
+        EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.expect(invocation.uri()).andReturn("/test");
+        EasyMock.replay(invocation);
+
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
+
+        MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
+        messageStore.addFileUploadContentTypeError("userfile", "/test", "text/plain");
+        EasyMock.replay(messageStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultFileUploadWorkflow workflow = new DefaultFileUploadWorkflow(new HttpServletRequestWrapper(request), actionInvocationStore, messageStore, expressionEvaluator, config);
+        workflow.perform(chain);
+
+        EasyMock.verify(request, config, chain, actionInvocationStore, invocation, expressionEvaluator, messageStore);
+    }
+
+    @Test
+    public void testFilesAnnotationSizeError() throws IOException, ServletException {
+        String body = FileTools.read("src/java/test/unit/org/jcatapult/mvc/parameter/fileupload/http-test-body.txt").toString();
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("POST");
+        EasyMock.expect(request.getContentType()).andReturn("multipart/form-data, boundary=AaB03x").times(2);
+        EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
+        EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
+        EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.replay(request);
+
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getStringArray("jcatapult.mvc.file-upload.allowed-content-types")).andReturn(new String[0]);
+        EasyMock.expect(config.getLong("jcatapult.mvc.file-upload.max-size", 1024000)).andReturn(10l);
+        EasyMock.replay(config);
+
+        Object action = new Object();
+        ExpressionEvaluator expressionEvaluator = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.expect(expressionEvaluator.getAnnotation(FileUpload.class, "userfile", action)).andReturn(new FileUpload() {
+            public long maxSize() {
+                return 1;
+            }
+
+            public String[] contentTypes() {
+                return new String[0];
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return FileUpload.class;
+            }
+        });
+        EasyMock.replay(expressionEvaluator);
+
+        ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
+        EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.expect(invocation.uri()).andReturn("/test");
+        EasyMock.replay(invocation);
+
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
+
+        MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
+        messageStore.addFileUploadSizeError("userfile", "/test", 4);
+        EasyMock.replay(messageStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultFileUploadWorkflow workflow = new DefaultFileUploadWorkflow(new HttpServletRequestWrapper(request), actionInvocationStore, messageStore, expressionEvaluator, config);
+        workflow.perform(chain);
+
+        EasyMock.verify(request, config, chain, actionInvocationStore, invocation, expressionEvaluator, messageStore);
+    }
+
+    @Test
+    public void testFilesAnnotationContentTypeError() throws IOException, ServletException {
+        String body = FileTools.read("src/java/test/unit/org/jcatapult/mvc/parameter/fileupload/http-test-body.txt").toString();
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("POST");
+        EasyMock.expect(request.getContentType()).andReturn("multipart/form-data, boundary=AaB03x").times(2);
+        EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
+        EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
+        EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.replay(request);
+
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getStringArray("jcatapult.mvc.file-upload.allowed-content-types")).andReturn(new String[0]);
+        EasyMock.expect(config.getLong("jcatapult.mvc.file-upload.max-size", 1024000)).andReturn(10l);
+        EasyMock.replay(config);
+
+        Object action = new Object();
+        ExpressionEvaluator expressionEvaluator = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.expect(expressionEvaluator.getAnnotation(FileUpload.class, "userfile", action)).andReturn(new FileUpload() {
+            public long maxSize() {
+                return 10;
+            }
+
+            public String[] contentTypes() {
+                return new String[]{"text/xml"};
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return FileUpload.class;
+            }
+        });
+        EasyMock.replay(expressionEvaluator);
+
+        ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
+        EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.expect(invocation.uri()).andReturn("/test");
+        EasyMock.replay(invocation);
+
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
+
+        MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
+        messageStore.addFileUploadContentTypeError("userfile", "/test", "text/plain");
+        EasyMock.replay(messageStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultFileUploadWorkflow workflow = new DefaultFileUploadWorkflow(new HttpServletRequestWrapper(request), actionInvocationStore, messageStore, expressionEvaluator, config);
+        workflow.perform(chain);
+
+        EasyMock.verify(request, config, chain, actionInvocationStore, invocation, expressionEvaluator, messageStore);
     }
 
     public <T> T capture() {
