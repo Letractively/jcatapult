@@ -24,6 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.lang.annotation.Annotation;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.locale.annotation.CurrentLocale;
@@ -205,6 +206,38 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
         }
 
         return values;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T extends Annotation> T getAnnotation(Class<T> type, String expression, Object object) {
+        List<String> atoms = parse(expression);
+        Context context = new Context(converterProvider, expression, atoms);
+        context.init(object);
+        while (context.hasNext()) {
+            String atom = context.next();
+            context.initAccessor(atom);
+            if (context.skip()) {
+                if (!context.hasNext()) {
+                    throw new ExpressionException("Encountered an indexed property without an index in the " +
+                        "expression [" + expression + "]");
+                }
+
+                continue;
+            }
+
+            if (context.hasNext()) {
+                Object nextValue = context.getCurrentValue();
+                if (nextValue == null) {
+                    nextValue = context.createValue();
+                }
+
+                context.init(nextValue);
+            }
+        }
+
+        return context.getAccessor().getAnnotation(type);
     }
 
     /**

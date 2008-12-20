@@ -66,6 +66,26 @@ public class DefaultMessageStore implements MessageStore {
     /**
      * {@inheritDoc}
      */
+    public void addFileUploadSizeError(String field, String uri, long size) throws MissingMessageException {
+        String key = field + ".fileUploadSize";
+        String message = messageProvider.getMessage(uri, key, size);
+        Scope scope = scopeProvider.lookup(MessageScope.REQUEST);
+        scope.addFieldMessage(MessageType.ERROR, field, message);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addFileUploadContentTypeError(String field, String uri, String contentType) throws MissingMessageException {
+        String key = field + ".fileUploadContentType";
+        String message = messageProvider.getMessage(uri, key, contentType);
+        Scope scope = scopeProvider.lookup(MessageScope.REQUEST);
+        scope.addFieldMessage(MessageType.ERROR, field, message);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void addFieldMessage(MessageScope scope, String field, String uri, String key, Object... values)
     throws MissingMessageException {
         String message = messageProvider.getMessage(uri, key, (Object[]) values);

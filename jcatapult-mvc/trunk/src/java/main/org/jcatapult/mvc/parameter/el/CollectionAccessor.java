@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.parameter.el;
 
 import java.lang.reflect.Array;
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
@@ -71,6 +72,17 @@ public class CollectionAccessor extends Accessor {
     public void set(Object value, Context context) {
         object = pad(object, context);
         setValueIntoCollection(object, index, value);
+    }
+
+    /**
+     * Returns the annotation of the member this collection belongs to.
+     *
+     * @param   type The annotation type.
+     * @return  The annotation or null.
+     */
+    @Override
+    protected <T extends Annotation> T getAnnotation(Class<T> type) {
+        return memberAccessor.getAnnotation(type);
     }
 
     /**
