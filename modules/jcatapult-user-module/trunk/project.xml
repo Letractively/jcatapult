@@ -12,7 +12,8 @@
   <plugin group="plugins.savant.inversoft.org" name="tomcat" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
   <plugin group="plugins.savant.jcatapult.org" name="module" version="1.0"/>
-  <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0-{integration}"/>
+  <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0"/>
+  <plugin group="plugins.savant.jcatapult.org" name="security" version="1.0"/>
   
   <!-- import property file properties -->
   <properties file="${user.home}/build.properties"/>
@@ -33,7 +34,7 @@
 
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult" value="1.0-RC9-{integration}"/>
+  <property name="version.jcatapult" value="1.0-RC9"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
@@ -51,9 +52,9 @@
       <artifact group="jcatapult.org" name="jcatapult-security" version="${version.jcatapult}"/>
 
       <!-- jcatapult libs -->
-      <artifact group="libraries.jcatapult.org" name="jcatapult-commerce" version="1.0-RC9-{integration}"/>
-      <artifact group="libraries.jcatapult.org" name="jcatapult-email" version="1.0-RC9-{integration}"/>
-      <artifact group="libraries.jcatapult.org" name="jcatapult-crud" version="1.0-RC9-{integration}"/>
+      <artifact group="libraries.jcatapult.org" name="jcatapult-commerce" version="${version.jcatapult}"/>
+      <artifact group="libraries.jcatapult.org" name="jcatapult-email" version="${version.jcatapult}"/>
+      <artifact group="libraries.jcatapult.org" name="jcatapult-crud" version="${version.jcatapult}"/>
 
       <!-- joda -->
       <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
