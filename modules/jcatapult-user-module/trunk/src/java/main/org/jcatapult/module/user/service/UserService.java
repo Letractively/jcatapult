@@ -1,15 +1,31 @@
+/*
+ * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ */
 package org.jcatapult.module.user.service;
 
 import java.net.InetAddress;
 import java.util.List;
 import java.util.Map;
 
-import com.google.inject.ImplementedBy;
-import net.java.error.ErrorList;
-
 import org.jcatapult.module.user.domain.AuditableCreditCard;
 import org.jcatapult.module.user.domain.Role;
 import org.jcatapult.module.user.domain.User;
+
+import com.google.inject.ImplementedBy;
+import net.java.error.ErrorList;
 
 /**
  * <p>
@@ -124,29 +140,30 @@ public interface UserService {
      * configuration options in order to correctly configure the emails.
      *
      * <p>
-     * <strong>inversoft.modules.user.password.email.template</strong> - A String configuration
+     * <strong>jcatapult.modules.user.password.email.template</strong> - A String configuration
      * parameter that sets the name of the email template that is executed to generate the reset
      * password email. Defaults to <strong>reset-password</strong>
      * </p>
      * <p>
-     * <strong>inversoft.modules.user.password.email.subject</strong> - A String configuration
+     * <strong>jcatapult.modules.user.password.email.subject</strong> - A String configuration
      * parameter that sets the subject of the email. Defaults to <strong>Password Reset</strong>.
      * </p>
      * <p>
-     * <strong>inversoft.modules.user.password.email.from-address</strong> - A String configuration
+     * <strong>jcatapult.modules.user.password.email.from-address</strong> - A String configuration
      * parameter that sets the from address of the email. This must be configured because it has no
      * default.
      * </p>
      * <p>
-     * <strong>inversoft.modules.user.password.email.from-address-display</strong>  -A String
+     * <strong>jcatapult.modules.user.password.email.from-address-display</strong>  -A String
      * configuration parameter that sets the display name of the from address of the email. This
      * must be configured because it has no default.
      * </p>
      *
      * @param   login The login to setup for password reset.
+     * @param url
      * @return  The result of the reset.
      */
-    UpdateResult resetPassword(String login);
+    UpdateResult resetPassword(String login, String url);
 
     /**
      * Locates the current user based on the username in the {@link org.jcatapult.security.SecurityContext}.

@@ -1,5 +1,18 @@
 /*
- * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
+ * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
  */
 package org.jcatapult.module.user.service;
 
@@ -39,28 +52,28 @@ public class DefaultUserConfiguration implements UserConfiguration {
     public static final String EMAIL_OPTIONS_FLAG = "emailOptions";
 
     /* Form constants */
-    public static final String NAME = "inversoft.modules.user.fields.name";
-    public static final String NAME_REQUIRED = "inversoft.modules.user.fields.name-required";
-    public static final String BUSINESS = "inversoft.modules.user.fields.business";
-    public static final String BUSINESS_REQUIRED = "inversoft.modules.user.fields.business-required";
-    public static final String HOME_ADDRESS = "inversoft.modules.user.fields.home-address";
-    public static final String HOME_ADDRESS_REQUIRED = "inversoft.modules.user.fields.home-address-required";
-    public static final String WORK_ADDRESS = "inversoft.modules.user.fields.work-address";
-    public static final String WORK_ADDRESS_REQUIRED = "inversoft.modules.user.fields.work-address-required";
-    public static final String HOME_PHONE = "inversoft.modules.user.fields.home-phone";
-    public static final String HOME_PHONE_REQUIRED = "inversoft.modules.user.fields.home-phone-required";
-    public static final String WORK_PHONE = "inversoft.modules.user.fields.work-phone";
-    public static final String WORK_PHONE_REQUIRED = "inversoft.modules.user.fields.work-phone-required";
-    public static final String CELL_PHONE = "inversoft.modules.user.fields.cell-phone";
-    public static final String CELL_PHONE_REQUIRED= "inversoft.modules.user.fields.cell-phone-required";
-    public static final String EMAIL_OPTIONS = "inversoft.modules.user.fields.email-options";
+    public static final String NAME = "jcatapult.modules.user.fields.name";
+    public static final String NAME_REQUIRED = "jcatapult.modules.user.fields.name-required";
+    public static final String BUSINESS = "jcatapult.modules.user.fields.business";
+    public static final String BUSINESS_REQUIRED = "jcatapult.modules.user.fields.business-required";
+    public static final String HOME_ADDRESS = "jcatapult.modules.user.fields.home-address";
+    public static final String HOME_ADDRESS_REQUIRED = "jcatapult.modules.user.fields.home-address-required";
+    public static final String WORK_ADDRESS = "jcatapult.modules.user.fields.work-address";
+    public static final String WORK_ADDRESS_REQUIRED = "jcatapult.modules.user.fields.work-address-required";
+    public static final String HOME_PHONE = "jcatapult.modules.user.fields.home-phone";
+    public static final String HOME_PHONE_REQUIRED = "jcatapult.modules.user.fields.home-phone-required";
+    public static final String WORK_PHONE = "jcatapult.modules.user.fields.work-phone";
+    public static final String WORK_PHONE_REQUIRED = "jcatapult.modules.user.fields.work-phone-required";
+    public static final String CELL_PHONE = "jcatapult.modules.user.fields.cell-phone";
+    public static final String CELL_PHONE_REQUIRED= "jcatapult.modules.user.fields.cell-phone-required";
+    public static final String EMAIL_OPTIONS = "jcatapult.modules.user.fields.email-options";
 
     /* Registration configureation */
-    public static final String REGISTRATION_DISABLED = "inversoft.modules.user.register.disabled";
-    public static final String REGISTRATION_SUCCESS_URI = "inversoft.modules.user.register.success-uri";
-    public static final String LOGOUT_SUCCESS_URI = "inversoft.modules.user.logout.success-uri";
-    public static final String LOGIN_SUCCESS_URI = "inversoft.modules.user.login.success-uri";
-    public static final String LOGIN_URI = "inversoft.modules.user.login.uri";
+    public static final String REGISTRATION_DISABLED = "jcatapult.modules.user.register.disabled";
+    public static final String REGISTRATION_SUCCESS_URI = "jcatapult.modules.user.register.success-uri";
+    public static final String LOGOUT_SUCCESS_URI = "jcatapult.modules.user.logout.success-uri";
+    public static final String LOGIN_SUCCESS_URI = "jcatapult.modules.user.login.success-uri";
+    public static final String LOGIN_URI = "jcatapult.modules.user.login.uri";
 
     private final Map<String, Boolean> flags = new HashMap<String, Boolean>();
     private final String registrationSuccessURI;

@@ -1,16 +1,29 @@
 /*
- * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
+ * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
  */
 package org.jcatapult.module.user.service;
 
 import java.net.InetAddress;
 import java.security.SecureRandom;
+import static java.util.Arrays.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import static java.util.Arrays.asList;
 import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
 
@@ -20,6 +33,9 @@ import org.jcatapult.config.Configuration;
 import org.jcatapult.domain.commerce.Money;
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.service.EmailService;
+import org.jcatapult.module.user.domain.AuditableCreditCard;
+import org.jcatapult.module.user.domain.Role;
+import org.jcatapult.module.user.domain.User;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.security.PasswordEncryptor;
 import org.jcatapult.security.SecurityContext;
@@ -28,10 +44,6 @@ import com.google.inject.Inject;
 import net.java.error.ErrorList;
 import net.java.lang.StringTools;
 import static net.java.lang.StringTools.*;
-
-import org.jcatapult.module.user.domain.AuditableCreditCard;
-import org.jcatapult.module.user.domain.Role;
-import org.jcatapult.module.user.domain.User;
 
 /**
  * <p>
@@ -214,7 +226,7 @@ public class DefaultUserService implements UserService {
     /**
      * {@inheritDoc}
      */
-    public UpdateResult resetPassword(String login) {
+    public UpdateResult resetPassword(String login, String url) {
         User user = findByLogin(login);
         if (user == null || user.isPartial()) {
             return UpdateResult.MISSING;
@@ -231,10 +243,11 @@ public class DefaultUserService implements UserService {
         user.setGuid(build.toString());
         persistenceService.persist(user);
 
-        String template = configuration.getString("inversoft.modules.user.password.email.template", "reset-password");
+        String template = configuration.getString("jcatapult.modules.user.password.email.template", "reset-password");
         emailService.sendEmail(template).
             to(new EmailAddress(user.getLogin())).
             withTemplateParam("user", user).
+            withTemplateParam("url", url).
             later();
         return UpdateResult.SUCCESS;
     }

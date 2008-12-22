@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, Inversoft LLC, All Rights Reserved
+ * Copyright (c) 2007, Jcatapult LLC, All Rights Reserved
  */
 package org.jcatapult.module.user.domain;
 
