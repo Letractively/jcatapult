@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.filemgr.action;
+package org.jcatapult.filemgr.action.jcatapult;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +26,7 @@ import org.jcatapult.config.Configuration;
 import org.jcatapult.filemgr.BaseTest;
 import org.jcatapult.filemgr.service.DefaultFileConfiguration;
 import org.jcatapult.filemgr.service.DefaultFileManagerService;
+import org.jcatapult.mvc.parameter.fileupload.FileInfo;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -51,9 +52,8 @@ public class FckFileManagerTest extends BaseTest {
 
         FckFileManager fm = new FckFileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext));
-        fm.setCommand(FileManagerCommand.FileUpload);
-        fm.setNewFile(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"));
-        fm.setNewFileContentType("application/active-x");
+        fm.command = FileManagerCommand.FileUpload;
+        fm.newFile = new FileInfo(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), "test-file", "application/active-x");
         String result = fm.execute();
         assertEquals("upload", result);
         assertEquals(1, fm.getConnector().getError().getNumber());
@@ -82,18 +82,17 @@ public class FckFileManagerTest extends BaseTest {
 
         FckFileManager fm = new FckFileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext));
-        fm.setCommand(FileManagerCommand.FileUpload);
-        fm.setNewFileContentType("image/gif");
-        fm.setNewFileFileName("foo-bar.xml");
+        fm.command = FileManagerCommand.FileUpload;
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
         temp.deleteOnExit();
-        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
-        fm.setNewFile(temp);
+        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
+        fm.newFile = new FileInfo(temp, "foo-bar.xml", "image/gif");
 
         String result = fm.execute();
         assertEquals("upload", result);
 
+        System.out.println("" + fm.getConnector().getError());
         assertNull(fm.getConnector().getError());
         assertEquals(0, fm.getConnector().getUploadResult().getResultCode());
         assertEquals("/foo/some-dir/foo-bar.xml", fm.getConnector().getUploadResult().getFileURL());

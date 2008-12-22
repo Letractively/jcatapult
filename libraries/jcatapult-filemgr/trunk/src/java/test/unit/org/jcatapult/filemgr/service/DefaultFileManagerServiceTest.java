@@ -129,7 +129,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
         temp.deleteOnExit();
-        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
+        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
@@ -167,7 +167,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
         temp.deleteOnExit();
-        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
+        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
@@ -206,7 +206,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
         temp.deleteOnExit();
-        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
+        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
@@ -238,7 +238,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
         temp.deleteOnExit();
-        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
+        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext);
         Connector connector = service.upload(temp, "foo-bar.xml", "image/gif", null, "");
@@ -276,7 +276,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
         temp.deleteOnExit();
-        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
+        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);
@@ -315,7 +315,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
         temp.deleteOnExit();
-        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/test-file.xml"), temp);
+        FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext);

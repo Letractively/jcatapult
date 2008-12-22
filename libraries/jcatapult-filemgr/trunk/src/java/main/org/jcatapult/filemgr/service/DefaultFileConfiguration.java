@@ -19,6 +19,7 @@ package org.jcatapult.filemgr.service;
 import java.util.Arrays;
 
 import org.jcatapult.config.Configuration;
+import org.jcatapult.mvc.parameter.fileupload.DefaultFileUploadWorkflow;
 
 import com.google.inject.Inject;
 
@@ -57,8 +58,7 @@ public class DefaultFileConfiguration implements FileConfiguration {
     public String[] getFileUploadAllowedContentTypes() {
         String[] value = configuration.getStringArray("jcatapult.file-mgr.file-upload.allowed-content-types");
         if (value == null || value.length == 0) {
-            value = new String[]{"image/jpeg", "image/png", "image/gif", "application/x-shockwave-flash",
-                "application/pdf"};
+            value = DefaultFileUploadWorkflow.DEFAULT_TYPES;
         }
 
         Arrays.sort(value);

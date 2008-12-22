@@ -1,9 +1,10 @@
-package org.jcatapult.filemgr.action;
+package org.jcatapult.filemgr.action.jcatapult;
 
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.convention.annotation.Results;
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.service.FileManagerService;
+import org.jcatapult.mvc.action.result.annotation.Forward;
+import org.jcatapult.mvc.action.result.annotation.Header;
+import org.jcatapult.mvc.action.result.annotation.Stream;
 
 import com.google.inject.Inject;
 
@@ -15,14 +16,13 @@ import com.google.inject.Inject;
  *
  * @author Brian Pontarelli
  */
-@Results({
-    @Result(name = "error", location = "", params = {"status", "500"}, type = "httpheader"),
-    @Result(name = "success", location = "", params = {"contentType", "text/xml"}, type = "stream"),
-    @Result(name = "upload", location = "file-mgr/fck-file-manager.ftl")
-})
+@Header(code = "error", status = 500)
+@Stream(type = "text/xml", name = "result")
+@Forward(code = "uplodate", page = "/file-mgr/fck-file-manager.ftl")
 public class FckFileManager extends FileManager {
     // Output for file upload from the service.
-    private Connector connector;
+    public Connector connector;
+    public String type;
 
     @Inject
     public FckFileManager(FileManagerService fileManagerService) {
@@ -35,8 +35,8 @@ public class FckFileManager extends FileManager {
 
     @Override
     protected String doUpload() {
-        connector = fileManagerService.upload(getNewFile(), getNewFileFileName(), getNewFileContentType(),
-            getType(), getCurrentFolder());
+        connector = fileManagerService.upload(newFile.file, newFile.name, newFile.contentType,
+            type, currentFolder);
         return "upload";
     }
 }

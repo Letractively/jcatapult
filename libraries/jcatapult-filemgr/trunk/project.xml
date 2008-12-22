@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
          name="jcatapult-filemgr"
          group="libraries.jcatapult.org"
-         version="1.0-RC9">
+         version="1.0-RC10">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0.1"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
@@ -28,7 +28,7 @@
 
   <!-- Compile properties -->
   <property name="jdk.project" value="${jdk1.6}"/>
-  <property name="version.jcatapult" value="1.0-{integration}"/>
+  <property name="version.jcatapult" value="1.0-RC10-{integration}"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">

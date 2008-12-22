@@ -13,10 +13,9 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.filemgr.action;
+package org.jcatapult.filemgr.action.jcatapult;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -24,11 +23,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.convention.annotation.Results;
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.service.FileManagerService;
-import org.jcatapult.struts.action.BaseAction;
+import org.jcatapult.mvc.action.result.annotation.Header;
+import org.jcatapult.mvc.action.result.annotation.Stream;
+import org.jcatapult.mvc.parameter.fileupload.FileInfo;
 
 import com.google.inject.Inject;
 
@@ -95,91 +94,43 @@ import com.google.inject.Inject;
  *
  * @author Brian Pontarelli
  */
-@Results({
-    @Result(name = "error", location = "", params = {"status", "500"}, type = "httpheader"),
-    @Result(name = "success", location = "", params = {"contentType", "text/xml"}, type = "stream")
-})
-public class FileManager extends BaseAction {
-    // Service
-    final protected FileManagerService fileManagerService;
+@Header(code = "error", status = 500)
+@Stream(type = "text/xml", name = "response")
+public class FileManager {
+    private static final JAXBContext context;
 
-    private FileManagerCommand command;
-    private String currentFolder;
-    private String newFolderName;
-    private InputStream inputStream;
+    static {
+        try {
+            context = JAXBContext.newInstance(Connector.class);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Service
+    protected final FileManagerService fileManagerService;
+
+    // The command type
+    public FileManagerCommand command;
+
+    // Common parameters for all commands
+    public String currentFolder;
+
+    // Create folder command parameter
+    public String newFolderName;
 
     // Input params for file upload
-    private String type;
-    private File file;
-    private String contentType;
-    private String fileName;
+    public FileInfo newFile;
+
+    // Response properties
+    public long length;
+    public InputStream stream;
 
     @Inject
     public FileManager(FileManagerService fileManagerService) {
         this.fileManagerService = fileManagerService;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public File getNewFile() {
-        return file;
-    }
-
-    public void setNewFile(File newFile) {
-        this.file = newFile;
-    }
-
-    public String getNewFileContentType() {
-        return contentType;
-    }
-
-    public void setNewFileContentType(String newFileContentType) {
-        this.contentType = newFileContentType;
-    }
-
-    public String getNewFileFileName() {
-        return fileName;
-    }
-
-    public void setNewFileFileName(String newFileFileName) {
-        this.fileName = newFileFileName;
-    }
-
-    public FileManagerCommand getCommand() {
-        return command;
-    }
-
-    public void setCommand(FileManagerCommand command) {
-        this.command = command;
-    }
-
-    public String getCurrentFolder() {
-        return currentFolder;
-    }
-
-    public void setCurrentFolder(String currentFolder) {
-        this.currentFolder = currentFolder;
-    }
-
-    public String getNewFolderName() {
-        return newFolderName;
-    }
-
-    public void setNewFolderName(String newFolderName) {
-        this.newFolderName = newFolderName;
-    }
-
-    public InputStream getInputStream() {
-        return inputStream;
-    }
-
-    @Override
     public String execute() {
         // If this is an upload, skip processing and handle control over to the upload action
         if (command == FileManagerCommand.FileUpload) {
@@ -189,16 +140,16 @@ public class FileManager extends BaseAction {
         // Otherwise, process the request according to the command
         Connector connector = null;
         if (command == FileManagerCommand.CreateFolder) {
-            connector = fileManagerService.createFolder(currentFolder, newFolderName, getType());
+            connector = fileManagerService.createFolder(currentFolder, newFolderName, null);
         } else if (command == FileManagerCommand.GetFolders) {
-            connector = fileManagerService.getFolders(currentFolder, getType());
+            connector = fileManagerService.getFolders(currentFolder, null);
         } else if (command == FileManagerCommand.GetFoldersAndFiles) {
-            connector = fileManagerService.getFoldersAndFiles(currentFolder, getType());
+            connector = fileManagerService.getFoldersAndFiles(currentFolder, null);
         }
 
         marshal(connector);
 
-        return SUCCESS;
+        return "success";
     }
 
     /**
@@ -207,25 +158,25 @@ public class FileManager extends BaseAction {
      * @return  The result to return from the execute method in order to provide a response.
      */
     protected String doUpload() {
-        Connector connector = fileManagerService.upload(file, fileName, contentType, type, currentFolder);
+        Connector connector = fileManagerService.upload(newFile.file, newFile.name, newFile.contentType, null, currentFolder);
         marshal(connector);
-        return SUCCESS;
+        return "success";
     }
 
     /**
-     * Marshals the Connector instance into an InputStream that is accessible via the property named {@link #getInputStream()}.
+     * Marshals the Connector instance into an InputStream that is accessible via the property named
+     * {@link #stream}.
      *
      * @param   connector The connector to marshal.
      */
     protected void marshal(Connector connector) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Connector.class);
             Marshaller marshaller = context.createMarshaller();
             StringWriter sw = new StringWriter();
             marshaller.marshal(connector, sw);
 
             String xml = sw.toString();
-            this.inputStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+            this.stream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
         } catch (JAXBException e) {
             // Bad error!
             throw new RuntimeException(e);
