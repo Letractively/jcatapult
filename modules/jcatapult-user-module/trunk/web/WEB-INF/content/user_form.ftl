@@ -1,12 +1,9 @@
 [#ftl/]
-[#--
-  ~ Copyright (c) 2001-2008, Inversoft, All Rights Reserved
-  --]
 [@jc.form action=formAction method="POST"]
   <h3>[@jc.message key="notice"/]</h3>
   [@jc.actionmessages errors=true/]
-  <div id="account-input" class="user-module-input inversoft-module-input">
-    <div id="login-input" class="user-module-input-section inversoft-module-input-section">
+  <div id="account-input" class="user-module-input jcatapult-module-input">
+    <div id="login-input" class="user-module-input-section jcatapult-module-input-section">
       [@jc.text name="user.login" size="30" required=true/]
       [#assign passwordRequired = (formAction != "edit")/]
       [#if formAction == "edit"]
@@ -15,7 +12,7 @@
       [@jc.password name="password" size="12" required=passwordRequired/]
       [@jc.password name="passwordConfirm" size="12" required=passwordRequired/]
     </div>
-    <div id="contact-info-input" class="user-module-input-section inversoft-module-input-section">
+    <div id="contact-info-input" class="user-module-input-section jcatapult-module-input-section">
       [#if settings['name']]
         [@jc.text name="user.name.firstName" size="30" required=settings['nameRequired']/]
         [@jc.text name="user.name.lastName" size="30" required=settings['nameRequired']/]
@@ -25,7 +22,7 @@
       [/#if]
       [#if settings['homeAddress']]
         <h3>[@jc.message key="user.addresses['home']"/]</h3>
-        <div id="home-address-input" class="user-module-input-section inversoft-module-input-section">
+        <div id="home-address-input" class="user-module-input-section jcatapult-module-input-section">
           [@jc.text name="user.addresses['home'].street" size="30" required=settings['homeAddressRequired']/]
           [@jc.text name="user.addresses['home'].city" size="30" required=settings['homeAddressRequired']/]
           [@jc.text name="user.addresses['home'].state" size="30"/]
@@ -35,7 +32,7 @@
       [/#if]
       [#if settings['workAddress']]
         <h3>[@jc.message key="user.addresses['work']"/]</h3>
-        <div id="work-address-input" class="user-module-input-section inversoft-module-input-section">
+        <div id="work-address-input" class="user-module-input-section jcatapult-module-input-section">
           [@jc.text name="user.addresses['work'].street" size="30" required=settings['workAddressRequired']/]
           [@jc.text name="user.addresses['work'].city" size="30" required=settings['workAddressRequired']/]
           [@jc.text name="user.addresses['work'].state" size="30"/]
@@ -44,23 +41,23 @@
         </div>
       [/#if]
       [#if settings['homePhone']]
-        <div id="home-phone-input" class="user-module-input-section inversoft-module-input-section">
+        <div id="home-phone-input" class="user-module-input-section jcatapult-module-input-section">
           [@jc.text name="user.phoneNumbers['home'].number" size="30" required=settings['homePhoneRequired']/]
         </div>
       [/#if]
       [#if settings['workPhone']]
-        <div id="work-phone-input" class="user-module-input-section inversoft-module-input-section">
+        <div id="work-phone-input" class="user-module-input-section jcatapult-module-input-section">
           [@jc.text name="user.phoneNumbers['work'].number" size="30" required=settings['workPhoneRequired']/]
         </div>
       [/#if]
       [#if settings['cellPhone']]
-        <div id="cell-phone-input" class="user-module-input-section inversoft-module-input-section">
+        <div id="cell-phone-input" class="user-module-input-section jcatapult-module-input-section">
           [@jc.text name="user.phoneNumbers['cell'].number" size="30" required=settings['cellPhoneRequired']/]
         </div>
       [/#if]
     </div>
     [#if settings['emailOptions']]
-    <div id="email-options-input" class="user-module-input-section inversoft-module-input-section">
+    <div id="email-options-input" class="user-module-input-section jcatapult-module-input-section">
         [@jc.hidden name="user.properties.map['email_internal'].name" value="email_internal"/]
         [@jc.checkbox name="user.properties.map['email_internal'].value" value="true" required=true defaultChecked=true uncheckedValue="false"/]
         [@jc.hidden name="user.properties.map['email_partners'].name" value="email_partners"/]
@@ -68,7 +65,7 @@
       </div>
     [/#if]
   </div>
-  <div id="account-controls" class="user-module-controls inversoft-module-controls">
+  <div id="account-controls" class="user-module-controls jcatapult-module-controls">
     [@jc.submit name="submit"/]
   </div>
 [/@jc.form]

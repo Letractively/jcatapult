@@ -1,5 +1,18 @@
 /*
- * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
+ * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
  */
 package org.jcatapult.module.user.service;
 
@@ -7,12 +20,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.jcatapult.email.EmailTestHelper;
-
-import com.google.inject.Inject;
 
 import org.jcatapult.module.user.BaseTest;
 import org.jcatapult.module.user.domain.Address;
@@ -22,6 +29,10 @@ import org.jcatapult.module.user.domain.Name;
 import org.jcatapult.module.user.domain.PhoneNumber;
 import org.jcatapult.module.user.domain.Role;
 import org.jcatapult.module.user.domain.User;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -48,7 +59,7 @@ public class DefaultUserServiceTest extends BaseTest {
     @Test
     public void testRegister() throws Exception {
         DefaultUser user = new DefaultUser();
-        user.setCompanyName("Inversoft");
+        user.setCompanyName("Jcatapult");
         user.setName(new Name());
         user.getName().setFirstName("Brian");
         user.getName().setLastName("Pontarelli");
@@ -64,7 +75,7 @@ public class DefaultUserServiceTest extends BaseTest {
     public void testRegisterDuplicate() throws Exception {
         // This user was persisted in testRegister method
         DefaultUser user = new DefaultUser();
-        user.setCompanyName("Inversoft");
+        user.setCompanyName("Jcatapult");
         user.setName(new Name());
         user.getName().setFirstName("Brian");
         user.getName().setLastName("Pontarelli");
@@ -84,7 +95,7 @@ public class DefaultUserServiceTest extends BaseTest {
         assertNotNull(user.getRoles().iterator().next());
 
         user = new DefaultUser();
-        user.setCompanyName("Inversoft");
+        user.setCompanyName("Jcatapult");
         user.setName(new Name());
         user.getName().setFirstName("Brian");
         user.getName().setLastName("Pontarelli");

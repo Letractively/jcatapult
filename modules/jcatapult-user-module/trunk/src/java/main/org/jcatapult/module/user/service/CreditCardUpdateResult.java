@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
+ * Copyright (c) 2001-2008, Jcatapult, All Rights Reserved
  */
 package org.jcatapult.module.user.service;
 

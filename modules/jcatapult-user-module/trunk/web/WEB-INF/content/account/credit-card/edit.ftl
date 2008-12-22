@@ -1,21 +1,18 @@
 [#ftl/]
-[#--
-  ~ Copyright (c) 2001-2008, Inversoft, All Rights Reserved
-  --]
 <html>
 <head>
   <title>[@jc.message key="title"/]</title>
 </head>
 <body>
-<div id="credit-card-edit" class="user-module inversoft-module">
-  <div class="credit-card-edit-header user-module-header inversoft-module-header">
+<div id="credit-card-edit" class="user-module jcatapult-module">
+  <div class="credit-card-edit-header user-module-header jcatapult-module-header">
     <h1>[@jc.message key="heading"/]</h1>
   </div>
-  <div class="credit-card-edit-content user-module-content inversoft-module-content">
+  <div class="credit-card-edit-content user-module-content jcatapult-module-content">
     [@jc.form action="edit" method="POST"]
       <h3>[@jc.message key="notice"/]</h3>
       [@jc.actionmessages errors=true/]
-      <div id="credit-card-fields" class="user-module-fields inversoft-module-fields">
+      <div id="credit-card-fields" class="user-module-fields jcatapult-module-fields">
         [@jc.hidden name="creditCard.id"/]
         [@jc.text name="creditCard.number" required=true size="20"/]
         [@jc.text name="creditCard.svn" required=true size="4"/]
@@ -32,7 +29,7 @@
 
         [@jc.countriesselect name="creditCard.address.country" preferredCodes="US" includeBlank=true required=true/]
       </div>
-      <div id="credit-card-controls" class="user-module-controls inversoft-module-controls">
+      <div id="credit-card-controls" class="user-module-controls jcatapult-module-controls">
         [@jc.submit name="submit"/]
         <a href="/account/summary">[@jc.message key="cancel"/]</a>
       </div>

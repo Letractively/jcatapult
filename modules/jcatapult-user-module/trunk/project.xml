@@ -19,7 +19,7 @@
   <properties file="${user.home}/build.properties"/>
 
   <!--
-    jcatapult-build.properties must contain the following:
+    inversoft-build.properties must contain the following:
       svn.username=<username>
       svn.password=<password>
   -->
@@ -93,7 +93,6 @@
     <fetchWorkflow>
       <process type="unifiedLocalCache"/>
       <process type="unified" url="http://savant.inversoft.org/"/>
-      <process type="unified" url="http://savant.inversoft.com/internal" username="${svn.username}" password="${svn.password}"/>
     </fetchWorkflow>
     <publishWorkflow>
       <process type="unifiedLocalCache"/>
@@ -121,7 +120,7 @@
     another project.
   -->
   <publishWorkflow id="workflow.publish.remote">
-    <process type="unifiedSVN" repository="https://svn.inversoft.com/internal/tools/savant-deps"
-             username="${svn.username}" password="${svn.password}"/>
+    <process type="unifiedSVN" repository="https://svn.inversoft.org/savant-deps"
+             username="${svn.release.username}" password="${svn.release.password}"/>
   </publishWorkflow>
 </project>

@@ -3,6 +3,8 @@
     <output url="file://$MODULE_DIR$/target/classes/main" />
     <exclude-output />
     <output-test url="file://$MODULE_DIR$/target/classes/test/unit" />
+    <testFolder url="file://$MODULE_DIR$/src/conf/test/integration" />
+    <testFolder url="file://$MODULE_DIR$/src/conf/test/unit" />
     <testFolder url="file://$MODULE_DIR$/src/java/test/integration" />
     <testFolder url="file://$MODULE_DIR$/src/java/test/unit" />
     <excludeFolder url="file://$MODULE_DIR$/target" />

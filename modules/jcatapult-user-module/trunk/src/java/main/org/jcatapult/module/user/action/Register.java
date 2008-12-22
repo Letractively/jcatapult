@@ -1,10 +1,24 @@
 /*
- * Copyright (c) 2001-2006, Inversoft, All Rights Reserved
+ * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
  */
 package org.jcatapult.module.user.action;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.module.user.service.RegisterResult;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
@@ -13,8 +27,6 @@ import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.saved.SavedRequestService;
 
 import com.google.inject.Inject;
-
-import org.jcatapult.module.user.service.RegisterResult;
 
 /**
  * <p>
@@ -39,33 +51,33 @@ import org.jcatapult.module.user.service.RegisterResult;
  *
  * <h3>Submit Configuration</h3>
  * <p>
- * <strong>inversoft.modules.user.register.disabled</strong> - This is
+ * <strong>jcatapult.modules.user.register.disabled</strong> - This is
  * a boolean configuration element that can be used to disable user registration
  * for any aplication. If registration is disabled and the user is attempting
  * to submit a registration (hacking or some old form), this will forward the
  * request to register.jsp. Defaults to <strong>false</strong>.
  * </p>
  * <p>
- * <strong>inversoft.modules.user.register.disabled-message-key</strong> -
+ * <strong>jcatapult.modules.user.register.disabled-message-key</strong> -
  * This is a String configuration element that contains the key used to
  * fetch the message displayed to users from the Struts2 resource bundle
  * if the registration is disabled. Defaults to <strong>disabled</strong>.
  * </p>
  * <p>
- * <strong>inversoft.modules.user.register.exists-message-key</strong> -
+ * <strong>jcatapult.modules.user.register.exists-message-key</strong> -
  * This is a String configuration element that contains the key used to
  * fetch the message displayed to users from the Struts2 resource bundle
  * if the username has already been registered. Defaults to <strong>exists</strong>.
  * </p>
  * <p>
- * <strong>inversoft.modules.user.register.error-message-key</strong> -
+ * <strong>jcatapult.modules.user.register.error-message-key</strong> -
  * This is a String configuration element that contains the key used to
  * fetch the message displayed to users from the Struts2 resource bundle
  * if the registration failed due to an unknown error. Defaults to
  * <strong>error</strong>.
  * </p>
  * <p>
- * <strong>inversoft.modules.user.register.success-uri</strong> -
+ * <strong>jcatapult.modules.user.register.success-uri</strong> -
  * This is a String configuration element that contains the URI that the user
  * is redirected to after a successful registration. If there is a saved
  * request (i.e. the user clicked a link or submitted a form that required

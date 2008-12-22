@@ -1,18 +1,15 @@
 [#ftl/]
 [#assign js=JspTaglibs["http://www.jcatapult.org/jcatapult-security/tags"]/]
-[#--
-  ~ Copyright (c) 2001-2008, Inversoft, All Rights Reserved
-  --]
 <html>
 <head>
   <title>[@jc.message key="title"/]</title>
 </head>
 <body>
-<div id="login" class="user-module inversoft-module">
-  <div class="security-header user-module-header inversoft-module-header">
+<div id="login" class="user-module jcatapult-module">
+  <div class="security-header user-module-header jcatapult-module-header">
     <h1>[@jc.message key="title"/]</h1>
   </div>
-  <div class="security-content user-module-content inversoft-module-content">
+  <div class="security-content user-module-content jcatapult-module-content">
     <form action="/jcatapult-security-check" method="POST">
       <h3>[@jc.message key="notice"/]</h3>
       <ul class="field-errors">
@@ -26,7 +23,7 @@
 
       [@jc.text name="j_username" id="j_username" size="30" required=true /]
       [@jc.password name="j_password" id="j_password" size="30" required=true/]
-      <div id="login-controls" class="user-module-controls inversoft-module-controls">
+      <div id="login-controls" class="user-module-controls jcatapult-module-controls">
         [@jc.submit name="login"/]
       </div>
 
