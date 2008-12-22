@@ -28,7 +28,7 @@
   persistence.xml for module testing in development.
 -->
 <project name="module">
-  <dirname property="dir.plugin.module" file="${ant.file.jar}"/>
+  <dirname property="dir.plugin.module" file="${ant.file.module}"/>
   <import file="${dir.plugin.module}/build-project.xml"/>
   <import file="${dir.plugin.module}/module-macros.xml"/>
 

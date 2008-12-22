@@ -99,12 +99,12 @@
         Document doc = new SAXBuilder().build(new File("project.xml"));
 
         // See if it already has the module
-        XPath xpath = XPath.newInstance("//project:artifact[@name='@{name}']");
+        XPath xpath = XPath.newInstance("//project:artifact[@name='@{project}']");
         xpath.addNamespace("project", "http://www.inversoft.org/schemas/savant-2.0/project");
         Element elem = xpath.selectSingleNode(doc.getRootElement());
         if (elem != null) {
-          ant.echo("This project already contains the module @{name}.");
-          ant.fail("This project already contains the module @{name}.");
+          ant.echo("This project already contains the module @{project}.");
+          ant.fail("This project already contains the module @{project}.");
         }
 
         // Find the artifactGroup element to add the dependency to
@@ -252,8 +252,19 @@
         </moduleClasspath>
       </module_add_entities>
 
-      <ant target="ide" inheritall="false"/>
-      <ant target="create-main-database" inheritall="false"/>
+      <groovy>
+        String cmd
+        if (System.getProperty("os.name").contains("Windows")) {
+          String savantHome = properties['savant.home']
+          cmd = "${savantHome}\\bin\\svnt.bat"
+        } else {
+          cmd = "svnt"
+        }
+
+        ant.exec(executable: cmd) {
+          arg(line: "ide create-main-database")
+        }
+      </groovy>
     </sequential>
   </macrodef>
 </project>

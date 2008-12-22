@@ -16,6 +16,9 @@
    language governing permissions and limitations under the License.
 -->
 <project name="module-project">
+  <dirname property="dir.plugin.module" file="${ant.file.module-project}"/>
+  <import file="${dir.plugin.module}/module-macros.xml"/>
+
   <!-- Adds the module to a project -->
   <target name="add-module" description="Adds a module to the current project.">
     <input message="Enter Savant group that the module is in (i.e. modules.example.com)" addproperty="module.group"/>
