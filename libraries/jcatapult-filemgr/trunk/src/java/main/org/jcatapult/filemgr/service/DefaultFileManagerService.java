@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 
-import org.jcatapult.filemgr.action.FileManagerCommand;
+import org.jcatapult.filemgr.action.jcatapult.FileManagerCommand;
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.domain.CurrentFolder;
 import org.jcatapult.filemgr.domain.Error;

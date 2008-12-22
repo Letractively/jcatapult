@@ -53,6 +53,7 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
     <option name="MAXIMUM_HEAP_SIZE" value="128" />
   </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
@@ -206,7 +207,8 @@
         <inspection_tool class="InstanceofCatchParameter" level="WARNING" enabled="false" />
         <inspection_tool class="SingleCharacterStartsWith" level="WARNING" enabled="false" />
         <inspection_tool class="ImplicitNumericConversion" level="WARNING" enabled="false">
-          <option name="m_ignoreWideningConversions" value="false" />
+          <option name="ignoreWideningConversions" value="false" />
+          <option name="ignoreCharConversions" value="false" />
         </inspection_tool>
         <inspection_tool class="UnnecessaryInterfaceModifier" level="WARNING" enabled="false" />
         <inspection_tool class="InstanceVariableInitialization" level="WARNING" enabled="false">
@@ -459,7 +461,9 @@
           <option name="m_maxLength" value="32" />
         </inspection_tool>
         <inspection_tool class="CheckedExceptionClass" level="WARNING" enabled="false" />
-        <inspection_tool class="CastThatLosesPrecision" level="WARNING" enabled="false" />
+        <inspection_tool class="CastThatLosesPrecision" level="WARNING" enabled="false">
+          <option name="ignoreIntegerCharCasts" value="false" />
+        </inspection_tool>
         <inspection_tool class="SwitchStatementWithConfusingDeclaration" level="WARNING" enabled="false" />
         <inspection_tool class="EmptyTryBlock" level="WARNING" enabled="false" />
         <inspection_tool class="ManualArrayCopy" level="WARNING" enabled="false" />
@@ -470,8 +474,13 @@
         <inspection_tool class="OverlyComplexArithmeticExpression" level="WARNING" enabled="false">
           <option name="m_limit" value="6" />
         </inspection_tool>
-        <inspection_tool class="ConditionalExpression" level="WARNING" enabled="false" />
-        <inspection_tool class="UnnecessaryParentheses" level="WARNING" enabled="false" />
+        <inspection_tool class="ConditionalExpression" level="WARNING" enabled="false">
+          <option name="ignoreSimpleAssignmentsAndReturns" value="false" />
+        </inspection_tool>
+        <inspection_tool class="UnnecessaryParentheses" level="WARNING" enabled="false">
+          <option name="ignoreClarifyingParentheses" value="false" />
+          <option name="ignoreParenthesesOnConditionals" value="false" />
+        </inspection_tool>
         <inspection_tool class="AssignmentToMethodParameter" level="WARNING" enabled="false">
           <option name="ignoreTransformationOfOriginalParameter" value="false" />
         </inspection_tool>
@@ -504,7 +513,6 @@
         <inspection_tool class="UnusedCatchParameter" level="WARNING" enabled="false">
           <option name="m_ignoreCatchBlocksWithComments" value="false" />
           <option name="m_ignoreTestCases" value="false" />
-          <option name="m_ignoreIgnoreParameter" value="true" />
         </inspection_tool>
         <inspection_tool class="ClassInTopLevelPackage" level="WARNING" enabled="false" />
         <inspection_tool class="FieldAccessedSynchronizedAndUnsynchronized" level="WARNING" enabled="false">
@@ -556,7 +564,9 @@
           <option name="ignoreTestCases" value="false" />
         </inspection_tool>
         <inspection_tool class="ConstantDeclaredInAbstractClass" level="WARNING" enabled="false" />
-        <inspection_tool class="TooBroadCatch" level="WARNING" enabled="false" />
+        <inspection_tool class="TooBroadCatch" level="WARNING" enabled="false">
+          <option name="onlyWarnOnRootExceptions" value="false" />
+        </inspection_tool>
         <inspection_tool class="FloatingPointEquality" level="WARNING" enabled="false" />
         <inspection_tool class="ReplaceAssignmentWithOperatorAssignment" level="WARNING" enabled="false">
           <option name="ignoreLazyOperators" value="true" />
@@ -812,13 +822,16 @@
       </item>
     </group>
   </component>
+  <component name="ProjectDetails">
+    <option name="projectName" value="jcatapult-filemgr" />
+  </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/jcatapult-filemgr.iml" filepath="$PROJECT_DIR$/jcatapult-filemgr.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/target/classes/main" />
   </component>
   <component name="RUBY_DOC_SETTINGS">
@@ -838,6 +851,9 @@
     <option name="GENERATE_NO_WARNINGS" value="false" />
     <option name="GENERATE_IIOP_STUBS" value="false" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myVersion" value="124" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
@@ -1002,5 +1018,8 @@
       <option name="useAlternate" value="false" />
     </LanguageOptions>
   </component>
+  <UsedPathMacros>
+    <macro name="SAVANT_REPOSITORY" />
+  </UsedPathMacros>
 </project>
 

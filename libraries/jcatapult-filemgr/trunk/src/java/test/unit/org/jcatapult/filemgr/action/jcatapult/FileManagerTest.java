@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.filemgr.action;
+package org.jcatapult.filemgr.action.jcatapult;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import org.easymock.EasyMock;
 import org.jcatapult.config.Configuration;
 import org.jcatapult.filemgr.BaseTest;
+import org.jcatapult.filemgr.action.jcatapult.FileManager;
+import org.jcatapult.filemgr.action.jcatapult.FileManagerCommand;
 import org.jcatapult.filemgr.domain.Connector;
 import org.jcatapult.filemgr.domain.Folder;
 import org.jcatapult.filemgr.service.DefaultFileConfiguration;
@@ -62,16 +64,15 @@ public class FileManagerTest extends BaseTest {
         EasyMock.replay(servletContext);
 
         FileManager fm = new FileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext));
-        fm.setCommand(FileManagerCommand.CreateFolder);
-        fm.setCurrentFolder("/deep/dir/");
-        fm.setNewFolderName("test");
-        fm.setType("Images");
+        fm.command = FileManagerCommand.CreateFolder;
+        fm.currentFolder = "/deep/dir/";
+        fm.newFolderName = "test";
         String result = fm.execute();
         Assert.assertEquals("success", result);
 
-        System.out.println("XML is " + IOTools.read(fm.getInputStream(), "UTF-8"));
+        System.out.println("XML is " + IOTools.read(fm.stream, "UTF-8"));
 
-        File dir = new File(testDir + "/some-dir/Images/deep/dir/test");
+        File dir = new File(testDir + "/some-dir/deep/dir/test");
         Assert.assertTrue(dir.isDirectory());
 
         EasyMock.verify(configuration, servletContext);

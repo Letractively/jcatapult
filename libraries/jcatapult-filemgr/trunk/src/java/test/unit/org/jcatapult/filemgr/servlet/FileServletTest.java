@@ -119,6 +119,7 @@ public class FileServletTest {
         };
 
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+        response.setContentLength(5);
         EasyMock.expect(response.getOutputStream()).andReturn(sos);
         EasyMock.replay(response);
 
