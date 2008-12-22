@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+
+<!--
+  This creates a module JAR file by packaging up the classes from
+  target/classes/main and these web directories:
+
+    web/WEB-INF/message
+    web/WEB-INF/email
+    web/WEB-INF/content
+
+  This also creates a simple testing JAR file that contains the JPA
+  persistence.xml for module testing in development.
+-->
+<project name="module">
+  <dirname property="dir.plugin.module" file="${ant.file.module}"/>
+  <import file="${dir.plugin.module}/build-project.xml"/>
+  <import file="${dir.plugin.module}/module-macros.xml"/>
+
+  <macrodef name="jar-init">
+    <sequential>
+      <mkdir dir="${dir.target.jars}"/>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="jar-local">
+    <sequential>
+
+      <!-- copy src/db/main sql files into META-INF/sql -->
+      <property name="dir.target.sql.main" value="${dir.target.classes.main}/META-INF/sql"/>
+      <mkdir dir="${dir.target.sql.main}"/>
+      <copy todir="${dir.target.sql.main}" failonerror="false">
+        <fileset dir="${dir.src.db.main}" includes="**/*"/>
+      </copy>
+
+      <!-- Copy the freemarker templates to the correct locations -->
+      <copy todir="${dir.target.classes.main}/WEB-INF/content" failonerror="false">
+        <fileset dir="${dir.web}/WEB-INF/content" includes="**/*"/>
+      </copy>
+
+      <!-- Copy the messages to the correct locations -->
+      <copy todir="${dir.target.classes.main}/WEB-INF/message" failonerror="false">
+        <fileset dir="${dir.web}/WEB-INF/message" includes="**/*"/>
+      </copy>
+
+      <!-- Copy the emails to the correct locations -->
+      <copy todir="${dir.target.classes.main}/WEB-INF/email" failonerror="false">
+        <fileset dir="${dir.web}/WEB-INF/email" includes="**/*"/>
+      </copy>
+
+      <!-- Copy the control templates to the correct locations -->
+      <copy todir="${dir.target.classes.main}/WEB-INF/control-templates" failonerror="false">
+        <fileset dir="${dir.web}/WEB-INF/control-templates" includes="**/*"/>
+      </copy>
+
+      <!-- Copy the static files into the correct location -->
+      <copy todir="${dir.target.classes.main}/module/${project.name}" failonerror="false">
+        <fileset dir="${dir.web}/module/${project.name}" includes="**/*"/>
+      </copy>
+
+      <jar destfile="${dir.target.jars}/${project.name}-${project.version}.jar">
+        <manifest>
+          <attribute name="Implementation-Version" value="${project.version}"/>
+        </manifest>
+        <fileset dir="${dir.target.classes.main}" includes="**/*"/>
+      </jar>
+
+      <!-- delete the META-INF/sql directory.  This is deleted so that these files are not found by the
+            jcatapult database migration api -->
+      <delete dir="${dir.target.sql.main}"/>
+
+      <!-- Source JAR -->
+      <jar destfile="${dir.target.jars}/${project.name}-${project.version}-src.jar">
+        <fileset dir="${dir.src.java.main}" includes="**/*"/>
+      </jar>
+
+      <!-- Special test only JAR with the persistence.xml -->
+      <module_create_persistence moduleFile="${dir.src.conf.main}/module.xml"
+                                 persistenceDir="${dir.target.classes.test.unit}"/>
+      <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}.jar">
+        <fileset dir="${dir.target.classes.test.unit}" includes="META-INF/**/*"/>
+      </jar>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="jar-publish">
+    <sequential>
+      <publish publishWorkflow="workflow.publish.local" integrationbuild="true"/>
+    </sequential>
+  </macrodef>
+
+  <!-- Pre process for overriding -->
+  <macrodef name="jar-pre">
+    <sequential>
+    </sequential>
+  </macrodef>
+
+  <!-- Post process for overriding -->
+  <macrodef name="jar-post">
+    <sequential>
+    </sequential>
+  </macrodef>
+
+  <target name="jar" depends="compile" description="Creates the project JAR file.">
+    <jar-init/>
+    <jar-pre/>
+    <jar-local/>
+    <jar-post/>
+    <jar-publish/>
+  </target>
+</project>
