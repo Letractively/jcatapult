@@ -53,8 +53,8 @@ import net.java.util.Pair;
  * @author  Brian Pontarelli
  */
 public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
-    public final String[] DEFAULT_TYPES = {"text/plain", "text/xml", "text/rtf", "text/richtext", "text/html", "text/css",
-        "image/ jpeg", "image/ gif", "image/ png", "image/pjpeg", "image/tiff",
+    public static final String[] DEFAULT_TYPES = {"text/plain", "text/xml", "text/rtf", "text/richtext", "text/html", "text/css",
+        "image/jpeg", "image/gif", "image/png", "image/pjpeg", "image/tiff",
         "video/dv", "video/h261", "video/h262", "video/h263", "video/h264", "video/jpeg", "video/mp4", "video/mpeg", "video/mpv", "video/ogg", "video/quicktime", "video/x-flv",
         "application/msword", "application/pdf", "application/msword", "application/msexcel", "application/mspowerpoint"};
     private final HttpServletRequest request;
