@@ -185,6 +185,12 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
                     String contentType = fileItem.getContentType();
                     File file = File.createTempFile("jcatapult", "fileupload");
                     fileItem.write(file);
+
+                    // Handle when the user doesn't provide a file at all
+                    if (file.length() == 0 || fileName == null || contentType == null) {
+                        continue;
+                    }
+                    
                     files.put(name, new FileInfo(file, fileName, contentType));
                 }
             }
