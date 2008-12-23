@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+ * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
+ *
  */
 package org.jcatapult.filemgr.action.jcatapult;
 
@@ -23,7 +24,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.jcatapult.filemgr.domain.Connector;
+import org.jcatapult.filemgr.domain.CreateDirectoryResult;
+import org.jcatapult.filemgr.domain.Listing;
+import org.jcatapult.filemgr.domain.UploadResult;
 import org.jcatapult.filemgr.service.FileManagerService;
 import org.jcatapult.mvc.action.result.annotation.Header;
 import org.jcatapult.mvc.action.result.annotation.Stream;
@@ -101,7 +104,7 @@ public class FileManager {
 
     static {
         try {
-            context = JAXBContext.newInstance(Connector.class);
+            context = JAXBContext.newInstance(CreateDirectoryResult.class, Listing.class, UploadResult.class);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
@@ -138,16 +141,16 @@ public class FileManager {
         }
 
         // Otherwise, process the request according to the command
-        Connector connector = null;
+        Object result = null;
         if (command == FileManagerCommand.CreateFolder) {
-            connector = fileManagerService.createFolder(currentFolder, newFolderName, null);
+            result = fileManagerService.createDirectory(newFolderName, currentFolder);
         } else if (command == FileManagerCommand.GetFolders) {
-            connector = fileManagerService.getFolders(currentFolder, null);
+            result = fileManagerService.getFolders(currentFolder);
         } else if (command == FileManagerCommand.GetFoldersAndFiles) {
-            connector = fileManagerService.getFoldersAndFiles(currentFolder, null);
+            result = fileManagerService.getFoldersAndFiles(currentFolder);
         }
 
-        marshal(connector);
+        marshal(result, context);
 
         return "success";
     }
@@ -158,8 +161,8 @@ public class FileManager {
      * @return  The result to return from the execute method in order to provide a response.
      */
     protected String doUpload() {
-        Connector connector = fileManagerService.upload(newFile.file, newFile.name, newFile.contentType, null, currentFolder);
-        marshal(connector);
+        Object result = fileManagerService.upload(newFile.file, newFile.name, newFile.contentType, currentFolder);
+        marshal(result, context);
         return "success";
     }
 
@@ -168,8 +171,9 @@ public class FileManager {
      * {@link #stream}.
      *
      * @param   connector The connector to marshal.
+     * @param   context The JAXB context.
      */
-    protected void marshal(Connector connector) {
+    protected void marshal(Object connector, JAXBContext context) {
         try {
             Marshaller marshaller = context.createMarshaller();
             StringWriter sw = new StringWriter();

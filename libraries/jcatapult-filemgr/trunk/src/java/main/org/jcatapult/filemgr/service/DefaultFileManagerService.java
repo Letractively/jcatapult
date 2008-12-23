@@ -21,14 +21,13 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.filemgr.action.jcatapult.FileManagerCommand;
-import org.jcatapult.filemgr.domain.Connector;
-import org.jcatapult.filemgr.domain.CurrentFolder;
-import org.jcatapult.filemgr.domain.Error;
-import org.jcatapult.filemgr.domain.Folder;
+import org.jcatapult.filemgr.domain.CreateDirectoryResult;
+import org.jcatapult.filemgr.domain.FileData;
+import org.jcatapult.filemgr.domain.DirectoryData;
+import org.jcatapult.filemgr.domain.Listing;
 import org.jcatapult.filemgr.domain.UploadResult;
-import org.jcatapult.servlet.ServletObjectsHolder;
 
 import com.google.inject.Inject;
 import net.java.io.FileTools;
@@ -45,59 +44,39 @@ public class DefaultFileManagerService implements FileManagerService {
     private static final Logger logger = Logger.getLogger(DefaultFileManagerService.class.getName());
     private final FileConfiguration configuration;
     private final ServletContext servletContext;
+    private final HttpServletRequest request;
     private String[] allowedContentTypes;
 
     @Inject
-    public DefaultFileManagerService(FileConfiguration configuration, ServletContext servletContext) {
+    public DefaultFileManagerService(FileConfiguration configuration, ServletContext servletContext, HttpServletRequest request) {
         this.configuration = configuration;
         this.servletContext = servletContext;
+        this.request = request;
         this.allowedContentTypes = configuration.getFileUploadAllowedContentTypes();
     }
 
     /**
      * {@inheritDoc}
      */
-    public Connector upload(File file, String fileName, String contentType, String fileType,
-            String directory) {
-        Connector connector = new Connector();
+    public UploadResult upload(File file, String fileName, String contentType, String directory) {
+        UploadResult result = new UploadResult();
         if (!file.exists() || file.isDirectory()) {
             logger.severe("The uploaded file [" + file.getAbsolutePath() + "] disappeared.");
-            connector.setError(new Error(1, "File uplaod failed."));
-            return connector;
-        }
-
-        // Set the directory
-        if (StringTools.isEmpty(directory)) {
-            directory = "";
-        }
-
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Inside upload action and handling fileName [" + fileName + "] with contentType [" +
-                contentType + "]. The file was saved to [" + file.getAbsolutePath() + "]");
+            result.setError(1); // file missing
+            return result;
         }
 
         // Check the content type
         if (Arrays.binarySearch(allowedContentTypes, contentType) < 0) {
-            connector.setError(new Error(1, "The file you are trying to upload is type [" + contentType +
-                "] which is not an allowed type."));
-            return connector;
+            result.setError(2); // invalid type
+            return result;
         }
 
-        String dirName = getFileDir(fileType) + directory;
-
-        // Check for relative pathes
-        String fullyQualifiedDirName = getFullyQualifiedDir(dirName);
-        File dir = new File(fullyQualifiedDirName);
-        if (!dir.exists()) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("Making directory [" + dir.getAbsolutePath() + "]");
-            }
-
-            if (!dir.mkdirs()) {
-                logger.severe("Unable to create upload directory [" + dir.getAbsolutePath() + "]");
-                connector.setError(new Error(1, "Unable to complete the file upload. Please try again later."));
-                return connector;
-            }
+        // Set the directory
+        File dir = determineStoreDirectory(directory);
+        if (dir == null) {
+            result.setError(3); // can't create directory
+            return result;
         }
 
         // Dissect the file into pieces.
@@ -128,138 +107,121 @@ public class DefaultFileManagerService implements FileManagerService {
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error copying file [" + file.getAbsolutePath() + "] to [" +
                 newFileLocation.getAbsolutePath() + "]", e);
-            connector.setError(new Error(1, "Unable to complete the file upload. Please try again later."));
-            return connector;
+            result.setError(4); // copy error
+            return result;
         }
 
-        String fileURL = getExternalDirectoryURL(fileType) + "/" + newFileLocation.getName();
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Inside upload action and handling fileName [" + fileName + "] with contentType [" +
+                contentType + "]. The file was saved to [" + newFileLocation.getAbsolutePath() + "]");
+        }
 
-        logger.fine("Returning fileURL [" + fileURL + "]");
+        String fileURI = determineURI(directory, newFileLocation.getName());
 
-        connector.setUploadResult(new UploadResult(modifiedFileName, fileURL, !modifiedFileName.equals(fileName), newFileLocation));
-        connector.setCommand(FileManagerCommand.FileUpload.name());
-        return connector;
+        logger.fine("Returning fileURI [" + fileURI + "]");
+
+        result.setModifiedFileName(modifiedFileName);
+        result.setFileURI(fileURI);
+        result.setChangedFileName(!modifiedFileName.equals(fileName));
+        result.setFile(newFileLocation);
+        return result;
     }
 
-    public Connector createFolder(String currentFolder, String newFolderName, String fileType) {
-        Connector connector = new Connector();
-        connector.setCommand(FileManagerCommand.CreateFolder.name());
-        connector.setResourceType(fileType);
-
-        CurrentFolder folder = new CurrentFolder();
-        folder.setPath(currentFolder);
-        folder.setUrl(getExternalDirectoryURL(fileType) + currentFolder);
-        connector.setCurrentFolder(folder);
+    /**
+     * {@inheritDoc}
+     */
+    public CreateDirectoryResult createDirectory(String name, String directory) {
+        CreateDirectoryResult result = new CreateDirectoryResult();
+        result.setPath(directory);
+        result.setURI(addSlash(determineURI(directory)));
 
         if (!configuration.isCreateFolderAllowed()) {
-            Error error = new Error();
-            error.setNumber(103);
-            connector.setError(error);
-            return connector;
+            result.setError(1); // Can't create directories
+            return result;
         }
 
         // Try to create the directory
         try {
-            String dirName = getFileDir(fileType);
-            String absolutePath = getFullyQualifiedDir(dirName);
-            File dir = new File(absolutePath + "/" + currentFolder, newFolderName);
+            File dir = determineStoreDirectory(directory, name);
             if (!dir.exists()) {
-                dir.mkdirs();
+                if (!dir.mkdirs()) {
+                    result.setError(2); // Directory create failed
+                }
             }
         } catch (SecurityException se) {
-            Error error = new Error();
-            error.setNumber(103);
-            connector.setError(error);
-            return connector;
+            result.setError(3); // Security error
+            return result;
         }
 
-        Error error = new Error();
-        error.setNumber(0);
-        connector.setError(error);
-        return connector;
+        return result;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Connector getFoldersAndFiles(String currentFolder, String fileType) {
-        return getListing(currentFolder, fileType, true);
+    public Listing getFoldersAndFiles(String directory) {
+        return getListing(directory, true);
     }
 
     /**
      * {@inheritDoc}
      */
-    public Connector getFolders(String currentFolder, String fileType) {
-        return getListing(currentFolder, fileType, false);
+    public Listing getFolders(String currentFolder) {
+        return getListing(currentFolder, false);
     }
 
-    /**
-     * Grabs the file upload directory configuration property and verifies that it is set. If it is not
-     * setup, this throws an exception.
-     *
-     * @param   fileType (Optional) This file type can optionally be appended to the file directory location
-     *          to build a more composite path for files of a specific type.
-     * @return  The file directory.
-     * @throws  RuntimeException If the configuration property is not setup.
-     */
-    private String getFileDir(String fileType) {
+    private File determineStoreDirectory(String... paths) {
         String dirName = configuration.getFileServletDir();
         if (dirName == null) {
             throw new RuntimeException("The file-mgr.file-servlet.dir configuration property is not set and is required");
         }
 
-        if (!StringTools.isTrimmedEmpty(fileType)) {
-            dirName = dirName + "/" + fileType;
+        for (String path : paths) {
+            if (!StringTools.isTrimmedEmpty(path)) {
+                dirName = dirName + "/" + path;
+            }
         }
 
-        return dirName;
+        // Check for relative pathes
+        File dir = new File(dirName);
+        if (!dir.isAbsolute()) {
+            String fullyQualifiedDirName = servletContext.getRealPath(dirName);
+            if (fullyQualifiedDirName == null) {
+                throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified a relative " +
+                    "directory of [" + configuration.getFileServletDir() + "] however it appears that the web application " +
+                    "is running from a WAR and therefore you must use an absolute directory in order to save uploded " +
+                    "files elsewhere on the server.");
+            }
+
+            dir = new File(fullyQualifiedDirName);
+        }
+
+        if (!dir.exists()) {
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("Making directory [" + dir.getAbsolutePath() + "]");
+            }
+
+            if (!dir.mkdirs()) {
+                logger.severe("Unable to create upload directory [" + dir.getAbsolutePath() + "]");
+                return null;
+            }
+        }
+
+        return dir;
     }
 
-    /**
-     * Based on the file upload directory given, this determines the fully qualified location of that
-     * directory on the file system. It also does some checks to ensure that the directory is correct
-     * based on the type of web application deployment.
-     *
-     * @param   dirName The directory name to get the fully qualified version of.
-     * @return  The fully qualified directory name.
-     * @throws  RuntimeException If the directory given is relative to the web application content root
-     *          but the ServletContext could not convert the path to a fully qualified location on disk.
-     *          This usually means the web application is a WAR.
-     */
-    private String getFullyQualifiedDir(String dirName) {
-        if (new File(dirName).isAbsolute()) {
-            return dirName;
+    private String determineURI(String... paths) {
+        String dirName = configuration.getFileServletDir();
+        if (dirName == null) {
+            throw new RuntimeException("The file-mgr.file-servlet.dir configuration property is not set and is required");
         }
 
-        String fullyQualifiedDirName;
-        fullyQualifiedDirName = servletContext.getRealPath(dirName);
-        if (fullyQualifiedDirName == null) {
-            throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified a relative " +
-                "directory of [" + configuration.getFileServletDir() + "] however it appears that the web application " +
-                "is running from a WAR and therefore you must use an absolute directory in order to save uploded " +
-                "files elsewhere on the server.");
-        }
-        return fullyQualifiedDirName;
-    }
-
-    /**
-     * Returns the externally usable file URL for the current file upload directory on the server and
-     * the given file type, which might be null, empty or white space.
-     *
-     * @param   fileType (Optional) File type to append to the file URL.
-     * @return  The external directory URL with no slash on the end.
-     * @throws  RuntimeException If the file upload directory is absolute and there is not file-servlet
-     *          prefix defined.
-     */
-    private String getExternalDirectoryURL(String fileType) {
-        String fileDir = getFileDir(fileType);
-        String fileURL;
-        boolean relative = !fileDir.startsWith("/");
-        if (relative) {
-            fileURL = ServletObjectsHolder.getServletRequest().getContextPath() + fileDir;
+        String uri;
+        if (!new File(dirName).isAbsolute()) {
+            uri = stripSlash(request.getContextPath()) + "/" + dirName;
         } else {
-            String fileServletPrefix = configuration.getFileServletPrefix();
-            if (fileServletPrefix == null) {
+            uri = configuration.getFileServletPrefix();
+            if (uri == null) {
                 throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified an absolute " +
                     "directory of [" + configuration.getFileServletDir() + "] however the configuration property " +
                     "file-mgr.file-servlet.prefix was not specified. This is required so that the browser can access files " +
@@ -267,53 +229,73 @@ public class DefaultFileManagerService implements FileManagerService {
                     "as well as set this configuration property to the same prefix that you mapped the servlet to in " +
                     "web.xml.");
             }
-
-            fileURL = fileServletPrefix + (StringTools.isTrimmedEmpty(fileType) ? "" : "/" + fileType);
         }
 
-        return fileURL;
+        uri = stripSlash(uri);
+
+        for (String path : paths) {
+            if (!StringTools.isTrimmedEmpty(path)) {
+                if (path.startsWith("/")) {
+                    uri = uri + path;
+                } else {
+                    uri = uri + "/" + path;
+                }
+            }
+
+            uri = stripSlash(uri);
+        }
+
+        return uri;
     }
 
     /**
      * Gets the listings for a specific directory.
      *
-     * @param   currentFolder The current folder to get the listing for.
-     * @param   fileType The file type to get the listing for.
+     * @param   directory The directory to get the listing for.
      * @param   includeFiles Whether or not the listing should include plain files or just directories.
      * @return  The listing.
      */
-    private Connector getListing(String currentFolder, String fileType, boolean includeFiles) {
-        Connector connector = new Connector();
-        connector.setCommand(includeFiles ? FileManagerCommand.GetFoldersAndFiles.name() : FileManagerCommand.GetFolders.name());
-        connector.setResourceType(fileType);
-
-        CurrentFolder folder = new CurrentFolder();
-        folder.setPath(currentFolder);
-        folder.setUrl(getExternalDirectoryURL(fileType) + currentFolder);
-        connector.setCurrentFolder(folder);
+    private Listing getListing(String directory, boolean includeFiles) {
+        Listing listing = new Listing();
+        listing.setPath(directory);
+        listing.setURI(addSlash(determineURI(directory)));
 
         // Try to locate the directory and get the listing
-        String dirName = getFileDir(fileType);
-        String absolutePath = getFullyQualifiedDir(dirName);
-        File dir = new File(absolutePath, currentFolder);
-        if (!dir.exists()) {
-            return connector;
+        File dir = determineStoreDirectory(directory);
+        if (dir == null) {
+            return listing;
         }
 
-        File[] listing = dir.listFiles();
-        for (File file : listing) {
+        File[] files = dir.listFiles();
+        for (File file : files) {
             if (includeFiles && file.isFile()) {
-                org.jcatapult.filemgr.domain.File fileListing = new org.jcatapult.filemgr.domain.File();
-                fileListing.setName(file.getName());
-                fileListing.setSize(file.length() / 1024);
-                connector.getFiles().add(fileListing);
+                FileData fileData = new FileData();
+                fileData.setName(file.getName());
+                fileData.setSize(file.length() / 1024);
+                listing.addFile(fileData);
             } else if (file.isDirectory()) {
-                Folder folderListing = new Folder();
-                folderListing.setName(file.getName());
-                connector.getFolders().add(folderListing);
+                DirectoryData directoryData = new DirectoryData();
+                directoryData.setName(file.getName());
+                listing.addDirectory(directoryData);
             }
         }
 
-        return connector;
+        return listing;
+    }
+
+    private String stripSlash(String s) {
+        if (s.endsWith("/")) {
+            return s.substring(0, s.length() - 1);
+        }
+
+        return s;
+    }
+
+    private String addSlash(String s) {
+        if (s.endsWith("/")) {
+            return s;
+        }
+
+        return s + "/";
     }
 }

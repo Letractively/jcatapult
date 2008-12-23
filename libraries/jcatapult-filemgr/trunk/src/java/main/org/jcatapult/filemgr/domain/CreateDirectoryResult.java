@@ -13,53 +13,55 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
+
 package org.jcatapult.filemgr.domain;
 
+import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- * This class represents an message that might occur when attempting to perform
- * an operation via the FileManager XML WebService.
+ * This class stores the result of creating a directory via the file manager.
  * </p>
  *
  * @author  Brian Pontarelli
  */
+@XmlRootElement(name = "create-directory")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Error {
-    @XmlAttribute()
-    private int number;
+public class CreateDirectoryResult implements Serializable {
+    private static final long serialVersionUID = 1;
 
     @XmlAttribute()
-    private String message;
+    private String path;
+    @XmlAttribute()
+    private String uri;
+    @XmlAttribute()
+    private int error;
 
-    public Error() {
+    public String getPath() {
+        return path;
     }
 
-    public Error(int number, String message) {
-        this.number = number;
-        this.message = message;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public int getNumber() {
-        return number;
+    public String getURI() {
+        return uri;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setURI(String uri) {
+        this.uri = uri;
     }
 
-    public String getMessage() {
-        return message;
+    public int getError() {
+        return error;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String toString() {
-        return "" + number + ": " + message;
+    public void setError(int error) {
+        this.error = error;
     }
 }

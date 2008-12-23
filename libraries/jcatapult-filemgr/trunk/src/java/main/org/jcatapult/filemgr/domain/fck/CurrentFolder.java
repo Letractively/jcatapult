@@ -13,7 +13,8 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.filemgr.domain;
+
+package org.jcatapult.filemgr.domain.fck;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -21,33 +22,47 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * <p>
- * This class represents a single File for a listing action from the client.
- * This is embedded in the {@link Connector} XML class, which defines a XML
- * wrapper named <strong>Files</strong>.
+ * This class represents the current folder that the File Manager is
+ * interacting with and is passed back to the client from the
+ * server in order to specify the URL that the File Manager should use
+ * for this folder.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class File {
+public class CurrentFolder {
     @XmlAttribute()
-    private String name;
+    private String path;
+
     @XmlAttribute()
-    private long size;
+    private String url;
 
-    public String getName() {
-        return name;
+    public CurrentFolder() {
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public CurrentFolder(String path, String url) {
+        this.path = path;
+        this.url = url;
     }
 
-    public long getSize() {
-        return size;
+    public String getPath() {
+        return path;
     }
 
-    public void setSize(long size) {
-        this.size = size;
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        if (url != null && !url.endsWith("/")) {
+            url += "/";
+        }
+
+        this.url = url;
     }
 }

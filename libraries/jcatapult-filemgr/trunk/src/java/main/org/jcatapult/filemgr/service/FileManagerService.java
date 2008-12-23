@@ -17,7 +17,9 @@ package org.jcatapult.filemgr.service;
 
 import java.io.File;
 
-import org.jcatapult.filemgr.domain.Connector;
+import org.jcatapult.filemgr.domain.CreateDirectoryResult;
+import org.jcatapult.filemgr.domain.Listing;
+import org.jcatapult.filemgr.domain.UploadResult;
 
 import com.google.inject.ImplementedBy;
 
@@ -105,19 +107,17 @@ public interface FileManagerService {
      * @param   file The file that was uploaded.
      * @param   fileName The name of the file that was sent from the browser.
      * @param   contentType The content type that was determined from the browser or server.
-     * @param   fileType The type of file that the user is uploading (if this is specified
-     *          by the browser/client)
      * @param   directory The name of the directory to place the uploaded file. This is appeneded
      *          to the configured upload directory.
      * @return  The result, which could be an error or a success.
      */
-    Connector upload(File file, String fileName, String contentType, String fileType, String directory);
+    UploadResult upload(File file, String fileName, String contentType, String directory);
 
     /**
      * <p>
-     * This action handles the creation of a new folder on disk. This uses
+     * This action handles the creation of a new directory on disk. This uses
      * the configuration property named <strong>jcatapult.file-mgr.create-folder-allowed</strong>
-     * to determine if the clients are allowed to create folders on the
+     * to determine if the clients are allowed to create directories on the
      * file system or not. This defaults to true, so be sure to set this to
      * false if you do not want to allow directory creation.
      * </p>
@@ -147,13 +147,11 @@ public interface FileManagerService {
      * file.
      * </p>
      *
-     * @param   currentFolder The current folder the file manager has been asked to create a new directory
-     *          within.
-     * @param   newFolderName The name of the new folder.
-     * @param   fileType The file type that the directory is being created for.
-     * @return  The result XML object.
+     * @param   name The name of the new folder to create.
+     * @param   directory The directory in which the new folder is to be created.
+     * @return  The result.
      */
-    Connector createFolder(String currentFolder, String newFolderName, String fileType);
+    CreateDirectoryResult createDirectory(String name, String directory);
 
     /**
      * <p>
@@ -192,11 +190,10 @@ public interface FileManagerService {
      * file.
      * </p>
      *
-     * @param   currentFolder The current folder the file manager needs a listing for.
-     * @param   type The file type the listing is for.
-     * @return  The result XML object.
+     * @param   directory The directory to get the listing for.
+     * @return  The result.
      */
-    Connector getFoldersAndFiles(String currentFolder, String type);
+    Listing getFoldersAndFiles(String directory);
 
     /**
      * <p>
@@ -235,8 +232,7 @@ public interface FileManagerService {
      * </p>
      *
      * @param   currentFolder The current folder the file manager needs a listing for.
-     * @param   type The file type the listing is for.
-     * @return  The result XML object.
+     * @return  The result.
      */
-    Connector getFolders(String currentFolder, String type);
+    Listing getFolders(String currentFolder);
 }
