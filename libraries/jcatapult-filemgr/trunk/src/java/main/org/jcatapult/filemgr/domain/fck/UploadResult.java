@@ -13,15 +13,10 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.filemgr.domain;
 
-import java.io.File;
+package org.jcatapult.filemgr.domain.fck;
+
 import java.io.Serializable;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
@@ -31,33 +26,26 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author  Brian Pontarelli
  */
-@XmlRootElement(name = "upload")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class UploadResult implements Serializable {
     private static final long serialVersionUID = 1;
-
-    @XmlAttribute()
     private String modifiedFileName;
-
-    @XmlAttribute()
-    private String fileURI;
-
-    @XmlAttribute()
-    private boolean changedFileName;
-
-    @XmlTransient()
-    private File file;
-
-    @XmlAttribute()
-    private int error;
+    private String fileURL;
+    private int resultCode;
+    private java.io.File file;
 
     public UploadResult() {
     }
 
-    public UploadResult(String modifiedFileName, String fileURI, boolean changedFileName, File file) {
+    public UploadResult(int resultCode) {
+        this.modifiedFileName = null;
+        this.fileURL = null;
+        this.resultCode = resultCode;
+    }
+
+    public UploadResult(String modifiedFileName, String fileURL, boolean fileNameModified, java.io.File file) {
         this.modifiedFileName = modifiedFileName;
-        this.fileURI = fileURI;
-        this.changedFileName = changedFileName;
+        this.fileURL = fileURL;
+        this.resultCode = fileNameModified ? 201 : 0;
         this.file = file;
     }
 
@@ -69,35 +57,27 @@ public class UploadResult implements Serializable {
         this.modifiedFileName = modifiedFileName;
     }
 
-    public String getFileURI() {
-        return fileURI;
+    public String getFileURL() {
+        return fileURL;
     }
 
-    public void setFileURI(String fileURI) {
-        this.fileURI = fileURI;
+    public void setFileURL(String fileURL) {
+        this.fileURL = fileURL;
     }
 
-    public File getFile() {
+    public int getResultCode() {
+        return resultCode;
+    }
+
+    public void setResultCode(int resultCode) {
+        this.resultCode = resultCode;
+    }
+
+    public java.io.File getFile() {
         return file;
     }
 
-    public void setFile(File file) {
+    public void setFile(java.io.File file) {
         this.file = file;
-    }
-
-    public int getError() {
-        return error;
-    }
-
-    public void setError(int error) {
-        this.error = error;
-    }
-
-    public boolean isChangedFileName() {
-        return changedFileName;
-    }
-
-    public void setChangedFileName(boolean changedFileName) {
-        this.changedFileName = changedFileName;
     }
 }

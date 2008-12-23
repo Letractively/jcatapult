@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, Inversoft, All Rights Reserved
+ * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,8 +12,9 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
+ *
  */
-package org.jcatapult.filemgr.domain;
+package org.jcatapult.filemgr.domain.fck;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +45,10 @@ public class Connector {
 
     @XmlElementWrapper(name = "Files")
     @XmlElement(name = "File")
-    private List<File> files;
+    private List<FileData> files;
 
     @XmlElement(name = "Error")
-    private Error error;
+    private ErrorData error;
 
     @XmlElement(name = "UploadResult")
     private UploadResult uploadResult;
@@ -77,22 +78,22 @@ public class Connector {
         this.folders = folders;
     }
 
-    public List<File> getFiles() {
+    public List<FileData> getFiles() {
         if (files == null) {
-            files = new ArrayList<File>();
+            files = new ArrayList<FileData>();
         }
         return files;
     }
 
-    public void setFiles(List<File> files) {
+    public void setFiles(List<FileData> files) {
         this.files = files;
     }
 
-    public Error getError() {
+    public ErrorData getError() {
         return error;
     }
 
-    public void setError(Error error) {
+    public void setError(ErrorData error) {
         this.error = error;
     }
 

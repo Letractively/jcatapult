@@ -15,21 +15,22 @@
  */
 package org.jcatapult.filemgr.domain;
 
+import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * <p>
- * This class represents a single Folder for a listing action from the client.
- * This is embedded in the {@link Connector} XML class, which defines a XML
- * wrapper named <strong>Folders</strong>.
+ * This class represents a single directory for a listing action from the client.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Folder {
+public class DirectoryData implements Serializable {
+    private static final long serialVersionUID = 1;
+    
     @XmlAttribute()
     private String name;
 
