@@ -109,7 +109,7 @@ public class Main {
             System.err.println("JCATAPULT_HOME must be set into your environment");
             System.exit(1);
         }
-        File defaultScaffolderDir = new File(jcatapultHome, "tools/jcatapult-scaffolder/scaffolders");
+        File defaultScaffolderDir = new File(jcatapultHome, "tools/scaffolder/scaffolders");
         File[] defaultScaffolders = defaultScaffolderDir.listFiles();
         for (File defaultScaffolder : defaultScaffolders) {
             scaffolderDirs.put(defaultScaffolder.getName(), defaultScaffolder);
