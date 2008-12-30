@@ -27,7 +27,7 @@ import org.jcatapult.filemgr.domain.CreateDirectoryResult;
 import org.jcatapult.filemgr.domain.DirectoryData;
 import org.jcatapult.filemgr.domain.FileData;
 import org.jcatapult.filemgr.domain.Listing;
-import org.jcatapult.filemgr.domain.UploadResult;
+import org.jcatapult.filemgr.domain.StorageResult;
 import org.jcatapult.filemgr.domain.fck.Connector;
 import org.jcatapult.filemgr.domain.fck.CurrentFolder;
 import org.jcatapult.filemgr.domain.fck.ErrorData;
@@ -74,7 +74,7 @@ public class FckFileManager extends FileManager {
     public String execute() {
         // If this is an upload, skip processing and handle control over to the upload action
         if (command == FileManagerCommand.FileUpload) {
-            return doUpload();
+            return doStore();
         }
 
         // Otherwise, process the request according to the command
@@ -104,9 +104,9 @@ public class FckFileManager extends FileManager {
      * @return  The result to return from the execute method in order to provide a response.
      */
     @Override
-    protected String doUpload() {
+    protected String doStore() {
         String directory = (type != null) ? type + "/" + currentFolder : currentFolder;
-        UploadResult result = fileManagerService.upload(newFile.file, newFile.name, newFile.contentType, directory);
+        StorageResult result = fileManagerService.store(newFile.file, newFile.name, newFile.contentType, directory);
         connector = translate(result);
         return "upload";
     }
@@ -119,7 +119,7 @@ public class FckFileManager extends FileManager {
         if (result.getError() != 0) {
             connector.setError(new ErrorData(result.getError(), "Unable to create directory."));
         }
-        
+
         return connector;
     }
 
@@ -142,7 +142,7 @@ public class FckFileManager extends FileManager {
         return connector;
     }
 
-    private Connector translate(UploadResult result) {
+    private Connector translate(StorageResult result) {
         Connector connector = new Connector();
         connector.setCommand(FileManagerCommand.CreateFolder.toString());
         connector.setResourceType(type);

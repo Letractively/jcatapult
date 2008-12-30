@@ -26,7 +26,7 @@ import javax.xml.bind.Marshaller;
 
 import org.jcatapult.filemgr.domain.CreateDirectoryResult;
 import org.jcatapult.filemgr.domain.Listing;
-import org.jcatapult.filemgr.domain.UploadResult;
+import org.jcatapult.filemgr.domain.StorageResult;
 import org.jcatapult.filemgr.service.FileManagerService;
 import org.jcatapult.mvc.action.result.annotation.Header;
 import org.jcatapult.mvc.action.result.annotation.Stream;
@@ -104,7 +104,7 @@ public class FileManager {
 
     static {
         try {
-            context = JAXBContext.newInstance(CreateDirectoryResult.class, Listing.class, UploadResult.class);
+            context = JAXBContext.newInstance(CreateDirectoryResult.class, Listing.class, StorageResult.class);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
@@ -137,7 +137,7 @@ public class FileManager {
     public String execute() {
         // If this is an upload, skip processing and handle control over to the upload action
         if (command == FileManagerCommand.FileUpload) {
-            return doUpload();
+            return doStore();
         }
 
         // Otherwise, process the request according to the command
@@ -160,8 +160,8 @@ public class FileManager {
      *
      * @return  The result to return from the execute method in order to provide a response.
      */
-    protected String doUpload() {
-        Object result = fileManagerService.upload(newFile.file, newFile.name, newFile.contentType, currentFolder);
+    protected String doStore() {
+        Object result = fileManagerService.store(newFile.file, newFile.name, newFile.contentType, currentFolder);
         marshal(result, context);
         return "success";
     }

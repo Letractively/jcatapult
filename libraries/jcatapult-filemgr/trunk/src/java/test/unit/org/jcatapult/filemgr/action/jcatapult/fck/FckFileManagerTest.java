@@ -40,10 +40,10 @@ import net.java.io.FileTools;
  * @author  Brian Pontarelli
  */
 public class FckFileManagerTest extends BaseTest {
-    @Test
+    // removed content type configuration but didn't want to delete test case
+    // in the event that we add content type configuration back in
     public void testContentTypeFail() {
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getStringArray("jcatapult.file-mgr.file-upload.allowed-content-types")).andReturn(null);
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
@@ -64,8 +64,7 @@ public class FckFileManagerTest extends BaseTest {
     public void testRelativeSuccess() throws IOException {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getStringArray("jcatapult.file-mgr.file-upload.allowed-content-types")).andReturn(null);
-        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
             andReturn("some-dir").times(2);
         EasyMock.replay(configuration);
 

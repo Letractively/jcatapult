@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.jcatapult.filemgr.domain.CreateDirectoryResult;
 import org.jcatapult.filemgr.domain.Listing;
-import org.jcatapult.filemgr.domain.UploadResult;
+import org.jcatapult.filemgr.domain.StorageResult;
 
 import com.google.inject.ImplementedBy;
 
@@ -28,68 +28,24 @@ import com.google.inject.ImplementedBy;
  * This interface defines the operations that are allowed for file support.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author Brian Pontarelli and James Humphrey
  */
 @ImplementedBy(DefaultFileManagerService.class)
 public interface FileManagerService {
     /**
      * <p>
-     * This action handles all uploads via the file manager. This
-     * handles verification of the MIME type of the upload as well as
-     * saving the file to the correct location and returning a result
-     * that the client can handle.
+     * This method provides the service of storing files to disk.
      * </p>
      *
      * <p>
-     * The configuration system can be used to setup the allowed MIME types
-     * using the <strong>jcatapult.file-mgr.file-upload.allowed-content-types</strong>
-     * key. This property is an array property and can be specified using
-     * multiple elements of the same name or via a comma-separated list
-     * of values inside a single element like this:
-     * </p>
-     *
-     * <pre>
-     * &lt;jcatapult>
-     *   &lt;file-mgr>
-     *     &lt;file-upload>
-     *       &lt;allowed-content-type>foo&lt;/allowed-content-type>
-     *       &lt;allowed-content-type>bar&lt;/allowed-content-type>
-     *     &lt;/file-upload>
-     *   &lt;/file-mgr>
-     * &lt;/jcatapult>
-     *
-     * or
-     *
-     * &lt;jcatapult>
-     *   &lt;file-mgr>
-     *     &lt;file-upload>
-     *       &lt;allowed-content-type>foo,bar&lt;/allowed-content-type>
-     *     &lt;/file-upload>
-     *   &lt;/file-mgr>
-     * &lt;/jcatapult>
-     * </pre>
-     *
-     * <p>
-     * The default list is:
-     * </p>
-     *
-     * <pre>
-     * image/jpeg
-     * image/png
-     * image/gif
-     * application/x-shockwave-flash
-     * application/pdf
-     * </pre>
-     *
-     * <p>
-     * In addition, the location that the files are saved to can be controlled
-     * using the configuration parameter named <strong>jcatapult.file-mgr.file-servlet.dir</strong>.
+     * The location that the files are stored can be controlled
+     * using the configuration parameter named <strong>jcatapult.file-mgr.storage-dir</strong>.
      * This directory can be a fully qualified path name anywhere on the machine
-     * that the application is running or it can be a directory relative to the
-     * web application web root. In order to distinquish between these two, this
-     * class assumes that all directories beginning with a / (forward-slash)
+     * that the application is running on or it can be a directory relative to the
+     * web application web root. In order to distinquish between these two, the
+     * implementation assumes that all directories beginning with a / (forward-slash)
      * character are fully qualified and are directories on the local machine.
-     * All pathes that don't start with a / (forward-slash) are considered
+     * All paths that don't start with a / (forward-slash) are considered
      * relative to the web application context root.
      * </p>
      *
@@ -98,7 +54,7 @@ public interface FileManagerService {
      * you must also configure the FileServlet in web.xml so that it can serve
      * up the files appropriately. Or you could also use symlinks or an Apache
      * server is you prefer. In any case, you must set the configuration property
-     * named <strong>jcatapult.file-mgr.file-servlet.prefix</strong> to the URL prefix that
+     * named <strong>jcatapult.file-mgr.servlet-prefix</strong> to the URL prefix that
      * will provide access to the files. If you are using the
      * {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the prefix
      * mapped in the servlet-mapping of the web.xml file.
@@ -108,10 +64,10 @@ public interface FileManagerService {
      * @param   fileName The name of the file that was sent from the browser.
      * @param   contentType The content type that was determined from the browser or server.
      * @param   directory The name of the directory to place the uploaded file. This is appeneded
-     *          to the configured upload directory.
+     *          to the directory specified <strong>jcatapult.file-mgr.storage-dir</strong>.
      * @return  The result, which could be an error or a success.
      */
-    UploadResult upload(File file, String fileName, String contentType, String directory);
+    StorageResult store(File file, String fileName, String contentType, String directory);
 
     /**
      * <p>
@@ -123,7 +79,7 @@ public interface FileManagerService {
      * </p>
      *
      * <p>
-     * The main configuration property of <strong>jcatapult.file-mgr.file-servlet.dir</strong> is used
+     * The main configuration property of <strong>jcatapult.file-mgr.storage-dir</strong> is used
      * by this method to determine the location on disk that files are being
      * uploaded to and managed by the file manager.
      * This directory can be a fully qualified path name anywhere on the machine
@@ -140,7 +96,7 @@ public interface FileManagerService {
      * you must also configure the {@link org.jcatapult.filemgr.servlet.FileServlet}
      * in web.xml so that it can serve up the files appropriately. Or you could also
      * use symlinks or an Apache server is you prefer. In any case, you must set
-     * the configuration property named <strong>jcatapult.file-mgr.file-servlet.prefix</strong>
+     * the configuration property named <strong>jcatapult.file-mgr.servlet-prefix</strong>
      * to the URL prefix that will provide access to the files. If you are using the
      * {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the prefix
      * mapped in the servlet-mapping of the web.xml
@@ -161,9 +117,9 @@ public interface FileManagerService {
      * </p>
      *
      * <p>
-     * The main configuration property of <strong>jcatapult.file-mgr.file-servlet.dir</strong> is used
+     * The main configuration property of <strong>jcatapult.file-mgr.storage-dir</strong> is used
      * by this method to determine the location on disk that files are being
-     * uploaded to and managed by the file manager. This will be how the listings
+     * stored to and managed by the file manager. This will be how the listings
      * are generated, by calling {@link java.io.File#listFiles()} on those directory
      * instances.
      * </p>
@@ -183,7 +139,7 @@ public interface FileManagerService {
      * you must also configure the {@link org.jcatapult.filemgr.servlet.FileServlet}
      * in web.xml so that it can serve up the files appropriately. Or you could
      * also use symlinks or an Apache server is you prefer. In any case, you must
-     * set the configuration property named <strong>jcatapult.file-mgr.file-servlet.prefix</strong>
+     * set the configuration property named <strong>jcatapult.file-mgr.servlet-prefix</strong>
      * to the URL prefix that will provide access to the files. If you are using
      * the {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the
      * prefix mapped in the servlet-mapping of the web.xml
@@ -203,9 +159,9 @@ public interface FileManagerService {
      * </p>
      *
      * <p>
-     * The main configuration property of <strong>jcatapult.file-mgr.file-servlet.dir</strong> is used
+     * The main configuration property of <strong>jcatapult.file-mgr.storage-dir</strong> is used
      * by this method to determine the location on disk that files are being
-     * uploaded to and managed by the file manager. This will be how the listings
+     * stored to and managed by the file manager. This will be how the listings
      * are generated, by calling {@link java.io.File#listFiles()} on those directory
      * instances.
      * </p>
@@ -225,7 +181,7 @@ public interface FileManagerService {
      * you must also configure the {@link org.jcatapult.filemgr.servlet.FileServlet}
      * in web.xml so that it can serve up the files appropriately. Or you could
      * also use symlinks or an Apache server is you prefer. In any case, you must
-     * set the configuration property named <strong>jcatapult.file-mgr.file-servlet.prefix</strong>
+     * set the configuration property named <strong>jcatapult.file-mgr.servlet-prefix</strong>
      * to the URL prefix that will provide access to the files. If you are using
      * the {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the
      * prefix mapped in the servlet-mapping of the web.xml file.
@@ -235,4 +191,41 @@ public interface FileManagerService {
      * @return  The result.
      */
     Listing getFolders(String currentFolder);
+
+    /**
+     * <p>Deletes a file from disk that has been stored via the
+     * {@link org.jcatapult.filemgr.service.FileManagerService#store(java.io.File, String, String, String)} method.
+     * The file URI supplied to this method should be exactly equal to
+     * {@link org.jcatapult.filemgr.domain.StorageResult#getFileURI()} or the same with the
+     * <strong>jcatapult.file-mgr.servlet-prefix</strong> removed.</p>
+     *
+     * <p>Example</p>
+     *
+     * <p>Lets say that I have the following configuration:</p>
+     *
+     * <p><strong>jcatapult.file-mgr.servlet-prefix</strong> = /files (this is the default)</p>
+     *
+     * <p>And, I store a file with the following:</p>
+     * <code>StorageResult result = store(file, "test.gif", "image/gif", "images/test")</code>
+     *
+     * <p>After storing the file, I should get the following file URI when calling
+     * {@link org.jcatapult.filemgr.domain.StorageResult#getFileURI()}:<br/><br/>
+     *
+     * file URI: <strong>/files/images/test/test.gif</strong></p>
+     *
+     * <p>When it's time to delete the file, you can specify the above file URI or a version of it with the
+     * <strong>jcatapult.file-mgr.servlet-prefix</strong> removed.  Both are acceptable formats:</p>
+     *
+     * <ul>
+     *   <li>delete("/files/images/test/test.gif")</li>
+     *   <li>delete("images/test/test.gif")</li>
+     * </ul>
+     *
+     * @param fileURI The
+     * file URI supplied to this method should be exactly equal to
+     * {@link org.jcatapult.filemgr.domain.StorageResult#getFileURI()} or the same with the
+     * <strong>jcatapult.file-mgr.servlet-prefix</strong> removed.
+     * @return true if deleted, false otherwise
+     */
+    boolean delete(String fileURI);
 }
