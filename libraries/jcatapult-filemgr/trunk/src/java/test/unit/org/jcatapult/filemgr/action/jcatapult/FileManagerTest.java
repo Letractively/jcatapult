@@ -43,12 +43,11 @@ public class FileManagerTest extends BaseTest {
     public void testCreateDirNestedWithType() throws IOException {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(configuration.getStringArray("jcatapult.file-mgr.file-upload.allowed-content-types")).andReturn(null);
-        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
             andReturn(testDir + "/some-dir");
-        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.prefix", "/files")).andReturn("/file-servlet");
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.servlet-prefix", "/files")).andReturn("/file-servlet");
         EasyMock.expect(configuration.getBoolean("jcatapult.file-mgr.create-folder-allowed", true)).andReturn(true);
-        EasyMock.expect(configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data")).
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
             andReturn(testDir + "/some-dir");
         EasyMock.replay(configuration);
 

@@ -50,7 +50,7 @@ public class Connector {
     @XmlElement(name = "Error")
     private ErrorData error;
 
-    @XmlElement(name = "UploadResult")
+    @XmlElement(name = "StorageResult")
     private UploadResult uploadResult;
 
     @XmlAttribute()

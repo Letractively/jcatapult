@@ -15,23 +15,17 @@
  */
 package org.jcatapult.filemgr.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
-import org.jcatapult.filemgr.domain.CreateDirectoryResult;
-import org.jcatapult.filemgr.domain.FileData;
-import org.jcatapult.filemgr.domain.DirectoryData;
-import org.jcatapult.filemgr.domain.Listing;
-import org.jcatapult.filemgr.domain.UploadResult;
-
 import com.google.inject.Inject;
 import net.java.io.FileTools;
 import net.java.lang.StringTools;
+import org.jcatapult.filemgr.domain.*;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -45,30 +39,22 @@ public class DefaultFileManagerService implements FileManagerService {
     private final FileConfiguration configuration;
     private final ServletContext servletContext;
     private final HttpServletRequest request;
-    private String[] allowedContentTypes;
 
     @Inject
     public DefaultFileManagerService(FileConfiguration configuration, ServletContext servletContext, HttpServletRequest request) {
         this.configuration = configuration;
         this.servletContext = servletContext;
         this.request = request;
-        this.allowedContentTypes = configuration.getFileUploadAllowedContentTypes();
     }
 
     /**
      * {@inheritDoc}
      */
-    public UploadResult upload(File file, String fileName, String contentType, String directory) {
-        UploadResult result = new UploadResult();
+    public StorageResult store(File file, String fileName, String contentType, String directory) {
+        StorageResult result = new StorageResult();
         if (!file.exists() || file.isDirectory()) {
-            logger.severe("The uploaded file [" + file.getAbsolutePath() + "] disappeared.");
+            logger.severe("The file to store [" + file.getAbsolutePath() + "] no longer exists.  Please verify that it was uploaded successfully.");
             result.setError(1); // file missing
-            return result;
-        }
-
-        // Check the content type
-        if (Arrays.binarySearch(allowedContentTypes, contentType) < 0) {
-            result.setError(2); // invalid type
             return result;
         }
 
@@ -170,10 +156,25 @@ public class DefaultFileManagerService implements FileManagerService {
         return getListing(currentFolder, false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean delete(String fileURI) {
+        String location = configuration.getFileStorageDir();
+        String servletPathPrefix = configuration.getFileServletPrefix();
+
+        // strip the prefix (if it exists), this will give us the exact URI relative to the storage directory
+        String relativeToStorageDirURI = fileURI.replaceFirst(servletPathPrefix, "");
+
+        File file = new File(location, relativeToStorageDirURI);
+
+        return !file.exists() || file.delete();
+    }
+
     private File determineStoreDirectory(String... paths) {
-        String dirName = configuration.getFileServletDir();
+        String dirName = configuration.getFileStorageDir();
         if (dirName == null) {
-            throw new RuntimeException("The file-mgr.file-servlet.dir configuration property is not set and is required");
+            throw new RuntimeException("The jcatapult.file-mgr.storage-dir configuration property is not set and is required");
         }
 
         for (String path : paths) {
@@ -188,7 +189,7 @@ public class DefaultFileManagerService implements FileManagerService {
             String fullyQualifiedDirName = servletContext.getRealPath(dirName);
             if (fullyQualifiedDirName == null) {
                 throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified a relative " +
-                    "directory of [" + configuration.getFileServletDir() + "] however it appears that the web application " +
+                    "directory of [" + configuration.getFileStorageDir() + "] however it appears that the web application " +
                     "is running from a WAR and therefore you must use an absolute directory in order to save uploded " +
                     "files elsewhere on the server.");
             }
@@ -211,7 +212,7 @@ public class DefaultFileManagerService implements FileManagerService {
     }
 
     private String determineURI(String... paths) {
-        String dirName = configuration.getFileServletDir();
+        String dirName = configuration.getFileStorageDir();
         if (dirName == null) {
             throw new RuntimeException("The file-mgr.file-servlet.dir configuration property is not set and is required");
         }
@@ -223,7 +224,7 @@ public class DefaultFileManagerService implements FileManagerService {
             uri = configuration.getFileServletPrefix();
             if (uri == null) {
                 throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified an absolute " +
-                    "directory of [" + configuration.getFileServletDir() + "] however the configuration property " +
+                    "directory of [" + configuration.getFileStorageDir() + "] however the configuration property " +
                     "file-mgr.file-servlet.prefix was not specified. This is required so that the browser can access files " +
                     "outside of the web application. Therefore, you must configure the FileServlet in the web.xml " +
                     "as well as set this configuration property to the same prefix that you mapped the servlet to in " +

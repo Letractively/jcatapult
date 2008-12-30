@@ -16,19 +16,15 @@
 
 package org.jcatapult.filemgr.service;
 
-import java.util.Arrays;
-
-import org.jcatapult.config.Configuration;
-import org.jcatapult.mvc.parameter.fileupload.DefaultFileUploadWorkflow;
-
 import com.google.inject.Inject;
+import org.jcatapult.config.Configuration;
 
 /**
  * <p>
  * This implements the file configuration interface.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author Brian Pontarelli and James Humphrey
  */
 public class DefaultFileConfiguration implements FileConfiguration {
     private Configuration configuration;
@@ -41,28 +37,15 @@ public class DefaultFileConfiguration implements FileConfiguration {
     /**
      * {@inheritDoc}
      */
-    public String getFileServletDir() {
-        return configuration.getString("jcatapult.file-mgr.file-servlet.dir", System.getProperty("user.home") + "/data");
+    public String getFileStorageDir() {
+        return configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data");
     }
 
     /**
      * {@inheritDoc}
      */
     public String getFileServletPrefix() {
-        return configuration.getString("jcatapult.file-mgr.file-servlet.prefix", "/files");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String[] getFileUploadAllowedContentTypes() {
-        String[] value = configuration.getStringArray("jcatapult.file-mgr.file-upload.allowed-content-types");
-        if (value == null || value.length == 0) {
-            value = DefaultFileUploadWorkflow.DEFAULT_TYPES;
-        }
-
-        Arrays.sort(value);
-        return value;
+        return configuration.getString("jcatapult.file-mgr.servlet-prefix", "/files");
     }
 
     /**

@@ -43,12 +43,12 @@ import com.google.inject.Injector;
  * </p>
  *
  * <p>
- * <strong>jcatapult.file-mgr.file-servlet.dir</strong> The location on disk
+ * <strong>jcatapult.file-mgr.storage-dir</strong> The location on disk
  * where the files are located.
  * </p>
  *
  * <p>
- * <strong>jcatapult.file-mgr.file-servlet.prefix</strong> The URI prefix that
+ * <strong>jcatapult.file-mgr.servlet-prefix</strong> The URI prefix that
  * the FileServlet is mapped to in the web.xml file. This is important, because
  * other parts of the JCatapult framework depend on this value. So, it should
  * be set correctly.
@@ -76,7 +76,7 @@ public class FileServlet extends HttpServlet {
                 "serve up files.", e);
         }
 
-        location = new File(configuration.getFileServletDir());
+        location = new File(configuration.getFileStorageDir());
         super.init();
     }
 

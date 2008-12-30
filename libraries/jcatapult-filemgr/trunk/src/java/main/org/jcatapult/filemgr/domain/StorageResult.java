@@ -26,14 +26,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * <p>
  * This class stores the result of an invocation to the
- * {@link org.jcatapult.filemgr.service.FileManagerService#upload(java.io.File, String, String, String)} method.
+ * {@link org.jcatapult.filemgr.service.FileManagerService#store(java.io.File, String, String, String)} method.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 @XmlRootElement(name = "upload")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class UploadResult implements Serializable {
+public class StorageResult implements Serializable {
     private static final long serialVersionUID = 1;
 
     @XmlAttribute()
@@ -51,10 +51,10 @@ public class UploadResult implements Serializable {
     @XmlAttribute()
     private int error;
 
-    public UploadResult() {
+    public StorageResult() {
     }
 
-    public UploadResult(String modifiedFileName, String fileURI, boolean changedFileName, File file) {
+    public StorageResult(String modifiedFileName, String fileURI, boolean changedFileName, File file) {
         this.modifiedFileName = modifiedFileName;
         this.fileURI = fileURI;
         this.changedFileName = changedFileName;

@@ -27,23 +27,16 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(DefaultFileConfiguration.class)
 public interface FileConfiguration {
     /**
-     * @return  The configuration parameter named <code>jcatapult.file-mgr.file-servlet.dir</code> or the default value
+     * @return  The configuration parameter named <code>jcatapult.file-mgr.storage-dir</code> or the default value
      *          of <code>${user.home}/data<code>.
      */
-    String getFileServletDir();
+    String getFileStorageDir();
 
     /**
-     * @return  The configuration parameter named <code>jcatapult.file-mgr.file-servlet.prefix</code> or the default value
+     * @return  The configuration parameter named <code>jcatapult.file-mgr.servlet-prefix</code> or the default value
      *          of <code>/files</code>.
      */
     String getFileServletPrefix();
-
-    /**
-     * @return  The configuration parameter named <code>jcatapult.file-mgr.file-upload.allowed-content-types</code> or the
-     *          default value of <code>new String[]{"image/jpeg", "image/png", "image/gif",
-     *          "application/x-shockwave-flash", "application/pdf"}</code>.
-     */
-    String[] getFileUploadAllowedContentTypes();
 
     /**
      * @return  The configuration parameter named <code>jcatapult.file-mgr.create-folder-allowed</code> or the default value
