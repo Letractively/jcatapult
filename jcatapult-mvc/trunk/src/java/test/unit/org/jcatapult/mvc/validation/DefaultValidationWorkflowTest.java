@@ -27,6 +27,7 @@ import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import static org.jcatapult.mvc.validation.DefaultValidationWorkflow.JCATAPULT_IS_VALIDATING;
 import org.jcatapult.servlet.WorkflowChain;
 import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
@@ -39,7 +40,7 @@ import com.google.inject.Inject;
  * This class tests the DefaultValidationWorkflow.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class DefaultValidationWorkflowTest extends JCatapultBaseTest {
     protected ActionInvocationStore actionInvocationStore;
@@ -49,12 +50,66 @@ public class DefaultValidationWorkflowTest extends JCatapultBaseTest {
 
     @Inject
     public void setServices(ActionInvocationStore actionInvocationStore,
-            ExpressionEvaluator expressionEvaluator, ValidatorProvider validatorProvider,
-            MessageStore messageStore) {
+                            ExpressionEvaluator expressionEvaluator, ValidatorProvider validatorProvider,
+                            MessageStore messageStore) {
         this.actionInvocationStore = actionInvocationStore;
         this.expressionEvaluator = expressionEvaluator;
         this.validatorProvider = validatorProvider;
         this.messageStore = messageStore;
+    }
+
+
+    @Test
+    public void testIsValidating() throws IOException, ServletException {
+
+        Edit action = new Edit();
+
+        // test literal true
+        {
+            request.setPost(true);
+            request.setParameter(JCATAPULT_IS_VALIDATING, "true");
+            actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+            DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
+                    expressionEvaluator, validatorProvider, messageStore);
+
+            assertTrue(workflow.isValidating());
+            request.removeParameter(JCATAPULT_IS_VALIDATING);
+        }
+
+        // test true, not defined
+        {
+            request.setPost(true);
+            actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+            DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
+                    expressionEvaluator, validatorProvider, messageStore);
+
+            assertTrue(workflow.isValidating());
+        }
+
+        // test true with anything but false
+        {
+            request.setPost(true);
+            request.setParameter(JCATAPULT_IS_VALIDATING, "foo");
+            actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+            DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
+                    expressionEvaluator, validatorProvider, messageStore);
+
+            assertTrue(workflow.isValidating());
+            request.removeParameter(JCATAPULT_IS_VALIDATING);
+        }
+
+        // test false
+        {
+            request.setPost(true);
+            request.setParameter(JCATAPULT_IS_VALIDATING, "false");
+            actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+            DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
+                    expressionEvaluator, validatorProvider, messageStore);
+
+            assertFalse(workflow.isValidating());
+            request.removeParameter(JCATAPULT_IS_VALIDATING);
+        }
+
     }
 
     @Test
@@ -63,7 +118,7 @@ public class DefaultValidationWorkflowTest extends JCatapultBaseTest {
         request.setPost(true);
         actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
         DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
-            expressionEvaluator, validatorProvider, messageStore);
+                expressionEvaluator, validatorProvider, messageStore);
 
         WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
         chain.continueWorkflow();
@@ -95,7 +150,7 @@ public class DefaultValidationWorkflowTest extends JCatapultBaseTest {
         action.user.getAddress("work").setCountry("US");
         actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
         DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
-            expressionEvaluator, validatorProvider, messageStore);
+                expressionEvaluator, validatorProvider, messageStore);
 
         WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
         chain.continueWorkflow();

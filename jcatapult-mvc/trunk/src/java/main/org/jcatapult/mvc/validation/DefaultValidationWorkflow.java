@@ -45,15 +45,25 @@ import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
 import static net.java.lang.ObjectTools.*;
+import net.java.lang.StringTools;
 
 /**
  * <p>
  * This workflow performs all the validation on the current action.
  * </p>
  *
- * @author  Brian Pontarelli
+ * <p>Validation can be turned off by setting a form field by the name 'jcatapultIsValidating' to false.
+ * This is best accomplished by setting a hidden input field as follows:<br/><br/>
+ *
+ * <input type="hidden" name="jcatapultIsValidating" value="false"/>
+ * </p>
+ *
+ * @author Brian Pontarelli
  */
 public class DefaultValidationWorkflow implements ValidationWorkflow {
+
+    public static final String JCATAPULT_IS_VALIDATING = "jcatapultIsValidating";
+
     private final ActionInvocationStore actionInvocationStore;
     private final ExpressionEvaluator expressionEvaluator;
     private final ValidatorProvider validatorProvider;
@@ -62,8 +72,8 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
 
     @Inject
     public DefaultValidationWorkflow(HttpServletRequest request, ActionInvocationStore actionInvocationStore,
-            ExpressionEvaluator expressionEvaluator, ValidatorProvider validatorProvider,
-            MessageStore messageStore) {
+                                     ExpressionEvaluator expressionEvaluator, ValidatorProvider validatorProvider,
+                                     MessageStore messageStore) {
         this.request = request;
         this.actionInvocationStore = actionInvocationStore;
         this.expressionEvaluator = expressionEvaluator;
@@ -76,24 +86,40 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
      * fails, this swaps out the ActionInvocation with a dummied version that always returns the
      * <code>input</code> result code and then proceeds down the chain.
      *
-     * @param   chain The chain.
-     * @throws  IOException If the chain throws.
-     * @throws  ServletException If the chain throws.
+     * @param chain The chain.
+     * @throws IOException      If the chain throws.
+     * @throws ServletException If the chain throws.
      */
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         if (request.getMethod().equals("POST")) {
             ActionInvocation invocation = actionInvocationStore.getCurrent();
             Object action = invocation.action();
-            if (action != null) {
+            if (action != null && isValidating()) {
                 validate(action);
                 if (messageStore.contains(MessageType.ERROR)) {
                     actionInvocationStore.setCurrent(new DefaultActionInvocation(action, invocation.actionURI(),
-                        invocation.extension(), null, invocation.configuration(), true, false, "input"));
+                            invocation.extension(), null, invocation.configuration(), true, false, "input"));
                 }
             }
         }
 
         chain.continueWorkflow();
+    }
+
+    /**
+     * Helper method that returns false if and only if the {@link DefaultValidationWorkflow#JCATAPULT_IS_VALIDATING}
+     * is a valid request parameter AND it's false
+     *
+     * @return returns true if validating, false otherwise
+     */
+    boolean isValidating() {
+        String param = request.getParameter(JCATAPULT_IS_VALIDATING);
+
+        if (StringTools.isEmpty(param) || !param.toLowerCase().equals("false")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected void validate(Object action) {
@@ -105,7 +131,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
                     method.invoke(action);
                 } catch (Exception e) {
                     throw new RuntimeException("Unable to invoke @ValidateMethod named [" +
-                        method.getName() + "] on class [" + action.getClass() + "]", e);
+                            method.getName() + "] on class [" + action.getClass() + "]", e);
                 }
             }
         }
@@ -116,9 +142,9 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
     /**
      * Handles looping over all of the fields on the given Class and looking for validation annotations.
      *
-     * @param   type The Class to validate.
-     * @param   object (Optional) The instance of the Class.
-     * @param   path The current validation path to the object.
+     * @param type   The Class to validate.
+     * @param object (Optional) The instance of the Class.
+     * @param path   The current validation path to the object.
      */
     protected void handleAnnotations(Class<?> type, Object object, String path) {
         List<Field> fields = allFields(type);
@@ -143,9 +169,9 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
     /**
      * Handles plain objects.
      *
-     * @param   container The object to get the value from for the given field.
-     * @param   path The path up to the object, not including the field.
-     * @param   field The field to validate.
+     * @param container The object to get the value from for the given field.
+     * @param path      The path up to the object, not including the field.
+     * @param field     The field to validate.
      */
     protected void handleObject(Object container, String path, Field field) {
         // First, validate that this field isn't a collection, array or map
@@ -153,7 +179,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
         Class<?> type = field.getType();
         if (isCollection(type) || type.isArray()) {
             throw new RuntimeException("Invalid use of @Valid on the field [" + newPath +
-                "]. This annotation should only be used on fields that are NOT Collections, arrays or Maps.");
+                    "]. This annotation should only be used on fields that are NOT Collections, arrays or Maps.");
         }
 
         // Next, grab the value and handle it
@@ -168,17 +194,17 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
     /**
      * Handles Maps.
      *
-     * @param   container The object to get the value from for the given field.
-     * @param   path The path up to the object, not including the field.
-     * @param   field The field to validate.
-     * @param   annotation The ValidMap annotation.
+     * @param container  The object to get the value from for the given field.
+     * @param path       The path up to the object, not including the field.
+     * @param field      The field to validate.
+     * @param annotation The ValidMap annotation.
      */
     protected void handleMap(Object container, String path, Field field, Annotation annotation) {
         // First verify that it is a collection
         String newPath = path(path, field);
         if (!Map.class.isAssignableFrom(field.getType())) {
             throw new RuntimeException("Invalid use of @ValidMap on the field [" + newPath +
-                "]. This annotation can only be used on fields that are Maps.");
+                    "]. This annotation can only be used on fields that are Maps.");
         }
 
         // Next, grab the value and handle it as a Map.
@@ -211,17 +237,17 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
     /**
      * Handles Collections and Arrays.
      *
-     * @param   container The object to get the value from for the given field.
-     * @param   path The path up to the object, not including the field.
-     * @param   field The field to validate.
-     * @param   annotation The ValidCollection annotation.
+     * @param container  The object to get the value from for the given field.
+     * @param path       The path up to the object, not including the field.
+     * @param field      The field to validate.
+     * @param annotation The ValidCollection annotation.
      */
     protected void handleCollection(Object container, String path, Field field, Annotation annotation) {
         // First verify that it is a collection
         String newPath = path(path, field);
         if (!Collection.class.isAssignableFrom(field.getType()) && !field.getType().isArray()) {
             throw new RuntimeException("Invalid use of @ValidCollection on the field [" + newPath +
-                "]. This annotation can only be used on fields that are Collections or arrays.");
+                    "]. This annotation can only be used on fields that are Collections or arrays.");
         }
 
         // Next grab the value and handle it as a collection
@@ -263,7 +289,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
                 }
             } catch (Exception e) {
                 throw new RuntimeException("Invalid validator annotation [" + annotation.annotationType() +
-                    "] it is missing the required key() method.");
+                        "] it is missing the required key() method.");
             }
 
             messageStore.addFieldError(MessageScope.REQUEST, path, key, value);
