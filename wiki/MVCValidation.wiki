@@ -219,3 +219,13 @@ public class StateValidator implements Validator<State> {
   }
 }
 }}}
+
+== Turning off validation ==
+
+If you want to turn validation off for any reason, you may do so by adding a form input field named 'jcatapultIsValidating' and setting the value to 'false'. The easiest way to accomplish this is by adding a hidden input field as illustrated below:
+
+{{{
+<input type="hidden" name="jcatapultIsValidating" value="false"/>
+}}}
+
+Providing any other value besides 'false' or omission of the form field will result in validation being perfomed.
