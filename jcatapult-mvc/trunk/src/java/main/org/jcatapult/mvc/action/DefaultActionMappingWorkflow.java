@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jcatapult.mvc.parameter.InternalParameters;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -37,12 +38,6 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
-    /**
-     * HTTP request parameter or scoped attribute from the request that indicates if the result
-     * should be executed or not. By default the result is always executed, but this can be used to
-     * suppress that behavior.
-     */
-    public static final String JCATAPULT_EXECUTE_RESULT = "jcatapultExecuteResult";
 
     private final HttpServletRequest request;
     private final HttpServletResponse response;
@@ -70,7 +65,7 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         // First, see if they hit a different button
         String uri = determineURI();
-        boolean executeResult = executeResult(JCATAPULT_EXECUTE_RESULT);
+        boolean executeResult = InternalParameters.is(request, InternalParameters.JCATAPULT_EXECUTE_RESULT);
         ActionInvocation invocation = actionMapper.map(uri, executeResult);
 
         // This case is redirect because they URI maps to something new and there isn't an action
@@ -114,24 +109,5 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
             }
         }
         return uri;
-    }
-
-    /**
-     * Determines if the result should be executed or not.
-     *
-     * @param   key The key.
-     * @return  True of false.
-     */
-    private boolean executeResult(String key) {
-        Object value = request.getParameter(key);
-        if (value == null) {
-            value = request.getAttribute(key);
-        }
-
-        if (value != null && value instanceof String) {
-            return value.equals("true");
-        }
-
-        return value == null ? true : (Boolean) value;
     }
 }

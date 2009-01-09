@@ -59,6 +59,8 @@ public class DefaultParameterWorkflowTest {
         values.put("user.name", array("")); // This should be stripped out and the ExpressionEvaluator never called for it
 
         final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("GET");
+        EasyMock.expect(request.getContentType()).andReturn(null);        
         EasyMock.expect(request.getParameterMap()).andReturn(values);
         EasyMock.replay(request);
 
@@ -106,6 +108,8 @@ public class DefaultParameterWorkflowTest {
         values.put("__jc_rb_user.radio['default']", array("false"));
 
         final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("POST");
+        EasyMock.expect(request.getContentType()).andReturn("application/x-www-form-urlencoded");        
         EasyMock.expect(request.getParameterMap()).andReturn(values);
         EasyMock.replay(request);
 
@@ -149,6 +153,8 @@ public class DefaultParameterWorkflowTest {
         values.put("submit.y", array("2"));
 
         final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("GET");
+        EasyMock.expect(request.getContentType()).andReturn(null);        
         EasyMock.expect(request.getParameterMap()).andReturn(values);
         EasyMock.replay(request);
 
