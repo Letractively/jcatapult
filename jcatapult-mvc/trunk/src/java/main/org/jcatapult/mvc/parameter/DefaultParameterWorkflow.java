@@ -201,6 +201,10 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         Map<String, String[]> radioButtons = new HashMap<String, String[]>();
         Set<String> actions = new HashSet<String>();
         for (String key : parameters.keySet()) {
+            if (InternalParameters.isInternalParameter(key)){
+                continue;
+            }
+
             boolean optional = (key.endsWith(".x") || key.endsWith(".y"));
 
             if (key.startsWith(CHECKBOX_PREFIX)) {

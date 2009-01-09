@@ -50,7 +50,7 @@ public final class InternalParameters {
      * @return  True of false.
      */
     public static boolean is(HttpServletRequest request, String key) {
-        if (key != JCATAPULT_EXECUTE_RESULT && key != JCATAPULT_EXECUTE_VALIDATION) {
+        if (!isInternalParameter(key)) {
             throw new IllegalArgumentException("Invalid key [" + key + "]");
         }
         
@@ -64,5 +64,15 @@ public final class InternalParameters {
         }
 
         return value == null ? true : (Boolean) value;
+    }
+
+    /**
+     * Determines if the given key is an internal parameter.
+     *
+     * @param   key The key.
+     * @return  True if it is, false otherwise.
+     */
+    public static boolean isInternalParameter(String key) {
+        return key.equals(JCATAPULT_EXECUTE_RESULT) || key.equals(JCATAPULT_EXECUTE_VALIDATION);
     }
 }
