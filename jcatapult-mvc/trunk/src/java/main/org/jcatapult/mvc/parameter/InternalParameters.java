@@ -17,6 +17,8 @@ package org.jcatapult.mvc.parameter;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.java.lang.StringTools;
+
 /**
  * <p>
  * This class handles all of the parameters that control the JCatapult MVC internal
@@ -47,7 +49,9 @@ public final class InternalParameters {
      *
      * @param   request The request to look in.
      * @param   key The key to check.
-     * @return  True of false.
+     * @return  True of false. If the key doesn't exist in the request, this returns true. If it
+     *          does exist in the request and is equal to {@code true}, this returns true. Otherwise,
+     *          this returns false.
      */
     public static boolean is(HttpServletRequest request, String key) {
         if (!isInternalParameter(key)) {
@@ -59,11 +63,13 @@ public final class InternalParameters {
             value = request.getAttribute(key);
         }
 
-        if (value == null || (value instanceof String && !((String)value).toLowerCase().equals("false"))) {
-            return true;
-        } else {
-            return false;
+        String str = value == null ? null : value.toString().toLowerCase();
+        if (str != null && !StringTools.isValidBoolean(str)) {
+            throw new IllegalArgumentException("Invalid value [" + str + "] for key [" + key +
+                "]. Must be either the string [true] or [false].");
         }
+
+        return str == null || str.equals("true");
     }
 
     /**
