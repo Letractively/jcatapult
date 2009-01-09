@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ */
+package org.jcatapult.mvc.parameter;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * <p>
+ * This class handles all of the parameters that control the JCatapult MVC internal
+ * behavior like validation, result execution, action execution, etc.
+ * </p>
+ *
+ * @author  Brian Pontarelli
+ */
+public final class InternalParameters {
+    /**
+     * HTTP request parameter or scoped attribute from the request that indicates if the result
+     * should be executed or not. By default the result is always executed, but this can be used to
+     * suppress that behavior.
+     */
+    public static final String JCATAPULT_EXECUTE_RESULT = "jcatapultExecuteResult";
+
+    /**
+     * HTTP request parameter or scoped attribute from the request that indicates if validation
+     * should be executed or not. By default the validation is always executed, but this can be used
+     * to suppress that behavior.
+     */
+    public static final String JCATAPULT_EXECUTE_VALIDATION = "jcatapultExecuteValidation";
+
+
+    /**
+     * Determines if the key given is true or false. The key must be one of the statics defined on
+     * this class and the request parameters and request scope are checked, in that order.
+     *
+     * @param   request The request to look in.
+     * @param   key The key to check.
+     * @return  True of false.
+     */
+    public static boolean is(HttpServletRequest request, String key) {
+        if (key != JCATAPULT_EXECUTE_RESULT && key != JCATAPULT_EXECUTE_VALIDATION) {
+            throw new IllegalArgumentException("Invalid key [" + key + "]");
+        }
+        
+        Object value = request.getParameter(key);
+        if (value == null) {
+            value = request.getAttribute(key);
+        }
+
+        if (value != null && value instanceof String) {
+            return value.equals("true");
+        }
+
+        return value == null ? true : (Boolean) value;
+    }
+}

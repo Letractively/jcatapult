@@ -34,6 +34,7 @@ import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.message.scope.MessageType;
+import org.jcatapult.mvc.parameter.InternalParameters;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.TypeTools;
 import org.jcatapult.mvc.validation.annotation.Valid;
@@ -45,25 +46,24 @@ import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
 import static net.java.lang.ObjectTools.*;
-import net.java.lang.StringTools;
 
 /**
  * <p>
  * This workflow performs all the validation on the current action.
  * </p>
  *
- * <p>Validation can be turned off by setting a form field by the name 'jcatapultIsValidating' to false.
- * This is best accomplished by setting a hidden input field as follows:<br/><br/>
- *
- * <input type="hidden" name="jcatapultIsValidating" value="false"/>
+ * <p>
+ * Validation can be turned off by setting a form field by the name 'jcatapultExecuteValidation'
+ * to false. This is best accomplished by setting a hidden input field as follows:
  * </p>
+ *
+ * <pre>
+ * &lt;input type="hidden" name="jcatapultExecuteValidation" value="false"/>
+ * </pre>
  *
  * @author Brian Pontarelli
  */
 public class DefaultValidationWorkflow implements ValidationWorkflow {
-
-    public static final String JCATAPULT_IS_VALIDATING = "jcatapultIsValidating";
-
     private final ActionInvocationStore actionInvocationStore;
     private final ExpressionEvaluator expressionEvaluator;
     private final ValidatorProvider validatorProvider;
@@ -94,7 +94,8 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
         if (request.getMethod().equals("POST")) {
             ActionInvocation invocation = actionInvocationStore.getCurrent();
             Object action = invocation.action();
-            if (action != null && isValidating()) {
+            boolean executeValidation = InternalParameters.is(request, InternalParameters.JCATAPULT_EXECUTE_VALIDATION);
+            if (action != null && executeValidation) {
                 validate(action);
                 if (messageStore.contains(MessageType.ERROR)) {
                     actionInvocationStore.setCurrent(new DefaultActionInvocation(action, invocation.actionURI(),
@@ -104,22 +105,6 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
         }
 
         chain.continueWorkflow();
-    }
-
-    /**
-     * Helper method that returns false if and only if the {@link DefaultValidationWorkflow#JCATAPULT_IS_VALIDATING}
-     * is a valid request parameter AND it's false
-     *
-     * @return returns true if validating, false otherwise
-     */
-    boolean isValidating() {
-        String param = request.getParameter(JCATAPULT_IS_VALIDATING);
-
-        if (StringTools.isEmpty(param) || !param.toLowerCase().equals("false")) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     protected void validate(Object action) {
@@ -277,6 +262,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void validate(Annotation annotation, Object container, Object value, String path) {
         Class<? extends Annotation> annotationType = annotation.annotationType();
         Validator validator = validatorProvider.lookup(annotationType);

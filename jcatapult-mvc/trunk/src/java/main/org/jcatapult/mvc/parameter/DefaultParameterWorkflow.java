@@ -88,7 +88,8 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         Object action = actionInvocation.action();
         String method = request.getMethod().toLowerCase();
-        String contentType = request.getContentType() != null ? request.getContentType().toLowerCase() : "";
+        String contentType = request.getContentType();
+        contentType = contentType != null ? contentType.toLowerCase() : "";
 
         if (action != null && (!method.equals("post") ||
                 (method.equals("post") && (contentType.startsWith("application/x-www-form-urlencoded") ||

@@ -7,7 +7,6 @@
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="mysql" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
   
   <!-- Properties from home dir -->
