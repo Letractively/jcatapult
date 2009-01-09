@@ -53,17 +53,17 @@ public final class InternalParameters {
         if (!isInternalParameter(key)) {
             throw new IllegalArgumentException("Invalid key [" + key + "]");
         }
-        
+
         Object value = request.getParameter(key);
         if (value == null) {
             value = request.getAttribute(key);
         }
 
-        if (value != null && value instanceof String) {
-            return value.equals("true");
+        if (value == null || (value instanceof String && !((String)value).toLowerCase().equals("false"))) {
+            return true;
+        } else {
+            return false;
         }
-
-        return value == null ? true : (Boolean) value;
     }
 
     /**
