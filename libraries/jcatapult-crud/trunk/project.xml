@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
     name="jcatapult-crud"
     group="libraries.jcatapult.org"
-    version="1.0-RC9">
+    version="1.0-RC10">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0.1"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
@@ -34,7 +34,7 @@
   <!-- set to true if this libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="true"/>
 
-  <property name="version.jcatapult" value="1.0-RC9"/>
+  <property name="version.jcatapult" value="1.0-RC10"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="compile-only">
