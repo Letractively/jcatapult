@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ */
+package org.jcatapult.module.user.action.account;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+
+import org.jcatapult.mvc.test.WebappTestRunner;
+import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.email.service.EmailTransportService;
+import org.jcatapult.email.EmailTestHelper;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+import org.jcatapult.module.user.BaseIntegrationTest;
+import org.jcatapult.module.user.domain.User;
+
+/**
+ * <p>
+ * This class tests the Summary action.
+ * </p>
+ *
+ * @author Brian Pontarelli
+ */
+public class SummaryIntegrationTest extends BaseIntegrationTest {
+    @Test
+    public void testRender() throws IOException, ServletException {
+        User user = makeUser("summary");
+        EnhancedSecurityContext.login(user);
+        WebappTestRunner runner = new WebappTestRunner();
+        runner.test("/account/summary").
+            withMock(EmailTransportService.class, EmailTestHelper.getService()).
+            get();
+        assertNull(runner.response.getRedirect());
+        assertTrue(runner.response.getStream().toString().contains("Account Summary"));
+    }
+}
