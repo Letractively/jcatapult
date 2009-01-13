@@ -48,6 +48,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     protected final Map<String, List<String>> headers = new HashMap<String, List<String>>();
     protected final MockHttpSession session;
     protected final Map<String, List<String>> parameters;
+    protected String contentType = null;
     protected String uri;
     protected Locale locale;
     protected boolean post;
@@ -62,6 +63,10 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.post = post;
         this.encoding = encoding;
         this.session = new MockHttpSession(context);
+
+        if (post) {
+            contentType = "application/x-www-form-urlencoded";
+        }
     }
 
     public MockHttpServletRequest(String uri, Locale locale, boolean post, String encoding,
@@ -72,6 +77,10 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.post = post;
         this.encoding = encoding;
         this.session = session;
+
+        if (post) {
+            contentType = "application/x-www-form-urlencoded";
+        }
     }
 
     public MockHttpServletRequest(Map<String, List<String>> parameters, String uri, String encoding,
@@ -82,6 +91,10 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.locale = locale;
         this.post = post;
         this.session = session;
+
+        if (post) {
+            contentType = "application/x-www-form-urlencoded";
+        }
     }
 
     public MockHttpServletRequest(Map<String, List<String>> parameters, String uri, String encoding,
@@ -92,6 +105,10 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.locale = locale;
         this.post = post;
         this.session = new MockHttpSession(context);
+
+        if (post) {
+            contentType = "application/x-www-form-urlencoded";
+        }
     }
 
 
@@ -135,7 +152,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     /**
      */
     public String getContentType() {
-        throw new UnsupportedOperationException();
+        return contentType;
     }
 
     /**
@@ -525,6 +542,15 @@ public class MockHttpServletRequest implements HttpServletRequest {
     //-------------------------------------------------------------------------
 
     /**
+     * Sets the content type of the request.
+     *
+     * @param   contentType The new content type.
+     */
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    /**
      * Allows a header to be added.
      *
      * @param   name The header name.
@@ -613,6 +639,12 @@ public class MockHttpServletRequest implements HttpServletRequest {
      */
     public void setPost(boolean post) {
         this.post = post;
+
+        if (post) {
+            contentType = "application/x-www-form-urlencoded";
+        } else {
+            contentType = null;
+        }
     }
 
     /**
