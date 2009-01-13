@@ -78,6 +78,7 @@ create table users (
     login varchar(255) not null unique,
     password varchar(255) not null,
     password_expired bit not null,
+    partial bit,
     primary key (id)
 ) ENGINE=InnoDB;
 
