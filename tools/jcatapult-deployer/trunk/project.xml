@@ -33,7 +33,7 @@
   -->
   <properties file="${user.home}/inversoft-org-release-build.properties"/>
 
-  <property name="version.jcatapult" value="1.0-RC9"/>
+  <property name="version.jcatapult" value="1.0-RC10"/>
 
   <dependencies id="dependencies.project">
     <artifactGroup type="run"/>
