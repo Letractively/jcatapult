@@ -18,13 +18,20 @@ JCatapult requires Java version 6 (1.6) to use. You can download that from Sun's
 
 = Ant =
 
-JCatapult requires that you are using Apache Ant 1.7.0 or later. You will need to download Apache Ant if you don't already have it installed. The website for Ant is http://ant.apache.org.
+JCatapult requires that have using Apache Ant 1.7.0 or later installed. You will need to download Apache Ant if you don't already have it installed. The website for Ant is http://ant.apache.org.
 
 After you download and install Ant, please create an ANT_HOME environment variable and set it to the location of your Ant installation.
+
+= Savant =
+
+JCatapult requires that you have Savant 2.0 RC3 or later installed. You will need to download Savant if you don't already have it installed. The website for Savant is http://code.google.com/p/savant-build
+
+After you download and install Savant, please create an SAVANT_HOME environment variable and set it to the location of your Savant installation.
 
 = Tomcat =
 
 == Installation ==
+
 Currently, JCatapult requires the use of Tomcat 5.5 (Tomcat 6.0 will not work with JCatapult yet) for running applications in development. This will change in the future to support Jetty and many other application servers. For now, though, you will need to download Apache Tomcat from http://tomcat.apache.org. Tomcat requires that you configure the CATALINA_HOME environment variable to point to the Tomcat installation directory.
 
 *NOTE FOR WINDOWS USERS:* JCatapult requires that you install Tomcat using the non-service based installation. Running Tomcat as a Windows service will not work with JCatapult. You must use the ZIP file installation of Tomcat to work with JCatapult.
@@ -62,6 +69,7 @@ JCatapult's databasing capabilities currently only work with MySQL's default por
 It's highly recommended to create an environment variable that references the MySQL home directory and adding the mysql home bin directory to your path.  This is optional and not a requirement for JCatapult to function properly but this will make it much easier for you to run the MySQL client from the command line.
 
 === MySQL Connector Driver ===
+
 Because JCatapult uses JNDI to connect to MySQL and this JNDI entry is defined in Tomcat's context.xml, you must place the MySQL connector driver in the the tomcat installation's `common/lib` directory.  Because the version of this driver changes periodically, we recommend that you download the most current version from here -> [http://dev.mysql.com/downloads/connector/j/5.0.html]
 
 = The build.properties file =
