@@ -5,11 +5,11 @@ Here are the documentation pages that are available for the JCatapult framework.
 
 = Introduction =
 
+  * [Overview Overview of what JCatapult is all about]
   * [GettingStarted Getting started]
   * [BuildFromSource Build from source]
   * [Architecture]
   * [ProjectLayout Project layout]
-  * [Principles JCatapult Principles]
 
 = Guides =
 
