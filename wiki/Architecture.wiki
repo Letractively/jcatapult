@@ -7,15 +7,12 @@ JCatapult is a large amount of glue for a bunch of other frameworks. It also add
 The frameworks that JCatapult is currently constructed on top of are:
 
 || *Framework/Library* || *Function* || *Required* ||
-|| Apache Ant || build || Yes ||
-|| Savant || Dependency management || Yes ||
-|| Struts2 || MVC || Yes ||
-|| SmartURLs || Struts2 convention based plugin || Yes ||
+|| Apache Ant || Build (this is used via Savant) || Yes ||
+|| Savant || Dependency management and Build || Yes ||
 || Guice || Dependency injection || No ||
 || JPA via Hibernate || ORM || No ||
-|| ACEGI || Security || No ||
 || JavaMail || Email || No ||
-|| FreeMarker || Email and moduleization || No ||
+|| FreeMarker || MVC views, email, MVC tags || No ||
 || SiteMesh || Template engine || No ||
 || Commons configuration || Configuration || Yes ||
 || Joda || Date time || Yes ||
@@ -28,11 +25,11 @@ One of the major features of JCatapult is that it provides a module methodology 
   * Entities
   * Actions (MVC/URL actions handlers)
   * Services
-  * Views (Struts/XWork results using FreeMarker or Velocity)
+  * Views (MVC views/results using FreeMarker)
   * Static resources (CSS, HTML, images, JavaScript, etc)
   * Database migration scripts
 
-The beauty of this type of moduleization is that it is very simple to define functionality and reuse it across multiple applications.
+The beauty of this type of modularization is that it is very simple to define functionality and reuse it across multiple applications.
 
 An example of a module might be a _user_ module. This module might provide these pieces of functionality:
 
