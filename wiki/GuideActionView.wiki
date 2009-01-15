@@ -1,27 +1,24 @@
-#summary Action and View Guide
+#summary Action and View Guide for the JCatapult MVC
 
 = Actions and Views =
 
-JCatapult currently uses Struts 2 and the Struts 2 Convention Plugin for the MVC layer. These two technologies are used as is without any major changes and therefore, all of the documentation for both of these technologies can be used as reference. However, to provide a simple means to get up and running, we'll cover the basics of writing actions and views for JCatapult. Detailed coverage of topics like annotations and configuration for these technologies will be left to their respective documentation sites:
-
-http://struts.apache.org/2.x/index.html
-
-http://cwiki.apache.org/S2PLUGINS/convention-plugin.html
+This guide is a quick overview of writing actions and views for the JCatapult MVC. For in depth MVC documentation, look at the advanced section of the DocumentationHome wiki page.
 
 = Conventions =
 
-JCatapult's MVC is convention based. This means that you don't have to mess around with Struts2 XML configuration files in order to get going. Instead, JCatapult maps incoming request URLs directly to actions and views. This is done using the Struts 2 Convention Plugin. Here is a brief summary of the conventions:
+JCatapult's MVC is convention based. This means that you don't have to mess around with any XML configuration files in order to get going. Instead, JCatapult maps incoming request URLs directly to actions and views. Here is a brief summary of the conventions:
 
 == Action Conventions ==
 
-Actions are translated into URLs during the application initialization process. This is important because it increases the performance of the application at runtime. Here is the process that JCatapult uses to locate actions and translate them into URLs.
+Actions are translated into URLs based on the package name and the class name of the class. This translation is spelled out in these steps:
 
-  * Actions are located by inspecting the classpath for any packages named `action`, `actions`, `struts` or `struts2`.
+  * Actions are located by inspecting the classpath for any packages named `action`
   * Packages that are found are called the *base action packages*
-  * These packages are inspected for classes that implement the `com.opensymphony.xwork2.Action` interface or whose name ends with `Action` - for example `UserUpdateAction`. This inspect includes sub-packages.
-  * Any classes found are translated into URLs using the package name and class name.
+  * These packages are inspected for classes that are annotated with the `org.jcatapult.mvc.action.annotation.Action` annotation
+  * All sub-packages are also inspect for action classes
+  * Any classes found are translated into URLs using the package name and class name
 
-The action name is translated into a URL using this process:
+The package and class name are translated into a URL using this process:
 
   * Drop the *base action package* from the fully qualified class name
   * Replace periods with forward slashes
@@ -39,24 +36,24 @@ Here are some examples of how actions are mapped to URLs by JCatapult.
 || com.example.actions.users.List || /users/list ||
 || com.example.actions.waterProducts.SpeedBoat || /water-products/speed-boat ||
 
-== View Conventions ==
+== Result Conventions ==
 
-JCatapult locates all of the views in the `WEB-INF/content` directory. The location of a specific view is simply the URL plus the file extension for the type of view file. For example, if the URL is `/foo/bar`, JCatapult would assume the result is located at `WEB-INF/content/foo/bar.jsp`. Currently, JCatapult only supports JSP, FreeMarker or Velocity views. Additionally, the views can be located in the classpath or the web application.
+The view part of a traditional MVC are known as results in the JCatapult MVC since they are normally the result of invoking an action. JCatapult locates all of the results in the `WEB-INF/content` directory. The location of a specific result is simply the URL plus the file extension. For example, if the URL is `/foo/bar`, JCatapult would assume the result is located at `WEB-INF/content/foo/bar.ftl`. Currently, JCatapult only supports FreeMarker results, but we have plans to support JSPs soon. FreeMarker is highly preferred because it allows for easier unit testing, it is a much more robust templating engine, allows results to be stored inside JAR files or in the classpath, and it allows for dynamic discovery of new tags. When JSP support is added, many features will be lacking from it because of the severe limitations of JSPs.
 
 === Examples ===
 
-Here are some examples of how views are mapped to URLs (and vice-versa) by JCatapult.
+Here are some examples of how results are mapped to URLs (and vice-versa) by JCatapult.
 
-|| *URL* || *View* ||
-|| /index || WEB-INF/content/index.jsp ||
-|| /user/list || WEB-INF/content/user/list.jsp ||
-|| /water-products/speed-boat || WEB-INF/content/water-products/speed-boat.jsp ||
+|| *URL* || *Result* ||
+|| /index || WEB-INF/content/index.ftl ||
+|| /user/list || WEB-INF/content/user/list.ftl ||
+|| /water-products/speed-boat || WEB-INF/content/water-products/speed-boat.ftl ||
 
-= Webapp Views Without Actions =
+= Webapp Results Without Actions =
 
-If you need to create a view that doesn't have an action behind it, you can accomplish this by simply creating a JSP or FTL (FreeMarker template) file in the correct location as described above. Here is an example of a JSP without an action:
+If you need to create a result that doesn't have an action behind it, you can accomplish this by simply creating an FTL (FreeMarker template) file in the correct location as described above. Here is an example of an FTL without an action:
 
-*WEB-INF/content/hello-world.jsp*
+*WEB-INF/content/hello-world.ftl*
 {{{
 <html>
 <body>
@@ -73,25 +70,20 @@ ant app
 
 and open your browser to http://localhost:8080/hello-world you should see this JSP.
 
-*NOTE:* This doesn't work inside modules. Module views have to have an action associated with them, even if the action is empty and does nothing.
-
 = Webapp Actions =
 
-JCatapult actions are Struts 2 actions and can implement the `com.opensymphony.xwork2.Action` interface (or extend any of the base-classes from XWork or JCatapult) or can be POJOs whose name ends with `Action`. JCatapult provides a common base-class called `org.jcatapult.struts.action.BaseAction` that provides access to the [EnvironmentAwareConfiguration Configuration] as well as the [PersistenceService persistence service].
+JCatapult actions are simply POJOs that contain the correct annotation. All JCatapult actions must be annotated with the `org.jcatapult.mvc.action.annotation.Action` annotation. This annotation signals to the JCatapult MVC that the class should be mapped to a URL.
 
-Here is an example of an action that would be associated with the _/hello-world_ URL and also with the view example from above. By associating the action with a view, we can provide dynamic data to the view from the action.
+Here is an example of an action that would be associated with the _/hello-world_ URL and also with the result example from above. By associating the action with a result, we can provide dynamic data to the view from the action. All public member variables and JavaBean properties inside the action automatically become available to the result.
 
 {{{
 package com.example.actions;
 
-import org.jcatapult.struts.action.BaseAction;
+import org.jcatapult.mvc.action.annotation.Action;
 
-public class HelloWorld extends BaseAction {
-  private String message;
-
-  public String getMessage() {
-    return message;
-  }
+@Action
+public class HelloWorld {
+  public String message;
 
   public String execute() {
     message = "Hello World!"
@@ -100,9 +92,9 @@ public class HelloWorld extends BaseAction {
 }
 }}}
 
-This action will be mapped by JCatapult to the _/hello-world_ URL because of its name. Likewise, it will be matched up with the `hello-world.jsp` since they are both associated with the same URL. JCatapult will first invoke the action and then render the result. If we update the result to pull the message value from the action, we will make the view dynamic. Here is the dynamic view:
+This action will be mapped by JCatapult to the _/hello-world_ URL because of its name and package. Likewise, it will be matched up with the `hello-world.ftl` since they are both associated with the same URL. JCatapult will first invoke the action and then render the result. If we update the result to pull the message value from the action, we will make it dynamic. Here is the dynamic result page:
 
-*WEB-INF/content/hello-world.jsp*
+*WEB-INF/content/hello-world.ftl*
 {{{
 <html>
 <body>
@@ -119,4 +111,12 @@ The message is Hello World!
 
 = Advanced =
 
-This document covers the basics of creating actions and views within a JCatapult application. There are a number of advanced topics, including overriding the conventions using annotations and handling return values from action methods, which are covered in the Struts 2 convention plugin documentation. Please refer to that document for details.
+This document covers the basics of creating actions and views within a JCatapult application. The JCatapult MVC also includes many other features covered in additional documentation. Here are the other features of the MVC:
+
+  * Parameter mapping
+  * Type conversion
+  * Forms
+  * Validation
+  * Messages and localization
+  * Results
+  * Scopes

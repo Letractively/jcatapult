@@ -1,9 +1,0 @@
-#summary How to create a simple view with JCatapult
-
-= Introduction =
-
-JCatapult uses Struts2 and the Convention plugin for Struts2 in order to make developing websites easier. The main technology that is important to learn is the Struts2 Convention Plugin. This plugin is well documented and rather than duplicating that documentation, this tutorial just points you over to that plugin's documentation.
-
-http://cwiki.apache.org/confluence/display/S2PLUGINS/Convention+Plugin
-
-This documentation provides the best way to create simple views and actions using JCatapult. There are no additional configuration necessary and the examples provided by the Struts2 Convention plugin documentation work perfectly with JCatapult.

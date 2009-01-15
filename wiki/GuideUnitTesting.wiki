@@ -1,4 +1,4 @@
-#summary A tutorial that guides you through creating a simple unit test.
+#summary A guide to unit testing in JCatapult applications.
 
 = Introduction =
 
@@ -40,10 +40,10 @@ public class CalculatorTest {
 }
 }}}
 
-This test verifies that the _add_ method on the _Calculator_ class works correctly. Next, we run the test from the command line using the _test_ target from the [AntJunitPlugin JUnit plugin].
+This test verifies that the _add_ method on the _Calculator_ class works correctly. Next, we run the test from the command line using the _test_ target via Savant.
 
 {{{
-$ ant test
+$ svnt test
 Buildfile: build.xml
 [savantinit] Initializing Savant - reading project.xml file
 [savantinit] Done initializing Savant - project is [jcatapult.org|jcatapult-doc-examples|1.0-RC1]

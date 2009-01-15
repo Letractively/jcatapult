@@ -10,6 +10,7 @@ This document describes how to get up and running with JCatapult.
 JCatapult requires Java version 6 (1.6) to use. You can download that from Sun's Java website at http://java.sun.com or use the standard method for your operating system. For example, OS X provides Java 6 downloads from the developer site and Linux has most JDKs in their repositories (via apt or yum).
 
 = JCatapult Distribution Installation =
+
   * Download the most current version of the JCatapult Distribution from the [http://code.google.com/p/jcatapult/downloads/list Downloads] page.
 
   * Unzip the distribution to a directory of your choice (e.g. /usr/share/jcatapult, C:\Program Files\jcatapult)
