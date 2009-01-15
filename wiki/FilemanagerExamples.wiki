@@ -51,7 +51,7 @@ The major difference between the first and second examples is that the second ex
   * deleteURI:  This is the action responsible for deleting the file from disk.  This is implemented by you.  In the example above, the app would have an action called 'deleteImage' which takes an employee id.  This action uses the employee id to load that particular employee from the database and then set the field holding the image uri to null.
 
 ==Class Examples==
-Please follow the [jCatapultFilemanagerConfiguration Filemanager Configuration and Setup Guide] before contiuing due to the fact that these examples depend on having the Filemanger configured and setup correctly.
+Please follow the [FilemanagerConfiguration Filemanager Configuration and Setup Guide] before contiuing due to the fact that these examples depend on having the Filemanger configured and setup correctly.
 
 =Delete File=
 Below is a sample class called `DeleteFile` that is referenced in the jsp example above:

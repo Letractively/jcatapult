@@ -7,23 +7,19 @@ Here are the documentation pages that are available for the JCatapult framework.
 
   * [Overview Overview of what JCatapult is all about]
   * [GettingStarted Getting started]
-  * [BuildFromSource Build from source]
-  * [Architecture]
   * [ProjectLayout Project layout]
+  * [SavantOverview JCatapult Savant overview]
+  * [CreateWebapp Creating a JCatapult web application]
+  * [CreateLibrary Creating a JCatapult library]
+  * [CreateModule Creating a JCatapult module]
+  * [Architecture]
+  * [BuildFromSource Build from source]
 
 = Guides =
 
-  * [GuideAntOverview JCatapult Ant overview]
-  * [AntPlugins JCatapult Ant plugins]
-
-  * [GuideModule JCatapult modules]
-  * [GuideLibrary JCatapult libraries]
-  * [GuideWebApp JCatapult WebApps]
-
+  * [GuideActionView Actions and views]
   * [GuideEntities Domains and entities]
   * [GuideDatabaseManagement Database management]
-  * [GuideNewActionView Actions and views] (the new MVC)
-  * [GuideActionView Actions and views] (the Struts MVC)
   * [GuideServices Services]
   * [GuideDependencyInjection Dependency Injection]
 
@@ -38,15 +34,7 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [GuideRelease Releasing JCatapult Projects]
   * [GuideVersioning JCatapult Versioning]
 
-= Tutorials =
-
-  * [TutorialView Simple view]
-  * [TutorialForm Simple form]
-  * [TutorialSimpleCrud Simple CRUD]
-  * [TutorialSimpleUnitTest Simple unit test]
-  * [TutorialSimpleModule Simple module]
-  * [TutorialLogin Login and security]
-  * [TutorialDatabaseManager Database management (migrations)]
+  * [GuideUnitTesting Unit testing]
 
 = API docs =
 
@@ -69,10 +57,9 @@ Below are links to topics about a specific JCatapult technology, service or API.
   * [MVCMessagesLocalization Messages, errors and localization]
   * [MVCScopes Scopes]
 
-== Ant ==
+== Savant ==
 
-  * [AntCreatingPlugins Creating ant plugins]
-  * [AntDependencies Adding and removing project dependencies]
+  * [SavantPlugins JCatapult Savant plugins]
 
 == Module ==
 
@@ -94,31 +81,9 @@ Below are links to topics about a specific JCatapult technology, service or API.
 == File manager ==
 
   * [FileManagerOverview Overview]
-  * [jCatapultFilemanagerConfiguration Configuration and Setup Guide]
+  * [FilemanagerConfiguration Configuration and Setup Guide]
   * [FileManagerAPI XML API]
   * [FileManagerFck FCK editor integration]
-
-
-= Methodologies =
-
-Below are links to various documents around JCatapult standard methodologies. These are broken into the various application lifecycle stages as well as best practices.
-
-== Lifecycle ==
-
-  * [ProjectCreation Project creation]
-  * [Scaffolding Scaffolding]
-  * [UnitTesting Unit testing]
-  * [IntegrationTestsing Integration testing]
-  * [RunningAWebapp Running a web application]
-  * [RunningAModule Running a module]
-  * [Releasing Releasing a version]
-
-== Best Practices ==
-
-  * [BestPracticesStruts Struts2/SmartURLs best practices]
-  * [BestPracticesGuice Guice dependency injection best practices]
-  * [BestPracticesTiers Standard application tiers best practices]
-  * [BestPracticesTesting Testing best practices]
 
 = Future =
 

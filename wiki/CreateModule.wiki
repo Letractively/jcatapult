@@ -1,6 +1,6 @@
 #summary Creating a module
 
-= modules =
+= Modules =
 
 Modules are complete working sets of functionality that are able to be plugged into JCatapult web applications. Some examples of modules might include:
 
@@ -23,13 +23,13 @@ JCatapult provides all of the support for adding modules to a web application in
 Run the _make-project_ script that is located at _JCATAPULT_HOME/tools/makeproject_. You can add that directory to your path. This script has a simple help menu if you don't know how to use it. The syntax for creating a module is:
 
 {{{
-make-project create-module
+make-project module
 }}}
 
 After you answer the questions it asks, you should have a newly created module. This module can be built using the following command:
 
 {{{
-ant clean app
+svnt clean app
 }}}
 
 Once the module has been compiled, you can run the module inside Tomcat by executing the Tomcat scripts located in _target/tomcat/bin_ like this:
@@ -45,3 +45,24 @@ target\tomcat\bin\tomcat.bat run
 }}}
 
 Now you should be able to access the newly created module in a browser via http://localhost:8080
+
+
+= Details =
+
+When you execute the `svnt app` command from above, these steps are taken:
+
+  # Compile the code
+  # JAR the project
+  # Copy the project JARs into the _web/WEB-INF/lib_ directory
+  # Copy the project dependencies using Savant into the _web/WEB-INF/lib_ directory
+  # Copy additional configuration from _src/conf/main_ into _web/WEB-INF/classes_
+  # Setup the Tomcat scripts and configuration into _target/tomcat_ (this is accomplished by Savant's Tomcat plugin)
+
+After these steps have completed, the application is ready to be run. The Tomcat configuration is setup so that the web application is run directly from the _web_ directory of the project. This makes modifications to web application resources immediately available (such as JSP changes).
+
+The `tomcat` script located in `target/tomcat/bin` takes a number of different commands that control how Tomcat is started. Here are the commands and their purpose:
+
+|| *start* || Start Tomcat in a new process (fork in `*`nix). Output from Tomcat is directed to _target/tomcat/logs/catalina.out_ ||
+|| *stop* || Shutdown a previously started Tomcat instance ||
+|| *run* || Starts Tomcat in the current process. The output is displayed to stdout ||
+|| *start jpda* || Starts Tomcat in debug mode ||
