@@ -1,0 +1,5 @@
+[#ftl/]
+<div${append_attributes(attributes)}[#if inEditMode] onclick="top.CMS.edit_content_node('${name}');"[/#if]>[#t/]
+${content.content}[#t/]
+</div>[#t/]
+[#if inEditMode]<script type="text/javascript">top.CMS.register_content_node('${attributes['id']}', '${name}', ${(attributes['global']!false)?string}, '${content.content?js_string}');</script>[/#if]
