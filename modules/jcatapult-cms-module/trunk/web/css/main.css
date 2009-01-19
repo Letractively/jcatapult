@@ -1,0 +1,31 @@
+div, p {
+  margin: 0;
+  padding: 0;
+}
+
+#cms-content-editor-container, #cms-meta-editor-container, #cms-publish, #cms-revert {
+  display: none;
+}
+
+.cms-node-editable {
+  border: 1px black dashed;
+  cursor: default;
+}
+
+html, body {
+  height: 98%;
+}
+
+#cms-view {
+  border-style: none;
+  border-top: 1px solid black;
+  height: 98%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+#cms-promo {
+  float: right;
+  font-style: italic;
+}
