@@ -43,7 +43,7 @@ JCatapult assumes your webapp will require the use of SSL and as a result sets t
 If your webapp does not require an SSL connection, then you can override the default server.xml by providing your own in your project without the 8443 connector and implementing the tomcat plugin's deploy_local_post macrodef inside your project's build.xml.  An example implementation has been provided below and assumes you will be overriding the default server.xml with one in your project located at deploy/tomcat/main/conf/server.xml
 
 {{{
-<macrodef name="deploy_local_post">
+<macrodef name="tomcat_post">
     <sequential>
       <copy file="deploy/tomcat/main/conf/server.xml" todir="${dir.target.tomcat}/conf" overwrite="true"/>
     </sequential>
