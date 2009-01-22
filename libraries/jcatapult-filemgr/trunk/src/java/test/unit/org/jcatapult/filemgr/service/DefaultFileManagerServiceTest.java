@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import org.easymock.EasyMock;
 import org.jcatapult.config.Configuration;
 import org.jcatapult.filemgr.BaseTest;
-import org.jcatapult.filemgr.domain.StorageResult;
+import org.jcatapult.filemgr.domain.StoreResult;
 import org.jcatapult.filemgr.domain.*;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import static org.junit.Assert.*;
@@ -52,7 +52,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, request);
-        StorageResult result = service.store(new File("project.xml"), "foo.xml", "application/active-x", null);
+        StoreResult result = service.store(new File("project.xml"), "foo.xml", "application/active-x", null);
         assertTrue(result.getError() != 0);
         assertEquals(2, result.getError());
 
@@ -127,7 +127,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, httpRequest);
-        StorageResult result = service.store(temp, "foo-bar.xml", "image/gif", "");
+        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "");
         assertEquals(0, result.getError());
         assertEquals("/foo/some-dir/foo-bar.xml", result.getFileURI());
 
@@ -161,7 +161,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, httpRequest);
-        StorageResult result = service.store(temp, "foo-bar.xml", "image/gif", "image");
+        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "image");
         assertEquals(0, result.getError());
         assertEquals("/foo/some-dir/image/foo-bar.xml", result.getFileURI());
 
@@ -228,7 +228,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
-        StorageResult result = service.store(temp, "foo-bar.xml", "image/gif", "");
+        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "");
 
         assertEquals(0, result.getError());
         assertEquals("/file-mgr.file-servlet/foo-bar.xml", result.getFileURI());
@@ -265,7 +265,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, request);
-        StorageResult result = service.store(temp, "foo-bar.xml", "image/gif", "image");
+        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "image");
 
         assertEquals(0, result.getError());
         assertEquals("/file-mgr.file-servlet/image/foo-bar.xml", result.getFileURI());
@@ -302,7 +302,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, request);
-        StorageResult result = service.store(temp, "foo-bar.xml", "image/gif", "image");
+        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "image");
 
         assertEquals(0, result.getError());
         assertTrue(result.isChangedFileName());
@@ -472,7 +472,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
-        StorageResult result = service.store(temp, "delete-test.xml", "image/gif", "");
+        StoreResult result = service.store(temp, "delete-test.xml", "image/gif", "");
 
         assertEquals(0, result.getError());
         assertEquals("/file-mgr.file-servlet/delete-test.xml", result.getFileURI());
@@ -514,7 +514,7 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
-        StorageResult result = service.store(temp, "delete-test.xml", "image/gif", "");
+        StoreResult result = service.store(temp, "delete-test.xml", "image/gif", "");
 
         assertEquals(0, result.getError());
         assertEquals("/file-mgr.file-servlet/delete-test.xml", result.getFileURI());
