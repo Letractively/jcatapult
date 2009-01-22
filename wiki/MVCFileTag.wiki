@@ -4,6 +4,26 @@
 
 The *file* tag generates a file upload control.
 
+
+= Caveats =
+
+The file upload can handle collections of files like:
+
+{{{
+public class Action {
+  public List<FileInfo> files;
+}
+}}}
+
+You can also place the annotation on a collection property. However, in order to handle errors for collections, you need not specify errors for each possible index within the collection as this would be really lame. Instead, just use the name of the property for errors like this:
+
+{{{
+files.required=You must upload a file dude.
+files.fileUploadSize=That file is WAY too big man.
+}}}
+
+Lastly, if the form doesn't validate,  
+
 *NOT FINISHED YET!!!!!!!!*
 
 = Association =
