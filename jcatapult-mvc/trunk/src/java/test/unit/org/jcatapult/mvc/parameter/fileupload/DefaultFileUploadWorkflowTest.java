@@ -17,6 +17,7 @@ package org.jcatapult.mvc.parameter.fileupload;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -88,6 +89,47 @@ public class DefaultFileUploadWorkflowTest {
         ExpressionEvaluator expressionEvaluator = EasyMock.createStrictMock(ExpressionEvaluator.class);
         EasyMock.expect(expressionEvaluator.getAnnotation(FileUpload.class, "userfile", action)).andReturn(null);
         expressionEvaluator.setValue(eq("userfile"), same(action), capture());
+        EasyMock.replay(expressionEvaluator);
+
+        ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
+        EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.replay(invocation);
+
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultFileUploadWorkflow workflow = new DefaultFileUploadWorkflow(new HttpServletRequestWrapper(request), actionInvocationStore, null, expressionEvaluator, config);
+        workflow.perform(chain);
+
+        EasyMock.verify(request, config, chain, actionInvocationStore, invocation, expressionEvaluator);
+    }
+
+    @Test
+    public void testMultipleFilesNoAnnotation() throws IOException, ServletException {
+        String body = FileTools.read("src/java/test/unit/org/jcatapult/mvc/parameter/fileupload/http-test-body-multiple-files.txt").toString();
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("POST");
+        EasyMock.expect(request.getContentType()).andReturn("multipart/form-data, boundary=AaB03x").times(2);
+        EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
+        EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
+        EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.replay(request);
+
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getStringArray("jcatapult.mvc.file-upload.allowed-content-types")).andReturn(new String[0]);
+        EasyMock.expect(config.getLong("jcatapult.mvc.file-upload.max-size", 1024000)).andReturn(10l);
+        EasyMock.replay(config);
+
+        Object action = new Object();
+        ExpressionEvaluator expressionEvaluator = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        EasyMock.expect(expressionEvaluator.getAnnotation(FileUpload.class, "userfiles", action)).andReturn(null);
+        expressionEvaluator.setValue(eq("userfiles"), same(action), captureMultiple());
         EasyMock.replay(expressionEvaluator);
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
@@ -315,12 +357,42 @@ public class DefaultFileUploadWorkflowTest {
     public <T> T capture() {
         reportMatcher(new IArgumentMatcher() {
             public boolean matches(Object argument) {
-                FileInfo info = (FileInfo) argument;
-                assertNotNull(info);
-                assertEquals("text/plain", info.contentType);
-                assertEquals("filename", info.name);
+                List<FileInfo> list = (List<FileInfo>) argument;
+                assertNotNull(list);
+                assertEquals(1, list.size());
+                assertNotNull(list.get(0));
+                assertEquals("text/plain", list.get(0).contentType);
+                assertEquals("filename", list.get(0).name);
                 try {
-                    assertEquals("test", FileTools.read(info.file).toString());
+                    assertEquals("test", FileTools.read(list.get(0).file).toString());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                return true;
+            }
+
+            public void appendTo(StringBuffer buffer) {
+            }
+        });
+
+        return null;
+    }
+
+    public <T> T captureMultiple() {
+        reportMatcher(new IArgumentMatcher() {
+            public boolean matches(Object argument) {
+                List<FileInfo> list = (List<FileInfo>) argument;
+                assertNotNull(list);
+                assertEquals(2, list.size());
+                assertNotNull(list.get(0));
+                assertNotNull(list.get(1));
+                assertEquals("text/plain", list.get(0).contentType);
+                assertEquals("text/plain", list.get(1).contentType);
+                assertEquals("filename", list.get(0).name);
+                assertEquals("filename2", list.get(1).name);
+                try {
+                    assertEquals("test", FileTools.read(list.get(0).file).toString());
+                    assertEquals("test2", FileTools.read(list.get(1).file).toString());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

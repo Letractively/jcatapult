@@ -16,6 +16,7 @@
 package org.jcatapult.mvc.parameter.el;
 
 import java.util.ArrayList;
+import static java.util.Arrays.*;
 import java.util.HashMap;
 
 import org.example.domain.Action;
@@ -290,6 +291,18 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         assertEquals(2, action.user.securityQuestions.length);
         assertEquals("What is your pet's name?", action.user.securityQuestions[0]);
         assertEquals("What is your home town?", action.user.securityQuestions[1]);
+    }
+
+    /**
+     * Tests setting a collection with a single value onto a plain field.
+     */
+    @Test
+    public void testFieldSettingWithCollectionSingleValue() {
+        // Test nested property set and type conversion
+        ActionField action = new ActionField();
+        evaluator.setValue("user.name", action, asList("Brian"));
+        evaluator.setValue("user.active", action, array("true"), null);
+        assertEquals("Brian", action.user.name);
     }
 
     /**

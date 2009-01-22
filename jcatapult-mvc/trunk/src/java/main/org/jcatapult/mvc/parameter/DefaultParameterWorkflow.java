@@ -15,34 +15,25 @@
  */
 package org.jcatapult.mvc.parameter;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.ExpressionException;
-import org.jcatapult.mvc.parameter.fileupload.FileInfo;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import net.java.util.Pair;
 
 /**
  * <p>
@@ -143,45 +134,6 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
      * Does nothing.
      */
     public void destroy() {
-    }
-
-    protected Pair<Map<String, FileInfo>, Map<String, String[]>> handleFiles() {
-        Map<String, FileInfo> files = new HashMap<String, FileInfo>();
-        Map<String, List<String>> params = new HashMap<String, List<String>>();
-
-        FileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        try {
-            List items = upload.parseRequest(request);
-            for (Object item : items) {
-                FileItem fileItem = (FileItem) item;
-                String name = fileItem.getFieldName();
-                if (fileItem.isFormField()) {
-                    String fileName = fileItem.getName();
-                    String contentType = fileItem.getContentType();
-                    File file = File.createTempFile("jcatapult", "fileupload");
-                    fileItem.write(file);
-                    files.put(name, new FileInfo(file, fileName, contentType));
-                } else {
-                    String value = fileItem.getString();
-                    List<String> list = params.get(name);
-                    if (list == null) {
-                        list = new ArrayList<String>();
-                        params.put(name, list);
-                    }
-
-                    list.add(value);
-                }
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Unable to handle file uploads", e);
-        }
-
-        Map<String, String[]> finalParams = new HashMap<String, String[]>();
-        for (String key : params.keySet()) {
-            finalParams.put(key, params.get(key).toArray(new String[params.get(key).size()]));
-        }
-        return Pair.p(files, finalParams);
     }
 
     /**

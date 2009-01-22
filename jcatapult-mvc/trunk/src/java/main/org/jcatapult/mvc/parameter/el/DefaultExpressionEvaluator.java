@@ -211,7 +211,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     /**
      * {@inheritDoc}
      */
-    public <T extends Annotation> T getAnnotation(Class<T> type, String expression, Object object) {
+    public <T extends Annotation> T getAnnotation(Class<T> type, String expression, Object object) {        
         List<String> atoms = parse(expression);
         Context context = new Context(converterProvider, expression, atoms);
         context.init(object);

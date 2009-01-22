@@ -54,8 +54,7 @@ public interface MessageStore {
      *
      * @param   field The field that the file was being set into.
      * @param   uri The request URI.
-     * @param   size The file size that was too large.
-     * @throws  MissingMessageException If the file size message is missing.
+     * @param   size The file size that was too large. @throws  MissingMessageException If the file size message is missing.
      */
     void addFileUploadSizeError(String field, String uri, long size) throws MissingMessageException;
 
