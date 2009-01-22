@@ -26,7 +26,7 @@ import javax.xml.bind.Marshaller;
 
 import org.jcatapult.filemgr.domain.CreateDirectoryResult;
 import org.jcatapult.filemgr.domain.Listing;
-import org.jcatapult.filemgr.domain.StorageResult;
+import org.jcatapult.filemgr.domain.StoreResult;
 import org.jcatapult.filemgr.service.FileManagerService;
 import org.jcatapult.mvc.action.result.annotation.Header;
 import org.jcatapult.mvc.action.result.annotation.Stream;
@@ -104,7 +104,7 @@ public class FileManager {
 
     static {
         try {
-            context = JAXBContext.newInstance(CreateDirectoryResult.class, Listing.class, StorageResult.class);
+            context = JAXBContext.newInstance(CreateDirectoryResult.class, Listing.class, StoreResult.class);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }

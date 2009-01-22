@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.jcatapult.filemgr.domain.CreateDirectoryResult;
 import org.jcatapult.filemgr.domain.Listing;
-import org.jcatapult.filemgr.domain.StorageResult;
+import org.jcatapult.filemgr.domain.StoreResult;
 
 import com.google.inject.ImplementedBy;
 
@@ -67,7 +67,7 @@ public interface FileManagerService {
      *          to the directory specified <strong>jcatapult.file-mgr.storage-dir</strong>.
      * @return  The result, which could be an error or a success.
      */
-    StorageResult store(File file, String fileName, String contentType, String directory);
+    StoreResult store(File file, String fileName, String contentType, String directory);
 
     /**
      * <p>
@@ -196,7 +196,7 @@ public interface FileManagerService {
      * <p>Deletes a file from disk that has been stored via the
      * {@link org.jcatapult.filemgr.service.FileManagerService#store(java.io.File, String, String, String)} method.
      * The file URI supplied to this method should be exactly equal to
-     * {@link org.jcatapult.filemgr.domain.StorageResult#getFileURI()} or the same with the
+     * {@link org.jcatapult.filemgr.domain.StoreResult#getFileURI()} or the same with the
      * <strong>jcatapult.file-mgr.servlet-prefix</strong> removed.</p>
      *
      * <p>Example</p>
@@ -209,7 +209,7 @@ public interface FileManagerService {
      * <code>StorageResult result = store(file, "test.gif", "image/gif", "images/test")</code>
      *
      * <p>After storing the file, I should get the following file URI when calling
-     * {@link org.jcatapult.filemgr.domain.StorageResult#getFileURI()}:<br/><br/>
+     * {@link org.jcatapult.filemgr.domain.StoreResult#getFileURI()}:<br/><br/>
      *
      * file URI: <strong>/files/images/test/test.gif</strong></p>
      *
@@ -223,7 +223,7 @@ public interface FileManagerService {
      *
      * @param fileURI The
      * file URI supplied to this method should be exactly equal to
-     * {@link org.jcatapult.filemgr.domain.StorageResult#getFileURI()} or the same with the
+     * {@link org.jcatapult.filemgr.domain.StoreResult#getFileURI()} or the same with the
      * <strong>jcatapult.file-mgr.servlet-prefix</strong> removed.
      * @return true if deleted, false otherwise
      */

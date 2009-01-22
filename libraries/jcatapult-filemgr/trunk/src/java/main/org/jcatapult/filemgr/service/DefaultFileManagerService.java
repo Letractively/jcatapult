@@ -50,8 +50,8 @@ public class DefaultFileManagerService implements FileManagerService {
     /**
      * {@inheritDoc}
      */
-    public StorageResult store(File file, String fileName, String contentType, String directory) {
-        StorageResult result = new StorageResult();
+    public StoreResult store(File file, String fileName, String contentType, String directory) {
+        StoreResult result = new StoreResult();
         if (!file.exists() || file.isDirectory()) {
             logger.severe("The file to store [" + file.getAbsolutePath() + "] no longer exists.  Please verify that it was uploaded successfully.");
             result.setError(1); // file missing

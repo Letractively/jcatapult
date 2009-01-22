@@ -17,7 +17,6 @@
 package org.jcatapult.filemgr.action.jcatapult.fck;
 
 import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
@@ -27,11 +26,12 @@ import org.jcatapult.filemgr.domain.CreateDirectoryResult;
 import org.jcatapult.filemgr.domain.DirectoryData;
 import org.jcatapult.filemgr.domain.FileData;
 import org.jcatapult.filemgr.domain.Listing;
-import org.jcatapult.filemgr.domain.StorageResult;
+import org.jcatapult.filemgr.domain.StoreResult;
 import org.jcatapult.filemgr.domain.fck.Connector;
 import org.jcatapult.filemgr.domain.fck.CurrentFolder;
 import org.jcatapult.filemgr.domain.fck.ErrorData;
 import org.jcatapult.filemgr.domain.fck.Folder;
+import org.jcatapult.filemgr.domain.fck.UploadResult;
 import org.jcatapult.filemgr.service.FileManagerService;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.action.result.annotation.Header;
@@ -49,7 +49,7 @@ import com.google.inject.Inject;
  */
 @Header(code = "error", status = 500)
 @Stream(type = "text/xml", name = "result")
-@Forward(code = "uplodate", page = "/file-mgr/fck-file-manager.ftl")
+@Forward(code = "upload", page = "/file-mgr/fck-file-manager.ftl")
 public class FckFileManager extends FileManager {
     private static final JAXBContext context;
 
@@ -106,7 +106,7 @@ public class FckFileManager extends FileManager {
     @Override
     protected String doStore() {
         String directory = (type != null) ? type + "/" + currentFolder : currentFolder;
-        StorageResult result = fileManagerService.store(newFile.file, newFile.name, newFile.contentType, directory);
+        StoreResult result = fileManagerService.store(newFile.file, newFile.name, newFile.contentType, directory);
         connector = translate(result);
         return "upload";
     }
@@ -142,14 +142,14 @@ public class FckFileManager extends FileManager {
         return connector;
     }
 
-    private Connector translate(StorageResult result) {
+    private Connector translate(StoreResult result) {
         Connector connector = new Connector();
         connector.setCommand(FileManagerCommand.CreateFolder.toString());
         connector.setResourceType(type);
         if (result.getError() != 0) {
             connector.setError(new ErrorData(1, "Unable to upload file."));
         } else {
-            connector.setUploadResult(new org.jcatapult.filemgr.domain.fck.UploadResult(result.getModifiedFileName(),
+            connector.setUploadResult(new UploadResult(result.getModifiedFileName(),
                 result.getFileURI(), result.isChangedFileName(), result.getFile()));
         }
 
