@@ -16,9 +16,11 @@
 package org.jcatapult.mvc.parameter.el;
 
 import java.beans.Introspector;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +31,7 @@ import java.util.WeakHashMap;
 
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 
-import static net.java.lang.reflect.ReflectionTools.*;
+import static net.java.lang.reflect.ReflectionTools.findField;
 
 /**
  * <p>
@@ -121,7 +123,7 @@ public class MemberAccessor extends Accessor {
                 throw new ExpressionException("Missing getter for property [" + propertyInfo.getName() +
                     "] in class [" + declaringClass + "]");
             }
-            return invokeMethod(getter, this.object);
+            return invokeGetter(getter, this.object);
         }
 
         return getField(field, this.object);
@@ -138,7 +140,7 @@ public class MemberAccessor extends Accessor {
                 throw new ExpressionException("Missing setter for property [" + propertyInfo.getName() +
                     "] in class [" + declaringClass + "]");
             }
-            invokeMethod(setter, object, value);
+            invokeSetter(setter, object, value);
         } else {
             setField(field, object, value);
         }
@@ -323,5 +325,162 @@ public class MemberAccessor extends Accessor {
         String propertyName = Introspector.decapitalize(name.substring(startIndex));
         String prefix = name.substring(0, startIndex);
         return new PropertyName(prefix, propertyName);
+    }
+
+    /**
+     * <p>
+     * This handles invoking the getter method.
+     * </p>
+     *
+     * @param   method The method to invoke.
+     * @param   object The object to invoke the method on.
+     * @return  The return value of the method.
+     * @throws  ExpressionException If any mishap occurred whilst Reflecting sire. All the exceptions
+     *          that could be thrown whilst invoking will be wrapped inside the ReflectionException.
+     * @throws  RuntimeException If the target of the InvocationTargetException is a RuntimeException,
+     *          in which case, it is re-thrown.
+     * @throws  Error If the target of the InvocationTargetException is an Error, in which case, it
+     *          is re-thrown.
+     */
+    public static Object invokeGetter(Method method, Object object)
+    throws ExpressionException, RuntimeException, Error {
+        try {
+            // I think we have a winner
+            return method.invoke(object);
+        } catch (IllegalAccessException iae) {
+            throw new ExpressionException("Illegal access for method [" + method + "]", iae);
+        } catch (IllegalArgumentException iare) {
+            throw new ExpressionException("Illegal argument for method [" + method + "]", iare);
+        } catch (InvocationTargetException ite) {
+
+            // Check if the target is a runtime or error and re-throw it
+            Throwable target = ite.getTargetException();
+
+            if (target instanceof RuntimeException) {
+                throw (RuntimeException) target;
+            }
+
+            if (target instanceof Error) {
+                throw (Error) target;
+            }
+
+            throw new ExpressionException("Method [" + method + "] threw an exception [" + target.toString() + "]", target);
+        }
+    }
+
+    /**
+     * <p>
+     * This handles invoking the setter method and also will handle a single special case where the
+     * setter method takes a single object and the value is a collection with a single value.
+     * </p>
+     *
+     * @param   method The method to invoke.
+     * @param   object The object to invoke the method on.
+     * @param   value The value to set into the method.
+     * @throws  ExpressionException If any mishap occurred whilst Reflecting sire. All the exceptions
+     *          that could be thrown whilst invoking will be wrapped inside the ReflectionException.
+     * @throws  RuntimeException If the target of the InvocationTargetException is a RuntimeException,
+     *          in which case, it is re-thrown.
+     * @throws  Error If the target of the InvocationTargetException is an Error, in which case, it
+     *          is re-thrown.
+     */
+    public static void invokeSetter(Method method, Object object, Object value)
+    throws ExpressionException, RuntimeException, Error {
+        Class[] types = method.getParameterTypes();
+        if (types.length != 1) {
+            throw new ExpressionException("Invalid method [" + method + "] it should take a single parameter");
+        }
+
+        Class type = types[0];
+        if (!type.isInstance(value) && Collection.class.isInstance(value)) {
+            // Handle the Collection special case
+            Collection c = (Collection) value;
+            if (c.size() == 1) {
+                value = c.iterator().next();
+            } else {
+                throw new ExpressionException("Cannot set a Collection that contains multiple values into the method [" +
+                    method + "] which is not a collection.");
+            }
+        }
+
+        try {
+            // I think we have a winner
+            method.invoke(object, value);
+        } catch (IllegalAccessException iae) {
+            throw new ExpressionException("Illegal access for method [" + method + "]", iae);
+        } catch (IllegalArgumentException iare) {
+            throw new ExpressionException("Illegal argument for method [" + method + "]", iare);
+        } catch (InvocationTargetException ite) {
+
+            // Check if the target is a runtime or error and re-throw it
+            Throwable target = ite.getTargetException();
+
+            if (target instanceof RuntimeException) {
+                throw (RuntimeException) target;
+            }
+
+            if (target instanceof Error) {
+                throw (Error) target;
+            }
+
+            throw new ExpressionException("Method [" + method + "] threw an exception [" + target.toString() + "]", target);
+        }
+    }
+
+    /**
+     * <p>
+     * This handles fetching a field value.
+     * </p>
+     *
+     * @param   field The field to get.
+     * @param   object The object to get he field from.
+     * @return  The value of the field.
+     * @throws  ExpressionException If any mishap occurred whilst Reflecting sire. All the exceptions
+     *          that could be thrown whilst invoking will be wrapped inside the ReflectionException.
+     */
+    public static Object getField(Field field, Object object) throws ExpressionException {
+        try {
+            // I think we have a winner
+            return field.get(object);
+        } catch (IllegalAccessException iae) {
+            throw new ExpressionException("Illegal access for field [" + field + "]", iae);
+        } catch (IllegalArgumentException iare) {
+            throw new ExpressionException("Illegal agrument for field [" + field + "]", iare);
+        }
+    }
+
+    /**
+     * <p>
+     * This handles setting a value on a field and also will handle a single special case where the
+     * setter method takes a single object and the value is a collection with a single value.
+     * </p>
+     *
+     * @param   field The field to set.
+     * @param   object The object to set the field on.
+     * @param   value The value to set into the field.
+     * @throws  ExpressionException If any mishap occurred whilst Reflecting sire. All the exceptions
+     *          that could be thrown whilst invoking will be wrapped inside the ReflectionException.
+     */
+    public static void setField(Field field, Object object, Object value) throws ExpressionException {
+        Class type = field.getType();
+        if (!type.isInstance(value) && Collection.class.isInstance(value)) {
+            // Handle the Collection special case
+            Collection c = (Collection) value;
+            if (c.size() == 1) {
+                value = c.iterator().next();
+            } else {
+                throw new ExpressionException("Cannot set a Collection that contains multiple values into the field [" +
+                    field + "] which is not a collection.");
+            }
+        }
+
+        try {
+            // I think we have a winner
+            field.set(object, value);
+        } catch (IllegalAccessException iae) {
+            throw new ExpressionException("Illegal access for field [" + field + "]", iae);
+        } catch (IllegalArgumentException iare) {
+            throw new ExpressionException("Illegal agrument for field [" + field + "]", iare);
+        }
     }
 }

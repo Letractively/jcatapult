@@ -15,6 +15,10 @@
  */
 package org.jcatapult.mvc.validation;
 
+import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.Map;
+
 import org.jcatapult.mvc.validation.annotation.Required;
 
 /**
@@ -32,6 +36,20 @@ public class RequiredValidator implements Validator<Required> {
      * @return  True if the value is not null, false if it is null.
      */
     public boolean validate(Required annotation, Object container, Object value) {
+        if (value != null && value instanceof Collection) {
+            Collection c = (Collection) value;
+            return !c.isEmpty();
+        }
+
+        if (value != null && value instanceof Map) {
+            Map c = (Map) value;
+            return !c.isEmpty();
+        }
+
+        if (value != null && value.getClass().isArray()) {
+            return Array.getLength(value) > 0;
+        }
+
         return value != null;
     }
 }

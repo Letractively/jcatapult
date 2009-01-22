@@ -88,34 +88,40 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
      */
     @SuppressWarnings("unchecked")
     public void perform(WorkflowChain chain) throws IOException, ServletException {
-        Map<String, FileInfo> files = null;
+        Map<String, List<FileInfo>> files = null;
         if (ServletFileUpload.isMultipartContent(request)) {
             ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
             Object action = actionInvocation.action();
             
-            Pair<Map<String, FileInfo>, Map<String, String[]>> pair = handleFiles();
+            Pair<Map<String, List<FileInfo>>, Map<String, String[]>> pair = handleFiles();
             files = pair.first;
-            final Map<String, String[]> parameters = pair.second;
 
             // Set the files into the action
-            for (Iterator<String> i = files.keySet().iterator(); i.hasNext(); ) {
-                String key = i.next();
-                FileInfo info = files.get(key);
-
+            for (String key : files.keySet()) {
+                // Verify file sizes and types
+                List<FileInfo> list = files.get(key);
                 FileUpload fileUpload = expressionEvaluator.getAnnotation(FileUpload.class, key, action);
-                if (fileUpload != null && !smallEnough(info, fileUpload) || !smallEnough(info)) {
-                    messageStore.addFileUploadSizeError(key, actionInvocation.uri(), info.getFile().length());
-                    info.deleteTempFile();
-                    i.remove();
-                } else if (fileUpload != null && !validContentType(info, fileUpload) || !validContentType(info)) {
-                    messageStore.addFileUploadContentTypeError(key, actionInvocation.uri(), info.getContentType());
-                    info.deleteTempFile();
-                    i.remove();
-                } else {
-                    expressionEvaluator.setValue(key, action, info);
+                for (Iterator<FileInfo> i = list.iterator(); i.hasNext();) {
+                    FileInfo info = i.next();
+                    if (fileUpload != null && !smallEnough(info, fileUpload) || !smallEnough(info)) {
+                        messageStore.addFileUploadSizeError(key, actionInvocation.uri(), info.file.length());
+                        info.deleteTempFile();
+                        i.remove();
+                    } else if (fileUpload != null && !validContentType(info, fileUpload) || !validContentType(info)) {
+                        messageStore.addFileUploadContentTypeError(key, actionInvocation.uri(), info.getContentType());
+                        info.deleteTempFile();
+                        i.remove();
+                    }
+                }
+
+                if (list.size() > 0) {
+                    // Set the files into the property
+                    expressionEvaluator.setValue(key, action, list);
                 }
             }
 
+            // Next, fake the request with the parameters from the multi-part
+            final Map<String, String[]> parameters = pair.second;
             HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
             HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
             HttpServletRequest newRequest = new HttpServletRequestWrapper(previous) {
@@ -147,8 +153,11 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
         } finally {
             // Clean up files
             if (files != null) {
-                for (FileInfo fileInfo : files.values()) {
-                    fileInfo.deleteTempFile();
+                for (String key : files.keySet()) {
+                    List<FileInfo> list = files.get(key);
+                    for (FileInfo info : list) {
+                        info.deleteTempFile();
+                    }
                 }
             }
         }
@@ -160,19 +169,18 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
     public void destroy() {
     }
 
-    protected Pair<Map<String, FileInfo>, Map<String, String[]>> handleFiles() {
-        Map<String, FileInfo> files = new HashMap<String, FileInfo>();
+    protected Pair<Map<String, List<FileInfo>>, Map<String, String[]>> handleFiles() {
+        Map<String, List<FileInfo>> files = new HashMap<String, List<FileInfo>>();
         Map<String, List<String>> params = new HashMap<String, List<String>>();
 
         FileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         try {
-            List items = upload.parseRequest(request);
-            for (Object item : items) {
-                FileItem fileItem = (FileItem) item;
-                String name = fileItem.getFieldName();
-                if (fileItem.isFormField()) {
-                    String value = fileItem.getString();
+            List<FileItem> items = upload.parseRequest(request);
+            for (FileItem item : items) {
+                String name = item.getFieldName();
+                if (item.isFormField()) {
+                    String value = item.getString();
                     List<String> list = params.get(name);
                     if (list == null) {
                         list = new ArrayList<String>();
@@ -181,17 +189,30 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
 
                     list.add(value);
                 } else {
-                    String fileName = fileItem.getName();
-                    String contentType = fileItem.getContentType();
+                    String fileName = item.getName();
+
+                    // Handle lame ass IE issues with file names
+                    if (fileName.contains(":\\")) {
+                        int index = fileName.lastIndexOf("\\");
+                        fileName = fileName.substring(index + 1);
+                    }
+                    
+                    String contentType = item.getContentType();
                     File file = File.createTempFile("jcatapult", "fileupload");
-                    fileItem.write(file);
+                    item.write(file);
 
                     // Handle when the user doesn't provide a file at all
                     if (file.length() == 0 || fileName == null || contentType == null) {
                         continue;
                     }
+
+                    List<FileInfo> list = files.get(name);
+                    if (list == null) {
+                        list = new ArrayList<FileInfo>();
+                        files.put(name, list);
+                    }
                     
-                    files.put(name, new FileInfo(file, fileName, contentType));
+                    list.add(new FileInfo(file, fileName, contentType, true));
                 }
             }
         } catch (Exception e) {
