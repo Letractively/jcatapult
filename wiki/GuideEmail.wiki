@@ -101,7 +101,7 @@ In order for the `FreeMarkerEmailService` to actually find your files in the con
 <template-name>-[html|text].ftl
 }}}
 
-  * <template-name>: arbitrary name given to the template (e.g. contact).
+  * template-name: arbitrary name given to the template (e.g. contact).
   * [html|text]: html or text.  This token informs the service that the email message is a text or html email.
 
 ex:
@@ -116,12 +116,12 @@ You can provide either of these two templates or both of the templates. If you o
 
 In addition to configuring how FreeMarker should process the templates, the `FreeMarkerEmailService` can also automatically set the email's from, from-display, to, bcc, and cc for you by getting configuration data from [GuideConfiguration JCatapult Configuration] files.  It accomplishes this by pulling configuration data using the template-name as follows:
 
-  * jcatapult.email.<template-name>.subject
-  * jcatapult.email.<template-name>.from
-  * jcatapult.email.<template-name>.from-display
-  * jcatapult.email.<template-name>.to
-  * jcatapult.email.<template-name>.cc
-  * jcatapult.email.<template-name>.bcc
+  * jcatapult.email.'template-name'.subject
+  * jcatapult.email.'template-name'.from
+  * jcatapult.email.'template-name'.from-display
+  * jcatapult.email.'template-name'.to
+  * jcatapult.email.'template-name'.cc
+  * jcatapult.email.'template-name'.bcc
 
 For instance, if my template-name is 'contact', the service will look for the from, from-display, to, cc, and bcc by trying to load the following from the configuration files:
 
