@@ -129,7 +129,7 @@ public class FreeMarkerEmailService implements EmailService {
         String configFromEmail = configuration.getString("jcatapult.email." + template + ".from");
         if (configFromEmail != null) {
             // if the from display is null then see if it's set in the configuration
-            String configFromEmailDisplay = configuration.getString("jcatapult.email." + template + ".from.display");
+            String configFromEmailDisplay = configuration.getString("jcatapult.email." + template + ".from-display");
 
             // if it's still null, then set it to the from email
             if (configFromEmailDisplay == null) {
