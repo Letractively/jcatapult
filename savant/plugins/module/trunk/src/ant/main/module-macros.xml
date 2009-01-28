@@ -17,8 +17,7 @@
 -->
 <project name="module-macros">
   <dirname property="dir.plugin.module" file="${ant.file.module-macros}"/>
-  <dependencypath pathid="classpath.module" dependencies="dependencies.project" workflow="workflow.project"
-      projectfile="${dir.plugin.module}/project.xml"/>
+  <dependencypath pathid="classpath.module" projectfile="${dir.plugin.module}/project.xml"/>
 
   <!--
     This determines the version of the module using the url to the module within a Savant repsitory.
@@ -34,7 +33,7 @@
 
     I can grab everything after "user-module-" and up to the .jar extension.
   -->
-  <macrodef name="module_properties">
+  <macrodef name="module-properties">
     <attribute name="group"/>
     <attribute name="project"/>
     <sequential>
@@ -77,7 +76,7 @@
     </sequential>
   </macrodef>
 
-  <macrodef name="module_add_dependency">
+  <macrodef name="module-add-dependency">
     <attribute name="group"/>
     <attribute name="project"/>
     <attribute name="version"/>
@@ -139,7 +138,7 @@
     </sequential>
   </macrodef>
 
-  <macrodef name="module_add_entities">
+  <macrodef name="module-add-entities">
     <attribute name="persistenceFile"/>
     <element name="moduleClasspath"/>
     <sequential>
@@ -212,7 +211,7 @@
     </sequential>
   </macrodef>
 
-  <macrodef name="module_create_persistence">
+  <macrodef name="module-create-persistence">
     <attribute name="moduleFile"/>
     <attribute name="persistenceDir"/>
     <sequential>
@@ -222,35 +221,34 @@
           <filter token="PROJECT_NAME" value="${project.name}"/>
         </filterset>
       </copy>
-      <dependencypath pathid="classpath.project" workflow="workflow.project"
-                      dependencies="dependencies.project"/>
-      <module_add_entities persistenceFile="@{persistenceDir}/META-INF/persistence.xml">
+      <dependencypath pathid="classpath.project"/>
+      <module-add-entities persistenceFile="@{persistenceDir}/META-INF/persistence.xml">
         <moduleClasspath>
           <path refid="classpath.project"/>
           <path>
             <fileset dir="${dir.target.jars}" includes="*.jar"/>
           </path>
         </moduleClasspath>
-      </module_add_entities>
+      </module-add-entities>
     </sequential>
   </macrodef>
 
-  <macrodef name="module_add">
+  <macrodef name="module-add">
     <attribute name="group"/>
     <attribute name="project"/>
     <sequential>
       <echo message="Using Savant to add module @{group} @{project}"/>
-      <module_properties group="@{group}" project="@{project}"/>
+      <module-properties group="@{group}" project="@{project}"/>
 
       <echo message="Version is ${module.version}"/>
       <echo message="File is ${module.file}"/>
-      <module_add_dependency group="@{group}" project="@{project}" version="${module.version}"/>
+      <module-add-dependency group="@{group}" project="@{project}" version="${module.version}"/>
 
-      <module_add_entities persistenceFile="${dir.src.conf.main}/META-INF/persistence.xml">
+      <module-add-entities persistenceFile="${dir.src.conf.main}/META-INF/persistence.xml">
         <moduleClasspath>
           <pathelement location="${module.file}"/>
         </moduleClasspath>
-      </module_add_entities>
+      </module-add-entities>
 
       <groovy>
         String cmd
