@@ -23,10 +23,10 @@
   <target name="add-module" description="Adds a module to the current project.">
     <input message="Enter Savant group that the module is in (i.e. modules.example.com)" addproperty="module.group"/>
     <input message="Enter project name of the module (i.e. user-module)" addproperty="module.project"/>
-    <module_add group="${module.group}" project="${module.project}"/>
+    <module-add group="${module.group}" project="${module.project}"/>
   </target>
 
   <target name="add-named-module" description="Adds a module that is named on the command-line using the url property">
-    <module_add url="${url}"/>
+    <module-add url="${url}"/>
   </target>
 </project>
