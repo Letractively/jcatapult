@@ -17,12 +17,10 @@
 -->
 <project name="dbmgr">
   <dirname property="dir.plugin.dbmgr" file="${ant.file.dbmgr}"/>
-  <dependencypath pathid="classpath.plugin.dbmgr" dependencies="dependencies.project"
-      workflow="workflow.project" projectfile="${dir.plugin.dbmgr}/project.xml"/>
-  <dependencypath pathid="classpath.project" dependencies="dependencies.project"
-      workflow="workflow.project"/>
+  <dependencypath pathid="classpath.plugin.dbmgr" projectfile="${dir.plugin.dbmgr}/project.xml"/>
+  <dependencypath pathid="classpath.project"/>
 
-  <macrodef name="database_manager">
+  <macrodef name="database-manager">
     <attribute name="url"/>
     <sequential>
       <groovy>
@@ -57,14 +55,14 @@
   <!-- Post process for overriding -->
   <macrodef name="create-main-database-post">
     <sequential>
-      <database_manager url="jdbc:mysql://localhost:3306/${project.database}?user=dev&amp;password=dev&amp;characterEncoding=utf8"/>
+      <database-manager url="jdbc:mysql://localhost:3306/${project.database}?user=dev&amp;password=dev&amp;characterEncoding=utf8"/>
     </sequential>
   </macrodef>
 
   <!-- Post process for overriding -->
   <macrodef name="create-test-database-post">
     <sequential>
-      <database_manager url="jdbc:mysql://localhost:3306/${project.database}?user=dev&amp;password=dev&amp;characterEncoding=utf8"/>
+      <database-manager url="jdbc:mysql://localhost:3306/${project.database}?user=dev&amp;password=dev&amp;characterEncoding=utf8"/>
     </sequential>
   </macrodef>
 </project>
