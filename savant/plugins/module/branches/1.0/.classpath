@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+    <classpathentry kind="src" path="src/conf/main" />
+    <classpathentry kind="src" path="src/conf/test/integration" output="target/classes/test/integration" />
+    <classpathentry kind="src" path="src/conf/test/unit" output="target/classes/test/unit" />
+    <classpathentry kind="src" path="src/java/main" />
+    <classpathentry kind="src" path="src/java/test/integration" output="target/classes/test/integration" />
+    <classpathentry kind="src" path="src/java/test/unit" output="target/classes/test/unit" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/junit/junit/4.4/junit-4.4.jar" sourcepath="/SAVANT_REPOSITORY/org/junit/junit/4.4/junit-4.4-src.jar" />
+    <classpathentry kind="output" path="target/classes/main" />
+</classpath>
+
