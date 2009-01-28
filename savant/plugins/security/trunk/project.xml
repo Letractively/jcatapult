@@ -4,36 +4,12 @@
     version="1.0">
 
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="plugin" version="1.0.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="plugin" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
 
-  <!-- import property file properties -->
-  <properties file="${user.home}/build.properties"/>
-  <properties file="${user.home}/google-code-build.properties"/>
-  <properties file="${user.home}/inversoft-org-release-build.properties"/>
-
-  <dependencies id="dependencies.project">
+  <dependencies>
     <artifactGroup type="run">
-      <artifact group="jcatapult.org" name="jcatapult-security" version="1.0-RC9"/>
+      <artifact group="jcatapult.org" name="jcatapult-security" version="1.0-RC10"/>
     </artifactGroup>
   </dependencies>
-
-  <workflow id="workflow.project">
-    <fetchWorkflow>
-      <process type="unifiedLocalCache"/>
-      <process type="unified" url="http://savant.inversoft.org/"/>
-    </fetchWorkflow>
-    <publishWorkflow>
-      <process type="unifiedLocalCache"/>
-    </publishWorkflow>
-  </workflow>
-
-  <publishWorkflow id="workflow.publish.local">
-    <process type="unifiedLocalCache"/>
-  </publishWorkflow>
-
-  <publishWorkflow id="workflow.publish.remote">
-    <process type="unifiedSVN" repository="https://svn.inversoft.org/savant-deps"
-             username="${svn.release.username}" password="${svn.release.password}"/>
-  </publishWorkflow>
 </project>
