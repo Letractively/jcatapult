@@ -14,25 +14,13 @@
   ~ language governing permissions and limitations under the License.
   -->
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://www.inversoft.com/schemas/savant-2.0/project http://www.inversoft.com/schemas/savant-2.0/project/project.xsd"
-         name="project4" version="1.0" group="Example">
+         name="project4" version="1.0" group="jcatapult-dbmgr.tests">
 
   <!-- this project is simple because it just depends on dependency1 and module1 -->
-
-  <dependencies id="project.deps">
+  <dependencies>
     <artifactGroup type="run">
       <artifact group="group" project="proj" name="dependency1" version="1.0" type="jar"/>
       <artifact group="group" project="proj" name="module1" version="1.2" type="jar"/>
     </artifactGroup>
   </dependencies>
-
-  <workflow>
-    <fetchWorkflow>
-      <process type="libDirFetchProcess" location="target/jars"/>
-    </fetchWorkflow>
-    <publishWorkflow>
-      <process type="localCachePublishProcess"/>
-    </publishWorkflow>
-  </workflow>
 </project>

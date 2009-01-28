@@ -40,10 +40,9 @@ public class DatabaseManagerTest extends BaseTest {
         File alterDir = new File("test/project1/db/alter");
         File seedDir = new File("test/project1/db/seed");
         File projectXmlFile = new File("test/project1/project.xml");
-        String depsId = "project.deps";
         Version projectVersion = new Version("1.0");
         DatabaseManager dm = new DatabaseManager(pUnit, c, projectName, containsDomain, baseDir, alterDir, seedDir,
-            projectXmlFile, depsId, projectVersion);
+            projectXmlFile, projectVersion);
 
         dm.manage();
     }

@@ -54,7 +54,7 @@ public class DatabaseGeneratorTest extends BaseTest {
         String projectName = "project5";
 
         Map<String, Version> databaseVersions = new HashMap<String, Version>();
-        DatabaseGenerator gen = getDbGen(projectName, "project.deps", databaseVersions, new Version("1.0"), null);
+        DatabaseGenerator gen = getDbGen(projectName, databaseVersions, new Version("1.0"), null);
         gen.generate();
 
         Assert.assertEquals(1, databaseVersions.size());
@@ -72,7 +72,7 @@ public class DatabaseGeneratorTest extends BaseTest {
         String projectName = "project4";
 
         Map<String, Version> databaseVersions = new HashMap<String, Version>();
-        DatabaseGenerator gen = getDbGen(projectName, "project.deps", databaseVersions, new Version("1.0"), null);
+        DatabaseGenerator gen = getDbGen(projectName, databaseVersions, new Version("1.0"), null);
         gen.generate();
 
         Assert.assertEquals(2, databaseVersions.size());
@@ -90,7 +90,7 @@ public class DatabaseGeneratorTest extends BaseTest {
         String projectName = "project1";
 
         Map<String, Version> databaseVersions = new HashMap<String, Version>();
-        DatabaseGenerator gen = getDbGen(projectName, "project.deps", databaseVersions, new Version("1.0"), null);
+        DatabaseGenerator gen = getDbGen(projectName, databaseVersions, new Version("1.0"), null);
         gen.generate();
 
         Assert.assertEquals(5, databaseVersions.size());
@@ -105,16 +105,15 @@ public class DatabaseGeneratorTest extends BaseTest {
      * Helper method to instantiate a database generator
      *
      * @param projectName project name
-     * @param depsId the dependencies id in the project.xml
      * @param databaseVersions map of database versions
      * @param projectCurrentVersion the project current version
      * @param projectDatabaseVersion the project database version
      * @return database generator
      */
-    DatabaseGenerator getDbGen(String projectName, String depsId, Map<String, Version> databaseVersions,
-        Version projectCurrentVersion, Version projectDatabaseVersion) {
+    DatabaseGenerator getDbGen(String projectName, Map<String, Version> databaseVersions,
+            Version projectCurrentVersion, Version projectDatabaseVersion) {
 
-        List<ModuleJar> moduleJars = moduleJarService.resolveJars(new File("test/" + projectName + "/project.xml"), depsId);
+        List<ModuleJar> moduleJars = moduleJarService.resolveJars(new File("test/" + projectName + "/project.xml"));
 
         ProjectContext pCtx = new ProjectContext(projectName, projectCurrentVersion, projectDatabaseVersion);
         pCtx.setAlterDir(new File("test/" + projectName + "/db/alter"));
