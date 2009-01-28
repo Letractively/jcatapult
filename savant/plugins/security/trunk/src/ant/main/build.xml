@@ -17,8 +17,7 @@
 -->
 <project name="security">
   <dirname property="dir.plugin.security" file="${ant.file.security}"/>
-  <dependencypath pathid="classpath.password" dependencies="dependencies.project" workflow="workflow.project"
-      projectfile="${dir.plugin.security}/project.xml"/>
+  <dependencypath pathid="classpath.password" projectfile="${dir.plugin.security}/project.xml"/>
 
   <target name="password" description="Prints out hashed passwords for seeding database values">
     <input addproperty="salt" message="Enter the salt" defaultvalue="${project.name}"/>
