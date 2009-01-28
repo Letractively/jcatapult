@@ -1,0 +1,16 @@
+<project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
+    name="module"
+    group="plugins.savant.jcatapult.org"
+    version="1.0">
+
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="plugin" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+
+  <dependencies>
+    <artifactGroup type="run">
+      <artifact group="jaxen.codehaus.org" name="jaxen" version="1.1.1"/>
+      <artifact group="jdom.org" name="jdom" version="1.1"/>
+    </artifactGroup>
+  </dependencies>
+</project>
