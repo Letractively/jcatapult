@@ -292,7 +292,6 @@ public class DatabaseManager {
     private final File alterDir;
     private final File seedDir;
     private final File projectXml;
-    private String dependenciesId;
     private Version projectVersion;
 
     private final Map<String, Version> databaseVersions = new HashMap<String, Version>();
@@ -301,7 +300,7 @@ public class DatabaseManager {
 
     public DatabaseManager(String persistenceUnit, Connection connection, String projectName,
             boolean containsDomain, File baseDir, File alterDir, File seedDir, File projectXml,
-            String dependenciesId, Version projectVersion) {
+            Version projectVersion) {
         this.persistenceUnit = persistenceUnit;
         this.connection = connection;
         this.projectName = projectName;
@@ -310,7 +309,6 @@ public class DatabaseManager {
         this.alterDir = alterDir;
         this.seedDir = seedDir;
         this.projectXml = projectXml;
-        this.dependenciesId = dependenciesId;
         this.projectVersion = projectVersion;
     }
 
@@ -324,7 +322,7 @@ public class DatabaseManager {
      */
     public static void main(String... args) throws SQLException, IOException {
 
-        if (args.length < 9 || args.length > 10) {
+        if (args.length < 8 || args.length > 9) {
             StringBuffer errMsg = new StringBuffer();
             errMsg.append("Invalid arguments: ").append(Arrays.asList(args)).append("\n");
             errMsg.append("Usage: DatabaseMigrator [--no-domain] <persistence-unit> <db-url> <application-name> <sql-dir> <db-type> <jndi-name> <project-xml-path> <dependencies-id> <version>");
@@ -349,8 +347,6 @@ public class DatabaseManager {
             errMsg.append("\n");
             errMsg.append("project-xml-path: the path to the project.xml file.\n");
             errMsg.append("\n");
-            errMsg.append("dependencies-id: the dependencies id defined within the project.xml.\n");
-            errMsg.append("\n");
             errMsg.append("version: The version of the project.");
             System.err.println(errMsg);
             System.exit(1);
@@ -370,7 +366,6 @@ public class DatabaseManager {
         String dbType = args[count++];
         String jndiName = args[count++];
         String projectXmlPath = args[count++];
-        String dependenciesId = args[count++];
         Version projectVersion = new Version(args[count]);
 
         // create the database provider
@@ -386,14 +381,14 @@ public class DatabaseManager {
 
         DatabaseManager dm = new DatabaseManager(persistenceUnit, dp.getConnection(), projectName,
             containsDomain, new File(sqlDir, "base"), new File(sqlDir, "alter"),
-            new File(sqlDir, "seed"), new File(projectXmlPath), dependenciesId, projectVersion);
+            new File(sqlDir, "seed"), new File(projectXmlPath), projectVersion);
         dm.manage();
     }
 
     public void manage() throws SQLException, IOException {
         // Resolve modules for project
         ModuleJarService cjs = injector.getInstance(ModuleJarService.class);
-        List<ModuleJar> moduleJars = cjs.resolveJars(projectXml, dependenciesId);
+        List<ModuleJar> moduleJars = cjs.resolveJars(projectXml);
 
         // Load up the module and project versions from the database.
         loadDatabaseVersions();

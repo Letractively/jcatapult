@@ -24,5 +24,5 @@ package org.jcatapult.dbmgr.domain;
 public enum SQLScriptType {
     BASE,
     ALTER,
-    SEED;
+    SEED
 }

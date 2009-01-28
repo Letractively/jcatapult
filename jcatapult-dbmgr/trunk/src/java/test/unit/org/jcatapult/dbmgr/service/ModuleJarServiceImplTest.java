@@ -45,17 +45,17 @@ public class ModuleJarServiceImplTest extends BaseTest {
 
     @Test
     public void testProject1() {
-        verifyQueue(cjs.resolveJars(new File("test/project1/project.xml"), "project.deps"));
+        verifyQueue(cjs.resolveJars(new File("test/project1/project.xml")));
     }
 
     @Test
     public void testProject2() {
-        verifyQueue(cjs.resolveJars(new File("test/project2/project.xml"), "project.deps"));
+        verifyQueue(cjs.resolveJars(new File("test/project2/project.xml")));
     }
 
     @Test
     public void testProject3() {
-        verifyQueue(cjs.resolveJars(new File("test/project3/project.xml"), "project.deps"));
+        verifyQueue(cjs.resolveJars(new File("test/project3/project.xml")));
     }
 
     @Test

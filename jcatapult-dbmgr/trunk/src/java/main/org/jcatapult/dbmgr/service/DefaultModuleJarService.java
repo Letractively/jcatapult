@@ -110,17 +110,16 @@ public class DefaultModuleJarService implements ModuleJarService {
      * Resolves jars using savant
      *
      * @param projectXml the project.xml
-     * @param dependenciesId the dependencies id
      * @return linked list of jar files
      */
-    public LinkedList<ModuleJar> resolveJars(File projectXml, String dependenciesId) {
+    public LinkedList<ModuleJar> resolveJars(File projectXml) {
 
         // init savant runtime and context
         SavantContext sc = savantContextBuilder.build(projectXml);
 
         // resolve deps
         DependencyResolveMediator mediator = new DependencyResolveMediator();
-        boolean depsResolved = mediator.mediate(sc, null, null, null, true);
+        boolean depsResolved = mediator.mediate(sc, null, null, true);
 
         // throw a runtime exception if deps can't get resolved
         if (!depsResolved) {
@@ -129,7 +128,7 @@ public class DefaultModuleJarService implements ModuleJarService {
         }
 
         // get all the Savant Artifact objects oredered depth-first
-        Queue<Artifact> arts = sc.getDepthFirstOrderedDependencies(dependenciesId);
+        Queue<Artifact> arts = sc.getDepthFirstOrderedDependencies("default");
 
         // holds the resolved jar files
         LinkedList<ModuleJar> moduleJars = new LinkedList<ModuleJar>();
@@ -163,11 +162,8 @@ public class DefaultModuleJarService implements ModuleJarService {
                 // check for module.xml file
                 JarEntry moduleXmlEntry = jf.getJarEntry(ModuleJar.PATH_MODULE_XML);
                 if (moduleXmlEntry == null) {
-                    moduleXmlEntry = jf.getJarEntry(ModuleJar.PATH_COMPONENT_XML);
-                    if (moduleXmlEntry == null) {
-                        throw new RuntimeException("jar file [" + artFile +
-                            "] does not contain a " + ModuleJar.PATH_MODULE_XML + " file");
-                    }
+                    throw new RuntimeException("jar file [" + artFile +
+                        "] does not contain a " + ModuleJar.PATH_MODULE_XML + " file");
                 }
 
                 // if module.xml exists, make sure it contains the 'name' attribute.  This is needed because

@@ -38,10 +38,9 @@ public interface ModuleJarService {
      * via the classpath, file system or some other data store resource.
      *
      * @param projectXml the project.xml file belonging to the project to resolve jars for
-     * @param dependenciesId the dependencies id from the project.xml where jars should be resolved from
      * @return a linked list of module jars
      */
-    public LinkedList<ModuleJar> resolveJars(File projectXml, String dependenciesId);
+    public LinkedList<ModuleJar> resolveJars(File projectXml);
 
     /**
      * Returns a list of JarEntry objects within the directory path specified
