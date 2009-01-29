@@ -103,11 +103,13 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
                 FileUpload fileUpload = expressionEvaluator.getAnnotation(FileUpload.class, key, action);
                 for (Iterator<FileInfo> i = list.iterator(); i.hasNext();) {
                     FileInfo info = i.next();
-                    if (fileUpload != null && !smallEnough(info, fileUpload) || !smallEnough(info)) {
+                    if ((fileUpload != null && tooBig(info, fileUpload)) ||
+                            ((fileUpload == null || fileUpload.maxSize() == -1) && tooBig(info))) {
                         messageStore.addFileUploadSizeError(key, actionInvocation.uri(), info.file.length());
                         info.deleteTempFile();
                         i.remove();
-                    } else if (fileUpload != null && !validContentType(info, fileUpload) || !validContentType(info)) {
+                    } else if ((fileUpload != null && invalidContentType(info, fileUpload)) ||
+                            ((fileUpload == null || fileUpload.contentTypes().length == 0) && invalidContentType(info))) {
                         messageStore.addFileUploadContentTypeError(key, actionInvocation.uri(), info.getContentType());
                         info.deleteTempFile();
                         i.remove();
@@ -232,20 +234,20 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
      *
      * @param   info The file info.
      * @param   fileUpload The annotation.
-     * @return  True if the file is okay, false if it is too big.
+     * @return  False if the file is okay, true if it is too big.
      */
-    private boolean smallEnough(FileInfo info, FileUpload fileUpload) {
-        return fileUpload.maxSize() == -1 || info.file.length() <= fileUpload.maxSize();
+    private boolean tooBig(FileInfo info, FileUpload fileUpload) {
+        return fileUpload.maxSize() != -1 && info.file.length() > fileUpload.maxSize();
     }
 
     /**
      * Checks the size of the given file against the global settings.
      *
      * @param   info The file info.
-     * @return  True if the file is okay, false if it is too big.
+     * @return  False if the file is okay, true if it is too big.
      */
-    private boolean smallEnough(FileInfo info) {
-        return info.file.length() <= maxSize;
+    private boolean tooBig(FileInfo info) {
+        return info.file.length() > maxSize;
     }
 
     /**
@@ -253,19 +255,19 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
      *
      * @param   info The file info.
      * @param   fileUpload The annotation.
-     * @return  True if the file is okay, false if it is too big.
+     * @return  False if the file is okay, true if it is an invalid type.
      */
-    private boolean validContentType(FileInfo info, FileUpload fileUpload) {
-        return fileUpload.contentTypes().length == 0 || arrayContains(fileUpload.contentTypes(), info.contentType);
+    private boolean invalidContentType(FileInfo info, FileUpload fileUpload) {
+        return fileUpload.contentTypes().length != 0 && !arrayContains(fileUpload.contentTypes(), info.contentType);
     }
 
     /**
      * Checks the content type of the global settings.
      *
      * @param   info The file info.
-     * @return  True if the file is okay, false if it is too big.
+     * @return  False if the file is okay, true if it is an invalid type.
      */
-    private boolean validContentType(FileInfo info) {
-        return arrayContains(contentTypes, info.contentType);
+    private boolean invalidContentType(FileInfo info) {
+        return !arrayContains(contentTypes, info.contentType);
     }
 }

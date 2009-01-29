@@ -3,45 +3,23 @@
     group="jcatapult.org"
     version="1.0-RC11">
 
-  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
-  
-  <!-- Properties from home dir -->
-  <properties file="${user.home}/build.properties"/>
-
-  <!--
-    jcatapult-build.properties must contain the following:
-      svn.username=<username>
-      svn.password=<password>
-  -->
-  <properties file="${user.home}/google-code-build.properties"/>
-
-  <!--
-    inversoft-org-release-build.properties must contain the following:
-      svn.release.username=<username>
-      svn.release.password=<password>
-  -->
-  <properties file="${user.home}/inversoft-org-release-build.properties"/>
-
-  <!-- MVC doesn't have any database code -->
-  <property name="project.requires.database" value="false"/>
 
   <!-- compile properties -->
-  <property name="jdk.project" value="${jdk1.6}"/>
+  <property name="jdk.version" value="1.6"/>
 
   <property name="version.jcatapult" value="1.0-RC10"/>
 
   <release>
-    <publication name="jcatapult-mvc" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"
-                 dependencies="dependencies.project"/>
-    <publication name="jcatapult-mvc-test" type="jar" compatType="minor" file="target/jars/${project.name}-test-${project.version}.jar"
-                 dependencies="dependencies.project"/>
+    <publication name="jcatapult-mvc" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"/>
+    <publication name="jcatapult-mvc-test" type="jar" compatType="minor" file="target/jars/${project.name}-test-${project.version}.jar"/>
   </release>
 
-  <dependencies id="dependencies.project">
+  <dependencies>
     <artifactGroup type="compile-only">
       <artifact group="servlet.javax" name="servlet-api" version="2.4"/>
       <artifact group="jsp.servlet.javax" name="jsp-api" version="2.0"/>
@@ -63,47 +41,4 @@
     </artifactGroup>
     <artifactGroup type="test-run"/>
   </dependencies>
-
-  <!--
-    This workflow is only used when fetching this projects dependencies that are listed above.
-    This works by iterating over the processes in the fetchWorkflow block until one of the
-    processes finds the artifact. Once the artifact is found, then this calls ALL of the
-    processes in the publishWorkflow block to store the file locally. This allows the file
-    to be stored locally in multiple locations.
-
-    The extra item entry fetches the source JARs for the artifacts.
-  -->
-  <workflow id="workflow.project">
-    <fetchWorkflow>
-      <process type="unifiedLocalCache"/>
-      <process type="unified" url="http://savant.inversoft.org/"/>
-    </fetchWorkflow>
-    <publishWorkflow>
-      <process type="unifiedLocalCache"/>
-    </publishWorkflow>
-  </workflow>
-
-  <!--
-    This workflow is used after the project has created a releasable item such as a JAR file
-    or a ZIP. After that file is created it can be "released" to a local Savant repository.
-    This local Savant repository usually exists in the users home directory at .savant_repository.
-    One thing to notice is that this workflow is used for publishing local artifacts that this
-    project produces and they are placed into the same location as the publishWorkflow block
-    from above uses. This allows other local projects to find the artifacts that this project
-    releases locally.
-  -->
-  <publishWorkflow id="workflow.publish.local">
-    <process type="unifiedLocalCache"/>
-  </publishWorkflow>
-
-  <!--
-    This workflow is used after the project has created a releasable item such as a JAR file or
-    a ZIP and the project has released that artifact locally using the publishWorkflow above.
-    This workflow can then release the artifact to a central repository. This allows any
-    developer to fetch the newly released artifact from the central repository for use in
-    another project.
-  -->
-  <publishWorkflow id="workflow.publish.remote">
-    <process type="unifiedSVN" repository="https://svn.inversoft.org/savant-deps" username="${svn.release.username}" password="${svn.release.password}"/>
-  </publishWorkflow>
 </project>
