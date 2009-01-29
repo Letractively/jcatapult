@@ -109,4 +109,63 @@ public class UserTest extends BaseTest {
         Assert.assertEquals("720-352-1193", user.getPhoneNumbers().get("Cell").getNumber());
         Assert.assertEquals("Cell", user.getPhoneNumbers().get("Cell").getType());
     }
+
+    @Test
+    public void testParitalUpdateClobbersDatabase() {
+        DefaultUser db = persistenceService.queryFirst(DefaultUser.class, "select u from DefaultUser u where u.login = ?1", "test-insert@test.com");
+        persistenceService.clearCache();
+
+        // Okay, we created the test-insert@test.com user in the last test. Let's simulate the MVC
+        // creating a new instance of the DefaultUser, only setting a few things into it (including
+        // the ID) and then persisting and see what happens to the addresses and phone numbers.
+
+        DefaultUser form = new DefaultUser();
+        form.setId(db.getId());
+        form.setLogin("different-login");
+        form.setGuid("different guid");
+        form.setPassword("new password");
+        form.setCompanyName("different company");
+
+        persistenceService.persist(form);
+
+        persistenceService.clearCache();
+
+        db = persistenceService.queryFirst(DefaultUser.class, "select u from DefaultUser u where u.login = ?1", "different-login");
+        Assert.assertEquals("different guid", db.getGuid());
+        Assert.assertEquals("new password", db.getPassword());
+        Assert.assertEquals("different company", db.getCompanyName());
+
+        // JAMES - all of these will fail because the all of the foreign references in the database
+        // were deleted
+
+        Assert.assertEquals(1, db.getRoles().size());
+        Assert.assertEquals("user", db.getRoles().iterator().next().getName());
+        Assert.assertFalse(db.isDeleted());
+        Assert.assertFalse(db.isAdmin());
+        Assert.assertFalse(db.isExpired());
+        Assert.assertFalse(db.isLocked());
+        Assert.assertFalse(db.isPasswordExpired());
+        Assert.assertEquals(new EmailAddress("test-insert@test.com", "home"), db.getEmailAddresses().get("home"));
+        Assert.assertEquals("Brian", db.getName().getFirstName());
+        Assert.assertEquals("Pontarelli", db.getName().getLastName());
+        Assert.assertEquals("Broomfield", db.getAddresses().get("Home").getCity());
+        Assert.assertEquals("US", db.getAddresses().get("Home").getCountry());
+        Assert.assertEquals("80020", db.getAddresses().get("Home").getPostalCode());
+        Assert.assertEquals("Colorado", db.getAddresses().get("Home").getState());
+        Assert.assertEquals("13275 Elk Mountain Way", db.getAddresses().get("Home").getStreet());
+        Assert.assertEquals("Home", db.getAddresses().get("Home").getType());
+
+        Assert.assertEquals("Boulder", db.getAddresses().get("Work").getCity());
+        Assert.assertEquals("US", db.getAddresses().get("Work").getCountry());
+        Assert.assertEquals("80302", db.getAddresses().get("Work").getPostalCode());
+        Assert.assertEquals("Colorado", db.getAddresses().get("Work").getState());
+        Assert.assertEquals("1600 Pearl St.", db.getAddresses().get("Work").getStreet());
+        Assert.assertEquals("Work", db.getAddresses().get("Work").getType());
+
+        Assert.assertEquals("303-954-0394", db.getPhoneNumbers().get("Home").getNumber());
+        Assert.assertEquals("Home", db.getPhoneNumbers().get("Home").getType());
+
+        Assert.assertEquals("720-352-1193", db.getPhoneNumbers().get("Cell").getNumber());
+        Assert.assertEquals("Cell", db.getPhoneNumbers().get("Cell").getType());
+    }
 }
