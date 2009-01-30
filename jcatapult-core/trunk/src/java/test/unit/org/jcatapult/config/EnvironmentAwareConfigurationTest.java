@@ -21,6 +21,7 @@ import org.easymock.EasyMock;
 import org.jcatapult.container.ServletContainerResolver;
 import org.jcatapult.environment.EnvironmentResolver;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * <p>
@@ -45,8 +46,8 @@ public class EnvironmentAwareConfigurationTest {
                 }
             },
             new ServletContainerResolver(context), "/WEB-INF/config");
-        config.getString("dev", "dev-value");
-        config.getString("default", "default-value");
+        assertEquals("dev-value", config.getString("dev"));
+        assertEquals("default-value", config.getString("default"));
         EasyMock.verify(context);
     }
 
