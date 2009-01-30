@@ -19,10 +19,8 @@ import javax.servlet.ServletContext;
 
 import org.easymock.EasyMock;
 import org.jcatapult.container.ServletContainerResolver;
-import org.jcatapult.environment.JNDIEnvironmentResolver;
+import org.jcatapult.environment.EnvironmentResolver;
 import org.junit.Test;
-
-import net.java.naming.MockJNDI;
 
 /**
  * <p>
@@ -34,21 +32,78 @@ import net.java.naming.MockJNDI;
 public class EnvironmentAwareConfigurationTest {
     @Test
     public void testEnvironmentAwareConfiguration() throws Exception {
-        MockJNDI jndi = new MockJNDI();
-        jndi.bind("java:comp/env/environment", "development");
-        jndi.activate();
-
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
-            andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-development.xml")).
             andReturn("src/java/test/unit/org/jcatapult/config/config-development.xml");
+        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
+            andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
         EasyMock.replay(context);
 
-        EnvironmentAwareConfiguration config = new EnvironmentAwareConfiguration(new JNDIEnvironmentResolver(),
+        EnvironmentAwareConfiguration config = new EnvironmentAwareConfiguration(new EnvironmentResolver() {
+                public String getEnvironment() {
+                    return "development";
+                }
+            },
             new ServletContainerResolver(context), "/WEB-INF/config");
         config.getString("dev", "dev-value");
         config.getString("default", "default-value");
+        EasyMock.verify(context);
+    }
+
+    @Test
+    public void testOverride() throws Exception {
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-development.xml")).
+            andReturn("src/java/test/unit/org/jcatapult/config/config-development.xml");
+        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
+            andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
+        EasyMock.replay(context);
+
+        EnvironmentAwareConfiguration config = new EnvironmentAwareConfiguration(new EnvironmentResolver() {
+                public String getEnvironment() {
+                    return "development";
+                }
+            },
+            new ServletContainerResolver(context), "/WEB-INF/config");
+        config.getString("override", "Development");
+        EasyMock.verify(context);
+    }
+
+    @Test
+    public void testFallThrough() throws Exception {
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-production.xml")).
+            andReturn("src/java/test/unit/org/jcatapult/config/config-production.xml");
+        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
+            andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
+        EasyMock.replay(context);
+
+        EnvironmentAwareConfiguration config = new EnvironmentAwareConfiguration(new EnvironmentResolver() {
+                public String getEnvironment() {
+                    return "production";
+                }
+            },
+            new ServletContainerResolver(context), "/WEB-INF/config");
+        config.getString("override", "Default");
+        EasyMock.verify(context);
+    }
+
+    @Test
+    public void testMissingFile() throws Exception {
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-production.xml")).
+            andReturn(null);
+        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
+            andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
+        EasyMock.replay(context);
+
+        EnvironmentAwareConfiguration config = new EnvironmentAwareConfiguration(new EnvironmentResolver() {
+                public String getEnvironment() {
+                    return "production";
+                }
+            },
+            new ServletContainerResolver(context), "/WEB-INF/config");
+        config.getString("override", "Default");
         EasyMock.verify(context);
     }
 }

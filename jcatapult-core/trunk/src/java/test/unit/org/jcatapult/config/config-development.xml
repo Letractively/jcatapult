@@ -15,6 +15,6 @@
   ~
   -->
 <config>
-  <default>default-value</default>
-  <override>Default</override>
+  <dev>dev-value</dev>
+  <override>Development</override>
 </config>

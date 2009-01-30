@@ -95,35 +95,29 @@ public class EnvironmentAwareConfiguration extends CompositeConfiguration implem
             location = location + '/';
         }
 
-        // Try to use the ServletContext to load the default configuration
-        String locationRealPath = resolver.getRealPath(location + "config-default.xml");
-        File defaultConfig = locationRealPath != null ? new File(locationRealPath) : null;
-        if (defaultConfig != null && defaultConfig.exists() && defaultConfig.isFile()) {
-            logger.info("Loading JCatapult configuration file [" + defaultConfig.getAbsolutePath() + "]");
-            super.addConfiguration(new XMLConfiguration(defaultConfig));
-        } else {
-            URL url = this.getClass().getResource("/config/config-default.xml");
-            if (url != null) {
-                logger.info("Loading JCatapult configuration from classpath entry [/config/config-default.xml]");
-                super.addConfiguration(new XMLConfiguration(url));
-            }
-        }
-
         // Try to use the ServletContext to load the environment configuration
-        String envFile = "config-" + environmentResolver.getEnvironment() + ".xml";
-        locationRealPath = resolver.getRealPath(location + envFile);
+        String env = environmentResolver.getEnvironment();
+        String envFile = "config-" + env + ".xml";
+        String locationRealPath = resolver.getRealPath(location + envFile);
         File envConfig = locationRealPath != null ? new File(locationRealPath) : null;
-        if (envConfig != null && envConfig.exists() && envConfig.isFile()) {
-            logger.info("Loading JCatapult configuration file [" + envConfig.getAbsolutePath() + "]");
-            super.addConfiguration(new XMLConfiguration(envConfig));
+        addConfig(envConfig, "/config/" + envFile + "]");
+
+        // Try to use the ServletContext to load the default configuration
+        locationRealPath = resolver.getRealPath(location + "config-default.xml");
+        File defaultConfig = locationRealPath != null ? new File(locationRealPath) : null;
+        addConfig(defaultConfig, "/config/config-default.xml");
+    }
+
+    private void addConfig(File config, String path) throws ConfigurationException {
+        if (config != null && config.exists() && config.isFile()) {
+            logger.info("Loading JCatapult configuration file [" + config.getAbsolutePath() + "]");
+            super.addConfiguration(new XMLConfiguration(config));
         } else {
-            URL url = this.getClass().getResource("/config/" + envFile);
+            URL url = this.getClass().getResource(path);
             if (url != null) {
-                logger.info("Loading JCatapult configuration from classpath entry [/config/" + envFile + "]");
+                logger.info("Loading JCatapult configuration from classpath entry [" + path + "]");
                 super.addConfiguration(new XMLConfiguration(url));
             }
         }
     }
-
-
 }
