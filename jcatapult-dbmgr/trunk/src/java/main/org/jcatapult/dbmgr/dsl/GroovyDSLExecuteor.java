@@ -20,11 +20,9 @@ import java.io.IOException;
 
 import org.jcatapult.dbmgr.database.Dialect;
 
-import groovy.lang.Closure;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import groovy.lang.MetaClass;
-import groovy.lang.MetaClassImpl;
 
 /**
  * <p>
@@ -44,58 +42,7 @@ public class GroovyDSLExecuteor {
         GroovyClassLoader gcl = new GroovyClassLoader();
         Class klass = gcl.parseClass(file);
         GroovyObject object = (GroovyObject) klass.newInstance();
-        MetaClass metaClass = new MetaClassImpl(object.getClass()) {
-            
-            @Override
-            public Object invokeMissingMethod(Object o, String s, Object[] objects) {
-                if (s.equals("table")) {
-                    String name = (String) objects[0];
-                    Closure closure = (Closure) objects[1];
-                    dialect.startCreateTable(name);
-                    closure.call();
-                    dialect.endCreateTable();
-                } else if (s.equals("column")) {
-                    String name = (String) objects[0];
-                    String type = (String) objects[1];
-                    boolean nullable = false;
-                    if (objects.length == 3) {
-                        nullable = (Boolean) objects[2];
-                    }
-                    
-                    dialect.addColumn(name, type, nullable);
-                } else if (s.equals("foreignKey")) {
-                    String name = (String) objects[0];
-                    String reference = (String) objects[1];
-                    boolean nullable = false;
-                    if (objects.length == 3) {
-                        nullable = (Boolean) objects[2];
-                    }
-
-                    dialect.addForeignKey(name, reference, nullable);
-                } else if (s.equals("id")) {
-                    String name = (String) objects[0];
-                    dialect.addId(name);
-                } else if (s.equals("string")) {
-                    if (objects.length == 1) {
-                        int size = (Integer) objects[0];
-                        return "varchar(" + size + ")";
-                    }
-
-                    return "varchar(255)";
-                }
-
-                return null;
-            }
-
-            @Override
-            public Object invokeMissingProperty(Object o, String s, Object o1, boolean b) {
-                if (s.equals("nullable")) {
-                    return true;
-                } else {
-                    return s; // This is a column type
-                }
-            }
-        };
+        MetaClass metaClass = new DSLMetaClass(klass, dialect);
         metaClass.initialize();
         object.setMetaClass(metaClass);
 
