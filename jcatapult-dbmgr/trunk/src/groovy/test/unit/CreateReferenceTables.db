@@ -1,0 +1,8 @@
+table("one") {
+  id "id"
+  foreignKey "two_id", "two(id)"
+}
+
+table("two") {
+  id "id"
+}

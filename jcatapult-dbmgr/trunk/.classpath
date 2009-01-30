@@ -13,6 +13,7 @@
     <classpathentry kind="var" path="SAVANT_REPOSITORY/com/svnkit/svnkit/1.2.0/svnkit-1.2.0.jar" sourcepath="/SAVANT_REPOSITORY/com/svnkit/svnkit/1.2.0/svnkit-1.2.0-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar" sourcepath="/SAVANT_REPOSITORY/javax/persistence/persistence-api/1.0/persistence-api-1.0-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/net/java/dev/java-net-commons/java-net-commons/1.5.2/java-net-commons-1.5.2.jar" sourcepath="/SAVANT_REPOSITORY/net/java/dev/java-net-commons/java-net-commons/1.5.2/java-net-commons-1.5.2-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/codehaus/groovy/groovy/1.5.4/groovy-all-1.5.4.jar" sourcepath="/SAVANT_REPOSITORY/org/codehaus/groovy/groovy/1.5.4/groovy-all-1.5.4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/org/hsqldb/hsqldb/1.8.9/hsqldb-1.8.9.jar" sourcepath="/SAVANT_REPOSITORY/org/hsqldb/hsqldb/1.8.9/hsqldb-1.8.9-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/org/inversoft/savant/savant-core/2.0-RC4/savant-core-2.0-RC4.jar" sourcepath="/SAVANT_REPOSITORY/org/inversoft/savant/savant-core/2.0-RC4/savant-core-2.0-RC4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/org/joda/joda-time/joda-time/1.4/joda-time-1.4.jar" sourcepath="/SAVANT_REPOSITORY/org/joda/joda-time/joda-time/1.4/joda-time-1.4-src.jar" />
