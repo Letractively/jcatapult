@@ -21,6 +21,7 @@ import org.easymock.EasyMock;
 import org.jcatapult.container.ServletContainerResolver;
 import org.jcatapult.environment.EnvironmentResolver;
 import org.junit.Test;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -35,17 +36,17 @@ public class EnvironmentAwareConfigurationTest {
     public void testEnvironmentAwareConfiguration() throws Exception {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-development.xml")).
-            andReturn("src/java/test/unit/org/jcatapult/config/config-development.xml");
+                andReturn("src/java/test/unit/org/jcatapult/config/config-development.xml");
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
-            andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
+                andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
         EasyMock.replay(context);
 
         EnvironmentAwareConfiguration config = new EnvironmentAwareConfiguration(new EnvironmentResolver() {
-                public String getEnvironment() {
-                    return "development";
-                }
-            },
-            new ServletContainerResolver(context), "/WEB-INF/config");
+            public String getEnvironment() {
+                return "development";
+            }
+        },
+                new ServletContainerResolver(context), "/WEB-INF/config");
         assertEquals("dev-value", config.getString("dev"));
         assertEquals("default-value", config.getString("default"));
         EasyMock.verify(context);
@@ -55,18 +56,20 @@ public class EnvironmentAwareConfigurationTest {
     public void testOverride() throws Exception {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-development.xml")).
-            andReturn("src/java/test/unit/org/jcatapult/config/config-development.xml");
+                andReturn("src/java/test/unit/org/jcatapult/config/config-development.xml");
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
-            andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
+                andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
         EasyMock.replay(context);
 
         EnvironmentAwareConfiguration config = new EnvironmentAwareConfiguration(new EnvironmentResolver() {
-                public String getEnvironment() {
-                    return "development";
-                }
-            },
-            new ServletContainerResolver(context), "/WEB-INF/config");
-        config.getString("override", "Development");
+            public String getEnvironment() {
+                return "development";
+            }
+        },
+                new ServletContainerResolver(context), "/WEB-INF/config");
+        String overrideValue = config.getString("override");
+        Assert.assertNotNull(overrideValue);
+        Assert.assertEquals("Development", overrideValue);
         EasyMock.verify(context);
     }
 
@@ -74,18 +77,20 @@ public class EnvironmentAwareConfigurationTest {
     public void testFallThrough() throws Exception {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-production.xml")).
-            andReturn("src/java/test/unit/org/jcatapult/config/config-production.xml");
+                andReturn("src/java/test/unit/org/jcatapult/config/config-production.xml");
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
-            andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
+                andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
         EasyMock.replay(context);
 
         EnvironmentAwareConfiguration config = new EnvironmentAwareConfiguration(new EnvironmentResolver() {
-                public String getEnvironment() {
-                    return "production";
-                }
-            },
-            new ServletContainerResolver(context), "/WEB-INF/config");
-        config.getString("override", "Default");
+            public String getEnvironment() {
+                return "production";
+            }
+        },
+                new ServletContainerResolver(context), "/WEB-INF/config");
+        String defaultValue = config.getString("override");
+        Assert.assertNotNull(defaultValue);
+        Assert.assertEquals("Default", defaultValue);
         EasyMock.verify(context);
     }
 
@@ -93,18 +98,20 @@ public class EnvironmentAwareConfigurationTest {
     public void testMissingFile() throws Exception {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-production.xml")).
-            andReturn(null);
+                andReturn(null);
         EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).
-            andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
+                andReturn("src/java/test/unit/org/jcatapult/config/config-default.xml");
         EasyMock.replay(context);
 
         EnvironmentAwareConfiguration config = new EnvironmentAwareConfiguration(new EnvironmentResolver() {
-                public String getEnvironment() {
-                    return "production";
-                }
-            },
-            new ServletContainerResolver(context), "/WEB-INF/config");
-        config.getString("override", "Default");
+            public String getEnvironment() {
+                return "production";
+            }
+        },
+                new ServletContainerResolver(context), "/WEB-INF/config");
+        String defaultValue = config.getString("override");
+        Assert.assertNotNull(defaultValue);
+        Assert.assertEquals("Default", defaultValue);
         EasyMock.verify(context);
     }
 }
