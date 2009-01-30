@@ -1,0 +1,6 @@
+table("simple_dsl_table") {
+  id "id"
+  column "name", string(512), nullable
+  column "age", integer, nullable
+  column "birthday", date, nullable
+}

@@ -1,0 +1,6 @@
+dependency "jcatapult-user-module", "1.0"
+
+create "one" {
+  id "id"
+  column "name", String, nullable
+}
