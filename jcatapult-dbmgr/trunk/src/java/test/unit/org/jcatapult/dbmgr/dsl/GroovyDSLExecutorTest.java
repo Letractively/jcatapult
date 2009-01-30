@@ -58,4 +58,15 @@ public class GroovyDSLExecutorTest {
         ScriptExecutor se = new ScriptExecutor(connection);
         se.execute(new ByteArrayInputStream(sql.getBytes()), "sql");
     }
+
+    @Test
+    public void testMySQLInsert() throws IllegalAccessException, IOException, InstantiationException, SQLException {
+        Dialect dialect = new MySQL5InnoDBDialect();
+        GroovyDSLExecuteor executor = new GroovyDSLExecuteor(dialect);
+        String sql = executor.execute(new File("src/groovy/test/unit/InsertSimple.db"));
+        System.out.println("SQL is " + sql);
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/database_manager_test", "dev", "dev");
+        ScriptExecutor se = new ScriptExecutor(connection);
+        se.execute(new ByteArrayInputStream(sql.getBytes()), "sql");
+    }
 }

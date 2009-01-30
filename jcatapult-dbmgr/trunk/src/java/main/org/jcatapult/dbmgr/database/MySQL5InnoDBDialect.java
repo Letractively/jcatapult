@@ -16,8 +16,16 @@
 package org.jcatapult.dbmgr.database;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+
+import static net.java.lang.ObjectTools.*;
 
 /**
  * <p>
@@ -50,7 +58,7 @@ public class MySQL5InnoDBDialect implements Dialect {
         columns.add(column);
     }
 
-    public void addForeignKey(String name, String reference, boolean nullable) {
+    public void addForeignKey(String name, String reference, String id, boolean nullable) {
         Column column = new Column();
         column.name = name;
         column.type = "integer";
@@ -61,6 +69,7 @@ public class MySQL5InnoDBDialect implements Dialect {
         key.tableName = tableName;
         key.reference = reference;
         key.column = column;
+        key.id = id;
         key.primary = false;
         keys.add(key);
     }
@@ -110,14 +119,43 @@ public class MySQL5InnoDBDialect implements Dialect {
         build.append(") Engine=InnoDB;\n");
     }
 
+    public void insert(String tableName, Map<String, Object> values) {
+        build.append("insert into ").append(tableName).append(" (").append(join(values.keySet(), ",")).append(") values (");
+        boolean first = true;
+        for (Object o : values.values()) {
+            if (!first) {
+                build.append(",");
+            }
+
+            if (o instanceof DateTime) {
+                // We have to assume that the MySQL instance is using the system timezone and convert
+                // the date time to that and then format to the mysql lame ass format
+                DateTime dt = (DateTime) o;
+                dt = dt.withZone(DateTimeZone.getDefault());
+                String format = DateTimeFormat.forPattern("YYYY-MM-dd hh:mm:ss").print(dt);
+                build.append("'").append(format).append("'");
+            } else if (o instanceof LocalDate) {
+                LocalDate ld = (LocalDate) o;
+                String format = DateTimeFormat.forPattern("YYYY-MM-dd").print(ld);
+                build.append("'").append(format).append("'");
+            } else if (o instanceof String){
+                build.append("'").append(o.toString()).append("'");
+            } else {
+                build.append(o.toString());
+            }
+
+            first = false;
+        }
+        build.append(");");
+    }
+
     public String endScript() {
         System.out.println("End");
         for (Key key : keys) {
             if (!key.primary) {
-                String id = makeID();
                 build.append("alter table ").append(key.tableName).
-                    append(" add index FK").append(id).append("(").append(key.column.name).append("),").
-                    append(" add constraint FK").append(id).append(" foreign key (").append(key.column.name).append(")").
+                    append(" add index ").append(key.id).append("(").append(key.column.name).append("),").
+                    append(" add constraint ").append(key.id).append(" foreign key (").append(key.column.name).append(")").
                     append(" references ").append(key.reference).append(";\n");
             }
         }
@@ -125,21 +163,18 @@ public class MySQL5InnoDBDialect implements Dialect {
         return build.toString();
     }
 
-    private String makeID() {
-        return "" + System.currentTimeMillis();
-    }
-
     public class Column {
-        private String name;
-        private String type;
-        private boolean nullable;
-        private boolean autoIncrement;
+        public String name;
+        public String type;
+        public boolean nullable;
+        public boolean autoIncrement;
     }
 
     public class Key {
-        private String tableName;
-        private boolean primary;
-        private Column column;
+        public String tableName;
+        public boolean primary;
+        public Column column;
         public String reference;
+        public String id;
     }
 }

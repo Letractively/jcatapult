@@ -13,31 +13,30 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.dbmgr.database;
-
-import java.util.Map;
+package org.jcatapult.dbmgr.dsl;
 
 /**
  * <p>
- * This is a database specific dialect.
+ * This class is the exception thrown when the DSL handler encounters an
+ * unrecoverable error.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface Dialect {
-    void startScript();
+public class DSLException extends RuntimeException {
+    public DSLException() {
+        super();
+    }
 
-    void startCreateTable(String name);
-    
-    void addColumn(String name, String type, boolean nullable);
+    public DSLException(String message) {
+        super(message);
+    }
 
-    void addForeignKey(String name, String reference, String id, boolean nullable);
+    public DSLException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    void addId(String name);
-
-    void endCreateTable();
-
-    void insert(String tableName, Map<String, Object> values);
-
-    String endScript();
+    public DSLException(Throwable cause) {
+        super(cause);
+    }
 }

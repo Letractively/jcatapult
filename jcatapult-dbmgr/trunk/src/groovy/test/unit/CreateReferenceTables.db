@@ -1,8 +1,13 @@
 table("one") {
   id "id"
-  foreignKey "two_id", "two(id)"
+  foreignKey "two_id", "two(id)", "fktonetwoid"
 }
 
 table("two") {
   id "id"
+}
+
+table("three") {
+  id "id"
+  foreignKey "two_id", "two(id)", "fkthreetwoid"
 }
