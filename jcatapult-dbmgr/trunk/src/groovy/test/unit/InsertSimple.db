@@ -1,9 +1,1 @@
 insert "simple_dsl_table", [name: "Brian", age: 32, birthday: datetime("1976-5-30T02:13:00-06"), male: true, insert_date: now()]
-insert("simple_dsl_table") {
-  
-}
-
-insert("users_roles", [users_id, roles_id]) {
-    "select users.id, roles.id from users, roles where users.login = 'brian@inversoft.com' and roles.name = 'admin'"
-};
-
