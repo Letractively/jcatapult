@@ -2,7 +2,7 @@
          name="jcatapult-dbmgr"
          group="jcatapult.org"
          version="1.0-RC11">
-	
+
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
@@ -19,6 +19,8 @@
 
   <dependencies>
     <artifactGroup type="compile">
+      <artifact group="hibernate.org" project="hibernate" name="hibernate" version="3.2.6" type="jar"/>
+      <artifact group="hibernate.org" project="hibernate-annotations" name="hibernate-annotations" version="3.3.1" type="jar"/>
       <artifact group="groovy.codehaus.org" project="groovy" name="groovy-all" version="1.5.4"/>
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
       <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
