@@ -47,7 +47,7 @@
         </classpath>
         <jvmarg line="-Xmx256M"/>
         <sysproperty key="java.util.logging.config.file" value="${dir.plugin.dbmgr}/logging.properties"/>
-        <arg line="${no.domain.switch} punit @{url} ${project.name} src/db/main mysql5 java:comp/env/jdbc/${project.name} ./project.xml dependencies.project ${project.version}"/>
+        <arg line="${no.domain.switch} punit @{url} ${project.name} src/db/main mysql5 java:comp/env/jdbc/${project.name} ./project.xml ${project.version}"/>
       </java>
     </sequential>
   </macrodef>
