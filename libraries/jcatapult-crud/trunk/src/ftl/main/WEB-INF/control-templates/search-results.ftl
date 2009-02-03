@@ -13,7 +13,7 @@
     [#list results as result]
       <tr>
         [#list attributes['properties'] as prop]
-        <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] ${prop?replace('.', '-')}-row">[#if prop_index == 0]<a href="details?id=${result.id}">[/#if]${("((result." + prop + ")!'')?string")?eval}[#if result_index == 0]</a>[/#if]</td>
+        <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] ${prop?replace('.', '-')}-row">[#if prop_index == 0 && detailable]<a href="details?id=${result.id}">[/#if]${("((result." + prop + ")!'')?string")?eval}[#if result_index == 0]</a>[/#if]</td>
         [/#list]
         <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] edit-row"><a href="edit/${result.id}"><img src="/module/inversoft-crud/1.0.1/edit.png" alt="" border=""/></a></td>
         [#if deletable]

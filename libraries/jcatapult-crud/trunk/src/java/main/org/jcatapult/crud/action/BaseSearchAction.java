@@ -5,13 +5,12 @@ package org.jcatapult.crud.action;
 
 import java.util.List;
 
+import org.jcatapult.crud.service.SearchCriteria;
+import org.jcatapult.crud.service.SearchService;
 import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.scope.annotation.ActionSession;
 
 import com.google.inject.Inject;
-
-import org.jcatapult.crud.service.SearchCriteria;
-import org.jcatapult.crud.service.SearchService;
 
 /**
  * <p>
@@ -51,6 +50,11 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
      * Determines if the entity can be added via the CRUD interface.
      */
     public boolean addable = true;
+
+    /**
+     * Determines if the entity details can be viewed via the CRUD interface.
+     */
+    public boolean detailable = true;
 
     /**
      * Determines if the entity can be deleted via the CRUD interface.
