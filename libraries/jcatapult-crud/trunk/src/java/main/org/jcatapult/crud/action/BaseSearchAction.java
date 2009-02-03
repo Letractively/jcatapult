@@ -14,7 +14,30 @@ import com.google.inject.Inject;
 
 /**
  * <p>
- * This is a generic base action for performing searches.
+ * This is a generic base action for performing searches. In order to implement
+ * a CRUD search and index page, simply extend this class and provide an
+ * implementation of the {@link #getDefaultCriteria()} method. This will
+ * require you to implement the {@link SearchCriteria} interface or to use
+ * the {@link org.jcatapult.crud.service.AbstractSearchCriteria} or the
+ * {@link org.jcatapult.crud.service.SimpleSearchCriteria}.
+ * </p>
+ *
+ * <p>
+ * An implementation might look like this:
+ * </p>
+ *
+ * <pre>
+ * @@Action
+ * public class Index extends BaseSearchAction&lt;User, UserSearchCriteria&lt;User>> {
+ *     protected UserSearchCriteria&lt;User> getDefaultCriteria() {
+ *         return new UserSearchCriteria&lt;User>(User.class);
+ *     }
+ * }
+ * </pre>
+ *
+ * <p>
+ * The bulk of the search work happens in the FTL file and the <code>UserSearchCriteria</code>
+ * class.
  * </p>
  *
  * @author  Brian Pontarelli
