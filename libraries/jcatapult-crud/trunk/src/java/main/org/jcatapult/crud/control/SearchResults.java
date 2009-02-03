@@ -19,9 +19,6 @@ import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
     required = {
         @ControlAttribute(name = "name"),
         @ControlAttribute(name = "properties")
-    },
-    optional = {
-        @ControlAttribute(name = "deletable", types = {Boolean.class, boolean.class})
     }
 )
 public class SearchResults extends AbstractComponentControl {
