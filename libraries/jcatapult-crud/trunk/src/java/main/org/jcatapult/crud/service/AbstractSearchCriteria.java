@@ -1,11 +1,26 @@
 /*
- * Copyright (c) 2001-2008, Inversoft, All Rights Reserved
+ * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
  */
 package org.jcatapult.crud.service;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jcatapult.persistence.domain.SoftDeletable;
 
 import net.java.util.Pair;
 
@@ -100,7 +115,7 @@ public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Se
     /**
      * A simple builder class for building query strings.
      */
-    public static class QueryBuilder {
+    public class QueryBuilder {
         private final StringBuilder where = new StringBuilder();
         private final Map<String, Object> params = new HashMap<String, Object>();
         private String select;
@@ -113,15 +128,18 @@ public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Se
 
         /**
          * <p>
-         * Sets the select of the query, such as <strong>u from User u</strong>. This could also be
+         * Sets the select of the query, such as <strong>e from User e</strong>. This could also be
          * a count query. This should not include the <strong>select</strong> keyword. An example
          * usage is:
          * </p>
          *
          * <pre>
-         * select("u from User u")
+         * select("e from User e")
          * </pre>
          *
+         * <p>
+         * You must always alias the Entity to <strong>e</strong>.
+         * </p>
          *
          * @param   select The select query.
          * @return  This builder.
@@ -140,12 +158,16 @@ public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Se
          * </p>
          *
          * <pre>
-         * where("u.age &lt; :age")
+         * where("e.age &lt; :age")
          * </pre>
          *
          * <p>
          * If there is already a where clause in the query, this <strong>ands</strong> the given where
          * clause to the already existing clause.
+         * </p>
+         *
+         * <p>
+         * You must always alias the Entity to <strong>e</strong>.
          * </p>
          *
          * @param   where The clause.
@@ -169,12 +191,16 @@ public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Se
          * </p>
          *
          * <pre>
-         * where("u.age &lt; :age")
+         * where("e.age &lt; :age")
          * </pre>
          *
          * <p>
          * If there is already a where clause in the query, this <strong>ands</strong> the given where
          * clause to the already existing clause.
+         * </p>
+         *
+         * <p>
+         * You must always alias the Entity to <strong>e</strong>.
          * </p>
          *
          * @param   where The clause.
@@ -198,12 +224,16 @@ public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Se
          * </p>
          *
          * <pre>
-         * andWhere("u.age &lt; :age")
+         * andWhere("e.age &lt; :age")
          * </pre>
          *
          * <p>
          * If there is already a where clause in the query, this <strong>ors</strong> the given where
          * clause to the already existing clause.
+         * </p>
+         *
+         * <p>
+         * You must always alias the Entity to <strong>e</strong>.
          * </p>
          *
          * @param   where The clause.
@@ -254,6 +284,13 @@ public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Se
             build.append("select ").append(select);
             if (where.length() > 0) {
                 build.append(" where ").append(where);
+                if (SoftDeletable.class.isAssignableFrom(getResultType())) {
+                    build.append(" and e.deleted = false");
+                }
+            } else {
+                if (SoftDeletable.class.isAssignableFrom(getResultType())) {
+                    build.append(" where e.deleted = false");
+                }
             }
 
             if (orderBy != null) {

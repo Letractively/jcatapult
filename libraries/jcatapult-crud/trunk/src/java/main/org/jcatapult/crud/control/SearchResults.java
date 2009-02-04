@@ -19,6 +19,12 @@ import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
     required = {
         @ControlAttribute(name = "name"),
         @ControlAttribute(name = "properties")
+    },
+    optional = {
+        @ControlAttribute(name = "tableTemplate"),
+        @ControlAttribute(name = "controlsTemplate"),
+        @ControlAttribute(name = "paginationTemplate"),
+        @ControlAttribute(name = "numberPerPageTemplate")
     }
 )
 public class SearchResults extends AbstractComponentControl {
