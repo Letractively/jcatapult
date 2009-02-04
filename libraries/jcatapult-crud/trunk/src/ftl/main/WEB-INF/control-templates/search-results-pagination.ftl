@@ -8,7 +8,7 @@
 [#if totalPages?int > 1 && !searchCriteria.showAll]
   <div id="pagination-controls" class="${attributes['name']}-pagination-controls jcatapult-module-pagination-controls">
     [#if searchCriteria.page > 1]
-      <a href="index?searchCriteria.page=${searchCriteria.page - 1}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">[@jc.message key="prev" default="Prev"/]</a> |
+      <a href="?searchCriteria.page=${searchCriteria.page - 1}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">[@jc.message key="prev" default="Prev"/]</a> |
     [/#if]
     [#if searchCriteria.page == 1]
       [@jc.message key="prev" default="Prev"/] |
@@ -23,7 +23,7 @@
     [#assign end = searchCriteria.page - 1]
     [#if (end >= start)]
       [#list start..end as i]
-        <a href="index?searchCriteria.page=${i}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">${i}</a> |
+        <a href="?searchCriteria.page=${i}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">${i}</a> |
       [/#list]
     [/#if]
     ${searchCriteria.page} |
@@ -36,12 +36,12 @@
     [/#if]
     [#if (end >= start)]
       [#list start..end as i]
-        <a href="index?searchCriteria.page=${i}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">${i}</a> |
+        <a href="?searchCriteria.page=${i}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">${i}</a> |
       [/#list]
     [/#if]
 
     [#if totalCount > (searchCriteria.page * searchCriteria.numberPerPage)]
-      <a href="index?searchCriteria.page=${searchCriteria.page + 1}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">[@jc.message key="next" default="Next"/]</a>
+      <a href="?searchCriteria.page=${searchCriteria.page + 1}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">[@jc.message key="next" default="Next"/]</a>
     [/#if]
     [#if totalCount <= (searchCriteria.page * searchCriteria.numberPerPage)]
       [@jc.message key="next" default="Next"/]
