@@ -481,7 +481,7 @@
           <option name="filler" value=" " />
         </value>
       </option>
-      <option name="notice" value="Copyright (c) 2001-&amp;#36;today.year, Inversoft, All Rights Reserved" />
+      <option name="notice" value="Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved&#10;&#10;Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);&#10;you may not use this file except in compliance with the License.&#10;You may obtain a copy of the License at&#10;&#10;  http://www.apache.org/licenses/LICENSE-2.0&#10;&#10;Unless required by applicable law or agreed to in writing,&#10;software distributed under the License is distributed on an&#10;&quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,&#10;either express or implied. See the License for the specific&#10;language governing permissions and limitations under the License.&#10;" />
       <option name="keyword" value="Copyright" />
       <option name="fileTypeOverride" value="4" />
       <option name="relativeBefore" value="true" />
@@ -495,5 +495,8 @@
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
     <option name="DEFAULT_LAYOUT_MANAGER" value="GridLayoutManager" />
   </component>
+  <UsedPathMacros>
+    <macro name="SAVANT_REPOSITORY" />
+  </UsedPathMacros>
 </project>
 
