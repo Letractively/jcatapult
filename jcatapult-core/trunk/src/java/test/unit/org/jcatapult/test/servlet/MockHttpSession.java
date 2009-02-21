@@ -45,7 +45,7 @@ public class MockHttpSession implements HttpSession {
     }
 
     public String getId() {
-        return null;
+        return "1";
     }
 
     public long getLastAccessedTime() {
