@@ -55,6 +55,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
     protected String encoding;
     protected MockRequestDispatcher dispatcher;
 
+    protected String remoteAddr;
+
     public MockHttpServletRequest(String uri, Locale locale, boolean post, String encoding,
             MockServletContext context) {
         this.parameters = new HashMap<String, List<String>>();
@@ -229,7 +231,11 @@ public class MockHttpServletRequest implements HttpServletRequest {
     /**
      */
     public String getRemoteAddr() {
-        throw new UnsupportedOperationException();
+        return remoteAddr;
+    }
+
+    public void setRemoteAddr(String remoteAddr) {
+        this.remoteAddr = remoteAddr;
     }
 
     /**
