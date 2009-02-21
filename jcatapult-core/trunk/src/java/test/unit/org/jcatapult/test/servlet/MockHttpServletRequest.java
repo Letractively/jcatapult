@@ -55,7 +55,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     protected String encoding;
     protected MockRequestDispatcher dispatcher;
 
-    protected String remoteAddr;
+    protected String remoteAddr = "127.0.0.1";
 
     public MockHttpServletRequest(String uri, Locale locale, boolean post, String encoding,
             MockServletContext context) {
