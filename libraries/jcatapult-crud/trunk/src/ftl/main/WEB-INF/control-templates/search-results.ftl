@@ -1,5 +1,13 @@
 [#ftl/]
+<div id="search-result-count">
+  <span id="search-result-count-label">[@jc.message key="number-of-results" default="Number of results:"/]</span><span id="search-result-count-number">${totalCount}</span>
+</div>
 <form action="delete" method="POST">
+  [#if attributes['paginationTemplate']??]
+    [#include attributes['paginationTemplate']/]
+  [#else]
+    [#include "search-results-pagination.ftl"/]
+  [/#if]
   [#if attributes['tableTemplate']??]
     [#include attributes['tableTemplate']/]
   [#else]

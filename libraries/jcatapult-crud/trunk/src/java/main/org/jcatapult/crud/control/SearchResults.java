@@ -45,9 +45,14 @@ public class SearchResults extends AbstractComponentControl {
     }
 
     /**
-     * @return  search-results.ftl
+     * @return  The template name, which defaults to search-results.ftl, but can be set via an attribute
+     *          named template.
      */
     protected String endTemplateName() {
+        if (attributes.containsKey("template")) {
+            return (String) attributes.get("template");
+        }
+        
         return "search-results.ftl";
     }
 }
