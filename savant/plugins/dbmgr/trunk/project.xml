@@ -9,7 +9,7 @@
 
   <dependencies>
     <artifactGroup type="run">
-      <artifact group="jcatapult.org" name="jcatapult-dbmgr" version="1.0-RC12-{integration}"/>
+      <artifact group="jcatapult.org" name="jcatapult-dbmgr" version="1.0-RC12"/>
       <artifact group="mysql.com" name="mysql-connector-java" version="5.1.6"/>
       <artifact group="savant.inversoft.org" name="savant-core" version="1.5"/>
     </artifactGroup>
