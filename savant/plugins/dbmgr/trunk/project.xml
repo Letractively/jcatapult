@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
     name="dbmgr"
     group="plugins.savant.jcatapult.org"
-    version="1.0.1">
+    version="1.0.2">
 
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="plugin" version="1.0"/>
@@ -9,9 +9,9 @@
 
   <dependencies>
     <artifactGroup type="run">
-      <artifact group="jcatapult.org" name="jcatapult-dbmgr" version="1.0-RC11"/>
+      <artifact group="jcatapult.org" name="jcatapult-dbmgr" version="1.0-RC12-{integration}"/>
       <artifact group="mysql.com" name="mysql-connector-java" version="5.1.6"/>
-      <artifact group="savant.inversoft.org" name="savant-core" version="2.0-RC4"/>
+      <artifact group="savant.inversoft.org" name="savant-core" version="1.5"/>
     </artifactGroup>
   </dependencies>
 </project>
