@@ -250,7 +250,7 @@ import net.java.util.Version;
  * </p>
  *
  * <pre>
- * Usage: DatabaseMigrator [--no-domain] &lt;persistence-unit> &lt;db-url> &lt;application-name> &lt;sql-dir> &lt;db-type> &lt;jndi-name> &lt;project-xml-path> &lt;dependencies-id> &lt;version>
+ * Usage: DatabaseMigrator [--no-domain] &lt;persistence-unit> &lt;db-url> &lt;application-name> &lt;sql-dir> &lt;db-type> &lt;jndi-name> &lt;project-xml-path> &lt;version>
  *
  *      --no-domain: Tells the DatabaseMigrator that the current application doesn't
  *                   contain any domain objects and that it should only check for module
@@ -271,8 +271,6 @@ import net.java.util.Version;
  *        jndi-name: The jndi name name that maps to the datasource.
  *
  * project-xml-path: The path to the project.xml file.
- *
- *  dependencies-id: The dependencies id defined within the project.xml.
  *
  *          version: The version of the project.
  * </pre>
@@ -325,7 +323,7 @@ public class DatabaseManager {
         if (args.length < 8 || args.length > 9) {
             StringBuffer errMsg = new StringBuffer();
             errMsg.append("Invalid arguments: ").append(Arrays.asList(args)).append("\n");
-            errMsg.append("Usage: DatabaseMigrator [--no-domain] <persistence-unit> <db-url> <application-name> <sql-dir> <db-type> <jndi-name> <project-xml-path> <dependencies-id> <version>");
+            errMsg.append("Usage: DatabaseMigrator [--no-domain] <persistence-unit> <db-url> <application-name> <sql-dir> <db-type> <jndi-name> <project-xml-path> <version>");
             errMsg.append("\n\n");
             errMsg.append("--no-domain: Tells the DatabaseMigrator that the current application doesn't\n");
             errMsg.append("             contain any domain objects and that it should only check for module\n");
