@@ -25,6 +25,7 @@ import java.sql.Statement;
 
 import org.jcatapult.dbmgr.database.Dialect;
 import org.jcatapult.dbmgr.database.MySQL5InnoDBDialect;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import net.java.sql.ScriptExecutor;
@@ -36,6 +37,7 @@ import net.java.sql.ScriptExecutor;
  *
  * @author  Brian Pontarelli
  */
+@Ignore
 public class GroovyDSLExecutorTest {
     @Test
     public void testMySQL() throws IllegalAccessException, IOException, InstantiationException, SQLException {
