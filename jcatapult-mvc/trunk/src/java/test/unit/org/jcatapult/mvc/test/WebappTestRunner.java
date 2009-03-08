@@ -66,9 +66,8 @@ public class WebappTestRunner {
         return new RequestBuilder(uri, this);
     }
 
-    void run(RequestBuilder builder, boolean post) throws IOException, ServletException {
-        this.request = new MockHttpServletRequest(builder.getParameters(), builder.getUri(), "UTF-8",
-            builder.getLocale(), post, session);
+    void run(RequestBuilder builder) throws IOException, ServletException {
+        this.request = builder.getRequest();
         ServletObjectsHolder.clearServletRequest();
         ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(request));
 

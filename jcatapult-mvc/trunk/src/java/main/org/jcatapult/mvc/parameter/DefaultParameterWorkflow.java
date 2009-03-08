@@ -30,6 +30,7 @@ import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.ExpressionException;
+import org.jcatapult.mvc.util.RequestTools;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -78,13 +79,8 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         Object action = actionInvocation.action();
-        String method = request.getMethod().toLowerCase();
-        String contentType = request.getContentType();
-        contentType = contentType != null ? contentType.toLowerCase() : "";
 
-        if (action != null && (!method.equals("post") ||
-                (method.equals("post") && (contentType.startsWith("application/x-www-form-urlencoded") ||
-                    contentType.startsWith("multipart/"))))) {
+        if (action != null && RequestTools.canUseParameters(request)) {
             Map<String, String[]> parameters = request.getParameterMap();
 
             // First grab the structs and then save them to the request

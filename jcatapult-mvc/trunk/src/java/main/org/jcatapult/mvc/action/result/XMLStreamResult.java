@@ -56,6 +56,8 @@ public class XMLStreamResult extends AbstractResult<XMLStream> {
 
         byte[] xmlBytes = ((String) object).getBytes("UTF-8");
 
+        response.setStatus(xmlStream.status());
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/xhtml+xml");
         response.setContentLength(xmlBytes.length);
 

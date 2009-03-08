@@ -17,11 +17,13 @@ package org.jcatapult.mvc.test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import javax.servlet.ServletException;
+
+import org.jcatapult.test.servlet.MockHttpServletRequest;
+import org.jcatapult.test.servlet.WebTestHelper;
+import org.jcatapult.test.servlet.MockServletInputStream;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -35,14 +37,12 @@ import com.google.inject.Module;
  * @author  Brian Pontarelli
  */
 public class RequestBuilder {
-    private final String uri;
-    private final Map<String, List<String>> parameters = new HashMap<String, List<String>>();
+    private final MockHttpServletRequest request;
     private final WebappTestRunner test;
     private final List<Module> modules = new ArrayList<Module>();
-    private Locale locale = Locale.getDefault();
 
     public RequestBuilder(String uri, WebappTestRunner test) {
-        this.uri = uri;
+        request = new MockHttpServletRequest(uri, Locale.getDefault(), false, "UTF-8", WebTestHelper.makeContext());
         this.test = test;
     }
 
@@ -55,13 +55,7 @@ public class RequestBuilder {
      * @return  This.
      */
     public RequestBuilder withParameter(String name, String value) {
-        List<String> list = parameters.get(name);
-        if (list == null) {
-            list = new ArrayList<String>();
-            parameters.put(name, list);
-        }
-
-        list.add(value);
+        request.setParameter(name, value);
         return this;
     }
 
@@ -72,7 +66,62 @@ public class RequestBuilder {
      * @return  This.
      */
     public RequestBuilder withLocale(Locale locale) {
-        this.locale = locale;
+        request.addLocale(locale);
+        return this;
+    }
+
+    /**
+     * Sets the body content.
+     *
+     * @param   bytes The bytes.
+     * @return  This.
+     */
+    public RequestBuilder withBody(byte[] bytes) {
+        request.setInputStream(new MockServletInputStream(bytes));
+        return this;
+    }
+
+    /**
+     * Sets the content type.
+     *
+     * @param   contentType The content type.
+     * @return  This.
+     */
+    public RequestBuilder withContentType(String contentType) {
+        request.setContentType(contentType);
+        return this;
+    }
+
+    /**
+     * Sets the context path.
+     *
+     * @param   contextPath The context path.
+     * @return  This.
+     */
+    public RequestBuilder withContextPath(String contextPath) {
+        request.setContextPath(contextPath);
+        return this;
+    }
+
+    /**
+     * Sets the encoding.
+     *
+     * @param   encoding The encoding.
+     * @return  This.
+     */
+    public RequestBuilder withEncoding(String encoding) {
+        request.setEncoding(encoding);
+        return this;
+    }
+
+    /**
+     * Sets the method as HTTPS and server port as 443.
+     *
+     * @return  This.
+     */
+    public RequestBuilder usingHTTPS() {
+        request.setScheme("HTTPS");
+        request.setServerPort(443);
         return this;
     }
 
@@ -101,7 +150,8 @@ public class RequestBuilder {
      * @throws  ServletException If the MVC throws an exception.
      */
     public void post() throws IOException, ServletException {
-        test.run(this, true);
+        request.setPost(true);
+        test.run(this);
     }
 
     /**
@@ -111,19 +161,12 @@ public class RequestBuilder {
      * @throws  ServletException If the MVC throws an exception.
      */
     public void get() throws IOException, ServletException {
-        test.run(this, false);
+        request.setPost(false);
+        test.run(this);
     }
 
-    public String getUri() {
-        return uri;
-    }
-
-    public Locale getLocale() {
-        return locale;
-    }
-
-    public Map<String, List<String>> getParameters() {
-        return parameters;
+    public MockHttpServletRequest getRequest() {
+        return request;
     }
 
     public List<Module> getModules() {

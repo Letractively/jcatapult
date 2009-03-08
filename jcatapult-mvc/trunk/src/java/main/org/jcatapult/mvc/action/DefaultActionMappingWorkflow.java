@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameter.InternalParameters;
+import org.jcatapult.mvc.util.RequestTools;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -82,20 +83,22 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
 
     private String determineURI() {
         String uri = null;
-        Set<String> keys = request.getParameterMap().keySet();
-        for (String key : keys) {
-            if (key.startsWith("__jc_a_")) {
-                String actionParameterName = key.substring(7);
-                String actionParameterValue = request.getParameter(key);
-                if (request.getParameter(actionParameterName) != null && actionParameterValue.trim().length() > 0) {
-                    uri = actionParameterValue;
+        if (RequestTools.canUseParameters(request)) {
+            Set<String> keys = request.getParameterMap().keySet();
+            for (String key : keys) {
+                if (key.startsWith("__jc_a_")) {
+                    String actionParameterName = key.substring(7);
+                    String actionParameterValue = request.getParameter(key);
+                    if (request.getParameter(actionParameterName) != null && actionParameterValue.trim().length() > 0) {
+                        uri = actionParameterValue;
 
-                    // Handle relative URIs
-                    if (!uri.startsWith("/")) {
-                        String requestURI = request.getRequestURI();
-                        int index = requestURI.lastIndexOf("/");
-                        if (index >= 0) {
-                            uri = requestURI.substring(0, index) + "/" + uri;
+                        // Handle relative URIs
+                        if (!uri.startsWith("/")) {
+                            String requestURI = request.getRequestURI();
+                            int index = requestURI.lastIndexOf("/");
+                            if (index >= 0) {
+                                uri = requestURI.substring(0, index) + "/" + uri;
+                            }
                         }
                     }
                 }
