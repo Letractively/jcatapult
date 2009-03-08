@@ -12,12 +12,16 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.test.servlet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.io.StringReader;
+import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.ArrayList;
 import static java.util.Arrays.*;
@@ -27,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Vector;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
@@ -46,24 +51,60 @@ import net.java.util.IteratorEnumeration;
 public class MockHttpServletRequest implements HttpServletRequest {
     protected final Map<String, Object> attributes = new HashMap<String, Object>();
     protected final Map<String, List<String>> headers = new HashMap<String, List<String>>();
-    protected final MockHttpSession session;
     protected final Map<String, List<String>> parameters;
+    protected final MockServletContext context;
+    protected MockHttpSession session;
+
     protected String contentType = null;
     protected String uri;
-    protected Locale locale;
+
+    protected Vector<Locale> locales = new Vector<Locale>(asList(Locale.getDefault()));
+
     protected boolean post;
     protected String encoding;
-    protected MockRequestDispatcher dispatcher;
-
     protected String remoteAddr = "127.0.0.1";
+    protected String remoteHost;
+    protected int remotePort = 10000;
+    protected String scheme = "HTTP";
+    protected String serverName = "localhost";
+    protected String localName = "localhost";
+    protected int serverPort = 10000;
+
+    protected ServletInputStream inputStream;
+    protected Reader reader;
+    protected boolean inputStreamRetrieved;
+
+    protected boolean readerRetrieved;
+    protected boolean parametersRetrieved;
+    protected MockRequestDispatcher dispatcher;
+    protected String contextPath = "";
+    protected List<Cookie> cookies = new ArrayList<Cookie>();
+    protected String pathInfo = "";
+    protected String pathTranslated;
+    protected String remoteUser;
+    protected String servletPath = "";
+
+    public MockHttpServletRequest(String uri, MockServletContext context) {
+        this.uri = uri;
+        this.context = context;
+        this.parameters = new HashMap<String, List<String>>();
+    }
+
+    public MockHttpServletRequest(String uri, MockHttpSession session) {
+        this.uri = uri;
+        this.session = session;
+        this.context = session.context;
+        this.parameters = new HashMap<String, List<String>>();
+    }
 
     public MockHttpServletRequest(String uri, Locale locale, boolean post, String encoding,
             MockServletContext context) {
         this.parameters = new HashMap<String, List<String>>();
         this.uri = uri;
-        this.locale = locale;
+        this.locales.add(locale);
         this.post = post;
         this.encoding = encoding;
+        this.context = context;
         this.session = new MockHttpSession(context);
 
         if (post) {
@@ -75,10 +116,11 @@ public class MockHttpServletRequest implements HttpServletRequest {
             MockHttpSession session) {
         this.parameters = new HashMap<String, List<String>>();
         this.uri = uri;
-        this.locale = locale;
+        this.locales.add(locale);
         this.post = post;
         this.encoding = encoding;
         this.session = session;
+        this.context = session.context;
 
         if (post) {
             contentType = "application/x-www-form-urlencoded";
@@ -90,9 +132,10 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.parameters = parameters;
         this.uri = uri;
         this.encoding = encoding;
-        this.locale = locale;
+        this.locales.add(locale);
         this.post = post;
         this.session = session;
+        this.context = session.context;
 
         if (post) {
             contentType = "application/x-www-form-urlencoded";
@@ -104,8 +147,9 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.parameters = parameters;
         this.uri = uri;
         this.encoding = encoding;
-        this.locale = locale;
+        this.locales.add(locale);
         this.post = post;
+        this.context = context;
         this.session = new MockHttpSession(context);
 
         if (post) {
@@ -146,39 +190,84 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @return  If the input stream or the reader are setup, this will return the length of those using
+     *          the available method.
      */
     public int getContentLength() {
+        if (inputStream != null) {
+            try {
+                return inputStream.available();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+
         return -1;
     }
 
     /**
+     * @return  The content type.
      */
     public String getContentType() {
         return contentType;
     }
 
     /**
+     * @return  The input stream.
+     * @throws  IOException If the reader was already retrieved.
      */
     public ServletInputStream getInputStream() throws IOException {
-        throw new UnsupportedOperationException();
+        if (readerRetrieved) {
+            throw new IOException("Reader has already been retrieved.");
+        }
+
+        inputStreamRetrieved = true;
+        if (parametersRetrieved) {
+            return new MockServletInputStream(new byte[0]);
+        }
+        
+        return inputStream;
+    }
+
+    public String getLocalAddr() {
+        return null;
     }
 
     /**
+     * @return  The system default locale if nothing was added or setup in the constructor or using
+     *          the setter methods. If there are multiple locales setup, this returns the first one.
      */
     public Locale getLocale() {
-        return locale;
+        if (locales.isEmpty()) {
+            return Locale.getDefault();
+        }
+
+        return locales.get(0);
     }
 
     /**
+     * @return  The request locales.
      */
     public Enumeration getLocales() {
-        throw new UnsupportedOperationException();
+        return locales.elements();
+    }
+
+    /**
+     * @return  The local name.
+     */
+    public String getLocalName() {
+        return localName;
+    }
+
+    public int getLocalPort() {
+        return 0;
     }
 
     /**
      * @return  The parameter or null.
      */
     public String getParameter(String name) {
+        parametersRetrieved = true;
         List<String> list = parameters.get(name);
         if (list != null && list.size() > 0) {
             return list.get(0);
@@ -188,6 +277,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     public Map getParameterMap() {
+        parametersRetrieved = true;
         Map<String, String[]> params = new HashMap<String, String[]>();
         for (String key : parameters.keySet()) {
             params.put(key, parameters.get(key).toArray(new String[parameters.get(key).size()]));
@@ -197,10 +287,12 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     public Enumeration getParameterNames() {
+        parametersRetrieved = true;
         return new IteratorEnumeration(parameters.keySet().iterator());
     }
 
     public String[] getParameterValues(String name) {
+        parametersRetrieved = true;
         List<String> list = parameters.get(name);
         if (list != null) {
             return list.toArray(new String[list.size()]);
@@ -210,15 +302,31 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @return  Always HTTP/1.0
      */
     public String getProtocol() {
         return "HTTP/1.0";
     }
 
     /**
+     * @return  The reader.
+     * @throws  IOException If the input stream was already retrieved.
      */
     public BufferedReader getReader() throws IOException {
-        throw new UnsupportedOperationException();
+        if (inputStreamRetrieved) {
+            throw new IOException("InputStream already retrieved.");
+        }
+
+        if (encoding != null) {
+            return new BufferedReader(new InputStreamReader(inputStream, encoding));
+        }
+
+        readerRetrieved = true;
+        if (parametersRetrieved) {
+            return new BufferedReader(new StringReader(""));
+        }
+
+        return new BufferedReader(new InputStreamReader(inputStream));
     }
 
     /**
@@ -229,21 +337,32 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @return  The remote address.
      */
     public String getRemoteAddr() {
         return remoteAddr;
     }
 
-    public void setRemoteAddr(String remoteAddr) {
-        this.remoteAddr = remoteAddr;
+    /**
+     * @return  The remote host.
+     */
+    public String getRemoteHost() {
+        return remoteHost;
     }
 
     /**
+     * @return  The remote port.
      */
-    public String getRemoteHost() {
-        throw new UnsupportedOperationException();
+    public int getRemotePort() {
+        return remotePort;
     }
 
+    /**
+     * The mock request dispatcher for the given path.
+     *
+     * @param   thePath The path.
+     * @return  The request dispatcher.
+     */
     public RequestDispatcher getRequestDispatcher(String thePath) {
         if (thePath == null) {
             return null;
@@ -277,36 +396,47 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @return  The scheme, which defaults to HTTP.
      */
     public String getScheme() {
-        return "HTTP";
+        return scheme;
     }
 
     /**
+     * @return  The server name, which defaults to localhost.
      */
     public String getServerName() {
-        return "localhost";
+        return serverName;
     }
 
     /**
+     * @return  The server port, which defaults to 80.
      */
     public int getServerPort() {
-        return 80;
+        return serverPort;
     }
 
     /**
+     * @return  True if the scheme is HTTPS, false otherwise.
      */
     public boolean isSecure() {
-        throw new UnsupportedOperationException();
+        return scheme.equals("HTTPS");
     }
 
     /**
+     * Removes the attribute with the name given.
+     *
+     * @param   name The name of the attribute.
      */
     public void removeAttribute(String name) {
         attributes.remove(name);
     }
 
     /**
+     * Sets the attribute given.
+     *
+     * @param   name The name of the attribute.
+     * @param   value The attribute value.
      */
     public void setAttribute(String name, Object value) {
         attributes.put(name, value);
@@ -325,15 +455,23 @@ public class MockHttpServletRequest implements HttpServletRequest {
         return null;
     }
 
+    /**
+     * @return  The context path, which defaults to empty String.
+     */
     public String getContextPath() {
-        return "";
-    }
-
-    public Cookie[] getCookies() {
-        return null;
+        return contextPath;
     }
 
     /**
+     * @return  Any cookies setup.
+     */
+    public Cookie[] getCookies() {
+        return cookies.toArray(new Cookie[cookies.size()]);
+    }
+
+    /**
+     * @param   name The name of the header.
+     * @return  The date header (if it exists), or -1.
      */
     public long getDateHeader(String name) {
         List<String> values = headers.get(name);
@@ -345,6 +483,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @param   name The name of the header.
+     * @return  The header or null.
      */
     public String getHeader(String name) {
         List<String> values = headers.get(name);
@@ -356,12 +496,15 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @return  The header names.
      */
     public Enumeration getHeaderNames() {
         return new IteratorEnumeration(headers.keySet().iterator());
     }
 
     /**
+     * @param   name The name of the headers.
+     * @return  The headers, never null.
      */
     public Enumeration getHeaders(String name) {
         List<String> values = headers.get(name);
@@ -373,6 +516,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @param   name The name of the header.
+     * @return  The header or -1.
      */
     public int getIntHeader(String name) {
         List<String> values = headers.get(name);
@@ -384,42 +529,65 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @return  GET or POST, depending on the constructor or post flag setup.
      */
     public String getMethod() {
         return (post) ? "POST" : "GET";
     }
 
     /**
+     * @return  The path info.
      */
     public String getPathInfo() {
-        return "";
+        return pathInfo;
     }
 
     /**
+     * @return  The path translated.
      */
     public String getPathTranslated() {
-        throw new UnsupportedOperationException();
+        return pathTranslated;
     }
 
     /**
+     * @return  The query string.
      */
     public String getQueryString() {
-        return "";
+        StringBuilder build = new StringBuilder();
+        for (String key : parameters.keySet()) {
+            List<String> list = parameters.get(key);
+            for (String value : list) {
+                if (build.length() > 0) {
+                    build.append("&");
+                }
+
+                try {
+                    build.append(URLEncoder.encode(key, "UTF-8")).append("=").append(URLEncoder.encode(value, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        return build.toString();
     }
 
     /**
+     * @return  The remote user.
      */
     public String getRemoteUser() {
-        throw new UnsupportedOperationException();
+        return remoteUser;
     }
 
     /**
+     * @return  Nothing, not implemented
      */
     public String getRequestedSessionId() {
         throw new UnsupportedOperationException();
     }
 
     /**
+     * @return  The request URI.
      */
     public String getRequestURI() {
         return uri;
@@ -432,30 +600,42 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @return  The servlet path, which defaults to the empty string.
      */
     public String getServletPath() {
-        return "";
+        return servletPath;
     }
 
     /**
+     * @return  The session.
      */
     public HttpSession getSession() {
+        if (session == null) {
+            session = new MockHttpSession(context);
+        }
         return session;
     }
 
     /**
+     * @return  The session.
      */
     public HttpSession getSession(boolean create) {
+        if (session == null && create) {
+            session = new MockHttpSession(context);
+        }
+        
         return session;
     }
 
     /**
+     * @return  Nothing, this isn't implemented.
      */
     public Principal getUserPrincipal() {
         throw new UnsupportedOperationException();
     }
 
     /**
+     * @return  Nothing, this isn't implemented.
      */
     public boolean isRequestedSessionIdFromCookie() {
         throw new UnsupportedOperationException();
@@ -469,37 +649,24 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @return  Nothing, this isn't implemented.
      */
     public boolean isRequestedSessionIdFromURL() {
         throw new UnsupportedOperationException();
     }
 
     /**
+     * @return  Nothing, this isn't implemented.
      */
     public boolean isRequestedSessionIdValid() {
         throw new UnsupportedOperationException();
     }
 
     /**
+     * @return  Nothing, this isn't implemented.
      */
     public boolean isUserInRole(String role) {
         throw new UnsupportedOperationException();
-    }
-
-    public int getRemotePort() {
-        return 0;
-    }
-
-    public String getLocalName() {
-        return null;
-    }
-
-    public String getLocalAddr() {
-        return null;
-    }
-
-    public int getLocalPort() {
-        return 0;
     }
 
     //-------------------------------------------------------------------------
@@ -527,8 +694,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
         // Deal with .. by chopping dirs off the lookup thePath
         while (thePath.startsWith("../")) {
+            index = theLookupPath.lastIndexOf("/");
             if (theLookupPath.length() > 0) {
-                index = theLookupPath.lastIndexOf("/");
                 theLookupPath = theLookupPath.substring(0, index);
             } else {
                 // More ..'s than dirs, return null
@@ -548,12 +715,89 @@ public class MockHttpServletRequest implements HttpServletRequest {
     //-------------------------------------------------------------------------
 
     /**
+     * Adds a request locale.
+     *
+     * @param   locale The locale.
+     */
+    public void addLocale(Locale locale) {
+        this.locales.add(locale);
+    }
+
+    /**
+     * @return  The request locales vector (changes effect the internal Vector).
+     */
+    public Vector<Locale> getLocalesVector() {
+        return locales;
+    }
+
+    /**
+     * Clears all the request locales.
+     */
+    public void clearLocales() {
+        locales.clear();
+    }
+
+    /**
+     * Sets the input stream.
+     *
+     * @param   inputStream The input stream.
+     */
+    public void setInputStream(ServletInputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    /**
+     * Sets the reader.
+     *
+     * @param   reader The reader.
+     */
+    public void setReader(Reader reader) {
+        this.reader = reader;
+    }
+
+    /**
      * Sets the content type of the request.
      *
      * @param   contentType The new content type.
      */
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    /**
+     * Sets the remote address.
+     *
+     * @param   remoteAddr The remote address.
+     */
+    public void setRemoteAddr(String remoteAddr) {
+        this.remoteAddr = remoteAddr;
+    }
+
+    /**
+     * Sets the remote host.
+     *
+     * @param   remoteHost The remote host.
+     */
+    public void setRemoteHost(String remoteHost) {
+        this.remoteHost = remoteHost;
+    }
+
+    /**
+     * Sets the scheme, which defaults to HTTP.
+     *
+     * @param   scheme The scheme.
+     */
+    public void setScheme(String scheme) {
+        this.scheme = scheme;
+    }
+
+    /**
+     * Sets the server name, which defaults to localhost.
+     *
+     * @param   serverName The server name.
+     */
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
     }
 
     /**
@@ -574,6 +818,9 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     /**
      * Sets the request parameter with the given name to the given value
+     *
+     * @param   name The name of the parameter.
+     * @param   value The value of the parameter.
      */
     public void setParameter(String name, String value) {
         List<String> list = parameters.get(name);
@@ -587,6 +834,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     /**
      * Removes all the values of the request parameter with the given name
+     *
+     * @param   name The name of the parameter. 
      */
     public void removeParameter(String name) {
         parameters.remove(name);
@@ -601,6 +850,9 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     /**
      * Sets the request parameter with the given name to the given values
+     *
+     * @param   name The name of the parameter.
+     * @param   values The values of the parameter.
      */
     public void setParameters(String name, String... values) {
         parameters.put(name, asList(values));
@@ -614,7 +866,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
-     * Returns the RequestDispatcher if one was created from this Request
+     * @return  The RequestDispatcher if one was created from this Request
      */
     public MockRequestDispatcher getRequestDispatcher() {
         return dispatcher;
@@ -630,15 +882,6 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
-     * Modifies the locale.
-     *
-     * @param   locale The locale.
-     */
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
-
-    /**
      * Sets whether or not the request is a POST or a GET.
      *
      * @param   post True for a POST.
@@ -646,10 +889,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
     public void setPost(boolean post) {
         this.post = post;
 
-        if (post) {
+        if (post && contentType == null) {
             contentType = "application/x-www-form-urlencoded";
-        } else {
-            contentType = null;
         }
     }
 
@@ -660,5 +901,109 @@ public class MockHttpServletRequest implements HttpServletRequest {
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
+    }
+
+    /**
+     * Sets a new session.
+     *
+     * @param   session The new session.
+     */
+    public void setSession(MockHttpSession session) {
+        this.session = session;
+    }
+
+    /**
+     * Sets the remote port.
+     *
+     * @param   remotePort The remote port.
+     */
+    public void setRemotePort(int remotePort) {
+        this.remotePort = remotePort;
+    }
+
+    /**
+     * Sets the local name.
+     *
+     * @param   localName The local name.
+     */
+    public void setLocalName(String localName) {
+        this.localName = localName;
+    }
+
+    /**
+     * Sets the server port.
+     *
+     * @param   serverPort The server port.
+     */
+    public void setServerPort(int serverPort) {
+        this.serverPort = serverPort;
+    }
+
+    /**
+     * Sets the context path.
+     *
+     * @param   contextPath The context path.
+     */
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    /**
+     * @return  The list of cookies.
+     */
+    public List<Cookie> getCookiesList() {
+        return cookies;
+    }
+
+    /**
+     * Adds a cookie.
+     *
+     * @param   cookie The cookie.
+     */
+    public void addCookie(Cookie cookie) {
+        this.cookies.add(cookie);
+    }
+
+    /**
+     * Clears all the cookies.
+     */
+    public void clearCookies() {
+        this.cookies.clear();
+    }
+
+    /**
+     * Sets the path info.
+     *
+     * @param   pathInfo The path info.
+     */
+    public void setPathInfo(String pathInfo) {
+        this.pathInfo = pathInfo;
+    }
+
+    /**
+     * Sets the path translated.
+     *
+     * @param   pathTranslated The path translated.
+     */
+    public void setPathTranslated(String pathTranslated) {
+        this.pathTranslated = pathTranslated;
+    }
+
+    /**
+     * Sets the remote user.
+     *
+     * @param   remoteUser The remote user.
+     */
+    public void setRemoteUser(String remoteUser) {
+        this.remoteUser = remoteUser;
+    }
+
+    /**
+     * Sets the servlet path.
+     *
+     * @param   servletPath The servlet path.
+     */
+    public void setServletPath(String servletPath) {
+        this.servletPath = servletPath;
     }
 }

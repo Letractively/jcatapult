@@ -150,4 +150,13 @@ public class Address implements Serializable {
         return !isTrimmedEmpty(street) || !isTrimmedEmpty(state) || !isTrimmedEmpty(district) ||
             !isTrimmedEmpty(city) || !isTrimmedEmpty(country) || !isTrimmedEmpty(postalCode);
     }
+
+    /**
+     * Returns a String suitable for debugging.
+     *
+     * @return  The address.
+     */
+    public String toString() {
+        return street + "\n" + city + ", " + state + " " + postalCode + "\n" + country;
+    }
 }
