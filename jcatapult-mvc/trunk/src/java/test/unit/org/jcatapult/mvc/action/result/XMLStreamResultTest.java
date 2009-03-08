@@ -37,12 +37,14 @@ public class XMLStreamResultTest {
 
         MockServletOutputStream sos = new MockServletOutputStream();
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+        response.setStatus(200);
+        response.setCharacterEncoding("UTF-8");
         response.setContentType(contentType);
         response.setContentLength(propertyBytesLen);
         EasyMock.expect(response.getOutputStream()).andReturn(sos);
         EasyMock.replay(response);
 
-        XMLStream xmlStream = new XMLStreamResultTest.XMLStreamImpl("success", "xml");
+        XMLStream xmlStream = new XMLStreamResultTest.XMLStreamImpl("success", "xml", 200);
         XMLStreamResult streamResult = new XMLStreamResult(ee, response);
         streamResult.execute(xmlStream, new DefaultActionInvocation(action, "/foo", "", null));
 
@@ -54,10 +56,12 @@ public class XMLStreamResultTest {
     public class XMLStreamImpl implements XMLStream {
         private final String code;
         private final String property;
+        private final int status;
 
-        public XMLStreamImpl(String code, String property) {
+        public XMLStreamImpl(String code, String property, int status) {
             this.code = code;
             this.property = property;
+            this.status = status;
         }
 
         public String code() {
@@ -66,6 +70,10 @@ public class XMLStreamResultTest {
 
         public String property() {
             return property;
+        }
+
+        public int status() {
+            return status;
         }
 
         public Class<? extends Annotation> annotationType() {

@@ -17,6 +17,8 @@ package org.jcatapult.mvc.parameter;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.mvc.util.RequestTools;
+
 import net.java.lang.StringTools;
 
 /**
@@ -58,7 +60,11 @@ public final class InternalParameters {
             throw new IllegalArgumentException("Invalid key [" + key + "]");
         }
 
-        Object value = request.getParameter(key);
+        Object value = null;
+        if (RequestTools.canUseParameters(request)) {
+            value = request.getParameter(key);
+        }
+        
         if (value == null) {
             value = request.getAttribute(key);
         }

@@ -20,7 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.jcatapult.mvc.action.result.RedirectResult;
+import org.jcatapult.mvc.action.result.HeaderResult;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ import org.jcatapult.mvc.action.result.RedirectResult;
  *
  * @author  Brian Pontarelli
  */
-@ResultAnnotation(RedirectResult.class)
+@ResultAnnotation(HeaderResult.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Header {
