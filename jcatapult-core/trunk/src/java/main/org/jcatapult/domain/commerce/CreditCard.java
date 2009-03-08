@@ -226,6 +226,17 @@ public class CreditCard implements Serializable {
         return result;
     }
 
+    /**
+     * Outputs a String for debugging. This includes the number in full because it is often necessary
+     * to help debug gateway issues. However, you should never use this in production.
+     *
+     * @return  The credit card.
+     */
+    public String toString() {
+        return "CC #[" + number + "] svn[" + svn + "] expiry[" + expirationMonth + "/" + expirationYear +
+            "] address[" + address + "]";
+    }
+
     private static int[] lookup = {0, 2, 4, 6, 8, 1, 3, 5, 7, 9};
 
     private boolean isValid(String number) {
@@ -244,5 +255,4 @@ public class CreditCard implements Serializable {
 
         return (sum % 10 == 0);
     }
-
 }
