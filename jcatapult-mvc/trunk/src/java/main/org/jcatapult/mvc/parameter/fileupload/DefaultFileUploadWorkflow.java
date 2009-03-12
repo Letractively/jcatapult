@@ -214,7 +214,7 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
                         files.put(name, list);
                     }
                     
-                    list.add(new FileInfo(file, fileName, contentType, true));
+                    list.add(new FileInfo(file, fileName, contentType));
                 }
             }
         } catch (Exception e) {

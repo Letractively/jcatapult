@@ -28,13 +28,11 @@ public class FileInfo {
     public final File file;
     public final String name;
     public final String contentType;
-    public final boolean success;
 
-    public FileInfo(File file, String name, String contentType, boolean success) {
+    public FileInfo(File file, String name, String contentType) {
         this.file = file;
         this.name = name;
         this.contentType = contentType;
-        this.success = success;
     }
 
     public File getFile() {
