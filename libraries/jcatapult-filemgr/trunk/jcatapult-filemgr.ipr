@@ -33,6 +33,9 @@
       <entry name="?*.tld" />
     </wildcardResourcePatterns>
   </component>
+  <component name="CopyrightManager" default="">
+    <module2copyright />
+  </component>
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
@@ -825,7 +828,14 @@
   <component name="ProjectDetails">
     <option name="projectName" value="jcatapult-filemgr" />
   </component>
-  <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectFileVersion" converted="true">
+    <converter id="javaee-modules" />
+    <converter id="ror-modules" />
+    <converter id="SelenaRunConfToDiana" />
+  </component>
+  <component name="ProjectKey">
+    <option name="state" value="https://jcatapult.googlecode.com/svn/libraries/jcatapult-filemgr/trunk/jcatapult-filemgr.ipr" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/jcatapult-filemgr.iml" filepath="$PROJECT_DIR$/jcatapult-filemgr.iml" />
@@ -854,6 +864,7 @@
   </component>
   <component name="SvnBranchConfigurationManager">
     <option name="myVersion" value="124" />
+    <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
@@ -1018,5 +1029,8 @@
       <option name="useAlternate" value="false" />
     </LanguageOptions>
   </component>
+  <UsedPathMacros>
+    <macro name="SAVANT_REPOSITORY" />
+  </UsedPathMacros>
 </project>
 

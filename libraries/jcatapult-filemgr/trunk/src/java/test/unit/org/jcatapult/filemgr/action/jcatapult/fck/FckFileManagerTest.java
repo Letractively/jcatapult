@@ -51,8 +51,8 @@ public class FckFileManagerTest extends BaseTest {
 
         FckFileManager fm = new FckFileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext, request));
-        fm.command = FileManagerCommand.FileUpload;
-        fm.newFile = new FileInfo(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), "test-file", "application/active-x");
+        fm.Command = FileManagerCommand.FileUpload;
+        fm.NewFile = new FileInfo(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), "test-file", "application/active-x");
         String result = fm.execute();
         assertEquals("upload", result);
         assertEquals(1, fm.connector.getError().getNumber());
@@ -78,12 +78,12 @@ public class FckFileManagerTest extends BaseTest {
 
         FckFileManager fm = new FckFileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext, httpRequest));
-        fm.command = FileManagerCommand.FileUpload;
+        fm.Command = FileManagerCommand.FileUpload;
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
-        fm.newFile = new FileInfo(temp, "foo-bar.xml", "image/gif");
+        fm.NewFile = new FileInfo(temp, "foo-bar.xml", "image/gif");
 
         String result = fm.execute();
         assertEquals("upload", result);

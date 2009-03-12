@@ -42,7 +42,7 @@
 
   <servlet>
     <servlet-name>FileServlet</servlet-name>
-    <servlet-class>org.jcatapult.filemgr.servlet.FileServlet</servlet-class>
+    <servlet-class>org.jcatapult.filemgr.servlet.FileWorkflow</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 

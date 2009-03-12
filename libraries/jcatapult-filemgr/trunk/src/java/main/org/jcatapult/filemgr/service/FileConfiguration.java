@@ -33,10 +33,10 @@ public interface FileConfiguration {
     String getFileStorageDir();
 
     /**
-     * @return  The configuration parameter named <code>jcatapult.file-mgr.servlet-prefix</code> or the default value
+     * @return  The configuration parameter named <code>jcatapult.file-mgr.workflow-prefix</code> or the default value
      *          of <code>/files</code>.
      */
-    String getFileServletPrefix();
+    String getFileWorkflowPrefix();
 
     /**
      * @return  The configuration parameter named <code>jcatapult.file-mgr.create-folder-allowed</code> or the default value

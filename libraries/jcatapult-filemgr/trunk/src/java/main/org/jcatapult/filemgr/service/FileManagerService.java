@@ -54,9 +54,9 @@ public interface FileManagerService {
      * you must also configure the FileServlet in web.xml so that it can serve
      * up the files appropriately. Or you could also use symlinks or an Apache
      * server is you prefer. In any case, you must set the configuration property
-     * named <strong>jcatapult.file-mgr.servlet-prefix</strong> to the URL prefix that
+     * named <strong>jcatapult.file-mgr.workflow-prefix</strong> to the URL prefix that
      * will provide access to the files. If you are using the
-     * {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the prefix
+     * {@link org.jcatapult.filemgr.servlet.FileWorkflow}, this will be the prefix
      * mapped in the servlet-mapping of the web.xml file.
      * </p>
      *
@@ -93,12 +93,12 @@ public interface FileManagerService {
      *
      * <p>
      * If you are using absolute pathes located elsewhere on the server, then
-     * you must also configure the {@link org.jcatapult.filemgr.servlet.FileServlet}
+     * you must also configure the {@link org.jcatapult.filemgr.servlet.FileWorkflow}
      * in web.xml so that it can serve up the files appropriately. Or you could also
      * use symlinks or an Apache server is you prefer. In any case, you must set
-     * the configuration property named <strong>jcatapult.file-mgr.servlet-prefix</strong>
+     * the configuration property named <strong>jcatapult.file-mgr.workflow-prefix</strong>
      * to the URL prefix that will provide access to the files. If you are using the
-     * {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the prefix
+     * {@link org.jcatapult.filemgr.servlet.FileWorkflow}, this will be the prefix
      * mapped in the servlet-mapping of the web.xml
      * file.
      * </p>
@@ -136,12 +136,12 @@ public interface FileManagerService {
      *
      * <p>
      * If you are using absolute pathes located elsewhere on the server, then
-     * you must also configure the {@link org.jcatapult.filemgr.servlet.FileServlet}
+     * you must also configure the {@link org.jcatapult.filemgr.servlet.FileWorkflow}
      * in web.xml so that it can serve up the files appropriately. Or you could
      * also use symlinks or an Apache server is you prefer. In any case, you must
-     * set the configuration property named <strong>jcatapult.file-mgr.servlet-prefix</strong>
+     * set the configuration property named <strong>jcatapult.file-mgr.workflow-prefix</strong>
      * to the URL prefix that will provide access to the files. If you are using
-     * the {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the
+     * the {@link org.jcatapult.filemgr.servlet.FileWorkflow}, this will be the
      * prefix mapped in the servlet-mapping of the web.xml
      * file.
      * </p>
@@ -178,32 +178,32 @@ public interface FileManagerService {
      *
      * <p>
      * If you are using absolute pathes located elsewhere on the server, then
-     * you must also configure the {@link org.jcatapult.filemgr.servlet.FileServlet}
+     * you must also configure the {@link org.jcatapult.filemgr.servlet.FileWorkflow}
      * in web.xml so that it can serve up the files appropriately. Or you could
      * also use symlinks or an Apache server is you prefer. In any case, you must
-     * set the configuration property named <strong>jcatapult.file-mgr.servlet-prefix</strong>
+     * set the configuration property named <strong>jcatapult.file-mgr.workflow-prefix</strong>
      * to the URL prefix that will provide access to the files. If you are using
-     * the {@link org.jcatapult.filemgr.servlet.FileServlet}, this will be the
+     * the {@link org.jcatapult.filemgr.servlet.FileWorkflow}, this will be the
      * prefix mapped in the servlet-mapping of the web.xml file.
      * </p>
      *
-     * @param   currentFolder The current folder the file manager needs a listing for.
+     * @param   directory The directory to get the listing for.
      * @return  The result.
      */
-    Listing getFolders(String currentFolder);
+    Listing getFolders(String directory);
 
     /**
      * <p>Deletes a file from disk that has been stored via the
      * {@link org.jcatapult.filemgr.service.FileManagerService#store(java.io.File, String, String, String)} method.
      * The file URI supplied to this method should be exactly equal to
      * {@link org.jcatapult.filemgr.domain.StoreResult#getFileURI()} or the same with the
-     * <strong>jcatapult.file-mgr.servlet-prefix</strong> removed.</p>
+     * <strong>jcatapult.file-mgr.workflow-prefix</strong> removed.</p>
      *
      * <p>Example</p>
      *
      * <p>Lets say that I have the following configuration:</p>
      *
-     * <p><strong>jcatapult.file-mgr.servlet-prefix</strong> = /files (this is the default)</p>
+     * <p><strong>jcatapult.file-mgr.workflow-prefix</strong> = /files (this is the default)</p>
      *
      * <p>And, I store a file with the following:</p>
      * <code>StorageResult result = store(file, "test.gif", "image/gif", "images/test")</code>
@@ -214,17 +214,16 @@ public interface FileManagerService {
      * file URI: <strong>/files/images/test/test.gif</strong></p>
      *
      * <p>When it's time to delete the file, you can specify the above file URI or a version of it with the
-     * <strong>jcatapult.file-mgr.servlet-prefix</strong> removed.  Both are acceptable formats:</p>
+     * <strong>jcatapult.file-mgr.workflow-prefix</strong> removed.  Both are acceptable formats:</p>
      *
      * <ul>
      *   <li>delete("/files/images/test/test.gif")</li>
      *   <li>delete("images/test/test.gif")</li>
      * </ul>
      *
-     * @param fileURI The
-     * file URI supplied to this method should be exactly equal to
-     * {@link org.jcatapult.filemgr.domain.StoreResult#getFileURI()} or the same with the
-     * <strong>jcatapult.file-mgr.servlet-prefix</strong> removed.
+     * @param fileURI The file URI supplied to this method should be exactly equal to
+     *        {@link org.jcatapult.filemgr.domain.StoreResult#getFileURI()} or the same with the
+     *        <strong>jcatapult.file-mgr.workflow-prefix</strong> removed.
      * @return true if deleted, false otherwise
      */
     boolean delete(String fileURI);

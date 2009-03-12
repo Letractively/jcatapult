@@ -17,10 +17,14 @@
 package org.jcatapult.filemgr.action.jcatapult.fck;
 
 import java.util.List;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
-import org.jcatapult.filemgr.action.jcatapult.FileManager;
 import org.jcatapult.filemgr.action.jcatapult.FileManagerCommand;
 import org.jcatapult.filemgr.domain.CreateDirectoryResult;
 import org.jcatapult.filemgr.domain.DirectoryData;
@@ -33,25 +37,72 @@ import org.jcatapult.filemgr.domain.fck.ErrorData;
 import org.jcatapult.filemgr.domain.fck.Folder;
 import org.jcatapult.filemgr.domain.fck.UploadResult;
 import org.jcatapult.filemgr.service.FileManagerService;
+import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.action.result.annotation.Header;
 import org.jcatapult.mvc.action.result.annotation.Stream;
+import org.jcatapult.mvc.parameter.fileupload.FileInfo;
 
 import com.google.inject.Inject;
 
 /**
+ * <h3>FCK integration</h3>
  * <p>
- * This class extends the {@link org.jcatapult.filemgr.action.jcatapult.FileManager} action and provides the
- * JavaScript response for file uploads.
+ * The XML API provided by this file manager action is fully compliant with
+ * the FCK editor's XML API. This API takes a GET or POST request and returns
+ * an XML document in the HTTP response body. This XML document is specified
+ * by a JCatapult XML schema, which can be found as part of the JCatapult
+ * documentation.
  * </p>
  *
- * @author Brian Pontarelli
+ * <h3>Request</h3>
+ * <p>
+ * The request coming into the this API contains a GET or POST parameter
+ * named <code>command</code> that controls the operation for the service
+ * to perform. This command can have one of these possible values:
+ * </p>
+ *
+ * <table>
+ * <tr><th>Value</th><th>Description</th></tr>
+ * <tr><td>GetFolders</td><td>Returns a list of the folders on the server.
+ *  The directory whose folders to returns is controlled by the parameter
+ *  named <code>currentFolder</code>.</td></tr>
+ * <tr><td>GetFoldersAndFiles</td><td>Returns a list of the folders and files
+ *  on the server. The directory whose folders to returns is controlled by
+ *  the parameter named <code>currentFolder</code>.</td></tr>
+ * <tr><td>CreateFolder</td><td>Creates a new folder. This new folder is created
+ *  in the folder specified using the parameter named <code>currentFolder</code>.
+ *  The name of the new folder is controlled by the parameter named
+ *  <code>newFolderName</code></td></tr>
+ * <tr><td>FileUpload</td><td>This indicates that the HTTP request body
+ *  contains a file upload. The multipart content is handled by Struts
+ *  and the name to save the file on the server is controlled using the
+ *  parameter named <code>NewFile</code>.</td></tr>
+ * </table>
+ *
+ * <p>
+ * These commands are also specified in the enumeration {@link FileManagerCommand}.
+ * </p>
+ *
+ * <h3>Response</h3>
+ * <p>
+ * For the GetFolders, GetFoldersAndFiles and CreateFolder requests, the
+ * response is an XML document that contains the information requested or
+ * the result of the operation. However, for the FileUpload command, this
+ * response is either an XML response or a JavaScript response, depending
+ * on the FileManager class being used. This class returns an XML response
+ * and the FCKFileManager sub-class returns a JavaScript response.
+ * </p>
+ *
+ * @author  Brian Pontarelli
  */
+@Action
 @Header(code = "error", status = 500)
-@Stream(type = "text/xml", name = "result")
+@Stream(type = "application/xml", name = "")
 @Forward(code = "upload", page = "/file-mgr/fck-file-manager.ftl")
-public class FckFileManager extends FileManager {
+public class FckFileManager {
     private static final JAXBContext context;
+    private final FileManagerService fileManagerService;
 
     static {
         try {
@@ -63,34 +114,53 @@ public class FckFileManager extends FileManager {
 
     // Output for file upload from the service.
     public Connector connector;
-    public String type;
+
+    // Response from the other requests
+    public long length;
+    public InputStream stream;
+
+    // The command type
+    public FileManagerCommand Command;
+
+    // The file type
+    public String Type;
+
+    // Common parameters for all commands
+    public String CurrentFolder;
+
+    // Create folder command parameter
+    public String NewFolderName;
+
+    // Input params for file upload
+    public FileInfo NewFile;
+
+    public String uuid; // not used
 
     @Inject
     public FckFileManager(FileManagerService fileManagerService) {
-        super(fileManagerService);
+        this.fileManagerService = fileManagerService;
     }
 
-    @Override
     public String execute() {
         // If this is an upload, skip processing and handle control over to the upload action
-        if (command == FileManagerCommand.FileUpload) {
+        if (Command == FileManagerCommand.FileUpload) {
             return doStore();
         }
 
         // Otherwise, process the request according to the command
-        String directory = (type != null) ? type + "/" + currentFolder : currentFolder;
+        String directory = (Type != null) ? Type + "/" + CurrentFolder : CurrentFolder;
         Connector connector;
-        if (command == FileManagerCommand.CreateFolder) {
-            CreateDirectoryResult result = fileManagerService.createDirectory(newFolderName, directory);
+        if (Command == FileManagerCommand.CreateFolder) {
+            CreateDirectoryResult result = fileManagerService.createDirectory(NewFolderName, directory);
             connector = translate(result);
-        } else if (command == FileManagerCommand.GetFolders) {
+        } else if (Command == FileManagerCommand.GetFolders) {
             Listing listing = fileManagerService.getFolders(directory);
             connector = translate(listing);
-        } else if (command == FileManagerCommand.GetFoldersAndFiles) {
+        } else if (Command == FileManagerCommand.GetFoldersAndFiles) {
             Listing listing = fileManagerService.getFoldersAndFiles(directory);
             connector = translate(listing);
         } else {
-            throw new RuntimeException("Invalid command [" + command + "]");
+            throw new RuntimeException("Invalid command [" + Command + "]");
         }
 
         marshal(connector, context);
@@ -103,19 +173,44 @@ public class FckFileManager extends FileManager {
      *
      * @return  The result to return from the execute method in order to provide a response.
      */
-    @Override
     protected String doStore() {
-        String directory = (type != null) ? type + "/" + currentFolder : currentFolder;
-        StoreResult result = fileManagerService.store(newFile.file, newFile.name, newFile.contentType, directory);
+        String directory = (Type != null) ? Type + "/" + CurrentFolder : CurrentFolder;
+        StoreResult result = fileManagerService.store(NewFile.file, NewFile.name, NewFile.contentType, directory);
         connector = translate(result);
         return "upload";
+    }
+
+    /**
+     * Marshals the Connector instance into an InputStream that is accessible via the property named
+     * {@link #stream}.
+     *
+     * @param   connector The connector to marshal.
+     * @param   context The JAXB context.
+     */
+    protected void marshal(Object connector, JAXBContext context) {
+        try {
+            Marshaller marshaller = context.createMarshaller();
+            StringWriter sw = new StringWriter();
+            marshaller.marshal(connector, sw);
+
+            String xml = sw.toString();
+            byte[] ba = xml.getBytes("UTF-8");
+            this.stream = new ByteArrayInputStream(ba);
+            this.length = ba.length;
+        } catch (JAXBException e) {
+            // Bad error!
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            // Bad error!
+            throw new RuntimeException(e);
+        }
     }
 
     private Connector translate(CreateDirectoryResult result) {
         Connector connector = new Connector();
         connector.setCommand(FileManagerCommand.CreateFolder.toString());
         connector.setCurrentFolder(new CurrentFolder(result.getPath(), result.getURI()));
-        connector.setResourceType(type);
+        connector.setResourceType(Type);
         if (result.getError() != 0) {
             connector.setError(new ErrorData(result.getError(), "Unable to create directory."));
         }
@@ -127,7 +222,7 @@ public class FckFileManager extends FileManager {
         Connector connector = new Connector();
         connector.setCommand(FileManagerCommand.CreateFolder.toString());
         connector.setCurrentFolder(new CurrentFolder(listing.getPath(), listing.getURI()));
-        connector.setResourceType(type);
+        connector.setResourceType(Type);
 
         List<FileData> files = listing.getFiles();
         for (FileData file : files) {
@@ -145,7 +240,7 @@ public class FckFileManager extends FileManager {
     private Connector translate(StoreResult result) {
         Connector connector = new Connector();
         connector.setCommand(FileManagerCommand.CreateFolder.toString());
-        connector.setResourceType(type);
+        connector.setResourceType(Type);
         if (result.getError() != 0) {
             connector.setError(new ErrorData(1, "Unable to upload file."));
         } else {
