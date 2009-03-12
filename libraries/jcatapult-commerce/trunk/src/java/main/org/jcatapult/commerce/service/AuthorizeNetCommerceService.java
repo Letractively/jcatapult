@@ -32,6 +32,7 @@ import org.jcatapult.domain.commerce.CreditCard;
 import org.jcatapult.domain.commerce.Money;
 
 import com.google.inject.Inject;
+import sun.util.logging.resources.logging;
 
 /**
  * <p>
@@ -98,11 +99,11 @@ public class AuthorizeNetCommerceService implements CommerceService {
         URL url = new URL(configuration.getString("jcatapult.commerce.aim.url"));
         String username = configuration.getString("jcatapult.commerce.aim.username");
         String password = configuration.getString("jcatapult.commerce.aim.password");
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("Contacting AIM with this info");
-            logger.finest("URL: " + url.toExternalForm());
-            logger.finest("Username: " + username);
-            logger.finest("Password: " + password);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Contacting AIM with this info");
+            logger.fine("URL: " + url.toExternalForm());
+            logger.fine("Username: " + username);
+            logger.fine("Password: " + password);
         }
 
         URLConnection huc = url.openConnection();
@@ -123,7 +124,10 @@ public class AuthorizeNetCommerceService implements CommerceService {
         }
 
         if (configuration.getBoolean("jcatapult.commerce.aim.test")) {
+            logger.fine("Authorize.Net commerce service is in *************TEST************* mode");
             build.append("x_test_request=TRUE&");
+        } else {
+            logger.fine("Authorize.Net commerce service is in *************PRODUCTION************* mode");
         }
 
         if (!creditCard.isVerified()) {
@@ -140,6 +144,10 @@ public class AuthorizeNetCommerceService implements CommerceService {
 
         if (tax != null) {
             build.append("x_tax=").append(tax.toString()).append("&");
+        }
+
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("CC is [" + creditCard + "]");
         }
 
         build.append("x_amount=").append(amount.toString()).append("&");
@@ -177,6 +185,11 @@ public class AuthorizeNetCommerceService implements CommerceService {
         String authCode = parts[4];
         String avsCode = parts[5];
         String txnID = parts[6];
+
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("AIM response is code [" + reasonCode + "]   reason [" + reasonCode + "] [" +
+                reasonText + "]    auth [" + authCode + "]     avs [" + avsCode + "]");
+        }
 
         if (verify) {
             CommerceError error = null;
