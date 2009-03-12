@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-email"
          group="libraries.jcatapult.org"
-         version="1.0-RC11">
+         version="1.0-RC12">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
@@ -11,7 +11,7 @@
 
   <!-- compile properties -->
   <property name="jdk.version" value="1.6"/>
-  <property name="version.jcatapult" value="1.0-RC10"/>
+  <property name="version.jcatapult" value="1.0-RC12-{integration}"/>
 
   <dependencies>
     <artifactGroup type="compile-only">
