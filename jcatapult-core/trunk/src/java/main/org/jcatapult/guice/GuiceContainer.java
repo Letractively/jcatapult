@@ -117,7 +117,7 @@ public class GuiceContainer {
      * does it once only so that synchronization is not used. This is called by the JCatapultFilter
      * in its constructor and should cover all cases.
      */
-    public static final void initialize() {
+    public static void initialize() {
         logger.info("Initializing JCatapult's Guice support");
 
         Set<Class<? extends Module>> classes = new HashSet<Class<? extends Module>>();
@@ -156,7 +156,7 @@ public class GuiceContainer {
      * The only thing you must do is to set the correct configuration using the various static
      * setter methods prior to invoking the {@link #initialize()} method.
      */
-    public static final void inject() {
+    public static void inject() {
         // Inject the JCatapult configuration
         Guice.createInjector(new JCatapultConfigurationModule(), new AbstractModule() {
             protected void configure() {

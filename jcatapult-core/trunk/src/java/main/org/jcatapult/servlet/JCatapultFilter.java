@@ -29,8 +29,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jcatapult.JCatapultFatalException;
+import org.jcatapult.JCatapultIgnorableException;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.guice.GuiceContainer;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -63,6 +68,17 @@ import org.jcatapult.guice.GuiceContainer;
 public class JCatapultFilter implements Filter {
     private static final Logger logger = Logger.getLogger(JCatapultFilter.class.getName());
     public static final String ORIGINAL_REQUEST_URI = "ORIGINAL_REQUEST_URI";
+    private Configuration configuration;
+
+    /**
+     * Sets the configuration.
+     *
+     * @param   configuration The configuration.
+     */
+    @Inject
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
     /**
      * This fetches the top level workflows for JCatapult using the {@link WorkflowResolver}
@@ -76,6 +92,7 @@ public class JCatapultFilter implements Filter {
         EnvironmentResolver resolver = GuiceContainer.getInjector().getInstance(EnvironmentResolver.class);
         String env = resolver.getEnvironment();
         filterConfig.getServletContext().setAttribute("environment", env);
+        GuiceContainer.getInjector().injectMembers(this);
     }
 
     /**
@@ -111,6 +128,27 @@ public class JCatapultFilter implements Filter {
 
             DefaultWorkflowChain workflowChain = new DefaultWorkflowChain(workflows, chain);
             workflowChain.continueWorkflow();
+        } catch (JCatapultIgnorableException jie) {
+            boolean propogate = configuration.getBoolean("jcatapult.filter.propogate-ignorable-exceptions", true);
+            if (propogate) {
+                throw jie;
+            } else {
+                ((HttpServletResponse) response).setStatus(500);
+            }
+        } catch (JCatapultFatalException jfe) {
+            boolean propogate = configuration.getBoolean("jcatapult.filter.propogate-fatal-exceptions", true);
+            if (propogate) {
+                throw jfe;
+            } else {
+                ((HttpServletResponse) response).setStatus(500);
+            }
+        } catch (RuntimeException re) {
+            boolean propogate = configuration.getBoolean("jcatapult.filter.propogate-runtime-exception", true);
+            if (propogate) {
+                throw re;
+            } else {
+                ((HttpServletResponse) response).setStatus(500);
+            }
         } finally {
             long end = System.currentTimeMillis();
             if (logger.isLoggable(Level.FINEST)) {
