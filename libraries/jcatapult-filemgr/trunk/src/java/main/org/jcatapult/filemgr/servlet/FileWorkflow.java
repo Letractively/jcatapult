@@ -24,14 +24,14 @@ import java.io.InputStream;
 import java.net.URLDecoder;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.filemgr.service.FileConfiguration;
-import org.jcatapult.guice.GuiceContainer;
+import org.jcatapult.servlet.Workflow;
+import org.jcatapult.servlet.WorkflowChain;
 
-import com.google.inject.Injector;
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -48,55 +48,68 @@ import com.google.inject.Injector;
  * </p>
  *
  * <p>
- * <strong>jcatapult.file-mgr.servlet-prefix</strong> The URI prefix that
- * the FileServlet is mapped to in the web.xml file. This is important, because
+ * <strong>jcatapult.file-mgr.workflow-prefix</strong> The URI prefix that
+ * the FileWorkflow is mapped to in the web.xml file. This is important, because
  * other parts of the JCatapult framework depend on this value. So, it should
  * be set correctly.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class FileServlet extends HttpServlet {
-    private File location;
+public class FileWorkflow implements Workflow {
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
+    private final String prefix;
+    private final File location;
 
-    @Override
-    public void init() throws ServletException {
-        Injector injector = GuiceContainer.getInjector();
-        if (injector == null) {
-            throw new ServletException("Unable to get the Guice injector. You might be missing the" +
-                "JCatapult servlet context listener definition in the web.xml file.");
-        }
-
-        FileConfiguration configuration;
-        try {
-            configuration = injector.getInstance(FileConfiguration.class);
-        } catch (Exception e) {
-            throw new ServletException("It looks like you do not have an JCatapult configuration bound into Guice. " +
-                "This is used to locate the file directory on the server in order for this servlet to correctly " +
-                "serve up files.", e);
-        }
-
-        location = new File(configuration.getFileStorageDir());
-        super.init();
+    @Inject
+    public FileWorkflow(FileConfiguration config, HttpServletRequest request, HttpServletResponse response) {
+        this.location = new File(config.getFileStorageDir());
+        this.prefix = config.getFileWorkflowPrefix();
+        this.request = request;
+        this.response = response;
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String path = request.getServletPath();
+    /**
+     * Checks if the URI contains the workflow prefix and if it does, it handles the URI. Otherwise,
+     * it calls continueWorkflow on the chain.
+     *
+     * @param   workflowChain The chain.
+     * @throws  IOException
+     * @throws  ServletException
+     */
+    public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
         String uri = request.getRequestURI();
-        if (uri.startsWith(path)) {
-            uri = uri.substring(path.length());
+        if (uri.startsWith(prefix)) {
+            handleFile(uri);
+        } else {
+            workflowChain.continueWorkflow();
         }
+    }
 
-        if (uri.startsWith("/")) {
-            uri = uri.substring(1);
-        }
-
+    /**
+     * Writes the file out.
+     *
+     * @param   uri The file URI.
+     * @throws  IOException If the write fails.
+     */
+    protected void handleFile(String uri) throws IOException {
+        uri = uri.substring(prefix.length() + 1);
         uri = URLDecoder.decode(uri, "UTF-8");
 
         File file = new File(location, uri);
         if (!file.exists()) {
             response.setStatus(404);
+            return;
+        } else if (file.isDirectory()) {
+            byte[] ba = "Directory listings disabled.".getBytes("UTF-8");
+            response.setStatus(200);
+            response.setContentType("text/html");
+            response.setContentLength(ba.length);
+            response.setCharacterEncoding("UTF-8");
+            response.getOutputStream().write(ba);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
             return;
         }
 
@@ -119,10 +132,5 @@ public class FileServlet extends HttpServlet {
         }
 
         bof.flush();
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        throw new ServletException("Posts for files are not allowed.");
     }
 }

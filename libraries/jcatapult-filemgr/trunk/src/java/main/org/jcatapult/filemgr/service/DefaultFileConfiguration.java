@@ -16,8 +16,9 @@
 
 package org.jcatapult.filemgr.service;
 
-import com.google.inject.Inject;
 import org.jcatapult.config.Configuration;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -44,8 +45,8 @@ public class DefaultFileConfiguration implements FileConfiguration {
     /**
      * {@inheritDoc}
      */
-    public String getFileServletPrefix() {
-        return configuration.getString("jcatapult.file-mgr.servlet-prefix", "/files");
+    public String getFileWorkflowPrefix() {
+        return configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files");
     }
 
     /**

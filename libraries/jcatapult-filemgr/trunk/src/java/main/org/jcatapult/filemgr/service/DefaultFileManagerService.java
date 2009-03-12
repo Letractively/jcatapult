@@ -15,17 +15,22 @@
  */
 package org.jcatapult.filemgr.service;
 
-import com.google.inject.Inject;
-import net.java.io.FileTools;
-import net.java.lang.StringTools;
-import org.jcatapult.filemgr.domain.*;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
+import org.jcatapult.filemgr.domain.CreateDirectoryResult;
+import org.jcatapult.filemgr.domain.DirectoryData;
+import org.jcatapult.filemgr.domain.FileData;
+import org.jcatapult.filemgr.domain.Listing;
+import org.jcatapult.filemgr.domain.StoreResult;
+
+import com.google.inject.Inject;
+import net.java.io.FileTools;
+import net.java.lang.StringTools;
 
 /**
  * <p>
@@ -51,9 +56,12 @@ public class DefaultFileManagerService implements FileManagerService {
      * {@inheritDoc}
      */
     public StoreResult store(File file, String fileName, String contentType, String directory) {
+        directory = stripSlashes(directory);
+        
         StoreResult result = new StoreResult();
         if (!file.exists() || file.isDirectory()) {
-            logger.severe("The file to store [" + file.getAbsolutePath() + "] no longer exists.  Please verify that it was uploaded successfully.");
+            logger.severe("The file to store [" + file.getAbsolutePath() + "] no longer exists. " +
+                "Please verify that it was uploaded successfully.");
             result.setError(1); // file missing
             return result;
         }
@@ -117,9 +125,13 @@ public class DefaultFileManagerService implements FileManagerService {
      * {@inheritDoc}
      */
     public CreateDirectoryResult createDirectory(String name, String directory) {
+        // Normalize everything
+        name = stripSlashes(name);
+        directory = stripSlashes(directory);
+
         CreateDirectoryResult result = new CreateDirectoryResult();
-        result.setPath(directory);
-        result.setURI(addSlash(determineURI(directory)));
+        result.setPath(wrapWithSlashes(directory));
+        result.setURI(wrapWithSlashes(determineURI(directory)));
 
         if (!configuration.isCreateFolderAllowed()) {
             result.setError(1); // Can't create directories
@@ -146,14 +158,16 @@ public class DefaultFileManagerService implements FileManagerService {
      * {@inheritDoc}
      */
     public Listing getFoldersAndFiles(String directory) {
+        directory = stripSlashes(directory);
         return getListing(directory, true);
     }
 
     /**
      * {@inheritDoc}
      */
-    public Listing getFolders(String currentFolder) {
-        return getListing(currentFolder, false);
+    public Listing getFolders(String directory) {
+        directory = stripSlashes(directory);
+        return getListing(directory, false);
     }
 
     /**
@@ -161,10 +175,10 @@ public class DefaultFileManagerService implements FileManagerService {
      */
     public boolean delete(String fileURI) {
         String location = configuration.getFileStorageDir();
-        String servletPathPrefix = configuration.getFileServletPrefix();
+        String prefix = configuration.getFileWorkflowPrefix();
 
         // strip the prefix (if it exists), this will give us the exact URI relative to the storage directory
-        String relativeToStorageDirURI = fileURI.replaceFirst(servletPathPrefix, "");
+        String relativeToStorageDirURI = fileURI.replaceFirst(prefix, "");
 
         File file = new File(location, relativeToStorageDirURI);
 
@@ -188,7 +202,7 @@ public class DefaultFileManagerService implements FileManagerService {
         if (!dir.isAbsolute()) {
             String fullyQualifiedDirName = servletContext.getRealPath(dirName);
             if (fullyQualifiedDirName == null) {
-                throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified a relative " +
+                throw new RuntimeException("The configuration property jcatapult.file-mgr.storage-dir specified a relative " +
                     "directory of [" + configuration.getFileStorageDir() + "] however it appears that the web application " +
                     "is running from a WAR and therefore you must use an absolute directory in order to save uploded " +
                     "files elsewhere on the server.");
@@ -214,36 +228,26 @@ public class DefaultFileManagerService implements FileManagerService {
     private String determineURI(String... paths) {
         String dirName = configuration.getFileStorageDir();
         if (dirName == null) {
-            throw new RuntimeException("The file-mgr.file-servlet.dir configuration property is not set and is required");
+            throw new RuntimeException("The jcatapult.file-mgr.storage-dir configuration property is not set and is required");
         }
 
         String uri;
-        if (!new File(dirName).isAbsolute()) {
-            uri = stripSlash(request.getContextPath()) + "/" + dirName;
+        if (new File(dirName).isAbsolute()) {
+            uri = configuration.getFileWorkflowPrefix();
         } else {
-            uri = configuration.getFileServletPrefix();
-            if (uri == null) {
-                throw new RuntimeException("The configuration property file-mgr.file-servlet.dir specified an absolute " +
-                    "directory of [" + configuration.getFileStorageDir() + "] however the configuration property " +
-                    "file-mgr.file-servlet.prefix was not specified. This is required so that the browser can access files " +
-                    "outside of the web application. Therefore, you must configure the FileServlet in the web.xml " +
-                    "as well as set this configuration property to the same prefix that you mapped the servlet to in " +
-                    "web.xml.");
-            }
+            uri = request.getContextPath() + "/" + dirName;
         }
 
-        uri = stripSlash(uri);
-
         for (String path : paths) {
+            uri = wrapWithSlashes(uri);
+            
             if (!StringTools.isTrimmedEmpty(path)) {
                 if (path.startsWith("/")) {
-                    uri = uri + path;
+                    uri = uri + path.substring(1);
                 } else {
-                    uri = uri + "/" + path;
+                    uri = uri + path;
                 }
             }
-
-            uri = stripSlash(uri);
         }
 
         return uri;
@@ -258,8 +262,8 @@ public class DefaultFileManagerService implements FileManagerService {
      */
     private Listing getListing(String directory, boolean includeFiles) {
         Listing listing = new Listing();
-        listing.setPath(directory);
-        listing.setURI(addSlash(determineURI(directory)));
+        listing.setPath(wrapWithSlashes(directory));
+        listing.setURI(wrapWithSlashes(determineURI(directory)));
 
         // Try to locate the directory and get the listing
         File dir = determineStoreDirectory(directory);
@@ -284,19 +288,29 @@ public class DefaultFileManagerService implements FileManagerService {
         return listing;
     }
 
-    private String stripSlash(String s) {
-        if (s.endsWith("/")) {
-            return s.substring(0, s.length() - 1);
+    private String stripSlashes(String name) {
+        if (name == null) {
+            return "";
         }
-
-        return s;
+        
+        if (name.length() > 0 && name.startsWith("/")) {
+            name = name.substring(1);
+        }
+        if (name.length() > 0 && name.endsWith("/")) {
+            name = name.substring(0, name.length() - 1);
+        }
+        return name;
     }
 
-    private String addSlash(String s) {
-        if (s.endsWith("/")) {
-            return s;
+    private String wrapWithSlashes(String path) {
+        if (!path.equals("/")) {
+            if (!path.startsWith("/")) {
+                path = "/" + path;
+            } if (!path.endsWith("/")) {
+                path = path + "/";
+            }
         }
-
-        return s + "/";
+        
+        return path;
     }
 }
