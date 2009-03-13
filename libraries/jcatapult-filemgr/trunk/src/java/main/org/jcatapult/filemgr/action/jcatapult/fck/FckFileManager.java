@@ -36,7 +36,7 @@ import org.jcatapult.filemgr.domain.fck.CurrentFolder;
 import org.jcatapult.filemgr.domain.fck.ErrorData;
 import org.jcatapult.filemgr.domain.fck.Folder;
 import org.jcatapult.filemgr.domain.fck.UploadResult;
-import org.jcatapult.filemgr.service.FileManagerService;
+import org.jcatapult.filemgr.service.FckFileManagerService;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.action.result.annotation.Header;
@@ -99,10 +99,10 @@ import com.google.inject.Inject;
 @Action
 @Header(code = "error", status = 500)
 @Stream(type = "application/xml", name = "")
-@Forward(code = "upload", page = "/file-mgr/fck-file-manager.ftl")
+@Forward(code = "upload", page = "fck-file-manager.ftl")
 public class FckFileManager {
     private static final JAXBContext context;
-    private final FileManagerService fileManagerService;
+    private final FckFileManagerService fckFileManagerService;
 
     static {
         try {
@@ -137,8 +137,8 @@ public class FckFileManager {
     public String uuid; // not used
 
     @Inject
-    public FckFileManager(FileManagerService fileManagerService) {
-        this.fileManagerService = fileManagerService;
+    public FckFileManager(FckFileManagerService fckFileManagerService) {
+        this.fckFileManagerService = fckFileManagerService;
     }
 
     public String execute() {
@@ -148,16 +148,15 @@ public class FckFileManager {
         }
 
         // Otherwise, process the request according to the command
-        String directory = (Type != null) ? Type + "/" + CurrentFolder : CurrentFolder;
         Connector connector;
         if (Command == FileManagerCommand.CreateFolder) {
-            CreateDirectoryResult result = fileManagerService.createDirectory(NewFolderName, directory);
+            CreateDirectoryResult result = fckFileManagerService.createDirectory(NewFolderName, Type, CurrentFolder);
             connector = translate(result);
         } else if (Command == FileManagerCommand.GetFolders) {
-            Listing listing = fileManagerService.getFolders(directory);
+            Listing listing = fckFileManagerService.getFolders(Type, CurrentFolder);
             connector = translate(listing);
         } else if (Command == FileManagerCommand.GetFoldersAndFiles) {
-            Listing listing = fileManagerService.getFoldersAndFiles(directory);
+            Listing listing = fckFileManagerService.getFoldersAndFiles(Type, CurrentFolder);
             connector = translate(listing);
         } else {
             throw new RuntimeException("Invalid command [" + Command + "]");
@@ -169,13 +168,12 @@ public class FckFileManager {
     }
 
     /**
-     * Performs the upload task using the {@link FileManagerService}.
+     * Performs the upload task using the {@link org.jcatapult.filemgr.service.FckFileManagerService}.
      *
      * @return  The result to return from the execute method in order to provide a response.
      */
     protected String doStore() {
-        String directory = (Type != null) ? Type + "/" + CurrentFolder : CurrentFolder;
-        StoreResult result = fileManagerService.store(NewFile.file, NewFile.name, NewFile.contentType, directory);
+        StoreResult result = fckFileManagerService.store(NewFile.file, NewFile.name, NewFile.contentType, Type, CurrentFolder);
         connector = translate(result);
         return "upload";
     }

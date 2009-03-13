@@ -30,8 +30,8 @@ import com.google.inject.ImplementedBy;
  *
  * @author Brian Pontarelli and James Humphrey
  */
-@ImplementedBy(DefaultFileManagerService.class)
-public interface FileManagerService {
+@ImplementedBy(DefaultFckFileManagerService.class)
+public interface FckFileManagerService {
     /**
      * <p>
      * This method provides the service of storing files to disk.
@@ -63,11 +63,12 @@ public interface FileManagerService {
      * @param   file The file that was uploaded.
      * @param   fileName The name of the file that was sent from the browser.
      * @param   contentType The content type that was determined from the browser or server.
+     * @param   type The type from the FCK file manager.
      * @param   directory The name of the directory to place the uploaded file. This is appeneded
      *          to the directory specified <strong>jcatapult.file-mgr.storage-dir</strong>.
      * @return  The result, which could be an error or a success.
      */
-    StoreResult store(File file, String fileName, String contentType, String directory);
+    StoreResult store(File file, String fileName, String contentType, String type, String directory);
 
     /**
      * <p>
@@ -104,10 +105,11 @@ public interface FileManagerService {
      * </p>
      *
      * @param   name The name of the new folder to create.
+     * @param   type The type from the FCK file manager.
      * @param   directory The directory in which the new folder is to be created.
      * @return  The result.
      */
-    CreateDirectoryResult createDirectory(String name, String directory);
+    CreateDirectoryResult createDirectory(String name, String type, String directory);
 
     /**
      * <p>
@@ -146,10 +148,11 @@ public interface FileManagerService {
      * file.
      * </p>
      *
+     * @param   type The type from the FCK file manager.
      * @param   directory The directory to get the listing for.
      * @return  The result.
      */
-    Listing getFoldersAndFiles(String directory);
+    Listing getFoldersAndFiles(String type, String directory);
 
     /**
      * <p>
@@ -187,14 +190,15 @@ public interface FileManagerService {
      * prefix mapped in the servlet-mapping of the web.xml file.
      * </p>
      *
+     * @param   type The type from the FCK file manager.
      * @param   directory The directory to get the listing for.
      * @return  The result.
      */
-    Listing getFolders(String directory);
+    Listing getFolders(String type, String directory);
 
     /**
      * <p>Deletes a file from disk that has been stored via the
-     * {@link org.jcatapult.filemgr.service.FileManagerService#store(java.io.File, String, String, String)} method.
+     * {@link FckFileManagerService#store(java.io.File, String, String, String, String)} method.
      * The file URI supplied to this method should be exactly equal to
      * {@link org.jcatapult.filemgr.domain.StoreResult#getFileURI()} or the same with the
      * <strong>jcatapult.file-mgr.workflow-prefix</strong> removed.</p>

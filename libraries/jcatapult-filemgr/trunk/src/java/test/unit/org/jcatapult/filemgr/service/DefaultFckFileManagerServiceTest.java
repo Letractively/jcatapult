@@ -40,7 +40,7 @@ import net.java.io.FileTools;
  *
  * @author Brian Pontarelli
  */
-public class DefaultFileManagerServiceTest extends BaseTest {
+public class DefaultFckFileManagerServiceTest extends BaseTest {
     @Test
     public void storeMissingDirName() {
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
@@ -51,10 +51,10 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, request);
         try {
-            service.store(new File("project.xml"), "foo.xml", "image/gif", null);
+            service.store(new File("project.xml"), "foo.xml", "image/gif", "File", null);
             fail("Should have have thrown an exception");
         } catch (Exception e) {
             assertTrue(e.getMessage().contains("file-mgr.storage-dir"));
@@ -67,21 +67,21 @@ public class DefaultFileManagerServiceTest extends BaseTest {
     public void storeRelativeFailure() {
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn("some-dir").times(2);
+                andReturn("storage-dir").times(2);
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.expect(servletContext.getRealPath("some-dir")).andReturn(null);
+        EasyMock.expect(servletContext.getRealPath("storage-dir/File")).andReturn(null);
         EasyMock.replay(servletContext);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, request);
         try {
-            service.store(new File("project.xml"), "foo.xml", "image/gif", null);
+            service.store(new File("project.xml"), "foo.xml", "image/gif", "File", null);
             fail("Should have failed");
         } catch (Exception e) {
             assertTrue(e.getMessage().contains("jcatapult.file-mgr.storage-dir"));
-            assertTrue(e.getMessage().contains("some-dir"));
+            assertTrue(e.getMessage().contains("storage-dir"));
         }
 
         EasyMock.verify(servletContext, configuration);
@@ -92,11 +92,11 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn("some-dir").times(2);
+                andReturn("storage-dir").times(2);
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.expect(servletContext.getRealPath("some-dir")).andReturn(testDir + "/some-dir");
+        EasyMock.expect(servletContext.getRealPath("storage-dir/File")).andReturn(testDir + "/storage-dir");
         EasyMock.replay(servletContext);
 
         HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -107,13 +107,13 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, httpRequest);
-        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "");
+        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "File", "/");
         assertEquals(0, result.getError());
-        assertEquals("/foo/some-dir/foo-bar.xml", result.getFileURI());
+        assertEquals("/foo/storage-dir/File/foo-bar.xml", result.getFileURI());
 
-        File check = new File(testDir + "/some-dir", "foo-bar.xml");
+        File check = new File(testDir + "/storage-dir", "foo-bar.xml");
         assertTrue(check.exists() && check.isFile());
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
@@ -126,11 +126,11 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn("some-dir").times(2);
+                andReturn("storage-dir").times(2);
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.expect(servletContext.getRealPath("some-dir/image")).andReturn(testDir + "/some-dir");
+        EasyMock.expect(servletContext.getRealPath("storage-dir/Image/my-images")).andReturn(testDir + "/storage-dir");
         EasyMock.replay(servletContext);
 
         HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -141,13 +141,13 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, httpRequest);
-        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "image");
+        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "Image", "my-images");
         assertEquals(0, result.getError());
-        assertEquals("/foo/some-dir/image/foo-bar.xml", result.getFileURI());
+        assertEquals("/foo/storage-dir/Image/my-images/foo-bar.xml", result.getFileURI());
 
-        File check = new File(testDir + "/some-dir", "foo-bar.xml");
+        File check = new File(testDir + "/storage-dir", "foo-bar.xml");
         assertTrue(check.exists() && check.isFile());
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
@@ -160,10 +160,10 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir").times(2);
+                andReturn(testDir + "/storage-dir").times(2);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).andReturn(null);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir"); // Exception message
+                andReturn(testDir + "/storage-dir"); // Exception message
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
@@ -178,10 +178,10 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, request);
         try {
-            service.store(temp, "foo-bar.xml", "image/gif", "");
+            service.store(temp, "foo-bar.xml", "image/gif", "File", "/");
             fail("Should have failed");
         } catch (Exception e) {
         }
@@ -192,9 +192,9 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir").times(2);
+                andReturn(testDir + "/storage-dir").times(2);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).
-                andReturn("/file-mgr.file-servlet");
+                andReturn("/prefix");
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
@@ -209,13 +209,13 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
-        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "");
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
+        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "File", "/");
 
         assertEquals(0, result.getError());
-        assertEquals("/file-mgr.file-servlet/foo-bar.xml", result.getFileURI());
+        assertEquals("/prefix/File/foo-bar.xml", result.getFileURI());
 
-        File check = new File(testDir + "/some-dir", "foo-bar.xml");
+        File check = new File(testDir + "/storage-dir/File", "foo-bar.xml");
         assertTrue(check.exists() && check.isFile());
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
@@ -228,9 +228,8 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir").times(2);
-        EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).
-                andReturn("/file-mgr.file-servlet");
+                andReturn(testDir + "/storage-dir").times(2);
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).andReturn("/prefix");
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
@@ -245,14 +244,14 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, request);
-        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "image");
+        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "File", "my-images");
 
         assertEquals(0, result.getError());
-        assertEquals("/file-mgr.file-servlet/image/foo-bar.xml", result.getFileURI());
+        assertEquals("/prefix/File/my-images/foo-bar.xml", result.getFileURI());
 
-        File check = new File(testDir + "/some-dir/image", "foo-bar.xml");
+        File check = new File(testDir + "/storage-dir/File/my-images", "foo-bar.xml");
         assertTrue(check.exists() && check.isFile());
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
@@ -265,9 +264,8 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         storeAbsoluteSuccessPrefix();
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir").times(2);
-        EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).
-                andReturn("/file-mgr.file-servlet");
+                andReturn(testDir + "/storage-dir").times(2);
+        EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).andReturn("/prefix");
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
@@ -282,15 +280,15 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, request);
-        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "image");
+        StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "File", "my-images");
 
         assertEquals(0, result.getError());
         assertTrue(result.isChangedFileName());
-        assertEquals("/file-mgr.file-servlet/image/foo-bar(1).xml", result.getFileURI());
+        assertEquals("/prefix/File/my-images/foo-bar(1).xml", result.getFileURI());
 
-        File check = new File(testDir + "/some-dir/image", "foo-bar(1).xml");
+        File check = new File(testDir + "/storage-dir/File/my-images", "foo-bar(1).xml");
         assertTrue(check.exists() && check.isFile());
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
@@ -303,24 +301,24 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir");
+                andReturn(testDir + "/storage-dir");
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).
-                andReturn("/file-mgr.file-servlet");
+                andReturn("/prefix");
         EasyMock.expect(configuration.getBoolean("jcatapult.file-mgr.create-folder-allowed", true)).andReturn(true);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir");
+                andReturn(testDir + "/storage-dir");
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, request);
-        CreateDirectoryResult result = service.createDirectory("test", "");
-        assertEquals("/file-mgr.file-servlet/", result.getURI());
+        CreateDirectoryResult result = service.createDirectory("test", "File", "/");
+        assertEquals("/prefix/File/", result.getURI());
         assertEquals("/", result.getPath());
 
-        File dir = new File(testDir + "/some-dir/test");
+        File dir = new File(testDir + "/storage-dir/File/test");
         assertTrue(dir.isDirectory());
 
         EasyMock.verify(configuration, servletContext);
@@ -331,24 +329,24 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir");
+                andReturn(testDir + "/storage-dir");
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).
-                andReturn("/file-mgr.file-servlet");
+                andReturn("/prefix");
         EasyMock.expect(configuration.getBoolean("jcatapult.file-mgr.create-folder-allowed", true)).andReturn(true);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir");
+                andReturn(testDir + "/storage-dir");
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, request);
-        CreateDirectoryResult result = service.createDirectory("test", "/deep/dir/");
-        assertEquals("/file-mgr.file-servlet/deep/dir/", result.getURI());
+        CreateDirectoryResult result = service.createDirectory("test", "Flash", "/deep/dir/");
+        assertEquals("/prefix/Flash/deep/dir/", result.getURI());
         assertEquals("/deep/dir/", result.getPath());
 
-        File dir = new File(testDir + "/some-dir/deep/dir/test");
+        File dir = new File(testDir + "/storage-dir/Flash/deep/dir/test");
         assertTrue(dir.isDirectory());
 
         EasyMock.verify(configuration, servletContext);
@@ -357,25 +355,25 @@ public class DefaultFileManagerServiceTest extends BaseTest {
     @Test
     public void getFolders() {
         FileTools.prune(testDir);
-        new File(testDir + "/some-dir/test").mkdirs();
-        new File(testDir + "/some-dir/test2").mkdirs();
+        new File(testDir + "/storage-dir/test").mkdirs();
+        new File(testDir + "/storage-dir/test2").mkdirs();
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
                 andReturn("files").times(2);
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.expect(servletContext.getRealPath("files")).andReturn(testDir + "/some-dir");
+        EasyMock.expect(servletContext.getRealPath("files/File")).andReturn(testDir + "/storage-dir");
         EasyMock.replay(servletContext);
 
         HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(httpRequest.getContextPath()).andReturn("/servlet-context");
         EasyMock.replay(httpRequest);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, httpRequest);
-        Listing listing = service.getFolders("");
-        assertEquals("/servlet-context/files/", listing.getURI());
+        Listing listing = service.getFolders("File", "/");
+        assertEquals("/servlet-context/files/File/", listing.getURI());
         assertEquals("/", listing.getPath());
 
         List<DirectoryData> folders = listing.getDirectories();
@@ -391,26 +389,26 @@ public class DefaultFileManagerServiceTest extends BaseTest {
     @Test
     public void getFoldersAndFiles() throws IOException {
         FileTools.prune(testDir);
-        new File(testDir + "/some-dir/test").mkdirs();
-        new File(testDir + "/some-dir/test2").mkdirs();
-        new File(testDir + "/some-dir/file").createNewFile();
+        new File(testDir + "/storage-dir/test").mkdirs();
+        new File(testDir + "/storage-dir/test2").mkdirs();
+        new File(testDir + "/storage-dir/file").createNewFile();
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
                 andReturn("files").times(2);
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.expect(servletContext.getRealPath("files")).andReturn(testDir + "/some-dir");
+        EasyMock.expect(servletContext.getRealPath("files/File")).andReturn(testDir + "/storage-dir");
         EasyMock.replay(servletContext);
 
         HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(httpRequest.getContextPath()).andReturn("/servlet-context");
         EasyMock.replay(httpRequest);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, httpRequest);
-        Listing listing = service.getFoldersAndFiles("");
-        assertEquals("/servlet-context/files/", listing.getURI());
+        Listing listing = service.getFoldersAndFiles("File", "/");
+        assertEquals("/servlet-context/files/File/", listing.getURI());
         assertEquals("/", listing.getPath());
 
         List<DirectoryData> folders = listing.getDirectories();
@@ -429,9 +427,9 @@ public class DefaultFileManagerServiceTest extends BaseTest {
     @Test
     public void getFoldersAndFilesAbsolute() throws IOException {
         FileTools.prune(testDir);
-        new File(testDir + "/Files/some-dir").mkdirs();
-        new File(testDir + "/Files/some-dir2").mkdirs();
-        new File(testDir + "/Files/file").createNewFile();
+        new File(testDir + "/File/storage-dir").mkdirs();
+        new File(testDir + "/File/storage-dir2").mkdirs();
+        new File(testDir + "/File/file").createNewFile();
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).andReturn(testDir);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).andReturn("/files");
@@ -444,16 +442,16 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.replay(httpRequest);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
                 servletContext, httpRequest);
-        Listing listing = service.getFoldersAndFiles("Files");
-        assertEquals("/files/Files/", listing.getURI());
-        assertEquals("/Files/", listing.getPath());
+        Listing listing = service.getFoldersAndFiles("File", "/");
+        assertEquals("/files/File/", listing.getURI());
+        assertEquals("/", listing.getPath());
 
         List<DirectoryData> folders = listing.getDirectories();
         assertEquals(2, folders.size());
-        assertTrue(folders.get(0).getName().equals("some-dir") || folders.get(0).getName().equals("some-dir2"));
-        assertTrue(folders.get(1).getName().equals("some-dir") || folders.get(1).getName().equals("some-dir2"));
+        assertTrue(folders.get(0).getName().equals("storage-dir") || folders.get(0).getName().equals("storage-dir2"));
+        assertTrue(folders.get(1).getName().equals("storage-dir") || folders.get(1).getName().equals("storage-dir2"));
 
         List<FileData> files = listing.getFiles();
         assertEquals(1, files.size());
@@ -468,13 +466,13 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir").times(2);
+                andReturn(testDir + "/storage-dir").times(2);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).
-                andReturn("/file-mgr.file-servlet");
+                andReturn("/prefix");
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir");
+                andReturn(testDir + "/storage-dir");
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).
-                andReturn("/file-mgr.file-servlet");
+                andReturn("/prefix");
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
@@ -489,13 +487,13 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
-        StoreResult result = service.store(temp, "delete-test.xml", "image/gif", "");
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
+        StoreResult result = service.store(temp, "delete-test.xml", "image/gif", "File", "/");
 
         assertEquals(0, result.getError());
-        assertEquals("/file-mgr.file-servlet/delete-test.xml", result.getFileURI());
+        assertEquals("/prefix/File/delete-test.xml", result.getFileURI());
 
-        File check = new File(testDir + "/some-dir", "delete-test.xml");
+        File check = new File(testDir + "/storage-dir/File", "delete-test.xml");
         assertTrue(check.exists() && check.isFile());
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
@@ -510,13 +508,13 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         FileTools.prune(testDir);
         Configuration configuration = EasyMock.createStrictMock(Configuration.class);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir").times(2);
+                andReturn(testDir + "/storage-dir").times(2);
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).
-                andReturn("/file-mgr.file-servlet");
+                andReturn("/prefix");
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.storage-dir", System.getProperty("user.home") + "/data")).
-                andReturn(testDir + "/some-dir");
+                andReturn(testDir + "/storage-dir");
         EasyMock.expect(configuration.getString("jcatapult.file-mgr.workflow-prefix", "/files")).
-                andReturn("/file-mgr.file-servlet");
+                andReturn("/prefix");
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
@@ -531,18 +529,18 @@ public class DefaultFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFileManagerService service = new DefaultFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
-        StoreResult result = service.store(temp, "delete-test.xml", "image/gif", "");
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
+        StoreResult result = service.store(temp, "delete-test.xml", "image/gif", "File", "/");
 
         assertEquals(0, result.getError());
-        assertEquals("/file-mgr.file-servlet/delete-test.xml", result.getFileURI());
+        assertEquals("/prefix/File/delete-test.xml", result.getFileURI());
 
-        File check = new File(testDir + "/some-dir", "delete-test.xml");
+        File check = new File(testDir + "/storage-dir/File", "delete-test.xml");
         assertTrue(check.exists() && check.isFile());
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
 
-        assertTrue(service.delete("some-dir/delete-test.xml"));
+        assertTrue(service.delete("storage-dir/File/delete-test.xml"));
 
         EasyMock.verify(httpRequest, servletContext, configuration);
     }
