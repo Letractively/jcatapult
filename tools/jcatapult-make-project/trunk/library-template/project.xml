@@ -12,11 +12,11 @@
   <property name="jdk.version" value="1.6"/>
 
   <dependencies>
-    <artifactGroup type="run"/>
-    <artifactGroup type="compile"/>
-    <artifactGroup type="test-run"/>
-    <artifactGroup type="test-compile">
-      <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
-    </artifactGroup>
+    <artifact-group type="run"/>
+    <artifact-group type="compile"/>
+    <artifact-group type="test-run"/>
+    <artifact-group type="test-compile">
+      <artifact group="junit.org" name="junit" version="4.4"/>
+    </artifact-group>
   </dependencies>
 </project>
