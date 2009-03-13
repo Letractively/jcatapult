@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
 
 import org.jcatapult.config.Configuration;
@@ -256,7 +255,7 @@ public class DefaultUserService implements UserService {
         try {
             persistenceService.persist(user);
             return true;
-        } catch (EntityExistsException e) {
+        } catch (PersistenceException e) {
             return false;
         }
     }
