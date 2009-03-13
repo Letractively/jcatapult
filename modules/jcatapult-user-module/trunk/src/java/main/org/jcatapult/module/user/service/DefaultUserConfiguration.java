@@ -52,28 +52,28 @@ public class DefaultUserConfiguration implements UserConfiguration {
     public static final String EMAIL_OPTIONS_FLAG = "emailOptions";
 
     /* Form constants */
-    public static final String NAME = "jcatapult.modules.user.fields.name";
-    public static final String NAME_REQUIRED = "jcatapult.modules.user.fields.name-required";
-    public static final String BUSINESS = "jcatapult.modules.user.fields.business";
-    public static final String BUSINESS_REQUIRED = "jcatapult.modules.user.fields.business-required";
-    public static final String HOME_ADDRESS = "jcatapult.modules.user.fields.home-address";
-    public static final String HOME_ADDRESS_REQUIRED = "jcatapult.modules.user.fields.home-address-required";
-    public static final String WORK_ADDRESS = "jcatapult.modules.user.fields.work-address";
-    public static final String WORK_ADDRESS_REQUIRED = "jcatapult.modules.user.fields.work-address-required";
-    public static final String HOME_PHONE = "jcatapult.modules.user.fields.home-phone";
-    public static final String HOME_PHONE_REQUIRED = "jcatapult.modules.user.fields.home-phone-required";
-    public static final String WORK_PHONE = "jcatapult.modules.user.fields.work-phone";
-    public static final String WORK_PHONE_REQUIRED = "jcatapult.modules.user.fields.work-phone-required";
-    public static final String CELL_PHONE = "jcatapult.modules.user.fields.cell-phone";
-    public static final String CELL_PHONE_REQUIRED= "jcatapult.modules.user.fields.cell-phone-required";
-    public static final String EMAIL_OPTIONS = "jcatapult.modules.user.fields.email-options";
+    public static final String NAME = "jcatapult.user.fields.name";
+    public static final String NAME_REQUIRED = "jcatapult.user.fields.name-required";
+    public static final String BUSINESS = "jcatapult.user.fields.business";
+    public static final String BUSINESS_REQUIRED = "jcatapult.user.fields.business-required";
+    public static final String HOME_ADDRESS = "jcatapult.user.fields.home-address";
+    public static final String HOME_ADDRESS_REQUIRED = "jcatapult.user.fields.home-address-required";
+    public static final String WORK_ADDRESS = "jcatapult.user.fields.work-address";
+    public static final String WORK_ADDRESS_REQUIRED = "jcatapult.user.fields.work-address-required";
+    public static final String HOME_PHONE = "jcatapult.user.fields.home-phone";
+    public static final String HOME_PHONE_REQUIRED = "jcatapult.user.fields.home-phone-required";
+    public static final String WORK_PHONE = "jcatapult.user.fields.work-phone";
+    public static final String WORK_PHONE_REQUIRED = "jcatapult.user.fields.work-phone-required";
+    public static final String CELL_PHONE = "jcatapult.user.fields.cell-phone";
+    public static final String CELL_PHONE_REQUIRED= "jcatapult.user.fields.cell-phone-required";
+    public static final String EMAIL_OPTIONS = "jcatapult.user.fields.email-options";
 
     /* Registration configureation */
-    public static final String REGISTRATION_DISABLED = "jcatapult.modules.user.register.disabled";
-    public static final String REGISTRATION_SUCCESS_URI = "jcatapult.modules.user.register.success-uri";
-    public static final String LOGOUT_SUCCESS_URI = "jcatapult.modules.user.logout.success-uri";
-    public static final String LOGIN_SUCCESS_URI = "jcatapult.modules.user.login.success-uri";
-    public static final String LOGIN_URI = "jcatapult.modules.user.login.uri";
+    public static final String REGISTRATION_DISABLED = "jcatapult.user.register.disabled";
+    public static final String REGISTRATION_SUCCESS_URI = "jcatapult.user.register.success-uri";
+    public static final String LOGOUT_SUCCESS_URI = "jcatapult.user.logout.success-uri";
+    public static final String LOGIN_SUCCESS_URI = "jcatapult.user.login.success-uri";
+    public static final String LOGIN_URI = "jcatapult.user.login.uri";
 
     private final Map<String, Boolean> flags = new HashMap<String, Boolean>();
     private final String registrationSuccessURI;

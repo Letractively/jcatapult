@@ -19,15 +19,14 @@ package org.jcatapult.module.user.action.account;
 import java.io.IOException;
 import javax.servlet.ServletException;
 
+import org.jcatapult.email.EmailTestHelper;
+import org.jcatapult.email.service.EmailTransportService;
+import org.jcatapult.module.user.BaseIntegrationTest;
 import org.jcatapult.mvc.test.WebappTestRunner;
 import org.jcatapult.security.EnhancedSecurityContext;
-import org.jcatapult.email.service.EmailTransportService;
-import org.jcatapult.email.EmailTestHelper;
+import org.jcatapult.user.domain.User;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import org.jcatapult.module.user.BaseIntegrationTest;
-import org.jcatapult.module.user.domain.User;
 
 /**
  * <p>

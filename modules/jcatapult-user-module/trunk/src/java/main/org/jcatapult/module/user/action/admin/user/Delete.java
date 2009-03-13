@@ -16,9 +16,9 @@
  */
 package org.jcatapult.module.user.action.admin.user;
 
-import org.jcatapult.module.user.service.UserService;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
+import org.jcatapult.user.service.UserService;
 
 import com.google.inject.Inject;
 

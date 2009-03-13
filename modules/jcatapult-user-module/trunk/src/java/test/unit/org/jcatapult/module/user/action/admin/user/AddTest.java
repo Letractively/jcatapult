@@ -3,6 +3,7 @@
  */
 package org.jcatapult.module.user.action.admin.user;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,14 +11,16 @@ import java.util.Map;
 import static junit.framework.Assert.*;
 
 import org.easymock.EasyMock;
+import static org.easymock.EasyMock.*;
+import org.jcatapult.module.user.BaseTest;
+import org.jcatapult.module.user.domain.Address;
+import org.jcatapult.module.user.domain.DefaultRole;
+import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.persistence.service.PersistenceService;
+import org.jcatapult.user.service.UserService;
 import org.junit.Test;
 
 import net.java.error.ErrorList;
-
-import org.jcatapult.module.user.BaseTest;
-import org.jcatapult.module.user.domain.Address;
-import org.jcatapult.module.user.domain.DefaultUser;
-import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>
@@ -36,8 +39,8 @@ public class AddTest extends BaseTest {
         user.setLogin("test");
         user.getAddresses().put("work", new Address());
 
-        Map<String, Integer[]> associations = new HashMap<String, Integer[]>();
-        associations.put("roles", new Integer[]{1, 2, 3});
+        Map<String, int[]> associations = new HashMap<String, int[]>();
+        associations.put("roles", new int[]{1, 2, 3});
 
         UserService service = EasyMock.createStrictMock(UserService.class);
         EasyMock.expect(service.validate(user, associations, false, "p", "pc")).andReturn(new ErrorList());
@@ -64,17 +67,21 @@ public class AddTest extends BaseTest {
         DefaultUser user = new DefaultUser();
         user.setLogin("test");
 
-        Map<String, List<?>> items = new HashMap<String, List<?>>();
+        List<DefaultRole> roles = new ArrayList<DefaultRole>();
+        PersistenceService ps = EasyMock.createStrictMock(PersistenceService.class);
+        expect(ps.findAllByType(DefaultRole.class)).andReturn(roles);
+        replay(ps);
+
         UserService service = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(service.getAssociationObjects()).andReturn(items);
         EasyMock.expect(service.createUser()).andReturn(user);
         EasyMock.replay(service);
 
         Add add = new Add();
+        add.setPersistenceService(ps);
         add.setServices(null, null, service);
         add.prepare();
         assertSame(user, add.user);
-        assertSame(items, add.items);
+        assertSame(roles, add.roles);
 
         EasyMock.verify(service);
     }

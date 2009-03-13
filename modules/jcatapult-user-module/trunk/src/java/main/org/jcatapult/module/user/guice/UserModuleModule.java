@@ -16,12 +16,10 @@
  */
 package org.jcatapult.module.user.guice;
 
-import org.jcatapult.security.UserAdapter;
-import org.jcatapult.security.guice.SecurityModule;
-import org.jcatapult.security.login.AuthenticationService;
+import org.jcatapult.module.user.service.DefaultUserHandler;
+import org.jcatapult.user.service.UserHandler;
 
-import org.jcatapult.module.user.security.DefaultAuthenticationService;
-import org.jcatapult.module.user.security.DefaultUserAdapter;
+import com.google.inject.AbstractModule;
 
 /**
  * <p>
@@ -31,18 +29,8 @@ import org.jcatapult.module.user.security.DefaultUserAdapter;
  *
  * @author  Brian Pontarelli
  */
-public class UserModuleModule extends SecurityModule {
-
-    @Override
+public class UserModuleModule extends AbstractModule {
     protected void configure() {
-        super.configure();
-    }
-
-    protected Class<? extends AuthenticationService> getAuthenticationService() {
-        return DefaultAuthenticationService.class;
-    }
-
-    protected Class<? extends UserAdapter> getUserAdapter() {
-        return DefaultUserAdapter.class;
+        bind(UserHandler.class).to(DefaultUserHandler.class);
     }
 }

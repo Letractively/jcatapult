@@ -45,11 +45,11 @@ import com.google.inject.Inject;
  *
  * <h3>Configuration</h3>
  * <p>
- * <strong>jcatapult.modules.user.login.success-uri</strong> -
+ * <strong>jcatapult.user.login.success-uri</strong> -
  * This is a String configuration element that contains the URI that
  * the user is redirected to after a successful login. Defaults to
  * <strong>/</strong>.
- * <strong>jcatapult.modules.user.login.uri</strong> -
+ * <strong>jcatapult.user.login.uri</strong> -
  * This is a String configuration element that contains the URI that
  * the user is redirected to in order to login. Defaults to
  * <strong>/login</strong>.

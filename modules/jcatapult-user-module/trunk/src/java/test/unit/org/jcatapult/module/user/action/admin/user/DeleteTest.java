@@ -17,10 +17,9 @@
 package org.jcatapult.module.user.action.admin.user;
 
 import org.easymock.EasyMock;
+import org.jcatapult.user.service.UserService;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>

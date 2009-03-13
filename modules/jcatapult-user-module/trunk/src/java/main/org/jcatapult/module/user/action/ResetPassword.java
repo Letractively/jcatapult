@@ -18,8 +18,8 @@ package org.jcatapult.module.user.action;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jcatapult.module.user.service.UserService;
 import org.jcatapult.mvc.action.annotation.Action;
+import org.jcatapult.user.service.UserService;
 
 import com.google.inject.Inject;
 

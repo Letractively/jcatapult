@@ -17,10 +17,10 @@
 package org.jcatapult.module.user.action.admin.user;
 
 import org.jcatapult.crud.action.BaseSearchAction;
-import org.jcatapult.module.user.domain.User;
-import org.jcatapult.module.user.service.UserHandler;
 import org.jcatapult.module.user.service.UserSearchCriteria;
 import org.jcatapult.mvc.action.annotation.Action;
+import org.jcatapult.user.domain.User;
+import org.jcatapult.user.service.UserHandler;
 
 import com.google.inject.Inject;
 

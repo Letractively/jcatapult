@@ -70,7 +70,7 @@
       [@jc.checkbox name="user.deleted" value="true" required=true/]
     </div>
     <div id="role-input" class="user-module-input-section jcatapult-module-input-section">
-      [@jc.checkboxlist items=items['roles'] valueExpr="id" l10nExpr="name" name="associations['roles']" required=true/]
+      [@jc.checkboxlist items=roles valueExpr="id" l10nExpr="name" name="associations['roles']" required=true/]
     </div>
   </div>
   <div id="user-admin-controls" class="user-module-controls jcatapult-module-controls">

@@ -26,26 +26,24 @@
     </commerce>
   </jcatapult>
   <jcatapult>
-    <modules>
-      <user>
-        <fields>
-          <name>true</name>
-          <name-required>true</name-required>
-          <business>true</business>
-          <business-required>true</business-required>
-          <home-address>true</home-address>
-          <home-address-required>true</home-address-required>
-          <work-address>true</work-address>
-          <work-address-required>true</work-address-required>
-          <home-phone>true</home-phone>
-          <home-phone-required>true</home-phone-required>
-          <work-phone>true</work-phone>
-          <work-phone-required>true</work-phone-required>
-          <cell-phone>true</cell-phone>
-          <cell-phone-required>true</cell-phone-required>
-          <email-options>true</email-options>
-        </fields>
-      </user>
-    </modules>
+    <user>
+      <fields>
+        <name>true</name>
+        <name-required>true</name-required>
+        <business>true</business>
+        <business-required>true</business-required>
+        <home-address>true</home-address>
+        <home-address-required>true</home-address-required>
+        <work-address>true</work-address>
+        <work-address-required>true</work-address-required>
+        <home-phone>true</home-phone>
+        <home-phone-required>true</home-phone-required>
+        <work-phone>true</work-phone>
+        <work-phone-required>true</work-phone-required>
+        <cell-phone>true</cell-phone>
+        <cell-phone-required>true</cell-phone-required>
+        <email-options>true</email-options>
+      </fields>
+    </user>
   </jcatapult>
 </config>
