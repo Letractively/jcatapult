@@ -24,10 +24,10 @@
   <property name="project.contains.domain" value="true"/>
 
   <dependencies>
-    <artifactGroup type="compile-only">
+    <artifact-group type="compile-only">
       <artifact group="servlet.javax" name="servlet-api" version="2.4"/>
-    </artifactGroup>
-    <artifactGroup type="compile">
+    </artifact-group>
+    <artifact-group type="compile">
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
       <artifact group="hibernate.org" name="hibernate-annotations" version="3.3.1"/>
 
@@ -37,14 +37,14 @@
       <artifact group="jcatapult.org" name="jcatapult-persistence" version="${version.jcatapult}"/>
 
       <artifact group="persistence.javax" name="persistence-api" version="1.0"/>
-    </artifactGroup>
-    <artifactGroup type="run">
+    </artifact-group>
+    <artifact-group type="run">
       <artifact group="taglibs.jakarta.apache.org" name="standard" version="1.1.2"/>
       <artifact group="opensymphony.com" name="sitemesh" version="2.3"/>
       <artifact group="servlet.javax" name="jstl" version="1.1"/>
-    </artifactGroup>
-    <artifactGroup type="test-run"/>
-    <artifactGroup type="test-compile">
+    </artifact-group>
+    <artifact-group type="test-run"/>
+    <artifact-group type="test-compile">
       <!-- jcat unit testing deps -->
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
       <artifact group="jcatapult.org" project="jcatapult-mvc" name="jcatapult-mvc-test" version="${version.jcatapult}"/>
@@ -52,6 +52,6 @@
 
       <artifact group="easymock.org" name="easymock" version="2.2"/>
       <artifact group="junit.org" name="junit" version="4.4"/>
-    </artifactGroup>
+    </artifact-group>
   </dependencies>
 </project>
