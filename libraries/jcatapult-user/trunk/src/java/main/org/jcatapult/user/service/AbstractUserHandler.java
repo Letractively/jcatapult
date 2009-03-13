@@ -15,20 +15,21 @@
  */
 package org.jcatapult.user.service;
 
-import java.util.Map;
+import java.util.ArrayList;
+import static java.util.Arrays.*;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ArrayList;
-import static java.util.Arrays.asList;
+import java.util.Map;
+import java.util.Set;
 
+import org.jcatapult.config.Configuration;
+import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.user.domain.Role;
 import org.jcatapult.user.domain.User;
-import org.jcatapult.persistence.service.PersistenceService;
 
-import net.java.error.ErrorList;
 import com.google.inject.Inject;
+import net.java.error.ErrorList;
 
 /**
  * <p>
@@ -40,10 +41,12 @@ import com.google.inject.Inject;
  */
 public abstract class AbstractUserHandler<T extends User<U>, U extends Role> implements UserHandler<T, U> {
     protected final PersistenceService persistenceService;
+    protected String defaultRoleName;
 
     @Inject
-    public AbstractUserHandler(PersistenceService persistenceService) {
+    public AbstractUserHandler(PersistenceService persistenceService, Configuration configuration) {
         this.persistenceService = persistenceService;
+        this.defaultRoleName = configuration.getString("jcatapult.user.default-role", "user");
     }
 
     /**
@@ -54,11 +57,17 @@ public abstract class AbstractUserHandler<T extends User<U>, U extends Role> imp
     }
 
     /**
-     * @return  This returns a Set of roles that contains a single role whose ID is 1.
+     * @return  This returns a Set of roles that contains a single role name is equal to the value
+     *          from the Configuration under the key <strong>jcatapult.user.default-role</strong>.
      */
     public Set<U> getDefaultRoles() {
-        U userRole = persistenceService.findById(getRoleType(), 1);
-        return new HashSet<U>(asList(userRole));
+        U role = persistenceService.queryFirst(getRoleType(),
+            "select r from " + getRoleType().getSimpleName() + " r where r.name = ?1", "user");
+        if (role == null) {
+            return new HashSet<U>();
+        }
+
+        return new HashSet<U>(asList(role));
     }
 
     /**
