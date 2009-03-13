@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.cms.content;
+package org.jcatapult.module.cms.action.admin.cms.content;
 
 import java.util.Locale;
 
@@ -23,6 +23,7 @@ import org.jcatapult.module.cms.domain.ContentNode;
 import org.jcatapult.module.cms.domain.ContentType;
 import org.jcatapult.module.cms.service.ContentService;
 import org.jcatapult.module.cms.service.CreateResult;
+import org.jcatapult.module.cms.action.admin.cms.content.Store;
 import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.module.user.service.UserService;
 import org.jcatapult.test.JCatapultBaseTest;

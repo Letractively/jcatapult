@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.cms.content;
+package org.jcatapult.module.cms.action.admin.cms.content;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -40,7 +40,7 @@ public class StoreIntegrationTest extends BaseIntegrationTest {
         EnhancedSecurityContext.login(publisher);
 
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("/cms/content/store").
+        runner.test("/admin/cms/content/store").
             withParameter("dynamic", "false").
             withParameter("global", "false").
             withParameter("uri", "/integration-page").
@@ -62,7 +62,7 @@ public class StoreIntegrationTest extends BaseIntegrationTest {
         EnhancedSecurityContext.login(publisher);
 
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("/cms/content/store").
+        runner.test("/admin/cms/content/store").
             withParameter("dynamic", "false").
             withParameter("global", "false").
             withParameter("uri", "/integration-page").

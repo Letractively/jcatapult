@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.cms.content;
+package org.jcatapult.module.cms.action.admin.cms.content;
 
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;

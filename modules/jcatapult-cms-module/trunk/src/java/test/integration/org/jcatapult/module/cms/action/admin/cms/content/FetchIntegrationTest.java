@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.cms.content;
+package org.jcatapult.module.cms.action.admin.cms.content;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -43,7 +43,7 @@ public class FetchIntegrationTest extends BaseIntegrationTest {
         contentService.storeContent("localhost", "/page", "callout", Locale.US, "Some content", ContentType.HTML, false, publisher);
 
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("/cms/content/fetch").
+        runner.test("/admin/cms/content/fetch").
             withParameter("queries[0].global", "false").
             withParameter("queries[0].uri", "/page").
             withParameter("queries[0].name", "callout").

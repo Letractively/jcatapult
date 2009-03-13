@@ -14,27 +14,17 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.cms;
-
-import org.jcatapult.module.cms.domain.CMSMode;
-import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.action.result.annotation.Redirect;
-import org.jcatapult.mvc.scope.annotation.Session;
+package org.jcatapult.module.cms.action.admin.cms.content;
 
 /**
  * <p>
- * This class puts the CMS into display mode.
+ * This class stores node information used when queriying.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@Action
-@Redirect(uri = "/")
-public class Exit {
-    @Session public CMSMode cmsMode;
-
-    public String get() {
-        cmsMode = CMSMode.DISPLAY;
-        return "success";
-    }
+public class NodeQuery {
+    public String name;
+    public String uri;
+    public boolean global;
 }

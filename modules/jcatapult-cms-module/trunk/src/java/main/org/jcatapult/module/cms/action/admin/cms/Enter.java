@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.cms;
+package org.jcatapult.module.cms.action.admin.cms;
 
 import org.jcatapult.config.Configuration;
 import org.jcatapult.module.cms.domain.CMSMode;
