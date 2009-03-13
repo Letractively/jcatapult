@@ -52,6 +52,7 @@ import net.java.util.Pair;
  *
  * @author  Brian Pontarelli
  */
+@SuppressWarnings("unchecked")
 public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
     public static final String[] DEFAULT_TYPES = {"text/plain", "text/xml", "text/rtf", "text/richtext", "text/html", "text/css",
         "image/jpeg", "image/gif", "image/png", "image/pjpeg", "image/tiff",
@@ -86,7 +87,6 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
      *
      * @param   chain The workflow chain.
      */
-    @SuppressWarnings("unchecked")
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         Map<String, List<FileInfo>> files = null;
         if (ServletFileUpload.isMultipartContent(request)) {
@@ -219,6 +219,23 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
             }
         } catch (Exception e) {
             throw new IllegalStateException("Unable to handle file uploads", e);
+        }
+
+        // We can now safely get the parameters from the request (on the URI)
+        Map<String, String[]> requestParameters = request.getParameterMap();
+        for (String name : requestParameters.keySet()) {
+            String[] paramsList = requestParameters.get(name);
+            if (paramsList != null) {
+                for (String param : paramsList) {
+                    List<String> list = params.get(name);
+                    if (list == null) {
+                        list = new ArrayList<String>();
+                        params.put(name, list);
+                    }
+
+                    list.add(param);
+                }
+            }
         }
 
         Map<String, String[]> finalParams = new HashMap<String, String[]>();
