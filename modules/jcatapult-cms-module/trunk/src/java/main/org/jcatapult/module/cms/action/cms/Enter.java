@@ -33,11 +33,17 @@ import com.google.inject.Inject;
 @Action
 public class Enter {
     @Session public CMSMode cmsMode;
+
     public String startURI;
+
+    public String richTextEditor;
+    public String richTextEditorURL;
 
     @Inject
     public Enter(Configuration configuration) {
-        this.startURI = configuration.getString("inversoft.modules.cms.start-uri", "/");
+        this.startURI = configuration.getString("jcatapult.modules.cms.start-uri", "/");
+        this.richTextEditor = configuration.getString("jcatapult.modules.cms.rich-text-editor.name", "nic");
+        this.richTextEditorURL = configuration.getString("jcatapult.modules.cms.rich-text-editor.url", "http://js.nicedit.com/nicEdit-latest.js");
     }
 
     public String get() {

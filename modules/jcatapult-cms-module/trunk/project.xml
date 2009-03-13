@@ -12,12 +12,12 @@
   <plugin group="plugins.savant.inversoft.org" name="tomcat" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
   <plugin group="plugins.savant.jcatapult.org" name="module" version="1.0"/>
-  <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0"/>
+  <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0.2"/>
   <plugin group="plugins.savant.jcatapult.org" name="security" version="1.0"/>
  
   <!-- Compile properties -->
   <property name="jdk.version" value="1.6"/>
-  <property name="version.jcatapult" value="1.0-RC10"/>
+  <property name="version.jcatapult" value="1.0-RC12-{integration}"/>
 
   <!-- Database properties -->
   <property name="project.requires.database" value="true"/>
@@ -31,7 +31,7 @@
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
       <artifact group="hibernate.org" name="hibernate-annotations" version="3.3.1"/>
 
-      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.2"/>
 
       <!-- User module -->
       <artifact group="modules.jcatapult.org" name="jcatapult-user-module" version="1.0-RC10"/>
@@ -46,17 +46,17 @@
     </artifactGroup>
     <artifactGroup type="run">
       <artifact group="hibernate.org" name="hibernate-entitymanager" version="3.3.2"/>
-      <artifact group="taglibs.jakarta.apache.org" name="standard" version="1.1.2"/>
+      <artifact group="libraries.jcatapult.org" name="jcatapult-filemgr" version="${version.jcatapult}"/>
+      <artifact group="modules.fckeditor.net" name="fckeditor" version="2.6.4"/>
       <artifact group="opensymphony.com" name="sitemesh" version="2.3"/>
-      <artifact group="servlet.javax" name="jstl" version="1.1"/>
     </artifactGroup>
     <artifactGroup type="test-run"/>
     <artifactGroup type="test-compile">
       <!-- jcat unit testing deps -->
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
-      <artifact group="libraries.jcatapult.org" name="jcatapult-email" version="${version.jcatapult}"/>
       <artifact group="jcatapult.org" project="jcatapult-mvc" name="jcatapult-mvc-test" version="${version.jcatapult}"/>
       <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence-test" version="${version.jcatapult}"/>
+      <artifact group="libraries.jcatapult.org" name="jcatapult-email" version="${version.jcatapult}"/>
 
       <artifact group="easymock.org" name="easymock" version="2.2"/>
       <artifact group="junit.org" name="junit" version="4.4"/>
