@@ -850,7 +850,7 @@
     <converter id="SelenaRunConfToDiana" />
   </component>
   <component name="ProjectKey">
-    <option name="state" value="project:///Users/bpontarelli/dev/os/jcatapult/modules/jcatapult-simple-user-module/jcatapult-simple-user-module.ipr" />
+    <option name="state" value="https://jcatapult.googlecode.com/svn/modules/jcatapult-simple-user-module/trunk/jcatapult-simple-user-module.ipr" />
   </component>
   <component name="ProjectModuleManager">
     <modules>
@@ -904,7 +904,7 @@
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="" />
+    <mapping directory="" vcs="svn" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <component name="com.intellij.jsf.UserDefinedFacesConfigs">
