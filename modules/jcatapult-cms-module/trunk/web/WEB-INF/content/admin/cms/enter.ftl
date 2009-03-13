@@ -17,14 +17,14 @@
   <div id="cms-promo">
     The JCatapult CMS
   </div>
-  <a id="cms-publish" href="/cms/content/publish" onclick="CMS.publish(); return false;">Publish</a>
-  <a id="cms-revert" href="/cms/content/revert" onclick="CMS.revert(); return false;">Revert</a>
-  <a id="cms-meta" href="/cms/content/meta" onclick="CMS.edit_meta_nodes(); return false;">Edit page details</a>
-  <a id="cms-exit" href="/cms/exit">Exit</a>
+  <a id="cms-publish" href="/admin/cms/content/publish" onclick="CMS.publish(); return false;">Publish</a>
+  <a id="cms-revert" href="/admin/cms/content/revert" onclick="CMS.revert(); return false;">Revert</a>
+  <a id="cms-meta" href="/admin/cms/content/meta" onclick="CMS.edit_meta_nodes(); return false;">Edit page details</a>
+  <a id="cms-exit" href="/admin/cms/exit">Exit</a>
 </div>
 <div id="cms-content-editor-container">
   <div id="cms-content-editor" class="flora">
-    [@jc.form action="/cms/content/store" method="POST"]
+    [@jc.form action="/admin/cms/content/store" method="POST"]
       [@jc.textarea id="cms-content-editor-textarea" name="content" cols="70" rows="10"/]
       [@jc.submit name="preview" onclick="CMS.preview_content_node(); return false;"/]
       [@jc.submit name="cancel" onclick="CMS.cancel_edit_content_node(); return false;"/]

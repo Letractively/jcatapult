@@ -27,8 +27,9 @@
  * @param   content_type The content type.
  * @param   description The description of the node.
  * @param   label The label used when editing the node.
+ * @param   meta This is a boolean that flags this node as a meta node.
  */
-function Node(span_id, name, uri, global, content, content_type, description, label) {
+function Node(span_id, name, uri, global, content, content_type, description, label, meta) {
   this.span_id = span_id;
   this.name = name;
   this.uri= uri;
@@ -38,6 +39,7 @@ function Node(span_id, name, uri, global, content, content_type, description, la
   this.content_type = content_type;
   this.description = description;
   this.label = label;
+  this.meta = meta;
 }
 
 function CMS_class() {
@@ -73,7 +75,7 @@ function CMS_class() {
    */
   this.register_content_node = function(div_id, name, global, default_content) {
     var uri = frames["cms-view"].location.pathname;
-    edited_nodes[name] = new Node(div_id, name, uri, global, default_content, "HTML", "Content node", "Content");
+    edited_nodes[name] = new Node(div_id, name, uri, global, default_content, "HTML", "Content node", "Content", false);
   };
 
   /**
@@ -84,7 +86,7 @@ function CMS_class() {
    */
   this.register_meta_node = function(name, default_content, description, label) {
     var uri = frames["cms-view"].location.pathname;
-    edited_nodes[name] = new Node("", name, uri, false, default_content, "META", description, label);
+    edited_nodes[name] = new Node("", name, uri, false, default_content, "META", description, label, true);
 
     // Build the form by hand
     var html = "<div class='input'><label for='" + edited_nodes[name].name + "'>" + edited_nodes[name].label + "</label><br/>" +
@@ -141,8 +143,7 @@ function CMS_class() {
   this.preview_content_node = function() {
     CMS.invoke(options, "preview_content_node_pre");
 
-    CMS.close_rich_text_editor();
-    current_node.edited_content = $("#cms-content-editor-textarea").val();
+    current_node.edited_content = CMS.close_rich_text_editor();
     $("#cms-view").contents().find("#" + current_node.span_id).html(current_node.edited_content);
     $("#cms-publish").show();
     $("#cms-revert").show();
@@ -178,12 +179,14 @@ function CMS_class() {
     CMS.invoke(options, "revert_pre");
 
     $.each(edited_nodes, function() {
-      var span_id = this.span_id;
-      var original_content = this.original_content;
-      $("#cms-view").contents().find("#" + span_id).html(original_content);
-    });
+      this.edited_content = this.original_content;
+      $("#cms-view").contents().find("#" + this.span_id).html(this.original_content);
 
-    edited_nodes = {};
+      // Reset the form if this is a meta tag
+      if (this.meta) {
+        $(":input[name='" + this.name + "']").val(this.original_content);
+      }
+    });
 
     $("#cms-publish").hide();
     $("#cms-revert").hide();
@@ -218,7 +221,7 @@ function CMS_class() {
           CMS.invoke(options, "publish_post", data);
         },
         type: "POST",
-        url: "/cms/content/store.ajaxjson"
+        url: "/admin/cms/content/store.ajaxjson"
       });
     }
 
@@ -236,7 +239,7 @@ function CMS_class() {
     CMS.invoke(options, "open_content_editor_pre");
 
     $("#cms-content-editor-textarea").val(content);
-    $("#cms-content-editor").dialog({height: 400, modal: true, overlay: {opacity: 0.5, background: "black"}, width: 600});
+    $("#cms-content-editor").dialog({height: 600, modal: true, overlay: {opacity: 0.5, background: "black"}, width: 800});
     current_editor = CMS.create_rich_text_editor();
 
     CMS.invoke(options, "open_content_editor_post");
@@ -286,10 +289,12 @@ function CMS_class() {
   this.close_rich_text_editor = function() {
     if (options['rich_text_editor'] == 'nic') {
       current_editor.removeInstance("cms-content-editor-textarea");
+      return $("#cms-content-editor-textarea").val();
     } else if (options['rich_text_editor'] == 'fck') {
-      current_editor.UpdateLinkedField();
+      FCKeditorAPI.GetInstance('cms-content-editor-textarea').UpdateLinkedField();
+      return $("#cms-content-editor-textarea").val();
     } else {
-      return undefined; // Just use text areas
+      return $("#cms-content-editor-textarea").val();
     }
   };
 

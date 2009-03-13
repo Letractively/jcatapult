@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="results" type="java.util.List<org.jcatapult.module.cms.action.cms.content.NodeResult>" -->
+<#-- @ftlvariable name="results" type="java.util.List<org.jcatapult.module.cms.action.admin.cms.content.NodeResult>" -->
 ({
 <#list results as result>
   <#if result.node??>

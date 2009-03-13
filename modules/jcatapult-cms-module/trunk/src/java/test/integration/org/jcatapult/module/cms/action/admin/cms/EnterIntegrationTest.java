@@ -14,32 +14,36 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.cms;
+package org.jcatapult.module.cms.action.admin.cms;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
 
+import org.jcatapult.email.EmailTestHelper;
+import org.jcatapult.email.service.EmailTransportService;
+import org.jcatapult.module.cms.BaseIntegrationTest;
 import org.jcatapult.module.cms.domain.CMSMode;
 import org.jcatapult.mvc.test.WebappTestRunner;
-import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
  * <p>
- * This class performs the integration test for the Exit action.
+ * This class performs the integration test for the Enter action.
  * </p>
  *
  * @author  Scaffolder
  */
-public class ExitIntegrationTest extends JCatapultBaseTest {
+public class EnterIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testStoreStaticPageScoped() throws IOException, ServletException {
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("/cms/exit").get();
+        runner.test("/cms/enter").
+            withMock(EmailTransportService.class, EmailTestHelper.getService()).
+            get();
 
-        String result = runner.response.getRedirect();
-        assertEquals("/", result);
-        assertSame(CMSMode.DISPLAY, runner.session.getAttribute("cmsMode"));
+        String result = runner.response.getStream().toString();
+        assertTrue(result.contains("<iframe"));
+        assertSame(CMSMode.EDIT, runner.session.getAttribute("cmsMode"));
     }
 }

@@ -14,36 +14,27 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.cms.content;
+package org.jcatapult.module.cms.action.admin.cms;
 
-import org.jcatapult.module.cms.domain.Content;
-import org.jcatapult.module.cms.domain.ContentNode;
+import org.jcatapult.module.cms.domain.CMSMode;
+import org.jcatapult.mvc.action.annotation.Action;
+import org.jcatapult.mvc.action.result.annotation.Redirect;
+import org.jcatapult.mvc.scope.annotation.Session;
 
 /**
  * <p>
- * This class stores node results from queriying.
+ * This class puts the CMS into display mode.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class NodeResult {
-    public ContentNode node;
-    public Content content;
+@Action
+@Redirect(uri = "/")
+public class Exit {
+    @Session public CMSMode cmsMode;
 
-    // These are needed for FreeMarker to work.
-    public ContentNode getNode() {
-        return node;
-    }
-
-    public void setNode(ContentNode node) {
-        this.node = node;
-    }
-
-    public Content getContent() {
-        return content;
-    }
-
-    public void setContent(Content content) {
-        this.content = content;
+    public String get() {
+        cmsMode = CMSMode.DISPLAY;
+        return "success";
     }
 }

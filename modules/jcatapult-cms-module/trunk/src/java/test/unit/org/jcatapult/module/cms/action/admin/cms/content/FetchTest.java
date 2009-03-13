@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.cms.content;
+package org.jcatapult.module.cms.action.admin.cms.content;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -22,6 +22,8 @@ import java.util.Locale;
 import org.easymock.EasyMock;
 import org.jcatapult.module.cms.domain.ContentNode;
 import org.jcatapult.module.cms.service.ContentService;
+import org.jcatapult.module.cms.action.admin.cms.content.Fetch;
+import org.jcatapult.module.cms.action.admin.cms.content.NodeQuery;
 import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;

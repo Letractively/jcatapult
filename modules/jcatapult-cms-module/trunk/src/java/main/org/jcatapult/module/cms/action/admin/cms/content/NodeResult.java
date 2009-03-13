@@ -14,17 +14,36 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.cms.content;
+package org.jcatapult.module.cms.action.admin.cms.content;
+
+import org.jcatapult.module.cms.domain.Content;
+import org.jcatapult.module.cms.domain.ContentNode;
 
 /**
  * <p>
- * This class stores node information used when queriying.
+ * This class stores node results from queriying.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class NodeQuery {
-    public String name;
-    public String uri;
-    public boolean global;
+public class NodeResult {
+    public ContentNode node;
+    public Content content;
+
+    // These are needed for FreeMarker to work.
+    public ContentNode getNode() {
+        return node;
+    }
+
+    public void setNode(ContentNode node) {
+        this.node = node;
+    }
+
+    public Content getContent() {
+        return content;
+    }
+
+    public void setContent(Content content) {
+        this.content = content;
+    }
 }
