@@ -53,7 +53,8 @@ public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl imp
     @Column(nullable = false, unique = true)
     private String login;
 
-    @Required
+    // Not required because there will be a confirm and encryption handling that need to occur
+    // before the password is set onto the entity for persistence
     @Column(nullable = false)
     private String password;
 
