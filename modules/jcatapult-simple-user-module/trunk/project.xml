@@ -11,7 +11,7 @@
   <plugin group="plugins.savant.inversoft.org" name="jee-web" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="tomcat" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
-  <plugin group="plugins.savant.jcatapult.org" name="module" version="1.0"/>
+  <plugin group="plugins.savant.jcatapult.org" name="module" version="1.0.2"/>
   <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0.2"/>
   <plugin group="plugins.savant.jcatapult.org" name="security" version="1.0"/>
 
