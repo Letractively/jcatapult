@@ -83,7 +83,7 @@ public class Add extends Prepare {
      */
     public String post() {
         if (!userService.persist(user, associations, password)) {
-            messageStore.addActionError(MessageScope.REQUEST, "unique");
+            messageStore.addFieldError(MessageScope.REQUEST, "user.login", "user.login.exists");
             return "input";
         }
 

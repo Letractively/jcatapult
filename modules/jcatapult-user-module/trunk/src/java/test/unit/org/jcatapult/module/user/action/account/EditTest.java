@@ -94,9 +94,6 @@ public class EditTest extends BaseTest {
 
     @Test
     public void testError() {
-        DefaultUser user = new DefaultUser();
-        user.setLogin("test");
-
         UserService userService = EasyMock.createStrictMock(UserService.class);
         EasyMock.expect(userService.findByLogin("test")).andReturn(user);
         EasyMock.expect(userService.update(user, "p")).andReturn(UpdateResult.ERROR);
@@ -114,5 +111,35 @@ public class EditTest extends BaseTest {
         assertEquals("error", edit.post());
         assertSame(user, edit.user);
         EasyMock.verify(userService, ms);
+    }
+
+    @Test
+    public void testLoginUpdate() {
+        // The security context is setup, so create a new user to simulate multiple requests
+        user = new DefaultUser();
+        user.setId(1);
+        user.setLogin("changed");
+        user.setPassword("password");
+        
+        UserService userService = EasyMock.createStrictMock(UserService.class);
+        EasyMock.expect(userService.findByLogin("test")).andReturn(user);
+        EasyMock.expect(userService.update(user, "p")).andReturn(UpdateResult.SUCCESS);
+        EasyMock.replay(userService);
+
+        MessageStore ms = EasyMock.createStrictMock(MessageStore.class);
+        EasyMock.replay(ms);
+
+        assertNotSame(user, EnhancedSecurityContext.getCurrentUser());
+
+        Edit edit = new Edit();
+        edit.setServices(ms, null, userService);
+        edit.password = "p";
+        edit.passwordConfirm = "pc";
+        edit.prepare();
+        assertEquals("success", edit.post());
+        assertSame(user, edit.user);
+        EasyMock.verify(userService, ms);
+
+        assertSame(user, EnhancedSecurityContext.getCurrentUser());
     }
 }

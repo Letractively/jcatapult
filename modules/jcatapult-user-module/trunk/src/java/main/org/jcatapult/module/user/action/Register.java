@@ -126,7 +126,7 @@ public class Register extends BaseUserFormAction {
 
         RegisterResult result = userService.register(user, password);
         if (result == RegisterResult.EXISTS) {
-            messageStore.addFieldError(MessageScope.REQUEST, "user.login", "exists");
+            messageStore.addFieldError(MessageScope.REQUEST, "user.login", "user.login.exists");
             return "input";
         } else if (result == RegisterResult.ERROR) {
             messageStore.addActionError(MessageScope.REQUEST, "error");
