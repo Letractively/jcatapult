@@ -25,7 +25,7 @@ import org.jcatapult.config.Configuration;
 import org.jcatapult.filemgr.BaseTest;
 import org.jcatapult.filemgr.action.jcatapult.FileManagerCommand;
 import org.jcatapult.filemgr.service.DefaultFileConfiguration;
-import org.jcatapult.filemgr.service.DefaultFileManagerService;
+import org.jcatapult.filemgr.service.DefaultFckFileManagerService;
 import org.jcatapult.mvc.parameter.fileupload.FileInfo;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -40,26 +40,6 @@ import net.java.io.FileTools;
  * @author  Brian Pontarelli
  */
 public class FckFileManagerTest extends BaseTest {
-    // removed content type configuration but didn't want to delete test case
-    // in the event that we add content type configuration back in
-    public void testContentTypeFail() {
-        Configuration configuration = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.replay(configuration);
-
-        ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.replay(servletContext);
-
-        FckFileManager fm = new FckFileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
-            servletContext, request));
-        fm.Command = FileManagerCommand.FileUpload;
-        fm.NewFile = new FileInfo(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), "test-file", "application/active-x");
-        String result = fm.execute();
-        assertEquals("upload", result);
-        assertEquals(1, fm.connector.getError().getNumber());
-
-        EasyMock.verify(servletContext, configuration);
-    }
-
     @Test
     public void testRelativeSuccess() throws IOException {
         FileTools.prune(testDir);
@@ -69,14 +49,14 @@ public class FckFileManagerTest extends BaseTest {
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.expect(servletContext.getRealPath("some-dir")).andReturn(testDir + "/some-dir");
+        EasyMock.expect(servletContext.getRealPath("some-dir/File")).andReturn(testDir + "/some-dir/File");
         EasyMock.replay(servletContext);
 
         HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(httpRequest.getContextPath()).andReturn("/foo");
         EasyMock.replay(httpRequest);
 
-        FckFileManager fm = new FckFileManager(new DefaultFileManagerService(new DefaultFileConfiguration(configuration),
+        FckFileManager fm = new FckFileManager(new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
             servletContext, httpRequest));
         fm.Command = FileManagerCommand.FileUpload;
 
@@ -84,6 +64,8 @@ public class FckFileManagerTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
         fm.NewFile = new FileInfo(temp, "foo-bar.xml", "image/gif");
+        fm.Type = "File";
+        fm.CurrentFolder = "/";
 
         String result = fm.execute();
         assertEquals("upload", result);
@@ -91,9 +73,9 @@ public class FckFileManagerTest extends BaseTest {
         System.out.println("" + fm.connector.getError());
         assertNull(fm.connector.getError());
         assertEquals(0, fm.connector.getUploadResult().getResultCode());
-        assertEquals("/foo/some-dir/foo-bar.xml", fm.connector.getUploadResult().getFileURL());
+        assertEquals("/foo/some-dir/File/foo-bar.xml", fm.connector.getUploadResult().getFileURL());
 
-        File check = new File(testDir + "/some-dir", "foo-bar.xml");
+        File check = new File(testDir + "/some-dir/File", "foo-bar.xml");
         assertTrue(check.exists());
         assertTrue(check.isFile());
         String contents = FileTools.read(check).toString();

@@ -39,14 +39,14 @@ import net.java.lang.StringTools;
  *
  * @author Brian Pontarelli
  */
-public class DefaultFileManagerService implements FileManagerService {
-    private static final Logger logger = Logger.getLogger(DefaultFileManagerService.class.getName());
+public class DefaultFckFileManagerService implements FckFileManagerService {
+    private static final Logger logger = Logger.getLogger(DefaultFckFileManagerService.class.getName());
     private final FileConfiguration configuration;
     private final ServletContext servletContext;
     private final HttpServletRequest request;
 
     @Inject
-    public DefaultFileManagerService(FileConfiguration configuration, ServletContext servletContext, HttpServletRequest request) {
+    public DefaultFckFileManagerService(FileConfiguration configuration, ServletContext servletContext, HttpServletRequest request) {
         this.configuration = configuration;
         this.servletContext = servletContext;
         this.request = request;
@@ -55,8 +55,8 @@ public class DefaultFileManagerService implements FileManagerService {
     /**
      * {@inheritDoc}
      */
-    public StoreResult store(File file, String fileName, String contentType, String directory) {
-        directory = stripSlashes(directory);
+    public StoreResult store(File file, String fileName, String contentType, String type, String directory) {
+        directory = stripSlashes(stripSlashes(type) + "/" + stripSlashes(directory));
         
         StoreResult result = new StoreResult();
         if (!file.exists() || file.isDirectory()) {
@@ -124,14 +124,14 @@ public class DefaultFileManagerService implements FileManagerService {
     /**
      * {@inheritDoc}
      */
-    public CreateDirectoryResult createDirectory(String name, String directory) {
+    public CreateDirectoryResult createDirectory(String name, String type, String directory) {
         // Normalize everything
+        String path = stripSlashes(type) + "/" + stripSlashes(directory);
         name = stripSlashes(name);
-        directory = stripSlashes(directory);
 
         CreateDirectoryResult result = new CreateDirectoryResult();
         result.setPath(wrapWithSlashes(directory));
-        result.setURI(wrapWithSlashes(determineURI(directory)));
+        result.setURI(wrapWithSlashes(determineURI(path)));
 
         if (!configuration.isCreateFolderAllowed()) {
             result.setError(1); // Can't create directories
@@ -140,7 +140,7 @@ public class DefaultFileManagerService implements FileManagerService {
 
         // Try to create the directory
         try {
-            File dir = determineStoreDirectory(directory, name);
+            File dir = determineStoreDirectory(path, name);
             if (!dir.exists()) {
                 if (!dir.mkdirs()) {
                     result.setError(2); // Directory create failed
@@ -157,17 +157,15 @@ public class DefaultFileManagerService implements FileManagerService {
     /**
      * {@inheritDoc}
      */
-    public Listing getFoldersAndFiles(String directory) {
-        directory = stripSlashes(directory);
-        return getListing(directory, true);
+    public Listing getFoldersAndFiles(String type, String directory) {
+        return getListing(type, directory, true);
     }
 
     /**
      * {@inheritDoc}
      */
-    public Listing getFolders(String directory) {
-        directory = stripSlashes(directory);
-        return getListing(directory, false);
+    public Listing getFolders(String type, String directory) {
+        return getListing(type, directory, false);
     }
 
     /**
@@ -256,17 +254,20 @@ public class DefaultFileManagerService implements FileManagerService {
     /**
      * Gets the listings for a specific directory.
      *
+     * @param   type The type from the FCK file manager.
      * @param   directory The directory to get the listing for.
      * @param   includeFiles Whether or not the listing should include plain files or just directories.
      * @return  The listing.
      */
-    private Listing getListing(String directory, boolean includeFiles) {
+    private Listing getListing(String type, String directory, boolean includeFiles) {
+        String path = stripSlashes(stripSlashes(type) + "/" + stripSlashes(directory));
+        
         Listing listing = new Listing();
         listing.setPath(wrapWithSlashes(directory));
-        listing.setURI(wrapWithSlashes(determineURI(directory)));
+        listing.setURI(wrapWithSlashes(determineURI(path)));
 
         // Try to locate the directory and get the listing
-        File dir = determineStoreDirectory(directory);
+        File dir = determineStoreDirectory(path);
         if (dir == null) {
             return listing;
         }
