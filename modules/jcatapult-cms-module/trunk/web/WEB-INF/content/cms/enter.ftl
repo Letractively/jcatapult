@@ -4,8 +4,13 @@
   <title>Site editor</title>
   <link rel="stylesheet" href="http://dev.jquery.com/view/tags/ui/latest/themes/flora/flora.all.css"/>
   <script type="text/javascript" src="/js/jquery-ui-personalized-1.6b.min.js"></script>
-  <script type="text/javascript" src="/module/cms/cms-1.0.js"></script>
-  <script type="text/javascript" src="http://js.nicedit.com/nicEdit-latest.js"></script>
+  <script type="text/javascript" src="/module/jcatapult-cms-module/cms-1.0.js"></script>
+  <script type="text/javascript" src="${richTextEditorURL}"></script>
+  <script type="text/javascript">
+    CMS.set_options({
+      rich_text_editor: "${richTextEditor}"
+    });
+  </script>
 </head>
 <body id="cms-body">
 <div id="cms-toolbar">

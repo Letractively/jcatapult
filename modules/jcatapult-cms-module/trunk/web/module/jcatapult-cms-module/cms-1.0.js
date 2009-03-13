@@ -57,10 +57,10 @@ function CMS_class() {
    *  2 - The hash of edited nodes
    *  3 - Any result from an AJAX call (post methods only)
    *
-   * @param   options The options.
+   * @param   opts The options.
    */
-  this.set_options = function(options) {
-    this.options = options;
+  this.set_options = function(opts) {
+    options = opts;
   };
 
   /**
@@ -103,7 +103,7 @@ function CMS_class() {
       current_node = edited_nodes[name];
       CMS.open_content_editor(current_node.edited_content);
     } else {
-      alert("The Inversoft CMS is experiencing issues. Please contact Inversoft support with the error code 1.");
+      alert("The JCatapult CMS is experiencing issues. Please contact the JCatapult team with the error code 1.");
     }
     CMS.invoke(options, "edit_content_node_post");
   };
@@ -141,7 +141,7 @@ function CMS_class() {
   this.preview_content_node = function() {
     CMS.invoke(options, "preview_content_node_pre");
 
-    current_editor.removeInstance("cms-content-editor-textarea");
+    CMS.close_rich_text_editor();
     current_node.edited_content = $("#cms-content-editor-textarea").val();
     $("#cms-view").contents().find("#" + current_node.span_id).html(current_node.edited_content);
     $("#cms-publish").show();
@@ -237,7 +237,7 @@ function CMS_class() {
 
     $("#cms-content-editor-textarea").val(content);
     $("#cms-content-editor").dialog({height: 400, modal: true, overlay: {opacity: 0.5, background: "black"}, width: 600});
-    current_editor = new nicEditor({fullPanel : true}).panelInstance('cms-content-editor-textarea');
+    current_editor = CMS.create_rich_text_editor();
 
     CMS.invoke(options, "open_content_editor_post");
   };
@@ -267,6 +267,30 @@ function CMS_class() {
     CMS.invoke(options, "close_meta_editor_pre");
     $("#cms-meta-editor").dialog("close");
     CMS.invoke(options, "close_meta_editor_post");
+  };
+
+  this.create_rich_text_editor = function() {
+    if (options['rich_text_editor'] == 'nic') {
+      return new nicEditor({fullPanel: true}).panelInstance('cms-content-editor-textarea');
+    } else if (options['rich_text_editor'] == 'fck') {
+      var editor = new FCKeditor('cms-content-editor-textarea');
+      editor.BasePath = "/module/fckeditor/2.6.4/";
+      editor.Config["CustomConfigurationsPath"] = "/module/jcatapult-cms-module/fckeditor-config-1.0.js";
+      editor.ReplaceTextarea();
+      return editor;
+    } else {
+      return undefined; // Just use text areas
+    }
+  };
+
+  this.close_rich_text_editor = function() {
+    if (options['rich_text_editor'] == 'nic') {
+      current_editor.removeInstance("cms-content-editor-textarea");
+    } else if (options['rich_text_editor'] == 'fck') {
+      current_editor.UpdateLinkedField();
+    } else {
+      return undefined; // Just use text areas
+    }
   };
 
   /**
