@@ -22,6 +22,7 @@ import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.user.domain.User;
 import org.jcatapult.user.service.UpdateResult;
 
@@ -98,6 +99,11 @@ public class Edit extends BaseUserFormAction {
             return "error";
         }
 
+        String oldUsername = SecurityContext.getCurrentUsername();
+        if (!user.getLogin().equals(oldUsername)) {
+            EnhancedSecurityContext.update(user);
+        }
+        
         return "success";
     }
 }

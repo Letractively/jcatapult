@@ -56,7 +56,11 @@ public class Edit extends Prepare {
     }
 
     public String post() {
-        userService.persist(user, associations, password);
+        if (!userService.persist(user, associations, password)) {
+            messageStore.addFieldError(MessageScope.REQUEST, "user.login", "user.login.exists");
+            return "input";
+        }
+
         return "success";
     }
 }
