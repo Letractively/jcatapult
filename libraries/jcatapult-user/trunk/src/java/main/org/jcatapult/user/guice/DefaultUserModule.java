@@ -16,11 +16,10 @@
 package org.jcatapult.user.guice;
 
 import org.jcatapult.security.UserAdapter;
+import org.jcatapult.security.guice.SecurityModule;
 import org.jcatapult.security.login.AuthenticationService;
 import org.jcatapult.user.security.DefaultAuthenticationService;
 import org.jcatapult.user.security.DefaultUserAdapter;
-
-import com.google.inject.AbstractModule;
 
 /**
  * <p>
@@ -31,9 +30,12 @@ import com.google.inject.AbstractModule;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultUserModule extends AbstractModule {
-    protected void configure() {
-        bind(AuthenticationService.class).to(DefaultAuthenticationService.class);
-        bind(UserAdapter.class).to(DefaultUserAdapter.class);
+public class DefaultUserModule extends SecurityModule {
+    protected Class<? extends AuthenticationService> getAuthenticationService() {
+        return DefaultAuthenticationService.class;
+    }
+
+    protected Class<? extends UserAdapter> getUserAdapter() {
+        return DefaultUserAdapter.class;
     }
 }
