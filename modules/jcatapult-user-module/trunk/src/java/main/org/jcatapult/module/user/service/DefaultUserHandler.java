@@ -17,23 +17,20 @@
 package org.jcatapult.module.user.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import static java.util.Arrays.*;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import org.jcatapult.config.Configuration;
 import org.jcatapult.module.user.domain.Address;
 import org.jcatapult.module.user.domain.AuditableCreditCard;
 import org.jcatapult.module.user.domain.DefaultRole;
 import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.module.user.domain.PhoneNumber;
-import org.jcatapult.module.user.domain.Role;
 import org.jcatapult.module.user.domain.UserProperty;
 import org.jcatapult.persistence.domain.Identifiable;
 import org.jcatapult.persistence.service.PersistenceService;
+import org.jcatapult.user.service.AbstractUserHandler;
 
 import com.google.inject.Inject;
 import net.java.error.ErrorList;
@@ -52,81 +49,48 @@ import net.java.validate.Validator;
  * @author Brian Pontarelli
  */
 @SuppressWarnings("unchecked")
-public class DefaultUserHandler<T extends DefaultUser, U extends DefaultRole> implements UserHandler<T, U> {
-    private final UserConfiguration configuration;
-    private final PersistenceService persistenceService;
+public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, DefaultRole> {
+    private final UserConfiguration userConfiguration;
 
     @Inject
-    public DefaultUserHandler(UserConfiguration configuration, PersistenceService persistenceService) {
-        this.configuration = configuration;
-        this.persistenceService = persistenceService;
+    public DefaultUserHandler(PersistenceService persistenceService, Configuration configuration,
+            UserConfiguration userConfiguration) {
+        super(persistenceService, configuration);
+        this.userConfiguration = userConfiguration;
     }
 
     /**
      * {@inheritDoc}
      */
-    public T createUser() {
-        return (T) new DefaultUser();
+    public DefaultUser createUser() {
+        return new DefaultUser();
     }
 
     /**
      * {@inheritDoc}
      */
-    public Class<T> getUserType() {
-        return (Class<T>) DefaultUser.class;
+    public Class<DefaultUser> getUserType() {
+        return DefaultUser.class;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Class<U> getRoleType() {
-        return (Class<U>) DefaultRole.class;
+    public Class<DefaultRole> getRoleType() {
+        return DefaultRole.class;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Map<String, Integer[]> getDefaultAssociations() {
-        return new HashMap<String, Integer[]>();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Set<Role> getDefaultRoles() {
-        DefaultRole role = persistenceService.queryFirst(getRoleType(),
-            "select r from " + getRoleType().getSimpleName() + " r where r.name = ?1", "user");
-        if (role == null) {
-            return new HashSet<Role>();
-        }
-
-        return new HashSet<Role>(asList(role));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void associate(T user, Map<String, Integer[]> associations) {
-        Integer[] roleIds = associations.get("roles");
-        if (roleIds != null && roleIds.length > 0) {
-            List<U> roles = persistenceService.queryAll(getRoleType(),
-                "select r from " + getRoleType().getSimpleName() + " r where r.id in (?1)",
-                Arrays.asList(roleIds));
-            user.getRoles().addAll(roles);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public ErrorList validate(T user, Map<String, Integer[]> associations, boolean existing, String password, String passwordConfirm) {
-        boolean nameRequired = configuration.getDomainFlags().get(DefaultUserConfiguration.NAME_REQUIRED_FLAG);
-        boolean businessRequired = configuration.getDomainFlags().get(DefaultUserConfiguration.BUSINESS_REQUIRED_FLAG);
-        boolean homeAddressRequired = configuration.getDomainFlags().get(DefaultUserConfiguration.HOME_ADDRESS_REQUIRED_FLAG);
-        boolean workAddressRequired = configuration.getDomainFlags().get(DefaultUserConfiguration.WORK_ADDRESS_REQUIRED_FLAG);
-        boolean homePhoneRequired = configuration.getDomainFlags().get(DefaultUserConfiguration.HOME_PHONE_REQUIRED_FLAG);
-        boolean workPhoneRequired = configuration.getDomainFlags().get(DefaultUserConfiguration.WORK_PHONE_REQUIRED_FLAG);
-        boolean cellPhoneRequired = configuration.getDomainFlags().get(DefaultUserConfiguration.CELL_PHONE_REQUIRED_FLAG);
+    public ErrorList validate(DefaultUser user, Map<String, int[]> associations, boolean existing, String password, String passwordConfirm) {
+        boolean nameRequired = userConfiguration.getDomainFlags().get(DefaultUserConfiguration.NAME_REQUIRED_FLAG);
+        boolean businessRequired = userConfiguration.getDomainFlags().get(DefaultUserConfiguration.BUSINESS_REQUIRED_FLAG);
+        boolean homeAddressRequired = userConfiguration.getDomainFlags().get(DefaultUserConfiguration.HOME_ADDRESS_REQUIRED_FLAG);
+        boolean workAddressRequired = userConfiguration.getDomainFlags().get(DefaultUserConfiguration.WORK_ADDRESS_REQUIRED_FLAG);
+        boolean homePhoneRequired = userConfiguration.getDomainFlags().get(DefaultUserConfiguration.HOME_PHONE_REQUIRED_FLAG);
+        boolean workPhoneRequired = userConfiguration.getDomainFlags().get(DefaultUserConfiguration.WORK_PHONE_REQUIRED_FLAG);
+        boolean cellPhoneRequired = userConfiguration.getDomainFlags().get(DefaultUserConfiguration.CELL_PHONE_REQUIRED_FLAG);
 
         ErrorList errors = new ErrorList();
 
@@ -237,7 +201,7 @@ public class DefaultUserHandler<T extends DefaultUser, U extends DefaultRole> im
     /**
      * {@inheritDoc}
      */
-    public void prepare(T user) {
+    public void prepare(DefaultUser user) {
         // Prepare UserProperty's
         if (user.getProperties() != null) {
             Map<String, UserProperty> props = user.getProperties().getMap();
@@ -269,7 +233,7 @@ public class DefaultUserHandler<T extends DefaultUser, U extends DefaultRole> im
      * @param   user The user to get the roles from.
      * @return  The Map that contains the role association IDs.
      */
-    public Map<String, Integer[]> getAssociationIds(T user) {
+    public Map<String, Integer[]> getAssociationIds(DefaultUser user) {
         Map<String, Integer[]> values = new HashMap<String, Integer[]>();
         List<Integer> rolesIds = new ArrayList<Integer>();
         for (Identifiable ident : user.getRoles()) {

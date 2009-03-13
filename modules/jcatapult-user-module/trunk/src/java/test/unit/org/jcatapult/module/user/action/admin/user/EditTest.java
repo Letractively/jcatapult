@@ -20,15 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.easymock.EasyMock;
+import org.jcatapult.module.user.BaseTest;
+import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.user.service.UserService;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import org.jcatapult.module.user.BaseTest;
-import org.jcatapult.module.user.domain.DefaultUser;
-import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>
@@ -68,12 +67,12 @@ public class EditTest extends BaseTest {
         DefaultUser user = new DefaultUser();
         user.setLogin("test");
 
-        Map<String, Integer[]> associations = new HashMap<String, Integer[]>();
-        associations.put("roles", new Integer[]{1, 2, 3});
+        Map<String, int[]> associations = new HashMap<String, int[]>();
+        associations.put("roles", new int[]{1, 2, 3});
 
         UserService service = EasyMock.createStrictMock(UserService.class);
         EasyMock.expect(service.findById(1)).andReturn(user);
-        EasyMock.expect(service.getAssociationIds(user)).andReturn(associations);
+        EasyMock.expect(service.getAssociationIds(1)).andReturn(associations);
         EasyMock.replay(service);
 
         Edit edit = new Edit();

@@ -16,12 +16,12 @@
  */
 package org.jcatapult.module.user.action.admin.user;
 
-import org.jcatapult.module.user.domain.User;
-import org.jcatapult.module.user.service.UserService;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.user.domain.User;
+import org.jcatapult.user.service.UserService;
 
 import com.google.inject.Inject;
 

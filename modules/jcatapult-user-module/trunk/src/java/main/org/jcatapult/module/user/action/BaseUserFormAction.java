@@ -19,12 +19,12 @@ package org.jcatapult.module.user.action;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jcatapult.module.user.domain.User;
 import org.jcatapult.module.user.service.UserConfiguration;
-import org.jcatapult.module.user.service.UserService;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.validation.annotation.ValidateMethod;
+import org.jcatapult.user.domain.User;
+import org.jcatapult.user.service.UserService;
 
 import com.google.inject.Inject;
 import net.java.error.ErrorList;
@@ -68,7 +68,7 @@ public class BaseUserFormAction {
     /**
      * The Map of associated ids.
      */
-    public Map<String, Integer[]> associations = new HashMap<String, Integer[]>();
+    public Map<String, int[]> associations = new HashMap<String, int[]>();
 
     /**
      * The password field value.

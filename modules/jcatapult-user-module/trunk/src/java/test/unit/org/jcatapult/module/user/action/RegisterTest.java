@@ -22,12 +22,12 @@ import java.util.Map;
 import org.easymock.EasyMock;
 import org.jcatapult.module.user.BaseTest;
 import org.jcatapult.module.user.domain.DefaultUser;
-import org.jcatapult.module.user.service.RegisterResult;
 import org.jcatapult.module.user.service.UserConfiguration;
-import org.jcatapult.module.user.service.UserService;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.security.saved.SavedRequestService;
+import org.jcatapult.user.service.RegisterResult;
+import org.jcatapult.user.service.UserService;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -157,7 +157,7 @@ public class RegisterTest extends BaseTest {
         UserConfiguration configuration = EasyMock.createStrictMock(UserConfiguration.class);
         EasyMock.replay(configuration);
 
-        Map<String, Integer[]> associations = new HashMap<String, Integer[]>();
+        Map<String, int[]> associations = new HashMap<String, int[]>();
 
         UserService userService = EasyMock.createStrictMock(UserService.class);
         EasyMock.expect(userService.validate(user, associations, false, "p", "pc")).andReturn(new ErrorList());
@@ -187,7 +187,7 @@ public class RegisterTest extends BaseTest {
         ErrorList errors = new ErrorList();
         errors.addError("passwordConfirm", "passwordConfirm.match");
 
-        Map<String, Integer[]> associations = new HashMap<String, Integer[]>();
+        Map<String, int[]> associations = new HashMap<String, int[]>();
 
         UserService userService = EasyMock.createStrictMock(UserService.class);
         EasyMock.expect(userService.validate(user, associations, false, "p", "pc")).andReturn(errors);

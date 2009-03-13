@@ -4,15 +4,17 @@
 package org.jcatapult.module.user.action.account;
 
 import org.easymock.EasyMock;
-import org.jcatapult.mvc.message.MessageStore;
-import org.jcatapult.mvc.message.scope.MessageScope;
-import static org.junit.Assert.*;
-import org.junit.Test;
-
 import org.jcatapult.module.user.BaseTest;
 import org.jcatapult.module.user.domain.DefaultUser;
-import org.jcatapult.module.user.service.UpdateResult;
-import org.jcatapult.module.user.service.UserService;
+import org.jcatapult.mvc.message.MessageStore;
+import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
+import org.jcatapult.user.service.UpdateResult;
+import org.jcatapult.user.service.UserService;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * <p>
@@ -22,14 +24,46 @@ import org.jcatapult.module.user.service.UserService;
  * @author Brian Pontarelli
  */
 public class EditTest extends BaseTest {
+    public DefaultUser user;
+
+    @Before
+    public void setup() {
+        user = new DefaultUser();
+        user.setId(1);
+        user.setLogin("test");
+        EnhancedSecurityContext.login(user);
+    }
+
+    @Before
+    public void setupSecurityContext() {
+        EnhancedSecurityContext.setProvider(new EnhancedSecurityContextProvider() {
+            private DefaultUser user;
+            public String getCurrentUsername() {
+                return user.getLogin();
+            }
+
+            public Object getCurrentUser() {
+                return user;
+            }
+
+            public void update(Object user) {
+                this.user = (DefaultUser) user;
+            }
+
+            public void login(Object user) {
+                this.user = (DefaultUser) user;
+            }
+
+            public void logout() {
+                this.user = null;
+            }
+        });
+    }
+
     @Test
     public void testLoad() {
-        DefaultUser user = new DefaultUser();
-        user.setLogin("test");
-
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.createUser()).andReturn(user);
-        EasyMock.expect(userService.currentUser()).andReturn(user);
+        EasyMock.expect(userService.findByLogin("test")).andReturn(user);
         EasyMock.replay(userService);
 
         Edit edit = new Edit();
@@ -42,11 +76,8 @@ public class EditTest extends BaseTest {
 
     @Test
     public void testSuccess() {
-        DefaultUser user = new DefaultUser();
-        user.setLogin("test");
-
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.createUser()).andReturn(user);
+        EasyMock.expect(userService.findByLogin("test")).andReturn(user);
         EasyMock.expect(userService.update(user, "p")).andReturn(UpdateResult.SUCCESS);
         EasyMock.replay(userService);
 
@@ -67,7 +98,7 @@ public class EditTest extends BaseTest {
         user.setLogin("test");
 
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.createUser()).andReturn(user);
+        EasyMock.expect(userService.findByLogin("test")).andReturn(user);
         EasyMock.expect(userService.update(user, "p")).andReturn(UpdateResult.ERROR);
         EasyMock.replay(userService);
 

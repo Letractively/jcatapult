@@ -4,12 +4,11 @@
 package org.jcatapult.module.user.action.account;
 
 import org.easymock.EasyMock;
-import static org.junit.Assert.*;
-import org.junit.Test;
-
 import org.jcatapult.module.user.BaseTest;
 import org.jcatapult.module.user.domain.DefaultUser;
-import org.jcatapult.module.user.service.UserService;
+import org.jcatapult.user.service.UserService;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * <p>

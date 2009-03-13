@@ -16,9 +16,6 @@
  */
 package org.jcatapult.module.user.action;
 
-import org.jcatapult.module.user.domain.User;
-import org.jcatapult.module.user.service.UpdateResult;
-import org.jcatapult.module.user.service.UserService;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.MessageStore;
@@ -27,6 +24,9 @@ import org.jcatapult.mvc.scope.annotation.Flash;
 import org.jcatapult.mvc.validation.annotation.Required;
 import org.jcatapult.mvc.validation.annotation.ValidateMethod;
 import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.user.domain.User;
+import org.jcatapult.user.service.UpdateResult;
+import org.jcatapult.user.service.UserService;
 
 import com.google.inject.Inject;
 

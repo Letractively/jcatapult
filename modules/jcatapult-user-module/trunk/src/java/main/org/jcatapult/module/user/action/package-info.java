@@ -56,77 +56,77 @@
  * will display forms and validate data.
  * </p>
  * <dl>
- * <dt>jcatapult.modules.user.fields.name</dt>
+ * <dt>jcatapult.user.fields.name</dt>
  * <dd>This is
  * a boolean configuration element that determines if the first and last name
  * fields should be displayed. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.name-required</dt>
+ * <dt>jcatapult.user.fields.name-required</dt>
  * <dd>This is
  * a boolean configuration element that determines if the first and last name
  * fields should be required. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.business</dt>
+ * <dt>jcatapult.user.fields.business</dt>
  * <dd>This is
  * a boolean configuration element that determines if the company name
  * field should be displayed. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.business-required</dt>
+ * <dt>jcatapult.user.fields.business-required</dt>
  * <dd>This is
  * a boolean configuration element that determines if the company name
  * field should be required. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.home-address</dt>
+ * <dt>jcatapult.user.fields.home-address</dt>
  * <dd>This is
  * a boolean configuration element that determines if the home address form
  * fields should be displayed. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.home-address-required</dt>
+ * <dt>jcatapult.user.fields.home-address-required</dt>
  * <dd>This is
  * a boolean configuration element that determines if the home address form
  * fields should be required. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.work-address</dt>
+ * <dt>jcatapult.user.fields.work-address</dt>
  * <dd>This is
  * a boolean configuration element that determines if the work address form
  * fields should be displayed. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.work-address-required</dt>
+ * <dt>jcatapult.user.fields.work-address-required</dt>
  * <dd>This is
  * a boolean configuration element that determines if the work address form
  * fields should be required. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.home-phone</dt>
+ * <dt>jcatapult.user.fields.home-phone</dt>
  * <dd>This is
  * a boolean configuration element that determines if the home phone form
  * field should be displayed. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.home-phone-required</dt>
+ * <dt>jcatapult.user.fields.home-phone-required</dt>
  * <dd>This is
  * a boolean configuration element that determines if the home phone form
  * field should be required. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.work-phone</dt>
+ * <dt>jcatapult.user.fields.work-phone</dt>
  * <dd>This is
  * a boolean configuration element that determines if the work phone form
  * field should be displayed. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.work-phone-required</dt>
+ * <dt>jcatapult.user.fields.work-phone-required</dt>
  * <dd>This is
  * a boolean configuration element that determines if the work phone form
  * field should be required. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.cell-phone</dt>
+ * <dt>jcatapult.user.fields.cell-phone</dt>
  * <dd>This is
  * a boolean configuration element that determines if the cell phone form
  * field should be displayed. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.cell-phone-required</dt>
+ * <dt>jcatapult.user.fields.cell-phone-required</dt>
  * <dd>This is
  * a boolean configuration element that determines if the cell phone form
  * field should be required. Defaults to <strong>false</strong>.
  * </dd>
- * <dt>jcatapult.modules.user.fields.email-options</dt>
+ * <dt>jcatapult.user.fields.email-options</dt>
  * <dd>This is
  * a boolean configuration element that determines if the standard email checkboxes
  * should be presented to the user. These are "receive newsletters from Company"

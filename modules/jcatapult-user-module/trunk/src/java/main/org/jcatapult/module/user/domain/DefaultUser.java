@@ -32,10 +32,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import org.jcatapult.mvc.validation.annotation.Required;
-import org.jcatapult.persistence.domain.SoftDeletableImpl;
+import org.jcatapult.user.domain.AbstractUser;
 
 /**
  * <p>
@@ -56,36 +54,8 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
 @Entity
 @Table(name="users")
 @SuppressWarnings("unchecked")
-public class DefaultUser extends SoftDeletableImpl implements User {
+public class DefaultUser extends AbstractUser<DefaultRole> {
     private static final long serialVersionUID = 1;
-
-    // ------------------------------------- Security -------------------------------------
-
-    @Required
-    @Column(unique = true, nullable = false)
-    private String login;
-
-    @Required
-    @Column(nullable = false)
-    private String password;
-
-    @Required
-    @Transient
-    private String passwordConfirm;
-
-    @Column()
-    private String guid;
-
-    @Column(nullable = false)
-    private boolean expired = false;
-
-    @Column(nullable = false)
-    private boolean locked = false;
-
-    @Column(name = "password_expired", nullable = false)
-    private boolean passwordExpired = false;
-
-    private boolean partial;
 
     // ------------------------------------- Name -------------------------------------
 
@@ -117,92 +87,6 @@ public class DefaultUser extends SoftDeletableImpl implements User {
     private Map<String, EmailAddress> emailAddresses = new HashMap<String, EmailAddress>();
 
 
-    // ------------------------------------- Security -------------------------------------
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Sets in the password.
-     *
-     * @param   password The new password.
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    /**
-     * Sets in the password confirmation.
-     *
-     * @param   passwordConfirm The new password confirmation.
-     */
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
-
-    public String getGuid() {
-        return guid;
-    }
-
-    public void setGuid(String guid) {
-        this.guid = guid;
-    }
-
-    public boolean isExpired() {
-        return expired;
-    }
-
-    public void setExpired(boolean expired) {
-        this.expired = expired;
-    }
-
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public boolean isPasswordExpired() {
-        return passwordExpired;
-    }
-
-    public void setPasswordExpired(boolean passwordExpired) {
-        this.passwordExpired = passwordExpired;
-    }
-
-    /**
-     * @return  True if the account only contains partial information and needs more information from
-     *          the user before it can be fully used. These types of accounts are useful when someone
-     *          makes a purchase as a guest on the system, but you want to store the transaction
-     *          details.
-     */
-    public boolean isPartial() {
-        return partial;
-    }
-
-    /**
-     * Sets if the account is a partial account.
-     *
-     * @param   partial If the account is a partial account.
-     */
-    public void setPartial(boolean partial) {
-        this.partial = partial;
-    }
 
     // ------------------------------------- Name -------------------------------------
 
@@ -304,12 +188,12 @@ public class DefaultUser extends SoftDeletableImpl implements User {
         return roles;
     }
 
-    public void setRoles(Set<? extends Role> roles) {
-        this.roles = (Set<DefaultRole>) roles;
+    public void setRoles(Set<DefaultRole> roles) {
+        this.roles = roles;
     }
 
-    public void addRole(Role role) {
-        this.roles.add((DefaultRole) role);
+    public void addRole(DefaultRole role) {
+        this.roles.add(role);
     }
 
     // ------------------ Helpers ------------------------
@@ -321,7 +205,7 @@ public class DefaultUser extends SoftDeletableImpl implements User {
      * @return  True if the user has it, false otherwise.
      */
     public boolean hasRole(String role) {
-        for (Role r : roles) {
+        for (DefaultRole r : roles) {
             if (r.getName().equals(role)) {
                 return true;
             }
@@ -335,22 +219,5 @@ public class DefaultUser extends SoftDeletableImpl implements User {
      */
     public boolean isAdmin() {
         return hasRole("admin");
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DefaultUser)) return false;
-
-        DefaultUser that = (DefaultUser) o;
-
-        if (!login.equals(that.login)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return login.hashCode();
     }
 }

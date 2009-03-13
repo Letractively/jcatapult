@@ -21,15 +21,14 @@ import java.util.List;
 
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
-import org.jcatapult.test.Capture;
-import static org.junit.Assert.*;
-import org.junit.Test;
-
 import org.jcatapult.crud.service.SearchService;
 import org.jcatapult.module.user.domain.DefaultUser;
-import org.jcatapult.module.user.domain.User;
-import org.jcatapult.module.user.service.UserHandler;
 import org.jcatapult.module.user.service.UserSearchCriteria;
+import org.jcatapult.test.Capture;
+import org.jcatapult.user.domain.User;
+import org.jcatapult.user.service.UserHandler;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * <p>

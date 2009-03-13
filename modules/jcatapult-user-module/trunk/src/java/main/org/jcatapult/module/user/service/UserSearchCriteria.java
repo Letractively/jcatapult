@@ -17,7 +17,7 @@
 package org.jcatapult.module.user.service;
 
 import org.jcatapult.crud.service.AbstractSearchCriteria;
-import org.jcatapult.module.user.domain.User;
+import org.jcatapult.user.domain.User;
 
 /**
  * <p>

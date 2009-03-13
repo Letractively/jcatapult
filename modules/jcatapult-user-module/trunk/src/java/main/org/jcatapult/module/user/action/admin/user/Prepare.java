@@ -17,12 +17,14 @@
 package org.jcatapult.module.user.action.admin.user;
 
 import java.util.List;
-import java.util.Map;
-
-import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.result.form.annotation.FormPrepareMethod;
 
 import org.jcatapult.module.user.action.BaseUserFormAction;
+import org.jcatapult.module.user.domain.DefaultRole;
+import org.jcatapult.mvc.action.annotation.Action;
+import org.jcatapult.mvc.result.form.annotation.FormPrepareMethod;
+import org.jcatapult.persistence.service.PersistenceService;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -33,10 +35,16 @@ import org.jcatapult.module.user.action.BaseUserFormAction;
  */
 @Action(overridable = true)
 public class Prepare extends BaseUserFormAction {
-    public Map<String, List<?>> items;
+    protected PersistenceService persistenceService;
+    public List<DefaultRole> roles;
+
+    @Inject
+    public void setPersistenceService(PersistenceService persistenceService) {
+        this.persistenceService = persistenceService;
+    }
 
     @FormPrepareMethod
     public void prepare() {
-        items = userService.getAssociationObjects();
+        roles = persistenceService.findAllByType(DefaultRole.class);
     }
 }

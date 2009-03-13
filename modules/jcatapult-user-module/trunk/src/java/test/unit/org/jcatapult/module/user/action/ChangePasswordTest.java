@@ -21,15 +21,14 @@ import javax.servlet.http.HttpSession;
 
 import org.easymock.EasyMock;
 import org.jcatapult.config.Configuration;
+import org.jcatapult.module.user.BaseTest;
+import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.user.service.UserService;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import org.jcatapult.module.user.BaseTest;
-import org.jcatapult.module.user.domain.DefaultUser;
-import org.jcatapult.module.user.service.UserService;
 
 /**
  * <p>

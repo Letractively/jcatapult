@@ -51,7 +51,7 @@ public class Edit extends Prepare {
             return "error";
         }
 
-        associations = userService.getAssociationIds(user);
+        associations = userService.getAssociationIds(id);
         return "input";
     }
 

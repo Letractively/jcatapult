@@ -32,7 +32,7 @@ import com.google.inject.Inject;
  *
  * <h3>Configuration</h3>
  * <p>
- * <strong>jcatapult.modules.user.logout.success-uri</strong> -
+ * <strong>jcatapult.user.logout.success-uri</strong> -
  * This is a String configuration element that contains the URI that
  * the user is redirected to after a successful logout. Defaults to
  * <strong>/</strong>.
