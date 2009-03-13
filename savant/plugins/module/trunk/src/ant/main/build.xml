@@ -45,7 +45,7 @@
 
       <!-- Copy the freemarker templates to the correct locations -->
       <copy todir="${dir.target.classes.main}/WEB-INF/content" failonerror="false">
-        <fileset dir="${dir.web}/WEB-INF/content" includes="**/*"/>
+        <fileset dir="${dir.web}/WEB-INF/content" includes="**/*" excludes="test/**/*"/>
       </copy>
 
       <!-- Copy the messages to the correct locations -->
