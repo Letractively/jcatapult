@@ -15,6 +15,7 @@
  */
 package org.jcatapult.user;
 
+import org.jcatapult.config.Configuration;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.user.service.AbstractUserHandler;
 
@@ -22,15 +23,15 @@ import com.google.inject.Inject;
 
 /**
  * <p>
- * This 
+ * This is a test user handler. 
  * </p>
  *
  * @author Brian Pontarelli
  */
 public class TestUserHandler extends AbstractUserHandler<TestUser, TestRole> {
     @Inject
-    public TestUserHandler(PersistenceService ps) {
-        super(ps);
+    public TestUserHandler(PersistenceService ps, Configuration configuration) {
+        super(ps, configuration);
     }
 
     public TestUser createUser() {

@@ -138,4 +138,17 @@ public interface User<T extends Role> extends Identifiable, SoftDeletable, Compa
      * @param   partial If the account is a partial account.
      */
     void setPartial(boolean partial);
+
+    /**
+     * @return  True if the account has been verified. This flag is useful when you want to verify
+     *          email addresses or other bits of information before granting a user access.
+     */
+    boolean isVerified();
+
+    /**
+     * Sets if the account is verified or not.
+     *
+     * @param   verified If the account is verified or not.
+     */
+    void setVerified(boolean verified);
 }
