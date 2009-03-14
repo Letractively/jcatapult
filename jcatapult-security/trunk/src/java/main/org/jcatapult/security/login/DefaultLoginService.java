@@ -34,6 +34,13 @@ import com.google.inject.Inject;
  * retrieved from the AuthenticationService.
  * </p>
  *
+ * <p>
+ * In order to track logins (both successful and failed), you can
+ * optionally register an {@link AuthenticationListener} with this
+ * service. That listener will be called whenever a login fails or
+ * succeeds.
+ * </p> 
+ *
  * @author  Brian Pontarelli
  */
 public class DefaultLoginService implements LoginService {
@@ -41,6 +48,7 @@ public class DefaultLoginService implements LoginService {
     private final UserAdapter userAdapter;
     private final PasswordEncryptor passwordEncryptor;
     private final JCatapultSecurityContextProvider securityContextProvider;
+    private AuthenticationListener authenticationListener;
 
     @Inject
     public DefaultLoginService(AuthenticationService authenticationService, UserAdapter userAdapter,
@@ -51,6 +59,17 @@ public class DefaultLoginService implements LoginService {
         this.securityContextProvider = securityContextProvider;
     }
 
+    /**
+     * Sets in the authentication listener for this application.
+     *
+     * @param   listener The listener.
+     */
+    @Inject(optional = true)
+    public void setAuthenticationListener(AuthenticationListener listener) {
+        this.authenticationListener = listener;
+    }
+
+    @SuppressWarnings("unchecked")
     public Object login(String username, String password, Map<String, Object> parameters)
     throws InvalidUsernameException, InvalidPasswordException {
         Object user = authenticationService.loadUser(username, parameters);
@@ -61,18 +80,31 @@ public class DefaultLoginService implements LoginService {
         String encrypted = passwordEncryptor.encryptPassword(password, user);
         String userPassword = userAdapter.getPassword(user);
         if (!userPassword.equals(encrypted)) {
+            if (authenticationListener != null) {
+                authenticationListener.failedLogin(user);
+            }
             throw new InvalidPasswordException();
         }
 
         if (userAdapter.areCredentialsExpired(user)) {
+            if (authenticationListener != null) {
+                authenticationListener.failedLogin(user);
+            }
             throw new CredentialsExpiredException();
         } else if (userAdapter.isExpired(user)) {
+            if (authenticationListener != null) {
+                authenticationListener.failedLogin(user);
+            }
             throw new AccountExpiredException();
         } else if (userAdapter.isLocked(user)) {
+            if (authenticationListener != null) {
+                authenticationListener.failedLogin(user);
+            }
             throw new AccountLockedException();
         }
 
         // Save the user to the context since the login was good
+        authenticationListener.successfulLogin(user);
         securityContextProvider.login(user);
 
         return user;

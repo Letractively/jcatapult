@@ -67,8 +67,14 @@ public class DefaultCredentialStorageWorkflow implements CredentialStorageWorkfl
             // If the user didn't exist before and now it does, store it.
             if (!existing && EnhancedSecurityContext.getCurrentUser() != null) {
                 credentialStorage.store(EnhancedSecurityContext.getCurrentUser(), request);
-            } else if (existing && EnhancedSecurityContext.getCurrentUser() == null) {
+            }
+            // User existed and now it doesn't, they logged out so remove them
+            else if (existing && EnhancedSecurityContext.getCurrentUser() == null) {
                 credentialStorage.remove(request);
+            }
+            // User existed and was updated, update it in the store
+            else if (existing && EnhancedSecurityContext.getCurrentUser() != userObject) {
+                credentialStorage.store(EnhancedSecurityContext.getCurrentUser(), request);
             }
         }
     }
