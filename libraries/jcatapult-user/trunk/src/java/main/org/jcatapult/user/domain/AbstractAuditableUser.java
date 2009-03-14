@@ -18,8 +18,10 @@ package org.jcatapult.user.domain;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import org.hibernate.annotations.Type;
 import org.jcatapult.mvc.validation.annotation.Required;
-import org.jcatapult.persistence.domain.SoftDeletableImpl;
+import org.jcatapult.persistence.domain.AuditableSoftDeletableImpl;
+import org.joda.time.DateTime;
 
 /**
  * <p>
@@ -28,6 +30,10 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
  * is a many to many relationship in most cases and that requires the knowledge
  * of the concrete Role class. Also, some JPA implementations don't allow
  * mapped superclasses to contain collections.
+ * </p>
+ * 
+ * <p>
+ * This also provides support for the auditable interface.
  * </p>
  *
  * <p>
@@ -49,7 +55,7 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
  * @author  Brian Pontarelli
  */
 @MappedSuperclass
-public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl implements User<T> {
+public abstract class AbstractAuditableUser<T extends Role> extends AuditableSoftDeletableImpl implements AuditableUser<T> {
     @Required
     @Column(nullable = false, unique = true)
     private String login;
@@ -76,6 +82,10 @@ public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl imp
 
     @Column
     private boolean verified;
+
+    @Column(name = "last_login")
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    private DateTime lastLogin;
 
     /**
      * {@inheritDoc}
@@ -187,6 +197,20 @@ public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl imp
      */
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public DateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setLastLogin(DateTime lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     /**

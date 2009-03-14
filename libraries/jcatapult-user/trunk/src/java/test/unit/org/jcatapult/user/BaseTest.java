@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.easymock.EasyMock.*;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.email.EmailTestHelper;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.test.JPABaseTest;
@@ -42,9 +44,14 @@ public class BaseTest extends JPABaseTest {
     @Inject public PersistenceService ps;
 
     public BaseTest() {
+        final Configuration config = createNiceMock(Configuration.class);
+        expect(config.getString("jcatapult.user.default-role", "user")).andReturn("user");
+        replay(config);
+
         addModules(new AbstractModule() {
             public void configure() {
                 bind(UserHandler.class).to(TestUserHandler.class);
+                bind(Configuration.class).toInstance(config);
             }
         });
 

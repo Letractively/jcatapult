@@ -17,7 +17,9 @@ package org.jcatapult.user.guice;
 
 import org.jcatapult.security.UserAdapter;
 import org.jcatapult.security.guice.SecurityModule;
+import org.jcatapult.security.login.AuthenticationListener;
 import org.jcatapult.security.login.AuthenticationService;
+import org.jcatapult.user.security.DefaultAuthenticationListener;
 import org.jcatapult.user.security.DefaultAuthenticationService;
 import org.jcatapult.user.security.DefaultUserAdapter;
 
@@ -31,6 +33,12 @@ import org.jcatapult.user.security.DefaultUserAdapter;
  * @author  Brian Pontarelli
  */
 public class DefaultUserModule extends SecurityModule {
+    @Override
+    protected void configure() {
+        bind(AuthenticationListener.class).to(DefaultAuthenticationListener.class);
+        super.configure();
+    }
+
     protected Class<? extends AuthenticationService> getAuthenticationService() {
         return DefaultAuthenticationService.class;
     }
