@@ -18,8 +18,10 @@ package org.jcatapult.user.domain;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import org.hibernate.annotations.Type;
 import org.jcatapult.mvc.validation.annotation.Required;
-import org.jcatapult.persistence.domain.SoftDeletableImpl;
+import org.jcatapult.persistence.domain.AuditableSoftDeletableImpl;
+import org.joda.time.DateTime;
 
 /**
  * <p>
@@ -29,9 +31,13 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
  * of the concrete Role class. Also, some JPA implementations don't allow
  * mapped superclasses to contain collections.
  * </p>
+ * 
+ * <p>
+ * This also provides support for the auditable interface.
+ * </p>
  *
  * <p>
- * This class uses a single column for emails and logins.
+ * This class uses separate logins (usernames) and emails.
  * </p>
  *
  * <p>
@@ -40,7 +46,8 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
  *
  * <table border="1">
  * <tr><th>Name</th><th>Type</th><th>Description</th><th>Required?</th><th>Unique?</th><th>Additional info/constraints</th></tr>
- * <tr><td>login</td><td>varchar(255)</td><td>The login and email of the user.</td><td>Yes</td><td>Yes</td><td>None</td></tr>
+ * <tr><td>login</td><td>varchar(255)</td><td>The login of the user.</td><td>Yes</td><td>Yes</td><td>None</td></tr>
+ * <tr><td>email</td><td>varchar(255)</td><td>The email of the user.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * <tr><td>password</td><td>varchar(255)</td><td>The password of the user.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * <tr><td>guid</td><td>varchar(255)</td><td>A GUID used for password reset.</td><td>No</td><td>Yes</td><td>None</td></tr>
  * <tr><td>locked</td><td>boolean(or bit)</td><td>The locked flag.</td><td>Yes</td><td>No</td><td>None</td></tr>
@@ -53,10 +60,14 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
  * @author  Brian Pontarelli
  */
 @MappedSuperclass
-public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl implements User<T> {
+public abstract class AbstractUsernameAuditableUser<T extends Role> extends AuditableSoftDeletableImpl implements AuditableUser<T> {
     @Required
     @Column(nullable = false, unique = true)
     private String login;
+
+    @Required
+    @Column(nullable = false)
+    private String email;
 
     // Not required because there will be a confirm and encryption handling that need to occur
     // before the password is set onto the entity for persistence
@@ -81,6 +92,10 @@ public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl imp
     @Column
     private boolean verified;
 
+    @Column(name = "last_login")
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    private DateTime lastLogin;
+
     /**
      * {@inheritDoc}
      */
@@ -99,14 +114,14 @@ public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl imp
      * {@inheritDoc}
      */
     public String getEmail() {
-        return login;
+        return email;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setEmail(String email) {
-        this.login = email;
+        this.email = email;
     }
 
     /**
@@ -205,6 +220,20 @@ public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl imp
      */
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public DateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setLastLogin(DateTime lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     /**

@@ -16,8 +16,9 @@
  */
 package org.jcatapult.user.service;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
+import javax.persistence.EntityNotFoundException;
 
 import org.jcatapult.user.domain.Role;
 import org.jcatapult.user.domain.User;
@@ -111,19 +112,63 @@ public interface UserService {
         String passwordConfirm);
 
     /**
-     * Registers a new user account.
+     * Registers a new user account. This attemptes to encrypt the password, setup the roles, insert
+     * the user, and optionally send a verification email to the user (depending on Configuration).
+     * In order to turn on verification of user accounts, set the boolean flag
+     * <strong>jcatapult.user.verify-emails</strong>. If you have flag set, you will also need to
+     * configure the emails. The default email template used is named <strong>verify-email</strong>.
+     * You can change the templates inside your application. You can also control the emails via these
+     * configuration parameters:
+     *
+     * <p>
+     * <strong>jcatapult.user.verify-emails.template</strong> - A String configuration
+     * parameter that sets the name of the email template that is executed to verification email.
+     * Defaults to <strong>verify-email</strong>
+     * </p>
+     * <p>
+     * <strong>jcatapult.email.verify-email.subject</strong> - A String configuration
+     * parameter that sets the subject of the email. Defaults to <strong>Email verification</strong>.
+     * </p>
+     * <p>
+     * <strong>jcatapult.email.verify-email.from-address</strong> - A String configuration
+     * parameter that sets the from address of the email. This must be configured because it has no
+     * default.
+     * </p>
+     * <p>
+     * <strong>jcatapult.email.verify-email.from-address-display</strong> - A String configuration
+     * parameter that sets the display name of the from address of the email. This must be configured
+     * because it has no default.
+     * </p>
      *
      * @param   user The user information.
-     * @param   password (Optional) The password.
+     * @param   password The password.
+     * @param   url (Optional) The root of the URL to include in the email to the user with a link
+     *          to reset their password. This should include the protocol, domain name, port, and
+     *          the action URI (i.e. http://example.com:1000/change-password).
      * @param   roles An optional list of roles for the user. If this is null, the default roles are
      *          pull from the UserHandler.
      * @return  The result of the registration.
      */
-    RegisterResult register(User user, String password, Role... roles);
+    RegisterResult register(User user, String password, String url, Role... roles);
 
     /**
+     * <p>
      * Registers a partial new user account. This account will have a password that is impossible to
      * log in with and the temporary flag set to true.
+     * </p>
+     *
+     * <p>
+     * This method has a number of caveats with it. The first being that your User implementation
+     * must have an email that is unique so that partial users can be emailed as well as located when
+     * they fully register. This generally implies that the login and email are the same such as with
+     * the {@link org.jcatapult.user.domain.AbstractUser} or the {@link org.jcatapult.user.domain.AbstractAuditableUser}.
+     * </p>
+     *
+     * <p>
+     * You can set this up differentlyy, but just beware that you need a common way to find the partial
+     * users and this service uses the <strong>login</strong> property of the user to locate them.
+     * Therefore, if you want to set things up differently, you probably can't use this service.
+     * </p>
      *
      * @param   user The user information.
      * @param   roles An optional list of roles for the user. If this is null, the default roles are
@@ -131,6 +176,19 @@ public interface UserService {
      * @return  The result of the registration.
      */
     RegisterResult registerPartial(User user, Role... roles);
+
+    /**
+     * Resends the verification email for the given user. Check out the JavaDoc for the
+     * {@link #register(User, String, String, Role[])}
+     * method to figure out more about the email.
+     *
+     * @param   login The login.
+     * @param   url The root of the URL to include in the email to the user with a link to reset
+     *          their password. This should include the protocol, domain name, port, and the action
+     *          URI (i.e. http://example.com:1000/change-password).
+     * @throws  EntityNotFoundException If the login is invalid.
+     */
+    void resendVerificationEmail(String login, String url) throws EntityNotFoundException;
 
     /**
      * <p>
@@ -190,9 +248,11 @@ public interface UserService {
     UpdateResult update(User user, String password);
 
     /**
+     * <p>
      * Saves or updates the given User. This User instance must be completely filled out in order to
      * be inserted or updated. All foreign key references need to be correct prior to any updates
      * otherwise Hibernate will truncate the data.
+     * </p>
      *
      * @param   user The User to save or update.
      * @param   associations The map of associated IDs for the User.
@@ -230,27 +290,29 @@ public interface UserService {
      * configuration options in order to correctly configure the emails.
      *
      * <p>
-     * <strong>jcatapult.user.password.email.template</strong> - A String configuration
+     * <strong>jcatapult.user.password-reset.template</strong> - A String configuration
      * parameter that sets the name of the email template that is executed to generate the reset
-     * password email. Defaults to <strong>reset-password</strong>
+     * password email. Defaults to <strong>password-reset</strong>
      * </p>
      * <p>
-     * <strong>jcatapult.user.password.email.subject</strong> - A String configuration
+     * <strong>jcatapult.email.password-reset.subject</strong> - A String configuration
      * parameter that sets the subject of the email. Defaults to <strong>Password Reset</strong>.
      * </p>
      * <p>
-     * <strong>jcatapult.user.password.email.from-address</strong> - A String configuration
+     * <strong>jcatapult.email.password-reset.from-address</strong> - A String configuration
      * parameter that sets the from address of the email. This must be configured because it has no
      * default.
      * </p>
      * <p>
-     * <strong>jcatapult.user.password.email.from-address-display</strong>  -A String
+     * <strong>jcatapult.email.password-reset.from-address-display</strong> - A String
      * configuration parameter that sets the display name of the from address of the email. This
      * must be configured because it has no default.
      * </p>
      *
      * @param   login The login to setup for password reset.
-     * @param   url The URL to include in the email to the user with a link to reset their password.
+     * @param   url The root of the URL to include in the email to the user with a link to reset
+     *          their password. This should include the protocol, domain name, port, and the action
+     *          URI (i.e. http://example.com:1000/change-password).
      * @return  The result of the reset.
      */
     UpdateResult resetPassword(String login, String url);

@@ -31,9 +31,13 @@ import org.joda.time.DateTime;
  * of the concrete Role class. Also, some JPA implementations don't allow
  * mapped superclasses to contain collections.
  * </p>
- * 
+ *
  * <p>
  * This also provides support for the auditable interface.
+ * </p>
+ *
+ * <p>
+ * This class uses a single column for emails and logins.
  * </p>
  *
  * <p>
@@ -99,6 +103,20 @@ public abstract class AbstractAuditableUser<T extends Role> extends AuditableSof
      */
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getEmail() {
+        return login;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setEmail(String email) {
+        this.login = email;
     }
 
     /**

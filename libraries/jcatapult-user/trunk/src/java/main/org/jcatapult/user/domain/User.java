@@ -46,6 +46,18 @@ public interface User<T extends Role> extends Identifiable, SoftDeletable, Compa
     void setLogin(String login);
 
     /**
+     * @return  The user's email, which in some cases will be the same as the login.
+     */
+    String getEmail();
+
+    /**
+     * Sets the users email.
+     *
+     * @param   email The email.
+     */
+    void setEmail(String email);
+
+    /**
      * @return  The roles for the user.
      */
     Set<T> getRoles();

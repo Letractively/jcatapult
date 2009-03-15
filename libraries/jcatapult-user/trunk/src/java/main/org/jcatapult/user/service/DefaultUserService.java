@@ -22,10 +22,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 
 import org.jcatapult.config.Configuration;
 import org.jcatapult.domain.contact.EmailAddress;
+import org.jcatapult.email.service.EmailCommand;
 import org.jcatapult.email.service.EmailService;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.security.PasswordEncryptor;
@@ -154,7 +156,7 @@ public class DefaultUserService implements UserService {
     /**
      * {@inheritDoc}
      */
-    public RegisterResult register(User user, String password, Role... roles) {
+    public RegisterResult register(User user, String password, String url, Role... roles) {
         User partial = findByLogin(user.getLogin());
         if (partial != null) {
             if (partial.isPartial()) {
@@ -171,13 +173,23 @@ public class DefaultUserService implements UserService {
         } else {
             user.setRoles(userHandler.getDefaultRoles());
         }
+        
+        boolean verify = configuration.getBoolean("jcatapult.user.verify-emails", false);
+        if (verify) {
+            user.setVerified(false);
+            user.setGuid(makeGUID());
+        }
 
         Map<String, int[]> associations = userHandler.getDefaultAssociations();
         if (!persist(user, associations, password)) {
             return RegisterResult.EXISTS;
         }
 
-        return RegisterResult.SUCCESS;
+        if (verify) {
+            resendVerificationEmail(user.getLogin(), url);
+        }
+
+        return verify ? RegisterResult.PENDING : RegisterResult.SUCCESS;
     }
 
     /**
@@ -199,6 +211,26 @@ public class DefaultUserService implements UserService {
         }
 
         return RegisterResult.SUCCESS;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void resendVerificationEmail(String login, String url) throws EntityNotFoundException {
+        User user = findByLogin(login);
+        if (user == null) {
+            throw new EntityNotFoundException("Invalid login [" + login + "]");
+        }
+        
+        String template = configuration.getString("jcatapult.user.verify-email.template", "verify-email");
+        EmailCommand command = emailService.sendEmail(template).
+            to(new EmailAddress(user.getEmail())).
+            withTemplateParam("user", user).
+            withTemplateParam("url", url);
+        if (command.getSubject() == null) {
+            command.withSubject("Password reset");
+        }
+        command.later();
     }
 
     /**
@@ -289,6 +321,23 @@ public class DefaultUserService implements UserService {
             return UpdateResult.MISSING;
         }
 
+        user.setGuid(makeGUID());
+        persistenceService.persist(user);
+
+        String template = configuration.getString("jcatapult.user.password-reset.template", "password-reset");
+        EmailCommand command = emailService.sendEmail(template).
+            to(new EmailAddress(user.getEmail())).
+            withTemplateParam("user", user).
+            withTemplateParam("url", url);
+        if (command.getSubject() == null) {
+            command.withSubject("Password reset");
+        }
+        command.later();
+        
+        return UpdateResult.SUCCESS;
+    }
+
+    private String makeGUID() {
         // Create/update the GUID and save it
         Random rand = new SecureRandom();
         StringBuilder build = new StringBuilder();
@@ -296,17 +345,7 @@ public class DefaultUserService implements UserService {
             int r = rand.nextInt(16);
             build.append(Integer.toHexString(r));
         }
-
-        user.setGuid(build.toString());
-        persistenceService.persist(user);
-
-        String template = configuration.getString("jcatapult.user.password.email.template", "reset-password");
-        emailService.sendEmail(template).
-            to(new EmailAddress(user.getLogin())).
-            withTemplateParam("user", user).
-            withTemplateParam("url", url).
-            later();
-        return UpdateResult.SUCCESS;
+        return build.toString();
     }
 
     /**

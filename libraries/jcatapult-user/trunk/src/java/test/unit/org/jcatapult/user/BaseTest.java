@@ -26,6 +26,7 @@ import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.test.JPABaseTest;
 import org.jcatapult.user.service.UserHandler;
 import org.jcatapult.user.service.UserService;
+import static org.junit.Assert.*;
 import org.junit.Ignore;
 
 import com.google.inject.AbstractModule;
@@ -44,8 +45,14 @@ public class BaseTest extends JPABaseTest {
     @Inject public PersistenceService ps;
 
     public BaseTest() {
+        setupConfigurationAndUserHandlerAndEmail();
+    }
+
+    protected void setupConfigurationAndUserHandlerAndEmail() { 
         final Configuration config = createNiceMock(Configuration.class);
         expect(config.getString("jcatapult.user.default-role", "user")).andReturn("user");
+        expect(config.getBoolean("jcatapult.user.logins-are-emails", true)).andReturn(true);
+        expect(config.getBoolean("jcatapult.user.verify-emails", false)).andReturn(false);
         replay(config);
 
         addModules(new AbstractModule() {
@@ -67,12 +74,11 @@ public class BaseTest extends JPABaseTest {
     protected TestUser makeUser(String login) {
         TestUser user = new TestUser();
         user.setLogin(login);
-        user.setPassword("test password");
 
         Map<String, int[]> associations = new HashMap<String, int[]>();
         associations.put("roles", new int[]{1, 2});
 
-        userService.persist(user, associations, "p");
+        assertTrue(userService.persist(user, associations, "password"));
         return user;
     }
 
