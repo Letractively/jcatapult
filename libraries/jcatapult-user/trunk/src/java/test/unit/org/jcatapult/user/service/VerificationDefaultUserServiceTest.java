@@ -39,6 +39,7 @@ public class VerificationDefaultUserServiceTest extends BaseTest {
     protected void setupConfigurationAndUserHandlerAndEmail() {
         final Configuration config = createNiceMock(Configuration.class);
         expect(config.getString("jcatapult.user.default-role", "user")).andReturn("user");
+        expect(config.getString("jcatapult.user.verify-email.template", "verify-email")).andReturn("verify-email");
         expect(config.getBoolean("jcatapult.user.verify-emails", false)).andReturn(true);
         replay(config);
 
@@ -62,6 +63,6 @@ public class VerificationDefaultUserServiceTest extends BaseTest {
         assertNotNull(user.getRoles().iterator().next());
 
         Email email = EmailTestHelper.getEmailResults().poll();
-        assertTrue(email.getHtml().contains("http://wwww.example.com/verify-email"));
+        assertTrue(email.getHtml().contains("http://www.example.com/verify-email?guid=" + user.getGuid()));
     }
 }
