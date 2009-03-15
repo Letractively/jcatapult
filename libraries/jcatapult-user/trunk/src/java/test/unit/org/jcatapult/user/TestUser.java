@@ -17,11 +17,11 @@ package org.jcatapult.user;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
 
 import org.jcatapult.user.domain.AbstractUser;
 

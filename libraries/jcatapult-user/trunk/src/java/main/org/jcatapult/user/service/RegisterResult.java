@@ -35,6 +35,12 @@ public enum RegisterResult {
     ERROR,
 
     /**
+     * The configuration was setup to verify user registrations via an email check and the account
+     * was created successfully, but is pending verification.
+     */
+    PENDING,
+
+    /**
      * Occurs when the user is updated successfully.
      */
     SUCCESS

@@ -31,7 +31,7 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
  * </p>
  *
  * <p>
- * This class uses a single column for emails and logins.
+ * This class uses separate logins (usernames) and emails.
  * </p>
  *
  * <p>
@@ -40,7 +40,8 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
  *
  * <table border="1">
  * <tr><th>Name</th><th>Type</th><th>Description</th><th>Required?</th><th>Unique?</th><th>Additional info/constraints</th></tr>
- * <tr><td>login</td><td>varchar(255)</td><td>The login and email of the user.</td><td>Yes</td><td>Yes</td><td>None</td></tr>
+ * <tr><td>login</td><td>varchar(255)</td><td>The login of the user.</td><td>Yes</td><td>Yes</td><td>None</td></tr>
+ * <tr><td>email</td><td>varchar(255)</td><td>The email of the user.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * <tr><td>password</td><td>varchar(255)</td><td>The password of the user.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * <tr><td>guid</td><td>varchar(255)</td><td>A GUID used for password reset.</td><td>No</td><td>Yes</td><td>None</td></tr>
  * <tr><td>locked</td><td>boolean(or bit)</td><td>The locked flag.</td><td>Yes</td><td>No</td><td>None</td></tr>
@@ -53,10 +54,13 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
  * @author  Brian Pontarelli
  */
 @MappedSuperclass
-public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl implements User<T> {
+public abstract class AbstractUsernameUser<T extends Role> extends SoftDeletableImpl implements User<T> {
     @Required
     @Column(nullable = false, unique = true)
     private String login;
+
+    @Column(nullable = false)
+    private String email;
 
     // Not required because there will be a confirm and encryption handling that need to occur
     // before the password is set onto the entity for persistence
@@ -99,14 +103,14 @@ public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl imp
      * {@inheritDoc}
      */
     public String getEmail() {
-        return login;
+        return email;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setEmail(String email) {
-        this.login = email;
+        this.email = email;
     }
 
     /**

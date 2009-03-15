@@ -45,8 +45,7 @@ public class DefaultUserServiceTest extends BaseTest {
     public void testRegister() throws Exception {
         TestUser user = new TestUser();
         user.setLogin("foo@bar.com");
-        user.setPassword("password");
-        assertEquals(RegisterResult.SUCCESS, userService.register(user, "p"));
+        assertEquals(RegisterResult.SUCCESS, userService.register(user, "password", null));
         assertFalse(user.isPartial());
         assertEquals(1, user.getRoles().size());
         assertNotNull(user.getRoles().iterator().next());
@@ -57,15 +56,13 @@ public class DefaultUserServiceTest extends BaseTest {
         // This user was persisted in testRegister method
         TestUser user = new TestUser();
         user.setLogin("foo@bar.com");
-        user.setPassword("password");
-        assertEquals(RegisterResult.EXISTS, userService.register(user, "p"));
+        assertEquals(RegisterResult.EXISTS, userService.register(user, "password", null));
     }
 
     @Test
     public void testRegisterPartial() throws Exception {
         TestUser user = new TestUser();
         user.setLogin("partial@bar.com");
-        user.setPassword("password");
         assertEquals(RegisterResult.SUCCESS, userService.registerPartial(user));
         assertTrue(user.isPartial());
         assertEquals(1, user.getRoles().size());
@@ -73,8 +70,7 @@ public class DefaultUserServiceTest extends BaseTest {
 
         user = new TestUser();
         user.setLogin("partial@bar.com");
-        user.setPassword("password");
-        assertEquals(RegisterResult.SUCCESS, userService.register(user, "password"));
+        assertEquals(RegisterResult.SUCCESS, userService.register(user, "password", null));
         assertFalse(user.isPartial());
         assertEquals(1, user.getRoles().size());
         assertNotNull(user.getRoles().iterator().next());
@@ -164,6 +160,6 @@ public class DefaultUserServiceTest extends BaseTest {
         assertTrue(user.getRoles().contains(new TestRole("admin")));
         assertTrue(user.getRoles().contains(new TestRole("user")));
         assertEquals("test login", user.getLogin());
-        assertEquals("XsDTm62xKL8t8SM8N8m3gg==", user.getPassword());
+        assertEquals("S42HhdOgrK0rLUNPnnJVKw==", user.getPassword());
     }
 }
