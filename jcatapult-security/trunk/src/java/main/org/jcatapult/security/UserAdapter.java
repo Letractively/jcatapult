@@ -47,31 +47,6 @@ public interface UserAdapter<T> {
     String getPassword(T user);
 
     /**
-     * Determines if the users account has expired (trial period or something like that).
-     *
-     * @param   user The user to verify.
-     * @return  True if the account is expired, false otherwise.
-     */
-    boolean isExpired(T user);
-
-    /**
-     * Determines if the users account has been locked (by an admin or someone with great power - hehe).
-     *
-     * @param   user The user to verify.
-     * @return  True if the account is locked, false otherwise.
-     */
-    boolean isLocked(T user);
-
-    /**
-     * Determines if any of the users credenditals have expired (the password was reset and needs
-     * to be changed or the password is old).
-     *
-     * @param   user The user to verify.
-     * @return  True if any credentials have expired, false otherwise.
-     */
-    boolean areCredentialsExpired(T user);
-
-    /**
      * Retrieves all of the roles that the user has.
      *
      * @param   user The user.

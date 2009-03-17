@@ -92,9 +92,6 @@ public class DefaultLoginServiceTest {
 
         UserAdapter ua = EasyMock.createStrictMock(UserAdapter.class);
         EasyMock.expect(ua.getPassword(user)).andReturn("encrypted");
-        EasyMock.expect(ua.areCredentialsExpired(user)).andReturn(false);
-        EasyMock.expect(ua.isExpired(user)).andReturn(false);
-        EasyMock.expect(ua.isLocked(user)).andReturn(false);
         EasyMock.replay(ua);
 
         PasswordEncryptor pe = EasyMock.createStrictMock(PasswordEncryptor.class);
