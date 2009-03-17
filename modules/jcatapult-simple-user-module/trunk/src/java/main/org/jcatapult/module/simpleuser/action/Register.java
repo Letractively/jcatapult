@@ -18,8 +18,8 @@ package org.jcatapult.module.simpleuser.action;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.module.simpleuser.util.URLTools;
 import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.security.EnhancedSecurityContext;
@@ -104,11 +104,6 @@ public class Register extends BaseUserFormAction {
         return uri;
     }
 
-    @ActionPrepareMethod
-    public void prepare() {
-        user = userService.createUser();
-    }
-
     public String get() {
         if (userConfiguration.isRegistrationDisabled()) {
             messageStore.addActionError(MessageScope.REQUEST, "disabled");
@@ -124,9 +119,14 @@ public class Register extends BaseUserFormAction {
             return "disabled";
         }
 
-        RegisterResult result = userService.register(user, password);
+        String url = null;
+        if (userConfiguration.isVerifyEmails()) {
+            url = URLTools.makeURL(request, "verify-email");
+        }
+
+        RegisterResult result = userService.register(user, password, url);
         if (result == RegisterResult.EXISTS) {
-            messageStore.addFieldError(MessageScope.REQUEST, "user.login", "user.login.exists");
+            messageStore.addFieldError(MessageScope.REQUEST, "user.username", "user.username.exists");
             return "input";
         } else if (result == RegisterResult.ERROR) {
             messageStore.addActionError(MessageScope.REQUEST, "error");

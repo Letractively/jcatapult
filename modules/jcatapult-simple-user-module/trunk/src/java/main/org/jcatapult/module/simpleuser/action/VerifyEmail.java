@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2009, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,21 +12,23 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.module.simpleuser.action;
 
+import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.jcatapult.module.simpleuser.util.URLTools;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
+import org.jcatapult.mvc.action.result.annotation.Redirects;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.scope.annotation.Flash;
 import org.jcatapult.mvc.validation.annotation.Required;
-import org.jcatapult.mvc.validation.annotation.ValidateMethod;
-import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.user.domain.User;
-import org.jcatapult.user.service.UpdateResult;
 import org.jcatapult.user.service.UserService;
+import org.jcatapult.security.EnhancedSecurityContext;
 
 import com.google.inject.Inject;
 
@@ -60,64 +62,65 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 @Action(overridable = true)
-@Redirect(uri = "password-updated")
-public class ChangePassword {
+@Redirects({
+    @Redirect(uri = "email-verified"),
+    @Redirect(code = "success-post", uri = "verification-email-resent")
+})
+public class VerifyEmail {
     private final UserService userService;
+    private final HttpServletRequest request;
     public final MessageStore messageStore;
 
     // The user
     @Flash
-    public User passwordResetUser;
+    public User verifyEmailUser;
 
     // For get
     public String guid;
 
     // For post
     @Required
-    public String password;
-    public String passwordConfirm;
+    public String username;
 
     @Inject
-    public ChangePassword(MessageStore messageStore, UserService userService) {
+    public VerifyEmail(MessageStore messageStore, UserService userService, HttpServletRequest request) {
         this.messageStore = messageStore;
         this.userService = userService;
+        this.request = request;
     }
 
     public String get() {
         if (guid == null) {
             messageStore.addActionError(MessageScope.REQUEST, "missing");
-        } else {
-            passwordResetUser = userService.findByGUID(guid);
-            if (passwordResetUser == null) {
-                messageStore.addActionError(MessageScope.REQUEST, "missing");
-            }
+            return "error";
         }
 
-        return "input";
-    }
-
-    public String post() throws Exception {
-        if (passwordResetUser == null) {
+        verifyEmailUser = userService.findByGUID(guid);
+        if (verifyEmailUser == null) {
+            messageStore.addActionError(MessageScope.REQUEST, "missing");
+            return "error";
+        }
+        
+        verifyEmailUser.setVerified(true);
+        verifyEmailUser.setGuid(null);
+        if (!userService.persist(verifyEmailUser)) {
             messageStore.addActionError(MessageScope.REQUEST, "error");
-            return "input";
+            return "error";
         }
 
-        UpdateResult result = userService.updatePassword(passwordResetUser.getId(), password);
-        if (result == UpdateResult.ERROR || result == UpdateResult.MISSING) {
-            messageStore.addActionError(MessageScope.REQUEST, "error");
-            return "input";
-        }
+        EnhancedSecurityContext.login(verifyEmailUser);
 
-        // Log the user in and clear the flash
-        EnhancedSecurityContext.login(passwordResetUser);
-        passwordResetUser = null;
         return "success";
     }
 
-    @ValidateMethod
-    public void validate() {
-        if (password != null && (passwordConfirm == null || !password.equals(passwordConfirm))) {
-            messageStore.addFieldError(MessageScope.REQUEST, "passwordConfirm", "passwordConfirm.match");
+    public String post() {
+        String url = URLTools.makeURL(request, "verify-email");
+        try {
+            userService.resendVerificationEmail(username, url);
+        } catch (EntityNotFoundException e) {
+            // Smother
         }
+
+        return "success-post";
     }
 }

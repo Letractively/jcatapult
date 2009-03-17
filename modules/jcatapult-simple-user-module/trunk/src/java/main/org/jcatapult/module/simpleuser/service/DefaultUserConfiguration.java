@@ -38,6 +38,7 @@ public class DefaultUserConfiguration implements UserConfiguration {
 
     /* Registration configureation */
     public static final String REGISTRATION_DISABLED = "jcatapult.user.register.disabled";
+    public static final String VERIFY_EMAILS = "jcatapult.user.verify-emails";
     public static final String REGISTRATION_SUCCESS_URI = "jcatapult.user.register.success-uri";
     public static final String LOGOUT_SUCCESS_URI = "jcatapult.user.logout.success-uri";
     public static final String LOGIN_SUCCESS_URI = "jcatapult.user.login.success-uri";
@@ -53,6 +54,7 @@ public class DefaultUserConfiguration implements UserConfiguration {
     public DefaultUserConfiguration(Configuration configuration) {
         // Registration
         flags.put(REGISTRATION_DISABLED, configuration.getBoolean(REGISTRATION_DISABLED, false));
+        flags.put(VERIFY_EMAILS, configuration.getBoolean(VERIFY_EMAILS, false));
         this.registrationSuccessURI = configuration.getString(REGISTRATION_SUCCESS_URI, "/");
 
         // Logout
@@ -75,6 +77,13 @@ public class DefaultUserConfiguration implements UserConfiguration {
      */
     public boolean isRegistrationDisabled() {
         return flags.get(REGISTRATION_DISABLED);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isVerifyEmails() {
+        return flags.get(VERIFY_EMAILS);
     }
 
     /**

@@ -19,6 +19,7 @@ package org.jcatapult.module.simpleuser.action;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jcatapult.module.simpleuser.domain.DefaultUser;
 import org.jcatapult.module.simpleuser.service.UserConfiguration;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
@@ -63,7 +64,7 @@ public class BaseUserFormAction {
     protected UserService userService;
 
     @Valid
-    public User user;
+    public DefaultUser user;
 
     /**
      * The Map of associated ids.

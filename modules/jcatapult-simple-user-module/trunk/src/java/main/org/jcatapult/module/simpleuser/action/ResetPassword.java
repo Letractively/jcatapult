@@ -18,7 +18,9 @@ package org.jcatapult.module.simpleuser.action;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.module.simpleuser.util.URLTools;
 import org.jcatapult.mvc.action.annotation.Action;
+import org.jcatapult.user.domain.User;
 import org.jcatapult.user.service.UserService;
 
 import com.google.inject.Inject;
@@ -60,13 +62,12 @@ public class ResetPassword {
     }
 
     public String post() {
-        StringBuilder build = new StringBuilder();
-        build.append(request.getScheme()).append("://").append(request.getServerName());
-        if ((request.getScheme().equals("http") && request.getServerPort() != 80) ||
-                (request.getScheme().equals("https") && request.getServerPort() != 443)) {
-            build.append(":").append(request.getServerPort());
+        User user = userService.findByUsernameOrEmail(login);
+        if (user != null) {
+            String url = URLTools.makeURL(request, "/change-password");
+            userService.resetPassword(user.getId(), url);
         }
-        userService.resetPassword(login, build.toString());
+        
         return "success";
     }
 }

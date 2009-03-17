@@ -85,7 +85,7 @@ public class BaseIntegrationTest extends JPABaseTest {
     protected DefaultUser makeUser(String login) {
         DefaultUser user = new DefaultUser();
         user.setGuid("test-guid");
-        user.setLogin(login);
+        user.setUsername(login);
         user.setPassword("test-password");
         user.addRole(persistenceService.findById(DefaultRole.class, 1));
 

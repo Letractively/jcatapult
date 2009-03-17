@@ -21,6 +21,7 @@ import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.module.simpleuser.domain.DefaultUser;
 
 /**
  * <p>
@@ -40,12 +41,12 @@ public class Edit extends Prepare {
         super.prepare();
 
         if (id != null) {
-            user = userService.findById(id);
+            user = (DefaultUser) userService.findById(id);
         }
     }
 
     public String get() {
-        user = userService.findById(id);
+        user = (DefaultUser) userService.findById(id);
         if (user == null) {
             messageStore.addActionError(MessageScope.REQUEST, "missing.user");
             return "error";
@@ -57,7 +58,7 @@ public class Edit extends Prepare {
 
     public String post() {
         if (!userService.persist(user, associations, password)) {
-            messageStore.addFieldError(MessageScope.REQUEST, "user.login", "user.login.exists");
+            messageStore.addFieldError(MessageScope.REQUEST, "user.username", "user.username.exists");
             return "input";
         }
 

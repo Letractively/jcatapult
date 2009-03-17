@@ -42,6 +42,11 @@ public interface UserConfiguration {
     boolean isRegistrationDisabled();
 
     /**
+     * @return Whether or not emails are being verified.
+     */
+    boolean isVerifyEmails();
+
+    /**
      * @return  The URI to redirect the user to after registration is there is not a saved request.
      */
     String getRegistrationSuccessURI();
