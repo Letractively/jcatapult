@@ -18,6 +18,8 @@ package org.jcatapult.module.simpleuser.action;
 
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Forward;
+import org.jcatapult.mvc.scope.annotation.Request;
+import org.jcatapult.security.JCatapultSecurityException;
 
 /**
  * <p>
@@ -33,7 +35,15 @@ public class LoginFailed {
     public String j_username;
     public String j_password;
 
+    @Request()
+    public JCatapultSecurityException jcatapult_security_login_exception;
+    public String message;
+
     public String execute() {
+        if (jcatapult_security_login_exception != null) {
+            message = jcatapult_security_login_exception.getMessage();
+        }
+        
         return "success";
     }
 }
