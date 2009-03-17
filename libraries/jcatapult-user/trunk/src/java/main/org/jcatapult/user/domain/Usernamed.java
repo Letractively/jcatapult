@@ -15,27 +15,14 @@
  */
 package org.jcatapult.user.domain;
 
-import org.jcatapult.persistence.domain.Auditable;
-import org.joda.time.DateTime;
-
 /**
  * <p>
- * This class provides all the auditing information for the User including
- * creation, update, and login times. 
+ * This is a marker interface that marks a User as having a separate username
+ * and email column so that the service and authentication can determine which
+ * field to use.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public interface AuditableUser<T extends Role> extends User<T>, Auditable {
-    /**
-     * @return  The time when the user last logged in.
-     */
-    DateTime getLastLogin();
-
-    /**
-     * Sets the time when the user last logged in.
-     *
-     * @param   lastLogin The last login.
-     */
-    void setLastLogin(DateTime lastLogin);
+public interface Usernamed {
 }

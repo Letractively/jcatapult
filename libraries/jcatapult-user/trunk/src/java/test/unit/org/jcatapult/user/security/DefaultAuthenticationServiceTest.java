@@ -53,7 +53,7 @@ public class DefaultAuthenticationServiceTest extends BaseTest {
         
         TestUser user = (TestUser) service.loadUser("test-auth@test.com", null);
         assertNotNull(user);
-        assertEquals("test-auth@test.com", user.getLogin());
+        assertEquals("test-auth@test.com", user.getUsername());
         assertEquals(2, user.getRoles().size());
         assertTrue(user.getRoles().contains(new TestRole("user")));
         assertTrue(user.getRoles().contains(new TestRole("admin")));

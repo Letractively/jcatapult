@@ -19,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.Type;
+import org.jcatapult.mvc.validation.annotation.Email;
 import org.jcatapult.mvc.validation.annotation.Required;
 import org.jcatapult.persistence.domain.AuditableSoftDeletableImpl;
 import org.joda.time.DateTime;
@@ -31,13 +32,13 @@ import org.joda.time.DateTime;
  * of the concrete Role class. Also, some JPA implementations don't allow
  * mapped superclasses to contain collections.
  * </p>
- * 
+ *
  * <p>
  * This also provides support for the auditable interface.
  * </p>
  *
  * <p>
- * This class uses separate logins (usernames) and emails.
+ * This class uses a single column for emails and logins.
  * </p>
  *
  * <p>
@@ -46,8 +47,7 @@ import org.joda.time.DateTime;
  *
  * <table border="1">
  * <tr><th>Name</th><th>Type</th><th>Description</th><th>Required?</th><th>Unique?</th><th>Additional info/constraints</th></tr>
- * <tr><td>login</td><td>varchar(255)</td><td>The login of the user.</td><td>Yes</td><td>Yes</td><td>None</td></tr>
- * <tr><td>email</td><td>varchar(255)</td><td>The email of the user.</td><td>Yes</td><td>Yes</td><td>None</td></tr>
+ * <tr><td>email</td><td>varchar(255)</td><td>The email of the user.</td><td>Yes</td><td>Yes</td><td>This must be used for authentication</td></tr>
  * <tr><td>password</td><td>varchar(255)</td><td>The password of the user.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * <tr><td>guid</td><td>varchar(255)</td><td>A GUID used for password reset.</td><td>No</td><td>Yes</td><td>None</td></tr>
  * <tr><td>locked</td><td>boolean(or bit)</td><td>The locked flag.</td><td>Yes</td><td>No</td><td>None</td></tr>
@@ -60,12 +60,9 @@ import org.joda.time.DateTime;
  * @author  Brian Pontarelli
  */
 @MappedSuperclass
-public abstract class AbstractUsernameAuditableUser<T extends Role> extends AuditableSoftDeletableImpl implements AuditableUser<T> {
+public abstract class AbstractTrackedUser<T extends Role> extends AuditableSoftDeletableImpl implements User<T>, Tracked {
     @Required
-    @Column(nullable = false, unique = true)
-    private String login;
-
-    @Required
+    @Email
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -99,15 +96,15 @@ public abstract class AbstractUsernameAuditableUser<T extends Role> extends Audi
     /**
      * {@inheritDoc}
      */
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return email;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.email = username;
     }
 
     /**
@@ -122,6 +119,13 @@ public abstract class AbstractUsernameAuditableUser<T extends Role> extends Audi
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEmailSameAsUsername() {
+        return true;
     }
 
     /**
@@ -237,10 +241,10 @@ public abstract class AbstractUsernameAuditableUser<T extends Role> extends Audi
     }
 
     /**
-     * This compares just based on the login.
+     * This compares just based on the email.
      *
      * @param   o The other object to compare to.
-     * @return  True if they are both Users and the logins are equal.
+     * @return  True if they are both Users and the emails are equal.
      */
     @Override
     public boolean equals(Object o) {
@@ -249,26 +253,26 @@ public abstract class AbstractUsernameAuditableUser<T extends Role> extends Audi
 
         User that = (User) o;
 
-        return login.equals(that.getLogin());
+        return email.equals(that.getEmail());
     }
 
     /**
-     * This uses just the login for hashing.
+     * This uses just the email for hashing.
      *
-     * @return  The hash code of the login.
+     * @return  The hash code of the email.
      */
     @Override
     public int hashCode() {
-        return login.hashCode();
+        return email.hashCode();
     }
 
     /**
-     * Uses the login to compare.
+     * Uses the email to compare.
      *
      * @param   o The other user.
-     * @return  The comparison of just the logins.
+     * @return  The comparison of just the emails.
      */
     public int compareTo(User o) {
-        return login.compareTo(o.getLogin());
+        return email.compareTo(o.getEmail());
     }
 }

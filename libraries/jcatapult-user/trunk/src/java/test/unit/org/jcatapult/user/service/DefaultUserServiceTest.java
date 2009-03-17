@@ -44,7 +44,7 @@ public class DefaultUserServiceTest extends BaseTest {
     @Test
     public void testRegister() throws Exception {
         TestUser user = new TestUser();
-        user.setLogin("foo@bar.com");
+        user.setUsername("foo@bar.com");
         assertEquals(RegisterResult.SUCCESS, userService.register(user, "password", null));
         assertFalse(user.isPartial());
         assertEquals(1, user.getRoles().size());
@@ -55,21 +55,21 @@ public class DefaultUserServiceTest extends BaseTest {
     public void testRegisterDuplicate() throws Exception {
         // This user was persisted in testRegister method
         TestUser user = new TestUser();
-        user.setLogin("foo@bar.com");
+        user.setUsername("foo@bar.com");
         assertEquals(RegisterResult.EXISTS, userService.register(user, "password", null));
     }
 
     @Test
     public void testRegisterPartial() throws Exception {
         TestUser user = new TestUser();
-        user.setLogin("partial@bar.com");
+        user.setUsername("partial@bar.com");
         assertEquals(RegisterResult.SUCCESS, userService.registerPartial(user));
         assertTrue(user.isPartial());
         assertEquals(1, user.getRoles().size());
         assertNotNull(user.getRoles().iterator().next());
 
         user = new TestUser();
-        user.setLogin("partial@bar.com");
+        user.setUsername("partial@bar.com");
         assertEquals(RegisterResult.SUCCESS, userService.register(user, "password", null));
         assertFalse(user.isPartial());
         assertEquals(1, user.getRoles().size());
@@ -95,19 +95,19 @@ public class DefaultUserServiceTest extends BaseTest {
     public void testUpdate() throws SQLException {
         clear();
         TestUser user = makeUser("test login");
-        user.setLogin("changed");
+        user.setUsername("changed");
 
         userService.update(user, "p");
 
         ps.reload(user);
-        assertEquals("changed", user.getLogin());
+        assertEquals("changed", user.getUsername());
     }
 
     @Test
     public void testUpdateNonManagedEntity() throws SQLException {
         clear();
         TestUser user = new TestUser();
-        user.setLogin("test-non-managed");
+        user.setUsername("test-non-managed");
         user.setPassword("test-non-managed");
 
         try {
@@ -162,7 +162,7 @@ public class DefaultUserServiceTest extends BaseTest {
     private void verify(TestUser user) {
         assertTrue(user.getRoles().contains(new TestRole("admin")));
         assertTrue(user.getRoles().contains(new TestRole("user")));
-        assertEquals("test login", user.getLogin());
+        assertEquals("test login", user.getUsername());
         assertEquals("S42HhdOgrK0rLUNPnnJVKw==", user.getPassword());
     }
 }

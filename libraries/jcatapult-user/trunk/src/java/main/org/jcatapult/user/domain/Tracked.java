@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2009, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,30 +12,30 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
-package org.jcatapult.user.service;
+package org.jcatapult.user.domain;
+
+import org.jcatapult.persistence.domain.Auditable;
+import org.joda.time.DateTime;
 
 /**
  * <p>
- * This class stores the various result from a user update.
+ * This class provides all the auditing information for the User including
+ * creation, update, and login times. 
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public enum UpdateResult {
+public interface Tracked extends Auditable {
     /**
-     * Occurs when the user ID supplied has been removed, deleted, etc.
+     * @return  The time when the user last logged in.
      */
-    MISSING,
+    DateTime getLastLogin();
 
     /**
-     * Occurs when the user could not be updated to the database.
+     * Sets the time when the user last logged in.
+     *
+     * @param   lastLogin The last login.
      */
-    ERROR,
-
-    /**
-     * Occurs when the user is updated successfully.
-     */
-    SUCCESS
+    void setLastLogin(DateTime lastLogin);
 }

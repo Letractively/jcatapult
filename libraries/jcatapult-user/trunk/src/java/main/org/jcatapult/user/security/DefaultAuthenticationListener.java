@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.security.login.AuthenticationListener;
-import org.jcatapult.user.domain.AuditableUser;
+import org.jcatapult.user.domain.Tracked;
 import org.jcatapult.user.domain.User;
 import org.joda.time.DateTime;
 
@@ -47,8 +47,8 @@ public class DefaultAuthenticationListener implements AuthenticationListener<Use
      * @param   user The User.
      */
     public void successfulLogin(User user) {
-        if (user instanceof AuditableUser) {
-            ((AuditableUser) user).setLastLogin(new DateTime());
+        if (user instanceof Tracked) {
+            ((Tracked) user).setLastLogin(new DateTime());
             persistenceService.persist(user);
         }
     }
