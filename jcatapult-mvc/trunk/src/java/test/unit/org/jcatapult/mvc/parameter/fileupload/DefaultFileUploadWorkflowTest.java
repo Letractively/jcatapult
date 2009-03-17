@@ -18,6 +18,7 @@ package org.jcatapult.mvc.parameter.fileupload;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -78,6 +79,7 @@ public class DefaultFileUploadWorkflowTest {
         EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
         EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
         EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.expect(request.getParameterMap()).andReturn(new HashMap());
         EasyMock.replay(request);
 
         Configuration config = EasyMock.createStrictMock(Configuration.class);
@@ -119,6 +121,7 @@ public class DefaultFileUploadWorkflowTest {
         EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
         EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
         EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.expect(request.getParameterMap()).andReturn(new HashMap());
         EasyMock.replay(request);
 
         Configuration config = EasyMock.createStrictMock(Configuration.class);
@@ -160,6 +163,7 @@ public class DefaultFileUploadWorkflowTest {
         EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
         EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
         EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.expect(request.getParameterMap()).andReturn(new HashMap());
         EasyMock.replay(request);
 
         Configuration config = EasyMock.createStrictMock(Configuration.class);
@@ -205,6 +209,7 @@ public class DefaultFileUploadWorkflowTest {
         EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
         EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
         EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.expect(request.getParameterMap()).andReturn(new HashMap());
         EasyMock.replay(request);
 
         Configuration config = EasyMock.createStrictMock(Configuration.class);
@@ -250,6 +255,7 @@ public class DefaultFileUploadWorkflowTest {
         EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
         EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
         EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.expect(request.getParameterMap()).andReturn(new HashMap());
         EasyMock.replay(request);
 
         Configuration config = EasyMock.createStrictMock(Configuration.class);
@@ -307,6 +313,7 @@ public class DefaultFileUploadWorkflowTest {
         EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body));
         EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
         EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        EasyMock.expect(request.getParameterMap()).andReturn(new HashMap());
         EasyMock.replay(request);
 
         Configuration config = EasyMock.createStrictMock(Configuration.class);
