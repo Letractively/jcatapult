@@ -66,20 +66,8 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
-      <description>If set to true and the exception is an AccountLockedException the body is processed.</description>
-      <name>locked</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>If set to true and the exception is an AccountExpiredException the body is processed.</description>
-      <name>expired</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>If set to true and the exception is an CredentialsExpiredException the body is processed.</description>
-      <name>credentials</name>
+      <description>This String must match the getMessage of the exception for the body to be processed.</description>
+      <name>failure</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>

@@ -17,6 +17,8 @@ package org.jcatapult.security.login;
 
 import java.util.Map;
 
+import org.jcatapult.security.JCatapultSecurityException;
+
 /**
  * <p>
  * This interface defines the method that JCatapult framework locates users
@@ -36,6 +38,11 @@ public interface AuthenticationService<T> {
      * @param   username The username to look for.
      * @param   parameters These are available for implementations that use something other than usernames.
      * @return  The user object or null if it doesn't exist.
+     * @throws  JCatapultSecurityException Implementors can throw a JCatapultSecurityException or any
+     *          sub-class on failure cases. For example, some websites verify emails before allowing
+     *          users to log in. If the user hasn't verified their email, the application might throw
+     *          a custom exception from this interface. Any exceptions that are thrown are handled
+     *          by the {@link org.jcatapult.security.servlet.login.LoginExceptionHandler}.
      */
-    T loadUser(String username, Map<String, Object> parameters);
+    T loadUser(String username, Map<String, Object> parameters) throws JCatapultSecurityException;
 }

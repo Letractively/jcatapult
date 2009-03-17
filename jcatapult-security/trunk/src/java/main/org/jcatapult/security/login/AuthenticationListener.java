@@ -15,6 +15,8 @@
  */
 package org.jcatapult.security.login;
 
+import java.util.Map;
+
 /**
  * <p>
  * This interface defines a mechanism by which applications can listener for
@@ -34,7 +36,9 @@ public interface AuthenticationListener<T> {
     /**
      * The given user failed to logged in.
      *
-     * @param   user The user.
+     * @param   username The username.
+     * @param   password The password.
+     * @param   parameters The parameters.
      */
-    void failedLogin(T user);
+    void failedLogin(String username, String password, Map<String, Object> parameters);
 }

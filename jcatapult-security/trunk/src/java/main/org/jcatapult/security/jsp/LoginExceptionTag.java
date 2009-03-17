@@ -18,9 +18,6 @@ package org.jcatapult.security.jsp;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.jcatapult.security.login.AccountExpiredException;
-import org.jcatapult.security.login.AccountLockedException;
-import org.jcatapult.security.login.CredentialsExpiredException;
 import org.jcatapult.security.login.InvalidPasswordException;
 import org.jcatapult.security.login.InvalidUsernameException;
 import org.jcatapult.security.servlet.login.DefaultLoginExceptionHandler;
@@ -32,14 +29,18 @@ import org.jcatapult.security.servlet.login.DefaultLoginExceptionHandler;
  * the tag that is set to true.
  * </p>
  *
+ * <p>
+ * This tag also allows you to throw your own custom exceptions and then
+ * check for them using a String. The failure String must match the return
+ * value of the getMessage of the thrown exception.
+ * </p>
+ *
  * @author  Brian Pontarelli
  */
 public class LoginExceptionTag extends BodyTagSupport {
     private boolean username;
     private boolean password;
-    private boolean locked;
-    private boolean credentials;
-    private boolean expired;
+    private String failure;
 
     public void setUsername(boolean username) {
         this.username = username;
@@ -49,16 +50,8 @@ public class LoginExceptionTag extends BodyTagSupport {
         this.password = password;
     }
 
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public void setCredentials(boolean credentials) {
-        this.credentials = credentials;
-    }
-
-    public void setExpired(boolean expired) {
-        this.expired = expired;
+    public void setFailure(String failure) {
+        this.failure = failure;
     }
 
     @Override
@@ -67,9 +60,7 @@ public class LoginExceptionTag extends BodyTagSupport {
         if (t != null) {
             if ((username && t instanceof InvalidUsernameException) ||
                     (password && t instanceof InvalidPasswordException) ||
-                    (locked && t instanceof AccountLockedException) ||
-                    (expired && t instanceof AccountExpiredException) ||
-                    (credentials && t instanceof CredentialsExpiredException)) {
+                    (failure != null && failure.equals(t.getMessage()))) {
                 return EVAL_BODY_INCLUDE;
             }
         }

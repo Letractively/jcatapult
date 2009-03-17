@@ -17,6 +17,7 @@ package org.jcatapult.security.login;
 
 import java.util.Map;
 
+import org.jcatapult.security.JCatapultSecurityException;
 import org.jcatapult.security.PasswordEncryptor;
 import org.jcatapult.security.UserAdapter;
 import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
@@ -72,39 +73,30 @@ public class DefaultLoginService implements LoginService {
     @SuppressWarnings("unchecked")
     public Object login(String username, String password, Map<String, Object> parameters)
     throws InvalidUsernameException, InvalidPasswordException {
-        Object user = authenticationService.loadUser(username, parameters);
-        if (user == null) {
-            throw new InvalidUsernameException();
-        }
+        Object user;
+        try {
+            user = authenticationService.loadUser(username, parameters);
+            if (user == null) {
+                throw new InvalidUsernameException();
+            }
 
-        String encrypted = passwordEncryptor.encryptPassword(password, user);
-        String userPassword = userAdapter.getPassword(user);
-        if (!userPassword.equals(encrypted)) {
-            if (authenticationListener != null) {
-                authenticationListener.failedLogin(user);
+            String encrypted = passwordEncryptor.encryptPassword(password, user);
+            String userPassword = userAdapter.getPassword(user);
+            if (!userPassword.equals(encrypted)) {
+                throw new InvalidPasswordException();
             }
-            throw new InvalidPasswordException();
-        }
-
-        if (userAdapter.areCredentialsExpired(user)) {
+        } catch (JCatapultSecurityException e) {
             if (authenticationListener != null) {
-                authenticationListener.failedLogin(user);
+                authenticationListener.failedLogin(username, password, parameters);
             }
-            throw new CredentialsExpiredException();
-        } else if (userAdapter.isExpired(user)) {
-            if (authenticationListener != null) {
-                authenticationListener.failedLogin(user);
-            }
-            throw new AccountExpiredException();
-        } else if (userAdapter.isLocked(user)) {
-            if (authenticationListener != null) {
-                authenticationListener.failedLogin(user);
-            }
-            throw new AccountLockedException();
+            
+            throw e;
         }
 
         // Save the user to the context since the login was good
-        authenticationListener.successfulLogin(user);
+        if (authenticationListener != null) {
+            authenticationListener.successfulLogin(user);
+        }
         securityContextProvider.login(user);
 
         return user;
