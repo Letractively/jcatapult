@@ -85,7 +85,7 @@ public abstract class AbstractAuditableUser<T extends Role> extends AuditableSof
     private boolean partial;
 
     @Column
-    private boolean verified;
+    private boolean verified = true;
 
     @Column(name = "last_login")
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")

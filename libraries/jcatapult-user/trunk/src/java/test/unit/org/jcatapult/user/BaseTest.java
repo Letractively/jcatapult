@@ -75,8 +75,11 @@ public class BaseTest extends JPABaseTest {
         TestUser user = new TestUser();
         user.setLogin(login);
 
+        int adminID = ps.queryFirst(TestRole.class, "select tr from TestRole tr where tr.name = 'admin'").getId();
+        int userID = ps.queryFirst(TestRole.class, "select tr from TestRole tr where tr.name = 'user'").getId();
+
         Map<String, int[]> associations = new HashMap<String, int[]>();
-        associations.put("roles", new int[]{1, 2});
+        associations.put("roles", new int[]{adminID, userID});
 
         assertTrue(userService.persist(user, associations, "password"));
         return user;

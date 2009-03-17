@@ -60,4 +60,60 @@ public class DefaultAuthenticationServiceTest extends BaseTest {
 
         assertNull(service.loadUser("bad-auth@test.com", null));
     }
+
+    @Test
+    public void testNotVerified() throws Exception {
+        TestUser user = makeUser("test-auth-not-verified@test.com");
+        user.setVerified(false);
+        ps.persist(user);
+        ps.clearCache();
+
+        try {
+            service.loadUser("test-auth-not-verified@test.com", null);
+        } catch (Exception e) {
+            assertEquals("not-verified", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testExpired() throws Exception {
+        TestUser user = makeUser("test-auth-expired@test.com");
+        user.setExpired(true);
+        ps.persist(user);
+        ps.clearCache();
+
+        try {
+            service.loadUser("test-auth-expired@test.com", null);
+        } catch (Exception e) {
+            assertEquals("expired", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testLocked() throws Exception {
+        TestUser user = makeUser("test-auth-locked@test.com");
+        user.setLocked(true);
+        ps.persist(user);
+        ps.clearCache();
+
+        try {
+            service.loadUser("test-auth-locked@test.com", null);
+        } catch (Exception e) {
+            assertEquals("locked", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testPasswordExpired() throws Exception {
+        TestUser user = makeUser("test-auth-password-expired@test.com");
+        user.setPasswordExpired(true);
+        ps.persist(user);
+        ps.clearCache();
+
+        try {
+            service.loadUser("test-auth-password-expired@test.com", null);
+        } catch (Exception e) {
+            assertEquals("password-expired", e.getMessage());
+        }
+    }
 }

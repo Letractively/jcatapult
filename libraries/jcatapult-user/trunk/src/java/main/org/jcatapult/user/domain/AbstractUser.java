@@ -79,7 +79,7 @@ public abstract class AbstractUser<T extends Role> extends SoftDeletableImpl imp
     private boolean partial;
 
     @Column
-    private boolean verified;
+    private boolean verified = true;
 
     /**
      * {@inheritDoc}

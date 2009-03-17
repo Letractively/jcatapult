@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.persistence.PersistenceException;
 
 import org.jcatapult.config.Configuration;
 import org.jcatapult.persistence.service.PersistenceService;
@@ -87,6 +88,14 @@ public abstract class AbstractUserHandler<T extends User<U>, U extends Role> imp
             
             List<U> roles = persistenceService.queryAll(getRoleType(),
                 "select r from " + getRoleType().getSimpleName() + " r where r.id in (?1)", ids);
+            for (U role : roles) {
+                ids.remove(role.getId());
+            }
+
+            if (ids.size() > 0) {
+                throw new PersistenceException("Invalid role ID(s) " + ids);
+            }
+            
             user.getRoles().addAll(roles);
         }
     }

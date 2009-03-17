@@ -15,6 +15,8 @@
  */
 package org.jcatapult.user.security;
 
+import java.util.Map;
+
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.security.login.AuthenticationListener;
 import org.jcatapult.user.domain.AuditableUser;
@@ -51,6 +53,6 @@ public class DefaultAuthenticationListener implements AuthenticationListener<Use
         }
     }
 
-    public void failedLogin(User user) {
+    public void failedLogin(String username, String password, Map<String, Object> parameters) {
     }
 }
