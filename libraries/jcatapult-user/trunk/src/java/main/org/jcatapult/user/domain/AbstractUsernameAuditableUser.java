@@ -47,7 +47,7 @@ import org.joda.time.DateTime;
  * <table border="1">
  * <tr><th>Name</th><th>Type</th><th>Description</th><th>Required?</th><th>Unique?</th><th>Additional info/constraints</th></tr>
  * <tr><td>login</td><td>varchar(255)</td><td>The login of the user.</td><td>Yes</td><td>Yes</td><td>None</td></tr>
- * <tr><td>email</td><td>varchar(255)</td><td>The email of the user.</td><td>Yes</td><td>No</td><td>None</td></tr>
+ * <tr><td>email</td><td>varchar(255)</td><td>The email of the user.</td><td>Yes</td><td>Yes</td><td>None</td></tr>
  * <tr><td>password</td><td>varchar(255)</td><td>The password of the user.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * <tr><td>guid</td><td>varchar(255)</td><td>A GUID used for password reset.</td><td>No</td><td>Yes</td><td>None</td></tr>
  * <tr><td>locked</td><td>boolean(or bit)</td><td>The locked flag.</td><td>Yes</td><td>No</td><td>None</td></tr>
@@ -66,7 +66,7 @@ public abstract class AbstractUsernameAuditableUser<T extends Role> extends Audi
     private String login;
 
     @Required
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     // Not required because there will be a confirm and encryption handling that need to occur
@@ -90,7 +90,7 @@ public abstract class AbstractUsernameAuditableUser<T extends Role> extends Audi
     private boolean partial;
 
     @Column
-    private boolean verified;
+    private boolean verified = true;
 
     @Column(name = "last_login")
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
