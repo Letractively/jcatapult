@@ -7,21 +7,14 @@ create table roles (
 create table users (
     id integer not null auto_increment,
     deleted bit not null,
-    company_name varchar(255),
-    first_name varchar(255),
-    middle_name varchar(255),
-    last_name varchar(255),
-    maiden_name varchar(255),
-    prefix varchar(255),
-    suffix varchar(255),
-    nickname varchar(255),
     expired bit not null,
     guid varchar(255),
     locked bit not null,
-    login varchar(255) not null unique,
+    email varchar(255) not null unique,
     password varchar(255) not null,
     password_expired bit not null,
-    partial bit,
+    partial bit not null,
+    verified bit not null,
     primary key (id)
 ) ENGINE=InnoDB;
 

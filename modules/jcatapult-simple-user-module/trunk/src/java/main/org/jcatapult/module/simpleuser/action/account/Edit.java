@@ -17,6 +17,7 @@
 package org.jcatapult.module.simpleuser.action.account;
 
 import org.jcatapult.module.simpleuser.action.BaseUserFormAction;
+import org.jcatapult.module.simpleuser.domain.DefaultUser;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
@@ -69,7 +70,7 @@ public class Edit extends BaseUserFormAction {
      */
     @ActionPrepareMethod
     public void prepare() {
-        user = userService.findByLogin(SecurityContext.getCurrentUsername());
+        user = (DefaultUser) userService.findByUsername(SecurityContext.getCurrentUsername());
     }
 
     /**
@@ -100,7 +101,7 @@ public class Edit extends BaseUserFormAction {
         }
 
         String oldUsername = SecurityContext.getCurrentUsername();
-        if (!user.getLogin().equals(oldUsername)) {
+        if (!user.getUsername().equals(oldUsername)) {
             EnhancedSecurityContext.update(user);
         }
         

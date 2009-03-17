@@ -23,8 +23,7 @@ import com.google.inject.AbstractModule;
 
 /**
  * <p>
- * This class extends the JCatapult security module and sets the
- * services that are required for that functionality.
+ * This class configures the UserHandler for the jcatapult-user library.
  * </p>
  *
  * @author  Brian Pontarelli

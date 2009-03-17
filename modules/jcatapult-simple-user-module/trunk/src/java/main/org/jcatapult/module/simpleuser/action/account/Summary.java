@@ -57,7 +57,7 @@ public class Summary {
     private final UserService userService;
 
     /**
-     * The User fetched from the UserService {@link UserService#findByLogin(String)} method.
+     * The User fetched from the UserService {@link UserService#findByUsername(String)} method.
      */
     public User user;
 
@@ -68,13 +68,13 @@ public class Summary {
 
     /**
      * Fetches the current user by grabbing the current username from the {@link SecurityContext}
-     * and then looking up the user from the UserService method {@link UserService#findByLogin(String)}.
+     * and then looking up the user from the UserService method {@link UserService#findByUsername(String)}.
      *
      * @return  Always success, even if the user doesn't exist any longer.
      */
     public String execute() {
         String username = SecurityContext.getCurrentUsername();
-        user = userService.findByLogin(username);
+        user = userService.findByUsername(username);
         return "success";
     }
 }

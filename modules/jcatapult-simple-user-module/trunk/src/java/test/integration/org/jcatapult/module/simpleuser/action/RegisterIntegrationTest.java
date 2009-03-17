@@ -63,7 +63,7 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
         Configuration configuration = makeConfiguration(true);
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.login", "login@test.com").
+            withParameter("user.username", "login@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
@@ -80,7 +80,7 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
         Configuration configuration = makeConfiguration(false);
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.login", "login@test.com").
+            withParameter("user.username", "login@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
@@ -101,13 +101,13 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
         Configuration configuration = makeConfiguration(false);
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.login", "login@test.com").
+            withParameter("user.username", "login@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
             post();
         assertEquals(1, runner.messageStore.getFieldMessages(MessageType.ERROR).size());
-        assertEquals("That email is already registered.", runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.login").get(0));
+        assertEquals("That email is already registered.", runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.username").get(0));
         assertEquals("anonymous", EnhancedSecurityContext.getCurrentUsername());
     }
 
@@ -117,7 +117,7 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
         Configuration configuration = makeConfiguration(false);
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.login", "login@test.com").
+            withParameter("user.username", "login@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "different").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).

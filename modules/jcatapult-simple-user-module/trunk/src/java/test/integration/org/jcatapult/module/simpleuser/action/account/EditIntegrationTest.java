@@ -63,7 +63,7 @@ public class EditIntegrationTest extends BaseIntegrationTest {
 
         // Then update
         runner.test("/account/edit").
-            withParameter("user.login", "edit-update-new@test.com").
+            withParameter("user.username", "edit-update-new@test.com").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
             post();
 
@@ -87,7 +87,7 @@ public class EditIntegrationTest extends BaseIntegrationTest {
 
         // Then update
         runner.test("/account/edit").
-            withParameter("user.login", "edit-update-password@test.com").
+            withParameter("user.username", "edit-update-password@test.com").
             withParameter("password", "new-password").
             withParameter("passwordConfirm", "new-password").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).

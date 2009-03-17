@@ -34,7 +34,7 @@ public class UserTest extends BaseTest {
         makeUser("test-dups@test.com");
         DefaultRole role = persistenceService.findById(DefaultRole.class, 1);
         DefaultUser user = new DefaultUser();
-        user.setLogin("test-dups@test.com");
+        user.setUsername("test-dups@test.com");
         user.setGuid("test uid");
         user.setPassword("blah blah");
         user.addRole(role);
@@ -50,7 +50,7 @@ public class UserTest extends BaseTest {
     public void testContactInfo() {
         DefaultRole role = persistenceService.findById(DefaultRole.class, 1);
         DefaultUser user = new DefaultUser();
-        user.setLogin("test-insert@test.com");
+        user.setUsername("test-insert@test.com");
         user.setGuid("test uid");
         user.setPassword("blah blah");
         user.addRole(role);
@@ -59,7 +59,7 @@ public class UserTest extends BaseTest {
 
         persistenceService.clearCache();
 
-        user = persistenceService.queryFirst(DefaultUser.class, "select u from DefaultUser u where u.login = ?1", "test-insert@test.com");
+        user = persistenceService.queryFirst(DefaultUser.class, "select u from DefaultUser u where u.email = ?1", "test-insert@test.com");
         Assert.assertEquals("test uid", user.getGuid());
         Assert.assertEquals("blah blah", user.getPassword());
         Assert.assertEquals(1, user.getRoles().size());

@@ -30,7 +30,7 @@ public class EditTest extends BaseTest {
     public void setup() {
         user = new DefaultUser();
         user.setId(1);
-        user.setLogin("test");
+        user.setUsername("test");
         EnhancedSecurityContext.login(user);
     }
 
@@ -39,7 +39,7 @@ public class EditTest extends BaseTest {
         EnhancedSecurityContext.setProvider(new EnhancedSecurityContextProvider() {
             private DefaultUser user;
             public String getCurrentUsername() {
-                return user.getLogin();
+                return user.getUsername();
             }
 
             public Object getCurrentUser() {
@@ -63,7 +63,7 @@ public class EditTest extends BaseTest {
     @Test
     public void testLoad() {
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.findByLogin("test")).andReturn(user);
+        EasyMock.expect(userService.findByUsername("test")).andReturn(user);
         EasyMock.replay(userService);
 
         Edit edit = new Edit();
@@ -77,7 +77,7 @@ public class EditTest extends BaseTest {
     @Test
     public void testSuccess() {
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.findByLogin("test")).andReturn(user);
+        EasyMock.expect(userService.findByUsername("test")).andReturn(user);
         EasyMock.expect(userService.update(user, "p")).andReturn(UpdateResult.SUCCESS);
         EasyMock.replay(userService);
 
@@ -95,7 +95,7 @@ public class EditTest extends BaseTest {
     @Test
     public void testError() {
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.findByLogin("test")).andReturn(user);
+        EasyMock.expect(userService.findByUsername("test")).andReturn(user);
         EasyMock.expect(userService.update(user, "p")).andReturn(UpdateResult.ERROR);
         EasyMock.replay(userService);
 
@@ -118,11 +118,11 @@ public class EditTest extends BaseTest {
         // The security context is setup, so create a new user to simulate multiple requests
         user = new DefaultUser();
         user.setId(1);
-        user.setLogin("changed");
+        user.setUsername("changed");
         user.setPassword("password");
         
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.findByLogin("test")).andReturn(user);
+        EasyMock.expect(userService.findByUsername("test")).andReturn(user);
         EasyMock.expect(userService.update(user, "p")).andReturn(UpdateResult.SUCCESS);
         EasyMock.replay(userService);
 
