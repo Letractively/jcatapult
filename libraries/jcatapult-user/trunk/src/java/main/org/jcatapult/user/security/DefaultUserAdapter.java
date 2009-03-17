@@ -32,8 +32,15 @@ import org.jcatapult.user.domain.User;
  * @author  Brian Pontarelli
  */
 public class DefaultUserAdapter<T extends User<U>, U extends Role> implements UserAdapter<T> {
+    /**
+     * This invokes the {@link User#getUsername()} method which returns either the username or the
+     * email address, depending on the implementation.
+     *
+     * @param   user The user to get the username from.
+     * @return  The user's username.
+     */
     public String getUsername(T user) {
-        return user.getLogin();
+        return user.getUsername();
     }
 
     public String getPassword(T user) {

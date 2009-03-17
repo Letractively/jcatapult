@@ -75,12 +75,36 @@ public interface UserService {
     User findById(int id);
 
     /**
-     * Locates the User with the given login.
+     * Locates the User with the given username or email address. Notice that on some Users the
+     * username is a separate column and one others it is the same as the email. Implementations of
+     * this method should use the {@link org.jcatapult.user.domain.Usernamed} marker interface to
+     * determine how to form the EJB-QL select statement using the appropriate column. Also, the given
+     * string should be parsed to determine if it is an email or a username and the EJB-QL should be
+     * varied accordingly.
      *
-     * @param   login The login.
+     * @param   str The String.
      * @return  The User or null.
      */
-    User findByLogin(String login);
+    User findByUsernameOrEmail(String str);
+
+    /**
+     * Locates the User with the given username. Notice that on some Users the username is a separate
+     * column and one others it is the same as the email. Implementations of this method should use
+     * the {@link org.jcatapult.user.domain.Usernamed} marker interface to determine how to form the
+     * EJB-QL select statement using the appropriate column.
+     *
+     * @param   username The username.
+     * @return  The User or null.
+     */
+    User findByUsername(String username);
+
+    /**
+     * Finds the user by email address.
+     *
+     * @param   email The email.
+     * @return  The User or null.
+     */
+    User findByEmail(String email);
 
     /**
      * Retrieves the user whose GUID field equals the GUID given.
@@ -161,7 +185,7 @@ public interface UserService {
      * This method has a number of caveats with it. The first being that your User implementation
      * must have an email that is unique so that partial users can be emailed as well as located when
      * they fully register. This generally implies that the login and email are the same such as with
-     * the {@link org.jcatapult.user.domain.AbstractUser} or the {@link org.jcatapult.user.domain.AbstractAuditableUser}.
+     * the {@link org.jcatapult.user.domain.AbstractUser} or the {@link org.jcatapult.user.domain.AbstractTrackedUser}.
      * </p>
      *
      * <p>
@@ -250,8 +274,8 @@ public interface UserService {
     /**
      * <p>
      * Saves or updates the given User. This User instance must be completely filled out in order to
-     * be inserted or updated. All foreign key references need to be correct prior to any updates
-     * otherwise Hibernate will truncate the data.
+     * be inserted or updated except for any associations. The associations are handled using the given
+     * Map and the UserHandler interface.
      * </p>
      *
      * @param   user The User to save or update.
@@ -260,6 +284,18 @@ public interface UserService {
      * @return  True if the user was saved, false otherwise.
      */
     boolean persist(User user, Map<String, int[]> associations, String password);
+
+    /**
+     * <p>
+     * Saves or updates the given User. This User instance must be completely filled out in order to
+     * be inserted or updated. All foreign key references need to be correct prior to any updates
+     * otherwise Hibernate will truncate the data.
+     * </p>
+     *
+     * @param   user The User to save or update.
+     * @return  True if the user was saved, false otherwise.
+     */
+    boolean persist(User user);
 
     /**
      * Deletes the User with the given ID.
@@ -278,11 +314,11 @@ public interface UserService {
     /**
      * Resets the password for the given user to the given password.
      *
-     * @param   login The login to reset the password for.
+     * @param   id The user id.
      * @param   password The new password.
      * @return  The result of the reset.
      */
-    UpdateResult updatePassword(String login, String password);
+    UpdateResult updatePassword(int id, String password);
 
     /**
      * Sets up the user account for a password reset by setting a GUID and then emailing the user a
@@ -309,11 +345,11 @@ public interface UserService {
      * must be configured because it has no default.
      * </p>
      *
-     * @param   login The login to setup for password reset.
+     * @param   id The user id.
      * @param   url The root of the URL to include in the email to the user with a link to reset
      *          their password. This should include the protocol, domain name, port, and the action
      *          URI (i.e. http://example.com:1000/change-password).
      * @return  The result of the reset.
      */
-    UpdateResult resetPassword(String login, String url);
+    UpdateResult resetPassword(int id, String url);
 }

@@ -18,6 +18,7 @@ package org.jcatapult.user.domain;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import org.jcatapult.mvc.validation.annotation.Email;
 import org.jcatapult.mvc.validation.annotation.Required;
 import org.jcatapult.persistence.domain.SoftDeletableImpl;
 
@@ -40,8 +41,8 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
  *
  * <table border="1">
  * <tr><th>Name</th><th>Type</th><th>Description</th><th>Required?</th><th>Unique?</th><th>Additional info/constraints</th></tr>
- * <tr><td>login</td><td>varchar(255)</td><td>The login of the user.</td><td>Yes</td><td>Yes</td><td>None</td></tr>
- * <tr><td>email</td><td>varchar(255)</td><td>The email of the user.</td><td>Yes</td><td>No</td><td>None</td></tr>
+ * <tr><td>username</td><td>varchar(255)</td><td>The username of the user.</td><td>Yes</td><td>Yes</td><td>Can be used for authentication</td></tr>
+ * <tr><td>email</td><td>varchar(255)</td><td>The email of the user.</td><td>Yes</td><td>Yes</td><td>Can be used for authentication</td></tr>
  * <tr><td>password</td><td>varchar(255)</td><td>The password of the user.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * <tr><td>guid</td><td>varchar(255)</td><td>A GUID used for password reset.</td><td>No</td><td>Yes</td><td>None</td></tr>
  * <tr><td>locked</td><td>boolean(or bit)</td><td>The locked flag.</td><td>Yes</td><td>No</td><td>None</td></tr>
@@ -54,12 +55,14 @@ import org.jcatapult.persistence.domain.SoftDeletableImpl;
  * @author  Brian Pontarelli
  */
 @MappedSuperclass
-public abstract class AbstractUsernameUser<T extends Role> extends SoftDeletableImpl implements User<T> {
+public abstract class AbstractUsernameUser<T extends Role> extends SoftDeletableImpl implements User<T>, Usernamed {
     @Required
     @Column(nullable = false, unique = true)
-    private String login;
+    private String username;
 
-    @Column(nullable = false)
+    @Required
+    @Email
+    @Column(nullable = false, unique = true)
     private String email;
 
     // Not required because there will be a confirm and encryption handling that need to occur
@@ -88,15 +91,15 @@ public abstract class AbstractUsernameUser<T extends Role> extends SoftDeletable
     /**
      * {@inheritDoc}
      */
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -111,6 +114,13 @@ public abstract class AbstractUsernameUser<T extends Role> extends SoftDeletable
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEmailSameAsUsername() {
+        return false;
     }
 
     /**
@@ -212,10 +222,10 @@ public abstract class AbstractUsernameUser<T extends Role> extends SoftDeletable
     }
 
     /**
-     * This compares just based on the login.
+     * This compares just based on the email.
      *
      * @param   o The other object to compare to.
-     * @return  True if they are both Users and the logins are equal.
+     * @return  True if they are both Users and the emails are equal.
      */
     @Override
     public boolean equals(Object o) {
@@ -224,26 +234,26 @@ public abstract class AbstractUsernameUser<T extends Role> extends SoftDeletable
 
         User that = (User) o;
 
-        return login.equals(that.getLogin());
+        return email.equals(that.getEmail());
     }
 
     /**
-     * This uses just the login for hashing.
+     * This uses just the email for hashing.
      *
-     * @return  The hash code of the login.
+     * @return  The hash code of the email.
      */
     @Override
     public int hashCode() {
-        return login.hashCode();
+        return email.hashCode();
     }
 
     /**
-     * Uses the login to compare.
+     * Uses the email to compare.
      *
      * @param   o The other user.
-     * @return  The comparison of just the logins.
+     * @return  The comparison of just the emails.
      */
     public int compareTo(User o) {
-        return login.compareTo(o.getLogin());
+        return username.compareTo(o.getEmail());
     }
 }

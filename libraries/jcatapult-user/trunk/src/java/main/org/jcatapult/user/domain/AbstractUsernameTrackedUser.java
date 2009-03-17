@@ -19,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.Type;
+import org.jcatapult.mvc.validation.annotation.Email;
 import org.jcatapult.mvc.validation.annotation.Required;
 import org.jcatapult.persistence.domain.AuditableSoftDeletableImpl;
 import org.joda.time.DateTime;
@@ -31,13 +32,13 @@ import org.joda.time.DateTime;
  * of the concrete Role class. Also, some JPA implementations don't allow
  * mapped superclasses to contain collections.
  * </p>
- *
+ * 
  * <p>
  * This also provides support for the auditable interface.
  * </p>
  *
  * <p>
- * This class uses a single column for emails and logins.
+ * This class uses separate logins (usernames) and emails.
  * </p>
  *
  * <p>
@@ -46,7 +47,8 @@ import org.joda.time.DateTime;
  *
  * <table border="1">
  * <tr><th>Name</th><th>Type</th><th>Description</th><th>Required?</th><th>Unique?</th><th>Additional info/constraints</th></tr>
- * <tr><td>login</td><td>varchar(255)</td><td>The login of the user.</td><td>Yes</td><td>Yes</td><td>None</td></tr>
+ * <tr><td>username</td><td>varchar(255)</td><td>The username of the user.</td><td>Yes</td><td>Yes</td><td>Can be used for authentication</td></tr>
+ * <tr><td>email</td><td>varchar(255)</td><td>The email of the user.</td><td>Yes</td><td>Yes</td><td>Can be used for authentication</td></tr>
  * <tr><td>password</td><td>varchar(255)</td><td>The password of the user.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * <tr><td>guid</td><td>varchar(255)</td><td>A GUID used for password reset.</td><td>No</td><td>Yes</td><td>None</td></tr>
  * <tr><td>locked</td><td>boolean(or bit)</td><td>The locked flag.</td><td>Yes</td><td>No</td><td>None</td></tr>
@@ -54,15 +56,25 @@ import org.joda.time.DateTime;
  * <tr><td>password_expired</td><td>boolean(or bit)</td><td>The password expired flag.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * <tr><td>partial</td><td>boolean(or bit)</td><td>The partial flag.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * <tr><td>verified</td><td>boolean(or bit)</td><td>The verified flag.</td><td>Yes</td><td>No</td><td>None</td></tr>
+ * <tr><td>last_login</td><td>timestamp</td><td>The last login of the user.</td><td>No</td><td>No</td><td>None</td></tr>
+ * <tr><td>insert_user</td><td>varchar(255)</td><td>The username of the person that inserted the row.</td><td>Yes</td><td>No</td><td>None</td></tr>
+ * <tr><td>insert_date</td><td>timestamp</td><td>The insert time of the row.</td><td>Yes</td><td>No</td><td>None</td></tr>
+ * <tr><td>update_user</td><td>varchar(255)</td><td>The username of the person that updated the row last.</td><td>Yes</td><td>No</td><td>None</td></tr>
+ * <tr><td>update_date</td><td>timestamp</td><td>The last update time of the row.</td><td>Yes</td><td>No</td><td>None</td></tr>
  * </table>
  *
  * @author  Brian Pontarelli
  */
 @MappedSuperclass
-public abstract class AbstractAuditableUser<T extends Role> extends AuditableSoftDeletableImpl implements AuditableUser<T> {
+public abstract class AbstractUsernameTrackedUser<T extends Role> extends AuditableSoftDeletableImpl implements User<T>, Tracked, Usernamed {
     @Required
     @Column(nullable = false, unique = true)
-    private String login;
+    private String username;
+
+    @Required
+    @Email
+    @Column(nullable = false, unique = true)
+    private String email;
 
     // Not required because there will be a confirm and encryption handling that need to occur
     // before the password is set onto the entity for persistence
@@ -94,29 +106,36 @@ public abstract class AbstractAuditableUser<T extends Role> extends AuditableSof
     /**
      * {@inheritDoc}
      */
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
      * {@inheritDoc}
      */
     public String getEmail() {
-        return login;
+        return email;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setEmail(String email) {
-        this.login = email;
+        this.email = email;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEmailSameAsUsername() {
+        return false;
     }
 
     /**
@@ -232,10 +251,10 @@ public abstract class AbstractAuditableUser<T extends Role> extends AuditableSof
     }
 
     /**
-     * This compares just based on the login.
+     * This compares just based on the emails.
      *
      * @param   o The other object to compare to.
-     * @return  True if they are both Users and the logins are equal.
+     * @return  True if they are both Users and the emails are equal.
      */
     @Override
     public boolean equals(Object o) {
@@ -244,26 +263,26 @@ public abstract class AbstractAuditableUser<T extends Role> extends AuditableSof
 
         User that = (User) o;
 
-        return login.equals(that.getLogin());
+        return username.equals(that.getEmail());
     }
 
     /**
-     * This uses just the login for hashing.
+     * This uses just the email for hashing.
      *
-     * @return  The hash code of the login.
+     * @return  The hash code of the email.
      */
     @Override
     public int hashCode() {
-        return login.hashCode();
+        return username.hashCode();
     }
 
     /**
-     * Uses the login to compare.
+     * Uses the emails to compare.
      *
      * @param   o The other user.
-     * @return  The comparison of just the logins.
+     * @return  The comparison of just the emails.
      */
     public int compareTo(User o) {
-        return login.compareTo(o.getLogin());
+        return email.compareTo(o.getEmail());
     }
 }

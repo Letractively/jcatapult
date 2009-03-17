@@ -33,6 +33,7 @@ import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.security.PasswordEncryptor;
 import org.jcatapult.user.domain.Role;
 import org.jcatapult.user.domain.User;
+import org.jcatapult.user.domain.Usernamed;
 
 import com.google.inject.Inject;
 import net.java.error.ErrorList;
@@ -111,17 +112,46 @@ public class DefaultUserService implements UserService {
     /**
      * {@inheritDoc}
      */
-    public User findByLogin(String login) {
+    public User findByUsernameOrEmail(String login) {
         Class<? extends User> userType = userHandler.getUserType();
-        return persistenceService.queryFirst(userType,
-            "select u from " + userType.getSimpleName() + " u where u.login = ?1 and u.deleted = false", login);
+        String jpaql;
+        if (Usernamed.class.isAssignableFrom(userType) && !login.contains("@")) {
+            jpaql = "select u from " + userType.getSimpleName() + " u where u.username = ?1 and u.deleted = false";
+        } else {
+            jpaql = "select u from " + userType.getSimpleName() + " u where u.email = ?1 and u.deleted = false"; 
+        }
+        
+        return persistenceService.queryFirst(userType, jpaql, login);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public User findByUsername(String login) {
+        Class<? extends User> userType = userHandler.getUserType();
+        String jpaql;
+        if (Usernamed.class.isAssignableFrom(userType)) {
+            jpaql = "select u from " + userType.getSimpleName() + " u where u.username = ?1 and u.deleted = false";
+        } else {
+            jpaql = "select u from " + userType.getSimpleName() + " u where u.email = ?1 and u.deleted = false";
+        }
+
+        return persistenceService.queryFirst(userType, jpaql, login);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public User findByEmail(String email) {
+        Class<? extends User> userType = userHandler.getUserType();
+        return persistenceService.queryFirst(userType, "select u from " + userType.getSimpleName() + " u where u.email = ?1 and u.deleted = false", email);
     }
 
     /**
      * @return  The default sort property.
      */
     protected String getDefaultSortProperty() {
-        return "login";
+        return "email";
     }
 
     /**
@@ -157,7 +187,7 @@ public class DefaultUserService implements UserService {
      * {@inheritDoc}
      */
     public RegisterResult register(User user, String password, String url, Role... roles) {
-        User partial = findByLogin(user.getLogin());
+        User partial = findByUsername(user.getEmail());
         if (partial != null) {
             if (partial.isPartial()) {
                 // Make this an update
@@ -186,7 +216,7 @@ public class DefaultUserService implements UserService {
         }
 
         if (verify) {
-            resendVerificationEmail(user.getLogin(), url);
+            resendVerificationEmail(user.getEmail(), url);
         }
 
         return verify ? RegisterResult.PENDING : RegisterResult.SUCCESS;
@@ -217,11 +247,15 @@ public class DefaultUserService implements UserService {
      * {@inheritDoc}
      */
     public void resendVerificationEmail(String login, String url) throws EntityNotFoundException {
-        User user = findByLogin(login);
+        User user = findByUsernameOrEmail(login);
         if (user == null) {
             throw new EntityNotFoundException("Invalid login [" + login + "]");
         }
-        
+
+        // Make a new GUID, just to be safe
+        user.setGuid(makeGUID());
+        persistenceService.persist(user);
+
         String template = configuration.getString("jcatapult.user.verify-email.template", "verify-email");
         EmailCommand command = emailService.sendEmail(template).
             to(new EmailAddress(user.getEmail())).
@@ -295,8 +329,20 @@ public class DefaultUserService implements UserService {
     /**
      * {@inheritDoc}
      */
-    public UpdateResult updatePassword(String login, String password) {
-        User user = findByLogin(login);
+    public boolean persist(User user) {
+        try {
+            persistenceService.persist(user);
+            return true;
+        } catch (PersistenceException e) {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public UpdateResult updatePassword(int id, String password) {
+        User user = findById(id);
         if (user == null || user.isPartial()) {
             return UpdateResult.MISSING;
         }
@@ -315,8 +361,8 @@ public class DefaultUserService implements UserService {
     /**
      * {@inheritDoc}
      */
-    public UpdateResult resetPassword(String login, String url) {
-        User user = findByLogin(login);
+    public UpdateResult resetPassword(int id, String url) {
+        User user = findById(id);
         if (user == null || user.isPartial()) {
             return UpdateResult.MISSING;
         }

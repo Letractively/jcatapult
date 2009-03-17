@@ -56,7 +56,7 @@ public class VerificationDefaultUserServiceTest extends BaseTest {
     @Test
     public void testRegisterVerify() throws Exception {
         TestUser user = new TestUser();
-        user.setLogin("verify@example.com");
+        user.setUsername("verify@example.com");
         assertEquals(RegisterResult.PENDING, userService.register(user, "password", "http://www.example.com/verify-email"));
         assertFalse(user.isPartial());
         assertEquals(1, user.getRoles().size());

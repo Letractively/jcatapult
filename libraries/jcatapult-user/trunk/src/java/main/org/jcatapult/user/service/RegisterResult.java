@@ -25,7 +25,7 @@ package org.jcatapult.user.service;
  */
 public enum RegisterResult {
     /**
-     * Occurs when the login name supplied already exists.
+     * Occurs when the email or username supplied already exists.
      */
     EXISTS,
 

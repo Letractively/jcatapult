@@ -27,10 +27,15 @@ import com.google.inject.Inject;
 
 /**
  * <p>
- * This class is the JCatapult security framework to fetch Jcatapult user objects
- * from the database. This checks all of the security constraints on the {@link User}
- * and if any of the constraints fails, it throws a JCatapultSecurityException
- * with the given Strings:
+ * This class is the JCatapult security framework to fetch JCatapult user objects
+ * from the database. This uses the {@link UserService#findByUsernameOrEmail(String)}
+ * method to find the user, thereby allowing usernames and emails to be used on the
+ * login form.
+ * </p>
+ *
+ * <p>
+ * This checks all of the security constraints on the {@link User} and if any of the
+ * constraints fails, it throws a JCatapultSecurityException with the given Strings:
  * </p>
  *
  * <ul>
@@ -58,7 +63,7 @@ public class DefaultAuthenticationService implements AuthenticationService<User>
      * @return  The user.
      */
     public User loadUser(String username, Map<String, Object> parameters) {
-        User user = userService.findByLogin(username);
+        User user = userService.findByUsernameOrEmail(username);
         if (user != null && user.isPartial() || user == null) {
             return null;
         }

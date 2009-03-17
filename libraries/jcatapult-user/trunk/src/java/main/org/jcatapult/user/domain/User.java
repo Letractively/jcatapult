@@ -34,19 +34,19 @@ import org.jcatapult.persistence.domain.SoftDeletable;
  */
 public interface User<T extends Role> extends Identifiable, SoftDeletable, Comparable<User>, Serializable {
     /**
-     * @return  The users login.
+     * @return  The username, which in some cases might be the email address.
      */
-    String getLogin();
+    String getUsername();
 
     /**
-     * Sets the users login.
+     * Sets the username.
      *
-     * @param   login The login.
+     * @param   username The username.
      */
-    void setLogin(String login);
-
+    void setUsername(String username);
+    
     /**
-     * @return  The user's email, which in some cases will be the same as the login.
+     * @return  The user's email.
      */
     String getEmail();
 

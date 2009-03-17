@@ -51,7 +51,6 @@ public class BaseTest extends JPABaseTest {
     protected void setupConfigurationAndUserHandlerAndEmail() { 
         final Configuration config = createNiceMock(Configuration.class);
         expect(config.getString("jcatapult.user.default-role", "user")).andReturn("user");
-        expect(config.getBoolean("jcatapult.user.logins-are-emails", true)).andReturn(true);
         expect(config.getBoolean("jcatapult.user.verify-emails", false)).andReturn(false);
         replay(config);
 
@@ -73,7 +72,7 @@ public class BaseTest extends JPABaseTest {
      */
     protected TestUser makeUser(String login) {
         TestUser user = new TestUser();
-        user.setLogin(login);
+        user.setEmail(login);
 
         int adminID = ps.queryFirst(TestRole.class, "select tr from TestRole tr where tr.name = 'admin'").getId();
         int userID = ps.queryFirst(TestRole.class, "select tr from TestRole tr where tr.name = 'user'").getId();
