@@ -26,4 +26,7 @@ import org.jcatapult.security.JCatapultSecurityException;
  * @author Brian Pontarelli
  */
 public class InvalidPasswordException extends JCatapultSecurityException {
+    public InvalidPasswordException() {
+        super("invalid-password");
+    }
 }

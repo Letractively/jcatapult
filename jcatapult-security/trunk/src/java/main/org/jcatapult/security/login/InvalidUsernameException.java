@@ -26,4 +26,7 @@ import org.jcatapult.security.JCatapultSecurityException;
  * @author Brian Pontarelli
  */
 public class InvalidUsernameException extends JCatapultSecurityException {
+    public InvalidUsernameException() {
+        super("invalid-username");
+    }
 }
