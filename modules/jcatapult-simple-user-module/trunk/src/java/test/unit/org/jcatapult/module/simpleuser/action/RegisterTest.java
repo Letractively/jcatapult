@@ -57,7 +57,7 @@ public class RegisterTest extends BaseTest {
         EasyMock.replay(userService);
 
         MessageStore ms = EasyMock.createStrictMock(MessageStore.class);
-        ms.addFieldError(MessageScope.REQUEST, "user.username", "user.username.exists");
+        ms.addFieldError(MessageScope.REQUEST, "user.email", "user.email.exists");
         EasyMock.replay(ms);
 
         Register register = new Register(null, request);
@@ -121,7 +121,7 @@ public class RegisterTest extends BaseTest {
         register.passwordConfirm = "password";
         register.user = user;
         assertEquals("success", register.post());
-        assertEquals("/", register.getUri());
+        assertEquals("/", register.uri);
         EasyMock.verify(configuration, userService, savedRequestService);
     }
 
@@ -149,7 +149,7 @@ public class RegisterTest extends BaseTest {
         register.passwordConfirm = "password";
         register.user = user;
         assertEquals("success", register.post());
-        assertEquals("/test", register.getUri());
+        assertEquals("/test", register.uri);
         EasyMock.verify(configuration, userService, savedRequestService);
     }
 

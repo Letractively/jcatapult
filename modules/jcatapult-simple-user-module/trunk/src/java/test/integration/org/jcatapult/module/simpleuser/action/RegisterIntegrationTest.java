@@ -20,17 +20,18 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 
 import org.jcatapult.config.Configuration;
-import org.jcatapult.mvc.message.scope.MessageType;
-import org.jcatapult.mvc.test.WebappTestRunner;
-import org.jcatapult.security.EnhancedSecurityContext;
-import org.jcatapult.email.service.EmailTransportService;
 import org.jcatapult.email.EmailTestHelper;
-import static org.junit.Assert.*;
-import org.junit.Test;
-
+import org.jcatapult.email.service.EmailTransportService;
 import org.jcatapult.module.simpleuser.BaseIntegrationTest;
 import org.jcatapult.module.simpleuser.domain.DefaultRole;
 import org.jcatapult.module.simpleuser.domain.DefaultUser;
+import org.jcatapult.module.simpleuser.service.DefaultUserConfiguration;
+import org.jcatapult.mvc.message.scope.MessageType;
+import org.jcatapult.mvc.test.WebappTestRunner;
+import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.test.MockConfiguration;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * <p>
@@ -61,9 +62,10 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
     public void testDisabledPost() throws IOException, ServletException {
         EnhancedSecurityContext.logout();
         Configuration configuration = makeConfiguration(true);
+        
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.username", "login@test.com").
+            withParameter("user.email", "login@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
@@ -77,10 +79,12 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testSuccessfulRegistration() throws IOException, ServletException {
         EnhancedSecurityContext.logout();
-        Configuration configuration = makeConfiguration(false);
+        MockConfiguration configuration = makeConfiguration(false);
+        configuration.addParameter(DefaultUserConfiguration.VERIFY_EMAILS, false);
+
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.username", "login@test.com").
+            withParameter("user.email", "login@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
@@ -96,28 +100,50 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void testVerifyEmail() throws IOException, ServletException {
+        EnhancedSecurityContext.logout();
+        MockConfiguration configuration = makeConfiguration(false);
+        configuration.addParameter(DefaultUserConfiguration.VERIFY_EMAILS, true);
+        
+        WebappTestRunner runner = new WebappTestRunner();
+        runner.test("/register").withMock(Configuration.class, configuration).
+            withParameter("user.email", "login-verify-emails@test.com").
+            withParameter("password", "password").
+            withParameter("passwordConfirm", "password").
+            withMock(EmailTransportService.class, EmailTestHelper.getService()).
+            post();
+
+        assertEquals(0, runner.messageStore.getActionMessages(MessageType.ERROR).size());
+        assertEquals("verification-email-sent", runner.response.getRedirect());
+        assertNull(EnhancedSecurityContext.getCurrentUser());
+        assertEquals(1, EmailTestHelper.getEmailResults().size());
+    }
+
+    @Test
     public void testDuplicateRegistration() throws IOException, ServletException {
         EnhancedSecurityContext.logout();
         Configuration configuration = makeConfiguration(false);
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.username", "login@test.com").
+            withParameter("user.email", "login@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
             post();
         assertEquals(1, runner.messageStore.getFieldMessages(MessageType.ERROR).size());
-        assertEquals("That email is already registered.", runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.username").get(0));
+        assertEquals("That email is already registered.", runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.email").get(0));
         assertEquals("anonymous", EnhancedSecurityContext.getCurrentUsername());
     }
 
     @Test
     public void testValidation() throws IOException, ServletException {
         EnhancedSecurityContext.logout();
-        Configuration configuration = makeConfiguration(false);
+        MockConfiguration configuration = makeConfiguration(false);
+        configuration.addParameter(DefaultUserConfiguration.VERIFY_EMAILS, false);
+        
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.username", "login@test.com").
+            withParameter("user.email", "bad-email").
             withParameter("password", "password").
             withParameter("passwordConfirm", "different").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
@@ -125,8 +151,9 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
 
         String result = runner.response.getStream().toString();
         assertTrue(result.contains("html"));
-        assertEquals(1, runner.messageStore.getFieldMessages(MessageType.ERROR).size());
+        assertEquals(2, runner.messageStore.getFieldMessages(MessageType.ERROR).size());
+        assertNotNull(runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.email").get(0));
         assertNotNull(runner.messageStore.getFieldMessages(MessageType.ERROR).get("passwordConfirm").get(0));
-        assertEquals("anonymous", EnhancedSecurityContext.getCurrentUsername());
+        assertNull(EnhancedSecurityContext.getCurrentUser());
     }
 }

@@ -3,7 +3,7 @@
   <div id="user-admin-input" class="user-module-input jcatapult-module-input">
     [@jc.hidden name="user.id"/]
     <div id="login-input" class="user-module-input-section jcatapult-module-input-section">
-      [@jc.text name="user.username" required=true/]
+      [@jc.text name="user.email" required=true/]
       [#assign passwordRequired = (formAction != "edit")/]
       [#if formAction == "edit"]
         [@jc.message key="passwordInstructions"/]

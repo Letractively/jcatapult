@@ -58,7 +58,7 @@ public class Edit extends Prepare {
 
     public String post() {
         if (!userService.persist(user, associations, password)) {
-            messageStore.addFieldError(MessageScope.REQUEST, "user.username", "user.username.exists");
+            messageStore.addFieldError(MessageScope.REQUEST, "user.email", "user.email.exists");
             return "input";
         }
 

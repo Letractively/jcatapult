@@ -99,7 +99,7 @@ public class VerifyEmailIntegrationTest extends BaseIntegrationTest {
             withParameter("username", "test-verify-email-resend@test.com").
             post();
 
-        assertEquals("verification-email-resent", runner.response.getRedirect());
+        assertEquals("verification-email-sent", runner.response.getRedirect());
 
         persistenceService.reload(user);
         assertFalse(user.isVerified());
