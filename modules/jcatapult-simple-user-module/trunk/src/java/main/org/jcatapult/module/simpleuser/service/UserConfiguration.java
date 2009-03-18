@@ -42,7 +42,7 @@ public interface UserConfiguration {
     boolean isRegistrationDisabled();
 
     /**
-     * @return Whether or not emails are being verified.
+     * @return  Whether or not emails are being verified.
      */
     boolean isVerifyEmails();
 
