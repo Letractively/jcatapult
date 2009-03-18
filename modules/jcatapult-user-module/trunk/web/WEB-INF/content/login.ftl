@@ -1,5 +1,4 @@
 [#ftl/]
-[#assign js=JspTaglibs["http://www.jcatapult.org/jcatapult-security/tags"]/]
 <html>
 <head>
   <title>[@jc.message key="title"/]</title>
@@ -13,12 +12,17 @@
     <form action="/jcatapult-security-check" method="POST">
       <h3>[@jc.message key="notice"/]</h3>
       <ul class="field-errors">
-        [@js.loginException expired=true locked=true]
-          <li>[@jc.message key="expired"/]</li>
-        [/@js.loginException]
-        [@js.loginException password=true username=true]
-          <li>[@jc.message key="failure"/]</li>
-        [/@js.loginException]
+        [#if securityError??]
+          [#if securityError == 'invalid-username' || securityError == 'invalid-password']
+            <li>[@jc.message key="failure"/]</li>
+          [#elseif securityError == 'expired' || securityError == 'locked']
+            <li>[@jc.message key="expired"/]</li>
+          [#elseif securityError == 'not-verified']
+            <li>[@jc.message key="not-verified"/]</li>
+          [#elseif securityError == 'password-expired']
+            <li>This is not implemented yet.</li>
+          [/#if]
+        [/#if]
       </ul>
 
       [@jc.text name="j_username" id="j_username" size="30" required=true /]

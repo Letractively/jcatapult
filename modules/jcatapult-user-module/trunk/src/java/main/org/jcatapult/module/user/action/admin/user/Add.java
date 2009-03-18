@@ -16,12 +16,10 @@
  */
 package org.jcatapult.module.user.action.admin.user;
 
+import org.jcatapult.module.user.action.BaseUserFormAction;
 import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.scope.MessageScope;
-
-import org.jcatapult.module.user.action.BaseUserFormAction;
 
 /**
  * <p>
@@ -59,13 +57,6 @@ import org.jcatapult.module.user.action.BaseUserFormAction;
 @Action(overridable = true)
 @Redirect(uri = "/admin/user/")
 public class Add extends Prepare {
-
-    @ActionPrepareMethod
-    public void prepare() {
-        super.prepare();
-        user = userService.createUser();
-    }
-
     /**
      * Renders the form with a new empty User.
      *
@@ -83,7 +74,7 @@ public class Add extends Prepare {
      */
     public String post() {
         if (!userService.persist(user, associations, password)) {
-            messageStore.addFieldError(MessageScope.REQUEST, "user.login", "user.login.exists");
+            messageStore.addFieldError(MessageScope.REQUEST, "user.username", "user.username.exists");
             return "input";
         }
 

@@ -16,6 +16,7 @@
  */
 package org.jcatapult.module.user.service;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,17 +29,18 @@ import org.jcatapult.module.user.domain.DefaultRole;
 import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.module.user.domain.PhoneNumber;
 import org.jcatapult.module.user.domain.UserProperty;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.mvc.validation.Validator;
+import org.jcatapult.mvc.validation.ValidatorProvider;
+import org.jcatapult.mvc.validation.annotation.Email;
+import org.jcatapult.mvc.validation.annotation.Required;
 import org.jcatapult.persistence.domain.Identifiable;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.user.service.AbstractUserHandler;
 
 import com.google.inject.Inject;
 import net.java.error.ErrorList;
-import net.java.error.PropertyError;
 import net.java.lang.StringTools;
-import net.java.validate.EmailValidator;
-import net.java.validate.RequiredValidator;
-import net.java.validate.Validator;
 
 /**
  * <p>
@@ -51,12 +53,17 @@ import net.java.validate.Validator;
 @SuppressWarnings("unchecked")
 public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, DefaultRole> {
     private final UserConfiguration userConfiguration;
+    private final ExpressionEvaluator expressionEvaluator;
+    private final ValidatorProvider validatorProvider;
 
     @Inject
     public DefaultUserHandler(PersistenceService persistenceService, Configuration configuration,
-            UserConfiguration userConfiguration) {
+            UserConfiguration userConfiguration, ExpressionEvaluator expressionEvaluator,
+            ValidatorProvider validatorProvider) {
         super(persistenceService, configuration);
         this.userConfiguration = userConfiguration;
+        this.expressionEvaluator = expressionEvaluator;
+        this.validatorProvider = validatorProvider; 
     }
 
     /**
@@ -94,9 +101,17 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
 
         ErrorList errors = new ErrorList();
 
-        // User properties
-        if (!validate(new RequiredValidator(), user, "login", "required", errors)) {
-            validate(new EmailValidator(), user, "login", "email", errors);
+        // User properties. If the username and email are the same, just validate the username as an
+        // email. Otherwise, validate both and the email as an email.
+        if (userConfiguration.isUsernameSameAsEmail()) {
+            if (!validate(Required.class, user, "username", errors)) {
+                validate(Email.class, user, "username", errors);
+            }
+        } else {
+            validate(Required.class, user, "username", errors);
+            if (!validate(Required.class, user, "email", errors)) {
+                validate(Email.class, user, "username", errors);
+            }
         }
 
         if (!existing || !StringTools.isTrimmedEmpty(password)) {
@@ -112,12 +127,12 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
         }
 
         if (nameRequired) {
-            validate(new RequiredValidator(), user, "name.firstName", "required", errors);
-            validate(new RequiredValidator(), user, "name.lastName", "required", errors);
+            validate(Required.class, user, "name.firstName", errors);
+            validate(Required.class, user, "name.lastName", errors);
         }
 
         if (businessRequired) {
-            validate(new RequiredValidator(), user, "companyName", "required", errors);
+            validate(Required.class, user, "companyName", errors);
         }
 
         // Contact info, check the addresses
@@ -127,13 +142,13 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
                 Address address = addresses.get(type);
                 if (Address.isContainsData(address) || (homeAddressRequired && type.equals("home"))  ||
                         (workAddressRequired && type.equals("work"))) {
-                    validate(new RequiredValidator(), user, "addresses['" + type + "'].street", "required", errors);
-                    validate(new RequiredValidator(), user, "addresses['" + type + "'].city", "required", errors);
-                    validate(new RequiredValidator(), user, "addresses['" + type + "'].country", "required", errors);
+                    validate(Required.class, user, "addresses['" + type + "'].street", errors);
+                    validate(Required.class, user, "addresses['" + type + "'].city", errors);
+                    validate(Required.class, user, "addresses['" + type + "'].country", errors);
 
                     if (address.getCountry() != null && address.getCountry().equals("US")) {
-                        validate(new RequiredValidator(), user, "addresses['" + type + "'].state", "required", errors);
-                        validate(new RequiredValidator(), user, "addresses['" + type + "'].postalCode", "required", errors);
+                        validate(Required.class, user, "addresses['" + type + "'].state", errors);
+                        validate(Required.class, user, "addresses['" + type + "'].postalCode", errors);
                     }
                 }
             }
@@ -147,55 +162,45 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
                     !StringTools.isEmpty(creditCard.getFirstName()) || !StringTools.isEmpty(creditCard.getLastName()) ||
                     !StringTools.isEmpty(creditCard.getNumber()) || !StringTools.isEmpty(creditCard.getSvn()) ||
                     Address.isContainsData(creditCard.getAddress())) {
-                validate(new RequiredValidator(), user, "creditCard[" + i + "].firstName", "required", errors);
-                validate(new RequiredValidator(), user, "creditCard[" + i + "].lastName", "required", errors);
-                validate(new RequiredValidator(), user, "creditCard[" + i + "].expirationMonth", "required", errors);
-                validate(new RequiredValidator(), user, "creditCard[" + i + "].expirationYear", "required", errors);
-                validate(new RequiredValidator(), user, "creditCard[" + i + "].number", "required", errors);
-                validate(new RequiredValidator(), user, "creditCard[" + i + "].address.street", "required", errors);
-                validate(new RequiredValidator(), user, "creditCard[" + i + "].address.city", "required", errors);
-                validate(new RequiredValidator(), user, "creditCard[" + i + "].address.country", "required", errors);
+                validate(Required.class, user, "creditCard[" + i + "].firstName", errors);
+                validate(Required.class, user, "creditCard[" + i + "].lastName", errors);
+                validate(Required.class, user, "creditCard[" + i + "].expirationMonth", errors);
+                validate(Required.class, user, "creditCard[" + i + "].expirationYear", errors);
+                validate(Required.class, user, "creditCard[" + i + "].number", errors);
+                validate(Required.class, user, "creditCard[" + i + "].address.street", errors);
+                validate(Required.class, user, "creditCard[" + i + "].address.city", errors);
+                validate(Required.class, user, "creditCard[" + i + "].address.country", errors);
 
                 if (creditCard.getAddress().getCountry() != null && creditCard.getAddress().getCountry().equals("US")) {
-                    validate(new RequiredValidator(), user, "creditCard[" + i + "].address.state", "required", errors);
-                    validate(new RequiredValidator(), user, "creditCard[" + i + "].address.postalCode", "required", errors);
+                    validate(Required.class, user, "creditCard[" + i + "].address.state", errors);
+                    validate(Required.class, user, "creditCard[" + i + "].address.postalCode", errors);
                 }
             }
         }
 
         // Check required phone numbers
         if (homePhoneRequired) {
-            validate(new RequiredValidator(), user, "phoneNumbers['home'].number", "required", errors);
+            validate(Required.class, user, "phoneNumbers['home'].number", errors);
         }
         if (workPhoneRequired) {
-            validate(new RequiredValidator(), user, "phoneNumbers['work'].number", "required", errors);
+            validate(Required.class, user, "phoneNumbers['work'].number", errors);
         }
         if (cellPhoneRequired) {
-            validate(new RequiredValidator(), user, "phoneNumbers['cell'].number", "required", errors);
+            validate(Required.class, user, "phoneNumbers['cell'].number", errors);
         }
 
         return errors;
     }
 
-    private boolean validate(Validator validator, DefaultUser user, String property, String key,
-            ErrorList errors, String... params) {
-        Map<String, String> parameters = new HashMap<String, String>();
-        for (int i = 0; i < params.length; i = i + 2) {
-            String name = params[i];
-            String value = params[i + 1];
-            parameters.put(name, value);
+    private boolean validate(Class<? extends Annotation> type, DefaultUser user, String property, ErrorList errors) {
+        Object value = expressionEvaluator.getValue(property, user);
+        Validator validator = validatorProvider.lookup(type);
+        if (!validator.validate(null, null, value)) {
+            errors.addError("user." + property, "user." + property + "." + type.getSimpleName().toLowerCase());
+            return false;
         }
 
-        Wrapper wrapper = new Wrapper(user);
-        PropertyError error = validator.fetchAndValidate("user." + property, wrapper,
-            "user." + property + "." + key,
-            null, null, parameters);
-        if (error != null) {
-            errors.addError(error);
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     /**
@@ -241,17 +246,5 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
         }
         values.put("roles", rolesIds.toArray(new Integer[rolesIds.size()]));
         return values;
-    }
-
-    public class Wrapper {
-        private final DefaultUser user;
-
-        private Wrapper(DefaultUser user) {
-            this.user = user;
-        }
-
-        public DefaultUser getUser() {
-            return user;
-        }
     }
 }

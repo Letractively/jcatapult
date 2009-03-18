@@ -45,24 +45,25 @@ public class RegisterTest extends BaseTest {
     @Test
     public void testExists() {
         DefaultUser user = new DefaultUser();
-        user.setLogin("test");
+        user.setUsername("test");
 
         UserConfiguration configuration = EasyMock.createStrictMock(UserConfiguration.class);
         EasyMock.expect(configuration.isRegistrationDisabled()).andReturn(false);
+        EasyMock.expect(configuration.isVerifyEmails()).andReturn(false);
         EasyMock.replay(configuration);
 
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.register(user, "p")).andReturn(RegisterResult.EXISTS);
+        EasyMock.expect(userService.register(user, "password", null)).andReturn(RegisterResult.EXISTS);
         EasyMock.replay(userService);
 
         MessageStore ms = EasyMock.createStrictMock(MessageStore.class);
-        ms.addFieldError(MessageScope.REQUEST, "user.login", "exists");
+        ms.addFieldError(MessageScope.REQUEST, "user.username", "user.username.exists");
         EasyMock.replay(ms);
 
         Register register = new Register(null, request);
         register.setServices(ms, configuration, userService);
-        register.password = "p";
-        register.passwordConfirm = "pc";
+        register.password = "password";
+        register.passwordConfirm = "password";
         register.user = user;
         assertEquals("input", register.post());
         EasyMock.verify(configuration, userService);
@@ -71,14 +72,15 @@ public class RegisterTest extends BaseTest {
     @Test
     public void testError() {
         DefaultUser user = new DefaultUser();
-        user.setLogin("test");
+        user.setUsername("test");
 
         UserConfiguration configuration = EasyMock.createStrictMock(UserConfiguration.class);
         EasyMock.expect(configuration.isRegistrationDisabled()).andReturn(false);
+        EasyMock.expect(configuration.isVerifyEmails()).andReturn(false);
         EasyMock.replay(configuration);
 
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.register(user, "p")).andReturn(RegisterResult.ERROR);
+        EasyMock.expect(userService.register(user, "password", null)).andReturn(RegisterResult.ERROR);
         EasyMock.replay(userService);
 
         MessageStore ms = EasyMock.createStrictMock(MessageStore.class);
@@ -87,8 +89,8 @@ public class RegisterTest extends BaseTest {
 
         Register register = new Register(null, request);
         register.setServices(ms, configuration, userService);
-        register.password = "p";
-        register.passwordConfirm = "pc";
+        register.password = "password";
+        register.passwordConfirm = "password";
         register.user = user;
         assertEquals("error", register.post());
         EasyMock.verify(configuration, userService);
@@ -97,15 +99,16 @@ public class RegisterTest extends BaseTest {
     @Test
     public void testSuccessNoSavedRequest() {
         DefaultUser user = new DefaultUser();
-        user.setLogin("test");
+        user.setUsername("test");
 
         UserConfiguration configuration = EasyMock.createStrictMock(UserConfiguration.class);
         EasyMock.expect(configuration.isRegistrationDisabled()).andReturn(false);
+        EasyMock.expect(configuration.isVerifyEmails()).andReturn(false);
         EasyMock.expect(configuration.getRegistrationSuccessURI()).andReturn("/");
         EasyMock.replay(configuration);
 
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.register(user, "p")).andReturn(RegisterResult.SUCCESS);
+        EasyMock.expect(userService.register(user, "password", null)).andReturn(RegisterResult.SUCCESS);
         EasyMock.replay(userService);
 
         SavedRequestService savedRequestService = EasyMock.createStrictMock(SavedRequestService.class);
@@ -114,25 +117,26 @@ public class RegisterTest extends BaseTest {
 
         Register register = new Register(savedRequestService, request);
         register.setServices(null, configuration, userService);
-        register.password = "p";
-        register.passwordConfirm = "pc";
+        register.password = "password";
+        register.passwordConfirm = "password";
         register.user = user;
         assertEquals("success", register.post());
-        assertEquals("/", register.getUri());
+        assertEquals("/", register.uri);
         EasyMock.verify(configuration, userService, savedRequestService);
     }
 
     @Test
     public void testSuccessWithSavedRequest() {
         DefaultUser user = new DefaultUser();
-        user.setLogin("test");
+        user.setUsername("test");
 
         UserConfiguration configuration = EasyMock.createStrictMock(UserConfiguration.class);
         EasyMock.expect(configuration.isRegistrationDisabled()).andReturn(false);
+        EasyMock.expect(configuration.isVerifyEmails()).andReturn(false);
         EasyMock.replay(configuration);
 
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.register(user, "p")).andReturn(RegisterResult.SUCCESS);
+        EasyMock.expect(userService.register(user, "password", null)).andReturn(RegisterResult.SUCCESS);
         EasyMock.replay(userService);
 
         SavedRequestService savedRequestService = EasyMock.createStrictMock(SavedRequestService.class);
@@ -141,18 +145,18 @@ public class RegisterTest extends BaseTest {
 
         Register register = new Register(savedRequestService, request);
         register.setServices(null, configuration, userService);
-        register.password = "p";
-        register.passwordConfirm = "pc";
+        register.password = "password";
+        register.passwordConfirm = "password";
         register.user = user;
         assertEquals("success", register.post());
-        assertEquals("/test", register.getUri());
+        assertEquals("/test", register.uri);
         EasyMock.verify(configuration, userService, savedRequestService);
     }
 
     @Test
     public void testValidateNoErrors() {
         DefaultUser user = new DefaultUser();
-        user.setLogin("test");
+        user.setUsername("test");
 
         UserConfiguration configuration = EasyMock.createStrictMock(UserConfiguration.class);
         EasyMock.replay(configuration);
@@ -160,7 +164,7 @@ public class RegisterTest extends BaseTest {
         Map<String, int[]> associations = new HashMap<String, int[]>();
 
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.validate(user, associations, false, "p", "pc")).andReturn(new ErrorList());
+        EasyMock.expect(userService.validate(user, associations, false, "password", "password")).andReturn(new ErrorList());
         EasyMock.replay(userService);
 
         MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
@@ -168,8 +172,8 @@ public class RegisterTest extends BaseTest {
 
         Register register = new Register(null, request);
         register.setServices(messageStore, configuration, userService);
-        register.password = "p";
-        register.passwordConfirm = "pc";
+        register.password = "password";
+        register.passwordConfirm = "password";
         register.user = user;
         register.associations = associations;
         register.validate();
@@ -179,7 +183,7 @@ public class RegisterTest extends BaseTest {
     @Test
     public void testValidateWithErrors() {
         DefaultUser user = new DefaultUser();
-        user.setLogin("test");
+        user.setUsername("test");
 
         UserConfiguration configuration = EasyMock.createStrictMock(UserConfiguration.class);
         EasyMock.replay(configuration);
@@ -190,7 +194,7 @@ public class RegisterTest extends BaseTest {
         Map<String, int[]> associations = new HashMap<String, int[]>();
 
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.validate(user, associations, false, "p", "pc")).andReturn(errors);
+        EasyMock.expect(userService.validate(user, associations, false, "password", "passwordconfirm")).andReturn(errors);
         EasyMock.replay(userService);
 
         MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
@@ -199,8 +203,8 @@ public class RegisterTest extends BaseTest {
 
         Register register = new Register(null, request);
         register.setServices(messageStore, configuration, userService);
-        register.password = "p";
-        register.passwordConfirm = "pc";
+        register.password = "password";
+        register.passwordConfirm = "passwordconfirm";
         register.user = user;
         register.associations = associations;
         register.validate();

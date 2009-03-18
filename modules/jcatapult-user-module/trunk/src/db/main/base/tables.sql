@@ -32,10 +32,10 @@ create table credit_cards (
     last_name varchar(255) not null,
     number varchar(20) not null,
     verified bit not null,
-    insert_date datetime,
-    insert_user varchar(255),
-    update_date datetime,
-    update_user varchar(255),
+    insert_date datetime not null,
+    insert_user varchar(255) not null,
+    update_date datetime not null,
+    update_user varchar(255) not null,
     users_id integer,
     primary key (id)
 ) ENGINE=InnoDB;
@@ -75,10 +75,17 @@ create table users (
     expired bit not null,
     guid varchar(255),
     locked bit not null,
-    login varchar(255) not null unique,
+    username varchar(255) not null unique,
+    email varchar(255) not null unique,
     password varchar(255) not null,
     password_expired bit not null,
-    partial bit,
+    partial bit not null,
+    verified bit not null,
+    last_login timestamp,
+    insert_user varchar(255) not null,
+    insert_date timestamp not null,
+    update_user varchar(255) not null,
+    update_date timestamp not null,
     primary key (id)
 ) ENGINE=InnoDB;
 
