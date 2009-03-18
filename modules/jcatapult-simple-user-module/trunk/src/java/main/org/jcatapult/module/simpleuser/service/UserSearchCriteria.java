@@ -28,18 +28,10 @@ import org.jcatapult.user.domain.User;
  */
 public class UserSearchCriteria extends AbstractSearchCriteria<User> {
     private final Class userType;
-    private String login;
+    public String email;
 
     public UserSearchCriteria(Class userType) {
         this.userType = userType;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     protected void buildJPAQuery(QueryBuilder builder) {
@@ -53,9 +45,9 @@ public class UserSearchCriteria extends AbstractSearchCriteria<User> {
     }
 
     private void addWhere(QueryBuilder builder) {
-        if (login != null) {
-            builder.andWhere("e.login like :login");
-            builder.withParameter("login", "%" + login + "%");
+        if (email != null) {
+            builder.andWhere("e.email like :email");
+            builder.withParameter("email", "%" + email + "%");
         }
     }
 

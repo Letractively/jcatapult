@@ -96,7 +96,7 @@ public class VerifyEmailIntegrationTest extends BaseIntegrationTest {
         runner.test("/verify-email").
             withMock(Configuration.class, configuration).
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
-            withParameter("username", "test-verify-email-resend@test.com").
+            withParameter("email", "test-verify-email-resend@test.com").
             post();
 
         assertEquals("verification-email-sent", runner.response.getRedirect());
