@@ -24,9 +24,14 @@
         <test>true</test>
       </aim>
     </commerce>
-  </jcatapult>
-  <jcatapult>
+    <email>
+      <verify-email>
+        <from>no-reply@jcatapult.org</from>
+      </verify-email>
+    </email>
     <user>
+      <verify-emails>true</verify-emails>
+      <username-is-email>false</username-is-email>
       <fields>
         <name>true</name>
         <name-required>true</name-required>

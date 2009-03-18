@@ -23,7 +23,7 @@ public class SummaryTest extends BaseTest {
         DefaultUser user = new DefaultUser();
 
         UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.findByLogin("test")).andReturn(user);
+        EasyMock.expect(userService.findByUsername("test")).andReturn(user);
         EasyMock.replay(userService);
 
         Summary summary = new Summary(userService);

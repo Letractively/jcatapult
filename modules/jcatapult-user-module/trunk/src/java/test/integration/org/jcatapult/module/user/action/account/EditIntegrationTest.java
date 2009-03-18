@@ -63,7 +63,7 @@ public class EditIntegrationTest extends BaseIntegrationTest {
 
         // Then update
         runner.test("/account/edit").
-            withParameter("user.login", "edit-update-new@test.com").
+            withParameter("user.username", "edit-update-new@test.com").
             withParameter("user.phoneNumbers['work'].number", "303-555-1212").
             withParameter("user.phoneNumbers['cell'].number", "303-555-1212").
             withParameter("user.phoneNumbers['home'].number", "303-555-1212").
@@ -93,7 +93,7 @@ public class EditIntegrationTest extends BaseIntegrationTest {
 
         // Then update
         runner.test("/account/edit").
-            withParameter("user.login", "edit-update-password@test.com").
+            withParameter("user.username", "edit-update-password@test.com").
             withParameter("user.phoneNumbers['work'].number", "303-555-1212").
             withParameter("user.phoneNumbers['cell'].number", "303-555-1212").
             withParameter("user.phoneNumbers['home'].number", "303-555-1212").

@@ -19,6 +19,7 @@ package org.jcatapult.module.user.action;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.module.user.service.UserConfiguration;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
@@ -63,7 +64,7 @@ public class BaseUserFormAction {
     protected UserConfiguration userConfiguration;
     protected UserService userService;
 
-    public User user;
+    public DefaultUser user;
 
     /**
      * The Map of associated ids.
@@ -79,13 +80,6 @@ public class BaseUserFormAction {
      * The password confirmation field value.
      */
     public String passwordConfirm;
-
-    /**
-     * Returns whether or not the validation routine in this class will check the password
-     * field. This is nice to set to false when the user is updating their own account.
-     * Defaults to true.
-     */
-    public boolean checkPassword = true;
 
     @Inject
     public void setServices(MessageStore messageStore, UserConfiguration userConfiguration,
@@ -105,13 +99,20 @@ public class BaseUserFormAction {
 
     /**
      * Performs validation on the User class by passing the User object from the form submission to
-     * the {@link UserService#validate(User,Map,boolean,String,String)} method.
+     * the {@link UserService#validate(User,Map,boolean,String,String)} method. In order to accomodate
+     * the username and email variations on the {@link DefaultUser} class, this checks the configuration
+     * to see if the {@link UserConfiguration#isUsernameSameAsEmail()} method returns true and if it
+     * does, it assumes that the form only has a field for the username and copies that value from
+     * the username property to the email property.
      */
     @SuppressWarnings("unchecked")
     @ValidateMethod
     public void validate() {
-        ErrorList errors = userService.validate(user, associations, (!checkPassword || user.getId() != null),
-            password, passwordConfirm);
+        if (userConfiguration.isUsernameSameAsEmail()) {
+            user.setEmail(user.getUsername());
+        }
+        
+        ErrorList errors = userService.validate(user, associations, user.getId() != null, password, passwordConfirm);
         if (!errors.isEmpty()) {
             for (net.java.error.Error error : errors) {
                 PropertyError pe = (PropertyError) error;

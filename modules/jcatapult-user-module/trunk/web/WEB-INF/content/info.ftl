@@ -3,7 +3,10 @@
 <div id="login-summary" class="user-module-section jcatapult-module-section">
   <div id="login-details" class="user-module-details jcatapult-module-details">
     <h3>[@jc.message key="login-header"/]</h3>
-    [@jc.message key="user.login"/]: ${user.login}
+    [@jc.message key="user.username"/]: ${user.username}
+    [#if user.username != user.email]
+      [@jc.message key="user.email"/]: ${user.email}
+    [/#if]
   </div>
 </div>
 [#if user.addresses?size > 0 && user.phoneNumbers?size > 0]

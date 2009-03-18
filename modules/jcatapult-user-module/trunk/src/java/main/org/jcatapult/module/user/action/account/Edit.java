@@ -17,6 +17,7 @@
 package org.jcatapult.module.user.action.account;
 
 import org.jcatapult.module.user.action.BaseUserFormAction;
+import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
@@ -58,18 +59,11 @@ import org.jcatapult.user.service.UpdateResult;
 @Redirect(uri = "summary")
 public class Edit extends BaseUserFormAction {
     /**
-     * Turns off password checking by setting the variable {@link #checkPassword} to false.
-     */
-    public Edit() {
-        checkPassword = false;
-    }
-
-    /**
      * Creates a new user so that it can be edited.
      */
     @ActionPrepareMethod
     public void prepare() {
-        user = userService.findByLogin(SecurityContext.getCurrentUsername());
+        user = (DefaultUser) userService.findByUsername(SecurityContext.getCurrentUsername());
     }
 
     /**
@@ -100,7 +94,7 @@ public class Edit extends BaseUserFormAction {
         }
 
         String oldUsername = SecurityContext.getCurrentUsername();
-        if (!user.getLogin().equals(oldUsername)) {
+        if (!user.getUsername().equals(oldUsername)) {
             EnhancedSecurityContext.update(user);
         }
         

@@ -68,8 +68,10 @@ public class DefaultUserConfiguration implements UserConfiguration {
     public static final String CELL_PHONE_REQUIRED= "jcatapult.user.fields.cell-phone-required";
     public static final String EMAIL_OPTIONS = "jcatapult.user.fields.email-options";
 
-    /* Registration configureation */
+    /* Registration configuration */
     public static final String REGISTRATION_DISABLED = "jcatapult.user.register.disabled";
+    public static final String VERIFY_EMAILS = "jcatapult.user.verify-emails";
+    public static final String USERNAME_IS_EMAIL = "jcatapult.user.username-is-email";
     public static final String REGISTRATION_SUCCESS_URI = "jcatapult.user.register.success-uri";
     public static final String LOGOUT_SUCCESS_URI = "jcatapult.user.logout.success-uri";
     public static final String LOGIN_SUCCESS_URI = "jcatapult.user.login.success-uri";
@@ -101,6 +103,8 @@ public class DefaultUserConfiguration implements UserConfiguration {
 
         // Registration
         flags.put(REGISTRATION_DISABLED, configuration.getBoolean(REGISTRATION_DISABLED, false));
+        flags.put(VERIFY_EMAILS, configuration.getBoolean(VERIFY_EMAILS, false));
+        flags.put(USERNAME_IS_EMAIL, configuration.getBoolean(USERNAME_IS_EMAIL, true));
         this.registrationSuccessURI = configuration.getString(REGISTRATION_SUCCESS_URI, "/");
 
         // Logout
@@ -123,6 +127,20 @@ public class DefaultUserConfiguration implements UserConfiguration {
      */
     public boolean isRegistrationDisabled() {
         return flags.get(REGISTRATION_DISABLED);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isVerifyEmails() {
+        return flags.get(VERIFY_EMAILS);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isUsernameSameAsEmail() {
+        return flags.get(USERNAME_IS_EMAIL);
     }
 
     /**

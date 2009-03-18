@@ -95,7 +95,8 @@ public class BaseTest extends JPABaseTest {
     protected DefaultUser makeUser(String login) {
         DefaultUser user = new DefaultUser();
         user.setGuid("test guid");
-        user.setLogin(login);
+        user.setUsername(login);
+        user.setEmail(login);
         user.setPassword("test password");
         user.setCompanyName("test company name");
         user.setName(new Name());

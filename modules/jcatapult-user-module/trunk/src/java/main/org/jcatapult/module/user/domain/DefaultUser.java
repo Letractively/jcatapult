@@ -33,7 +33,7 @@ import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.jcatapult.user.domain.AbstractUser;
+import org.jcatapult.user.domain.AbstractUsernameTrackedUser;
 
 /**
  * <p>
@@ -54,7 +54,7 @@ import org.jcatapult.user.domain.AbstractUser;
 @Entity
 @Table(name="users")
 @SuppressWarnings("unchecked")
-public class DefaultUser extends AbstractUser<DefaultRole> {
+public class DefaultUser extends AbstractUsernameTrackedUser<DefaultRole> {
     private static final long serialVersionUID = 1;
 
     // ------------------------------------- Name -------------------------------------

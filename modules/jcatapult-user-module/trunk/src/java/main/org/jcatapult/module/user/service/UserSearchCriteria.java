@@ -28,45 +28,14 @@ import org.jcatapult.user.domain.User;
  */
 public class UserSearchCriteria extends AbstractSearchCriteria<User> {
     private final Class userType;
-    private String firstName;
-    private String lastName;
-    private String companyName;
-    private String login;
+    public String firstName;
+    public String lastName;
+    public String companyName;
+    public String username;
+    public String email;
 
     public UserSearchCriteria(Class userType) {
         this.userType = userType;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     protected void buildJPAQuery(QueryBuilder builder) {
@@ -95,9 +64,14 @@ public class UserSearchCriteria extends AbstractSearchCriteria<User> {
             builder.withParameter("companyName", "%" + companyName + "%");
         }
 
-        if (login != null) {
-            builder.andWhere("e.login like :login");
-            builder.withParameter("login", "%" + login + "%");
+        if (email != null) {
+            builder.andWhere("e.email like :email");
+            builder.withParameter("email", "%" + email + "%");
+        }
+
+        if (username != null) {
+            builder.andWhere("e.username like :username");
+            builder.withParameter("username", "%" + username + "%");
         }
     }
 

@@ -65,7 +65,7 @@ public class EditTest extends BaseTest {
     @Test
     public void testEdit() {
         DefaultUser user = new DefaultUser();
-        user.setLogin("test");
+        user.setUsername("test");
 
         Map<String, int[]> associations = new HashMap<String, int[]>();
         associations.put("roles", new int[]{1, 2, 3});
