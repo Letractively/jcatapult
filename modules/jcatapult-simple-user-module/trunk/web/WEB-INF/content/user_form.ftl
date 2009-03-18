@@ -4,7 +4,7 @@
   [@jc.actionmessages errors=true/]
   <div id="account-input" class="user-module-input jcatapult-module-input">
     <div id="login-input" class="user-module-input-section jcatapult-module-input-section">
-      [@jc.text name="user.username" size="30" required=true/]
+      [@jc.text name="user.email" size="30" required=true/]
       [#assign passwordRequired = (formAction != "edit")/]
       [#if formAction == "edit"]
         [@jc.message key="passwordInstructions"/]

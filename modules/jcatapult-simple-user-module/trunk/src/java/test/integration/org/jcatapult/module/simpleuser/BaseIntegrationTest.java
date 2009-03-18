@@ -18,7 +18,6 @@ package org.jcatapult.module.simpleuser;
 
 import java.sql.SQLException;
 
-import org.jcatapult.config.Configuration;
 import org.jcatapult.config.EnvironmentAwareConfiguration;
 import org.jcatapult.email.EmailTestHelper;
 import org.jcatapult.module.simpleuser.domain.DefaultRole;
@@ -69,7 +68,7 @@ public class BaseIntegrationTest extends JPABaseTest {
      * @param   registrationDisabled Determines if registration is disabled or not.
      * @return  The configuration mock.
      */
-    protected Configuration makeConfiguration(boolean registrationDisabled) {
+    protected MockConfiguration makeConfiguration(boolean registrationDisabled) {
         MockConfiguration configuration = new MockConfiguration(environmentAwareConfiguration);
         configuration.addParameter(DefaultUserConfiguration.REGISTRATION_DISABLED, registrationDisabled);
         return configuration;

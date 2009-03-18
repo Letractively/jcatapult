@@ -92,16 +92,13 @@ import com.google.inject.Inject;
 public class Register extends BaseUserFormAction {
     private final SavedRequestService savedRequestService;
     private final HttpServletRequest request;
-    private String uri;
+
+    public String uri;
 
     @Inject
     public Register(SavedRequestService savedRequestService, HttpServletRequest request) {
         this.savedRequestService = savedRequestService;
         this.request = request;
-    }
-
-    public String getUri() {
-        return uri;
     }
 
     public String get() {
@@ -119,27 +116,32 @@ public class Register extends BaseUserFormAction {
             return "disabled";
         }
 
+        boolean verifyEmails = userConfiguration.isVerifyEmails();
         String url = null;
-        if (userConfiguration.isVerifyEmails()) {
+        if (verifyEmails) {
             url = URLTools.makeURL(request, "verify-email");
         }
 
         RegisterResult result = userService.register(user, password, url);
         if (result == RegisterResult.EXISTS) {
-            messageStore.addFieldError(MessageScope.REQUEST, "user.username", "user.username.exists");
+            messageStore.addFieldError(MessageScope.REQUEST, "user.email", "user.email.exists");
             return "input";
         } else if (result == RegisterResult.ERROR) {
             messageStore.addActionError(MessageScope.REQUEST, "error");
             return "error";
         }
 
-        // Login the user in
-        EnhancedSecurityContext.login(user);
+        if (verifyEmails) {
+            uri = "verification-email-sent";
+        } else {
+            // Login the user in
+            EnhancedSecurityContext.login(user);
 
-        // See if there is a saved request
-        uri = savedRequestService.processSavedRequest(request);
-        if (uri == null) {
-            uri = userConfiguration.getRegistrationSuccessURI();
+            // See if there is a saved request
+            uri = savedRequestService.processSavedRequest(request);
+            if (uri == null) {
+                uri = userConfiguration.getRegistrationSuccessURI();
+            }
         }
 
         return "success";

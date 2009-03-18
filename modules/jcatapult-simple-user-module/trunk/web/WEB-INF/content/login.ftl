@@ -12,14 +12,14 @@
     <form action="/jcatapult-security-check" method="POST">
       <h3>[@jc.message key="notice"/]</h3>
       <ul class="field-errors">
-        [#if message??]
-          [#if message == 'invalid-username' || message == 'invalid-password']
+        [#if securityError??]
+          [#if securityError == 'invalid-username' || securityError == 'invalid-password']
             <li>[@jc.message key="failure"/]</li>
-          [#elseif message = 'expired' || message == 'locked']
+          [#elseif securityError == 'expired' || securityError == 'locked']
             <li>[@jc.message key="expired"/]</li>
-          [#elseif message = 'not-verified']
+          [#elseif securityError == 'not-verified']
             <li>[@jc.message key="not-verified"/]</li>
-          [#elseif message = 'password-expired']
+          [#elseif securityError == 'password-expired']
             <li>This is not implemented yet.</li>
           [/#if]
         [/#if]

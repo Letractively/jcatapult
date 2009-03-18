@@ -64,7 +64,7 @@ import com.google.inject.Inject;
 @Action(overridable = true)
 @Redirects({
     @Redirect(uri = "email-verified"),
-    @Redirect(code = "success-post", uri = "verification-email-resent")
+    @Redirect(code = "success-post", uri = "verification-email-sent")
 })
 public class VerifyEmail {
     private final UserService userService;
@@ -80,7 +80,7 @@ public class VerifyEmail {
 
     // For post
     @Required
-    public String username;
+    public String email;
 
     @Inject
     public VerifyEmail(MessageStore messageStore, UserService userService, HttpServletRequest request) {
@@ -91,8 +91,7 @@ public class VerifyEmail {
 
     public String get() {
         if (guid == null) {
-            messageStore.addActionError(MessageScope.REQUEST, "missing");
-            return "error";
+            return "input";
         }
 
         verifyEmailUser = userService.findByGUID(guid);
@@ -116,7 +115,7 @@ public class VerifyEmail {
     public String post() {
         String url = URLTools.makeURL(request, "verify-email");
         try {
-            userService.resendVerificationEmail(username, url);
+            userService.resendVerificationEmail(email, url);
         } catch (EntityNotFoundException e) {
             // Smother
         }

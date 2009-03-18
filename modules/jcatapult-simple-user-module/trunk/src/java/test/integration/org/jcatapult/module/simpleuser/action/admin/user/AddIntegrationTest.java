@@ -55,7 +55,7 @@ public class AddIntegrationTest extends BaseIntegrationTest {
         // Render first
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/admin/user/add").
-            withParameter("user.username", "add@test.com").
+            withParameter("user.email", "add@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
@@ -70,7 +70,7 @@ public class AddIntegrationTest extends BaseIntegrationTest {
         // Render first
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/admin/user/add").
-            withParameter("user.username", "add@test.com").
+            withParameter("user.email", "add@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "bad-password").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).

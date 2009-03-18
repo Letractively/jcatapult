@@ -37,11 +37,12 @@ public class LoginFailed {
 
     @Request()
     public JCatapultSecurityException jcatapult_security_login_exception;
-    public String message;
+
+    public String securityError;
 
     public String execute() {
         if (jcatapult_security_login_exception != null) {
-            message = jcatapult_security_login_exception.getMessage();
+            securityError = jcatapult_security_login_exception.getMessage();
         }
         
         return "success";

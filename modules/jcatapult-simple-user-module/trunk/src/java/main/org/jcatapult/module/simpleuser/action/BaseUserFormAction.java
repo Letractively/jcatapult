@@ -81,13 +81,6 @@ public class BaseUserFormAction {
      */
     public String passwordConfirm;
 
-    /**
-     * Returns whether or not the validation routine in this class will check the password
-     * field. This is nice to set to false when the user is updating their own account.
-     * Defaults to true.
-     */
-    public boolean checkPassword = true;
-
     @Inject
     public void setServices(MessageStore messageStore, UserConfiguration userConfiguration,
             UserService userService) {
@@ -111,14 +104,14 @@ public class BaseUserFormAction {
     @SuppressWarnings("unchecked")
     @ValidateMethod
     public void validate() {
-        if (checkPassword) {
-            if (password == null) {
-                messageStore.addFieldError(MessageScope.REQUEST, "password", "password.required");
-            } else if (password.length() < 5) {
-                messageStore.addFieldError(MessageScope.REQUEST, "password", "password.length");
-            } else if (!password.equals(passwordConfirm)) {
-                messageStore.addFieldError(MessageScope.REQUEST, "passwordConfirm", "passwordConfirm.match");
-            }
+        if (password == null && user.getId() == null) {
+            messageStore.addFieldError(MessageScope.REQUEST, "password", "password.required");
+        } else if (password == null && passwordConfirm != null) {
+            messageStore.addFieldError(MessageScope.REQUEST, "passwordConfirm", "passwordConfirm.match");
+        } else if (password != null && password.length() < 5) {
+            messageStore.addFieldError(MessageScope.REQUEST, "password", "password.length");
+        } else if (password != null && !password.equals(passwordConfirm)) {
+            messageStore.addFieldError(MessageScope.REQUEST, "passwordConfirm", "passwordConfirm.match");
         }
     }
 }

@@ -59,13 +59,6 @@ import org.jcatapult.user.service.UpdateResult;
 @Redirect(uri = "summary")
 public class Edit extends BaseUserFormAction {
     /**
-     * Turns off password checking by setting the variable {@link #checkPassword} to false.
-     */
-    public Edit() {
-        checkPassword = false;
-    }
-
-    /**
      * Creates a new user so that it can be edited.
      */
     @ActionPrepareMethod
