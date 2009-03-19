@@ -2,7 +2,7 @@
 
 = Actions and Views =
 
-This guide is a quick overview of writing actions and views for the JCatapult MVC. For in depth MVC documentation, look at the advanced section of the DocumentationHome wiki page.
+This guide is a quick overview of writing actions and views for the JCatapult MVC. For in depth MVC documentation, look at the advanced section of the DocumentationHome wiki page. All of the information contained here and in most of the JCatapult documentation applies to JCatapult webapps and JCatapult modules.
 
 = Conventions =
 
@@ -49,7 +49,7 @@ Here are some examples of how results are mapped to URLs (and vice-versa) by JCa
 || /user/list || WEB-INF/content/user/list.ftl ||
 || /water-products/speed-boat || WEB-INF/content/water-products/speed-boat.ftl ||
 
-= Webapp Results Without Actions =
+= Results Without Actions =
 
 If you need to create a result that doesn't have an action behind it, you can accomplish this by simply creating an FTL (FreeMarker template) file in the correct location as described above. Here is an example of an FTL without an action:
 
@@ -70,7 +70,7 @@ ant app
 
 and open your browser to http://localhost:8080/hello-world you should see this JSP.
 
-= Webapp Actions =
+= Actions =
 
 JCatapult actions are simply POJOs that contain the correct annotation. All JCatapult actions must be annotated with the `org.jcatapult.mvc.action.annotation.Action` annotation. This annotation signals to the JCatapult MVC that the class should be mapped to a URL.
 
