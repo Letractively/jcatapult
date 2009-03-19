@@ -101,6 +101,6 @@ Windows
 c:\> keytool -import -keystore %JAVA_HOME%/lib/security/cacerts -file <your-pem-export> -alias <anything>
 }}}
 
-= JCatapult Release Scripts =
+= Savant Subversion Release Plugin =
 
-The release handling is done inside the [AntReleaseSvnPlugin JCatapult Ant Release Plugin] of the JCatapult Ant build system. You can read up further on that documentation for more information.
+The release handling for JCatapult projects that are stored in SubVersion repositories, including all of the JCatapult projects, is performed by the Savant SubVersion Release plugin. You can learn how this plugin works and everything that you need to setup in order to use it by reading the Savant documentation located at http://code.google.com/p/savant-build/wiki
