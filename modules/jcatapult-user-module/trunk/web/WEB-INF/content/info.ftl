@@ -5,6 +5,7 @@
     <h3>[@jc.message key="login-header"/]</h3>
     [@jc.message key="user.username"/]: ${user.username}
     [#if user.username != user.email]
+      <br/>
       [@jc.message key="user.email"/]: ${user.email}
     [/#if]
   </div>
