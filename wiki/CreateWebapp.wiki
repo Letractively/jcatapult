@@ -15,13 +15,13 @@ At the core of JCatapult is support for building web applications. JCatapult pro
 
 = Create a web application =
 
-Run the _make-project_ script that is located at _JCATAPULT_HOME/makeproject_. You can add that directory to your path. This script has a simple help menu if you don't know how to use it. The syntax for creating a webapp is:
+To create a web application, run the _make-project_ plugin like this:
 
 {{{
-make-project webapp
+$ svnt jcatapult:make-project --type=webapp
 }}}
 
-When you execute the `make-project webapp` command you will be asked the following questions:
+When you execute this command you will be asked the following questions:
 
   # Project Name:  Enter the name of your project (e.g. jcatapult-example-webapp)
   # Creation Directory:  Enter the directory to create the project in. (e.g. win: C:\projects, linux/mac: ~/projects)
