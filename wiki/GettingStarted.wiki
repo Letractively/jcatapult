@@ -25,7 +25,7 @@ After you download and install Ant, please create an ANT_HOME environment variab
 
 = Savant =
 
-JCatapult requires that you have Savant 2.0 RC3 or later installed. You will need to download Savant if you don't already have it installed. The website for Savant is http://code.google.com/p/savant-build
+JCatapult requires that you have Savant 1.5 or later installed (but NOT a 2.0 build). You will need to download Savant if you don't already have it installed. The website for Savant is http://code.google.com/p/savant-build
 
 After you download and install Savant, please create an SAVANT_HOME environment variable and set it to the location of your Savant installation.
 
