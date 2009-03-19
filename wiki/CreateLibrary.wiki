@@ -11,11 +11,10 @@ JCatapult supports the concept of libraries. Libraries are the best location to 
 
 
 = Create a library =
-
-Run the _make-project_ script that is located at _JCATAPULT_HOME/makeproject_. You can add that directory to your path. This script has a simple help menu if you don't know how to use it. The syntax for creating a library is:
+To create a library, run the _make-project_ plugin like this:
 
 {{{
-make-project library
+$ svnt jcatapult:make-project --type=library
 }}}
 
 After you answer the questions it asks, you should have a newly created library. This library can be built using the following command:
