@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Run svnt jar first
+echo "Running the Savant build"
+if ! svnt jar > /dev/null 2>&1; then
+  echo "Build failed.  Please ensure that your project compiles successfully by running 'svnt compile'."
+  exit 1
+fi
+
+# Build up the scaffolding classpath
+dir=$(dirname $0)
+classpath=
+for f in $(ls $dir/../lib); do
+  classpath=$dir/../lib/$f:$classpath
+done
+
+# Grab the project JARs
+local_classpath=
+for f in $(ls target/jars); do
+  local_classpath=target/jars/$f:$local_classpath
+done
+
+# Grab the deps and transitive deps for the project
+echo "Using Savant to determine project classpath"
+project_classpath=$(java -cp $classpath org.inversoft.savant.dep.DependencyPathMain)
+
+java -cp $classpath:$local_classpath:$project_classpath -Dscaffolder.home=$dir/.. \
+  org.jcatapult.scaffolder.Main $@
