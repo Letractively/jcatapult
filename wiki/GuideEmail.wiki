@@ -1,101 +1,78 @@
-﻿= JCatapult Email Library (JCEL) =
+﻿= Overview =
 
-Built on [http://freemarker.sourceforge.net/ FreeMarker] and [http://java.sun.com/products/javamail/ JavaMail], the JCatapult Email library (JCEL for short) provides a set of APIs to easily create and send emails from an application. JCEL is designed primarily around two main interface APIs:
+Built on [http://freemarker.sourceforge.net/ FreeMarker] and [http://java.sun.com/products/javamail/ JavaMail], the JCatapult Email library (JCEL for short) provides a set of APIs to easily create and send emails from an application. 
 
-  * Email Service - Builds the email
-  * Email Transport Service - Sends the mail
+= Getting Started =
 
-= Email Service =
+In order to use the EmailService, you first need to open the _deploy/tomcat/main/conf/context.xml_ file and uncomment the MailSession configuration. Next, you'll need to setup an email server on your local machine. Most Unix and Linux operating systems come with an email server or you can easily install PostFix or Sendmail. Windows users will need to find an appropriate email server for their version of Windows.
 
-The Email Service is an interface that is used to construct emails in a simple and templatized manner.  The API itself consists of one method, `sendEmail`, the javadoc for which has been included below for illustration:
+= API and Templates =
 
-{{{
-/**
- * Called to build the email using the specified template as the email body, configure the
- * email using the returned {@link EmailCommand} object and then send the email using the returned
- * {@link EmailCommand} object.
- *
- * Here's an example using the template below named 'hello':
- *
- * <pre>
- * Hello ${name},
- *
- * Thanks for buying all that cool stuff.
- * </pre>
- *
- * <p>
- * You would call this method like this:
- * </p>
- *
- * <pre>
- * sendEmail("hello").withTemplateParam("name", "Joe Blow").to("joe@blow.com").from("info@example.com").now(); 
- * </pre>
- *
- * @param   template (Required) The name of the template. The implementation will dictate the type
- *          of template and how they are stored.
- * @return  The name value pair chain.
- * @throws JCatapultEmailException Runtime exception thrown if the from and/or subject are null and also
- * if the email message contains zero recipients
- */
-EmailCommand sendEmail(String template) throws JCatapultEmailException ;
-}}}
-
-== Email Command ==
-
-As indicated above, the `sendEmail` method returns an instance of the `EmailCommand` interface. The `EmailCommand` interface provides a DSL (domain specific language) approach to constructing and sending emails. DSLs, such as the `EmailCommand`, are characterized by providing methods that sound like plain English. This allows the code to be more easily read. here is an example:
-
-=== Example ===
-
-You want to send an email to john@doe.com, from 'jane@doe.com' and right now.  Using the `EmailService` interface and the `EmailCommand` interface you would instruct the service to perform the operation like this:
+The Email Service is an interface that is used to construct emails in a simple and templatized manner.  The API itself consists of one method, `sendEmail`, which takes the name of the email template to be sent. Email templates are stored (by default) in the _web/WEB-INF/email_ directory. The EmailService API can be used to send plain text or HTML emails, depending on which templates exist in this directory. For example, if we wanted to send an HTML email from a *contact us* form, we might invoke the EmailService like this:
 
 {{{
-sendEmail("hello").to("john@doe.com").from("jane@doe.com").now();
+emailService.sendEmail("contact-us")...
 }}}
 
-== FreeMarker Email Service ==
-
-As suggested by the name, the `FreeMarkerEmailService` is an implementation of the `EmailService` that uses the FreeMarker templating engine to build the body of the emails.
-
-=== Configuration ===
-
-The `FreemarkerEmailService` uses [GuideConfiguration JCatapult Configuration] for configuring both the FreeMarker Template and Email processing behaviour. There are a number of configuration parameters that can be specified to control the behavior of how the `FreeMarkerEmailService` processes templates. Specifically, these include:
-
-  * jcatapult.email.templates.location:
-    * Description: The location within the web application or a fully qualified location on disk of the FreeMarker email templates. The default value for the location of the email template files is configured using the [JCatapultProperties JCatapult properties] files.
-    * Optional: Yes
-    * default value: /WEB-INF/email
-  
-  * jcatapult.email.templates.cache
-    * Description: A boolean that determines if the email templates should be cached by FreeMarker.
-    * Optional: Yes
-    * Default: false
-  
-  * jcatapult.email.templates.check-interval
-    * Description: The number of seconds to check if the FreeMarker template has been modified. If caching is turned off this value is ignored.
-    * Optional: Yes
-    * Default: 2 if caching
-
-To override the defaults, you would include these in your webapp's configuration files.  An example has been provided below for illustration purposes:
+And we would create an email templated named _contact-us-html.ftl_ inside the _web/WEB-INF/email_ directory. Our template might look like this:
 
 {{{
-<config>
-  <jcatapult>
-    <email>
-      <templates>
-        <location>/WEB-INF/email-templates</location>
-        <cache>true</cache>
-        <check-interval>3600</check-interval>
-      </templates>
-    </email>
-  </jcatapult>
-</config>
+<html>
+<body>
+<p>
+Thanks for contacting us.
+</p>
+</body>
+</html>
 }}}
 
-The above example configures the `FreeMarkerEmailService` to load the email templates from the directory location `/WEB-INF/email-templates` and cache the templates in memory for 1 hour (3600 seconds).
+= Email Command =
 
-=== Template Naming ===
+In order to change parameters, such as the subject and to address, of the email, you use the `EmailCommand` interface. This interface is returned from the `sendEmail` method on the `EmailService`. The `EmailCommand` interface provides a DSL (domain specific language) approach to constructing and sending emails. DSLs, such as the `EmailCommand`, are characterized by providing methods that sound like plain English. This allows the code to be more easily read. Let's say we wanted our *Contact Us* email to be sent from a special no reply email address and sent to the email address from the *Contact Us* form. We can specify the to and from addresses using the EmailCommand like this:
 
-In order for the `FreeMarkerEmailService` to actually find your files in the configured location, the files must conform to the following naming convention format:
+{{{
+// The emailAddress variable is the value from the form
+
+sendEmail("contact-us").to(emailAddress).from("no-reply@example.com").now();
+}}}
+
+This code will send an email using the `contact-us` email template, to the email address specific on the form, from the email address `no-reply@example.com`.
+
+== Parameters ==
+
+Another cool feature of the `EmailService` is that it uses FreeMarker (by default) for the email templates. This means that you can use all the power of FreeMarker to construct the content of your email. You can also pass in extra parameters to the FreeMarker email template using the `EmailCommand` interface. Let's say we wanted to pass in the first and last name values from our *Contact Us* form. Here's how we would do that:
+
+{{{
+// The emailAddress, firstName, and lastName variables are the values from the form
+
+sendEmail("contact-us").
+    to(emailAddress).
+    from("no-reply@example.com").
+    withTemplateParam("firstName", firstName).
+    withTemplateParam("lastName", lastName).
+    now();
+}}}
+
+Now, we could update our email template like this:
+
+{{{
+<html>
+<body>
+<p>
+Dear ${firstName} ${lastName},
+</p>
+<p>
+Thanks for contacting us.
+</p>
+</body>
+</html>
+}}}
+
+As you can see, the FreeMarker email template now has access to these parameters. There are a number of additional methods on the `EmailCommand` that you can use to setup the emails. Consult the JavaDoc for more information.
+
+= Templates =
+
+In order for the `EmailService` to find the correct email template to use, the names of the email template files must conform to the following naming convention:
 
 {{{
 <template-name>-[html|text].ftl
@@ -106,156 +83,25 @@ In order for the `FreeMarkerEmailService` to actually find your files in the con
 
 ex:
 {{{
-contact-text.ftl
-contact-html.ftl
+contact-us-text.ftl
+contact-us-html.ftl
 }}}
 
 You can provide either of these two templates or both of the templates. If you only provide one of the two templates, the template will be rendered and then set into the `Email` instance as either the text body, if the `-text.ftl` template is used, or the MIME body, if the `-html.ftl` template is used. If you provide both templates then the email will contain both a text body and a MIME body. It is usually best to provide both versions of your emails for usability reasons.
 
-=== Email Processing ===
+= Configuration =
 
-In addition to configuring how FreeMarker should process the templates, the `FreeMarkerEmailService` can also automatically set the email's from, from-display, to, bcc, and cc for you by getting configuration data from [GuideConfiguration JCatapult Configuration] files.  It accomplishes this by pulling configuration data using the template-name as follows:
+Besides using the methods on the `EmailCommand` interface to setup the emails, you can also use the JCatapult Environment Aware Configuration to setup the emails as well as configure the `EmailService` itself. Here are the configuration parameters you can use to setup the how the `EmailService` finds and processes email templates:
 
-  * jcatapult.email.'template-name'.subject
-  * jcatapult.email.'template-name'.from
-  * jcatapult.email.'template-name'.from-display
-  * jcatapult.email.'template-name'.to
-  * jcatapult.email.'template-name'.cc
-  * jcatapult.email.'template-name'.bcc
-
-For instance, if my template-name is 'contact', the service will look for the from, from-display, to, cc, and bcc by trying to load the following from the configuration files:
-
-  * jcatapult.email.contact.subject
-  * jcatapult.email.contact.from
-  * jcatapult.email.contact.from-display
-  * jcatapult.email.contact.to
-  * jcatapult.email.contact.cc
-  * jcatapult.email.contact.bcc
-
-The configuration xml would look as follows:
-
-{{{
-<config>
-  <jcatapult>
-    <email>
-      <contact>
-        <subject>Contact</subject>
-        <from>jane@doe.com</from>
-        <from-display>Jane Doe</from-display>
-        <to>joe@doe.com</to>
-      </contact>
-    </email>
-  </jcatapult>
-</config>
-}}}
-
-= Full Example =
-
-To sum up the `FreeMarkerEmailService`, lets pretend that your website has a *contact us* form and when a user fills out this form it should send an email to john@doe.com.
-
-== Template Location ==
-
-The first thing you'll want to do is decide where you want to store your template files.  For this example, lets pretend that you don't like the default location `WEB-INF/email` and you want to change it to `WEB-INF/email-templates`.  As illustrated above, you'd change this by specifying a new template location in the configuration files as follows:
-
-{{{
-<config>
-  <jcatapult>
-    <email>
-      <templates>
-        <location>/WEB-INF/email-templates</location>
-      </templates>
-    </email>
-  </jcatapult>
-</config>
-}}}
-
-== Template Name ==
-
-The next thing you'll want to do is come up with a name for your email template.  Since this email will contain details on who submitted the contact form, lets choose 'contact' as the template name.
-
-== Creating Template Files ==
-
-After you decide on a template name, the next thing you must do is construct your email body and decide whether or not you want it to be a text or html email or both types. Let's send an html email with the following body:
-
-{{{
-<html>
-  <body>
-    <p>The website contact us form has been submitted with the following information:</p>
-    <ul>
-      <li>Name: ${name}</li>
-      <li>Email: ${email}</li>
-      <li>Message: ${message}</li>
-    </ul>
-  </body>
-</html>
-}}}
-
-Since we've chosen `contact` as our template name and we're sending an HTML email, we'll create the following template file containing the above HTML in the WEB-INF/email-templates directory:
-
-{{{
-contact-html.ftl
-}}}
-
-== Sending the email ==
-
-Using the `FreeMarkerEmailService`, you would send the email by calling the `sendEmail` method, issuing the appropriate commands to build the email. Below is an example JCatapult action that performs this operation:
-
-{{{
-// Imports left out for simplicity
-
-/**
- * Example action that processes the contact us form
- */
-@Action
-public class Test {
-    public String name;
-    public String email;
-    public String message;
-    public EmailService emailService;
-
-    @Inject
-    public Test(EmailService emailService) {
-        this.emailService = emailService;
-    }
-
-    public String execute() {
-        emailService.sendEmail("contact").
-                     withSubject("Contact Us Form Submission").
-                     to("john@doe.com").
-                     from(email).
-                     withTemplateParam("name", name).
-                     withTemplateParam("email", email).
-                     withTemplateParam("message", message).
-                     now();
-
-        return "success";
-    }
-}
-}}}
-
-= Email Transport Service =
-
-The `EmailTransportService` is an interface that defines a transport mechanism for sending email messages. The `FreeMarkerEmailService` that we covered above uses this interface to send the email after is has been constructed. This API consists of one method, `sendEmail`. The javadoc has been included below for illustration:
-
-{{{
-    /**
-     * Sends an email using some SMTP transport mechanism. An implementation might decide to make the
-     * sending be asynchronous or it might choose to send the email immediately. If it decides to send
-     * the email immediately, this method will return null.
-     *
-     * @param   email The email to send.
-     * @return  A Future for implementations that send email asynchronously.
-     */
-    Future<Email> sendEmail(Email email);
-}}}
-
-== Java Mail Email Transport Service ==
-
-As suggested by the name, the `JavaMailEmailTransportService` is an implementation of the `EmailTransportService` that uses [http://java.sun.com/products/javamail/ JavaMail] as the SMTP transport mechansism.
-
-=== Configuration ===
-
-The `JavaMailEmailTransportService` uses [GuideConfiguration JCatapult Configuration] for configuring the [http://java.sun.com/products/javamail/ JavaMail] Session.  In order to create the session, the configuration is used to load up the username and password for the SMTP server as well as any other possible JavaMail configuration. Here are the configuration keys that can be used.
+  * jcatapult.email.templates.location:
+    * Description: The location within the web application or a fully qualified location on disk of the FreeMarker email templates. The default value for the location of the email template files is configured using the [JCatapultProperties JCatapult properties] files.
+    * Optional: Yes
+    * default value: /WEB-INF/email
+  
+  * jcatapult.freemarker-service.check-seconds
+    * Description: The number of seconds to check if the FreeMarker template has been modified. (Changes to this property will also effect the JCatapult MVC and anything else that uses the DefaultFreeMarkerService from jcatapult-core)
+    * Optional: Yes
+    * Default: 2 if the environment is not _production_, Integer.MAX_INT if the environment is _production_
 
   * jcatapult.email.username
     * Description: The user name for the SMTP server
@@ -268,7 +114,7 @@ The `JavaMailEmailTransportService` uses [GuideConfiguration JCatapult Configura
     * Default: N/A
 
   * jcatapult.email.smtp-host
-    * Description: The SMTP host.
+    * Description: The email server that the EmailService will use to send the emails.
     * Optional: true
     * Default: localhost
 
@@ -287,16 +133,92 @@ The `JavaMailEmailTransportService` uses [GuideConfiguration JCatapult Configura
     * Optional: true
     * Default: 500 milliseconds
 
-Besides the above properties, you can also specify any other properties that are supported by the JavaMail specification. However, these properties need to be prepended with `mail` in order to be loaded. For example, if you want to specify a default 'from' address, you would add a property to the configuration files like this:
+To override the defaults, you would include these in your webapp's configuration files.  An example has been provided below for illustration purposes:
 
 {{{
 <config>
   <jcatapult>
     <email>
-      <mail>
-        <from>fred@example.com</from>
-      </mail>
+      <templates>
+        <location>/WEB-INF/email-templates</location>
+      </templates>
+    </email>
+    <freemarker-service>
+        <check-seconds>60</check-seconds>
+    </freemarker-service>
+  </jcatapult>
+</config>
+}}}
+
+The above example configures the `EmailService` to load the email templates from the directory location `/WEB-INF/email-templates` and cache the templates in memory for 1 minute (60 seconds).
+
+In addition to configuring how the `EmailService` is configured to process the email templates, you can also configure individual properties for a specific email template, such as the email's from, from-display, to, bcc, and cc. In order to configure a specific email template, you need to specify various configuration values using the templates name. Here are the values you can set:
+
+  * jcatapult.email.'template-name'.subject
+  * jcatapult.email.'template-name'.from
+  * jcatapult.email.'template-name'.from-display
+  * jcatapult.email.'template-name'.to
+  * jcatapult.email.'template-name'.cc
+  * jcatapult.email.'template-name'.bcc
+
+Using our example from above or the *Contact Us* email template, these configuration values would become:
+
+  * jcatapult.email.contact-us.subject
+  * jcatapult.email.contact-us.from
+  * jcatapult.email.contact-us.from-display
+  * jcatapult.email.contact-us.to
+  * jcatapult.email.contact-us.cc
+  * jcatapult.email.contact-us.bcc
+
+The configuration XML file would look something like this:
+
+{{{
+<config>
+  <jcatapult>
+    <email>
+      <contact-us>
+        <subject>Contact Us</subject>
+        <from>no-reply@example.com</from>
+        <from-display>Example.com's Contact form</from-display>
+      </contact-us>
     </email>
   </jcatapult>
 </config>
+}}}
+
+= Action Example =
+
+here is an example JCatapult action that would use the `EmailService`:
+
+{{{
+// Imports left out for simplicity
+
+/**
+ * Example action that processes the contact us form
+ */
+@Action
+public class Test {
+    public String firstName;
+    public String lastName;
+    public String email;
+    public EmailService emailService;
+
+    @Inject
+    public Test(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+    public String execute() {
+        emailService.sendEmail("contact-us").
+                     withSubject("Contact Us Form Submission").
+                     to(email).
+                     from("no-reply@example.com).
+                     withTemplateParam("firstName", firstName).
+                     withTemplateParam("lastName", lastName).
+                     withTemplateParam("email", email).
+                     now();
+
+        return "success";
+    }
+}
 }}}
