@@ -14,24 +14,24 @@
 
   <!-- Compile properties -->
   <property name="jdk.version" value="1.6"/>
-  <property name="version.jcatapult" value="1.0-RC12-{integration}"/>
+  <property name="version.jcatapult" value="1.0-RC12"/>
 
   <dependencies>
-    <artifactGroup type="compile-only">
-      <artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4"/>
-    </artifactGroup>
-    <artifactGroup type="compile">
+    <artifact-group type="compile-only">
+      <artifact group="servlet.javax" name="servlet-api" version="2.4"/>
+    </artifact-group>
+    <artifact-group type="compile">
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
       <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5"/>
       <artifact group="jcatapult.org" name="jcatapult-core" version="${version.jcatapult}"/>
       <artifact group="jcatapult.org" name="jcatapult-mvc" version="${version.jcatapult}"/>
-    </artifactGroup>
-    <artifactGroup type="run">
-    </artifactGroup>
-    <artifactGroup type="test-compile">
-      <artifact group="easymock.org" project="easymock" name="easymock" version="2.2"/>
+    </artifact-group>
+    <artifact-group type="run">
+    </artifact-group>
+    <artifact-group type="test-compile">
+      <artifact group="easymock.org" name="easymock" version="2.2"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
-      <artifact group="junit.org" project="junit" name="junit" version="4.4"/>
-    </artifactGroup>
+      <artifact group="junit.org" name="junit" version="4.4"/>
+    </artifact-group>
   </dependencies>
 </project>
