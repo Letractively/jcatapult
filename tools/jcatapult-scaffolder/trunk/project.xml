@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
     name="jcatapult-scaffolder"
     group="jcatapult.org"
-    version="1.0-RC11">
+    version="1.0-RC12">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
@@ -15,33 +15,22 @@
   <property name="jdk.version" value="1.6"/>
 
   <dependencies>
-    <artifactGroup type="compile">
-      <!-- apache commons -->
-      <artifact group="commons.apache.org" project="commons-configuration" name="commons-configuration" version="1.4" type="jar"/>
-      <artifact group="commons.apache.org" project="commons-cli" name="commons-cli" version="1.1" type="jar"/>
-
-      <!-- groovy -->
-      <artifact group="groovy.codehaus.org" project="groovy" name="groovy-all" version="1.5.4" type="jar"/>
-
-      <!-- java net commons -->
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
-
-      <!-- jdom -->
-      <artifact group="jdom.org" project="jdom" name="jdom" version="1.1" type="jar"/>
-
-      <!-- freemarker -->
-      <artifact group="freemarker.org" project="freemarker" name="freemarker" version="2.3.12" type="jar"/>
-
-      <!-- jline -->
-      <artifact group="jline.sourceforge.net" project="jline" name="jline" version="0.9.94" type="jar"/>
-    </artifactGroup>
-    <artifactGroup type="run">
-      <artifact group="savant.inversoft.org" project="savant-core" name="savant-core" version="2.0-RC4" type="jar"/>
-    </artifactGroup>
-    <artifactGroup type="test-compile">
-      <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
-      <artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>
-    </artifactGroup>
-    <artifactGroup type="test-run"/>
+    <artifact-group type="compile">
+      <artifact group="commons.apache.org" name="commons-configuration" version="1.4"/>
+      <artifact group="commons.apache.org" name="commons-cli" version="1.1"/>
+      <artifact group="groovy.codehaus.org" project="groovy" name="groovy-all" version="1.5.4"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5"/>
+      <artifact group="jdom.org" name="jdom" version="1.1"/>
+      <artifact group="freemarker.org" name="freemarker" version="2.3.12"/>
+      <artifact group="jline.sourceforge.net" name="jline" version="0.9.94"/>
+    </artifact-group>
+    <artifact-group type="run">
+      <artifact group="savant.inversoft.org" name="savant-core" version="1.5"/>
+    </artifact-group>
+    <artifact-group type="test-compile">
+      <artifact group="junit.org" name="junit" version="4.4"/>
+      <artifact group="persistence.javax" name="persistence-api" version="1.0"/>
+    </artifact-group>
+    <artifact-group type="test-run"/>
   </dependencies>
 </project>
