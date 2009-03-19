@@ -64,7 +64,13 @@ public class Main {
             if (commands[0].equals("help")) {
                 printAllHelp(scaffolderDirs);
             } else {
-                File scaffolderDir = new File(scaffolderDirs.get(commands[0]).getParentFile(), commands[0]);
+                File file = scaffolderDirs.get(commands[0]);
+                if (file == null) {
+                    System.err.println("Invalid scaffolder [" + commands[0] + "]");
+                    System.exit(1);
+                }
+
+                File scaffolderDir = new File(file.getParentFile(), commands[0]);
                 Scaffolder scaffolder = makeScaffolder(commands[0], scaffolderDir);
                 scaffolder.setDir(scaffolderDir);
                 scaffolder.setOverwrite(line.hasOption("overwrite"));
@@ -93,23 +99,22 @@ public class Main {
      *
      * Scaffolder Dirs:
      * <ul>
-     *   <li>default: JCATAPULT_HOME/scaffolder/scaffolders</li>
-     *   <li>custom: USER.HOME/.jcatapult/scaffolders</li>
+     *   <li>default: ${scaffolder.home}/scaffolder/scaffolders</li>
+     *   <li>custom: ${user.home}/.jcatapult/scaffolders</li>
      * </ul>
      *
      * @return map contaning the default and custom scaffolders dir
      */
     private static Map<String, File> getScaffolderDirs() {
-
         Map<String, File> scaffolderDirs = new HashMap<String, File>();
-
-        // get the default scaffolder dir
-        String jcatapultHome = System.getenv("JCATAPULT_HOME");
-        if (StringTools.isEmpty(jcatapultHome)) {
-            System.err.println("JCATAPULT_HOME must be set into your environment");
+        
+        String home = System.getProperty("scaffolder.home");
+        if (StringTools.isEmpty(home)) {
+            System.err.println("-Dscaffolder.home must be set in the scaffold scripts");
             System.exit(1);
         }
-        File defaultScaffolderDir = new File(jcatapultHome, "tools/scaffolder/scaffolders");
+
+        File defaultScaffolderDir = new File(home, "scaffolders");
         File[] defaultScaffolders = defaultScaffolderDir.listFiles();
         for (File defaultScaffolder : defaultScaffolders) {
             scaffolderDirs.put(defaultScaffolder.getName(), defaultScaffolder);
