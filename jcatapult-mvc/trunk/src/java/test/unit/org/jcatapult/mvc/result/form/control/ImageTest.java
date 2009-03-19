@@ -31,7 +31,7 @@ import static net.java.util.CollectionTools.*;
  * @author  Brian Pontarelli
  */
 public class ImageTest extends ControlBaseTest {
-    @Inject private Image image;
+    @Inject public Image image;
 
     @Test
     public void testActionLess() {
@@ -40,8 +40,9 @@ public class ImageTest extends ControlBaseTest {
             mapNV("name", "image", "value", "test-value", "class", "css-class", "bundle", "/image-bundle", "src", "foo.gif"),
             null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image-Bundle\"/></div>\n" +
+            "<div class=\"image-button button control\">\n" +
+            "<div class=\"image-button-label button-label control-label\"> </div>\n" +
+            "<div class=\"image-button-container button-container control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image-Bundle\"/></div>\n" +
             "</div>\n");
     }
 
@@ -52,8 +53,9 @@ public class ImageTest extends ControlBaseTest {
             mapNV("name", "image", "value", "test-value", "class", "css-class", "src", "foo.gif"),
             null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "<div class=\"image-button button control\">\n" +
+            "<div class=\"image-button-label button-label control-label\"> </div>\n" +
+            "<div class=\"image-button-container button-container control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
             "</div>\n");
     }
 
@@ -64,8 +66,9 @@ public class ImageTest extends ControlBaseTest {
             mapNV("name", "image", "action", "/foo", "value", "test-value", "class", "css-class", "src", "foo.gif"),
             null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"/foo\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "<div class=\"image-button button control\">\n" +
+            "<div class=\"image-button-label button-label control-label\"> </div>\n" +
+            "<div class=\"image-button-container button-container control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
             "</div>\n");
     }
 
@@ -76,8 +79,9 @@ public class ImageTest extends ControlBaseTest {
             mapNV("name", "image", "value", "test-value", "class", "css-class", "ismap", true, "src", "foo.gif"),
             null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" ismap=\"ismap\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "<div class=\"image-button button control\">\n" +
+            "<div class=\"image-button-label button-label control-label\"> </div>\n" +
+            "<div class=\"image-button-container button-container control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" ismap=\"ismap\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
             "</div>\n");
     }
 }

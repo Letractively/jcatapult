@@ -31,7 +31,7 @@ import static net.java.util.CollectionTools.*;
  * @author  Brian Pontarelli
  */
 public class SubmitTest extends ControlBaseTest {
-    @Inject Submit submit;
+    @Inject public Submit submit;
 
     @Test
     public void testActionLess() {
@@ -40,8 +40,9 @@ public class SubmitTest extends ControlBaseTest {
             mapNV("name", "button", "value", "test-value", "class", "css-class", "bundle", "/button-bundle"),
             null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"submit\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button-Bundle\"/></div>\n" +
+            "<div class=\"submit-button button control\">\n" +
+            "<div class=\"submit-button-label button-label control-label\"> </div>\n" +
+            "<div class=\"submit-button-container button-container control-container\"><input type=\"submit\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button-Bundle\"/></div>\n" +
             "</div>\n");
     }
 
@@ -52,8 +53,9 @@ public class SubmitTest extends ControlBaseTest {
             mapNV("name", "button", "value", "test-value", "class", "css-class"),
             null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"submit\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
+            "<div class=\"submit-button button control\">\n" +
+            "<div class=\"submit-button-label button-label control-label\"> </div>\n" +
+            "<div class=\"submit-button-container button-container control-container\"><input type=\"submit\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
             "</div>\n");
     }
 
@@ -64,8 +66,9 @@ public class SubmitTest extends ControlBaseTest {
             mapNV("name", "button", "action", "/foo", "value", "test-value", "class", "css-class"),
             null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"/foo\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\"><input type=\"submit\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
+            "<div class=\"submit-button button control\">\n" +
+            "<div class=\"submit-button-label button-label control-label\"> </div>\n" +
+            "<div class=\"submit-button-container button-container control-container\"><input type=\"submit\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
             "</div>\n");
     }
 }

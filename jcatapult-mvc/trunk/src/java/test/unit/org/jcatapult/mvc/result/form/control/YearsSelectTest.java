@@ -32,7 +32,7 @@ import static net.java.util.CollectionTools.*;
  * @author  Brian Pontarelli
  */
 public class YearsSelectTest extends ControlBaseTest {
-    @Inject YearsSelect yearsSelect;
+    @Inject public YearsSelect yearsSelect;
 
     @Test
     public void testActionLess() {
@@ -40,21 +40,21 @@ public class YearsSelectTest extends ControlBaseTest {
         run(yearsSelect,
             mapNV("name", "test", "class", "css-class", "bundle", "/years-select-bundle"),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"test\" name=\"test\">\n" +
-            "    <option value=\"2009\">2009</option>\n" +
-            "    <option value=\"2010\">2010</option>\n" +
-            "    <option value=\"2011\">2011</option>\n" +
-            "    <option value=\"2012\">2012</option>\n" +
-            "    <option value=\"2013\">2013</option>\n" +
-            "    <option value=\"2014\">2014</option>\n" +
-            "    <option value=\"2015\">2015</option>\n" +
-            "    <option value=\"2016\">2016</option>\n" +
-            "    <option value=\"2017\">2017</option>\n" +
-            "    <option value=\"2018\">2018</option>\n" +
-            "  </select>\n" +
+            "<div class=\"select input control\">\n" +
+            "<div class=\"select-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"select-container input-container control-container\">\n" +
+            "<select class=\"css-class\" id=\"test\" name=\"test\">\n" +
+            "<option value=\"2009\">2009</option>\n" +
+            "<option value=\"2010\">2010</option>\n" +
+            "<option value=\"2011\">2011</option>\n" +
+            "<option value=\"2012\">2012</option>\n" +
+            "<option value=\"2013\">2013</option>\n" +
+            "<option value=\"2014\">2014</option>\n" +
+            "<option value=\"2015\">2015</option>\n" +
+            "<option value=\"2016\">2016</option>\n" +
+            "<option value=\"2017\">2017</option>\n" +
+            "<option value=\"2018\">2018</option>\n" +
+            "</select>\n" +
             "</div>\n" +
             "</div>\n");
     }
@@ -69,17 +69,17 @@ public class YearsSelectTest extends ControlBaseTest {
         run(yearsSelect,
             mapNV("name", "user.year", "class", "css-class", "startYear", 2001, "endYear", 2006),
             null, "<input type=\"hidden\" name=\"user.year@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"user_year\" class=\"label\">Year</label></div>\n" +
-            "<div class=\"control-container\">\n" +
-            "  <select class=\"css-class\" id=\"user_year\" name=\"user.year\">\n" +
-            "    <option value=\"2001\">2001</option>\n" +
-            "    <option value=\"2002\">2002</option>\n" +
-            "    <option value=\"2003\" selected=\"selected\">2003</option>\n" +
-            "    <option value=\"2004\">2004</option>\n" +
-            "    <option value=\"2005\">2005</option>\n" +
-            "    <option value=\"2006\">2006</option>\n" +
-            "  </select>\n" +
+            "<div class=\"select input control\">\n" +
+            "<div class=\"select-label input-label control-label\"><label for=\"user_year\" class=\"label\">Year</label></div>\n" +
+            "<div class=\"select-container input-container control-container\">\n" +
+            "<select class=\"css-class\" id=\"user_year\" name=\"user.year\">\n" +
+            "<option value=\"2001\">2001</option>\n" +
+            "<option value=\"2002\">2002</option>\n" +
+            "<option value=\"2003\" selected=\"selected\">2003</option>\n" +
+            "<option value=\"2004\">2004</option>\n" +
+            "<option value=\"2005\">2005</option>\n" +
+            "<option value=\"2006\">2006</option>\n" +
+            "</select>\n" +
             "</div>\n" +
             "</div>\n");
     }
