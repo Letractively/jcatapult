@@ -222,3 +222,65 @@ public class Test {
     }
 }
 }}}
+
+= Unit Testing =
+
+The JCatapult `EmailService` is also testable without actually sending an emails via SMTP. To setup testing of the `EmailService` you need to use the `org.jcatapult.email.EmailTestHelper` class. This class has a method called `setup` that must be called in the constructor of your test like this:
+
+{{{
+public class MyTest extends JCatapultBaseTest {
+  public MyTest() {
+    EmailTestHelper.setup(this);
+  }
+
+  ...
+}
+}}}
+
+This will setup all of the necessary mocks so that the EmailService will work properly without actually sending the email. After each test has completed you can verify that emails were correctly generated and sent using the methods on the `EmailTestHelper`. Here is an example:
+
+{{{
+public class MyServiceTest extends JCatapultBaseTest {
+  @Inject public MyService service;
+
+  public MyServiceTest() {
+    EmailTestHelper.setup(this);
+  }
+
+  @Test
+  public void testThatEmailsAreSent() {
+    service.doSomething();
+
+    Queue<Email> emails = EmailTestHelper.getEmailResults();
+    assertEquals(1, emails.size());
+    assertEquals("This would be the actual email content", emails.get(0).getText());
+    // Additional asserts
+    ...
+  }
+}
+}}}
+
+You can also setup the `EmailService` within JCatapult action integration tests. Action integration tests use the WebappTestRunner to invoke an action and this process sets up the entire JCatapult framework separately to ensure the test simulates how the framework is setup inside Tomcat. To setup the `EmailTestHelper` for an integration test, you need to do something like this:
+
+{{{
+public class MyActionIntegrationTest extends JCatapultBaseTest {
+  public MyTest() {
+    EmailTestHelper.setup(this);
+  }
+
+  @Test
+  public void testTheAction() {
+    WebappTestRunner runner = new WebappTestRunner();
+
+    runner.test("/my-action").
+        withMock(EmailTransportService.class, EmailTestHelper.getService()).
+        ...
+
+    Queue<Email> emails = EmailTestHelper.getEmailResults();
+    assertEquals(1, emails.size());
+    assertEquals("This would be the actual email content", emails.get(0).getText());
+    // Additional asserts
+    ...
+  }
+}
+}}}
