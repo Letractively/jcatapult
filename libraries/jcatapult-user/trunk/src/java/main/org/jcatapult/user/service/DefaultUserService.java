@@ -262,7 +262,7 @@ public class DefaultUserService implements UserService {
             withTemplateParam("user", user).
             withTemplateParam("url", url);
         if (command.getSubject() == null) {
-            command.withSubject("Password reset");
+            command.withSubject("Email verification");
         }
         command.later();
     }
