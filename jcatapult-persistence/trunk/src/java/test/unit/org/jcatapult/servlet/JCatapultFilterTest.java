@@ -27,7 +27,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.easymock.EasyMock;
+import static org.easymock.EasyMock.*;
 import org.jcatapult.environment.Environment;
 import org.jcatapult.persistence.DatabaseTools;
 import org.jcatapult.persistence.service.jpa.EntityManagerContext;
@@ -52,15 +52,15 @@ public class JCatapultFilterTest {
         jndi.activate();
 
         // Setup the configuration for the static resource workflow
-        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        ServletContext context = createStrictMock(ServletContext.class);
         context.setAttribute("environment", "unittesting");
-        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-default.xml")).andReturn(null);
-        EasyMock.expect(context.getRealPath("/WEB-INF/config/config-unittesting.xml")).andReturn(null);
-        EasyMock.replay(context);
+        expect(context.getRealPath("/WEB-INF/config/config-unittesting.xml")).andReturn(null);
+        expect(context.getRealPath("/WEB-INF/config/config-default.xml")).andReturn(null);
+        replay(context);
 
-        FilterConfig filterConfig = EasyMock.createStrictMock(FilterConfig.class);
-        EasyMock.expect(filterConfig.getServletContext()).andReturn(context);
-        EasyMock.replay(filterConfig);
+        FilterConfig filterConfig = createStrictMock(FilterConfig.class);
+        expect(filterConfig.getServletContext()).andReturn(context);
+        replay(filterConfig);
 
         // Initialize JCatapult via the listener first.
         ServletContextEvent event = new ServletContextEvent(context);
@@ -70,20 +70,20 @@ public class JCatapultFilterTest {
         JCatapultFilter filter = new JCatapultFilter();
         filter.init(filterConfig);
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         // Filter
-        EasyMock.expect(request.getAttribute(JCatapultFilter.ORIGINAL_REQUEST_URI)).andReturn(null);
-        EasyMock.expect(request.getRequestURI()).andReturn("/test");
+        expect(request.getAttribute(JCatapultFilter.ORIGINAL_REQUEST_URI)).andReturn(null);
+        expect(request.getRequestURI()).andReturn("/test");
         request.setAttribute(JCatapultFilter.ORIGINAL_REQUEST_URI, "/test");
         // StaticResourceWorkflow
-        EasyMock.expect(request.getRequestURI()).andReturn("/test");
+        expect(request.getRequestURI()).andReturn("/test");
         // Error handling
-        EasyMock.expect(request.getAttribute("javax.servlet.error.exception")).andReturn(null);
-        EasyMock.expect(request.getAttribute("javax.servlet.jsp.jspException")).andReturn(null);
-        EasyMock.replay(request);
+        expect(request.getAttribute("javax.servlet.error.exception")).andReturn(null);
+        expect(request.getAttribute("javax.servlet.jsp.jspException")).andReturn(null);
+        replay(request);
 
-        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
-        EasyMock.replay(response);
+        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
+        replay(response);
 
         final AtomicBoolean called = new AtomicBoolean(false);
         FilterChain chain = new FilterChain() {
@@ -96,7 +96,7 @@ public class JCatapultFilterTest {
         filter.doFilter(request, response, chain);
         assertTrue(called.get());
 
-        EasyMock.verify(context);
-        EasyMock.verify(filterConfig);
+        verify(context);
+        verify(filterConfig);
     }
 }

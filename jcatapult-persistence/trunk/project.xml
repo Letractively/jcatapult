@@ -16,36 +16,36 @@
   <!-- This libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="true"/>
 
-  <property name="version.jcatapult" value="1.0-RC12-{integration}"/>
+  <property name="version.jcatapult" value="1.0-RC12"/>
 
   <release>
-    <publication name="jcatapult-persistence" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"/>
-    <publication name="jcatapult-persistence-test" type="jar" compatType="minor" file="target/jars/${project.name}-test-${project.version}.jar"/>
+    <publication name="jcatapult-persistence" compatType="minor" file="target/jars/${project.name}-${project.version}.jar" type="jar"/>
+    <publication name="jcatapult-persistence-test" compatType="minor" file="target/jars/${project.name}-test-${project.version}.jar" type="jar"/>
   </release>
 
   <dependencies>
-    <artifactGroup type="compile-only">
-      <artifact group="servlet.javax" project="servlet-api" name="servlet-api" version="2.4" type="jar"/>
-    </artifactGroup>
-    <artifactGroup type="compile">
-      <artifact group="aopalliance.sourceforge.net" project="aopalliance" name="aopalliance" version="1.0" type="jar"/>
-      <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="hibernate.org" project="hibernate" name="hibernate" version="3.2.6" type="jar"/>
-      <artifact group="hibernate.org" project="hibernate-annotations" name="hibernate-annotations" version="3.3.1" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core" version="${version.jcatapult}" type="jar"/>
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
-      <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
-      <artifact group="mysql.com" project="mysql-connector-java" name="mysql-connector-java" version="5.1.6" type="jar"/>
-      <artifact group="persistence.javax" project="persistence-api" name="persistence-api" version="1.0" type="jar"/>
-    </artifactGroup>
-    <artifactGroup type="run">
-      <artifact group="hibernate.org" project="hibernate-entitymanager" name="hibernate-entitymanager" version="3.3.2" type="jar"/>
-      <artifact group="joda-time.joda.org" project="joda-time-hibernate" name="joda-time-hibernate" version="1.0" type="jar"/>
-    </artifactGroup>
-    <artifactGroup type="test-compile">
-      <artifact group="easymock.org" project="easymock" name="easymock" version="2.2" type="jar"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}" type="jar"/>
-      <artifact group="junit.org" project="junit" name="junit" version="4.4" type="jar"/>
-    </artifactGroup>
+    <artifact-group type="compile-only">
+      <artifact group="servlet.javax" name="servlet-api" version="2.4"/>
+    </artifact-group>
+    <artifact-group type="compile">
+      <artifact group="aopalliance.sourceforge.net" name="aopalliance" version="1.0"/>
+      <artifact group="guice.code.google.com" name="guice" version="1.0"/>
+      <artifact group="hibernate.org" name="hibernate" version="3.2.6"/>
+      <artifact group="hibernate.org" name="hibernate-annotations" version="3.3.1"/>
+      <artifact group="jcatapult.org" name="jcatapult-core" version="${version.jcatapult}"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5"/>
+      <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
+      <artifact group="mysql.com" name="mysql-connector-java" version="5.1.6"/>
+      <artifact group="persistence.javax" name="persistence-api" version="1.0"/>
+    </artifact-group>
+    <artifact-group type="run">
+      <artifact group="hibernate.org" name="hibernate-entitymanager" version="3.3.2"/>
+      <artifact group="joda-time.joda.org" name="joda-time-hibernate" version="1.0"/>
+    </artifact-group>
+    <artifact-group type="test-compile">
+      <artifact group="easymock.org" name="easymock" version="2.2"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
+      <artifact group="junit.org" name="junit" version="4.4"/>
+    </artifact-group>
   </dependencies>
 </project>
