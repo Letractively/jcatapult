@@ -304,7 +304,11 @@
   <component name="ProjectDetails">
     <option name="projectName" value="crud" />
   </component>
-  <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectFileVersion" converted="true">
+    <converter id="javaee-modules" />
+    <converter id="ror-modules" />
+    <converter id="SelenaRunConfToDiana" />
+  </component>
   <component name="ProjectKey">
     <option name="state" value="https://jcatapult.googlecode.com/svn/libraries/jcatapult-crud/trunk/jcatapult-crud.ipr" />
   </component>

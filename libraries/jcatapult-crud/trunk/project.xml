@@ -17,14 +17,14 @@
   <!-- set to true if this libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="true"/>
 
-  <property name="version.jcatapult" value="1.0-RC11"/>
+  <property name="version.jcatapult" value="1.0-RC12"/>
 
   <dependencies>
-    <artifactGroup type="compile-only">
+    <artifact-group type="compile-only">
       <artifact group="jsp.servlet.javax" name="jsp-api" version="2.0"/>
       <artifact group="servlet.javax" name="servlet-api" version="2.4"/>
-    </artifactGroup>
-    <artifactGroup type="compile">
+    </artifact-group>
+    <artifact-group type="compile">
       <artifact group="freemarker.org" name="freemarker" version="2.3.12"/>
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
       <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5"/>
@@ -32,12 +32,12 @@
       <artifact group="jcatapult.org" name="jcatapult-mvc" version="${version.jcatapult}"/>
       <artifact group="jcatapult.org" name="jcatapult-persistence" version="${version.jcatapult}"/>
       <artifact group="persistence.javax" name="persistence-api" version="1.0"/>
-    </artifactGroup>
-    <artifactGroup type="test-compile">
+    </artifact-group>
+    <artifact-group type="test-compile">
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
       <artifact group="jcatapult.org" project="jcatapult-mvc" name="jcatapult-mvc-test" version="${version.jcatapult}"/>
       <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence-test" version="${version.jcatapult}"/>
       <artifact group="junit.org" name="junit" version="4.4"/>
-    </artifactGroup>
+    </artifact-group>
   </dependencies>
 </project>
