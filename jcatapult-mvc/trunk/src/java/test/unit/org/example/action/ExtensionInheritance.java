@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2009, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import org.jcatapult.mvc.action.annotation.Action;
  * @author Brian Pontarelli
  */
 @Action
-public abstract class Extension {
-    public String json() {
-        return "json";
+public class ExtensionInheritance extends Extension {
+    public String ajax() {
+        return "ajax";
     }
 }

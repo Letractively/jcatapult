@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
 import org.example.action.ExecuteMethodThrowsException;
-import org.example.action.Extension;
+import org.example.action.ExtensionInheritance;
 import org.example.action.InvalidExecuteMethod;
 import org.example.action.MissingExecuteMethod;
 import org.example.action.Post;
@@ -373,16 +373,53 @@ public class DefaultActionInvocationWorkflowTest {
         HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
         EasyMock.replay(response);
 
-        Extension action = new Extension();
+        ExtensionInheritance action = new ExtensionInheritance();
+        ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", "ajax", null);
+        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
+        EasyMock.replay(ais);
+
+        Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "ajax");
+        ResultInvocation ri = new DefaultResultInvocation(annotation, "/foo/bar", "ajax");
+        ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
+        EasyMock.expect(rip.lookup(invocation, "ajax")).andReturn(ri);
+        EasyMock.replay(rip);
+
+        Result result = EasyMock.createStrictMock(Result.class);
+        result.execute(annotation, invocation);
+        EasyMock.replay(result);
+
+        ResultProvider resultProvider = EasyMock.createStrictMock(ResultProvider.class);
+        EasyMock.expect(resultProvider.lookup(annotation.annotationType())).andReturn(result);
+        EasyMock.replay(resultProvider);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        EasyMock.replay(chain);
+
+        DefaultActionInvocationWorkflow workflow = new DefaultActionInvocationWorkflow(request, response, ais, rip, resultProvider);
+        workflow.perform(chain);
+
+        EasyMock.verify(request, response, ais, rip, resultProvider, chain);
+    }
+
+    @Test
+    public void testActionExtensionInheritance() throws IOException, ServletException {
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("GET");
+        EasyMock.replay(request);
+        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+        EasyMock.replay(response);
+
+        ExtensionInheritance action = new ExtensionInheritance();
         ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", "json", null);
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
         EasyMock.expect(ais.getCurrent()).andReturn(invocation);
         EasyMock.replay(ais);
 
-        Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "success");
-        ResultInvocation ri = new DefaultResultInvocation(annotation, "/foo/bar", "success");
+        Annotation annotation = new ForwardResult.ForwardImpl("/foo/bar", "json");
+        ResultInvocation ri = new DefaultResultInvocation(annotation, "/foo/bar", "json");
         ResultInvocationProvider rip = EasyMock.createStrictMock(ResultInvocationProvider.class);
-        EasyMock.expect(rip.lookup(invocation, "success")).andReturn(ri);
+        EasyMock.expect(rip.lookup(invocation, "json")).andReturn(ri);
         EasyMock.replay(rip);
 
         Result result = EasyMock.createStrictMock(Result.class);
