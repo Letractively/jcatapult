@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true">
+    <exclude-output />
+    <testFolder url="file://$MODULE_DIR$/src/java/test/integration" />
+    <testFolder url="file://$MODULE_DIR$/src/java/test/unit" />
+    <excludeFolder url="file://$MODULE_DIR$/target" />
+    <excludeFolder url="file://$MODULE_DIR$/web/WEB-INF/classes" />
+    <excludeFolder url="file://$MODULE_DIR$/web/WEB-INF/lib" />
+</component>
+
