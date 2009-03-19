@@ -201,32 +201,24 @@ contact-html.ftl
 Using the `FreeMarkerEmailService`, you would send the email by calling the `sendEmail` method, issuing the appropriate commands to build the email. Below is an example JCatapult action that performs this operation:
 
 {{{
-package org.jcatapult.test;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jcatapult.email.service.EmailService;
-import org.jcatapult.struts.action.BaseAction;
-
-import com.google.inject.Inject;
+// Imports left out for simplicity
 
 /**
- * Example struts2 action that processes the contact us form
+ * Example action that processes the contact us form
  */
-public class Test extends BaseAction {
-    private String name;
-    private String email;
-    private String message;
-    private EmailService emailService;
+@Action
+public class Test {
+    public String name;
+    public String email;
+    public String message;
+    public EmailService emailService;
 
     @Inject
     public Test(EmailService emailService) {
         this.emailService = emailService;
     }
 
-    @Override
-    public String execute() throws Exception {
+    public String execute() {
         emailService.sendEmail("contact").
                      withSubject("Contact Us Form Submission").
                      to("john@doe.com").
@@ -236,31 +228,7 @@ public class Test extends BaseAction {
                      withTemplateParam("message", message).
                      now();
 
-        return SUCCESS;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+        return "success";
     }
 }
 }}}
