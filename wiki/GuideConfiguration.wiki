@@ -50,7 +50,7 @@ int number = this.configuration.getInt("number.of.turns");
 JCatapult by default expects that the Environment Aware Configuration files are placed in the _WEB-INF/config_ directory. The configuration files form a hierarchy and are named:
 
   * config-default.xml
-  * config-<environment>.xml
+  * config-{environment}.xml
 
 Let's say that you have three environments:
 
