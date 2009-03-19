@@ -33,7 +33,7 @@ import static net.java.util.CollectionTools.*;
  * @author  Brian Pontarelli
  */
 public class TextareaTest extends ControlBaseTest {
-    @Inject Textarea textarea;
+    @Inject public Textarea textarea;
 
     @Test
     public void testActionLess() {
@@ -41,9 +41,9 @@ public class TextareaTest extends ControlBaseTest {
         run(textarea,
             mapNV("name", "test", "class", "css-class", "bundle", "/textarea-bundle"),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"test\" name=\"test\"></textarea></div>\n" +
+            "<div class=\"textarea input control\">\n" +
+            "<div class=\"textarea-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"textarea-container input-container control-container\"><textarea class=\"css-class\" id=\"test\" name=\"test\"></textarea></div>\n" +
             "</div>\n");
     }
 
@@ -57,9 +57,9 @@ public class TextareaTest extends ControlBaseTest {
         run(textarea,
             mapNV("name", "user.name", "class", "css-class"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Brian</textarea></div>\n" +
+            "<div class=\"textarea input control\">\n" +
+            "<div class=\"textarea-label input-label control-label\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"textarea-container input-container control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Brian</textarea></div>\n" +
             "</div>\n");
     }
 
@@ -77,9 +77,9 @@ public class TextareaTest extends ControlBaseTest {
         run(textarea,
             mapNV("name", "user.name", "class", "css-class"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
-            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Barry</textarea></div>\n" +
+            "<div class=\"textarea input control\">\n" +
+            "<div class=\"textarea-label input-label control-label\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
+            "<div class=\"textarea-container input-container control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Barry</textarea></div>\n" +
             "</div>\n");
     }
 
@@ -92,9 +92,9 @@ public class TextareaTest extends ControlBaseTest {
         run(textarea,
             mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">John</textarea></div>\n" +
+            "<div class=\"textarea input control\">\n" +
+            "<div class=\"textarea-label input-label control-label\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"textarea-container input-container control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">John</textarea></div>\n" +
             "</div>\n");
     }
 
@@ -109,9 +109,9 @@ public class TextareaTest extends ControlBaseTest {
         run(textarea,
             mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Barry</textarea></div>\n" +
+            "<div class=\"textarea input control\">\n" +
+            "<div class=\"textarea-label input-label control-label\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"textarea-container input-container control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Barry</textarea></div>\n" +
             "</div>\n");
     }
 }

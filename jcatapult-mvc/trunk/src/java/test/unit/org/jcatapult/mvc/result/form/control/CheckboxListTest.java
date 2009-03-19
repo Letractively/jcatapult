@@ -39,7 +39,7 @@ import net.java.util.Pair;
  * @author  Brian Pontarelli
  */
 public class CheckboxListTest extends ControlBaseTest {
-    @Inject CheckboxList checkboxList;
+    @Inject public CheckboxList checkboxList;
 
     @Test
     public void testActionLess() {
@@ -47,20 +47,16 @@ public class CheckboxListTest extends ControlBaseTest {
         run(checkboxList,
             mapNV("name", "test", "class", "css-class", "bundle", "/checkbox-list-bundle", "items", asList("one", "two", "three")),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\">\n" +
-            "  <input type=\"checkbox\" value=\"one\" class=\"css-class\" name=\"test\"/><span class=\"checkbox-text\">one</span>\n" +
+            "<div class=\"checkbox-list input control\">\n" +
+            "<div class=\"checkbox-list-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"checkbox-list-item-container input-container control-container\">\n" +
+            "<input type=\"checkbox\" value=\"one\" class=\"css-class\" name=\"test\"/><span class=\"checkbox-text\">one</span>\n" +
             "</div>\n" +
+            "<div class=\"checkbox-list-item-container input-container control-container\">\n" +
+            "<input type=\"checkbox\" value=\"two\" class=\"css-class\" name=\"test\"/><span class=\"checkbox-text\">two</span>\n" +
             "</div>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\">\n" +
-            "  <input type=\"checkbox\" value=\"two\" class=\"css-class\" name=\"test\"/><span class=\"checkbox-text\">two</span>\n" +
-            "</div>\n" +
-            "</div>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\">\n" +
-            "  <input type=\"checkbox\" value=\"three\" class=\"css-class\" name=\"test\"/><span class=\"checkbox-text\">three</span>\n" +
+            "<div class=\"checkbox-list-item-container input-container control-container\">\n" +
+            "<input type=\"checkbox\" value=\"three\" class=\"css-class\" name=\"test\"/><span class=\"checkbox-text\">three</span>\n" +
             "</div>\n" +
             "</div>\n");
     }
@@ -77,15 +73,13 @@ public class CheckboxListTest extends ControlBaseTest {
         run(checkboxList,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
-            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\">\n" +
-            "  <input type=\"checkbox\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">United States</span>\n" +
+            "<div class=\"checkbox-list input control\">\n" +
+            "<div class=\"checkbox-list-label input-label control-label\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"checkbox-list-item-container input-container control-container\">\n" +
+            "<input type=\"checkbox\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">United States</span>\n" +
             "</div>\n" +
-            "</div>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\">\n" +
-            "  <input type=\"checkbox\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +
+            "<div class=\"checkbox-list-item-container input-container control-container\">\n" +
+            "<input type=\"checkbox\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n");
     }
@@ -106,15 +100,13 @@ public class CheckboxListTest extends ControlBaseTest {
         run(checkboxList,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
             null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
-            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\">\n" +
-            "  <input type=\"checkbox\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">United States</span>\n" +
+            "<div class=\"checkbox-list input control\">\n" +
+            "<div class=\"checkbox-list-label input-label control-label\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"checkbox-list-item-container input-container control-container\">\n" +
+            "<input type=\"checkbox\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">United States</span>\n" +
             "</div>\n" +
-            "</div>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\">\n" +
-            "  <input type=\"checkbox\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +
+            "<div class=\"checkbox-list-item-container input-container control-container\">\n" +
+            "<input type=\"checkbox\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n");
     }
@@ -134,15 +126,13 @@ public class CheckboxListTest extends ControlBaseTest {
         run(checkboxList,
             mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
             null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
-            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\">\n" +
-            "  <input type=\"checkbox\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">United States</span>\n" +
+            "<div class=\"checkbox-list input control\">\n" +
+            "<div class=\"checkbox-list-label input-label control-label\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
+            "<div class=\"checkbox-list-item-container input-container control-container\">\n" +
+            "<input type=\"checkbox\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">United States</span>\n" +
             "</div>\n" +
-            "</div>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"control-container\">\n" +
-            "  <input type=\"checkbox\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +
+            "<div class=\"checkbox-list-item-container input-container control-container\">\n" +
+            "<input type=\"checkbox\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +
             "</div>\n" +
             "</div>\n");
     }

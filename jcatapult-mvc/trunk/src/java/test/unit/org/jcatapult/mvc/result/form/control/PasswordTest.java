@@ -33,7 +33,7 @@ import static net.java.util.CollectionTools.*;
  * @author  Brian Pontarelli
  */
 public class PasswordTest extends ControlBaseTest {
-    @Inject Password password;
+    @Inject public Password password;
 
     @Test
     public void testActionLess() {
@@ -41,9 +41,9 @@ public class PasswordTest extends ControlBaseTest {
         run(password,
             mapNV("name", "test", "class", "css-class", "value", "password", "bundle", "/password-bundle"),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
+            "<div class=\"password input control\">\n" +
+            "<div class=\"password-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"password-container input-container control-container\"><input type=\"password\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
             "</div>\n");
     }
 
@@ -57,9 +57,9 @@ public class PasswordTest extends ControlBaseTest {
         run(password,
             mapNV("name", "user.password", "class", "css-class", "value", "password"),
             null, "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"user_password\" class=\"label\">Password</label></div>\n" +
-            "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
+            "<div class=\"password input control\">\n" +
+            "<div class=\"password-label input-label control-label\"><label for=\"user_password\" class=\"label\">Password</label></div>\n" +
+            "<div class=\"password-container input-container control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
             "</div>\n");
     }
 
@@ -77,9 +77,9 @@ public class PasswordTest extends ControlBaseTest {
         run(password,
             mapNV("name", "user.password", "class", "css-class", "value", "password"),
             null, "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
-            "<div class=\"input\">\n" +
-            "<div class=\"label-container\"><label for=\"user_password\" class=\"label\"><span class=\"error\">Password (Password is required, Password must be cool)</span></label></div>\n" +
-            "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
+            "<div class=\"password input control\">\n" +
+            "<div class=\"password-label input-label control-label\"><label for=\"user_password\" class=\"label\"><span class=\"error\">Password (Password is required, Password must be cool)</span></label></div>\n" +
+            "<div class=\"password-container input-container control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
             "</div>\n");
     }
 }
