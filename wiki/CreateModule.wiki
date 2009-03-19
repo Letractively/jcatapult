@@ -9,7 +9,7 @@ Modules are complete working sets of functionality that are able to be plugged i
   * A content management system
   * A user administration system
 
-JCatapult modules are not like other Java framework modules such as JSF and Tapestry modules. These modules are more like widgets than modules. JCatapult modules are a complete collection of widgets and all the code that is required to use them. Examples of items that are added to modules are:
+JCatapult modules are not like modules (sometimes called components) from other Java framework such as JSF and Tapestry modules, whose modules are more like widgets. JCatapult modules contain a full set of features that make up an entire functional part of a webapp. Examples of items that are part of a module are:
 
   * Entity classes
   * Services
@@ -66,3 +66,21 @@ The `tomcat` script located in `target/tomcat/bin` takes a number of different c
 || *stop* || Shutdown a previously started Tomcat instance ||
 || *run* || Starts Tomcat in the current process. The output is displayed to stdout ||
 || *start jpda* || Starts Tomcat in debug mode ||
+
+= Module Examples =
+
+Currently, JCatapult has 3 modules which you can easily add to your project. You can also use these modules as examples of how to build and use your own modules. These modules can be checked out from SubVersion here:
+
+  * http://jcatapult.googlecode.com/svn/modules/jcatapult-simple-user-module/trunk
+  * http://jcatapult.googlecode.com/svn/modules/jcatapult-user-module/trunk
+  * http://jcatapult.googlecode.com/svn/modules/jcatapult-cms-module/trunk
+
+The best module you should consult to figure out how to get started is the jcatpault-simple-user-module. This module contains all of these following and is simple and straight-forward:
+
+  * Actions
+  * Entity classes
+  * Database scripts
+  * Views
+  * Services
+
+This module also makes use of a library called *jcatapult-user* and if you look in the project.xml file, you can see how to import modules into your project.
