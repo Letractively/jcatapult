@@ -9,14 +9,6 @@ This document describes how to get up and running with JCatapult.
 
 JCatapult requires Java version 6 (1.6) to use. You can download that from Sun's Java website at http://java.sun.com or use the standard method for your operating system. For example, OS X provides Java 6 downloads from the developer site and Linux has most JDKs in their repositories (via apt or yum).
 
-= JCatapult Distribution Installation =
-
-  * Download the most current version of the JCatapult Distribution from the [http://code.google.com/p/jcatapult/downloads/list Downloads] page.
-
-  * Unzip the distribution to a directory of your choice (e.g. /usr/share/jcatapult, C:\Program Files\jcatapult)
-
-  * Create a JCATAPULT_HOME environment variable and set it to the directory you unzipped the distribution to.
-
 = Ant =
 
 JCatapult requires that have using Apache Ant 1.7.0 or later installed. You will need to download Apache Ant if you don't already have it installed. The website for Ant is http://ant.apache.org.
@@ -27,7 +19,12 @@ After you download and install Ant, please create an ANT_HOME environment variab
 
 JCatapult requires that you have Savant 1.5 or later installed (but NOT a 2.0 build). You will need to download Savant if you don't already have it installed. The website for Savant is http://code.google.com/p/savant-build
 
-After you download and install Savant, please create an SAVANT_HOME environment variable and set it to the location of your Savant installation.
+After you download and install Savant, please create an SAVANT_HOME environment variable and set it to the location of your Savant installation. You also need to setup 2 Savant global plugins that JCatapult provides in order to use the JCatapult make-project and svn-import tools. To setup these plugins, execute these commands:
+
+{{{
+$ svnt add-plugin plugins.savant.jcatapult.org:make-project
+$ svnt add-plugin plugins.savant.jcatapult.org:svn-import
+}}}
 
 = Tomcat =
 
@@ -51,7 +48,6 @@ If your webapp does not require an SSL connection, then you can override the def
 }}}
 
 Make sure you provide this implementation after the tomcat plugin import.
-
 
 = MySQL = 
 
@@ -106,3 +102,7 @@ The MySQL plugin for Savant requires a file named _mysql.properties_ be created 
 db.username=root
 db.password=secret
 }}}
+
+= Scaffolder =
+
+If you want to use the JCatapult scaffolder tool, you need to download it from the Downloads section of this project (http://code.google.com/p/jcatapult/downloads/list Downloads). Once you download it you can install it wherever you want and then add that location to your path.
