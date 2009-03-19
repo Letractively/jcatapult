@@ -2,42 +2,10 @@
 
 = Available plugins =
 
-  * [AntCleanPlugin clean] - The clean plugin for cleaning compiled files. This will be used mostly by library projects. Web application projects will use the J2EE plugins clean script
+  * [SavantModulePlugin module] - The JCatapult module plugin for module development and module integration into applications. Web applications and module projects will use this plugin
 
-  * [AntCoberturaPlugin cobertura] - The cobertura code coverage plugin. Any project can use this plugin
+  * [SavantSecurityPlugin security] - The security plugin that provides tools for helping projects that are using JCatapult security and ACEGI. Most famously, this provides a tool to output the encrypted form of passwords for helping to seed databases. Any project can use this plugin
 
-  * [AntModulePlugin module] - The JCatapult module plugin for module development and module integration into applications. Web applications and module projects will use this plugin
+  * [SavantMakeProjectPlugin make-project] - The make-project plugin allows you to create new projects quickly. This is a global plugin, meaning that you must be outside of a project to use it. You also need to invoke it using a namespace like this:  `svnt jcatapult:make-project`
 
-  * [AntGroovyPlugin groovy] - The Groovy plugin for compiling Groovy source code. This plugin can be used by any application using the Groovy language
-
-  * [AntHibernatePlugin hibernate] - The Hibernate plugin that contains Hibernate tools. This plugin will be used from web application and module projects in order to generate SQL files from JPA entity objects
-
-  * [AntIdePlugin ide] - The IDE plugin for generating and updating Eclipse and IntelliJ project files. Any project can use this plugin
-
-  * [AntInitPlugin init] - The init plugin that is required for projects using JCatapult Ant in order to configure the properties correctly for other plugins. All projects must use this plugin
-
-  * [AntJ2eePlugin j2ee] - The J2EE plugin that provides support for constructing web applications. Web application projects must use this plugin
-
-  * [AntJavaPlugin java] - The Java plugin that compiles and creates JAR file from Java source code. All projects must use this plugin, unless they are not using the Java language
-
-  * [AntJavadocPlugin javadoc] - The JavaDoc that creates JavaDoc from Java source code. This plugin can be used by any project
-
-  * [AntJaxwsPlugin jaxws] - The JAX-WS plugin that provides support for projects that will be consuming WebServices and would like to use JAX-WS 2.1 rather than the version shipped with the JDK. Web application projects might use this plugin
-
-  * [AntJunitPlugin junit] - The JUnit plugin that provides support for unit testing using the JUnit library. All project should DEFINITELY be using this plugin, but aren't required to unit test. The JCatapult team begs you to unit test because it will make you a happier person
-
-  * [AntMysqlPlugin mysql] - The MySQL plugin that provides support for creating project databases on MySQL. This plugin can be ignored if a project doesn't use a database using some project configuration. However, other plugins require that a database plugin be used and this is the default database plugin that JCatapult uses.
-
-  * [AntReleaseSvnPlugin release-svn] - The release plugin that uses SubVersion for tagging and branching. This plugin allows projects to release versions and does a lot of the work of tagging, branching and ensuring that the project is ready to release. This plugin only works with SubVersion and is pretty useful if you are using SubVersion in the manner expected by the plugin. Any project can use this plugin
-
-  * [AntSavantPlugin savant] - The Savant plugin that provides support for dependency management. All projects must use this plugin
-
-  * [AntSecurityPlugin security] - The security plugin that provides tools for helping projects that are using JCatapult security and ACEGI. Most famously, this provides a tool to output the encrypted form of passwords for helping to seed databases. Any project can use this plugin
-
-  * [AntSvnPlugin svn] - The SubVersion plugin that provides tools for dealing with SubVersion repositories. This plugin is only useful for projects that are using SubVersion for source control
-
-  * [AntTomcatPlugin tomcat] - The Tomcat plugin that provides support for using Tomcat as the application server to development. This plugin must be used by web application and module projects for development
-
-
-
-
+  * [SavantSvnImportPlugin svn-import] - The svn-import plugin allows you to import a new project into a SubVersion repository. This is a global plugin, meaning that you must be outside of a project to use it. You also need to invoke it using a namespace like this:  `svnt jcatapult:svn-import`
