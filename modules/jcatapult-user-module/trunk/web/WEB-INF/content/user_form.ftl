@@ -5,14 +5,14 @@
   <div id="account-input" class="user-module-input jcatapult-module-input">
     <div id="login-input" class="user-module-input-section jcatapult-module-input-section">
       [#--
-        If the email and username are the same, this will render the username with the email label.
-        Otherwise, it will render both.
+        If the email and username are the same, this will render the email. Otherwise, it will
+        render both.
       --]
       [#if settings['jcatapult.user.username-is-email']]
-        [@jc.text name="user.username" size="30" required=true labelKey="user.email"/]
-      [#else]
-        [@jc.text name="user.username" size="30" required=true/]
         [@jc.text name="user.email" size="30" required=true/]
+      [#else]
+        [@jc.text name="user.email" size="30" required=true/]
+        [@jc.text name="user.username" size="30" required=true/]
       [/#if]
 
       [#assign passwordRequired = (formAction != "edit")/]

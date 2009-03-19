@@ -24,6 +24,7 @@ import org.jcatapult.module.user.domain.Name;
 import org.jcatapult.module.user.domain.PhoneNumber;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.validation.ValidatorProvider;
+import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ import net.java.error.ErrorList;
  *
  * @author Brian Pontarelli
  */
-public class DefaultUserHandlerTest {
+public class DefaultUserHandlerTest extends JCatapultBaseTest {
     @Inject public ExpressionEvaluator expressionEvaluator;
     @Inject public ValidatorProvider validatorProvider;
 
@@ -60,6 +61,8 @@ public class DefaultUserHandlerTest {
         expect(configuration.getBoolean(DefaultUserConfiguration.CELL_PHONE_REQUIRED, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.EMAIL_OPTIONS, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.REGISTRATION_DISABLED, false)).andReturn(false);
+        expect(configuration.getBoolean(DefaultUserConfiguration.VERIFY_EMAILS, false)).andReturn(false);
+        expect(configuration.getBoolean(DefaultUserConfiguration.USERNAME_IS_EMAIL, true)).andReturn(true);
         expect(configuration.getString(DefaultUserConfiguration.REGISTRATION_SUCCESS_URI, "/")).andReturn("/");
         expect(configuration.getString(DefaultUserConfiguration.LOGOUT_SUCCESS_URI, "/")).andReturn("/");
         expect(configuration.getString(DefaultUserConfiguration.LOGIN_URI, "/login")).andReturn("/login");
@@ -68,7 +71,7 @@ public class DefaultUserHandlerTest {
         replay(configuration);
 
         DefaultUser newUserData = new DefaultUser();
-        newUserData.setUsername("test@example.com");
+        newUserData.setEmail("test@example.com");
         newUserData.setPassword("aaaaa");
         newUserData.setCompanyName("New");
         newUserData.setName(new Name());
@@ -103,6 +106,8 @@ public class DefaultUserHandlerTest {
         expect(configuration.getBoolean(DefaultUserConfiguration.CELL_PHONE_REQUIRED, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.EMAIL_OPTIONS, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.REGISTRATION_DISABLED, false)).andReturn(false);
+        expect(configuration.getBoolean(DefaultUserConfiguration.VERIFY_EMAILS, false)).andReturn(false);
+        expect(configuration.getBoolean(DefaultUserConfiguration.USERNAME_IS_EMAIL, true)).andReturn(true);
         expect(configuration.getString(DefaultUserConfiguration.REGISTRATION_SUCCESS_URI, "/")).andReturn("/");
         expect(configuration.getString(DefaultUserConfiguration.LOGOUT_SUCCESS_URI, "/")).andReturn("/");
         expect(configuration.getString(DefaultUserConfiguration.LOGIN_URI, "/login")).andReturn("/login");
@@ -111,7 +116,6 @@ public class DefaultUserHandlerTest {
         replay(configuration);
 
         DefaultUser newUserData = new DefaultUser();
-        newUserData.setUsername(null);
         newUserData.setPassword("bar");
         newUserData.setCompanyName("New");
         newUserData.setName(new Name());

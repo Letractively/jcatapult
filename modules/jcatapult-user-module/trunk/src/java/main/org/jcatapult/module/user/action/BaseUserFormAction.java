@@ -109,7 +109,7 @@ public class BaseUserFormAction {
     @ValidateMethod
     public void validate() {
         if (userConfiguration.isUsernameSameAsEmail()) {
-            user.setEmail(user.getUsername());
+            user.setUsername(user.getEmail());
         }
         
         ErrorList errors = userService.validate(user, associations, user.getId() != null, password, passwordConfirm);

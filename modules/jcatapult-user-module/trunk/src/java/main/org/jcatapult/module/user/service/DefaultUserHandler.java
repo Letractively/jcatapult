@@ -103,15 +103,14 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
 
         // User properties. If the username and email are the same, just validate the username as an
         // email. Otherwise, validate both and the email as an email.
-        if (userConfiguration.isUsernameSameAsEmail()) {
-            if (!validate(Required.class, user, "username", errors)) {
-                validate(Email.class, user, "username", errors);
+        if (!userConfiguration.isUsernameSameAsEmail()) {
+            if (validate(Required.class, user, "username", errors) && !user.getUsername().matches("[a-zA-Z0-9]+")) {
+                errors.addError("user.username", "user.username.invalid-characters");
             }
-        } else {
-            validate(Required.class, user, "username", errors);
-            if (!validate(Required.class, user, "email", errors)) {
-                validate(Email.class, user, "username", errors);
-            }
+        }
+
+        if (validate(Required.class, user, "email", errors)) {
+            validate(Email.class, user, "email", errors);
         }
 
         if (!existing || !StringTools.isTrimmedEmpty(password)) {

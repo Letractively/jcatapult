@@ -62,9 +62,12 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
     public void testDisabledPost() throws IOException, ServletException {
         EnhancedSecurityContext.logout();
         Configuration configuration = makeConfiguration(true);
+
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.username", "login@test.com").
+        runner.test("/register").
+            withMock(Configuration.class, configuration).
+            withParameter("user.username", "registerintegration").
+            withParameter("user.email", "registerintegration@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withParameter("user.name.firstName", "Test").
@@ -99,7 +102,8 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
 
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.username", "login@test.com").
+            withParameter("user.username", "registerintegration").
+            withParameter("user.email", "registerintegration@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withParameter("user.name.firstName", "Test").
@@ -124,7 +128,7 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
         System.out.println("Errors are " + runner.messageStore.getActionErrors());
         assertEquals(0, runner.messageStore.getActionMessages(MessageType.ERROR).size());
         assertEquals("/", runner.response.getRedirect());
-        assertEquals("login@test.com", EnhancedSecurityContext.getCurrentUsername());
+        assertEquals("registerintegration", EnhancedSecurityContext.getCurrentUsername());
         DefaultUser user = (DefaultUser) EnhancedSecurityContext.getCurrentUser();
         assertTrue(user.getRoles().contains(new DefaultRole("user")));
         assertFalse(user.getRoles().contains(new DefaultRole("admin")));
@@ -134,11 +138,12 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
     public void testVerifyEmail() throws IOException, ServletException {
         EnhancedSecurityContext.logout();
         MockConfiguration configuration = makeConfiguration(false);
+        configuration.addParameter(DefaultUserConfiguration.USERNAME_IS_EMAIL, true);
         configuration.addParameter(DefaultUserConfiguration.VERIFY_EMAILS, true);
 
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.username", "login-verify-email@test.com").
+            withParameter("user.email", "login-verify-email@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withParameter("user.name.firstName", "Test").
@@ -170,11 +175,12 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
     public void testDuplicateRegistration() throws IOException, ServletException {
         EnhancedSecurityContext.logout();
         MockConfiguration configuration = makeConfiguration(false);
+        configuration.addParameter(DefaultUserConfiguration.USERNAME_IS_EMAIL, true);
         configuration.addParameter(DefaultUserConfiguration.VERIFY_EMAILS, true);
 
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.username", "login@test.com").
+            withParameter("user.email", "registerintegration@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withParameter("user.name.firstName", "Test").
@@ -195,8 +201,9 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
             withParameter("user.phoneNumbers['cell'].number", "303-555-1212").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
             post();
-        assertEquals(1, runner.messageStore.getFieldMessages(MessageType.ERROR).size());
-        assertEquals("That email is already registered.", runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.username").get(0));
+        assertEquals(2, runner.messageStore.getFieldMessages(MessageType.ERROR).size());
+        assertEquals("That email is already registered.", runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.email").get(0));
+        assertEquals("That username is already registered.", runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.username").get(0));
         assertEquals("anonymous", EnhancedSecurityContext.getCurrentUsername());
     }
 
@@ -204,11 +211,11 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
     public void testValidation() throws IOException, ServletException {
         EnhancedSecurityContext.logout();
         MockConfiguration configuration = makeConfiguration(false);
+        configuration.addParameter(DefaultUserConfiguration.USERNAME_IS_EMAIL, true);
         configuration.addParameter(DefaultUserConfiguration.VERIFY_EMAILS, true);
 
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/register").withMock(Configuration.class, configuration).
-            withParameter("user.username", "login").
             withParameter("password", "password").
             withParameter("passwordConfirm", "different").
             withParameter("user.name.firstName", "Test").
@@ -223,7 +230,7 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
         String result = runner.response.getStream().toString();
         assertTrue(result.contains("html"));
         assertEquals(12, runner.messageStore.getFieldMessages(MessageType.ERROR).size());
-        assertNotNull(runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.username").get(0));
+        assertNotNull(runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.email").get(0));
         assertNotNull(runner.messageStore.getFieldMessages(MessageType.ERROR).get("passwordConfirm").get(0));
         assertNotNull(runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.name.lastName").get(0));
         assertNotNull(runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.addresses['home'].street").get(0));

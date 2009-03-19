@@ -11,7 +11,7 @@
   <div class="verify-email-content user-module-content jcatapult-module-content">
     [@jc.actionmessages errors=true/]
     [@jc.form action="verify-email" method="POST"]
-      [@jc.text name="email" required=true/]
+      [@jc.text name="username" required=true/]
       <div id="verify-email-controls" class="user-module-controls jcatapult-module-controls">
         [@jc.submit type="submit" name="submit"/]
       </div>

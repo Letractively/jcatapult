@@ -77,7 +77,7 @@ public class UserTest extends BaseTest {
 
         persistenceService.clearCache();
 
-        user = persistenceService.queryFirst(DefaultUser.class, "select u from DefaultUser u where u.login = ?1", "test-insert@test.com");
+        user = persistenceService.queryFirst(DefaultUser.class, "select u from DefaultUser u where u.username = ?1", "test-insert@test.com");
         Assert.assertEquals("test uid", user.getGuid());
         Assert.assertEquals("blah blah", user.getPassword());
         Assert.assertEquals(1, user.getRoles().size());

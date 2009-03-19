@@ -55,15 +55,11 @@ public class EditIntegrationTest extends BaseIntegrationTest {
         User user = makeUser("edit-update@test.com");
         EnhancedSecurityContext.login(user);
 
-        // Render first
+        // Then update
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/account/edit").
-            withMock(EmailTransportService.class, EmailTestHelper.getService()).
-            get();
-
-        // Then update
-        runner.test("/account/edit").
-            withParameter("user.username", "edit-update-new@test.com").
+            withParameter("user.username", "editupdatenew").
+            withParameter("user.email", "edit-update-new@test.com").
             withParameter("user.phoneNumbers['work'].number", "303-555-1212").
             withParameter("user.phoneNumbers['cell'].number", "303-555-1212").
             withParameter("user.phoneNumbers['home'].number", "303-555-1212").
@@ -85,15 +81,11 @@ public class EditIntegrationTest extends BaseIntegrationTest {
         User user = makeUser("edit-update-password@test.com");
         EnhancedSecurityContext.login(user);
 
-        // Render first
+        // Then update
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/account/edit").
-            withMock(EmailTransportService.class, EmailTestHelper.getService()).
-            get();
-
-        // Then update
-        runner.test("/account/edit").
-            withParameter("user.username", "edit-update-password@test.com").
+            withParameter("user.username", "editupdatepassword").
+            withParameter("user.email", "edit-update-password@test.com").
             withParameter("user.phoneNumbers['work'].number", "303-555-1212").
             withParameter("user.phoneNumbers['cell'].number", "303-555-1212").
             withParameter("user.phoneNumbers['home'].number", "303-555-1212").
