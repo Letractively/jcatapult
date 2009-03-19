@@ -8,6 +8,9 @@ import org.tmatesoft.svn.core.io.SVNRepository
 import org.tmatesoft.svn.core.wc.SVNClientManager
 import org.tmatesoft.svn.core.wc.SVNCommitClient
 import org.tmatesoft.svn.core.wc.SVNWCUtil
+import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory
+import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl
+import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory
 
 println """svn-import is an interactive tool to help you import a local project directory into a remote subversion
 repository. Please ensure that you are NOT in the project directory currently. If you are in the
@@ -66,6 +69,11 @@ projectDir.eachFileMatch(/.+\.iws/) {
 println "Importing [${projectPath}] to [${url}/${projectName}/trunk]..."
 
 try {
+  // Setup the SubVersion handlers
+  DAVRepositoryFactory.setup()
+  SVNRepositoryFactoryImpl.setup()
+  FSRepositoryFactory.setup()
+
   SVNURL svnURL = SVNURL.parseURIEncoded(url)
   DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(true)
   SVNClientManager clientManager = SVNClientManager.newInstance(options, username, password)
@@ -80,5 +88,6 @@ try {
   SVNURL tags = svnURL.appendPath("tags", false)
   client.doMkDir([branches, tags] as SVNURL[], "Branches and tags")
 } catch (SVNException e) {
+  e.printStackTrace()
   throw new SavantBuildException("Failure while importing project", e);
 }
