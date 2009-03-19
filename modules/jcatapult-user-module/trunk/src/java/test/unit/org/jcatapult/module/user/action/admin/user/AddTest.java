@@ -8,10 +8,11 @@ import java.util.Map;
 
 import static junit.framework.Assert.*;
 
-import org.easymock.EasyMock;
+import static org.easymock.EasyMock.*;
 import org.jcatapult.module.user.BaseTest;
 import org.jcatapult.module.user.domain.Address;
 import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.module.user.service.UserConfiguration;
 import org.jcatapult.user.service.UserService;
 import org.junit.Test;
 
@@ -31,19 +32,23 @@ public class AddTest extends BaseTest {
     @Test
     public void testAddPost() {
         DefaultUser user = new DefaultUser();
-        user.setUsername("test");
+        user.setEmail("test");
         user.getAddresses().put("work", new Address());
 
         Map<String, int[]> associations = new HashMap<String, int[]>();
         associations.put("roles", new int[]{1, 2, 3});
 
-        UserService service = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(service.validate(user, associations, false, "p", "pc")).andReturn(new ErrorList());
-        EasyMock.expect(service.persist(user, associations, "p")).andReturn(true);
-        EasyMock.replay(service);
+        UserService service = createStrictMock(UserService.class);
+        expect(service.validate(user, associations, false, "p", "pc")).andReturn(new ErrorList());
+        expect(service.persist(user, associations, "p")).andReturn(true);
+        replay(service);
+
+        UserConfiguration config = createStrictMock(UserConfiguration.class);
+        expect(config.isUsernameSameAsEmail()).andReturn(true);
+        replay(config);
 
         Add add = new Add();
-        add.setServices(null, null, service);
+        add.setServices(null, config, service);
         add.user = user;
         add.associations = associations;
         add.password = "p";
@@ -51,6 +56,6 @@ public class AddTest extends BaseTest {
         add.validate();
         String result = add.post();
         assertEquals("success", result);
-        EasyMock.verify(service);
+        verify(service);
     }
 }

@@ -55,7 +55,8 @@ public class AddIntegrationTest extends BaseIntegrationTest {
         // Render first
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/admin/user/add").
-            withParameter("user.username", "add@test.com").
+            withParameter("user.username", "add").
+            withParameter("user.email", "add@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
             withParameter("user.name.firstName", "Test").
@@ -86,7 +87,8 @@ public class AddIntegrationTest extends BaseIntegrationTest {
         // Render first
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/admin/user/add").
-            withParameter("user.username", "add@test.com").
+            withParameter("user.username", "add").
+            withParameter("user.email", "add@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "bad-password").
             withParameter("user.name.firstName", "Test").
