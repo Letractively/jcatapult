@@ -37,6 +37,10 @@ public class EmailValidator implements Validator<Email> {
      * @return  True if the value matches the pattern, false otherwise.
      */
     public boolean validate(Email annotation, Object container, Object value) {
+        if (value == null) {
+            return true;
+        }
+        
         String email = value.toString();
         return emailPattern.matcher(email.toLowerCase()).matches();
     }
