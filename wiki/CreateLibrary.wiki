@@ -27,13 +27,13 @@ svnt clean jar
 Once the library has been compiled, you can use the library from other applications by adding it as a dependency in the _project.xml_ file. If you haven't released the library as a final version you will need to include the library as an integration build in the application's _project.xml_ file like this:
 
 {{{
-<artifact group="example.com" project="my-library" name="my-library" version="1.0-A1-{integration}" type="jar"/>
+<artifact group="example.com" name="my-library" version="1.0-A1-{integration}"/>
 }}}
 
 Once the library has been released you can remove the integration build from the _project.xml_ file like this:
 
 {{{
-<artifact group="example.com" project="my-library" name="my-library" version="1.0-A1" type="jar"/>
+<artifact group="example.com" name="my-library" version="1.0-A1"/>
 }}}
 
 For more information on Integration builds, please consult the Savant documentation at http://code.google.com/p/savant-build
