@@ -20,7 +20,7 @@ JCatapult provides all of the support for adding modules to a web application in
 
 = Create a module =
 
-Run the _make-project_ script that is located at _JCATAPULT_HOME/tools/makeproject_. You can add that directory to your path. This script has a simple help menu if you don't know how to use it. The syntax for creating a module is:
+Run the _make-project_ script that is located at _JCATAPULT_HOME/makeproject_. You can add that directory to your path. This script has a simple help menu if you don't know how to use it. The syntax for creating a module is:
 
 {{{
 make-project module
