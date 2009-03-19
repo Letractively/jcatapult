@@ -1,6 +1,6 @@
 [#ftl/]
 [#include "dynamic-attributes.ftl"/]
-<div class="input">
+<div class="checkbox input control">
 [#include "label.ftl"/]
-<div class="control-container"><input type="checkbox"${append_attributes(attributes)}/><input type="hidden" name="__jc_cb_${attributes['name']}" value="${uncheckedValue}"/></div>
+<div class="checkbox-container input-container control-container"><input type="checkbox"${append_attributes(attributes)}/><input type="hidden" name="__jc_cb_${attributes['name']}" value="${uncheckedValue}"/></div>
 </div>
