@@ -50,3 +50,13 @@ svn --username=<your-username> co https://jcatapult.googlecode.com/svn/jcatapult
 }}}
 
 You will be prompted for your Google Code password.
+
+= Building =
+
+Once you have the project checked out, you can build it with Savant like this:
+
+{{{
+$ svnt clean jar
+}}}
+
+This will run the build, create the JAR file and then install an integration build of the project into your local Savant cache.
