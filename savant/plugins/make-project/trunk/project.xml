@@ -17,9 +17,6 @@
     </artifact-group>
     
     <artifact-group type="compile">
-      <!--<artifact group="commons.apache.org" name="commons-cli" version="1.1"/>-->
-      <!--<artifact group="ant.apache.org" name="ant" version="1.7.1"/>-->
-      <!--<artifact group="ant.apache.org" project="ant" name="ant-launcher" version="1.7.1"/>-->
       <artifact group="savant.inversoft.org" name="savant-core" version="1.5"/>
     </artifact-group>
   </dependencies>
