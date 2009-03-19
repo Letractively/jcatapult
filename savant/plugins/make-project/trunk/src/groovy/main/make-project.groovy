@@ -76,7 +76,7 @@ ant.copy(todir: "${projectDir}/${projectName}") {
     filter(token: "PACKAGE_NAME", value: packageName)
     filter(token: "PROJECT_NAME", value: projectName)
     filter(token: "UNDERSCORED_PROJECT_NAME", value: projectName.replace('-', '_').replace('.', '_'))
-    filter(token: "JCATAPULT_VERSTION", value: version)
+    filter(token: "JCATAPULT_VERSION", value: version)
   }
 }
 println "Copying IDE files"
