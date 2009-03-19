@@ -73,65 +73,36 @@ It's highly recommended to create an environment variable that references the My
 
 Because JCatapult uses JNDI to connect to MySQL and this JNDI entry is defined in Tomcat's context.xml, you must place the MySQL connector driver in the the tomcat installation's `common/lib` directory.  Because the version of this driver changes periodically, we recommend that you download the most current version from here -> [http://dev.mysql.com/downloads/connector/j/5.0.html]
 
-= The build.properties file =
+= The properties files =
 
-== JDK 1.6 Configuration ==
+JCatapult uses Savant for its build system, which provides a plugin mechanism for Apache Ant. Some of the plugins that Savant provides require configuration in order to work properly. Although Savant provides excellent error messages that provide enough information that you could figure out how to configure these files yourself (and it also provides documentation on them), we'll cover them here just to get you up and running faster.
 
-JCatapult requires a file named build.properties to be created inside your user home directory. This file points JCatapult to the location of the JDK for the project. This allows the project to clearly define which JDK it is using (which might be different for other applications) and the JDK used to run the JCatapult Ant build system. This file should contain entries for each of the JDKs you plan to use. Here is an example:
+== Java Compiler Configuration ==
+
+The Java plugin for Savant requires a file named _java.properties_ be created in the _~/.savant/plugins_ directory. This file tells the Java plugin where the JDKs are located on your system based on version numbers. You'll need to create this file and add a configuration entry for JDK 1.6 like this:
 
 *Linux/Unix version*
 {{{
-jdk1.6=/usr/lib/jvm/java-6-sun
-jdk1.5=/usr/lib/jvm/java-1.5.0-sun
+1.6=/usr/lib/jvm/java-6-sun
 }}}
 
 *Windows version*
 {{{
-jdk1.6=C:\\Program Files\\Java\\jdk1.6.0_03
-jdk1.5=C:\\Program Files\\Java\\jdk1.5.0_12
+1.6=C:\\Program Files\\Java\\jdk1.6.0_03
 }}}
 
 *Mac version*
 {{{
-jdk1.6=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home
-jdk1.5=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home
+1.6=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home
 }}}
 
-By default, JCatapult uses JDK 6 and therefore we suggest downloading, installing and configuring JCatapult to use that JDK.
+Right now, JCatapult only works with JDK 1.6 and we don't have immediate plans to downgrade back to JDK 1.5.
 
 == Database Credential Configuration ==
 
-In order to successfully create databases for JCatapult projects, JCatapult requires that 2 properties be defined:
-
-  * db.username
-  * db.password
-
-Whichever username and password you choose is arbitrary but we recommend that you use the same username as your user home account (using the same username as your home account will make it much easier to access mysql from the shell).
-
-Example:  Lets pretend that your user account is 'userX':
-
-Linux:
-{{{
-/home/userX
-}}}
-
-Mac:
-{{{
-/Users/userX
-}}}
-
-Windows:
-{{{
-C:\Documents and Settings\userX
-}}}
-
-Within your home directory's build.properties file, you'd define db.username and db.password as follows:
+The MySQL plugin for Savant requires a file named _mysql.properties_ be created in the _~/.savant/plugins_ directory. This file tells the MySQL plugin the username and password for the local MySQL database. This username and password must be a MySQL user that has permissions to create, update, and delete anything inside MySQL. You'll need to create this file and add a configuration entry for your MySQL username and password like this:
 
 {{{
-db.username=userX
-db.password=
+db.username=root
+db.password=secret
 }}}
-
-The last step is to add 'userX' with password empty string to your mysql database (if they do not yet exist).  Use the following mysql documentation to help you with adding your new user credentials to your mysql datbase [http://dev.mysql.com/doc/refman/5.0/en/adding-users.html Adding New User Accounts to MySQL]
-
-NOTE:  You'll notice that no password (empty string) was specified for our example 'userX'.  Inconjunction with setting your username equal to your user home account, providing empty string as your password will expedite accessing the mysql client from the command line.  Once your user is added, you'll only have to type 'mysql' to access your mysql client rather than having to provide both the username and password.
