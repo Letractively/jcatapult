@@ -26,6 +26,8 @@ $ svnt add-plugin plugins.savant.jcatapult.org:make-project
 $ svnt add-plugin plugins.savant.jcatapult.org:svn-import
 }}}
 
+*NOTE* There is currently a bug in Savant 1.5 that causes these two plugins to fail. Until 1.5.1 is released and fixes the bug, you'll need to copy the ant.jar and ant-launcher.jar files from $ANT_HOME/lib to the $SAVANT_HOME/lib directory.
+
 = Tomcat =
 
 == Installation ==
