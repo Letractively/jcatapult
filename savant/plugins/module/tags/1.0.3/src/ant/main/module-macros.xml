@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+<project name="module-macros">
+  <dirname property="dir.plugin.module" file="${ant.file.module-macros}"/>
+  <dependencypath pathid="classpath.module" projectfile="${dir.plugin.module}/project.xml"/>
+
+  <!--
+    This determines the version of the module using the url to the module within a Savant repsitory.
+
+    This is making a very large and somewhat annoying assumption to keep me from having to parse out file
+    names to determine version numbers. Instead I'm assuming that there is a JAR with the same name as the
+    project. So, since the URL points to the Savant project directory I can grab the last part of that String
+    and then look for a JAR with the same name and the version on the end.
+
+    For example, if the project name is user-module:
+
+      user-module-1.0-RC1.jar
+
+    I can grab everything after "user-module-" and up to the .jar extension.
+  -->
+  <macrodef name="module-properties">
+    <attribute name="group"/>
+    <attribute name="project"/>
+    <sequential>
+      <groovy>
+        <classpath>
+          <path refid="classpath.module"/>
+        </classpath>
+        <![CDATA[
+        import org.inversoft.savant.dep.*
+        import org.inversoft.savant.context.*
+        import org.inversoft.savant.context.xml.*
+
+        DefaultSavantContextBuilder builder = new DefaultSavantContextBuilder(
+            new DefaultWorkflowConfigBuilder(), new DefaultProjectConfigBuilder())
+        SavantContext context = builder.build(new File("project.xml"))
+
+        // Create a new deps set
+        ArtifactGroup artifactGroup = new ArtifactGroup("compile")
+        artifactGroup.addArtifact(new Artifact("@{group}", "@{project}", "@{project}", "{latest}", "jar"))
+        Dependencies deps = new Dependencies("add-module-deps")
+        deps.addArtifactGroup(artifactGroup)
+
+        // Add it to the project
+        context.projectConfig.addDependencies(deps)
+
+        // Resolve the module
+        DependencyResolveMediator mediator = new DependencyResolveMediator()
+        try {
+          mediator.mediate(context, "add-module-deps", ["compile"] as Set, false)
+        } catch (Exception e) {
+          ant.fail("Unable to find module")
+        }
+
+        // Get the artifact back out and grab the version and the file
+        Artifact artifact = artifactGroup.artifacts.toList()[0]
+        properties["module.version"] = artifact.getVersion()
+        properties["module.file"] = context.getArtifactFile(artifact).getAbsolutePath()
+        ]]>
+      </groovy>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="module-add-dependency">
+    <attribute name="group"/>
+    <attribute name="project"/>
+    <attribute name="version"/>
+    <sequential>
+      <groovy>
+        <classpath>
+          <path refid="classpath.module"/>
+        </classpath>
+        <![CDATA[
+        import org.jdom.*
+        import org.jdom.filter.*
+        import org.jdom.input.SAXBuilder
+        import org.jdom.output.Format
+        import org.jdom.output.XMLOutputter
+        import org.jdom.xpath.XPath
+        import java.net.URL
+        import java.net.MalformedURLException
+
+        // Read it in
+        Document doc = new SAXBuilder().build(new File("project.xml"));
+
+        // See if it already has the module (brute force to avoid namespaces and issues with naming)
+        doc.getDescendants(new ElementFilter("artifact")).toList().each { elem ->
+          if (elem.getAttributeValue("name") == "@{project}") {
+            ant.echo("This project already contains the module @{project}.");
+            ant.fail("This project already contains the module @{project}.");
+          }
+        }
+
+        // Find the artifactGroup element to add the dependency to
+        Element root = doc.getRootElement()
+        Element deps = root.getChild("dependencies", root.getNamespace())
+        if (deps == null) {
+          ant.fail("Can't figure out where to add the module artifact since the project lacks any dependencies")
+        }
+
+        def filter = {Object[] args -> return args[0] instanceof Element && (args[0].name == "artifactGroup" || args[0].name == "artifact-group")} as Filter
+        Element artifactGroup = null
+        root.getDescendants(filter).toList().each { elem ->
+          if (elem.getAttributeValue("type") == "compile") {
+            artifactGroup = elem
+          }
+        }
+        if (artifactGroup == null) {
+          ant.fail("Can't find an artifact-group to put the dependency in")
+        }
+
+        Element artifact = new Element("artifact", root.getNamespace());
+        artifact.setAttribute("group", "@{group}");
+        artifact.setAttribute("name", "@{project}");
+        artifact.setAttribute("version", "@{version}");
+
+        // Add the element and some whitespace for formatting
+        artifactGroup.addContent(new Text("  "));
+        artifactGroup.addContent(artifact);
+        artifactGroup.addContent(new Text("\n    "));
+
+        // Write it out
+        Format format = Format.getRawFormat();
+        format.setLineSeparator("\n");
+        XMLOutputter output = new XMLOutputter(format);
+        FileOutputStream fos = new FileOutputStream("project.xml");
+        output.output(doc, fos);
+        fos.close();
+
+        ant.echo("Added entry [" + artifact.getAttributes().toString() + "] to project.xml");
+        ]]>
+      </groovy>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="module-add-entities">
+    <attribute name="persistenceFile"/>
+    <element name="moduleClasspath"/>
+    <sequential>
+      <property name="tmp_persistence_file" value="@{persistenceFile}"/>
+      <groovy>
+        <classpath>
+          <path refid="classpath.module"/>
+          <moduleClasspath/>
+        </classpath>
+        <![CDATA[
+        import org.jdom.*;
+        import org.jdom.input.SAXBuilder;
+        import org.jdom.output.Format;
+        import org.jdom.output.XMLOutputter;
+
+        SAXBuilder builder = new SAXBuilder();
+        String persistenceFileName = properties["tmp_persistence_file"];
+
+        // Search in the classloader for all the module.xml files
+        Enumeration urls = this.getClass().getClassLoader().getResources("META-INF/module.xml");
+        SortedSet set = new TreeSet();
+        while (urls.hasMoreElements()) {
+          def url = urls.nextElement();
+
+          ant.echo("Adding persistence classes from [${url}] to [${persistenceFileName}]");
+
+          // Read it in
+          Document moduleDoc = builder.build(url);
+          Element persistenceElem = moduleDoc.getRootElement().getChild("persistence");
+          if (persistenceElem == null) {
+            ant.echo("Project doesn't define a <persistence> element in the module.xml file. Skipping entity management");
+            continue;
+          }
+
+          List classElems = persistenceElem.getChildren("class");
+          if (classElems == null) {
+            ant.echo("Project doesn't define any persistence classes in the module.xml file. Skipping entity management");
+            continue;
+          }
+
+          classElems.each {classElem ->
+            set.add(classElem.getText());
+          }
+        }
+
+        // Grab the target file and root element
+        Namespace ns = Namespace.getNamespace("http://java.sun.com/xml/ns/persistence");
+        Document persistenceDoc = builder.build(new File(persistenceFileName));
+        Element target = persistenceDoc.getRootElement().getChild("persistence-unit", ns);
+        if (target == null) {
+          ant.fail("Malformed persistence.xml file [${persistenceFileName}]. No <persistence-unit> element.");
+        }
+
+        // Add all the classes to it
+        set.each {c ->
+          Element newClassElem = new Element("class", ns);
+          newClassElem.setText(c);
+          target.addContent(2, newClassElem);
+        }
+
+        // Write it out
+        Format format = Format.getPrettyFormat();
+        format.setLineSeparator("\n");
+        XMLOutputter output = new XMLOutputter(format);
+        FileOutputStream fos = new FileOutputStream(persistenceFileName);
+        output.output(persistenceDoc, fos);
+        fos.close();
+        ]]>
+      </groovy>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="module-create-persistence">
+    <attribute name="moduleFile"/>
+    <attribute name="persistenceDir"/>
+    <sequential>
+      <copy todir="@{persistenceDir}" failonerror="yes" overwrite="yes">
+        <fileset dir="${dir.plugin.module}/files" includes="**/*"/>
+        <filterset>
+          <filter token="PROJECT_NAME" value="${project.name}"/>
+        </filterset>
+      </copy>
+      <dependencypath pathid="classpath.project"/>
+      <module-add-entities persistenceFile="@{persistenceDir}/META-INF/persistence.xml">
+        <moduleClasspath>
+          <path refid="classpath.project"/>
+          <path>
+            <fileset dir="${dir.target.jars}" includes="*.jar"/>
+          </path>
+        </moduleClasspath>
+      </module-add-entities>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="module-add">
+    <attribute name="group"/>
+    <attribute name="project"/>
+    <sequential>
+      <echo message="Using Savant to add module @{group} @{project}"/>
+      <module-properties group="@{group}" project="@{project}"/>
+
+      <echo message="Version is ${module.version}"/>
+      <echo message="File is ${module.file}"/>
+      <module-add-dependency group="@{group}" project="@{project}" version="${module.version}"/>
+
+      <module-add-entities persistenceFile="${dir.src.conf.main}/META-INF/persistence.xml">
+        <moduleClasspath>
+          <pathelement location="${module.file}"/>
+        </moduleClasspath>
+      </module-add-entities>
+
+      <groovy>
+        String cmd
+        if (System.getProperty("os.name").contains("Windows")) {
+          String savantHome = properties['savant.home']
+          cmd = "${savantHome}\\bin\\svnt.bat"
+        } else {
+          cmd = "svnt"
+        }
+
+        ant.exec(executable: cmd) {
+          arg(line: "ide create-main-database")
+        }
+      </groovy>
+    </sequential>
+  </macrodef>
+</project>
