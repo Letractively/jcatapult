@@ -22,6 +22,7 @@ import javax.servlet.ServletException;
 import org.jcatapult.email.EmailTestHelper;
 import org.jcatapult.email.service.EmailTransportService;
 import org.jcatapult.module.cms.BaseIntegrationTest;
+import org.jcatapult.mvc.test.RequestBuilder;
 import org.jcatapult.mvc.test.WebappTestRunner;
 import org.jcatapult.security.EnhancedSecurityContext;
 import static org.junit.Assert.*;
@@ -40,7 +41,7 @@ public class StoreIntegrationTest extends BaseIntegrationTest {
         EnhancedSecurityContext.login(publisher);
 
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("/admin/cms/content/store").
+        RequestBuilder builder = runner.test("/admin/cms/content/store").
             withParameter("dynamic", "false").
             withParameter("global", "false").
             withParameter("uri", "/integration-page").
@@ -48,8 +49,8 @@ public class StoreIntegrationTest extends BaseIntegrationTest {
             withParameter("locale", "en_US").
             withParameter("content", "The content").
             withParameter("contentType", "HTML").
-            withMock(EmailTransportService.class, EmailTestHelper.getService()).
-            post();
+            withMock(EmailTransportService.class, EmailTestHelper.getService());
+        builder.post();
 
         String result = runner.response.getStream().toString();
         assertTrue(result.contains("\"success\": true"));
@@ -62,14 +63,14 @@ public class StoreIntegrationTest extends BaseIntegrationTest {
         EnhancedSecurityContext.login(publisher);
 
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("/admin/cms/content/store").
+        RequestBuilder builder = runner.test("/admin/cms/content/store").
             withParameter("dynamic", "false").
             withParameter("global", "false").
             withParameter("uri", "/integration-page").
             withParameter("name", "callout").
             withParameter("locale", "en_US").
-            withMock(EmailTransportService.class, EmailTestHelper.getService()).
-            post();
+            withMock(EmailTransportService.class, EmailTestHelper.getService());
+        builder.post();
 
         String result = runner.response.getStream().toString();
         assertTrue(result.contains("\"success\": false"));

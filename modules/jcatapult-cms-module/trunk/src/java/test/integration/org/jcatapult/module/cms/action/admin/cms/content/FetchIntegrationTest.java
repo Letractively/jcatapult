@@ -22,6 +22,7 @@ import javax.servlet.ServletException;
 
 import org.jcatapult.module.cms.BaseIntegrationTest;
 import org.jcatapult.module.cms.domain.ContentType;
+import org.jcatapult.mvc.test.RequestBuilder;
 import org.jcatapult.mvc.test.WebappTestRunner;
 import org.jcatapult.security.EnhancedSecurityContext;
 import static org.junit.Assert.*;
@@ -43,11 +44,11 @@ public class FetchIntegrationTest extends BaseIntegrationTest {
         contentService.storeContent("localhost", "/page", "callout", Locale.US, "Some content", ContentType.HTML, false, publisher);
 
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("/admin/cms/content/fetch").
+        RequestBuilder builder = runner.test("/admin/cms/content/fetch").
             withParameter("queries[0].global", "false").
             withParameter("queries[0].uri", "/page").
-            withParameter("queries[0].name", "callout").
-            get();
+            withParameter("queries[0].name", "callout");
+        builder.get();
 
         String result = runner.response.getStream().toString();
         System.out.println("Result is " + result);

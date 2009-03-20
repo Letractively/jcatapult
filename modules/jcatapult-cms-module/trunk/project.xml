@@ -17,7 +17,7 @@
  
   <!-- Compile properties -->
   <property name="jdk.version" value="1.6"/>
-  <property name="version.jcatapult" value="1.0-RC12-{integration}"/>
+  <property name="version.jcatapult" value="1.0-RC12"/>
 
   <!-- Database properties -->
   <property name="project.requires.database" value="true"/>
@@ -33,9 +33,6 @@
 
       <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.2"/>
 
-      <!-- User module -->
-      <artifact group="modules.jcatapult.org" name="jcatapult-user-module" version="1.0-RC10"/>
-
       <!-- jcatapult deps -->
       <artifact group="jcatapult.org" name="jcatapult-core" version="${version.jcatapult}"/>
       <artifact group="jcatapult.org" name="jcatapult-mvc" version="${version.jcatapult}"/>
@@ -50,8 +47,10 @@
       <artifact group="modules.fckeditor.net" name="fckeditor" version="2.6.4"/>
       <artifact group="opensymphony.com" name="sitemesh" version="2.3"/>
     </artifactGroup>
-    <artifactGroup type="test-run"/>
     <artifactGroup type="test-compile">
+      <artifact group="libraries.jcatapult.org" name="jcatapult-user" version="1.0-RC12"/>
+      <artifact group="modules.jcatapult.org" name="jcatapult-simple-user-module" version="1.0-RC12"/>
+
       <!-- jcat unit testing deps -->
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
       <artifact group="jcatapult.org" project="jcatapult-mvc" name="jcatapult-mvc-test" version="${version.jcatapult}"/>
@@ -60,6 +59,13 @@
 
       <artifact group="easymock.org" name="easymock" version="2.2"/>
       <artifact group="junit.org" name="junit" version="4.4"/>
+    </artifactGroup>
+  </dependencies>
+
+  <!-- This is for testing the module in Tomcat -->
+  <dependencies id="dev-test">
+    <artifactGroup type="run">
+      <artifact group="modules.jcatapult.org" name="jcatapult-simple-user-module" version="1.0-RC12"/>
     </artifactGroup>
   </dependencies>
 </project>

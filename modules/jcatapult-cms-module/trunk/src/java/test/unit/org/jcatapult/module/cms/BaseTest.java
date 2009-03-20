@@ -19,8 +19,8 @@ package org.jcatapult.module.cms;
 import java.sql.SQLException;
 
 import org.jcatapult.module.cms.service.DefaultContentService;
-import org.jcatapult.module.user.domain.DefaultRole;
-import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.module.simpleuser.domain.DefaultRole;
+import org.jcatapult.module.simpleuser.domain.DefaultUser;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.test.JPABaseTest;
 import org.junit.Before;
@@ -37,29 +37,19 @@ import com.google.inject.Inject;
  */
 @Ignore
 public class BaseTest extends JPABaseTest {
-    @Inject protected DefaultContentService service;
-    @Inject protected PersistenceService persistenceService;
+    @Inject public DefaultContentService service;
+    @Inject public PersistenceService persistenceService;
     protected DefaultUser publisher;
     protected DefaultUser editor;
 
     @Before
     public void setupDatabase() throws SQLException {
-        publisher = persistenceService.queryFirst(DefaultUser.class, "select u from DefaultUser u where u.login = 'publisher'");
-        if (publisher == null) {
-            publisher = new DefaultUser();
-            publisher.setLogin("publisher");
-            publisher.setPassword("password");
-            publisher.addRole(persistenceService.queryFirst(DefaultRole.class, "select r from DefaultRole r where r.name = 'publisher'"));
-            persistenceService.persist(publisher);
-        }
+        publisher = new DefaultUser();
+        publisher.setId(1);
+        publisher.addRole(new DefaultRole("publisher"));
 
-        editor = persistenceService.queryFirst(DefaultUser.class, "select u from DefaultUser u where u.login = 'editor'");
-        if (editor == null) {
-            editor = new DefaultUser();
-            editor.setLogin("editor");
-            editor.setPassword("password");
-            editor.addRole(persistenceService.queryFirst(DefaultRole.class, "select r from DefaultRole r where r.name = 'editor'"));
-            persistenceService.persist(editor);
-        }
+        editor = new DefaultUser();
+        editor.setId(1);
+        editor.addRole(new DefaultRole("editor"));
     }
 }

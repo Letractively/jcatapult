@@ -23,7 +23,9 @@ import org.jcatapult.email.EmailTestHelper;
 import org.jcatapult.email.service.EmailTransportService;
 import org.jcatapult.module.cms.BaseIntegrationTest;
 import org.jcatapult.module.cms.domain.CMSMode;
+import org.jcatapult.mvc.test.RequestBuilder;
 import org.jcatapult.mvc.test.WebappTestRunner;
+import org.jcatapult.security.EnhancedSecurityContext;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -36,14 +38,16 @@ import org.junit.Test;
  */
 public class EnterIntegrationTest extends BaseIntegrationTest {
     @Test
-    public void testStoreStaticPageScoped() throws IOException, ServletException {
+    public void testEnter() throws IOException, ServletException {
+        EnhancedSecurityContext.login(publisher);
+        
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("/cms/enter").
-            withMock(EmailTransportService.class, EmailTestHelper.getService()).
-            get();
+        RequestBuilder builder = runner.test("/admin/cms/enter").
+            withMock(EmailTransportService.class, EmailTestHelper.getService());
+        builder.get();
 
         String result = runner.response.getStream().toString();
         assertTrue(result.contains("<iframe"));
-        assertSame(CMSMode.EDIT, runner.session.getAttribute("cmsMode"));
+        assertSame(CMSMode.EDIT, builder.getRequest().getSession().getAttribute("cmsMode"));
     }
 }

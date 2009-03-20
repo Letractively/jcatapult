@@ -24,7 +24,7 @@ import org.jcatapult.module.cms.domain.ContentType;
 import org.jcatapult.module.cms.domain.NodeAction;
 import org.jcatapult.module.cms.domain.PageNode;
 import org.jcatapult.module.cms.domain.SiteNode;
-import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.persistence.domain.Identifiable;
 
 import com.google.inject.ImplementedBy;
 
@@ -135,11 +135,11 @@ public interface ContentService {
      * @throws  PersistenceException If the site was created in the split second after this method
      *          checks for it and then inserts it. Very rare, but possible.
      */
-    CreateResult<SiteNode> createSite(String site, DefaultUser user) throws PersistenceException;
+    CreateResult<SiteNode> createSite(String site, Identifiable user) throws PersistenceException;
 
     /**
      * Creates a new page for the given URI and site. If the site doesn't exist, this method will
-     * attempt to create it by calling the {@link #createSite(String, DefaultUser)} method. If the
+     * attempt to create it by calling the {@link #createSite(String, Identifiable)} method. If the
      * page already exists, this will not create the page and instead just return a result that
      * indicates nothing happened. The handling of the creation depends on the given user. The
      * creation might immediately take effect, or it might be put into a pending state and require
@@ -153,11 +153,11 @@ public interface ContentService {
      *          method or the createSite method checks for it and then inserts it. Very rare, but
      *          possible.
      */
-    CreateResult<PageNode> createPage(String site, String uri, DefaultUser user);
+    CreateResult<PageNode> createPage(String site, String uri, Identifiable user);
 
     /**
      * Creates or updates content for the page with the given URI and site. If the page doesn't exist,
-     * this method will attempt to create it by calling the {@link #createPage(String, String, DefaultUser)}
+     * this method will attempt to create it by calling the {@link #createPage(String, String, Identifiable)}
      * method. If the content node already exists and contains visible content for the given locale,
      * this will not create the content node and instead just return a result that indicates nothing
      * happened. The handling of the creation depends on the given user. The creation might
@@ -181,7 +181,7 @@ public interface ContentService {
      *          inserts it. Very rare, but possible.
      */
     CreateResult<ContentNode> storeContent(String site, String uri, String name, Locale locale,
-        String content, ContentType type, boolean dynamic, DefaultUser user);
+        String content, ContentType type, boolean dynamic, Identifiable user);
 
     /**
      * Deletes the given site. If the site has already been deleted, this does nothing. The deletion
@@ -192,7 +192,7 @@ public interface ContentService {
      * @param   user The currently logged in user.
      * @return  The result from the delete.
      */
-    DeleteResult<SiteNode> deleteSite(String site, DefaultUser user);
+    DeleteResult<SiteNode> deleteSite(String site, Identifiable user);
 
     /**
      * Deletes the given page. If the page has already been deleted, this does nothing. The deletion
@@ -204,7 +204,7 @@ public interface ContentService {
      * @param   user The currently logged in user.
      * @return  The result from the delete.
      */
-    DeleteResult<PageNode> deletePage(String site, String uri, DefaultUser user);
+    DeleteResult<PageNode> deletePage(String site, String uri, Identifiable user);
 
     /**
      * Deletes the given content node. If the content node has already been deleted, this does
@@ -217,7 +217,7 @@ public interface ContentService {
      * @param   user The currently logged in user.
      * @return  The result from the delete.
      */
-    DeleteResult<ContentNode> deleteContent(String site, String uri, String name, DefaultUser user);
+    DeleteResult<ContentNode> deleteContent(String site, String uri, String name, Identifiable user);
 
     /**
      * Approves the given action. The approval process depends on the type of action that was taken
@@ -228,7 +228,7 @@ public interface ContentService {
      * @param   comment A comment to go with the approval.
      * @return  The result of the approval.
      */
-    ApproveResult approve(NodeAction action, DefaultUser user, String comment);
+    ApproveResult approve(NodeAction action, Identifiable user, String comment);
 
     /**
      * Rejects the given action. The rejection process depends on the type of action that was taken
@@ -239,7 +239,7 @@ public interface ContentService {
      * @param   comment A comment about the rejection.
      * @return  The result of the rejection.
      */
-    RejectResult reject(NodeAction action, DefaultUser user, String comment);
+    RejectResult reject(NodeAction action, Identifiable user, String comment);
 
     /**
      * Declines the given action. The decline process depends on the type of action that was taken
@@ -250,5 +250,5 @@ public interface ContentService {
      * @param   comment A comment about the decline.
      * @return  The result of the decline.
      */
-    DeclineResult decline(NodeAction action, DefaultUser user, String comment);
+    DeclineResult decline(NodeAction action, Identifiable user, String comment);
 }
