@@ -1,4 +1,4 @@
-<project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
+<project xmlns="http://www.inversoft.org/schemas/savant-1.5/project"
          name="@PROJECT_NAME@"
          group="@GROUP_NAME@"
          version="1.0-A1">
@@ -12,7 +12,7 @@
   <plugin group="plugins.savant.inversoft.org" name="tomcat" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
   <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0.2"/>
-  <plugin group="plugins.savant.jcatapult.org" name="module" version="1.0"/>
+  <plugin group="plugins.savant.jcatapult.org" name="module" version="1.0.3"/>
   <plugin group="plugins.savant.jcatapult.org" name="security" version="1.0"/>
 
   <!-- Compile properties -->
