@@ -18,11 +18,13 @@ package org.jcatapult.module.cms.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import javax.persistence.PersistenceException;
 
 import org.jcatapult.module.cms.domain.ActionType;
 import org.jcatapult.module.cms.domain.Content;
 import org.jcatapult.module.cms.domain.ContentNode;
+import org.jcatapult.module.cms.domain.ContentRole;
 import org.jcatapult.module.cms.domain.ContentState;
 import org.jcatapult.module.cms.domain.ContentType;
 import org.jcatapult.module.cms.domain.LocaleContent;
@@ -33,9 +35,10 @@ import org.jcatapult.module.cms.domain.NodeActionStateType;
 import org.jcatapult.module.cms.domain.NodeState;
 import org.jcatapult.module.cms.domain.PageNode;
 import org.jcatapult.module.cms.domain.SiteNode;
-import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.persistence.domain.Identifiable;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.txn.annotation.Transactional;
+import org.jcatapult.security.UserAdapter;
 
 import com.google.inject.Inject;
 import net.java.lang.reflect.ReflectionTools;
@@ -50,10 +53,12 @@ import net.java.lang.reflect.ReflectionTools;
  */
 public class DefaultContentService implements ContentService {
     private final PersistenceService persistenceService;
+    private final UserAdapter userAdapater;
 
     @Inject
-    public DefaultContentService(PersistenceService persistenceService) {
+    public DefaultContentService(PersistenceService persistenceService, UserAdapter userAdapater) {
         this.persistenceService = persistenceService;
+        this.userAdapater = userAdapater;
     }
 
     /**
@@ -91,7 +96,7 @@ public class DefaultContentService implements ContentService {
     /**
      * {@inheritDoc}
      */
-    public CreateResult<SiteNode> createSite(String site, DefaultUser user) throws PersistenceException {
+    public CreateResult<SiteNode> createSite(String site, Identifiable user) throws PersistenceException {
         CreateResult<SiteNode> result;
         if (canPublish(user)) {
             result = createNodeApproved(SiteNode.class, site, null, null, null, user);
@@ -105,7 +110,7 @@ public class DefaultContentService implements ContentService {
     /**
      * {@inheritDoc}
      */
-    public CreateResult<PageNode> createPage(String site, String uri, DefaultUser user) {
+    public CreateResult<PageNode> createPage(String site, String uri, Identifiable user) {
         CreateResult<SiteNode> siteResult = createNodeApproved(SiteNode.class, site, null, null, null, user);
         SiteNode siteNode = siteResult.getNode();
         CreateResult<PageNode> result;
@@ -123,7 +128,7 @@ public class DefaultContentService implements ContentService {
      */
     @Transactional()
     public CreateResult<ContentNode> storeContent(String site, String uri, String name, Locale locale,
-            String content, ContentType type, boolean dynamic, DefaultUser user) {
+            String content, ContentType type, boolean dynamic, Identifiable user) {
         CreateResult<SiteNode> siteResult = createNodeApproved(SiteNode.class, site, null, null, null, user);
         Node parent = siteResult.getNode();
         if (uri != null) {
@@ -221,7 +226,7 @@ public class DefaultContentService implements ContentService {
             List<NodeAction> actions = node.getActions();
             for (NodeAction nodeAction : actions) {
                 if (nodeAction.getCurrentState() == NodeActionStateType.PENDING &&
-                        nodeAction.getUser().equals(user) && nodeAction.getContent() != null &&
+                        nodeAction.getUserId() == user.getId() && nodeAction.getContent() != null &&
                         nodeAction.getContent().getContentNode().getId() == node.getId() &&
                         nodeAction.getContent().getLocale().equals(locale)) {
                     archiveAction(nodeAction, user, null);
@@ -243,7 +248,7 @@ public class DefaultContentService implements ContentService {
     /**
      * {@inheritDoc}
      */
-    public DeleteResult<SiteNode> deleteSite(String site, DefaultUser user) {
+    public DeleteResult<SiteNode> deleteSite(String site, Identifiable user) {
         DeleteResult<SiteNode> result;
         if (canPublish(user)) {
             result = deleteNodeApproved(SiteNode.class, site, null, null, user);
@@ -257,7 +262,7 @@ public class DefaultContentService implements ContentService {
     /**
      * {@inheritDoc}
      */
-    public DeleteResult<PageNode> deletePage(String site, String uri, DefaultUser user) {
+    public DeleteResult<PageNode> deletePage(String site, String uri, Identifiable user) {
         SiteNode siteNode = findSite(site);
         if (siteNode == null) {
             return new DeleteResult<PageNode>(null, false, false);
@@ -276,7 +281,7 @@ public class DefaultContentService implements ContentService {
     /**
      * {@inheritDoc}
      */
-    public DeleteResult<ContentNode> deleteContent(String site, String uri, String name, DefaultUser user) {
+    public DeleteResult<ContentNode> deleteContent(String site, String uri, String name, Identifiable user) {
         PageNode pageNode = findPage(site, uri);
         if (pageNode == null) {
             return new DeleteResult<ContentNode>(null, false, false);
@@ -295,7 +300,7 @@ public class DefaultContentService implements ContentService {
     /**
      * {@inheritDoc}
      */
-    public ApproveResult approve(NodeAction action, DefaultUser user, String comment) {
+    public ApproveResult approve(NodeAction action, Identifiable user, String comment) {
         Node node = action.getNode();
         if (action.getCurrentState() != NodeActionStateType.PENDING) {
             return new ApproveResult(node, false);
@@ -314,7 +319,7 @@ public class DefaultContentService implements ContentService {
         NodeActionState actionState = new NodeActionState();
         actionState.setNodeAction(action);
         actionState.setState(NodeActionStateType.APPROVED);
-        actionState.setUser(user);
+        actionState.setUserId(user.getId());
         actionState.setComment(comment);
         action.getNodeActionStates().add(actionState);
 
@@ -379,7 +384,7 @@ public class DefaultContentService implements ContentService {
     /**
      * {@inheritDoc}
      */
-    public RejectResult reject(NodeAction action, DefaultUser user, String comment) {
+    public RejectResult reject(NodeAction action, Identifiable user, String comment) {
         Node node = action.getNode();
         if (action.getCurrentState() != NodeActionStateType.PENDING) {
             return new RejectResult(node, false);
@@ -390,7 +395,7 @@ public class DefaultContentService implements ContentService {
         NodeActionState actionState = new NodeActionState();
         actionState.setNodeAction(action);
         actionState.setState(NodeActionStateType.REJECTED);
-        actionState.setUser(user);
+        actionState.setUserId(user.getId());
         actionState.setComment(comment);
         action.getNodeActionStates().add(actionState);
 
@@ -400,7 +405,7 @@ public class DefaultContentService implements ContentService {
     /**
      * {@inheritDoc}
      */
-    public DeclineResult decline(NodeAction action, DefaultUser user, String comment) {
+    public DeclineResult decline(NodeAction action, Identifiable user, String comment) {
         Node node = action.getNode();
         if (action.getCurrentState() != NodeActionStateType.PENDING) {
             return new DeclineResult(node, false);
@@ -411,7 +416,7 @@ public class DefaultContentService implements ContentService {
         NodeActionState actionState = new NodeActionState();
         actionState.setNodeAction(action);
         actionState.setState(NodeActionStateType.DECLINED);
-        actionState.setUser(user);
+        actionState.setUserId(user.getId());
         actionState.setComment(comment);
         action.getNodeActionStates().add(actionState);
 
@@ -439,28 +444,29 @@ public class DefaultContentService implements ContentService {
         return site;
     }
 
-    private boolean canPublish(DefaultUser user) {
-        return user.hasRole("admin") || user.hasRole("publisher");
+    private boolean canPublish(Identifiable user) {
+        Set<String> roles = userAdapater.getRoles(user);
+        return roles.contains("admin") || roles.contains(ContentRole.publisher.toString());
     }
 
-    private NodeAction makeAction(ActionType type, NodeActionStateType state, Node node, DefaultUser user) {
+    private NodeAction makeAction(ActionType type, NodeActionStateType state, Node node, Identifiable user) {
         NodeAction action = new NodeAction();
         action.setCurrentState(state);
         action.setNode(node);
         action.setType(type);
-        action.setUser(user);
+        action.setUserId(user.getId());
 
         NodeActionState actionState = new NodeActionState();
         actionState.setNodeAction(action);
         actionState.setState(state);
-        actionState.setUser(user);
+        actionState.setUserId(user.getId());
         action.getNodeActionStates().add(actionState);
 
         return action;
     }
 
     private <T extends Node> CreateResult<T> createNodeApproved(Class<T> type, String site, String uri,
-            String name, Node parent, DefaultUser user) {
+            String name, Node parent, Identifiable user) {
         CreateResult<T> result;
         T existing = findNode(type, site, uri, name);
         if (existing == null) {
@@ -517,7 +523,7 @@ public class DefaultContentService implements ContentService {
     }
 
     private <T extends Node> CreateResult<T> createNodePending(Class<T> type, String site, String uri,
-            String name, Node parent, DefaultUser user) {
+            String name, Node parent, Identifiable user) {
         CreateResult<T> result;
         T existing = findNode(type, site, uri, name);
         if (existing == null) {
@@ -562,7 +568,7 @@ public class DefaultContentService implements ContentService {
     }
 
     private <T extends Node> DeleteResult<T> deleteNodeApproved(Class<T> type, String site, String uri,
-            String name, DefaultUser user) {
+            String name, Identifiable user) {
         DeleteResult<T> result;
         T existing = findNode(type, site, uri, name);
         if (existing == null) {
@@ -590,7 +596,7 @@ public class DefaultContentService implements ContentService {
     }
 
     private <T extends Node> DeleteResult<T> deleteNodePending(Class<T> type, String site, String uri,
-            String name, DefaultUser user) {
+            String name, Identifiable user) {
         DeleteResult<T> result;
         T existing = findNode(type, site, uri, name);
         if (existing == null) {
@@ -632,13 +638,13 @@ public class DefaultContentService implements ContentService {
         return build.toString();
     }
 
-    private void archiveAction(NodeAction action, DefaultUser user, String comment) {
+    private void archiveAction(NodeAction action, Identifiable user, String comment) {
         action.setCurrentState(NodeActionStateType.ARCHIVED);
 
         NodeActionState state = new NodeActionState();
         state.setNodeAction(action);
         state.setState(NodeActionStateType.ARCHIVED);
-        state.setUser(user);
+        state.setUserId(user.getId());
         state.setComment(comment);
         action.getNodeActionStates().add(state);
     }

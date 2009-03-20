@@ -15,7 +15,7 @@
 <body id="cms-body">
 <div id="cms-toolbar">
   <div id="cms-promo">
-    The JCatapult CMS
+    [@jc.message key="promo" default="The JCatapult CMS"/]
   </div>
   <a id="cms-publish" href="/admin/cms/content/publish" onclick="CMS.publish(); return false;">Publish</a>
   <a id="cms-revert" href="/admin/cms/content/revert" onclick="CMS.revert(); return false;">Revert</a>

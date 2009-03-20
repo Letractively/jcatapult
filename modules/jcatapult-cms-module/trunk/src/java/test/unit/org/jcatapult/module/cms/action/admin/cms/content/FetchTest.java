@@ -20,11 +20,9 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.easymock.EasyMock;
+import org.jcatapult.module.cms.BaseTest;
 import org.jcatapult.module.cms.domain.ContentNode;
 import org.jcatapult.module.cms.service.ContentService;
-import org.jcatapult.module.cms.action.admin.cms.content.Fetch;
-import org.jcatapult.module.cms.action.admin.cms.content.NodeQuery;
-import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -35,7 +33,7 @@ import org.junit.Test;
  *
  * @author  Scaffolder
  */
-public class FetchTest extends JCatapultBaseTest {
+public class FetchTest extends BaseTest {
     @Test
     public void testGetPage() {
         ContentNode node = new ContentNode();

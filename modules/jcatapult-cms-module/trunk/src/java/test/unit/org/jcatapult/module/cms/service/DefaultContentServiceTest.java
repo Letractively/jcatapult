@@ -60,7 +60,7 @@ public class DefaultContentServiceTest extends BaseTest {
         assertEquals(1, actions.size());
         assertNull(actions.get(0).getContent());
         assertEquals(NodeActionStateType.PENDING, actions.get(0).getCurrentState());
-        assertEquals(editor, actions.get(0).getUser());
+        assertEquals((int) editor.getId(), actions.get(0).getUserId());
         assertEquals(siteNode, actions.get(0).getNode());
         assertEquals(1, actions.get(0).getNodeActionStates().size());
         assertEquals(NodeActionStateType.PENDING, actions.get(0).getNodeActionStates().get(0).getState());
@@ -117,9 +117,9 @@ public class DefaultContentServiceTest extends BaseTest {
         assertEquals(NodeActionStateType.APPROVED, node.getActions().get(0).getCurrentState());
         assertEquals(1, node.getActions().get(0).getNodeActionStates().size());
         assertEquals(NodeActionStateType.APPROVED, node.getActions().get(0).getNodeActionStates().get(0).getState());
-        assertEquals(publisher, node.getActions().get(0).getNodeActionStates().get(0).getUser());
+        assertEquals((int) publisher.getId(), node.getActions().get(0).getNodeActionStates().get(0).getUserId());
         assertEquals(ActionType.CREATE, node.getActions().get(0).getType());
-        assertEquals(publisher, node.getActions().get(0).getUser());
+        assertEquals((int) publisher.getId(), node.getActions().get(0).getUserId());
         assertNotNull(node.getActions().get(0).getContent());
         assertSame(node.getCurrentContents().get(Locale.US), node.getActions().get(0).getContent());
     }
@@ -163,9 +163,9 @@ public class DefaultContentServiceTest extends BaseTest {
         assertEquals(NodeActionStateType.APPROVED, node.getActions().get(0).getCurrentState());
         assertEquals(1, node.getActions().get(0).getNodeActionStates().size());
         assertEquals(NodeActionStateType.APPROVED, node.getActions().get(0).getNodeActionStates().get(0).getState());
-        assertEquals(publisher, node.getActions().get(0).getNodeActionStates().get(0).getUser());
+        assertEquals((int) publisher.getId(), node.getActions().get(0).getNodeActionStates().get(0).getUserId());
         assertEquals(ActionType.CREATE, node.getActions().get(0).getType());
-        assertEquals(publisher, node.getActions().get(0).getUser());
+        assertEquals((int) publisher.getId(), node.getActions().get(0).getUserId());
         assertNotNull(node.getActions().get(0).getContent());
         assertSame(node.getCurrentContents().get(Locale.US), node.getActions().get(0).getContent());
     }

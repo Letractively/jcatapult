@@ -23,11 +23,11 @@ import org.jcatapult.module.cms.domain.ContentNode;
 import org.jcatapult.module.cms.domain.ContentType;
 import org.jcatapult.module.cms.service.ContentService;
 import org.jcatapult.module.cms.service.CreateResult;
-import org.jcatapult.module.user.domain.DefaultUser;
-import org.jcatapult.module.user.service.UserService;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.validation.annotation.Required;
+import org.jcatapult.persistence.domain.Identifiable;
+import org.jcatapult.security.SecurityContext;
 
 import com.google.inject.Inject;
 
@@ -40,7 +40,6 @@ import com.google.inject.Inject;
  */
 @Action
 public class Store {
-    private final UserService userService;
     private final ContentService contentService;
     private final HttpServletRequest request;
     public final MessageStore messageStore;
@@ -61,16 +60,14 @@ public class Store {
     public CreateResult<ContentNode> result;
 
     @Inject
-    public Store(UserService userService, ContentService contentService, HttpServletRequest request,
-            MessageStore messageStore) {
-        this.userService = userService;
+    public Store(ContentService contentService, HttpServletRequest request, MessageStore messageStore) {
         this.contentService = contentService;
         this.request = request;
         this.messageStore = messageStore;
     }
 
     public String post() {
-        DefaultUser user = (DefaultUser) userService.currentUser();
+        Identifiable user = (Identifiable) SecurityContext.getCurrentUser();
         String site = request.getServerName();
         String page = global ? null : uri;
 

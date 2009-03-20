@@ -26,7 +26,6 @@ import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.persistence.domain.AuditableImpl;
 
 /**
@@ -50,9 +49,8 @@ public class NodeActionState extends AuditableImpl {
     @JoinColumn(name = "cms_node_actions_id")
     private NodeAction nodeAction;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "users_id")
-    private DefaultUser user;
+    @Column(name = "user_id", nullable = false)
+    private int userId;
 
     public NodeActionStateType getState() {
         return state;
@@ -78,12 +76,12 @@ public class NodeActionState extends AuditableImpl {
         this.nodeAction = nodeAction;
     }
 
-    public DefaultUser getUser() {
-        return user;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser(DefaultUser user) {
-        this.user = user;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     @PreUpdate

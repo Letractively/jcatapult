@@ -19,14 +19,13 @@ package org.jcatapult.module.cms.action.admin.cms.content;
 import java.util.Locale;
 
 import org.easymock.EasyMock;
+import org.jcatapult.module.cms.BaseTest;
 import org.jcatapult.module.cms.domain.ContentNode;
 import org.jcatapult.module.cms.domain.ContentType;
 import org.jcatapult.module.cms.service.ContentService;
 import org.jcatapult.module.cms.service.CreateResult;
-import org.jcatapult.module.cms.action.admin.cms.content.Store;
-import org.jcatapult.module.user.domain.DefaultUser;
-import org.jcatapult.module.user.service.UserService;
-import org.jcatapult.test.JCatapultBaseTest;
+import org.jcatapult.persistence.domain.Identifiable;
+import org.jcatapult.security.EnhancedSecurityContext;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -37,21 +36,25 @@ import org.junit.Test;
  *
  * @author  Scaffolder
  */
-public class StoreTest extends JCatapultBaseTest {
+public class StoreTest extends BaseTest {
     @Test
     public void testPostPage() {
-        DefaultUser user = new DefaultUser();
-        user.setLogin("test");
-        UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.currentUser()).andReturn(user);
-        EasyMock.replay(userService);
+        Identifiable user = new Identifiable() {
+            public Integer getId() {
+                return 1;
+            }
+
+            public void setId(Integer id) {
+            }
+        };
+        EnhancedSecurityContext.login(user);
 
         CreateResult<ContentNode> createResult = new CreateResult<ContentNode>(null, true, false);
         ContentService contentService = EasyMock.createStrictMock(ContentService.class);
         EasyMock.expect(contentService.storeContent("localhost", "/page", "name", Locale.US, "The content", ContentType.HTML, true, user)).andReturn(createResult);
         EasyMock.replay(contentService);
 
-        Store action = new Store(userService, contentService, request, null);
+        Store action = new Store(contentService, request, null);
         action.content = "The content";
         action.dynamic = true;
         action.global = false;
@@ -67,18 +70,22 @@ public class StoreTest extends JCatapultBaseTest {
 
     @Test
     public void testPostGlobal() {
-        DefaultUser user = new DefaultUser();
-        user.setLogin("test");
-        UserService userService = EasyMock.createStrictMock(UserService.class);
-        EasyMock.expect(userService.currentUser()).andReturn(user);
-        EasyMock.replay(userService);
+        Identifiable user = new Identifiable() {
+            public Integer getId() {
+                return 1;
+            }
+
+            public void setId(Integer id) {
+            }
+        };
+        EnhancedSecurityContext.login(user);
 
         CreateResult<ContentNode> createResult = new CreateResult<ContentNode>(null, true, false);
         ContentService contentService = EasyMock.createStrictMock(ContentService.class);
         EasyMock.expect(contentService.storeContent("localhost", null, "name", Locale.US, "The content", ContentType.HTML, false, user)).andReturn(createResult);
         EasyMock.replay(contentService);
 
-        Store action = new Store(userService, contentService, request, null);
+        Store action = new Store(contentService, request, null);
         action.content = "The content";
         action.dynamic = false;
         action.global = true;
