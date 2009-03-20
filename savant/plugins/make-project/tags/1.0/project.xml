@@ -1,0 +1,23 @@
+<project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
+    namespace="jcatapult"
+    language="groovy"
+    name="make-project"
+    group="plugins.savant.jcatapult.org"
+    version="1.0">
+
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="plugin" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+
+  <dependencies>
+    <!-- For the plugin -->
+    <artifact-group type="jcatapult">
+      <artifact group="jcatapult.org" name="jcatapult-core" version="{latest}"/>
+    </artifact-group>
+    
+    <artifact-group type="compile">
+      <artifact group="savant.inversoft.org" name="savant-core" version="1.5"/>
+    </artifact-group>
+  </dependencies>
+</project>
