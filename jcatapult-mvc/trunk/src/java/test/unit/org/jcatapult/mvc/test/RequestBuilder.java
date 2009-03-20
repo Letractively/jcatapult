@@ -22,7 +22,6 @@ import java.util.Locale;
 import javax.servlet.ServletException;
 
 import org.jcatapult.test.servlet.MockHttpServletRequest;
-import org.jcatapult.test.servlet.WebTestHelper;
 import org.jcatapult.test.servlet.MockServletInputStream;
 
 import com.google.inject.Binder;
@@ -42,7 +41,7 @@ public class RequestBuilder {
     private final List<Module> modules = new ArrayList<Module>();
 
     public RequestBuilder(String uri, WebappTestRunner test) {
-        request = new MockHttpServletRequest(uri, Locale.getDefault(), false, "UTF-8", WebTestHelper.makeContext());
+        request = new MockHttpServletRequest(uri, Locale.getDefault(), false, "UTF-8", test.session);
         this.test = test;
     }
 
