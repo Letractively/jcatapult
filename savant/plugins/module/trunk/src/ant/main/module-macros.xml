@@ -44,31 +44,31 @@
         <![CDATA[
         import org.inversoft.savant.dep.*
         import org.inversoft.savant.context.*
-        import org.inversoft.savant.context.xml.DefaultProjectConfigBuilder
+        import org.inversoft.savant.context.xml.*
 
-        DefaultProjectConfigBuilder builder = new DefaultProjectConfigBuilder()
-        ProjectConfig projectConfig = builder.build(new File("project.xml"))
+        DefaultSavantContextBuilder builder = new DefaultSavantContextBuilder(
+            new DefaultWorkflowConfigBuilder(), new DefaultProjectConfigBuilder())
+        SavantContext context = builder.build(new File("project.xml"))
 
         // Create a new deps set
-        ArtifactGroup artifactGroup = new ArtifactGroup("compile", Integer.MAX_VALUE)
+        ArtifactGroup artifactGroup = new ArtifactGroup("compile")
         artifactGroup.addArtifact(new Artifact("@{group}", "@{project}", "@{project}", "{latest}", "jar"))
         Dependencies deps = new Dependencies("add-module-deps")
         deps.addArtifactGroup(artifactGroup)
 
         // Add it to the project
-        projectConfig.addDependencies(deps)
+        context.projectConfig.addDependencies(deps)
 
         // Resolve the module
-        SavantContext context = new DefaultSavantContext(projectConfig, new File("."), new File("."))
         DependencyResolveMediator mediator = new DependencyResolveMediator()
         try {
-          mediator.mediate(context, "add-module-deps", null, ["compile"] as Set, false)
+          mediator.mediate(context, "add-module-deps", ["compile"] as Set, false)
         } catch (Exception e) {
           ant.fail("Unable to find module")
         }
 
         // Get the artifact back out and grab the version and the file
-        Artifact artifact = artifactGroup.getArtifacts().toList()[0]
+        Artifact artifact = artifactGroup.artifacts.toList()[0]
         properties["module.version"] = artifact.getVersion()
         properties["module.file"] = context.getArtifactFile(artifact).getAbsolutePath()
         ]]>
@@ -86,43 +86,53 @@
           <path refid="classpath.module"/>
         </classpath>
         <![CDATA[
-        import org.jdom.*;
-        import org.jdom.input.SAXBuilder;
-        import org.jdom.output.Format;
-        import org.jdom.output.XMLOutputter;
-        import org.jdom.xpath.XPath;
-        import java.net.URL;
-        import java.net.MalformedURLException;
+        import org.jdom.*
+        import org.jdom.filter.*
+        import org.jdom.input.SAXBuilder
+        import org.jdom.output.Format
+        import org.jdom.output.XMLOutputter
+        import org.jdom.xpath.XPath
+        import java.net.URL
+        import java.net.MalformedURLException
 
         // Read it in
         Document doc = new SAXBuilder().build(new File("project.xml"));
 
-        // See if it already has the module
-        XPath xpath = XPath.newInstance("//project:artifact[@name='@{project}']");
-        xpath.addNamespace("project", "http://www.inversoft.org/schemas/savant-2.0/project");
-        Element elem = xpath.selectSingleNode(doc.getRootElement());
-        if (elem != null) {
-          ant.echo("This project already contains the module @{project}.");
-          ant.fail("This project already contains the module @{project}.");
+        // See if it already has the module (brute force to avoid namespaces and issues with naming)
+        doc.getDescendants(new ElementFilter("artifact")).toList().each { elem ->
+          if (elem.getAttributeValue("name") == "@{project}") {
+            ant.echo("This project already contains the module @{project}.");
+            ant.fail("This project already contains the module @{project}.");
+          }
         }
 
         // Find the artifactGroup element to add the dependency to
-        xpath = XPath.newInstance("//project:artifactGroup[@type='compile']");
-        xpath.addNamespace("project", "http://www.inversoft.org/schemas/savant-2.0/project");
+        Element root = doc.getRootElement()
+        Element deps = root.getChild("dependencies", root.getNamespace())
+        if (deps == null) {
+          ant.fail("Can't figure out where to add the module artifact since the project lacks any dependencies")
+        }
 
-        elem = xpath.selectSingleNode(doc.getRootElement());
-        Element artifact = new Element("artifact", "http://www.inversoft.org/schemas/savant-2.0/project");
+        def filter = {Object[] args -> return args[0] instanceof Element && (args[0].name == "artifactGroup" || args[0].name == "artifact-group")} as Filter
+        Element artifactGroup = null
+        root.getDescendants(filter).toList().each { elem ->
+          if (elem.getAttributeValue("type") == "compile") {
+            artifactGroup = elem
+          }
+        }
+        if (artifactGroup == null) {
+          ant.fail("Can't find an artifact-group to put the dependency in")
+        }
 
+        Element artifact = new Element("artifact", root.getNamespace());
         artifact.setAttribute("group", "@{group}");
-        artifact.setAttribute("project", "@{project}");
         artifact.setAttribute("name", "@{project}");
         artifact.setAttribute("version", "@{version}");
-        artifact.setAttribute("type", "jar");
 
         // Add the element and some whitespace for formatting
-        elem.addContent(new Text("  "));
-        elem.addContent(artifact);
-        elem.addContent(new Text("\n    "));
+        artifactGroup.addContent(new Text("  "));
+        artifactGroup.addContent(artifact);
+        artifactGroup.addContent(new Text("\n    "));
 
         // Write it out
         Format format = Format.getRawFormat();
