@@ -293,5 +293,8 @@
       <setting name="state" value="2" />
     </Base>
   </component>
+  <UsedPathMacros>
+    <macro name="SAVANT_REPOSITORY" />
+  </UsedPathMacros>
 </project>
 
