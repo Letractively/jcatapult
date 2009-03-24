@@ -23,6 +23,10 @@ import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 import org.jcatapult.mvc.parameter.convert.AbstractGlobalConverter;
 import org.jcatapult.mvc.parameter.el.TypeTools;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import net.java.lang.StringTools;
+
 /**
  * <p>
  * Overrides the abstract type converter to add abstract methods
@@ -33,8 +37,19 @@ import org.jcatapult.mvc.parameter.el.TypeTools;
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractPrimitiveConverter extends AbstractGlobalConverter {
+    private boolean emptyIsNull = true;
+
+    @Inject(optional = true)
+    public void setEmptyStringIsNull(@Named("jcatapult.mvc.emptyStringIsNull") boolean emptyIsNull) {
+        this.emptyIsNull = emptyIsNull;
+    }
+
     protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
+        if (emptyIsNull && StringTools.isTrimmedEmpty(value)) {
+            value = null;
+        }
+
         Class<?> rawType = TypeTools.rawType(convertTo);
         if (value == null && rawType.isPrimitive()) {
             return defaultPrimitive(rawType, attributes);

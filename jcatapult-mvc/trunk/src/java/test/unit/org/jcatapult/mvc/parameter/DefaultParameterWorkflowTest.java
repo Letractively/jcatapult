@@ -56,7 +56,7 @@ public class DefaultParameterWorkflowTest {
         values.put("user.age", array("32"));
         values.put("user.age@dateFormat", array("MM/dd/yyyy"));
         values.put("user.inches", array("tall"));
-        values.put("user.name", array("")); // This should be stripped out and the ExpressionEvaluator never called for it
+        values.put("user.name", array(""));
 
         final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getMethod()).andReturn("GET");
@@ -69,6 +69,7 @@ public class DefaultParameterWorkflowTest {
         expressionEvaluator.setValue(eq("user.age"), same(action), aryEq(array("32")), eq(map("dateFormat", "MM/dd/yyyy")));
         expressionEvaluator.setValue(eq("user.inches"), same(action), aryEq(array("tall")), eq(new HashMap<String, String>()));
         expectLastCall().andThrow(new ConversionException());
+        expressionEvaluator.setValue(eq("user.name"), same(action), aryEq(array("")), eq(new HashMap<String, String>()));
         EasyMock.replay(expressionEvaluator);
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
