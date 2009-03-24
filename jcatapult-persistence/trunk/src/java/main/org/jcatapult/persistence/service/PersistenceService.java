@@ -26,7 +26,9 @@ import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This interface defines the core CRUD operations for any object.
+ * This interface defines a basic set of persistence methods for objects.
+ * This interface is almost entirely JPA specific, but it is nice to have
+ * an interface for testing.
  * </p>
  *
  * @author  Brian Pontarelli
@@ -291,16 +293,51 @@ public interface PersistenceService {
      * @param   id The primary key of the Object to fetch.
      * @return  The Object or null if it doesn't exist.
      */
-    <T extends Identifiable> T findById(Class<T> type, int id);
+    <T> T findById(Class<T> type, Object id);
 
     /**
-     * Saves or updates the object to the database.
+     * <p>
+     * Saves or updates the object to the database. This method attempts to determine if it needs to
+     * call persist or merge on the JPA EntityManager based on a few rules:
+     * </p>
+     *
+     * <ol>
+     * <li>If the entity is already stored in the EntityManager (a managed object), this calls persist</li>
+     * <li>If the entity is {@link Identifiable}, and doesn't have an ID, this calls persist</li>
+     * <li>In all other cases, this calls merge</li>
+     * </ol>
+     *
+     * <p>
+     * In some cases you might not want this handling, possibly because your class doesn't implement
+     * the {@link Identifiable} interface. In this case, you will need to determine which method to
+     * call and then use either the {@link #jpaPersist(Object)} or {@link @jpaMerge(Object)} method.
+     * </p>
      *
      * @param   obj The object to persist.
      * @throws  javax.persistence.PersistenceException If there were any database issues while
      *          persisting the Object.
      */
     void persist(Object obj);
+
+    /**
+     * Forcibly calls the EntityManager persist method, but still handles wrapped transactions and
+     * error handling.
+     *
+     * @param   obj The object to persist.
+     * @throws  javax.persistence.PersistenceException If there were any database issues while
+     *          persisting the Object.
+     */
+    void jpaPersist(Object obj);
+
+    /**
+     * Forcibly calls the EntityManager merge method, but still handles wrapped transactions and
+     * error handling.
+     *
+     * @param   obj The object to persist.
+     * @throws  javax.persistence.PersistenceException If there were any database issues while
+     *          persisting the Object.
+     */
+    void jpaMerge(Object obj);
 
     /**
      * Removes the object with the given type and primary key. Since this uses a primary key to remove
@@ -312,7 +349,7 @@ public interface PersistenceService {
      * @param   id The primary key of the Object to remove.
      * @return  True if the entity was removed, false if it wasn't because it doesn't exist.
      */
-    <T extends Identifiable> boolean delete(Class<T> type, int id);
+    <T> boolean delete(Class<T> type, Object id);
 
     /**
      * Removes the given object. If the object type passed in is {@link org.jcatapult.persistence.domain.SoftDeletable} than this
