@@ -118,7 +118,7 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
      */
     @ActionPrepareMethod
     public void prepare() {
-        if (searchCriteria == null || clear) {
+        if (searchCriteria == null) {
             searchCriteria = getDefaultCriteria();
         }
     }
@@ -129,6 +129,11 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
      * @return  Always success.
      */
     public String execute() {
+        // If the clear flag is set, clear the search
+        if (clear) {
+            searchCriteria = getDefaultCriteria();
+        }
+
         results = searchService.find(searchCriteria);
         totalCount = searchService.totalCount(searchCriteria);
         return "success";
