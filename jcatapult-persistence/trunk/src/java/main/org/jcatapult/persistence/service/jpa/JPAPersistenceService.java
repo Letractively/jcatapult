@@ -404,22 +404,64 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
+    public <T> T findById(Class<T> type, Object id) {
+        verify(type);
+        T t = null;
+        try {
+            t = entityManager.find(type, id);
+        } catch (EntityNotFoundException enfe) {
+            // This is okay, just return null
+        }
+
+        return t;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void persist(Object obj) {
+        if (entityManager.contains(obj) ||
+                (obj instanceof Identifiable && ((Identifiable) obj).getId() == null)) {
+            jpaPersist(obj);
+        } else {
+            jpaMerge(obj);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void jpaPersist(Object obj) {
         // Check for and possibly start a tranasction
         Transaction transaction = startTransaction(entityManager);
         boolean exception = false;
         try {
-            if (entityManager.contains(obj) ||
-                    (obj instanceof Identifiable && ((Identifiable) obj).getId() == null)) {
-                entityManager.persist(obj);
-            } else {
-                entityManager.merge(obj);
-            }
+            entityManager.persist(obj);
         } catch (PersistenceException pe) {
             exception = true;
             throw pe;
         } finally {
-            // Always rollback if the transaction is local
+            if (!exception && !transaction.getRollbackOnly()) {
+                transaction.commit();
+            } else {
+                transaction.rollback();
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void jpaMerge(Object obj) {
+        // Check for and possibly start a tranasction
+        Transaction transaction = startTransaction(entityManager);
+        boolean exception = false;
+        try {
+            entityManager.merge(obj);
+        } catch (PersistenceException pe) {
+            exception = true;
+            throw pe;
+        } finally {
             if (!exception && !transaction.getRollbackOnly()) {
                 transaction.commit();
             } else {
@@ -432,6 +474,33 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public <T extends Identifiable> boolean delete(Class<T> type, int id) {
+        T t = findById(type, id);
+        if (t != null) {
+            // Check for and possibly start a transaction
+            Transaction transaction = startTransaction(entityManager);
+
+            // Remove it for normal entities and soft delete for others
+            if (t instanceof SoftDeletable) {
+                ((SoftDeletable) t).setDeleted(true);
+                entityManager.persist(t);
+            } else {
+                entityManager.remove(t);
+            }
+
+            // No need for a try-catch block because a call to commit that fails will rollback the
+            // transaction automatically for us.
+            transaction.commit();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T> boolean delete(Class<T> type, Object id) {
         T t = findById(type, id);
         if (t != null) {
             // Check for and possibly start a transaction
