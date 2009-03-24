@@ -310,14 +310,14 @@ public interface PersistenceService {
      * <p>
      * In some cases you might not want this handling, possibly because your class doesn't implement
      * the {@link Identifiable} interface. In this case, you will need to determine which method to
-     * call and then use either the {@link #jpaPersist(Object)} or {@link @jpaMerge(Object)} method.
+     * call and then use either the {@link #persist(Object)} or {@link @jpaMerge(Object)} method.
      * </p>
      *
      * @param   obj The object to persist.
      * @throws  javax.persistence.PersistenceException If there were any database issues while
      *          persisting the Object.
      */
-    void persist(Object obj);
+    void persist(Identifiable obj);
 
     /**
      * Forcibly calls the EntityManager persist method, but still handles wrapped transactions and
@@ -327,7 +327,7 @@ public interface PersistenceService {
      * @throws  javax.persistence.PersistenceException If there were any database issues while
      *          persisting the Object.
      */
-    void jpaPersist(Object obj);
+    void persist(Object obj);
 
     /**
      * Forcibly calls the EntityManager merge method, but still handles wrapped transactions and
@@ -337,7 +337,7 @@ public interface PersistenceService {
      * @throws  javax.persistence.PersistenceException If there were any database issues while
      *          persisting the Object.
      */
-    void jpaMerge(Object obj);
+    void merge(Object obj);
 
     /**
      * Removes the object with the given type and primary key. Since this uses a primary key to remove

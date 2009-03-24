@@ -419,19 +419,18 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
-    public void persist(Object obj) {
-        if (entityManager.contains(obj) ||
-                (obj instanceof Identifiable && ((Identifiable) obj).getId() == null)) {
-            jpaPersist(obj);
+    public void persist(Identifiable obj) {
+        if (entityManager.contains(obj) || obj.getId() == null) {
+            persist(obj);
         } else {
-            jpaMerge(obj);
+            merge(obj);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public void jpaPersist(Object obj) {
+    public void persist(Object obj) {
         // Check for and possibly start a tranasction
         Transaction transaction = startTransaction(entityManager);
         boolean exception = false;
@@ -452,7 +451,7 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
-    public void jpaMerge(Object obj) {
+    public void merge(Object obj) {
         // Check for and possibly start a tranasction
         Transaction transaction = startTransaction(entityManager);
         boolean exception = false;
