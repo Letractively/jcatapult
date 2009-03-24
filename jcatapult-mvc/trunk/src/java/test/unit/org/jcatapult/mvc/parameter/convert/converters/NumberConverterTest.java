@@ -72,23 +72,59 @@ public class NumberConverterTest {
         double d = (Double) converter.convertFromStrings(array((String) null), Double.TYPE, null, "testExpr");
         assertEquals(0, d, 0);
 
-        b = (Byte) converter.convertFromStrings(array("1"), Byte.class, null, "testExpr");
-        assertEquals(1, b);
+        bw = (Byte) converter.convertFromStrings(array("1"), Byte.class, null, "testExpr");
+        assertEquals(1, (byte) bw);
 
-        s = (Short) converter.convertFromStrings(array("1"), Short.class, null, "testExpr");
-        assertEquals(1, s);
+        sw = (Short) converter.convertFromStrings(array("1"), Short.class, null, "testExpr");
+        assertEquals(1, (short) sw);
 
-        i = (Integer) converter.convertFromStrings(array("1"), Integer.class, null, "testExpr");
-        assertEquals(1, i);
+        iw = (Integer) converter.convertFromStrings(array("1"), Integer.class, null, "testExpr");
+        assertEquals(1, (int) iw);
 
-        l = (Long) converter.convertFromStrings(array("1"), Long.class, null, "testExpr");
-        assertEquals(1, l);
+        lw = (Long) converter.convertFromStrings(array("1"), Long.class, null, "testExpr");
+        assertEquals(1l, (long) lw);
 
-        f = (Float) converter.convertFromStrings(array("1"), Float.class, null, "testExpr");
-        assertEquals(1, f, 0);
+        fw = (Float) converter.convertFromStrings(array("1"), Float.class, null, "testExpr");
+        assertEquals(1f, (float) fw, 0);
 
-        d = (Double) converter.convertFromStrings(array("1"), Double.class, null, "testExpr");
-        assertEquals(1, d, 0);
+        dw = (Double) converter.convertFromStrings(array("1"), Double.class, null, "testExpr");
+        assertEquals(1d, (double) dw, 0);
+
+        bw = (Byte) converter.convertFromStrings(array("   "), Byte.class, null, "testExpr");
+        assertNull(bw);
+
+        sw = (Short) converter.convertFromStrings(array("   "), Short.class, null, "testExpr");
+        assertNull(sw);
+
+        iw = (Integer) converter.convertFromStrings(array("   "), Integer.class, null, "testExpr");
+        assertNull(iw);
+
+        lw = (Long) converter.convertFromStrings(array("   "), Long.class, null, "testExpr");
+        assertNull(lw);
+
+        fw = (Float) converter.convertFromStrings(array("   "), Float.class, null, "testExpr");
+        assertNull(fw);
+
+        dw = (Double) converter.convertFromStrings(array("   "), Double.class, null, "testExpr");
+        assertNull(dw);
+
+        b = (Byte) converter.convertFromStrings(array("   "), Byte.TYPE, null, "testExpr");
+        assertEquals(0, b);
+
+        s = (Short) converter.convertFromStrings(array("   "), Short.TYPE, null, "testExpr");
+        assertEquals(0, s);
+
+        i = (Integer) converter.convertFromStrings(array("   "), Integer.TYPE, null, "testExpr");
+        assertEquals(0, i);
+
+        l = (Long) converter.convertFromStrings(array("   "), Long.TYPE, null, "testExpr");
+        assertEquals(0, l);
+
+        f = (Float) converter.convertFromStrings(array("   "), Float.TYPE, null, "testExpr");
+        assertEquals(0, f, 0);
+
+        d = (Double) converter.convertFromStrings(array("   "), Double.TYPE, null, "testExpr");
+        assertEquals(0, d, 0);
 
         try {
             converter.convertFromStrings(array("bad"), Byte.class, null, "testExpr");
@@ -129,20 +165,6 @@ public class NumberConverterTest {
             converter.convertFromStrings(array("bad"), Double.class, null, "testExpr");
             fail("Should have failed");
         } catch (ConversionException ce) {
-            // Expected
-        }
-
-        try {
-            converter.convertFromStrings(array("   "), Byte.class, null, "testExpr");
-            fail("Should have failed");
-        } catch (ConversionException e) {
-            // Expected
-        }
-
-        try {
-            converter.convertFromStrings(array("   "), Byte.TYPE, null, "testExpr");
-            fail("Should have failed");
-        } catch (ConversionException e) {
             // Expected
         }
     }

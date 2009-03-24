@@ -54,7 +54,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     private final ActionInvocationStore actionInvocationStore;
     private final MessageStore messageStore;
     private final ExpressionEvaluator expressionEvaluator;
-    private boolean ignoreEmptyParameters = true;
+    private boolean ignoreEmptyParameters = false;
 
     @Inject
     public DefaultParameterWorkflow(HttpServletRequest request, ActionInvocationStore actionInvocationStore,
@@ -184,8 +184,9 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
                 if (index > 0) {
                     s.attributes.put(key.substring(index + 1), parameters.get(key)[0]);
                 } else {
-                    // Only add the values if there is something in them. Otherwise, they are worthless
-                    // empty text fields.
+                    // If the ignore empty parameters flag is set, which IS NOT the default, this
+                    // block will only ever add the values to the structure if they contain at least
+                    // one non-empty String.
                     String[] values = parameters.get(parameter);
                     if (!ignoreEmptyParameters || !empty(values)) {
                         s.values = values;

@@ -42,11 +42,17 @@ public class CharacterConverterTest {
         char c = (Character) converter.convertFromStrings(array((String) null), Character.TYPE, null, "testExpr");
         assertEquals('\u0000', c);
 
-        c = (Character) converter.convertFromStrings(array("c"), Character.class, null, "testExpr");
-        assertEquals('c', c);
+        cw = (Character) converter.convertFromStrings(array("c"), Character.class, null, "testExpr");
+        assertEquals('c', (char) cw);
 
         c = (Character) converter.convertFromStrings(array("c"), Character.TYPE, null, "testExpr");
         assertEquals('c', c);
+
+        cw = (Character) converter.convertFromStrings(array(" "), Character.class, null, "testExpr");
+        assertNull(cw);
+
+        c = (Character) converter.convertFromStrings(array(" "), Character.TYPE, null, "testExpr");
+        assertEquals(0, c);
 
         Character[] ca = (Character[]) converter.convertFromStrings(array("c", "d"), Character[].class, null, "testExpr");
         assertEquals((Character) 'c', ca[0]);
@@ -67,20 +73,6 @@ public class CharacterConverterTest {
             converter.convertFromStrings(array("bad"), Character.TYPE, null, "testExpr");
             fail("Should have failed");
         } catch (ConversionException ce) {
-            // Expected
-        }
-
-        try {
-            converter.convertFromStrings(array("   "), Character.class, null, "testExpr");
-            fail("Should have failed");
-        } catch (ConversionException e) {
-            // Expected
-        }
-
-        try {
-            converter.convertFromStrings(array("   "), Boolean.TYPE, null, "testExpr");
-            fail("Should have failed");
-        } catch (ConversionException e) {
             // Expected
         }
     }

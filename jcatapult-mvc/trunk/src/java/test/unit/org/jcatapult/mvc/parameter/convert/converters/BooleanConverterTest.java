@@ -54,6 +54,12 @@ public class BooleanConverterTest {
         b = (Boolean) converter.convertFromStrings(array("false"), Boolean.TYPE, null, "testExpr");
         assertFalse(b);
 
+        b = (Boolean) converter.convertFromStrings(array("   "), Boolean.class, null, "testExpr");
+        assertNull(b);
+
+        b = (Boolean) converter.convertFromStrings(array("   "), Boolean.TYPE, null, "testExpr");
+        assertFalse(b);
+
         Boolean[] ba = (Boolean[]) converter.convertFromStrings(array("true", "false"), Boolean[].class, null, "testExpr");
         assertTrue(ba[0]);
         assertFalse(ba[1]);
@@ -66,20 +72,6 @@ public class BooleanConverterTest {
             converter.convertFromStrings(array("fals3"), Boolean.class, null, "testExpr");
             fail("Should have failed");
         } catch (ConversionException ce) {
-            // Expected
-        }
-
-        try {
-            converter.convertFromStrings(array("   "), Boolean.class, null, "testExpr");
-            fail("Should have failed");
-        } catch (ConversionException e) {
-            // Expected
-        }
-
-        try {
-            converter.convertFromStrings(array("   "), Boolean.TYPE, null, "testExpr");
-            fail("Should have failed");
-        } catch (ConversionException e) {
             // Expected
         }
     }
