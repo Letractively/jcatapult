@@ -303,14 +303,14 @@ public interface PersistenceService {
      *
      * <ol>
      * <li>If the entity is already stored in the EntityManager (a managed object), this calls persist</li>
-     * <li>If the entity is {@link Identifiable}, and doesn't have an ID, this calls persist</li>
+     * <li>If the entity doesn't have an ID set, this calls persist</li>
      * <li>In all other cases, this calls merge</li>
      * </ol>
      *
      * <p>
      * In some cases you might not want this handling, possibly because your class doesn't implement
      * the {@link Identifiable} interface. In this case, you will need to determine which method to
-     * call and then use either the {@link #persist(Object)} or {@link @jpaMerge(Object)} method.
+     * call and then use either the {@link #persist(Object)} or {@link #merge(Object)} method.
      * </p>
      *
      * @param   obj The object to persist.
