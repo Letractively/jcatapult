@@ -260,7 +260,6 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public <T> List<T> queryAll(Class<T> type, String query, Object... params) {
-        verify(type);
         Query q = entityManager.createQuery(query);
         addParams(q, params);
         return q.getResultList();
@@ -270,7 +269,6 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public <T> List<T> query(Class<T> type, String query, int start, int number, Object... params) {
-        verify(type);
         Query q = entityManager.createQuery(query);
         addParams(q, params);
         q.setFirstResult(start);
@@ -282,7 +280,6 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public <T> T queryFirst(Class<T> type, String query, Object... params) {
-        verify(type);
         Query q = entityManager.createQuery(query);
         q.setFirstResult(0);
         q.setMaxResults(1);
@@ -308,7 +305,6 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public <T> List<T> queryAllWithNamedParameters(Class<T> type, String query, Map<String, Object> params) {
-        verify(type);
         Query q = entityManager.createQuery(query);
         addNamedParams(q, params);
         return q.getResultList();
@@ -318,7 +314,6 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public <T> List<T> queryWithNamedParameters(Class<T> type, String query, int start, int number, Map<String, Object> params) {
-        verify(type);
         Query q = entityManager.createQuery(query);
         addNamedParams(q, params);
         q.setFirstResult(start);
@@ -330,7 +325,6 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public <T> T queryFirstWithNamedParameters(Class<T> type, String query, Map<String, Object> params) {
-        verify(type);
         Query q = entityManager.createQuery(query);
         q.setFirstResult(0);
         q.setMaxResults(1);
@@ -353,7 +347,6 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public <T> List<T> namedQueryAll(Class<T> type, String query, Object... params) {
-        verify(type);
         Query q = entityManager.createNamedQuery(query);
         addParams(q, params);
         return q.getResultList();
@@ -363,7 +356,6 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public <T> List<T> namedQuery(Class<T> type, String query, int start, int number, Object... params) {
-        verify(type);
         Query q = entityManager.createNamedQuery(query);
         addParams(q, params);
         q.setFirstResult(start);
@@ -375,7 +367,6 @@ public class JPAPersistenceService implements PersistenceService {
      * {@inheritDoc}
      */
     public <T> T namedQueryFirst(Class<T> type, String query, Object... params) {
-        verify(type);
         Query q = entityManager.createNamedQuery(query);
         addParams(q, params);
         List<T> results = q.getResultList();
@@ -421,7 +412,7 @@ public class JPAPersistenceService implements PersistenceService {
      */
     public void persist(Identifiable obj) {
         if (entityManager.contains(obj) || obj.getId() == null) {
-            persist(obj);
+            persist((Object) obj);
         } else {
             merge(obj);
         }
