@@ -3,7 +3,7 @@
     language="groovy"
     name="svn-import"
     group="plugins.savant.jcatapult.org"
-    version="1.0">
+    version="1.0.1">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>

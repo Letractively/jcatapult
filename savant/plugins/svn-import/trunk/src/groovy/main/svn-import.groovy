@@ -53,20 +53,21 @@ def password = reader.readLine()
 def projectPath = projectDir.getAbsolutePath()
 def confirm = ''
 while (confirm != 'y' && confirm != 'n') {
-  println "Really import [${projectPath}] to [${url}]? (y or n)"
+  println "Really import [${projectPath}] to [${url}/trunk]? (y or n)"
   confirm = reader.readLine()
   if (confirm == 'n') {
     System.exit(0)
   }
 }
 
-def jcatDir = System.getProperty("user.home") + "/.jcatapult"
-FileTools.prune("${jcatDir}/project-svn-import")
+println "Cleaning up the project (deleting target, web/WEB-INF/classes, web/WEB-INF/lib)"
+def jcatDir = System.getProperty("user.home") + "/.jcatapult/project-svn-import"
+FileTools.prune(jcatDir)
 FileTools.prune("${projectPath}/target")
 FileTools.prune("${projectPath}/web/WEB-INF/lib")
 FileTools.prune("${projectPath}/web/WEB-INF/classes")
-projectDir.eachFileMatch(/.+\.iws/) {
-  this.delete()
+projectDir.eachFileMatch(~/.+\.iws/) {
+  it.delete()
 }
 
 println "Importing [${projectPath}] to [${url}/trunk]..."
