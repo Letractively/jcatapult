@@ -41,9 +41,9 @@ public class PasswordTest extends ControlBaseTest {
         run(password,
             mapNV("name", "test", "class", "css-class", "value", "password", "bundle", "/password-bundle"),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"password input control\">\n" +
-            "<div class=\"password-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"password-container input-container control-container\"><input type=\"password\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
+            "<div class=\"css-class-password css-class-input css-class-control password input control\">\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"password\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
             "</div>\n");
     }
 
@@ -55,11 +55,11 @@ public class PasswordTest extends ControlBaseTest {
 
         ais.setCurrent(new DefaultActionInvocation(edit, "/password", null, null));
         run(password,
-            mapNV("name", "user.password", "class", "css-class", "value", "password"),
+            mapNV("name", "user.password", "value", "password"),
             null, "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
             "<div class=\"password input control\">\n" +
-            "<div class=\"password-label input-label control-label\"><label for=\"user_password\" class=\"label\">Password</label></div>\n" +
-            "<div class=\"password-container input-container control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_password\" class=\"label\">Password</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"password\" id=\"user_password\" name=\"user.password\"/></div>\n" +
             "</div>\n");
     }
 
@@ -75,11 +75,11 @@ public class PasswordTest extends ControlBaseTest {
         messageStore.addFieldError(MessageScope.REQUEST, "user.password", "fieldError2");
 
         run(password,
-            mapNV("name", "user.password", "class", "css-class", "value", "password"),
+            mapNV("name", "user.password", "value", "password"),
             null, "<input type=\"hidden\" name=\"user.password@param\" value=\"param-value\"/>\n" +
             "<div class=\"password input control\">\n" +
-            "<div class=\"password-label input-label control-label\"><label for=\"user_password\" class=\"label\"><span class=\"error\">Password (Password is required, Password must be cool)</span></label></div>\n" +
-            "<div class=\"password-container input-container control-container\"><input type=\"password\" class=\"css-class\" id=\"user_password\" name=\"user.password\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_password\" class=\"label\"><span class=\"error\">Password (Password is required, Password must be cool)</span></label></div>\n" +
+            "<div class=\"control-container\"><input type=\"password\" id=\"user_password\" name=\"user.password\"/></div>\n" +
             "</div>\n");
     }
 }

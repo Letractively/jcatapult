@@ -55,7 +55,7 @@ public class AppendAttributesMethod implements TemplateMethodModelEx {
         Map<String, Object> map = hash.toMap();
         SortedSet<String> sortedKeys = new TreeSet<String>(map.keySet());
         for (String key : sortedKeys) {
-            if (!ignore.contains(key)) {
+            if (!ignore.contains(key) && map.get(key) != null) {
                 build.append(" ").append(key).append("=\"").append(map.get(key)).append("\"");
             }
         }

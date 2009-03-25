@@ -47,9 +47,9 @@ public class SelectTest extends ControlBaseTest {
         run(select,
             mapNV("name", "test", "class", "css-class", "bundle", "/select-bundle", "items", asList("one", "two", "three")),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"select input control\">\n" +
-            "<div class=\"select-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"select-container input-container control-container\">\n" +
+            "<div class=\"css-class-select css-class-input css-class-control select input control\">\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"control-container\">\n" +
             "<select class=\"css-class\" id=\"test\" name=\"test\">\n" +
             "<option value=\"one\">one</option>\n" +
             "<option value=\"two\">two</option>\n" +
@@ -63,12 +63,12 @@ public class SelectTest extends ControlBaseTest {
     public void testHeaderOption() {
         ais.setCurrent(new DefaultActionInvocation(null, "/select", null, null));
         run(select,
-            mapNV("name", "test", "class", "css-class", "bundle", "/select-bundle", "headerValue", "zero", "items", asList("one", "two", "three")),
+            mapNV("name", "test", "bundle", "/select-bundle", "headerValue", "zero", "items", asList("one", "two", "three")),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
             "<div class=\"select input control\">\n" +
-            "<div class=\"select-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"select-container input-container control-container\">\n" +
-            "<select class=\"css-class\" id=\"test\" name=\"test\">\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<select id=\"test\" name=\"test\">\n" +
             "<option value=\"zero\"></option>\n" +
             "<option value=\"one\">one</option>\n" +
             "<option value=\"two\">two</option>\n" +
@@ -89,12 +89,12 @@ public class SelectTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/select", null, null));
 
         run(select,
-            mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
+            mapNV("name", "user.addresses['work'].country", "items", lmap("US", "United States", "DE", "Germany")),
             null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"select input control\">\n" +
-            "<div class=\"select-label input-label control-label\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
-            "<div class=\"select-container input-container control-container\">\n" +
-            "<select class=\"css-class\" id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
+            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<select id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
             "<option value=\"US\" selected=\"selected\">United States</option>\n" +
             "<option value=\"DE\">Germany</option>\n" +
             "</select>\n" +
@@ -116,12 +116,12 @@ public class SelectTest extends ControlBaseTest {
         Pair<String, String> de = new Pair<String, String>("DE", "Germany");
 
         run(select,
-            mapNV("name", "user.addresses['work'].country", "class", "css-class", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
+            mapNV("name", "user.addresses['work'].country", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
             null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"select input control\">\n" +
-            "<div class=\"select-label input-label control-label\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
-            "<div class=\"select-container input-container control-container\">\n" +
-            "<select class=\"css-class\" id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
+            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<select id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
             "<option value=\"US\" selected=\"selected\">United States</option>\n" +
             "<option value=\"DE\">Germany</option>\n" +
             "</select>\n" +
@@ -142,12 +142,12 @@ public class SelectTest extends ControlBaseTest {
         messageStore.addFieldError(MessageScope.REQUEST, "user.addresses['work'].country", "fieldError2");
 
         run(select,
-            mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
+            mapNV("name", "user.addresses['work'].country", "items", lmap("US", "United States", "DE", "Germany")),
             null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"select input control\">\n" +
-            "<div class=\"select-label input-label control-label\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
-            "<div class=\"select-container input-container control-container\">\n" +
-            "<select class=\"css-class\" id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
+            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<select id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
             "<option value=\"US\" selected=\"selected\">United States</option>\n" +
             "<option value=\"DE\">Germany</option>\n" +
             "</select>\n" +

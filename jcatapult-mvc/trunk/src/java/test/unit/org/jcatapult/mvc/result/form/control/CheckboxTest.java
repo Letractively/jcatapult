@@ -47,9 +47,9 @@ public class CheckboxTest extends ControlBaseTest {
         run(checkbox,
             mapNV("name", "test", "value", "test-value", "required", true, "class", "css-class", "bundle", "/checkbox-bundle"),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"checkbox input control\">\n" +
-            "<div class=\"checkbox-label input-label control-label\"><label for=\"test\" class=\"label\">Test<span class=\"required\">*</span></label></div>\n" +
-            "<div class=\"checkbox-container input-container control-container\"><input type=\"checkbox\" class=\"css-class\" id=\"test\" name=\"test\" value=\"test-value\"/><input type=\"hidden\" name=\"__jc_cb_test\" value=\"\"/></div>\n" +
+            "<div class=\"css-class-checkbox css-class-input css-class-control checkbox input control\">\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test<span class=\"required\">*</span></label></div>\n" +
+            "<div class=\"control-container\"><input type=\"checkbox\" class=\"css-class\" id=\"test\" name=\"test\" value=\"test-value\"/><input type=\"hidden\" name=\"__jc_cb_test\" value=\"\"/></div>\n" +
             "</div>\n");
     }
 
@@ -97,12 +97,12 @@ public class CheckboxTest extends ControlBaseTest {
 
     protected void testAction(String property, boolean flag, String value) {
         run(checkbox,
-            mapNV("name", property, "value", value, "class", "css-class"),
+            mapNV("name", property, "value", value),
             null, "<input type=\"hidden\" name=\"" + property + "@param\" value=\"param-value\"/>\n" +
             "<div class=\"checkbox input control\">\n" +
-            "<div class=\"checkbox-label input-label control-label\"><label for=\"" + property.replace(".", "_") + "\" class=\"label\">Male?</label></div>\n" +
-            "<div class=\"checkbox-container input-container control-container\"><input type=\"checkbox\" " + (flag ? "checked=\"checked\" " : "") +
-                "class=\"css-class\" id=\"" + property.replace(".", "_") + "\" name=\"" + property + "\" value=\"" + value +
+            "<div class=\"label-container\"><label for=\"" + property.replace(".", "_") + "\" class=\"label\">Male?</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"checkbox\" " + (flag ? "checked=\"checked\" " : "") +
+                "id=\"" + property.replace(".", "_") + "\" name=\"" + property + "\" value=\"" + value +
                 "\"/><input type=\"hidden\" name=\"__jc_cb_" + property +"\" value=\"\"/></div>\n" +
             "</div>\n");
     }
@@ -113,11 +113,11 @@ public class CheckboxTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/checkbox", null, null));
 
         run(checkbox,
-            mapNV("name", "user.maleWrapper", "defaultChecked", true, "class", "css-class", "value", true),
+            mapNV("name", "user.maleWrapper", "defaultChecked", true, "value", true),
             null, "<input type=\"hidden\" name=\"user.maleWrapper@param\" value=\"param-value\"/>\n" +
             "<div class=\"checkbox input control\">\n" +
-            "<div class=\"checkbox-label input-label control-label\"><label for=\"user_maleWrapper\" class=\"label\">Male?</label></div>\n" +
-            "<div class=\"checkbox-container input-container control-container\"><input type=\"checkbox\" checked=\"checked\" class=\"css-class\" id=\"user_maleWrapper\" name=\"user.maleWrapper\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.maleWrapper\" value=\"\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_maleWrapper\" class=\"label\">Male?</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"checkbox\" checked=\"checked\" id=\"user_maleWrapper\" name=\"user.maleWrapper\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.maleWrapper\" value=\"\"/></div>\n" +
             "</div>\n");
     }
 
@@ -127,11 +127,11 @@ public class CheckboxTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/checkbox", null, null));
 
         run(checkbox,
-            mapNV("name", "user.male", "checked", true, "class", "css-class", "value", "true"),
+            mapNV("name", "user.male", "checked", true, "value", "true"),
             null, "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"checkbox input control\">\n" +
-            "<div class=\"checkbox-label input-label control-label\"><label for=\"user_male\" class=\"label\">Male?</label></div>\n" +
-            "<div class=\"checkbox-container input-container control-container\"><input type=\"checkbox\" checked=\"checked\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.male\" value=\"\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_male\" class=\"label\">Male?</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"checkbox\" checked=\"checked\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.male\" value=\"\"/></div>\n" +
             "</div>\n");
     }
 
@@ -144,11 +144,11 @@ public class CheckboxTest extends ControlBaseTest {
         messageStore.addFieldError(MessageScope.REQUEST, "user.male", "fieldError2");
 
         run(checkbox,
-            mapNV("name", "user.male", "class", "css-class", "value", "true"),
+            mapNV("name", "user.male", "value", "true"),
             null, "<input type=\"hidden\" name=\"user.male@param\" value=\"param-value\"/>\n" +
             "<div class=\"checkbox input control\">\n" +
-            "<div class=\"checkbox-label input-label control-label\"><label for=\"user_male\" class=\"label\"><span class=\"error\">Male? (Must be male, Check this box dude!)</span></label></div>\n" +
-            "<div class=\"checkbox-container input-container control-container\"><input type=\"checkbox\" class=\"css-class\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.male\" value=\"\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_male\" class=\"label\"><span class=\"error\">Male? (Must be male, Check this box dude!)</span></label></div>\n" +
+            "<div class=\"control-container\"><input type=\"checkbox\" id=\"user_male\" name=\"user.male\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.male\" value=\"\"/></div>\n" +
             "</div>\n");
     }
 
@@ -158,11 +158,11 @@ public class CheckboxTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/checkbox", null, null));
 
         run(checkbox,
-            mapNV("name", "user.maleWrapper", "class", "css-class", "value", "true", "uncheckedValue", "false"),
+            mapNV("name", "user.maleWrapper", "value", "true", "uncheckedValue", "false"),
             null, "<input type=\"hidden\" name=\"user.maleWrapper@param\" value=\"param-value\"/>\n" +
             "<div class=\"checkbox input control\">\n" +
-            "<div class=\"checkbox-label input-label control-label\"><label for=\"user_maleWrapper\" class=\"label\">Male?</label></div>\n" +
-            "<div class=\"checkbox-container input-container control-container\"><input type=\"checkbox\" class=\"css-class\" id=\"user_maleWrapper\" name=\"user.maleWrapper\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.maleWrapper\" value=\"false\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_maleWrapper\" class=\"label\">Male?</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"checkbox\" id=\"user_maleWrapper\" name=\"user.maleWrapper\" value=\"true\"/><input type=\"hidden\" name=\"__jc_cb_user.maleWrapper\" value=\"false\"/></div>\n" +
             "</div>\n");
     }
 }

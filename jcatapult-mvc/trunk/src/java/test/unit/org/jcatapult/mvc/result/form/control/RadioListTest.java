@@ -47,16 +47,18 @@ public class RadioListTest extends ControlBaseTest {
         run(radioList,
             mapNV("name", "test", "class", "css-class", "bundle", "/radio-list-bundle", "items", asList("one", "two", "three")),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"radio-list input control\">\n" +
-            "<div class=\"radio-list-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
+            "<div class=\"css-class-radio-list css-class-input css-class-control radio-list input control\">\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<div class=\"control-item-container\">\n" +
             "<input type=\"radio\" value=\"one\" class=\"css-class\" name=\"test\"/><span class=\"radio-text\">one</span>\n" +
             "</div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
+            "<div class=\"control-item-container\">\n" +
             "<input type=\"radio\" value=\"two\" class=\"css-class\" name=\"test\"/><span class=\"radio-text\">two</span>\n" +
             "</div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
+            "<div class=\"control-item-container\">\n" +
             "<input type=\"radio\" value=\"three\" class=\"css-class\" name=\"test\"/><span class=\"radio-text\">three</span>\n" +
+            "</div>\n" +
             "</div>\n" +
             "</div>\n" +
             "<input type=\"hidden\" name=\"__jc_rb_test\" value=\"\"/>\n");
@@ -72,15 +74,17 @@ public class RadioListTest extends ControlBaseTest {
 
         ais.setCurrent(new DefaultActionInvocation(action, "/radio-list", null, null));
         run(radioList,
-            mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
+            mapNV("name", "user.addresses['work'].country", "items", lmap("US", "United States", "DE", "Germany")),
             null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"radio-list input control\">\n" +
-            "<div class=\"radio-list-label input-label control-label\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
-            "<input type=\"radio\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
+            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<div class=\"control-item-container\">\n" +
+            "<input type=\"radio\" checked=\"checked\" value=\"US\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
             "</div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
-            "<input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
+            "<div class=\"control-item-container\">\n" +
+            "<input type=\"radio\" value=\"DE\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
+            "</div>\n" +
             "</div>\n" +
             "</div>\n" +
             "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"\"/>\n");
@@ -100,15 +104,17 @@ public class RadioListTest extends ControlBaseTest {
         Pair<String, String> de = new Pair<String, String>("DE", "Germany");
 
         run(radioList,
-            mapNV("name", "user.addresses['work'].country", "class", "css-class", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
+            mapNV("name", "user.addresses['work'].country", "valueExpr", "first", "textExpr", "second", "items", array(us, de)),
             null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"radio-list input control\">\n" +
-            "<div class=\"radio-list-label input-label control-label\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
-            "<input type=\"radio\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
+            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<div class=\"control-item-container\">\n" +
+            "<input type=\"radio\" checked=\"checked\" value=\"US\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
             "</div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
-            "<input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
+            "<div class=\"control-item-container\">\n" +
+            "<input type=\"radio\" value=\"DE\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
+            "</div>\n" +
             "</div>\n" +
             "</div>\n" +
             "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"\"/>\n");
@@ -127,15 +133,17 @@ public class RadioListTest extends ControlBaseTest {
         messageStore.addFieldError(MessageScope.REQUEST, "user.addresses['work'].country", "fieldError2");
 
         run(radioList,
-            mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany")),
+            mapNV("name", "user.addresses['work'].country", "items", lmap("US", "United States", "DE", "Germany")),
             null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"radio-list input control\">\n" +
-            "<div class=\"radio-list-label input-label control-label\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
-            "<input type=\"radio\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
+            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<div class=\"control-item-container\">\n" +
+            "<input type=\"radio\" checked=\"checked\" value=\"US\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
             "</div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
-            "<input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
+            "<div class=\"control-item-container\">\n" +
+            "<input type=\"radio\" value=\"DE\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
+            "</div>\n" +
             "</div>\n" +
             "</div>\n" +
             "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"\"/>\n");
@@ -154,15 +162,17 @@ public class RadioListTest extends ControlBaseTest {
         messageStore.addFieldError(MessageScope.REQUEST, "user.addresses['work'].country", "fieldError2");
 
         run(radioList,
-            mapNV("name", "user.addresses['work'].country", "class", "css-class", "items", lmap("US", "United States", "DE", "Germany"), "uncheckedValue", "US"),
+            mapNV("name", "user.addresses['work'].country", "items", lmap("US", "United States", "DE", "Germany"), "uncheckedValue", "US"),
             null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
             "<div class=\"radio-list input control\">\n" +
-            "<div class=\"radio-list-label input-label control-label\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
-            "<input type=\"radio\" checked=\"checked\" value=\"US\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
+            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\"><span class=\"error\">Country (Country is required, Country must be cool)</span></label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<div class=\"control-item-container\">\n" +
+            "<input type=\"radio\" checked=\"checked\" value=\"US\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">United States</span>\n" +
             "</div>\n" +
-            "<div class=\"radio-list-item-container input-container control-container\">\n" +
-            "<input type=\"radio\" value=\"DE\" class=\"css-class\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
+            "<div class=\"control-item-container\">\n" +
+            "<input type=\"radio\" value=\"DE\" name=\"user.addresses['work'].country\"/><span class=\"radio-text\">Germany</span>\n" +
+            "</div>\n" +
             "</div>\n" +
             "</div>\n" +
             "<input type=\"hidden\" name=\"__jc_rb_user.addresses['work'].country\" value=\"US\"/>\n");

@@ -1,6 +1,7 @@
 [#ftl/]
+[#include "class-helper.ftl"/]
 [#include "dynamic-attributes.ftl"/]
-<div class="file input control">
-<div class="file-label input-label control-label">[#include "label.ftl"/]</div>
-<div class="file-container input-container control-container"><input type="file"${append_attributes(attributes)}/></div>
+<div class="[@class attributes, 'file' true/]">
+<div class="label-container">[#include "label.ftl"/]</div>
+<div class="control-container"><input type="file"${append_attributes(attributes)}/></div>
 </div>

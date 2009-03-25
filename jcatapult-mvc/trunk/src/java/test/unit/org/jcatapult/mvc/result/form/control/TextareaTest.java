@@ -41,9 +41,9 @@ public class TextareaTest extends ControlBaseTest {
         run(textarea,
             mapNV("name", "test", "class", "css-class", "bundle", "/textarea-bundle"),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"textarea input control\">\n" +
-            "<div class=\"textarea-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"textarea-container input-container control-container\"><textarea class=\"css-class\" id=\"test\" name=\"test\"></textarea></div>\n" +
+            "<div class=\"css-class-textarea css-class-input css-class-control textarea input control\">\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"control-container\"><textarea class=\"css-class\" id=\"test\" name=\"test\"></textarea></div>\n" +
             "</div>\n");
     }
 
@@ -55,11 +55,11 @@ public class TextareaTest extends ControlBaseTest {
 
         ais.setCurrent(new DefaultActionInvocation(action, "/textarea", null, null));
         run(textarea,
-            mapNV("name", "user.name", "class", "css-class"),
+            mapNV("name", "user.name"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"textarea input control\">\n" +
-            "<div class=\"textarea-label input-label control-label\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"textarea-container input-container control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Brian</textarea></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><textarea id=\"user_name\" name=\"user.name\">Brian</textarea></div>\n" +
             "</div>\n");
     }
 
@@ -75,11 +75,11 @@ public class TextareaTest extends ControlBaseTest {
         messageStore.addFieldError(MessageScope.REQUEST, "user.name", "fieldError2");
 
         run(textarea,
-            mapNV("name", "user.name", "class", "css-class"),
+            mapNV("name", "user.name"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"textarea input control\">\n" +
-            "<div class=\"textarea-label input-label control-label\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
-            "<div class=\"textarea-container input-container control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Barry</textarea></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
+            "<div class=\"control-container\"><textarea id=\"user_name\" name=\"user.name\">Barry</textarea></div>\n" +
             "</div>\n");
     }
 
@@ -90,11 +90,11 @@ public class TextareaTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/textarea", null, null));
 
         run(textarea,
-            mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"),
+            mapNV("name", "user.name", "defaultValue", "John"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"textarea input control\">\n" +
-            "<div class=\"textarea-label input-label control-label\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"textarea-container input-container control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">John</textarea></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><textarea id=\"user_name\" name=\"user.name\">John</textarea></div>\n" +
             "</div>\n");
     }
 
@@ -107,11 +107,11 @@ public class TextareaTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/textarea", null, null));
 
         run(textarea,
-            mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
+            mapNV("name", "user.name", "value", "Barry"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"textarea input control\">\n" +
-            "<div class=\"textarea-label input-label control-label\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"textarea-container input-container control-container\"><textarea class=\"css-class\" id=\"user_name\" name=\"user.name\">Barry</textarea></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><textarea id=\"user_name\" name=\"user.name\">Barry</textarea></div>\n" +
             "</div>\n");
     }
 }

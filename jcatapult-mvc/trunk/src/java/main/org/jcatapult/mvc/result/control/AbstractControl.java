@@ -28,6 +28,7 @@ import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 import org.jcatapult.mvc.result.form.control.AppendAttributesMethod;
+import org.jcatapult.mvc.result.form.control.MakeClassMethod;
 
 import com.google.inject.Inject;
 import net.java.error.ErrorList;
@@ -134,6 +135,7 @@ public abstract class AbstractControl implements Control {
         parameters.put("attributes", attributes);
         parameters.put("dynamic_attributes", dynamicAttributes);
         parameters.put("append_attributes", new AppendAttributesMethod());
+        parameters.put("make_class", new MakeClassMethod());
         return parameters;
     }
 
