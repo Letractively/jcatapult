@@ -40,9 +40,9 @@ public class MonthsSelectTest extends ControlBaseTest {
         run(monthsSelect,
             mapNV("name", "test", "class", "css-class", "bundle", "/months-select-bundle"),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"select input control\">\n" +
-            "<div class=\"select-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"select-container input-container control-container\">\n" +
+            "<div class=\"css-class-select css-class-input css-class-control select input control\">\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"control-container\">\n" +
             "<select class=\"css-class\" id=\"test\" name=\"test\">\n" +
             "<option value=\"1\">January</option>\n" +
             "<option value=\"2\">February</option>\n" +
@@ -69,12 +69,12 @@ public class MonthsSelectTest extends ControlBaseTest {
 
         ais.setCurrent(new DefaultActionInvocation(edit, "/months-select", null, null));
         run(monthsSelect,
-            mapNV("name", "user.month", "class", "css-class"),
+            mapNV("name", "user.month"),
             null, "<input type=\"hidden\" name=\"user.month@param\" value=\"param-value\"/>\n" +
             "<div class=\"select input control\">\n" +
-            "<div class=\"select-label input-label control-label\"><label for=\"user_month\" class=\"label\">Month</label></div>\n" +
-            "<div class=\"select-container input-container control-container\">\n" +
-            "<select class=\"css-class\" id=\"user_month\" name=\"user.month\">\n" +
+            "<div class=\"label-container\"><label for=\"user_month\" class=\"label\">Month</label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<select id=\"user_month\" name=\"user.month\">\n" +
             "<option value=\"1\">January</option>\n" +
             "<option value=\"2\">February</option>\n" +
             "<option value=\"3\">March</option>\n" +

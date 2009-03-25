@@ -41,9 +41,9 @@ public class FileTest extends ControlBaseTest {
         run(file,
             mapNV("name", "test", "class", "css-class", "bundle", "/file-bundle"),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"file input control\">\n" +
-            "<div class=\"file-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"file-container input-container control-container\"><input type=\"file\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
+            "<div class=\"css-class-file css-class-input css-class-control file input control\">\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"file\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
             "</div>\n");
     }
 
@@ -53,11 +53,11 @@ public class FileTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/file", null, null));
 
         run(file,
-            mapNV("name", "user.profile", "class", "css-class"),
+            mapNV("name", "user.profile"),
             null, "<input type=\"hidden\" name=\"user.profile@param\" value=\"param-value\"/>\n" +
             "<div class=\"file input control\">\n" +
-            "<div class=\"file-label input-label control-label\"><label for=\"user_profile\" class=\"label\">Your profile</label></div>\n" +
-            "<div class=\"file-container input-container control-container\"><input type=\"file\" class=\"css-class\" id=\"user_profile\" name=\"user.profile\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_profile\" class=\"label\">Your profile</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"file\" id=\"user_profile\" name=\"user.profile\"/></div>\n" +
             "</div>\n");
     }
 
@@ -70,11 +70,11 @@ public class FileTest extends ControlBaseTest {
         messageStore.addFieldError(MessageScope.REQUEST, "user.profile", "fieldError2");
 
         run(file,
-            mapNV("name", "user.profile", "class", "css-class"),
+            mapNV("name", "user.profile"),
             null, "<input type=\"hidden\" name=\"user.profile@param\" value=\"param-value\"/>\n" +
             "<div class=\"file input control\">\n" +
-            "<div class=\"file-label input-label control-label\"><label for=\"user_profile\" class=\"label\"><span class=\"error\">Your profile (Profile is required, Profile must be cool)</span></label></div>\n" +
-            "<div class=\"file-container input-container control-container\"><input type=\"file\" class=\"css-class\" id=\"user_profile\" name=\"user.profile\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_profile\" class=\"label\"><span class=\"error\">Your profile (Profile is required, Profile must be cool)</span></label></div>\n" +
+            "<div class=\"control-container\"><input type=\"file\" id=\"user_profile\" name=\"user.profile\"/></div>\n" +
             "</div>\n");
     }
 }

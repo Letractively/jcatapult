@@ -40,9 +40,9 @@ public class ImageTest extends ControlBaseTest {
             mapNV("name", "image", "value", "test-value", "class", "css-class", "bundle", "/image-bundle", "src", "foo.gif"),
             null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
-            "<div class=\"image-button button control\">\n" +
-            "<div class=\"image-button-label button-label control-label\"> </div>\n" +
-            "<div class=\"image-button-container button-container control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image-Bundle\"/></div>\n" +
+            "<div class=\"css-class-image-button css-class-button css-class-control image-button button control\">\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image-Bundle\"/></div>\n" +
             "</div>\n");
     }
 
@@ -50,12 +50,12 @@ public class ImageTest extends ControlBaseTest {
     public void testAction() {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
         run(image,
-            mapNV("name", "image", "value", "test-value", "class", "css-class", "src", "foo.gif"),
+            mapNV("name", "image", "value", "test-value", "src", "foo.gif"),
             null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
             "<div class=\"image-button button control\">\n" +
-            "<div class=\"image-button-label button-label control-label\"> </div>\n" +
-            "<div class=\"image-button-container button-container control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"image\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
             "</div>\n");
     }
 
@@ -63,12 +63,12 @@ public class ImageTest extends ControlBaseTest {
     public void testActionAttribute() {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
         run(image,
-            mapNV("name", "image", "action", "/foo", "value", "test-value", "class", "css-class", "src", "foo.gif"),
+            mapNV("name", "image", "action", "/foo", "value", "test-value", "src", "foo.gif"),
             null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"/foo\"/>\n" +
             "<div class=\"image-button button control\">\n" +
-            "<div class=\"image-button-label button-label control-label\"> </div>\n" +
-            "<div class=\"image-button-container button-container control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"image\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
             "</div>\n");
     }
 
@@ -76,12 +76,12 @@ public class ImageTest extends ControlBaseTest {
     public void testIsmap() {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
         run(image,
-            mapNV("name", "image", "value", "test-value", "class", "css-class", "ismap", true, "src", "foo.gif"),
+            mapNV("name", "image", "value", "test-value", "ismap", true, "src", "foo.gif"),
             null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_image\" value=\"\"/>\n" +
             "<div class=\"image-button button control\">\n" +
-            "<div class=\"image-button-label button-label control-label\"> </div>\n" +
-            "<div class=\"image-button-container button-container control-container\"><input type=\"image\" class=\"css-class\" id=\"image\" ismap=\"ismap\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"image\" id=\"image\" ismap=\"ismap\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
             "</div>\n");
     }
 }

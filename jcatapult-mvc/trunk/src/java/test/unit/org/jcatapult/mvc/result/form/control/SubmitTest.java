@@ -40,9 +40,9 @@ public class SubmitTest extends ControlBaseTest {
             mapNV("name", "button", "value", "test-value", "class", "css-class", "bundle", "/button-bundle"),
             null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"\"/>\n" +
-            "<div class=\"submit-button button control\">\n" +
-            "<div class=\"submit-button-label button-label control-label\"> </div>\n" +
-            "<div class=\"submit-button-container button-container control-container\"><input type=\"submit\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button-Bundle\"/></div>\n" +
+            "<div class=\"css-class-submit-button css-class-button css-class-control submit-button button control\">\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"submit\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button-Bundle\"/></div>\n" +
             "</div>\n");
     }
 
@@ -50,12 +50,12 @@ public class SubmitTest extends ControlBaseTest {
     public void testAction() {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
         run(submit,
-            mapNV("name", "button", "value", "test-value", "class", "css-class"),
+            mapNV("name", "button", "value", "test-value"),
             null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"\"/>\n" +
             "<div class=\"submit-button button control\">\n" +
-            "<div class=\"submit-button-label button-label control-label\"> </div>\n" +
-            "<div class=\"submit-button-container button-container control-container\"><input type=\"submit\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"submit\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
             "</div>\n");
     }
 
@@ -63,12 +63,12 @@ public class SubmitTest extends ControlBaseTest {
     public void testActionAttribute() {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
         run(submit,
-            mapNV("name", "button", "action", "/foo", "value", "test-value", "class", "css-class"),
+            mapNV("name", "button", "action", "/foo", "value", "test-value"),
             null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"/foo\"/>\n" +
             "<div class=\"submit-button button control\">\n" +
-            "<div class=\"submit-button-label button-label control-label\"> </div>\n" +
-            "<div class=\"submit-button-container button-container control-container\"><input type=\"submit\" class=\"css-class\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"submit\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
             "</div>\n");
     }
 }

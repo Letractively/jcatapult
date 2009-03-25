@@ -1,6 +1,7 @@
 [#ftl/]
+[#include "class-helper.ftl"/]
 [#include "dynamic-attributes.ftl"/]
-<div class="text input control">
-<div class="text-label input-label control-label">[#include "label.ftl"/]</div>
-<div class="text-container input-container control-container"><input type="text"${append_attributes(attributes)}/></div>
+<div class="[@class attributes, 'text' true/]">
+<div class="label-container">[#include "label.ftl"/]</div>
+<div class="control-container"><input type="text"${append_attributes(attributes)}/></div>
 </div>

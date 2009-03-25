@@ -1,6 +1,7 @@
 [#ftl/]
+[#include "class-helper.ftl"/]
 [#include "dynamic-attributes.ftl"/]
-<div class="password input control">
-<div class="password-label input-label control-label">[#include "label.ftl"/]</div>
-<div class="password-container input-container control-container"><input type="password"${append_attributes(attributes)}/></div>
+<div class="[@class attributes, 'password' true/]">
+<div class="label-container">[#include "label.ftl"/]</div>
+<div class="control-container"><input type="password"${append_attributes(attributes)}/></div>
 </div>

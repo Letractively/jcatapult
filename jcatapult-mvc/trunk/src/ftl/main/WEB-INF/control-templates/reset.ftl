@@ -1,6 +1,7 @@
 [#ftl/]
+[#include "class-helper.ftl"/]
 [#include "dynamic-attributes.ftl"/]
-<div class="reset-button button control">
-<div class="submit-button-label button-label control-label"> </div>
-<div class="reset-button-container button-container control-container"><input type="reset"${append_attributes(attributes)}/></div>
+<div class="[@class attributes, 'reset-button' false/]">
+<div class="label-container"> </div>
+<div class="control-container"><input type="reset"${append_attributes(attributes)}/></div>
 </div>

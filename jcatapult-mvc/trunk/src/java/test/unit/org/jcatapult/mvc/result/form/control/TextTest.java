@@ -41,9 +41,9 @@ public class TextTest extends ControlBaseTest {
         run(text,
             mapNV("name", "test", "class", "css-class", "bundle", "/text-bundle"),
             null, "<input type=\"hidden\" name=\"test@param\" value=\"param-value\"/>\n" +
-            "<div class=\"text input control\">\n" +
-            "<div class=\"text-label input-label control-label\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
-            "<div class=\"text-container input-container control-container\"><input type=\"text\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
+            "<div class=\"css-class-text css-class-input css-class-control text input control\">\n" +
+            "<div class=\"label-container\"><label for=\"test\" class=\"label\">Test</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" class=\"css-class\" id=\"test\" name=\"test\"/></div>\n" +
             "</div>\n");
     }
 
@@ -55,11 +55,11 @@ public class TextTest extends ControlBaseTest {
 
         ais.setCurrent(new DefaultActionInvocation(action, "/text", null, null));
         run(text,
-            mapNV("name", "user.name", "class", "css-class"),
+            mapNV("name", "user.name"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"text input control\">\n" +
-            "<div class=\"text-label input-label control-label\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"text-container input-container control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/></div>\n" +
             "</div>\n");
     }
 
@@ -75,11 +75,11 @@ public class TextTest extends ControlBaseTest {
         messageStore.addFieldError(MessageScope.REQUEST, "user.name", "fieldError2");
 
         run(text,
-            mapNV("name", "user.name", "class", "css-class"),
+            mapNV("name", "user.name"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"text input control\">\n" +
-            "<div class=\"text-label input-label control-label\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
-            "<div class=\"text-container input-container control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><span class=\"error\">Your name (Name is required, Name must be cool)</span></label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
             "</div>\n");
     }
 
@@ -90,11 +90,11 @@ public class TextTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/text", null, null));
 
         run(text,
-            mapNV("name", "user.name", "class", "css-class", "defaultValue", "John"),
+            mapNV("name", "user.name", "defaultValue", "John"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"text input control\">\n" +
-            "<div class=\"text-label input-label control-label\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"text-container input-container control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"John\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" id=\"user_name\" name=\"user.name\" value=\"John\"/></div>\n" +
             "</div>\n");
     }
 
@@ -107,11 +107,11 @@ public class TextTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/text", null, null));
 
         run(text,
-            mapNV("name", "user.name", "class", "css-class", "value", "Barry"),
+            mapNV("name", "user.name", "value", "Barry"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"text input control\">\n" +
-            "<div class=\"text-label input-label control-label\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
-            "<div class=\"text-container input-container control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" id=\"user_name\" name=\"user.name\" value=\"Barry\"/></div>\n" +
             "</div>\n");
     }
 
@@ -124,11 +124,11 @@ public class TextTest extends ControlBaseTest {
         ais.setCurrent(new DefaultActionInvocation(action, "/text", null, null));
 
         run(text,
-            mapNV("name", "user.name", "class", "css-class", "labelKey", "label-key"),
+            mapNV("name", "user.name", "labelKey", "label-key"),
             null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
             "<div class=\"text input control\">\n" +
-            "<div class=\"text-label input-label control-label\"><label for=\"user_name\" class=\"label\">Foo bar</label></div>\n" +
-            "<div class=\"text-container input-container control-container\"><input type=\"text\" class=\"css-class\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/></div>\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Foo bar</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" id=\"user_name\" name=\"user.name\" value=\"Brian\"/></div>\n" +
             "</div>\n");
     }
 }
