@@ -8,5 +8,6 @@
 [@jc.cmscontentnode name="test"]
   Default content.
 [/@jc.cmscontentnode]
+<a href="/test/other">Other page</a>
 </body>
 </html>

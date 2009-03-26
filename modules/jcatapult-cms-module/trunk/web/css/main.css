@@ -29,3 +29,7 @@ html, body {
   float: right;
   font-style: italic;
 }
+
+#cms-content-editor-textarea___Frame {
+  height: 400px;
+}
