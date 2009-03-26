@@ -58,14 +58,18 @@ function CMS_class() {
       height: 600,
       modal: true,
       overlay: {opacity: 0.5, background: "black"},
-      width: 800}, options['cms-content-editor-options']);
+      width: 800,
+      close: function(event, ui) {
+        CMS.close_rich_text_editor();
+      }
+    }, options["cms-content-editor-options"]);
 
     var metaOptions = jQuery.extend({
       autoOpen: false,
       height: 600,
       modal: true,
       overlay: {opacity: 0.5, background: "black"},
-      width: 800}, options['cms-meta-editor-options']);
+      width: 800}, options["cms-meta-editor-options"]);
 
     $("#cms-content-editor").dialog(contentOptions);
     $("#cms-meta-editor").dialog(metaOptions);
@@ -91,7 +95,6 @@ function CMS_class() {
     $("#cms-meta-editor-form .dynamic").remove();
     $.each(edited_nodes, function(name, node) {
       if (node.meta) {
-//        alert("Node is " + name + " internal name is " + node.name + " value is " + node.edited_content);
         var html = "<div class='input dynamic'><label for='" + node.name + "'>" + node.label + "</label><br/>" +
                    "<input type='text' name='" + node.name + "' value='" + node.edited_content + "'/></div>";
         $("#cms-meta-editor-form").prepend(html);
@@ -141,7 +144,6 @@ function CMS_class() {
    */
   this.register_content_node = function(elem_id, name, global, default_content) {
     var uri = frames["cms-view"].location.pathname;
-//    alert("URI is " + uri);
     edited_nodes[name] = new Node(elem_id, name, uri, global, default_content, "HTML", "Content node", "Content", false);
   };
 
@@ -153,9 +155,13 @@ function CMS_class() {
    */
   this.register_meta_node = function(name, default_content, description, label) {
     var uri = frames["cms-view"].location.pathname;
-//    alert("meta URI is " + uri);
     edited_nodes[name] = new Node("", name, uri, false, default_content, "META", description, label, true);
   };
+
+
+  /*------------------------------------------------------------------------------------------------
+    Content editing functions
+    ------------------------------------------------------------------------------------------------*/
 
   /**
    * Opens the CMS editor for editing a content node.
@@ -206,7 +212,7 @@ function CMS_class() {
   this.preview_content_node = function() {
     CMS.invoke(options, "preview_content_node_pre");
 
-    current_node.edited_content = CMS.close_rich_text_editor();
+    current_node.edited_content = CMS.save_rich_text_editor_content();
     $("#cms-view").contents().find("#" + current_node.elem_id).html(current_node.edited_content);
     $("#cms-publish").show();
     $("#cms-revert").show();
@@ -264,7 +270,6 @@ function CMS_class() {
 
     $("#cms-publish").hide();
     $("#cms-revert").hide();
-    CMS.close_content_editor();
 
     nodes_modified = false;
     current_editor = undefined;
@@ -306,8 +311,12 @@ function CMS_class() {
 
     $("#cms-publish").hide();
     $("#cms-revert").hide();
-    CMS.close_content_editor();
   };
+
+
+  /*------------------------------------------------------------------------------------------------
+    Rich text and meta editor functions
+    ------------------------------------------------------------------------------------------------*/
 
   /**
    * Opens the content editor dialog and puts the given content in the editor.
@@ -319,7 +328,7 @@ function CMS_class() {
 
     $("#cms-content-editor-textarea").val(content);
     $("#cms-content-editor").dialog("open");
-    current_editor = CMS.create_rich_text_editor();
+    current_editor = CMS.create_rich_text_editor(content);
 
     CMS.invoke(options, "open_content_editor_post");
   };
@@ -329,6 +338,7 @@ function CMS_class() {
    */
   this.close_content_editor = function() {
     CMS.invoke(options, "close_content_editor_pre");
+    // This will kick off the close event on the dialog, which closes the rich text editor
     $("#cms-content-editor").dialog("close");
     CMS.invoke(options, "close_content_editor_post");
   };
@@ -351,15 +361,22 @@ function CMS_class() {
     CMS.invoke(options, "close_meta_editor_post");
   };
 
-  this.create_rich_text_editor = function() {
-    if (options['rich_text_editor'] == 'nic') {
-      return new nicEditor({fullPanel: true}).panelInstance('cms-content-editor-textarea');
-    } else if (options['rich_text_editor'] == 'fck') {
-      var editor = new FCKeditor('cms-content-editor-textarea');
+  /**
+   * Creates a rich text editor.
+   *
+   * @param   content The content to put inside the rich text editor.
+   */
+  this.create_rich_text_editor = function(content) {
+    if (options["rich_text_editor"] == "nic") {
+      var ne = new nicEditor({fullPanel: true}).panelInstance("cms-content-editor-textarea");
+      nicEditors.findEditor("cms-content-editor-textarea").setContent(content);
+      return ne;
+    } else if (options["rich_text_editor"] == "fck") {
+      var editor = new FCKeditor("cms-content-editor-textarea");
       editor.BasePath = "/module/fckeditor/2.6.4/";
       editor.Config["CustomConfigurationsPath"] = "/module/jcatapult-cms-module/fckeditor-config-1.0.js";
-      editor.Width = '100%';
-      editor.Height = '450px';
+      editor.Width = "100%";
+      editor.Height = "450px";
       editor.ReplaceTextarea();
       return editor;
     } else {
@@ -367,15 +384,26 @@ function CMS_class() {
     }
   };
 
+  /**
+   * This function saves the content from the rich text editor and places it back into the textarea
+   * and returns it.
+   */
+  this.save_rich_text_editor_content = function() {
+    if (options["rich_text_editor"] == "nic") {
+      nicEditors.findEditor("cms-content-editor-textarea").saveContent();
+    } else if (options["rich_text_editor"] == "fck") {
+      FCKeditorAPI.GetInstance("cms-content-editor-textarea").UpdateLinkedField();
+    }
+    
+    return $("#cms-content-editor-textarea").val();
+  };
+
+  /**
+   * This method allows rich text editors that need to be closed that opportunity.
+   */
   this.close_rich_text_editor = function() {
-    if (options['rich_text_editor'] == 'nic') {
+    if (options["rich_text_editor"] == "nic") {
       current_editor.removeInstance("cms-content-editor-textarea");
-      return $("#cms-content-editor-textarea").val();
-    } else if (options['rich_text_editor'] == 'fck') {
-      FCKeditorAPI.GetInstance('cms-content-editor-textarea').UpdateLinkedField();
-      return $("#cms-content-editor-textarea").val();
-    } else {
-      return $("#cms-content-editor-textarea").val();
     }
   };
 
