@@ -5,8 +5,10 @@
 <head>
   <title><sm:title/></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" href="/css/smoothness/jquery-ui-1.7.1.custom.css"/>
   <link rel="stylesheet" href="/css/main.css"/>
-  <script type="text/javascript" src="/js/jquery-1.2.6.pack.js"></script>
+  <script type="text/javascript" src="/js/jquery-1.3.2.min.js"></script>
+  <script type="text/javascript" src="/js/jquery-ui-1.7.1.custom.min.js"></script>
   <sm:head/>
 </head>
 <body>

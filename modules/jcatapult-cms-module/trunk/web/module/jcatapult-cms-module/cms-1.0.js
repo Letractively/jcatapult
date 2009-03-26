@@ -19,7 +19,7 @@
 /**
  * This is a Node class that stores an node that has been edited.
  *
- * @param   span_id The ID of the span within the IFrame that has been edited.
+ * @param   elem_id The ID of the element within the IFrame that contains the node.
  * @param   name The name of the content node.
  * @param   uri The URI of the content node.
  * @param   global A flag that determines if the content node is global or not.
@@ -29,10 +29,10 @@
  * @param   label The label used when editing the node.
  * @param   meta This is a boolean that flags this node as a meta node.
  */
-function Node(span_id, name, uri, global, content, content_type, description, label, meta) {
-  this.span_id = span_id;
+function Node(elem_id, name, uri, global, content, content_type, description, label, meta) {
+  this.elem_id = elem_id;
   this.name = name;
-  this.uri= uri;
+  this.uri = uri;
   this.global = global;
   this.edited_content = content;
   this.original_content = content;
@@ -44,9 +44,75 @@ function Node(span_id, name, uri, global, content, content_type, description, la
 
 function CMS_class() {
   var current_node;
-  var edited_nodes = {};
   var current_editor;
+  var nodes_modified = false;
+  var edited_nodes = {};
   var options = {};
+
+  /**
+   * This function initializes the dialogs so that they can be opened and closed.
+   */
+  this.initialize_cms = function() {
+    var contentOptions = jQuery.extend({
+      autoOpen: false,
+      height: 600,
+      modal: true,
+      overlay: {opacity: 0.5, background: "black"},
+      width: 800}, options['cms-content-editor-options']);
+
+    var metaOptions = jQuery.extend({
+      autoOpen: false,
+      height: 600,
+      modal: true,
+      overlay: {opacity: 0.5, background: "black"},
+      width: 800}, options['cms-meta-editor-options']);
+
+    $("#cms-content-editor").dialog(contentOptions);
+    $("#cms-meta-editor").dialog(metaOptions);
+
+    $("#cms-view").load(function() {
+      CMS.initialize_meta_editor();
+
+      $("#cms-view").contents().find("a").click(function() {
+        return CMS.view_changed();
+      });
+
+      $("#cms-view").contents().find(":button").click(function() {
+        return CMS.view_changed();
+      });
+    });
+  };
+
+  /**
+   * This function initializes the meta editor using the current nodes.
+   */
+  this.initialize_meta_editor = function() {
+    // Build the form by hand after the iframe has loaded completely
+    $("#cms-meta-editor-form .dynamic").remove();
+    $.each(edited_nodes, function(name, node) {
+      if (node.meta) {
+//        alert("Node is " + name + " internal name is " + node.name + " value is " + node.edited_content);
+        var html = "<div class='input dynamic'><label for='" + node.name + "'>" + node.label + "</label><br/>" +
+                   "<input type='text' name='" + node.name + "' value='" + node.edited_content + "'/></div>";
+        $("#cms-meta-editor-form").prepend(html);
+      }
+    });
+  };
+
+  this.view_changed = function() {
+    if (nodes_modified) {
+      var leave = confirm("You have unsaved content on this page. Are you sure you want to leave this page and lose your changes?");
+      if (!leave) {
+        return false;
+      }
+    }
+
+    edited_nodes = {};
+    current_editor = undefined;
+    current_node = undefined;
+    nodes_modified = false;
+    return true;
+  };
 
   /**
    * Sets the options for the CMS class. The options are:
@@ -68,14 +134,15 @@ function CMS_class() {
   /**
    * Registers a content node so that it can be edited.
    *
-   * @param   div_id The ID of the div the content is stored in.
+   * @param   elem_id The ID of the element the content is stored in.
    * @param   name The name of the content node.
    * @param   global True if the node is global.
    * @param   default_content The default content of the node.
    */
-  this.register_content_node = function(div_id, name, global, default_content) {
+  this.register_content_node = function(elem_id, name, global, default_content) {
     var uri = frames["cms-view"].location.pathname;
-    edited_nodes[name] = new Node(div_id, name, uri, global, default_content, "HTML", "Content node", "Content", false);
+//    alert("URI is " + uri);
+    edited_nodes[name] = new Node(elem_id, name, uri, global, default_content, "HTML", "Content node", "Content", false);
   };
 
   /**
@@ -86,12 +153,8 @@ function CMS_class() {
    */
   this.register_meta_node = function(name, default_content, description, label) {
     var uri = frames["cms-view"].location.pathname;
+//    alert("meta URI is " + uri);
     edited_nodes[name] = new Node("", name, uri, false, default_content, "META", description, label, true);
-
-    // Build the form by hand
-    var html = "<div class='input'><label for='" + edited_nodes[name].name + "'>" + edited_nodes[name].label + "</label><br/>" +
-               "<input type='text' name='" + edited_nodes[name].name + "' value='" + edited_nodes[name].edited_content + "'/></div>";
-    $("#cms-meta-editor-form").prepend(html);
   };
 
   /**
@@ -144,7 +207,7 @@ function CMS_class() {
     CMS.invoke(options, "preview_content_node_pre");
 
     current_node.edited_content = CMS.close_rich_text_editor();
-    $("#cms-view").contents().find("#" + current_node.span_id).html(current_node.edited_content);
+    $("#cms-view").contents().find("#" + current_node.elem_id).html(current_node.edited_content);
     $("#cms-publish").show();
     $("#cms-revert").show();
     CMS.close_content_editor();
@@ -152,6 +215,7 @@ function CMS_class() {
     // Clear out the current edit information
     current_node = undefined;
     current_editor = undefined;
+    nodes_modified = true;
     CMS.invoke(options, "preview_content_node_post");
   };
 
@@ -169,6 +233,8 @@ function CMS_class() {
     $("#cms-publish").show();
     $("#cms-revert").show();
     CMS.close_meta_editor();
+
+    nodes_modified = true;
     CMS.invoke(options, "preview_meta_nodes_post");
   };
 
@@ -178,19 +244,31 @@ function CMS_class() {
   this.revert = function() {
     CMS.invoke(options, "revert_pre");
 
-    $.each(edited_nodes, function() {
-      this.edited_content = this.original_content;
-      $("#cms-view").contents().find("#" + this.span_id).html(this.original_content);
+    var revert = confirm("Are you sure you want to revert all your changes?");
+    if (!revert) {
+      return;
+    }
+    
+    $.each(edited_nodes, function(name, node) {
+      // Only revert visible nodes that have an elem_id
+      if (node.elem_id != "") {
+        node.edited_content = node.original_content;
+        $("#cms-view").contents().find("#" + node.elem_id).html(node.original_content);
+      }
 
       // Reset the form if this is a meta tag
-      if (this.meta) {
-        $(":input[name='" + this.name + "']").val(this.original_content);
+      if (node.meta) {
+        $(":input[name='" + name + "']").val(node.original_content);
       }
     });
 
     $("#cms-publish").hide();
     $("#cms-revert").hide();
     CMS.close_content_editor();
+
+    nodes_modified = false;
+    current_editor = undefined;
+    current_node = undefined;
     CMS.invoke(options, "revert_post");
   };
 
@@ -213,6 +291,7 @@ function CMS_class() {
         success: function(data) {
           if (data.success) {
             alert("Content named [" + data.name + "] saved.");
+            nodes_modified = false;
             node.original_content = node.edited_content;
           } else {
             alert("Error saving content named [" + data.name + "]");
@@ -239,7 +318,7 @@ function CMS_class() {
     CMS.invoke(options, "open_content_editor_pre");
 
     $("#cms-content-editor-textarea").val(content);
-    $("#cms-content-editor").dialog({height: 600, modal: true, overlay: {opacity: 0.5, background: "black"}, width: 800});
+    $("#cms-content-editor").dialog("open");
     current_editor = CMS.create_rich_text_editor();
 
     CMS.invoke(options, "open_content_editor_post");
@@ -259,7 +338,7 @@ function CMS_class() {
    */
   this.open_meta_editor = function() {
     CMS.invoke(options, "open_meta_editor_pre");
-    $("#cms-meta-editor").dialog({height: 400, modal: true, overlay: {opacity: 0.5, background: "black"}, width: 600});
+    $("#cms-meta-editor").dialog("open");
     CMS.invoke(options, "open_meta_editor_post");
   };
 
@@ -279,6 +358,8 @@ function CMS_class() {
       var editor = new FCKeditor('cms-content-editor-textarea');
       editor.BasePath = "/module/fckeditor/2.6.4/";
       editor.Config["CustomConfigurationsPath"] = "/module/jcatapult-cms-module/fckeditor-config-1.0.js";
+      editor.Width = '100%';
+      editor.Height = '450px';
       editor.ReplaceTextarea();
       return editor;
     } else {
