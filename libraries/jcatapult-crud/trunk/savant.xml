@@ -6,7 +6,7 @@
         <fileset dir="src/ftl/main" includes="**"/>
       </copy>
 
-      <copy todir="${dir.target.classes.main}/module/${project.name}/${project.version}">
+      <copy todir="${dir.target.classes.main}/module/${project.name}">
         <fileset dir="src/static/main" includes="**"/>
       </copy>
     </sequential>
