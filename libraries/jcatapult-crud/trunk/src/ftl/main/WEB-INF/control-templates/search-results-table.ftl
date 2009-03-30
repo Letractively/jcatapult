@@ -2,7 +2,7 @@
 <table id="listing" class="${attributes['name']}-listing jcatapult-module-listing">
   <tr>
     [#list attributes['properties'] as prop]
-    <th id="${prop?replace('.', '-')}-header"><a href="?searchCriteria.sortProperty=${prop}[#if searchCriteria.sortProperty! == prop + ' desc']+asc[#else]+desc[/#if]">[@jc.message key=(attributes['name'] + "." + prop)/][#if searchCriteria.sortProperty! == prop + " desc"]<img src="/module/jcatapult-crud/1.0-RC12/sort-arrow-up.gif" alt="" border="0"/>[#elseif searchCriteria.sortProperty! == prop + " asc"]<img src="/module/jcatapult-crud/1.0-RC12/sort-arrow-down.gif" alt="" border="0"/>[/#if]</a></th>
+    <th id="${prop?replace('.', '-')}-header"><a href="?searchCriteria.sortProperty=${prop}[#if searchCriteria.sortProperty! == prop + ' desc']+asc[#else]+desc[/#if]">[@jc.message key=(attributes['name'] + "." + prop)/][#if searchCriteria.sortProperty! == prop + " desc"]<img src="/module/jcatapult-crud/sort-arrow-up-1.0.gif" alt="" border="0"/>[#elseif searchCriteria.sortProperty! == prop + " asc"]<img src="/module/jcatapult-crud/sort-arrow-down-1.0.gif" alt="" border="0"/>[/#if]</a></th>
     [/#list]
     [#if editable]
       <th id="edit-header">[@jc.message key="edit-header" default="Edit"/]</th>
@@ -17,7 +17,7 @@
       <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] ${prop?replace('.', '-')}-row">[#if prop_index == 0 && detailable]<a href="details?id=${result.id?c}">[/#if]${("((result." + prop + ")!'')?string")?eval}[#if result_index == 0]</a>[/#if]</td>
       [/#list]
       [#if editable]
-        <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] edit-row"><a href="edit/${result.id?c}"><img src="/module/jcatapult-crud/1.0-RC12/edit.png" alt="" border=""/></a></td>
+        <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] edit-row"><a href="edit/${result.id?c}"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
       [/#if]
       [#if deletable]
         <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] delete-row"><input type="checkbox" name="ids" value="${result.id?c}"/></td>
