@@ -69,7 +69,7 @@ public class DefaultUser extends AbstractUsernameTrackedUser<DefaultRole> {
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "user", fetch = FetchType.EAGER)
     private List<AuditableCreditCard> creditCards = new ArrayList<AuditableCreditCard>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<DefaultRole> roles = new HashSet<DefaultRole>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch = FetchType.EAGER)
