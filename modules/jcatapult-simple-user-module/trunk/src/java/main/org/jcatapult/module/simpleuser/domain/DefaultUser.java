@@ -48,7 +48,7 @@ import org.jcatapult.user.domain.AbstractUser;
 public class DefaultUser extends AbstractUser<DefaultRole> {
     private static final long serialVersionUID = 1;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<DefaultRole> roles = new HashSet<DefaultRole>();
 
     public Set<DefaultRole> getRoles() {
