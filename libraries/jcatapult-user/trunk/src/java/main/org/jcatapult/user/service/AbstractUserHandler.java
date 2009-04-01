@@ -96,7 +96,7 @@ public abstract class AbstractUserHandler<T extends User<U>, U extends Role> imp
                 throw new PersistenceException("Invalid role ID(s) " + ids);
             }
             
-            user.getRoles().addAll(roles);
+            user.setRoles(new HashSet<U>(roles));
         }
     }
 
