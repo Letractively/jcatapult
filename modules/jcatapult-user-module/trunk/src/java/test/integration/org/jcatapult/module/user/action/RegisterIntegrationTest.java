@@ -244,4 +244,47 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
         assertNotNull(runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.phoneNumbers['cell'].number").get(0));
         assertEquals("anonymous", EnhancedSecurityContext.getCurrentUsername());
     }
+
+    @Test
+    public void testCaptchaInvalid() throws IOException, ServletException {
+        EnhancedSecurityContext.logout();
+        MockConfiguration configuration = makeConfiguration(false);
+        configuration.addParameter(DefaultUserConfiguration.USERNAME_IS_EMAIL, true);
+        configuration.addParameter(DefaultUserConfiguration.CAPTCHA_ENABLED, true);
+
+        WebappTestRunner runner = new WebappTestRunner();
+        runner.test("/captch.jpg").get(); // Setup the captcha in the session
+        
+        runner.test("/register").
+            withMock(Configuration.class, configuration).
+            withParameter("user.username", "registercaptcha").
+            withParameter("user.email", "registercaptcha@test.com").
+            withParameter("captcha", "invalid").
+            withParameter("password", "password").
+            withParameter("passwordConfirm", "password").
+            withParameter("user.name.firstName", "Test").
+            withParameter("user.name.lastName", "McGee").
+            withParameter("user.companyName", "Jcatapult").
+            withParameter("user.addresses['home'].street", "132 Main").
+            withParameter("user.addresses['home'].city", "Broomfield").
+            withParameter("user.addresses['home'].state", "CO").
+            withParameter("user.addresses['home'].postalCode", "80020").
+            withParameter("user.addresses['home'].country", "US").
+            withParameter("user.addresses['work'].street", "132 Main").
+            withParameter("user.addresses['work'].city", "Broomfield").
+            withParameter("user.addresses['work'].state", "CO").
+            withParameter("user.addresses['work'].postalCode", "80020").
+            withParameter("user.addresses['work'].country", "US").
+            withParameter("user.phoneNumbers['home'].number", "303-555-1212").
+            withParameter("user.phoneNumbers['work'].number", "303-555-1212").
+            withParameter("user.phoneNumbers['cell'].number", "303-555-1212").
+            withMock(EmailTransportService.class, EmailTestHelper.getService()).
+            post();
+
+        String result = runner.response.getStream().toString();
+        assertTrue(result.contains("html"));
+        assertEquals(1, runner.messageStore.getFieldMessages(MessageType.ERROR).size());
+        assertNotNull(runner.messageStore.getFieldMessages(MessageType.ERROR).get("captcha").get(0));
+        assertEquals("anonymous", EnhancedSecurityContext.getCurrentUsername());
+    }
 }

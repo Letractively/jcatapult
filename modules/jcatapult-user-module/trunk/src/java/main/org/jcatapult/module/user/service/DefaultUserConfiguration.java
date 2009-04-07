@@ -50,6 +50,7 @@ public class DefaultUserConfiguration implements UserConfiguration {
     public static final String CELL_PHONE_FLAG = "cellPhone";
     public static final String CELL_PHONE_REQUIRED_FLAG = "cellPhoneRequired";
     public static final String EMAIL_OPTIONS_FLAG = "emailOptions";
+    public static final String CAPTCHA_FLAG = "captcha";
 
     /* Form constants */
     public static final String NAME = "jcatapult.user.fields.name";
@@ -67,6 +68,7 @@ public class DefaultUserConfiguration implements UserConfiguration {
     public static final String CELL_PHONE = "jcatapult.user.fields.cell-phone";
     public static final String CELL_PHONE_REQUIRED= "jcatapult.user.fields.cell-phone-required";
     public static final String EMAIL_OPTIONS = "jcatapult.user.fields.email-options";
+    public static final String CAPTCHA = "jcatapult.user.fields.captcha";
 
     /* Registration configuration */
     public static final String REGISTRATION_DISABLED = "jcatapult.user.register.disabled";
@@ -100,6 +102,7 @@ public class DefaultUserConfiguration implements UserConfiguration {
         flags.put(CELL_PHONE_FLAG, configuration.getBoolean(CELL_PHONE, false));
         flags.put(CELL_PHONE_REQUIRED_FLAG, configuration.getBoolean(CELL_PHONE_REQUIRED, false));
         flags.put(EMAIL_OPTIONS_FLAG, configuration.getBoolean(EMAIL_OPTIONS, false));
+        flags.put(CAPTCHA_FLAG, configuration.getBoolean(CAPTCHA, false));
 
         // Registration
         flags.put(REGISTRATION_DISABLED, configuration.getBoolean(REGISTRATION_DISABLED, false));
@@ -127,6 +130,13 @@ public class DefaultUserConfiguration implements UserConfiguration {
      */
     public boolean isRegistrationDisabled() {
         return flags.get(REGISTRATION_DISABLED);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isCaptchaEnabled() {
+        return flags.get(CAPTCHA_FLAG);
     }
 
     /**

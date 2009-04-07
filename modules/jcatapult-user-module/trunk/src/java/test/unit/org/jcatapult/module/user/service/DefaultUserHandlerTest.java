@@ -60,6 +60,7 @@ public class DefaultUserHandlerTest extends JCatapultBaseTest {
         expect(configuration.getBoolean(DefaultUserConfiguration.CELL_PHONE, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.CELL_PHONE_REQUIRED, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.EMAIL_OPTIONS, false)).andReturn(false);
+        expect(configuration.getBoolean(DefaultUserConfiguration.CAPTCHA, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.REGISTRATION_DISABLED, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.VERIFY_EMAILS, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.USERNAME_IS_EMAIL, true)).andReturn(true);
@@ -105,6 +106,7 @@ public class DefaultUserHandlerTest extends JCatapultBaseTest {
         expect(configuration.getBoolean(DefaultUserConfiguration.CELL_PHONE, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.CELL_PHONE_REQUIRED, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.EMAIL_OPTIONS, false)).andReturn(false);
+        expect(configuration.getBoolean(DefaultUserConfiguration.CAPTCHA, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.REGISTRATION_DISABLED, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.VERIFY_EMAILS, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.USERNAME_IS_EMAIL, true)).andReturn(true);

@@ -42,6 +42,11 @@ public interface UserConfiguration {
     boolean isRegistrationDisabled();
 
     /**
+     * @return  True if captcha is enabled, false if not.
+     */
+    boolean isCaptchaEnabled();
+
+    /**
      * @return  Whether or not emails are being verified.
      */
     boolean isVerifyEmails();
