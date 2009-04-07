@@ -255,6 +255,7 @@ public class DefaultUserService implements UserService {
         // Make a new GUID, just to be safe
         user.setGuid(makeGUID());
         persistenceService.persist(user);
+        persistenceService.flush();
 
         String template = configuration.getString("jcatapult.user.verify-email.template", "verify-email");
         EmailCommand command = emailService.sendEmail(template).
@@ -290,6 +291,7 @@ public class DefaultUserService implements UserService {
 
         try {
             persistenceService.persist(user);
+            persistenceService.flush();
             return UpdateResult.SUCCESS;
         } catch (PersistenceException e) {
             return UpdateResult.ERROR;
@@ -320,6 +322,7 @@ public class DefaultUserService implements UserService {
 
         try {
             persistenceService.persist(user);
+            persistenceService.flush();
             return true;
         } catch (PersistenceException e) {
             return false;
@@ -332,6 +335,7 @@ public class DefaultUserService implements UserService {
     public boolean persist(User user) {
         try {
             persistenceService.persist(user);
+            persistenceService.flush();
             return true;
         } catch (PersistenceException e) {
             return false;
@@ -352,6 +356,7 @@ public class DefaultUserService implements UserService {
 
         try {
             persistenceService.persist(user);
+            persistenceService.flush();
             return UpdateResult.SUCCESS;
         } catch (PersistenceException e) {
             return UpdateResult.ERROR;
@@ -369,6 +374,7 @@ public class DefaultUserService implements UserService {
 
         user.setGuid(makeGUID());
         persistenceService.persist(user);
+        persistenceService.flush();
 
         String template = configuration.getString("jcatapult.user.password-reset.template", "password-reset");
         EmailCommand command = emailService.sendEmail(template).
