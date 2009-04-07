@@ -206,7 +206,13 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     protected void handlePreParameters(Parameters params, Object action, ActionInvocation actionInvocation) {
         Set<String> members = expressionEvaluator.getAllMembers(action.getClass());
         for (String member : members) {
-            PreParameter annotation = expressionEvaluator.getAnnotation(PreParameter.class, member, action);
+            PreParameter annotation = null;
+            try {
+                annotation = expressionEvaluator.getAnnotation(PreParameter.class, member, action);
+            } catch (ExpressionException e) {
+                // Ignore
+            }
+            
             if (annotation != null) {
                 Struct struct = params.optional.remove(member);
                 if (struct == null) {
