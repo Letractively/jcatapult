@@ -27,9 +27,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
+import org.jcatapult.mvc.parameter.annotation.PostParameterMethod;
+import org.jcatapult.mvc.parameter.annotation.PreParameter;
+import org.jcatapult.mvc.parameter.annotation.PreParameterMethod;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.ExpressionException;
+import org.jcatapult.mvc.util.MethodTools;
 import org.jcatapult.mvc.util.RequestTools;
 import org.jcatapult.servlet.WorkflowChain;
 
@@ -83,42 +87,20 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         if (action != null && RequestTools.canUseParameters(request)) {
             Map<String, String[]> parameters = request.getParameterMap();
 
-            // First grab the structs and then save them to the request
+            // First grab the structs
             Parameters params = getValuesToSet(parameters);
 
-            // Next, process the optional
-            for (String key : params.optional.keySet()) {
-                Struct struct = params.optional.get(key);
+            // Next, handle pre parameters
+            handlePreParameters(params, action, actionInvocation);
 
-                // If there are no values to set, skip it
-                if (struct.values == null) {
-                    continue;
-                }
+            // Next, invoke pre methods
+            MethodTools.invokeAllWithAnnotation(action, PreParameterMethod.class);
 
-                try {
-                    expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
-                } catch (ConversionException ce) {
-                    messageStore.addConversionError(key, action.getClass().getName(), struct.attributes, (Object[]) struct.values);
-                } catch (ExpressionException ee) {
-                    // Ignore, these are optional
-                }
-            }
+            // Next, set the parameters
+            handleParameters(params, action, actionInvocation);
 
-            // Next, process the required
-            for (String key : params.required.keySet()) {
-                Struct struct = params.required.get(key);
-
-                // If there are no values to set, skip it
-                if (struct.values == null) {
-                    continue;
-                }
-
-                try {
-                    expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
-                } catch (ConversionException ce) {
-                    messageStore.addConversionError(key, actionInvocation.uri(), struct.attributes, (Object[]) struct.values);
-                }
-            }
+            // Finally, invoke post methods
+            MethodTools.invokeAllWithAnnotation(action, PostParameterMethod.class);
         } else if (action != null) {
             // TODO Handle setting the request body onto the action  
         }
@@ -210,6 +192,82 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         result.required.keySet().removeAll(actions);
 
         return result;
+    }
+
+    /**
+     * Handles any fields or properties annotated with PreParameter. These are removed from the parameters
+     * given and set into the PreParameter fields.
+     *
+     * @param   params The parameters.
+     * @param   action The action.
+     * @param   actionInvocation The action invocation for the URI and anything else that might be
+     *          needed.
+     */
+    protected void handlePreParameters(Parameters params, Object action, ActionInvocation actionInvocation) {
+        Set<String> members = expressionEvaluator.getAllMembers(action.getClass());
+        for (String member : members) {
+            PreParameter annotation = expressionEvaluator.getAnnotation(PreParameter.class, member, action);
+            if (annotation != null) {
+                Struct struct = params.optional.remove(member);
+                if (struct == null) {
+                    struct = params.required.remove(member);
+                }
+
+                if (struct == null) {
+                    continue;
+                }
+                
+                try {
+                    expressionEvaluator.setValue(member, action, struct.values, struct.attributes);
+                } catch (ConversionException ce) {
+                    messageStore.addConversionError(member, actionInvocation.uri(), struct.attributes, (Object[]) struct.values);
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets all of the parameters into the action.
+     *
+     * @param   params The parameters.
+     * @param   action The action.
+     * @param   actionInvocation The action invocation for the URI and anything else that might be
+     *          needed.
+     */
+    protected void handleParameters(Parameters params, Object action, ActionInvocation actionInvocation) {
+        // First, process the optional
+        for (String key : params.optional.keySet()) {
+            Struct struct = params.optional.get(key);
+
+            // If there are no values to set, skip it
+            if (struct.values == null) {
+                continue;
+            }
+
+            try {
+                expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
+            } catch (ConversionException ce) {
+                messageStore.addConversionError(key, action.getClass().getName(), struct.attributes, (Object[]) struct.values);
+            } catch (ExpressionException ee) {
+                // Ignore, these are optional
+            }
+        }
+
+        // Next, process the required
+        for (String key : params.required.keySet()) {
+            Struct struct = params.required.get(key);
+
+            // If there are no values to set, skip it
+            if (struct.values == null) {
+                continue;
+            }
+
+            try {
+                expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
+            } catch (ConversionException ce) {
+                messageStore.addConversionError(key, actionInvocation.uri(), struct.attributes, (Object[]) struct.values);
+            }
+        }
     }
 
     private boolean empty(String[] values) {

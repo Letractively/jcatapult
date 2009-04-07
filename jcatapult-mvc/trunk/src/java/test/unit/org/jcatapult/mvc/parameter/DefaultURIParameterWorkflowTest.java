@@ -18,6 +18,7 @@ package org.jcatapult.mvc.parameter;
 import java.io.IOException;
 import static java.util.Arrays.*;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.easymock.EasyMock;
 import org.example.action.ComplexRest;
@@ -42,8 +43,7 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class DefaultURIParameterWorkflowTest extends JCatapultBaseTest {
-    @Inject
-    ExpressionEvaluator expressionEvaluator;
+    @Inject public ExpressionEvaluator expressionEvaluator;
 
     /**
      * Tests the no parameters case.
@@ -62,7 +62,7 @@ public class DefaultURIParameterWorkflowTest extends JCatapultBaseTest {
         chain.continueWorkflow();
         EasyMock.replay(chain);
 
-        DefaultURIParameterWorkflow workflow = new DefaultURIParameterWorkflow(expressionEvaluator, store);
+        DefaultURIParameterWorkflow workflow = new DefaultURIParameterWorkflow(new HttpServletRequestWrapper(request), store);
         workflow.perform(chain);
 
         EasyMock.verify(store, chain);
@@ -86,10 +86,11 @@ public class DefaultURIParameterWorkflowTest extends JCatapultBaseTest {
         chain.continueWorkflow();
         EasyMock.replay(chain);
 
-        DefaultURIParameterWorkflow workflow = new DefaultURIParameterWorkflow(expressionEvaluator, store);
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+        DefaultURIParameterWorkflow workflow = new DefaultURIParameterWorkflow(wrapper, store);
         workflow.perform(chain);
 
-        assertEquals(12, action.id);
+        assertEquals("12", wrapper.getParameter("id"));
 
         EasyMock.verify(store, chain);
     }
@@ -114,16 +115,17 @@ public class DefaultURIParameterWorkflowTest extends JCatapultBaseTest {
         chain.continueWorkflow();
         EasyMock.replay(chain);
 
-        DefaultURIParameterWorkflow workflow = new DefaultURIParameterWorkflow(expressionEvaluator, store);
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+        DefaultURIParameterWorkflow workflow = new DefaultURIParameterWorkflow(wrapper, store);
         workflow.perform(chain);
 
-        assertEquals("brian", action.firstName);
-        assertEquals("pontarelli", action.lastName);
-        assertEquals("then", action.theRest.get(0));
-        assertEquals("a", action.theRest.get(1));
-        assertEquals("bunch", action.theRest.get(2));
-        assertEquals("of", action.theRest.get(3));
-        assertEquals("stuff", action.theRest.get(4));
+        assertEquals("brian", wrapper.getParameter("firstName"));
+        assertEquals("pontarelli", wrapper.getParameter("lastName"));
+        assertEquals("then", wrapper.getParameterValues("theRest")[0]);
+        assertEquals("a", wrapper.getParameterValues("theRest")[1]);
+        assertEquals("bunch", wrapper.getParameterValues("theRest")[2]);
+        assertEquals("of", wrapper.getParameterValues("theRest")[3]);
+        assertEquals("stuff", wrapper.getParameterValues("theRest")[4]);
 
         EasyMock.verify(store, chain);
     }
