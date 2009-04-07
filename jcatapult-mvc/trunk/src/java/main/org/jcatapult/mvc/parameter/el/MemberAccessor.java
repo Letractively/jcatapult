@@ -90,7 +90,7 @@ public class MemberAccessor extends Accessor {
         super(converterProvider);
         Map<String, PropertyInfo> map = getPropMap(declaringClass);
         PropertyInfo bpi = map.get(name);
-        if (bpi == null || bpi.getMethods().get("get") == null) {
+        if (bpi == null) {
             this.propertyInfo = null;
             this.field = findField(declaringClass, name);
         } else {
