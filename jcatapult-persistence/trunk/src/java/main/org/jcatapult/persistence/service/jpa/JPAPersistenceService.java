@@ -44,7 +44,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-@SuppressWarnings(value = {"unchecked"})
+@SuppressWarnings("unchecked")
 public class JPAPersistenceService implements PersistenceService {
     private EntityManager entityManager;
     private boolean verifyEntityClasses = true;
@@ -463,6 +463,16 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
+    public void flush() {
+        EntityTransaction transaction = entityManager.getTransaction();
+        if (transaction.isActive()) {
+            entityManager.flush();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public <T extends Identifiable> boolean delete(Class<T> type, int id) {
         T t = findById(type, id);
         if (t != null) {
@@ -551,6 +561,13 @@ public class JPAPersistenceService implements PersistenceService {
         transaction.commit();
 
         return results;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     /**
