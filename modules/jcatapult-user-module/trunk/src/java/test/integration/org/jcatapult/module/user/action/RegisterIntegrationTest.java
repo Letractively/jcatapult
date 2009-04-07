@@ -250,7 +250,7 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
         EnhancedSecurityContext.logout();
         MockConfiguration configuration = makeConfiguration(false);
         configuration.addParameter(DefaultUserConfiguration.USERNAME_IS_EMAIL, true);
-        configuration.addParameter(DefaultUserConfiguration.CAPTCHA_ENABLED, true);
+        configuration.addParameter(DefaultUserConfiguration.CAPTCHA, true);
 
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/captch.jpg").get(); // Setup the captcha in the session

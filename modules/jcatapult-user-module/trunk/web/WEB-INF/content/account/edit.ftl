@@ -10,7 +10,7 @@
   </div>
   <div class="account-update-content user-module-content jcatapult-module-content">
     [#global formAction="edit"/]
-    [#include "../user_form.ftl"/]
+    [#include "../_user-form.ftl"/]
   </div>
 </div>
 </body>

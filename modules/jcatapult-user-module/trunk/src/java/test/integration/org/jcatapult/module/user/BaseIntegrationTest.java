@@ -74,6 +74,7 @@ public class BaseIntegrationTest extends JPABaseTest {
     protected MockConfiguration makeConfiguration(boolean registrationDisabled) {
         MockConfiguration configuration = new MockConfiguration(environmentAwareConfiguration);
         configuration.addParameter(DefaultUserConfiguration.REGISTRATION_DISABLED, registrationDisabled);
+        configuration.addParameter(DefaultUserConfiguration.CAPTCHA, false);
         return configuration;
     }
 
