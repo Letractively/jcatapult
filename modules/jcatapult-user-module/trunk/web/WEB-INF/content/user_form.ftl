@@ -67,11 +67,19 @@
       [/#if]
     </div>
     [#if settings['emailOptions']]
-    <div id="email-options-input" class="user-module-input-section jcatapult-module-input-section">
+      <div id="email-options-input" class="user-module-input-section jcatapult-module-input-section">
         [@jc.hidden name="user.properties.map['email_internal'].name" value="email_internal"/]
         [@jc.checkbox name="user.properties.map['email_internal'].value" value="true" required=true defaultChecked=true uncheckedValue="false"/]
         [@jc.hidden name="user.properties.map['email_partners'].name" value="email_partners"/]
         [@jc.checkbox name="user.properties.map['email_partners'].value" value="true" required=true defaultChecked=true uncheckedValue="false"/]
+      </div>
+    [/#if]
+    [#if settings['captcha'] && formAction == 'register']
+      <div id="captcha-image" class="user-module-input-section jcatapult-module-input-section">
+        <img src="/captcha.png" width="200" height="50"/>
+      </div>
+      <div id="captcha-input" class="user-module-input-section jcatapult-module-input-section">
+        [@jc.text name="captcha" required=true/]
       </div>
     [/#if]
   </div>

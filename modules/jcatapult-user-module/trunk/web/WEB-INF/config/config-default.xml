@@ -48,6 +48,7 @@
         <cell-phone>true</cell-phone>
         <cell-phone-required>true</cell-phone-required>
         <email-options>true</email-options>
+        <captcha>true</captcha>
       </fields>
     </user>
   </jcatapult>

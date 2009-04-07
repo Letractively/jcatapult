@@ -22,6 +22,8 @@ import org.jcatapult.module.user.util.URLTools;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.scope.MessageScope;
+import org.jcatapult.mvc.scope.annotation.Session;
+import org.jcatapult.mvc.validation.annotation.ValidateMethod;
 import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.saved.SavedRequestService;
 import org.jcatapult.user.service.RegisterResult;
@@ -95,6 +97,10 @@ public class Register extends BaseUserFormAction {
 
     public String uri;
 
+    @Session
+    public String captchaText;
+    public String captcha;
+
     @Inject
     public Register(SavedRequestService savedRequestService, HttpServletRequest request) {
         this.savedRequestService = savedRequestService;
@@ -146,5 +152,12 @@ public class Register extends BaseUserFormAction {
         }
 
         return "success";
+    }
+
+    @ValidateMethod
+    public void validateCaptcha() {
+        if (userConfiguration.isCaptchaEnabled() && (captchaText == null || captcha == null || !captcha.equals(captchaText))) {
+            messageStore.addFieldError(MessageScope.REQUEST, "captcha", "captcha.invalid");
+        }
     }
 }
