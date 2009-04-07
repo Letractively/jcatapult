@@ -108,6 +108,11 @@ public class BaseUserFormAction {
     @SuppressWarnings("unchecked")
     @ValidateMethod
     public void validate() {
+        // It is okay to create the user as a side-effect because it will be empty
+        if (user == null) {
+            user = new DefaultUser();
+        }
+        
         if (userConfiguration.isUsernameSameAsEmail()) {
             user.setUsername(user.getEmail());
         }
