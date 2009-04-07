@@ -18,6 +18,7 @@ package org.jcatapult.security.config;
 import org.apache.commons.configuration.Configuration;
 
 import com.google.inject.Inject;
+import net.java.lang.ObjectTools;
 
 /**
  * <p>
@@ -59,7 +60,12 @@ public class DefaultSecurityConfiguration implements SecurityConfiguration {
      * {@inheritDoc}
      */
     public String getAuthorizationRules() {
-        return configuration.getString("jcatapult.security.authorization.rules", "/admin**=admin");
+        String[] values = configuration.getStringArray("jcatapult.security.authorization.rules");
+        if (values == null || values.length == 0) {
+            return "/admin**=admin";
+        }
+
+        return ObjectTools.join(values, ",");
     }
 
     /**
