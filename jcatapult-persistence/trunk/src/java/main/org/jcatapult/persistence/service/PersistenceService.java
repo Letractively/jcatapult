@@ -17,6 +17,7 @@ package org.jcatapult.persistence.service;
 
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
 
 import org.jcatapult.persistence.domain.Identifiable;
 import org.jcatapult.persistence.domain.SoftDeletable;
@@ -340,6 +341,13 @@ public interface PersistenceService {
     void merge(Object obj);
 
     /**
+     * Flushes all of the previous calls (within a transaction) to the database. This is useful for
+     * ensuring that previous statements will be committed and won't cause key violations and other
+     * similar types of errors. If there is no transaction, this does nothing.
+     */
+    void flush();
+
+    /**
      * Removes the object with the given type and primary key. Since this uses a primary key to remove
      * the instance, this method will only work with identified instances. In addition, if the object
      * type passed in is {@link org.jcatapult.persistence.domain.SoftDeletable} than this method will update the active flag and perform
@@ -369,4 +377,9 @@ public interface PersistenceService {
      * @return  The number of rows updated or deleted.
      */
     int execute(String statement, Object... params);
+
+    /**
+     * @return  The EntityManager associated with this instance of the PersistenceService.
+     */
+    EntityManager getEntityManager();
 }
