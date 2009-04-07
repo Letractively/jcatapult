@@ -50,8 +50,10 @@ public @interface Action {
      *          /admin/user/edit/{id}
      *          </pre>
      *          <p>
-     *          If the URI is <strong>/admin/user/edit/42</strong>, the value of 42 would be set into
-     *          the action's <strong>id</strong> property or field.
+     *          If the URI is <strong>/admin/user/edit/42</strong>, the value of 42 would be added
+     *          to the HTTP request parameters under the key <strong>id</strong>. In most cases this
+     *          means that the value will also be set into the action, but it could also be used as
+     *          a {@link org.jcatapult.mvc.parameter.annotation.PreParameter}.
      *          </p>
      */
     String value() default "";

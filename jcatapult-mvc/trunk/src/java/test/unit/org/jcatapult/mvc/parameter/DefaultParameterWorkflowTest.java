@@ -19,12 +19,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.HashSet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 import org.example.domain.Action;
+import org.example.domain.PreAndPostAction;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
@@ -32,8 +34,11 @@ import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.ExpressionException;
 import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.test.JCatapultBaseTest;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import static net.java.util.CollectionTools.*;
 
 /**
@@ -43,7 +48,9 @@ import static net.java.util.CollectionTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class DefaultParameterWorkflowTest {
+public class DefaultParameterWorkflowTest extends JCatapultBaseTest {
+    @Inject public ExpressionEvaluator expressionEvaluator;
+    
     /**
      * Tests the workflow method.
      */
@@ -65,6 +72,7 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(request);
 
         ExpressionEvaluator expressionEvaluator = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        expect(expressionEvaluator.getAllMembers(action.getClass())).andReturn(new HashSet<String>());
         expressionEvaluator.setValue(eq("user.addresses['home'].city"), same(action), aryEq(array("Boulder")), eq(new HashMap<String, String>()));
         expressionEvaluator.setValue(eq("user.age"), same(action), aryEq(array("32")), eq(map("dateFormat", "MM/dd/yyyy")));
         expressionEvaluator.setValue(eq("user.inches"), same(action), aryEq(array("tall")), eq(new HashMap<String, String>()));
@@ -115,6 +123,7 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(request);
 
         ExpressionEvaluator expressionEvaluator = EasyMock.createNiceMock(ExpressionEvaluator.class);
+        expect(expressionEvaluator.getAllMembers(action.getClass())).andReturn(new HashSet<String>());
         expressionEvaluator.setValue(eq("user.checkbox['default']"), same(action), aryEq(array("false")), eq(new HashMap<String, String>()));
         expressionEvaluator.setValue(eq("user.radio['default']"), same(action), aryEq(array("false")), eq(new HashMap<String, String>()));
         EasyMock.replay(expressionEvaluator);
@@ -160,6 +169,7 @@ public class DefaultParameterWorkflowTest {
         EasyMock.replay(request);
 
         ExpressionEvaluator expressionEvaluator = EasyMock.createNiceMock(ExpressionEvaluator.class);
+        expect(expressionEvaluator.getAllMembers(action.getClass())).andReturn(new HashSet<String>());
         expressionEvaluator.setValue(eq("submit.x"), same(action), aryEq(array("1")), eq(new HashMap<String, String>()));
         expectLastCall().andThrow(new ExpressionException("Not property x"));
         expressionEvaluator.setValue(eq("submit.y"), same(action), aryEq(array("2")), eq(new HashMap<String, String>()));
@@ -185,5 +195,47 @@ public class DefaultParameterWorkflowTest {
         workflow.perform(chain);
 
         EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
+    }
+
+    /**
+     * Tests that all of the pre and post handling works correctly.
+     */
+    @Test
+    public void testPreAndPost() throws IOException, ServletException {
+        PreAndPostAction action = new PreAndPostAction();
+
+        Map<String, String[]> values = new HashMap<String, String[]>();
+        values.put("preField", array("1"));
+        values.put("preProperty", array("Pre property"));
+        values.put("notPre", array("Not pre"));
+
+        final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("GET");
+        EasyMock.expect(request.getContentType()).andReturn(null);
+        EasyMock.expect(request.getParameterMap()).andReturn(values);
+        EasyMock.replay(request);
+
+        ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
+        EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.replay(invocation);
+
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
+
+        MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
+        EasyMock.replay(messageStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator);
+        workflow.perform(chain);
+
+        assertTrue(action.preCalled);
+        assertTrue(action.postCalled);
+
+        EasyMock.verify(request, invocation, actionInvocationStore, messageStore, chain);
     }
 }

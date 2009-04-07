@@ -18,12 +18,14 @@ package org.jcatapult.mvc.parameter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.config.ActionConfiguration;
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -81,12 +83,12 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class DefaultURIParameterWorkflow implements URIParameterWorkflow {
-    private final ExpressionEvaluator expressionEvaluator;
+    private final HttpServletRequest request;
     private final ActionInvocationStore actionInvocationStore;
 
     @Inject
-    public DefaultURIParameterWorkflow(ExpressionEvaluator expressionEvaluator, ActionInvocationStore actionInvocationStore) {
-        this.expressionEvaluator = expressionEvaluator;
+    public DefaultURIParameterWorkflow(HttpServletRequest request, ActionInvocationStore actionInvocationStore) {
+        this.request = request;
         this.actionInvocationStore = actionInvocationStore;
     }
 
@@ -101,35 +103,40 @@ public class DefaultURIParameterWorkflow implements URIParameterWorkflow {
      * @throws  IOException If the WorkflowChain throws this exception.
      * @throws  ServletException If the WorkflowChain throws this exception.
      */
+    @SuppressWarnings("unchecked")
     public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
         ActionInvocation invocation = actionInvocationStore.getCurrent();
         LinkedList<String> parameters = new LinkedList<String>(invocation.uriParameters());
         ActionConfiguration actionConfiguration = invocation.configuration();
 
         if (!parameters.isEmpty() && actionConfiguration != null) {
+            Map<String, String[]> uriParameters = new HashMap<String, String[]>();
             String pattern = actionConfiguration.uriParameterPattern();
             String[] patternParts = pattern.split("/");
-            for (int i = 0; i < patternParts.length; i++) {
+            for (String patternPart : patternParts) {
                 // If there are no more URI parameters, we are finished
                 if (parameters.isEmpty()) {
                     break;
                 }
 
-                String patternPart = patternParts[i];
                 if (patternPart.startsWith("{*")) {
                     // Stuff the rest of the list into the property
                     String name = patternPart.substring(2, patternPart.length() - 1);
-                    expressionEvaluator.setValue(name, invocation.action(), parameters);
+                    uriParameters.put(name, parameters.toArray(new String[parameters.size()]));
                 } else if (patternPart.startsWith("{")) {
                     // Stuff this parameter into the property
                     String name = patternPart.substring(1, patternPart.length() - 1);
                     String value = parameters.removeFirst();
-                    expressionEvaluator.setValue(name, invocation.action(), new String[]{value}, new HashMap<String, String>());
+                    uriParameters.put(name, new String[]{value});
                 } else {
                     // Pop the value off
                     parameters.removeFirst();
                 }
             }
+
+            HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
+            HttpServletRequest old = (HttpServletRequest) wrapper.getRequest();
+            wrapper.setRequest(new ParameterHttpServletRequest(old, uriParameters));
         }
 
         workflowChain.continueWorkflow();

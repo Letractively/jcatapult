@@ -16,10 +16,10 @@
 package org.jcatapult.mvc.action;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import javax.servlet.ServletException;
 
 import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
+import org.jcatapult.mvc.util.MethodTools;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -50,17 +50,7 @@ public class DefaultActionPrepareWorkflow implements ActionPrepareWorkflow {
     public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
         Object action = actionInvocationStore.getCurrent().action();
         if (action != null) {
-            Class<?> actionClass = action.getClass();
-            Method[] methods = actionClass.getMethods();
-            for (Method method : methods) {
-                if (method.getAnnotation(ActionPrepareMethod.class) != null) {
-                    try {
-                        method.invoke(action);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Unable to call PrepareMethod method [" + method + "]", e);
-                    }
-                }
-            }
+            MethodTools.invokeAllWithAnnotation(action, ActionPrepareMethod.class);
         }
 
         workflowChain.continueWorkflow();
