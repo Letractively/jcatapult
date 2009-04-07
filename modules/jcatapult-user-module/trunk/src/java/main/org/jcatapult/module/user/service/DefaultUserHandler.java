@@ -161,18 +161,18 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
                     !StringTools.isEmpty(creditCard.getFirstName()) || !StringTools.isEmpty(creditCard.getLastName()) ||
                     !StringTools.isEmpty(creditCard.getNumber()) || !StringTools.isEmpty(creditCard.getSvn()) ||
                     Address.isContainsData(creditCard.getAddress())) {
-                validate(Required.class, user, "creditCard[" + i + "].firstName", errors);
-                validate(Required.class, user, "creditCard[" + i + "].lastName", errors);
-                validate(Required.class, user, "creditCard[" + i + "].expirationMonth", errors);
-                validate(Required.class, user, "creditCard[" + i + "].expirationYear", errors);
-                validate(Required.class, user, "creditCard[" + i + "].number", errors);
-                validate(Required.class, user, "creditCard[" + i + "].address.street", errors);
-                validate(Required.class, user, "creditCard[" + i + "].address.city", errors);
-                validate(Required.class, user, "creditCard[" + i + "].address.country", errors);
+                validate(Required.class, user, "creditCards[" + i + "].firstName", errors);
+                validate(Required.class, user, "creditCards[" + i + "].lastName", errors);
+                validate(Required.class, user, "creditCards[" + i + "].expirationMonth", errors);
+                validate(Required.class, user, "creditCards[" + i + "].expirationYear", errors);
+                validate(Required.class, user, "creditCards[" + i + "].number", errors);
+                validate(Required.class, user, "creditCards[" + i + "].address.street", errors);
+                validate(Required.class, user, "creditCards[" + i + "].address.city", errors);
+                validate(Required.class, user, "creditCards[" + i + "].address.country", errors);
 
                 if (creditCard.getAddress().getCountry() != null && creditCard.getAddress().getCountry().equals("US")) {
-                    validate(Required.class, user, "creditCard[" + i + "].address.state", errors);
-                    validate(Required.class, user, "creditCard[" + i + "].address.postalCode", errors);
+                    validate(Required.class, user, "creditCards[" + i + "].address.state", errors);
+                    validate(Required.class, user, "creditCards[" + i + "].address.postalCode", errors);
                 }
             }
         }
