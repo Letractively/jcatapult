@@ -37,7 +37,15 @@ public class GlobalTest extends JCatapultBaseTest {
     public void testRenderFTL() throws IOException, ServletException {
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/user/edit").get();
-        assertEquals(FileTools.read("src/java/test/unit/org/jcatapult/mvc/render-ftl.txt").toString(),
+        assertEquals(FileTools.read("src/java/test/unit/org/jcatapult/mvc/edit-output.txt").toString(),
+            runner.response.getStream().toString());
+    }
+
+    @Test
+    public void testNonFormFields() throws IOException, ServletException {
+        WebappTestRunner runner = new WebappTestRunner();
+        runner.test("/user/details-fields").get();
+        assertEquals(FileTools.read("src/java/test/unit/org/jcatapult/mvc/details-fields-output.txt").toString(),
             runner.response.getStream().toString());
     }
 }

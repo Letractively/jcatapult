@@ -69,6 +69,8 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     private static final String JCATAPULT_TAGS = "jc";
     private static final String JSP_TAGLIBS = "JspTaglibs";
 
+    private static final ObjectWrapper wrapper = new FieldSupportObjectWrapper();
+
     private static final Map<String, Class<? extends TemplateModel>> models = new HashMap<String, Class<? extends TemplateModel>>();
     private static final Map<String, Class<? extends Control>> controls = new HashMap<String, Class<? extends Control>>();
     private static TaglibFactory taglibFactory;
@@ -193,7 +195,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
         }
 
         try {
-            return ObjectWrapper.DEFAULT_WRAPPER.wrap(value);
+            return wrapper.wrap(value);
         } catch (TemplateModelException e) {
             throw new RuntimeException(e);
         }
@@ -208,7 +210,9 @@ public class FreeMarkerMap implements TemplateHashModelEx {
 
         keys.add(JSP_TAGLIBS);
 
-        return new SimpleCollection(keys);
+        SimpleCollection collection = new SimpleCollection(keys);
+        collection.setObjectWrapper(wrapper);
+        return collection;
     }
 
     public TemplateCollectionModel values() {
@@ -238,7 +242,9 @@ public class FreeMarkerMap implements TemplateHashModelEx {
 
         values.add(taglibFactory);
 
-        return new SimpleCollection(values);
+        SimpleCollection collection = new SimpleCollection(values);
+        collection.setObjectWrapper(wrapper);
+        return collection;
     }
 
     private int count(Enumeration enumeration) {
