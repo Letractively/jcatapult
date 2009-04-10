@@ -20,7 +20,8 @@ import java.util.List;
 
 import org.jcatapult.crud.service.SearchCriteria;
 import org.jcatapult.crud.service.SearchService;
-import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
+import org.jcatapult.mvc.parameter.annotation.PreParameter;
+import org.jcatapult.mvc.parameter.annotation.PreParameterMethod;
 import org.jcatapult.mvc.scope.annotation.ActionSession;
 
 import com.google.inject.Inject;
@@ -80,6 +81,7 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
     /**
      * The current clear flag state.
      */
+    @PreParameter
     public boolean clear = false;
 
     /**
@@ -116,9 +118,9 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
      * This method prepares the SearchCriteria instance if it is null by calling the
      * {@link #getDefaultCriteria()} method.
      */
-    @ActionPrepareMethod
+    @PreParameterMethod
     public void prepare() {
-        if (searchCriteria == null) {
+        if (searchCriteria == null || clear) {
             searchCriteria = getDefaultCriteria();
         }
     }
@@ -129,13 +131,8 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
      * @return  Always success.
      */
     public String execute() {
-        // If the clear flag is set, clear the search
-        if (clear) {
-            searchCriteria = getDefaultCriteria();
-        }
-
         results = searchService.find(searchCriteria);
-        totalCount = searchService.totalCount(searchCriteria);
+        totalCount = searchService.totalCount(searchCriteria);        
         return "success";
     }
 
