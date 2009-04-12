@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<module name="jcatapult-user-module">
+<module name="jcatapult-simple-user-module">
   <persistence>
     <class>org.jcatapult.module.simpleuser.domain.DefaultRole</class>
     <class>org.jcatapult.module.simpleuser.domain.DefaultUser</class>
