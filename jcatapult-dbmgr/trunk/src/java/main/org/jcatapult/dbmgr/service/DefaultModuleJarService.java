@@ -35,6 +35,7 @@ import static org.jcatapult.dbmgr.module.ModuleJarTools.*;
 
 import com.google.inject.Inject;
 import net.java.lang.StringTools;
+import static net.java.util.CollectionTools.set;
 
 /**
  * <p>
@@ -119,7 +120,7 @@ public class DefaultModuleJarService implements ModuleJarService {
 
         // resolve deps
         DependencyResolveMediator mediator = new DependencyResolveMediator();
-        boolean depsResolved = mediator.mediate(sc, null, null, true);
+        boolean depsResolved = mediator.mediate(sc, null, set("compile", "run"), true);
 
         // throw a runtime exception if deps can't get resolved
         if (!depsResolved) {
