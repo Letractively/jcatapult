@@ -21,8 +21,8 @@
     <classpathentry kind="var" path="SAVANT_REPOSITORY/org/easymock/easymock/2.3/easymock-2.3.jar" sourcepath="/SAVANT_REPOSITORY/org/easymock/easymock/2.3/easymock-2.3-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/org/freemarker/freemarker/2.3.12/freemarker-2.3.12.jar" sourcepath="/SAVANT_REPOSITORY/org/freemarker/freemarker/2.3.12/freemarker-2.3.12-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/org/hsqldb/hsqldb/1.8.9/hsqldb-1.8.9.jar" sourcepath="/SAVANT_REPOSITORY/org/hsqldb/hsqldb/1.8.9/hsqldb-1.8.9-src.jar" />
-    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0-RC12-{integration}/jcatapult-core-1.0-RC12-IB20090312212225138.jar" sourcepath="/SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0-RC12-{integration}/jcatapult-core-1.0-RC12-IB20090312212225138-src.jar" />
-    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0-RC12-{integration}/jcatapult-core-test-1.0-RC12-IB20090312212225138.jar" sourcepath="/SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0-RC12-{integration}/jcatapult-core-test-1.0-RC12-IB20090312212225138-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0-RC13/jcatapult-core-1.0-RC13.jar" sourcepath="/SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0-RC13/jcatapult-core-1.0-RC13-src.jar" />
+    <classpathentry kind="var" path="SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0-RC13/jcatapult-core-test-1.0-RC13.jar" sourcepath="/SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0-RC13/jcatapult-core-test-1.0-RC13-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/org/joda/joda-time/joda-time/1.4/joda-time-1.4.jar" sourcepath="/SAVANT_REPOSITORY/org/joda/joda-time/joda-time/1.4/joda-time-1.4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/org/junit/junit/4.4/junit-4.4.jar" sourcepath="/SAVANT_REPOSITORY/org/junit/junit/4.4/junit-4.4-src.jar" />
     <classpathentry kind="var" path="SAVANT_REPOSITORY/org/objectweb/asm/asm/3.1/asm-3.1.jar" sourcepath="/SAVANT_REPOSITORY/org/objectweb/asm/asm/3.1/asm-3.1-src.jar" />
