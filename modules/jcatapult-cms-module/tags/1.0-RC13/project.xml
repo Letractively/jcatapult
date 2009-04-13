@@ -1,0 +1,68 @@
+<project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
+         name="jcatapult-cms-module"
+         group="modules.jcatapult.org"
+         version="1.0-RC13">
+  
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="mysql" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="jee-web" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="tomcat" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+  <plugin group="plugins.savant.jcatapult.org" name="module" version="1.0.2"/>
+  <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0.2"/>
+  <plugin group="plugins.savant.jcatapult.org" name="security" version="1.0"/>
+ 
+  <!-- Compile properties -->
+  <property name="jdk.version" value="1.6"/>
+  <property name="version.jcatapult" value="1.0-RC13"/>
+
+  <!-- Database properties -->
+  <property name="project.requires.database" value="true"/>
+  <property name="project.contains.domain" value="true"/>
+
+  <dependencies>
+    <artifactGroup type="compile-only">
+      <artifact group="servlet.javax" name="servlet-api" version="2.4"/>
+    </artifactGroup>
+    <artifactGroup type="compile">
+      <artifact group="guice.code.google.com" name="guice" version="1.0"/>
+      <artifact group="hibernate.org" name="hibernate-annotations" version="3.3.1"/>
+
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.2"/>
+
+      <!-- jcatapult deps -->
+      <artifact group="jcatapult.org" name="jcatapult-core" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" name="jcatapult-mvc" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" name="jcatapult-persistence" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" name="jcatapult-security" version="${version.jcatapult}"/>
+
+      <artifact group="persistence.javax" name="persistence-api" version="1.0"/>
+    </artifactGroup>
+    <artifactGroup type="run">
+      <artifact group="hibernate.org" name="hibernate-entitymanager" version="3.3.2"/>
+      <artifact group="libraries.jcatapult.org" name="jcatapult-filemgr" version="${version.jcatapult}"/>
+      <artifact group="modules.fckeditor.net" name="fckeditor" version="2.6.4"/>
+      <artifact group="opensymphony.com" name="sitemesh" version="2.3"/>
+    </artifactGroup>
+    <artifactGroup type="test-compile">
+      <!-- jcat unit testing deps -->
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" project="jcatapult-mvc" name="jcatapult-mvc-test" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence-test" version="${version.jcatapult}"/>
+      <artifact group="libraries.jcatapult.org" name="jcatapult-email" version="${version.jcatapult}"/>
+
+      <artifact group="easymock.org" name="easymock" version="2.2"/>
+      <artifact group="junit.org" name="junit" version="4.4"/>
+    </artifactGroup>
+  </dependencies>
+
+  <!-- This is for testing the module in Tomcat -->
+  <dependencies id="dev-test">
+    <artifactGroup type="run">
+      <artifact group="modules.jcatapult.org" name="jcatapult-simple-user-module" version="1.0-RC13"/>
+    </artifactGroup>
+  </dependencies>
+</project>
