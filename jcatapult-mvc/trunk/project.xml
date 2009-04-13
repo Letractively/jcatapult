@@ -12,7 +12,7 @@
   <!-- compile properties -->
   <property name="jdk.version" value="1.6"/>
 
-  <property name="version.jcatapult" value="1.0-RC13-{integration}"/>
+  <property name="version.jcatapult" value="1.0-RC13"/>
 
   <release>
     <publication name="jcatapult-mvc" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"/>
