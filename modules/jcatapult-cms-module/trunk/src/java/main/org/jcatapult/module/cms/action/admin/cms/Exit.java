@@ -16,10 +16,13 @@
  */
 package org.jcatapult.module.cms.action.admin.cms;
 
+import org.jcatapult.config.Configuration;
 import org.jcatapult.module.cms.domain.CMSMode;
 import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.scope.annotation.Session;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -29,11 +32,20 @@ import org.jcatapult.mvc.scope.annotation.Session;
  * @author  Brian Pontarelli
  */
 @Action
-@Redirect(uri = "/")
+@Redirect(uri = "${uri}")
 public class Exit {
+    private final Configuration configuration;
+
     @Session public CMSMode cmsMode;
+    public String uri;
+
+    @Inject
+    public Exit(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
     public String get() {
+        uri = configuration.getString("jcatapult.cms.exit-uri", "/admin/");
         cmsMode = CMSMode.DISPLAY;
         return "success";
     }

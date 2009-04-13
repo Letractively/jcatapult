@@ -16,17 +16,22 @@
  */
 package org.jcatapult.module.cms;
 
-import java.sql.SQLException;
+import java.util.Set;
 
 import org.jcatapult.email.EmailTestHelper;
 import org.jcatapult.module.cms.service.ContentService;
-import org.jcatapult.module.simpleuser.domain.DefaultRole;
-import org.jcatapult.module.simpleuser.domain.DefaultUser;
 import org.jcatapult.persistence.test.JPABaseTest;
-import org.junit.Before;
+import org.jcatapult.security.UserAdapter;
+import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
+import org.jcatapult.security.spi.SecurityContextProvider;
+import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
 import org.junit.Ignore;
 
 import com.google.inject.Inject;
+import com.google.inject.AbstractModule;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -38,23 +43,41 @@ import com.google.inject.Inject;
 @Ignore
 public class BaseIntegrationTest extends JPABaseTest {
     @Inject public ContentService contentService;
-    protected DefaultUser publisher;
-    protected DefaultUser editor;
+    protected User publisher = new User();
+    protected User editor = new User();
+    protected UserAdapter<User> userAdapter;
 
     public BaseIntegrationTest() {
         EmailTestHelper.setup(this);
-    }
+        
+        userAdapter = new UserAdapter<User>() {
+            public String getUsername(User user) {
+                return "foo";
+            }
 
-    @Before
-    public void setupDatabase() throws SQLException {
-        publisher = new DefaultUser();
-        publisher.setId(1);
-        publisher.setUsername("publisher");
-        publisher.addRole(new DefaultRole("publisher"));
+            public String getPassword(User user) {
+                return "bar";
+            }
 
-        editor = new DefaultUser();
-        editor.setId(1);
-        editor.setUsername("editor");
-        editor.addRole(new DefaultRole("editor"));
+            public Set<String> getRoles(User user) {
+                if (user == publisher) {
+                    return set("publisher");
+                }
+
+                return set("editor");
+            }
+        };
+
+        addModules(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(UserAdapter.class).toInstance(userAdapter);
+
+                bind(SecurityContextProvider.class).to(JCatapultSecurityContextProvider.class);
+                requestStaticInjection(SecurityContext.class);
+                bind(EnhancedSecurityContextProvider.class).to(JCatapultSecurityContextProvider.class);
+                requestStaticInjection(EnhancedSecurityContext.class);
+            }
+        });
     }
 }

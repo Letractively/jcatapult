@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
   <jcatapult>
-    <modules>
-      <cms>
-        <!--<rich-text-editor>-->
-          <!--<name>fck</name>-->
-          <!--<url>/module/fckeditor/2.6.4/fckeditor.js</url>-->
-        <!--</rich-text-editor>-->
-        <start-uri>/test</start-uri>
-      </cms>
-    </modules>
+    <cms>
+      <!--<rich-text-editor>-->
+        <!--<name>fck</name>-->
+        <!--<uri>/module/fckeditor/2.6.4/fckeditor.js</uri>-->
+      <!--</rich-text-editor>-->
+      <start-uri>/test</start-uri>
+    </cms>
   </jcatapult>
 </config>

@@ -23,6 +23,7 @@ import org.jcatapult.module.cms.BaseIntegrationTest;
 import org.jcatapult.module.cms.domain.CMSMode;
 import org.jcatapult.mvc.test.RequestBuilder;
 import org.jcatapult.mvc.test.WebappTestRunner;
+import org.jcatapult.security.UserAdapter;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -38,10 +39,12 @@ public class ExitIntegrationTest extends BaseIntegrationTest {
     public void testStoreStaticPageScoped() throws IOException, ServletException {
         WebappTestRunner runner = new WebappTestRunner();
         RequestBuilder builder = runner.test("/admin/cms/exit");
-        builder.get();
+        builder.
+            withMock(UserAdapter.class, userAdapter).
+            get();
 
         String result = runner.response.getRedirect();
-        assertEquals("/", result);
+        assertEquals("/admin/", result);
         assertSame(CMSMode.DISPLAY, builder.getRequest().getSession().getAttribute("cmsMode"));
     }
 }

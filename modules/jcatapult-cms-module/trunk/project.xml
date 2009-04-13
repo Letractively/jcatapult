@@ -17,7 +17,7 @@
  
   <!-- Compile properties -->
   <property name="jdk.version" value="1.6"/>
-  <property name="version.jcatapult" value="1.0-RC12"/>
+  <property name="version.jcatapult" value="1.0-RC13-{integration}"/>
 
   <!-- Database properties -->
   <property name="project.requires.database" value="true"/>
@@ -48,8 +48,10 @@
       <artifact group="opensymphony.com" name="sitemesh" version="2.3"/>
     </artifactGroup>
     <artifactGroup type="test-compile">
+    <!--
       <artifact group="libraries.jcatapult.org" name="jcatapult-user" version="1.0-RC12"/>
       <artifact group="modules.jcatapult.org" name="jcatapult-simple-user-module" version="1.0-RC12"/>
+-->
 
       <!-- jcat unit testing deps -->
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>

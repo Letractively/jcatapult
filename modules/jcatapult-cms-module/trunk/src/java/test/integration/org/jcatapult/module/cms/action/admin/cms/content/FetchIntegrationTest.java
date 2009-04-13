@@ -25,6 +25,7 @@ import org.jcatapult.module.cms.domain.ContentType;
 import org.jcatapult.mvc.test.RequestBuilder;
 import org.jcatapult.mvc.test.WebappTestRunner;
 import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.UserAdapter;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -45,6 +46,7 @@ public class FetchIntegrationTest extends BaseIntegrationTest {
 
         WebappTestRunner runner = new WebappTestRunner();
         RequestBuilder builder = runner.test("/admin/cms/content/fetch").
+            withMock(UserAdapter.class, userAdapter).
             withParameter("queries[0].global", "false").
             withParameter("queries[0].uri", "/page").
             withParameter("queries[0].name", "callout");
