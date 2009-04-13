@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<module name="jcatapult-user-module">
+  <persistence>
+    <class>org.jcatapult.module.user.domain.Address</class>
+    <class>org.jcatapult.module.user.domain.AuditableCreditCard</class>
+    <class>org.jcatapult.module.user.domain.EmailAddress</class>
+    <class>org.jcatapult.module.user.domain.DefaultRole</class>
+    <class>org.jcatapult.module.user.domain.DefaultUser</class>
+    <class>org.jcatapult.module.user.domain.PhoneNumber</class>
+    <class>org.jcatapult.module.user.domain.UserProperty</class>
+  </persistence>
+</module>
