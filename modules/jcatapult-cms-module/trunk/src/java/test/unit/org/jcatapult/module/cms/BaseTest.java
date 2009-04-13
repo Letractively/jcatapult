@@ -16,17 +16,22 @@
  */
 package org.jcatapult.module.cms;
 
-import java.sql.SQLException;
+import java.util.Set;
 
 import org.jcatapult.module.cms.service.DefaultContentService;
-import org.jcatapult.module.simpleuser.domain.DefaultRole;
-import org.jcatapult.module.simpleuser.domain.DefaultUser;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.test.JPABaseTest;
-import org.junit.Before;
+import org.jcatapult.security.UserAdapter;
+import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
+import org.jcatapult.security.spi.SecurityContextProvider;
+import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
 import org.junit.Ignore;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -39,17 +44,36 @@ import com.google.inject.Inject;
 public class BaseTest extends JPABaseTest {
     @Inject public DefaultContentService service;
     @Inject public PersistenceService persistenceService;
-    protected DefaultUser publisher;
-    protected DefaultUser editor;
+    protected User publisher = new User();
+    protected User editor = new User();
 
-    @Before
-    public void setupDatabase() throws SQLException {
-        publisher = new DefaultUser();
-        publisher.setId(1);
-        publisher.addRole(new DefaultRole("publisher"));
+    public BaseTest() {
+        addModules(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(UserAdapter.class).toInstance(new UserAdapter<User>() {
+                    public String getUsername(User user) {
+                        return "foo";
+                    }
 
-        editor = new DefaultUser();
-        editor.setId(1);
-        editor.addRole(new DefaultRole("editor"));
+                    public String getPassword(User user) {
+                        return "bar";
+                    }
+
+                    public Set<String> getRoles(User user) {
+                        if (user == publisher) {
+                            return set("publisher");
+                        }
+
+                        return set("editor");
+                    }
+                });
+
+                bind(SecurityContextProvider.class).to(JCatapultSecurityContextProvider.class);
+                requestStaticInjection(SecurityContext.class);
+                bind(EnhancedSecurityContextProvider.class).to(JCatapultSecurityContextProvider.class);
+                requestStaticInjection(EnhancedSecurityContext.class);
+            }
+        });
     }
 }

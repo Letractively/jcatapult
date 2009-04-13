@@ -25,6 +25,7 @@ import org.jcatapult.module.cms.BaseIntegrationTest;
 import org.jcatapult.mvc.test.RequestBuilder;
 import org.jcatapult.mvc.test.WebappTestRunner;
 import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.UserAdapter;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -49,6 +50,7 @@ public class StoreIntegrationTest extends BaseIntegrationTest {
             withParameter("locale", "en_US").
             withParameter("content", "The content").
             withParameter("contentType", "HTML").
+            withMock(UserAdapter.class, userAdapter).
             withMock(EmailTransportService.class, EmailTestHelper.getService());
         builder.post();
 
@@ -69,6 +71,7 @@ public class StoreIntegrationTest extends BaseIntegrationTest {
             withParameter("uri", "/integration-page").
             withParameter("name", "callout").
             withParameter("locale", "en_US").
+            withMock(UserAdapter.class, userAdapter).
             withMock(EmailTransportService.class, EmailTestHelper.getService());
         builder.post();
 
