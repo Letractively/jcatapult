@@ -17,6 +17,9 @@
   <macrodef name="app-pre">
     <sequential>
       <artifactcopy todir="web/WEB-INF/lib" flatten="true" dependencies="dev-test" types="compile,run" transitive="true"/>
+      <copy todir="web/WEB-INF/classes/META-INF">
+        <fileset dir="src/conf/test/integration/META-INF" includes="*"/>
+      </copy>
       <!--<copy todir="web/WEB-INF/classes">-->
         <!--<fileset dir="src/conf/test/dev" includes="META-INF/**"/>-->
       <!--</copy>-->

@@ -2,10 +2,10 @@
 <config>
   <jcatapult>
     <cms>
-      <!--<rich-text-editor>-->
-        <!--<name>fck</name>-->
-        <!--<uri>/module/fckeditor/2.6.4/fckeditor.js</uri>-->
-      <!--</rich-text-editor>-->
+      <rich-text-editor>
+        <name>fck</name>
+        <uri>/module/fckeditor/2.6.4/fckeditor.js</uri>
+      </rich-text-editor>
       <start-uri>/test</start-uri>
     </cms>
   </jcatapult>
