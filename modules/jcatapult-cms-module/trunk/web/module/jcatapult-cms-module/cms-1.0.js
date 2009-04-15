@@ -111,7 +111,6 @@ function CMS_class() {
     }
 
     edited_nodes = {};
-    current_editor = undefined;
     current_node = undefined;
     nodes_modified = false;
     return true;
@@ -220,7 +219,6 @@ function CMS_class() {
 
     // Clear out the current edit information
     current_node = undefined;
-    current_editor = undefined;
     nodes_modified = true;
     CMS.invoke(options, "preview_content_node_post");
   };
@@ -272,7 +270,6 @@ function CMS_class() {
     $("#cms-revert").hide();
 
     nodes_modified = false;
-    current_editor = undefined;
     current_node = undefined;
     CMS.invoke(options, "revert_post");
   };
@@ -328,7 +325,7 @@ function CMS_class() {
 
     $("#cms-content-editor-textarea").val(content);
     $("#cms-content-editor").dialog("open");
-    current_editor = CMS.create_rich_text_editor(content);
+    CMS.create_rich_text_editor(content);
 
     CMS.invoke(options, "open_content_editor_post");
   };
@@ -368,19 +365,19 @@ function CMS_class() {
    */
   this.create_rich_text_editor = function(content) {
     if (options["rich_text_editor"] == "nic") {
-      var ne = new nicEditor({fullPanel: true}).panelInstance("cms-content-editor-textarea");
+      current_editor = new nicEditor({fullPanel: true}).panelInstance("cms-content-editor-textarea");
       nicEditors.findEditor("cms-content-editor-textarea").setContent(content);
-      return ne;
     } else if (options["rich_text_editor"] == "fck") {
-      var editor = new FCKeditor("cms-content-editor-textarea");
-      editor.BasePath = "/module/fckeditor/2.6.4/";
-      editor.Config["CustomConfigurationsPath"] = "/module/jcatapult-cms-module/fckeditor-config-1.0.js";
-      editor.Width = "100%";
-      editor.Height = "450px";
-      editor.ReplaceTextarea();
-      return editor;
-    } else {
-      return undefined; // Just use text areas
+      if (current_editor == undefined) {
+        current_editor = new FCKeditor("cms-content-editor-textarea");
+        current_editor.BasePath = "/module/fckeditor/2.6.4/";
+        current_editor.Config["CustomConfigurationsPath"] = "/module/jcatapult-cms-module/fckeditor-config-1.0.js";
+        current_editor.Width = "100%";
+        current_editor.Height = "450px";
+        current_editor.ReplaceTextarea();
+      } else {
+        FCKeditorAPI.GetInstance("cms-content-editor-textarea").SetData(content);
+      }
     }
   };
 
