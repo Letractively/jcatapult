@@ -96,6 +96,6 @@ if (System.getProperty("os.name").contains("Windows")) {
   cmd = "svnt"
 }
 
-ant.exec(executable: cmd, dir: projectDir) {
+ant.exec(executable: cmd, dir: "${projectDir}/${projectName}") {
   arg(line: "ide")
 }
