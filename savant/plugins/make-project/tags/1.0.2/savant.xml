@@ -1,0 +1,12 @@
+<project>
+  <macrodef name="compile-post">
+    <sequential>
+      <copy todir="target/dist/groovy">
+        <fileset dir="src/groovy/main" includes="**/*"/>
+      </copy>
+      <copy todir="target/dist">
+        <fileset dir="." includes="project.xml"/>
+      </copy>
+    </sequential>
+  </macrodef>
+</project>
