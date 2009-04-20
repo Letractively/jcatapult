@@ -17,7 +17,7 @@ After you download and install Ant, please create an ANT_HOME environment variab
 
 = Savant =
 
-JCatapult requires that you have Savant 1.5 or later installed (but NOT a 2.0 build). You will need to download Savant if you don't already have it installed. The website for Savant is http://code.google.com/p/savant-build
+JCatapult requires that you have Savant 1.5.1 (NOT 1.5) or later installed (but NOT a 2.0 build). You will need to download Savant if you don't already have it installed. The website for Savant is http://code.google.com/p/savant-build
 
 After you download and install Savant, please create an SAVANT_HOME environment variable and set it to the location of your Savant installation. You also need to setup 2 Savant global plugins that JCatapult provides in order to use the JCatapult make-project and svn-import tools. To setup these plugins, execute these commands:
 
@@ -26,7 +26,6 @@ $ svnt add-plugin plugins.savant.jcatapult.org:make-project
 $ svnt add-plugin plugins.savant.jcatapult.org:svn-import
 }}}
 
-*NOTE* There is currently a bug in Savant 1.5 that causes these two plugins to fail. Until 1.5.1 is released and fixes the bug, you'll need to copy the ant.jar and ant-launcher.jar files from $ANT_HOME/lib to the $SAVANT_HOME/lib directory.
 
 = Tomcat =
 
