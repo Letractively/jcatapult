@@ -37,11 +37,11 @@
   <component name="DynamicElementsStorage">
     <option name="containingClasses">
       <map>
-        <entry key="make-project">
+        <entry key="make_project">
           <value>
             <DClassElement>
-              <option name="name" value="make-project" />
-              <option name="myName" value="make-project" />
+              <option name="name" value="make_project" />
+              <option name="myName" value="make_project" />
               <option name="myNamesToProperties">
                 <map>
                   <entry key="arguments">
