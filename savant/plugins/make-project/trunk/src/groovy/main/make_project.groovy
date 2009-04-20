@@ -11,7 +11,7 @@ if (type == null || (type != 'webapp' && type != 'module' && type != 'library'))
   System.exit(1)
 }
 
-Reader reader = new InputStreamReader(System.in)
+Reader reader = new BufferedReader(new InputStreamReader(System.in))
 
 
 // Read the input
@@ -88,4 +88,14 @@ println "Fixing IntelliJ file names"
 ant.replace(file: "${projectDir}/${projectName}/${projectName}.ipr", token: "${type}-template", value: projectName)
 ant.replace(file: "${projectDir}/${projectName}/${projectName}.iml", token: "${type}-template", value: projectName)
 
-"svnt ide".execute()
+String cmd
+if (System.getProperty("os.name").contains("Windows")) {
+  String savantHome = System.getProperty("savant.home")
+  cmd = "${savantHome}\\bin\\svnt.bat"
+} else {
+  cmd = "svnt"
+}
+
+ant.exec(executable: cmd, dir: projectDir) {
+  arg(line: "ide")
+}
