@@ -9,7 +9,7 @@
   <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="mysql" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="jee" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="tomcat" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="tomcat" version="1.0.1"/>
   <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
   <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0.2"/>
   <plugin group="plugins.savant.jcatapult.org" name="module" version="1.0.3"/>
