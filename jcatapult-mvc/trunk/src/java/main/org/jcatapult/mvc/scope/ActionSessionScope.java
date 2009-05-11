@@ -66,7 +66,8 @@ public class ActionSessionScope implements Scope<ActionSession> {
             return null;
         }
 
-        return values.get(fieldName);
+        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+        return values.get(key);
     }
 
     /**
@@ -86,7 +87,8 @@ public class ActionSessionScope implements Scope<ActionSession> {
             actionSession.put(className, values);
         }
 
-        values.put(fieldName, value);
+        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+        values.put(key, value);
     }
 
     /**
@@ -98,8 +100,8 @@ public class ActionSessionScope implements Scope<ActionSession> {
      */
     protected String getActionClassName(ActionSession scope) {
         String className;
-        if (scope.value() != ActionSession.class) {
-            className = scope.value().getName();
+        if (scope.action() != ActionSession.class) {
+            className = scope.action().getName();
         } else {
             ActionInvocation ai = actionInvocationStore.getCurrent();
             if (ai.action() == null) {

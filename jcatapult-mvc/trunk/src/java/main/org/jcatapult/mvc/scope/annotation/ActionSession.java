@@ -35,8 +35,14 @@ import org.jcatapult.mvc.scope.ActionSessionScope;
 @Target(ElementType.FIELD)
 public @interface ActionSession {
     /**
+     * @return  This attribute determines the name under which that the value is stored in the action
+     *          session. The default name is the name of the field that the annotation is put on.
+     */
+    String value() default "##field-name##";
+
+    /**
      * @return  This attribute determines the action for which the action session is used. This allows
      *          an action to get and set attributes inside another action's session.
      */
-    Class<?> value() default ActionSession.class;
+    Class<?> action() default ActionSession.class;
 }
