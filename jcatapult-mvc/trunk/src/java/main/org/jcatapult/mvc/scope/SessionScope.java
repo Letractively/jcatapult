@@ -18,6 +18,8 @@ package org.jcatapult.mvc.scope;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.jcatapult.mvc.scope.annotation.Session;
+
 import com.google.inject.Inject;
 
 /**
@@ -28,7 +30,7 @@ import com.google.inject.Inject;
  *
  * @author Brian Pontarelli
  */
-public class SessionScope implements Scope {
+public class SessionScope implements Scope<Session> {
     private final HttpSession session;
 
     @Inject
@@ -39,14 +41,16 @@ public class SessionScope implements Scope {
     /**
      * {@inheritDoc}
      */
-    public Object get(String fieldName) {
-        return session.getAttribute(fieldName);
+    public Object get(String fieldName, Session scope) {
+        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+        return session.getAttribute(key);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void set(String fieldName, Object value) {
-        session.setAttribute(fieldName, value);
+    public void set(String fieldName, Object value, Session scope) {
+        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+        session.setAttribute(key, value);
     }
 }

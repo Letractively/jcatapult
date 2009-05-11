@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.util.Currency;
 import java.util.Map;
 
+import static net.java.lang.StringTools.*;
 import org.jcatapult.domain.commerce.Money;
 import org.jcatapult.mvc.parameter.convert.AbstractGlobalConverter;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
@@ -27,7 +28,6 @@ import org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import net.java.lang.StringTools;
 
 /**
  * <p>
@@ -48,12 +48,12 @@ public class MoneyConverter extends AbstractGlobalConverter {
 
     protected Object stringToObject(String value, Type convertTo, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
-        if (emptyIsNull && StringTools.isTrimmedEmpty(value)) {
+        if (emptyIsNull && isTrimmedEmpty(value)) {
             return null;
         }
 
         String code = attributes.get("currencyCode");
-        if (code == null) {
+        if (isTrimmedEmpty(code)) {
             throw new ConverterStateException("You must provide the currencyCode dynamic attribute. " +
                 "If you are using a text field it will look like this: [@jc.text _currencyCode=\"USD\"]");
         }
@@ -62,7 +62,9 @@ public class MoneyConverter extends AbstractGlobalConverter {
         try {
             currency = Currency.getInstance(code);
         } catch (Exception e) {
-            throw new ConverterStateException("Invalid currencyCode [" + code + "]");
+            throw new ConverterStateException("Invalid currencyCode [" + code + "]. You must provide a valid " +
+                "currency code using the currencyCode dynamic attribute. If you are using a text field " +
+                "it will look like this: [@jc.text _currencyCode=\"USD\"]");
         }
 
         if (value.startsWith(currency.getSymbol())) {

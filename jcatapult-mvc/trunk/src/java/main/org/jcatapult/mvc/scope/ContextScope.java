@@ -17,6 +17,8 @@ package org.jcatapult.mvc.scope;
 
 import javax.servlet.ServletContext;
 
+import org.jcatapult.mvc.scope.annotation.Context;
+
 import com.google.inject.Inject;
 
 /**
@@ -27,7 +29,7 @@ import com.google.inject.Inject;
  *
  * @author Brian Pontarelli
  */
-public class ContextScope implements Scope {
+public class ContextScope implements Scope<Context> {
     private final ServletContext context;
 
     @Inject
@@ -38,14 +40,16 @@ public class ContextScope implements Scope {
     /**
      * {@inheritDoc}
      */
-    public Object get(String fieldName) {
-        return context.getAttribute(fieldName);
+    public Object get(String fieldName, Context scope) {
+        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+        return context.getAttribute(key);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void set(String fieldName, Object value) {
-        context.setAttribute(fieldName, value);
+    public void set(String fieldName, Object value, Context scope) {
+        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+        context.setAttribute(key, value);
     }
 }

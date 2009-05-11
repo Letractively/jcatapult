@@ -91,7 +91,7 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
 
                     if (type.isAnnotationPresent(ScopeAnnotation.class)) {
                         Scope scope = scopeProvider.lookup(type);
-                        Object value = scope.get(fieldName);
+                        Object value = scope.get(fieldName, annotation);
                         if (value != null) {
                             expressionEvaluator.setValue(fieldName, action, value);
                         }
@@ -121,7 +121,7 @@ public class DefaultScopeWorkflow implements ScopeWorkflow {
                     if (type.isAnnotationPresent(ScopeAnnotation.class)) {
                         Scope scope = scopeProvider.lookup(type);
                         Object value = expressionEvaluator.getValue(fieldName, action);
-                        scope.set(fieldName, value);
+                        scope.set(fieldName, value, annotation);
                     }
                 }
             }

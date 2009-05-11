@@ -15,12 +15,14 @@
  */
 package org.jcatapult.mvc.scope;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.easymock.EasyMock;
+import org.jcatapult.mvc.scope.annotation.Flash;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -43,13 +45,45 @@ public class FlashScopeTest {
         EasyMock.replay(request);
 
         FlashScope scope = new FlashScope(request);
-        assertSame(value, scope.get("test"));
+        assertSame(value, scope.get("test", new Flash() {
+            public String value() {
+                return "##field-name##";
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return Flash.class;
+            }
+        }));
 
         EasyMock.verify(request);
     }
 
     @Test
-    public void testGet() {
+    public void testGetRequestDifferentKey() {
+        Object value = new Object();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("other", value);
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getAttribute("jcatapultFlash")).andReturn(map);
+        EasyMock.replay(request);
+
+        FlashScope scope = new FlashScope(request);
+        assertSame(value, scope.get("test", new Flash() {
+            public String value() {
+                return "other";
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return Flash.class;
+            }
+        }));
+
+        EasyMock.verify(request);
+    }
+
+    @Test
+    public void testGetFromSession() {
         Object value = new Object();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("test", value);
@@ -64,7 +98,44 @@ public class FlashScopeTest {
         EasyMock.replay(request);
 
         FlashScope scope = new FlashScope(request);
-        assertSame(value, scope.get("test"));
+        assertSame(value, scope.get("test", new Flash() {
+            public String value() {
+                return "##field-name##";
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return Flash.class;
+            }
+        }));
+
+        EasyMock.verify(request, session);
+    }
+
+    @Test
+    public void testGetFromSessionDifferentKey() {
+        Object value = new Object();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("other", value);
+
+        HttpSession session = EasyMock.createStrictMock(HttpSession.class);
+        EasyMock.expect(session.getAttribute("jcatapultFlash")).andReturn(map);
+        EasyMock.replay(session);
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getAttribute("jcatapultFlash")).andReturn(new HashMap<String, Object>());
+        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.replay(request);
+
+        FlashScope scope = new FlashScope(request);
+        assertSame(value, scope.get("test", new Flash() {
+            public String value() {
+                return "other";
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return Flash.class;
+            }
+        }));
 
         EasyMock.verify(request, session);
     }
@@ -83,8 +154,44 @@ public class FlashScopeTest {
         EasyMock.replay(request);
 
         FlashScope scope = new FlashScope(request);
-        scope.set("test", value);
+        scope.set("test", value, new Flash() {
+            public String value() {
+                return "##field-name##";
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return Flash.class;
+            }
+        });
         assertSame(value, map.get("test"));
+
+        EasyMock.verify(request, session);
+    }
+
+    @Test
+    public void testSetDifferentkey() {
+        Object value = new Object();
+        Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
+
+        HttpSession session = EasyMock.createStrictMock(HttpSession.class);
+        EasyMock.expect(session.getAttribute("jcatapultFlash")).andReturn(map);
+        EasyMock.replay(session);
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.replay(request);
+
+        FlashScope scope = new FlashScope(request);
+        scope.set("test", value, new Flash() {
+            public String value() {
+                return "other";
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return Flash.class;
+            }
+        });
+        assertSame(value, map.get("other"));
 
         EasyMock.verify(request, session);
     }

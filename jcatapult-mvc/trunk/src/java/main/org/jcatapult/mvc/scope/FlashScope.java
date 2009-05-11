@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.mvc.scope.annotation.Flash;
+
 import com.google.inject.Inject;
 
 /**
@@ -35,7 +37,7 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 @SuppressWarnings("unchecked")
-public class FlashScope implements Scope {
+public class FlashScope implements Scope<Flash> {
     public static final String FLASH_KEY = "jcatapultFlash";
     private final HttpServletRequest request;
 
@@ -47,29 +49,33 @@ public class FlashScope implements Scope {
     /**
      * {@inheritDoc}
      */
-    public Object get(String fieldName) {
+    public Object get(String fieldName, Flash scope) {
         Map<String, Object> flash = (Map<String, Object>) request.getAttribute(FLASH_KEY);
-        if (flash == null || !flash.containsKey(fieldName)) {
+
+        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+        if (flash == null || !flash.containsKey(key)) {
             flash = (Map<String, Object>) request.getSession().getAttribute(FLASH_KEY);
             if (flash == null) {
                 return null;
             }
         }
 
-        return flash.get(fieldName);
+        return flash.get(key);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void set(String fieldName, Object value) {
+    public void set(String fieldName, Object value, Flash scope) {
         Map<String, Object> flash = (Map<String, Object>) request.getSession().getAttribute(FLASH_KEY);
+
         if (flash == null) {
             flash = new HashMap<String, Object>();
             request.getSession().setAttribute(FLASH_KEY, flash);
         }
 
-        flash.put(fieldName, value);
+        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+        flash.put(key, value);
     }
 
     /**

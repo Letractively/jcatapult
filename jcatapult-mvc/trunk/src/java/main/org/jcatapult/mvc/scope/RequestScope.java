@@ -17,6 +17,8 @@ package org.jcatapult.mvc.scope;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.mvc.scope.annotation.Request;
+
 import com.google.inject.Inject;
 
 /**
@@ -27,7 +29,7 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-public class RequestScope implements Scope {
+public class RequestScope implements Scope<Request> {
     private final HttpServletRequest request;
 
     @Inject
@@ -38,14 +40,16 @@ public class RequestScope implements Scope {
     /**
      * {@inheritDoc}
      */
-    public Object get(String fieldName) {
-        return request.getAttribute(fieldName);
+    public Object get(String fieldName, Request scope) {
+        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+        return request.getAttribute(key);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void set(String fieldName, Object value) {
-        request.setAttribute(fieldName, value);
+    public void set(String fieldName, Object value, Request scope) {
+        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+        request.setAttribute(key, value);
     }
 }
