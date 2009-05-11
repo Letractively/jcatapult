@@ -35,4 +35,6 @@ When the JCatapult MVC Workflow is processing the request, if there is a value i
 
 = Naming =
 
-All scopes use the same convention for naming. The name of the field is the same name used to store and retrieve the value in the scope.
+All scopes use the same convention for naming. If you don't set the value() attribute of the annotation, the default key that the value is stored and retrieved from the scope is the name of the field the annotation is on. If you specify a value() attribute on the annotation, that will be used as the key instead.
+
+The ActionSession annotation also has an attribute named action that allows you to specify which action to scope the value to. This allows one action to access another action's session.
