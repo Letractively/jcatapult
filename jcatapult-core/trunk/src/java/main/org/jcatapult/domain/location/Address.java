@@ -37,6 +37,9 @@ public class Address implements Serializable {
     @Column(length = 512)
     private String street;
 
+    @Column(length = 512)
+    private String street2;
+
     @Column()
     private String city;
 
@@ -62,6 +65,14 @@ public class Address implements Serializable {
 
     public String getCity() {
         return city;
+    }
+
+    public String getStreet2() {
+        return street2;
+    }
+
+    public void setStreet2(String street2) {
+        this.street2 = street2;
     }
 
     public void setCity(String city) {
@@ -114,17 +125,14 @@ public class Address implements Serializable {
 
         Address address = (Address) o;
 
-        if (city != null ? !city.equals(address.city) : address.city != null) return false;
-        if (country != null ? !country.equals(address.country) : address.country != null)
-            return false;
-        if (district != null ? !district.equals(address.district) : address.district != null)
-            return false;
-        if (postalCode != null ? !postalCode.equals(address.postalCode) : address.postalCode != null)
-            return false;
-        if (state != null ? !state.equals(address.state) : address.state != null) return false;
-        if (street != null ? !street.equals(address.street) : address.street != null) return false;
+        return (city != null ? city.equals(address.city) : address.city == null) && 
+            (country != null ? country.equals(address.country) : address.country == null) &&
+            (district != null ? district.equals(address.district) : address.district == null) &&
+            (postalCode != null ? postalCode.equals(address.postalCode) : address.postalCode == null) &&
+            (state != null ? state.equals(address.state) : address.state == null) &&
+            (street != null ? street.equals(address.street) : address.street == null) &&
+            (street2 != null ? street2.equals(address.street2) : address.street2 == null);
 
-        return true;
     }
 
     /**
@@ -135,6 +143,7 @@ public class Address implements Serializable {
     @Override
     public int hashCode() {
         int result = street != null ? street.hashCode() : 0;
+        result = 31 * result + (street2 != null ? street2.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (district != null ? district.hashCode() : 0);
