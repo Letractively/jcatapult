@@ -34,4 +34,9 @@ import org.jcatapult.mvc.scope.ActionSessionScope;
 @ScopeAnnotation(ActionSessionScope.class)
 @Target(ElementType.FIELD)
 public @interface ActionSession {
+    /**
+     * @return  This attribute determines the action for which the action session is used. This allows
+     *          an action to get and set attributes inside another action's session.
+     */
+    Class<?> value() default ActionSession.class;
 }

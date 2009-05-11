@@ -18,14 +18,13 @@ package org.jcatapult.mvc.parameter.convert.converters;
 import java.util.Collections;
 import java.util.Locale;
 
+import static net.java.util.CollectionTools.*;
 import org.jcatapult.domain.commerce.Money;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -58,6 +57,12 @@ public class MoneyConverterTest {
 
         try {
             converter.convertFromStrings(array("a"), Locale.class, map("currencyCode", "BAD"), "testExpr");
+            fail("Should have failed");
+        } catch (ConverterStateException e) {
+        }
+
+        try {
+            converter.convertFromStrings(array("a"), Locale.class, map("currencyCode", ""), "testExpr");
             fail("Should have failed");
         } catch (ConverterStateException e) {
         }

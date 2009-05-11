@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.scope.annotation.ActionSession;
 
 import com.google.inject.Inject;
 
@@ -39,7 +40,7 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 @SuppressWarnings("unchecked")
-public class ActionSessionScope implements Scope {
+public class ActionSessionScope implements Scope<ActionSession> {
     public static final String ACTION_SESSION_KEY = "jcatapultActionSession";
     private final HttpSession session;
     private final ActionInvocationStore actionInvocationStore;
@@ -53,19 +54,13 @@ public class ActionSessionScope implements Scope {
     /**
      * {@inheritDoc}
      */
-    public Object get(String fieldName) {
+    public Object get(String fieldName, ActionSession scope) {
         Map<String, Map<String, Object>> actionSession = (Map<String, Map<String, Object>>) session.getAttribute(ACTION_SESSION_KEY);
         if (actionSession == null) {
             return null;
         }
 
-        ActionInvocation ai = actionInvocationStore.getCurrent();
-        if (ai.action() == null) {
-            throw new IllegalStateException("Attempting to store a value in the action session but " +
-                "the current request URL isn't associated with an action class");
-        }
-
-        String className = ai.action().getClass().getName();
+        String className = getActionClassName(scope);
         Map<String, Object> values = actionSession.get(className);
         if (values == null) {
             return null;
@@ -77,20 +72,14 @@ public class ActionSessionScope implements Scope {
     /**
      * {@inheritDoc}
      */
-    public void set(String fieldName, Object value) {
+    public void set(String fieldName, Object value, ActionSession scope) {
         Map<String, Map<String, Object>> actionSession = (Map<String, Map<String, Object>>) session.getAttribute(ACTION_SESSION_KEY);
         if (actionSession == null) {
             actionSession = new HashMap<String, Map<String, Object>>();
             session.setAttribute(ACTION_SESSION_KEY, actionSession);
         }
 
-        ActionInvocation ai = actionInvocationStore.getCurrent();
-        if (ai.action() == null) {
-            throw new IllegalStateException("Attempting to store a value in the action session but " +
-                "the current request URL isn't associated with an action class");
-        }
-
-        String className = ai.action().getClass().getName();
+        String className = getActionClassName(scope);
         Map<String, Object> values = actionSession.get(className);
         if (values == null) {
             values = new HashMap<String, Object>();
@@ -98,5 +87,27 @@ public class ActionSessionScope implements Scope {
         }
 
         values.put(fieldName, value);
+    }
+
+    /**
+     * Using the annotation or the current action invocation, this detremines the name of the action
+     * used to get the action session.
+     *
+     * @param   scope The scope annotation.
+     * @return  The action class name.
+     */
+    protected String getActionClassName(ActionSession scope) {
+        String className;
+        if (scope.value() != ActionSession.class) {
+            className = scope.value().getName();
+        } else {
+            ActionInvocation ai = actionInvocationStore.getCurrent();
+            if (ai.action() == null) {
+                throw new IllegalStateException("Attempting to store a value in the action session but " +
+                    "the current request URL isn't associated with an action class");
+            }
+            className = ai.action().getClass().getName();
+        }
+        return className;
     }
 }

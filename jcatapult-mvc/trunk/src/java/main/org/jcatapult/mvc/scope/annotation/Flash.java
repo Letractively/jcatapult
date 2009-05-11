@@ -34,4 +34,9 @@ import org.jcatapult.mvc.scope.FlashScope;
 @ScopeAnnotation(FlashScope.class)
 @Target(ElementType.FIELD)
 public @interface Flash {
+    /**
+     * @return  This attribute determines the name under which that the value is stored in the flash.
+     *          The default name is the name of the field that the annotation is put on.
+     */
+    String value() default "##field-name##";
 }

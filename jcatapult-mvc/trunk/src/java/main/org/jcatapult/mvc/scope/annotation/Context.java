@@ -34,4 +34,9 @@ import org.jcatapult.mvc.scope.ContextScope;
 @ScopeAnnotation(ContextScope.class)
 @Target(ElementType.FIELD)
 public @interface Context {
+    /**
+     * @return  This attribute determines the name that the value is stored in the context. The default
+     *          is to use the field name.
+     */
+    String value() default "##field-name##";
 }

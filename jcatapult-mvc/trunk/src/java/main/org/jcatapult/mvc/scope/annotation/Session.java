@@ -34,4 +34,9 @@ import org.jcatapult.mvc.scope.SessionScope;
 @ScopeAnnotation(SessionScope.class)
 @Target(ElementType.FIELD)
 public @interface Session {
+    /**
+     * @return  This attribute determines the name under which that the value is stored in the session.
+     *          The default name is the name of the field that the annotation is put on.
+     */
+    String value() default "##field-name##";
 }
