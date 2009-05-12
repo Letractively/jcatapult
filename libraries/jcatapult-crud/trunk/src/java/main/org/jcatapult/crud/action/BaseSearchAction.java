@@ -23,6 +23,7 @@ import org.jcatapult.crud.service.SearchService;
 import org.jcatapult.mvc.parameter.annotation.PreParameter;
 import org.jcatapult.mvc.parameter.annotation.PreParameterMethod;
 import org.jcatapult.mvc.scope.annotation.ActionSession;
+import org.jcatapult.persistence.domain.Identifiable;
 
 import com.google.inject.Inject;
 
@@ -57,7 +58,7 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 @SuppressWarnings("unchecked")
-public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
+public abstract class BaseSearchAction<T extends Identifiable, U extends SearchCriteria<T>> {
     protected SearchService searchService;
 
     /**
@@ -74,7 +75,7 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
     public U searchCriteria;
 
     /**
-     * The total number of BillingTransactions.
+     * The total number of results.
      */
     public long totalCount;
 
@@ -105,6 +106,32 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
     public boolean deletable = true;
 
     /**
+     * Determines if the action persists the search and pagination information to the action session
+     * or not.
+     */
+    public boolean persistent = true;
+
+    /**
+     * The maximum number of page links to display.
+     */
+    public int maximumPageLinks = 10;
+
+    /**
+     * Total number of pages to for the search.
+     */
+    public int numberOfPages;
+
+    /**
+     * The start page.
+     */
+    public int startPage;
+
+    /**
+     * The end page.
+     */
+    public int endPage;
+
+    /**
      * Sets in the search service.
      *
      * @param   searchService The search service to use.
@@ -120,7 +147,7 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
      */
     @PreParameterMethod
     public void prepare() {
-        if (searchCriteria == null || clear) {
+        if (searchCriteria == null || clear || !persistent) {
             searchCriteria = getDefaultCriteria();
         }
     }
@@ -132,7 +159,23 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
      */
     public String execute() {
         results = searchService.find(searchCriteria);
-        totalCount = searchService.totalCount(searchCriteria);        
+        totalCount = searchService.totalCount(searchCriteria);
+
+        numberOfPages = (int) totalCount / searchCriteria.getNumberPerPage();
+        if (numberOfPages <= 0) {
+            numberOfPages = 1;
+        }
+
+        // 20 pages
+        // page 18
+        // start = 13
+        // end = 20
+
+        int currentPage = searchCriteria.getPage();
+        int factor = maximumPageLinks / 2;
+        startPage = (currentPage - factor < 1) ? 1 : currentPage - factor;
+        endPage = (currentPage + factor > numberOfPages) ? numberOfPages : currentPage + factor;
+
         return "success";
     }
 

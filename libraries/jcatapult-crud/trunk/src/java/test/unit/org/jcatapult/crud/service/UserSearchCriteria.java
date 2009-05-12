@@ -16,9 +16,8 @@
  */
 package org.jcatapult.crud.service;
 
-import org.jcatapult.crud.domain.User;
-
 import net.java.lang.StringTools;
+import org.jcatapult.crud.domain.User;
 
 /**
  * <p>
@@ -28,24 +27,8 @@ import net.java.lang.StringTools;
  * @author  Brian Pontarelli
  */
 public class UserSearchCriteria extends AbstractSearchCriteria<User> {
-    private String name;
-    private Integer age;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
+    public String name;
+    public Integer age;
 
     protected void buildJPAQuery(QueryBuilder builder) {
         builder.select("u from User u");

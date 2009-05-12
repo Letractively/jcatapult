@@ -20,9 +20,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jcatapult.persistence.domain.SoftDeletable;
-
 import net.java.util.Pair;
+import org.jcatapult.persistence.domain.SoftDeletable;
 
 /**
  * <p>
@@ -39,10 +38,10 @@ import net.java.util.Pair;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Serializable {
-    private String sortProperty;
-    private int numberPerPage = 20;
-    private int page = 1;
-    private boolean showAll = false;
+    protected String sortProperty;
+    protected int numberPerPage = 20;
+    protected int page = 1;
+    protected boolean showAll = false;
 
     protected AbstractSearchCriteria() {
     }
@@ -84,6 +83,15 @@ public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Se
 
     public void setShowAll(boolean showAll) {
         this.showAll = showAll;
+    }
+
+    public Map<String, Object> getParameters() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("searchCriteria.sortProperty", sortProperty);
+        map.put("searchCriteria.numberPerPage", numberPerPage);
+        map.put("searchCriteria.page", page);
+        map.put("searchCriteria.showAll", showAll);
+        return map;
     }
 
     public Pair<String, Map<String, Object>> toJPAQuery() {

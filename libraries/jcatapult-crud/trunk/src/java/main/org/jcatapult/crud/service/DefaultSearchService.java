@@ -19,10 +19,10 @@ package org.jcatapult.crud.service;
 import java.util.List;
 import java.util.Map;
 
+import net.java.util.Pair;
 import org.jcatapult.persistence.service.PersistenceService;
 
 import com.google.inject.Inject;
-import net.java.util.Pair;
 
 /**
  * <p>
@@ -59,5 +59,12 @@ public class DefaultSearchService implements SearchService {
     public <T> long totalCount(SearchCriteria<T> search) {
         Pair<String, Map<String, Object>> pair = search.toJPACountQuery();
         return persistenceService.queryCountWithNamedParameters(pair.first, pair.second);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T> T findById(Class<T> type, int id) {
+        return persistenceService.findById(type, id);
     }
 }

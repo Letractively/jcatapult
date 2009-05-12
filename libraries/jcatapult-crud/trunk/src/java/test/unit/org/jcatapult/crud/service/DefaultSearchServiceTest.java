@@ -19,9 +19,8 @@ package org.jcatapult.crud.service;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.jcatapult.crud.BaseTest;
 import org.jcatapult.crud.domain.User;
-import org.jcatapult.persistence.service.PersistenceService;
-import org.jcatapult.persistence.test.JPABaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -34,15 +33,8 @@ import com.google.inject.Inject;
  *
  * @author Brian Pontarelli
  */
-public class DefaultSearchServiceTest extends JPABaseTest {
-    private SearchService searchService;
-    private PersistenceService persistenceService;
-
-    @Inject
-    public void setServices(SearchService searchService, PersistenceService persistenceService) {
-        this.searchService = searchService;
-        this.persistenceService = persistenceService;
-    }
+public class DefaultSearchServiceTest extends BaseTest {
+    @Inject public SearchService searchService;
 
     @Test
     public void testSearchSimple() throws SQLException {
@@ -63,7 +55,7 @@ public class DefaultSearchServiceTest extends JPABaseTest {
         makeUser("Betsy", 29);
 
         UserSearchCriteria criteria = new UserSearchCriteria();
-        criteria.setName("Fred");
+        criteria.name = "Fred";
         List<User> users = searchService.find(criteria);
         assertEquals(1, users.size());
         assertEquals("Fred", users.get(0).getName());
@@ -80,7 +72,7 @@ public class DefaultSearchServiceTest extends JPABaseTest {
         makeUser("Betsy", 29);
 
         UserSearchCriteria criteria = new UserSearchCriteria();
-        criteria.setAge(40);
+        criteria.age = 40;
         List<User> users = searchService.find(criteria);
         assertEquals(2, users.size());
         assertEquals("George", users.get(0).getName());
@@ -89,12 +81,5 @@ public class DefaultSearchServiceTest extends JPABaseTest {
         assertEquals(29, (int) users.get(1).getAge());
 
         assertEquals(2, searchService.totalCount(criteria));
-    }
-
-    private void makeUser(String name, Integer age) {
-        User user = new User();
-        user.setName(name);
-        user.setAge(age);
-        persistenceService.persist(user);
     }
 }
