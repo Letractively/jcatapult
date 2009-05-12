@@ -15,11 +15,8 @@
  */
 package org.jcatapult.crud.action;
 
-import java.util.List;
-
-import org.jcatapult.crud.service.SearchCriteria;
-import org.jcatapult.crud.service.SearchService;
-import org.jcatapult.mvc.parameter.annotation.PostParameterMethod;
+import org.jcatapult.mvc.message.MessageStore;
+import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.persistence.domain.Identifiable;
 
 import com.google.inject.Inject;
@@ -62,9 +59,8 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
-@SuppressWarnings("unchecked")
-public abstract class BaseDetailsAction<T extends Identifiable> {
-    protected SearchService searchService;
+public abstract class BaseDetailsAction<T extends Identifiable> extends BaseCrudAction<T> {
+    protected MessageStore messageStore;
 
     /**
      * The ID of the entity to display the details for. (Input)
@@ -72,28 +68,32 @@ public abstract class BaseDetailsAction<T extends Identifiable> {
     public int id;
 
     /**
-     * The index within the current search results page for this entity. (Output)
-     */
-    public int index;
-
-    /**
-     * The ID of the next entity in the search results or null if there isn't one. (Output)
-     */
-    public Integer nextId;
-
-    /**
-     * The ID of the previous entity in the search results or null if there isn't one.  (Output)
-     */
-    public Integer prevId;
-
-    /**
      * The entity.  (Output)
      */
     public T result;
-    
-    public long totalCount;
-    
-    public int numberOfPages;
+
+    @Inject
+    public void setMessageStore(MessageStore messageStore) {
+        this.messageStore = messageStore;
+    }
+
+    /**
+     * Fetches the entity from the database using the ID and {@link #getType()} return value. If the
+     * entity is missing, this puts an action error into the message store using the key
+     * <code>missing</code>.
+     *
+     * @return  The String <code>missing</code> if the entity doesn't exist, <code>success</code>
+     *          otherwise. 
+     */
+    public String execute() {
+        result = searchService.findById(getType(), id);
+        if (result == null) {
+            messageStore.addActionError(MessageScope.REQUEST, "missing");
+            return "missing";
+        }
+
+        return "success";
+    }
 
     /**
      * Sub-classes must implement this to provide the result type.
@@ -101,94 +101,4 @@ public abstract class BaseDetailsAction<T extends Identifiable> {
      * @return  The result type.
      */
     protected abstract Class<T> getType();
-
-    /**
-     * Sub-classes must implement this to provide the results list from the action session.
-     *
-     * @return  The results.
-     */
-    protected abstract List<T> getResults();
-
-    /**
-     * Sub-classes must implement this to provide the search criteria from the action session.
-     *
-     * @return  The search criteria.
-     */
-    protected abstract SearchCriteria<T> getSearchCriteria();
-
-    /**
-     * Sets in the search service.
-     *
-     * @param   searchService The search service to use.
-     */
-    @Inject
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
-
-    @PostParameterMethod
-    public void checkResults() {
-        SearchCriteria<T> criteria = getSearchCriteria();
-        List<T> results = getResults();
-        if (results != null && criteria != null) {
-            totalCount = searchService.totalCount(criteria);
-            numberOfPages = (int) totalCount / criteria.getNumberPerPage();
-            if (numberOfPages <= 0) {
-                numberOfPages = 1;
-            }
-
-            if (index == results.size()) {
-                boolean hasNextPage = criteria.getPage() != numberOfPages;
-                if (hasNextPage) {
-                    results.clear();
-                    results.addAll(searchService.find(criteria));
-                    index = 0;
-                }
-            }
-        }
-    }
-
-    /**
-     * Performs the search.
-     *
-     * @return  Always success.
-     */
-    public String execute() {
-        result = searchService.findById(getType(), id);
-        if (result == null) {
-            return "missing";
-        }
-
-        List<T> results = getResults();
-        SearchCriteria<T> criteria = getSearchCriteria();
-        if (results != null && criteria != null) {
-            if (index != results.size() - 1) {
-                nextId = results.get(index + 1).getId();
-            } else {
-                boolean hasNextPage = criteria.getPage() != numberOfPages;
-                if (hasNextPage) {
-                    int page = criteria.getPage();
-                    criteria.setPage(page + 1);
-                    List<T> nextResults = searchService.find(criteria);
-                    criteria.setPage(page);
-                    nextId = nextResults.get(0).getId();
-                }
-            }
-
-            if (index != 0) {
-                prevId = results.get(index - 1).getId();
-            } else {
-                boolean hasPrevPage = criteria.getPage() != 1;
-                if (hasPrevPage) {
-                    int page = criteria.getPage();
-                    criteria.setPage(page - 1);
-                    List<T> prevResults = searchService.find(criteria);
-                    criteria.setPage(page);
-                    prevId = prevResults.get(prevResults.size() - 1).getId();
-                }
-            }
-        }
-
-        return "success";
-    }
 }
