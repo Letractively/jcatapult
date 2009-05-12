@@ -1,0 +1,32 @@
+<project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
+         name="jcatapult-email"
+         group="libraries.jcatapult.org"
+         version="1.0">
+
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+
+  <!-- compile properties -->
+  <property name="jdk.version" value="1.6"/>
+  <property name="version.jcatapult" value="1.0"/>
+
+  <dependencies>
+    <artifact-group type="compile-only">
+      <artifact group="mail.javax" project="mail" name="javamail" version="1.4"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
+    </artifact-group>
+    <artifact-group type="compile">
+      <artifact group="guice.code.google.com" name="guice" version="1.0"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5"/>
+      <artifact group="jcatapult.org" name="jcatapult-core" version="${version.jcatapult}"/>
+      <artifact group="freemarker.org" name="freemarker" version="2.3.12"/>
+    </artifact-group>
+    <artifact-group type="test-compile">
+      <artifact group="easymock.org" name="easymock" version="2.2"/>
+      <artifact group="junit.org" name="junit" version="4.4"/>
+    </artifact-group>
+  </dependencies>
+</project>
