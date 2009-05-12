@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-persistence"
          group="jcatapult.org"
-         version="1.0-RC13">
+         version="1.0">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
@@ -16,7 +16,7 @@
   <!-- This libary has hibernate entities and requires database creation -->
   <property name="project.requires.database" value="true"/>
 
-  <property name="version.jcatapult" value="1.0-RC13"/>
+  <property name="version.jcatapult" value="1.0"/>
 
   <release>
     <publication name="jcatapult-persistence" compatType="minor" file="target/jars/${project.name}-${project.version}.jar" type="jar"/>
