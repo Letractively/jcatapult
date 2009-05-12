@@ -22,6 +22,7 @@ import net.java.io.FileTools;
 import org.jcatapult.crud.BaseTest;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.test.ControlTestRunner;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -33,6 +34,7 @@ import com.google.inject.Inject;
  *
  * @author Brian Pontarelli
  */
+@Ignore
 public class SearchResultsTest extends BaseTest {
     @Inject public SearchResults searchResults;
     @Inject public TestAction action;

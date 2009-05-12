@@ -162,8 +162,9 @@ public abstract class BaseSearchAction<T extends Identifiable, U extends SearchC
         totalCount = searchService.totalCount(searchCriteria);
 
         numberOfPages = (int) totalCount / searchCriteria.getNumberPerPage();
-        if (numberOfPages <= 0) {
-            numberOfPages = 1;
+        int extra = (int) totalCount % searchCriteria.getNumberPerPage();
+        if (extra != 0) {
+            numberOfPages++;
         }
 
         // 20 pages

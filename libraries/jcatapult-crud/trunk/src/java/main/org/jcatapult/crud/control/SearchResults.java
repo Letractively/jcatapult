@@ -24,7 +24,8 @@ import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
         @ControlAttribute(name = "tableTemplate"),
         @ControlAttribute(name = "controlsTemplate"),
         @ControlAttribute(name = "paginationTemplate"),
-        @ControlAttribute(name = "numberPerPageTemplate")
+        @ControlAttribute(name = "numberPerPageTemplate"),
+        @ControlAttribute(name = "dateTimeFormat")
     }
 )
 public class SearchResults extends AbstractComponentControl {

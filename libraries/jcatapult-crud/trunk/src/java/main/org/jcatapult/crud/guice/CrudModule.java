@@ -16,6 +16,7 @@
  */
 package org.jcatapult.crud.guice;
 
+import org.jcatapult.crud.control.IsJodaDate;
 import org.jcatapult.crud.control.SearchResults;
 
 import com.google.inject.AbstractModule;
@@ -33,5 +34,6 @@ public class CrudModule extends AbstractModule {
      */
     protected void configure() {
         bind(SearchResults.class);
+        bind(IsJodaDate.class);
     }
 }
