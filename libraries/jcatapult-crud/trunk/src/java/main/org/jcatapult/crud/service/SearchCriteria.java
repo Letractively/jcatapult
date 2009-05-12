@@ -81,6 +81,12 @@ public interface SearchCriteria<T> {
     void setShowAll(boolean showAll);
 
     /**
+     * @return  The additional parameters for this search criteria and their values. This includes
+     *          the page, numberPerPage, or showAll.
+     */
+    Map<String, Object> getParameters();
+
+    /**
      * @return  A valid JPA query string that uses the search criteria and the parameters that are
      *          used in the query.
      */

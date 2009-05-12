@@ -1,50 +1,35 @@
 [#ftl/]
-[#if totalCount % searchCriteria.numberPerPage > 0]
-  [#assign extra = 1]
-[#else]
-  [#assign extra = 0]
+[#macro params ignore]
+[#if !persistent]
+[#list searchCriteria.parameters?keys as key]
+[#if key != ignore && searchCriteria.parameters[key]??]
+${key}=${searchCriteria.parameters[key]?string?url('UTF-8')}&[#t/]
 [/#if]
-[#assign totalPages = (totalCount / searchCriteria.numberPerPage) + extra]
-[#if totalPages?int > 1 && !searchCriteria.showAll]
+[/#list]
+[/#if]
+[/#macro]
+[#if numberOfPages > 1 && !searchCriteria.showAll]
   <div id="pagination-controls" class="${attributes['name']}-pagination-controls jcatapult-module-pagination-controls">
     [#if searchCriteria.page > 1]
-      <a href="?searchCriteria.page=${searchCriteria.page - 1}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">[@jc.message key="prev" default="Prev"/]</a> |
-    [/#if]
-    [#if searchCriteria.page == 1]
-      [@jc.message key="prev" default="Prev"/] |
-    [/#if]
-
-    [#if searchCriteria.page - 5 < 1]
-      [#assign start = 1]
+      <a href="?[@params "searchCriteria.page"/]searchCriteria.page=1">[@jc.message key="beginning" default="&lt;&lt;"/]</a>
+      <a href="?[@params "searchCriteria.page"/]searchCriteria.page=${searchCriteria.page - 1}">[@jc.message key="prev" default="&lt;"/]</a>
     [#else]
-      [#assign start = searchCriteria.page - 5]
+      [@jc.message key="prev" default="<"/]
     [/#if]
 
-    [#assign end = searchCriteria.page - 1]
-    [#if (end >= start)]
-      [#list start..end as i]
-        <a href="?searchCriteria.page=${i}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">${i}</a> |
-      [/#list]
-    [/#if]
-    ${searchCriteria.page} |
-
-    [#assign start = searchCriteria.page + 1]
-    [#if searchCriteria.page + 5 > totalPages]
-      [#assign end = totalPages]
-    [#else]
-      [#assign end = searchCriteria.page + 5]
-    [/#if]
-    [#if (end >= start)]
-      [#list start..end as i]
-        <a href="?searchCriteria.page=${i}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">${i}</a> |
-      [/#list]
-    [/#if]
+    [#list startPage..endPage as i]
+      [#if i != searchCriteria.page]
+        <a href="?[@params "searchCriteria.page"/]searchCriteria.page=${i}">${i}</a>
+      [#else]
+        ${searchCriteria.page}
+      [/#if]
+    [/#list]
 
     [#if totalCount > (searchCriteria.page * searchCriteria.numberPerPage)]
-      <a href="?searchCriteria.page=${searchCriteria.page + 1}&searchCriteria.numberPerPage=${searchCriteria.numberPerPage}">[@jc.message key="next" default="Next"/]</a>
-    [/#if]
-    [#if totalCount <= (searchCriteria.page * searchCriteria.numberPerPage)]
-      [@jc.message key="next" default="Next"/]
+      <a href="?[@params "searchCriteria.page"/]searchCriteria.page=${searchCriteria.page + 1}">[@jc.message key="next" default="&gt;"/]</a>
+      <a href="?[@params "searchCriteria.page"/]searchCriteria.page=${numberOfPages}">[@jc.message key="end" default="&gt;&gt;"/]</a>
+    [#else]
+      [@jc.message key="next" default=">"/]
     [/#if]
   </div>
 [/#if]

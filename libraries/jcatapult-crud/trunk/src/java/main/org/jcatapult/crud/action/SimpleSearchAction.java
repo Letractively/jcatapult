@@ -17,6 +17,7 @@
 package org.jcatapult.crud.action;
 
 import org.jcatapult.crud.service.SimpleSearchCriteria;
+import org.jcatapult.persistence.domain.Identifiable;
 
 /**
  * <p>
@@ -37,10 +38,11 @@ import org.jcatapult.crud.service.SimpleSearchCriteria;
  *        super(Category.class);
  *    }
  * }
- *
+ * </pre>
+ * 
  * @author Brian Pontarelli
  */
-public class SimpleSearchAction<T> extends BaseSearchAction<T, SimpleSearchCriteria<T>> {
+public abstract class SimpleSearchAction<T extends Identifiable> extends BaseSearchAction<T, SimpleSearchCriteria<T>> {
     private final Class<T> type;
 
     public SimpleSearchAction(Class<T> type) {

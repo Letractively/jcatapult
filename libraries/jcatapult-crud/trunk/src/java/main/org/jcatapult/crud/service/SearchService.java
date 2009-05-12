@@ -44,4 +44,13 @@ public interface SearchService {
      * @return  The total count.
      */
     <T> long totalCount(SearchCriteria<T> search);
+
+    /**
+     * Finds the single entity with the given ID and type.
+     *
+     * @param   type The type.
+     * @param   id The id.
+     * @return  The entity or null.
+     */
+    <T> T findById(Class<T> type, int id);
 }
