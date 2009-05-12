@@ -92,6 +92,9 @@ public abstract class BaseDetailsAction<T extends Identifiable> extends BaseCrud
             return "missing";
         }
 
+        // Setup the ids
+        setupNextPrevIds();
+
         return "success";
     }
 

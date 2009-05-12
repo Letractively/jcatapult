@@ -42,7 +42,6 @@ public class IsJodaDate implements TemplateMethodModelEx {
         Object obj = arguments.get(0);
         if (obj instanceof BeanModel) {
             obj = ((BeanModel) obj).getWrappedObject();
-            System.out.println("Type is "+ obj.getClass());
             if (obj instanceof ReadableInstant || obj instanceof ReadablePartial) {
                 return TemplateBooleanModel.TRUE;
             }

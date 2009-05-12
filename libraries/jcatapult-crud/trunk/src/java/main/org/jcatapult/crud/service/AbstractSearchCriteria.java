@@ -131,7 +131,9 @@ public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Se
 
         public QueryBuilder(String select, String orderBy) {
             this.select = select;
-            this.orderBy = orderBy;
+            if (orderBy != null) {
+                this.orderBy = "e." + orderBy;
+            }
         }
 
         /**
@@ -272,11 +274,12 @@ public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Se
         /**
          * <p>
          * Adds a order by clause to the query. This should not include the <strong>order by</strong>
-         * keyword. An example usage is like this:
+         * keyword, but MUST include the alias for the objects (i.e. 'e'). An example usage is like
+         * this:
          * </p>
          *
          * <pre>
-         * orderBy("age desc")
+         * orderBy("e.age desc")
          * </pre>
          *
          * @param   orderBy The clause.
@@ -302,7 +305,7 @@ public abstract class AbstractSearchCriteria<T> implements SearchCriteria<T>, Se
             }
 
             if (orderBy != null) {
-                build.append(" order by e.").append(orderBy);
+                build.append(" order by ").append(orderBy);
             }
 
             return new Pair<String, Map<String, Object>>(build.toString(), params);
