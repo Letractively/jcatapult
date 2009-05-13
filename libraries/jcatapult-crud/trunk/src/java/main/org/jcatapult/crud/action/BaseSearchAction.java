@@ -23,7 +23,6 @@ import org.jcatapult.crud.service.SearchService;
 import org.jcatapult.mvc.parameter.annotation.PreParameter;
 import org.jcatapult.mvc.parameter.annotation.PreParameterMethod;
 import org.jcatapult.mvc.scope.annotation.ActionSession;
-import org.jcatapult.persistence.domain.Identifiable;
 
 import com.google.inject.Inject;
 
@@ -58,7 +57,7 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 @SuppressWarnings("unchecked")
-public abstract class BaseSearchAction<T extends Identifiable, U extends SearchCriteria<T>> {
+public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
     protected SearchService searchService;
 
     /**
