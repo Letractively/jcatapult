@@ -28,12 +28,14 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import static net.java.lang.ObjectTools.*;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.message.scope.MessageType;
+import org.jcatapult.mvc.parameter.DefaultParameterWorkflow;
 import org.jcatapult.mvc.parameter.InternalParameters;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.TypeTools;
@@ -45,7 +47,6 @@ import org.jcatapult.mvc.validation.annotation.ValidatorAnnotation;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
-import static net.java.lang.ObjectTools.*;
 
 /**
  * <p>
@@ -91,7 +92,7 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
      * @throws ServletException If the chain throws.
      */
     public void perform(WorkflowChain chain) throws IOException, ServletException {
-        if (request.getMethod().equals("POST")) {
+        if (request.getMethod().equals("POST") ||containsSubmitButton(request)) {
             ActionInvocation invocation = actionInvocationStore.getCurrent();
             Object action = invocation.action();
             boolean executeValidation = InternalParameters.is(request, InternalParameters.JCATAPULT_EXECUTE_VALIDATION);
@@ -105,6 +106,24 @@ public class DefaultValidationWorkflow implements ValidationWorkflow {
         }
 
         chain.continueWorkflow();
+    }
+
+    /**
+     * Determines if the request contains a submit button, which means a form was subnitted using a
+     * GET.
+     *
+     * @param   request The request.
+     * @return  True if the form contains a submit button, false otherwise.
+     */
+    protected boolean containsSubmitButton(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        for (String key :params.keySet()){
+            if (key.startsWith(DefaultParameterWorkflow.ACTION_PREFIX)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     protected void validate(Object action) {
