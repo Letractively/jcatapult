@@ -37,7 +37,7 @@ ${key}=${searchCriteria.parameters[key]?string?url('UTF-8')}&[#t/]
       [#list attributes['properties'] as prop]
         [#assign value=("((result." + prop + ")!'')")?eval/]
         <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] ${prop?replace('.', '-')}-row">[#t/]
-          [#if prop_index == 0 && detailable]<a href="details?[@params "none"/]index=${result_index}&id=${result.id?c}">[#t/][/#if]
+          [#if prop_index == 0 && detailable]<a href="details?[@params "none"/][#if paginationControlsOnDetails]index=${result_index}&[/#if]id=${result.id?c}">[#t/][/#if]
           [#if value?is_date]
             ${value?string(attributes['dateTimeFormat']!"MM/dd/yyyy")}[#t/]
           [#elseif isjodadate(value)]
@@ -49,7 +49,7 @@ ${key}=${searchCriteria.parameters[key]?string?url('UTF-8')}&[#t/]
         </td>[#t/]
       [/#list]
       [#if editable]
-        <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] edit-row"><a href="edit/${result.id?c}"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] edit-row"><a href="edit?[#if paginationControlsOnEdit]index=${result_index}&[/#if]id=${result.id?c}"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
       [/#if]
       [#if deletable]
         <td class="[#if result_index % 2 == 0]even[#else]odd[/#if] delete-row"><input type="checkbox" name="ids" value="${result.id?c}"/></td>
