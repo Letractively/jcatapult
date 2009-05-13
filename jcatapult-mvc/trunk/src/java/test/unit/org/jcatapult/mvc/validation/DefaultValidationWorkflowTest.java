@@ -92,6 +92,39 @@ public class DefaultValidationWorkflowTest extends JCatapultBaseTest {
     }
 
     @Test
+    public void testValidationOnForGet() throws IOException, ServletException {
+        request.setPost(false);
+        request.setParameter("__jc_a_foo", "");
+
+        Edit action = new Edit();
+        action.user = new User();
+        action.user.setName("Fred");
+        action.user.setAge(12);
+        action.user.setSecurityQuestions(new String[]{"What is your name?"});
+        action.user.setAddress("home", new Address());
+        action.user.setAddress("work", new Address());
+        action.user.getAddress("home").setCity("Boulder");
+        action.user.getAddress("home").setStreet("Main");
+        action.user.getAddress("home").setCountry("US");
+        action.user.getAddress("work").setCity("Boulder");
+        action.user.getAddress("work").setStreet("Main");
+        action.user.getAddress("work").setCountry("US");
+        actionInvocationStore.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+        DefaultValidationWorkflow workflow = new DefaultValidationWorkflow(request, actionInvocationStore,
+                expressionEvaluator, validatorProvider, messageStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        workflow.perform(chain);
+
+        assertTrue(messageStore.contains(MessageType.ERROR));
+
+        EasyMock.verify(chain);
+    }
+
+    @Test
     public void testAllNull() throws IOException, ServletException {
         Edit action = new Edit();
         request.setPost(true);
