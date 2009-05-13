@@ -17,6 +17,7 @@ package org.jcatapult.mvc.action.result.freemarker;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,13 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.jcatapult.mvc.ObjectFactory;
-import org.jcatapult.mvc.action.result.ControlHashModel;
-import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-import org.jcatapult.mvc.parameter.el.ExpressionException;
-import org.jcatapult.mvc.result.control.Control;
-
-import com.google.inject.Inject;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
@@ -49,6 +43,15 @@ import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import org.jcatapult.mvc.ObjectFactory;
+import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionInvocationStore;
+import org.jcatapult.mvc.action.result.ControlHashModel;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
+import org.jcatapult.mvc.parameter.el.ExpressionException;
+import org.jcatapult.mvc.result.control.Control;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -80,7 +83,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     private final Map<String, Object> objects = new HashMap<String, Object>();
     private final HttpServletRequest request;
     private final ExpressionEvaluator expressionEvaluator;
-    private final Object action;
+    private final ActionInvocationStore actionInvocationStore;
 
     /**
      * Initializes the ServletContext and the JSP taglib support for FreeMaker and also the TemplateModel
@@ -108,7 +111,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     }
 
     public FreeMarkerMap(HttpServletRequest request, HttpServletResponse response,
-            ExpressionEvaluator expressionEvaluator, Object action, Map<String, Object> additionalValues) {
+            ExpressionEvaluator expressionEvaluator, ActionInvocationStore actionInvocationStore, Map<String, Object> additionalValues) {
         objects.put(REQUEST_MODEL, new HttpRequestHashModel(request, response, ObjectWrapper.DEFAULT_WRAPPER));
         objects.put(REQUEST, request);
         HttpSession session = request.getSession(false);
@@ -147,13 +150,23 @@ public class FreeMarkerMap implements TemplateHashModelEx {
 
         this.request = request;
         this.expressionEvaluator = expressionEvaluator;
-        this.action = action;
+        this.actionInvocationStore = actionInvocationStore;
     }
 
     public int size() {
-        return objects.size() + expressionEvaluator.getAllMembers(action.getClass()).size() +
-            count(request.getAttributeNames()) + count(request.getSession().getAttributeNames()) +
-            count(context.getAttributeNames());
+        int size = objects.size() + count(request.getAttributeNames()) +
+            count(request.getSession().getAttributeNames()) + count(context.getAttributeNames());
+
+        Deque<ActionInvocation> actionInvocations = actionInvocationStore.getDeque();
+        if (actionInvocations != null) {
+            for (ActionInvocation actionInvocation : actionInvocations) {
+                if (actionInvocation.action() != null) {
+                    size += expressionEvaluator.getAllMembers(actionInvocation.action().getClass()).size();
+                }
+            }
+        }
+
+        return size;
     }
 
     public boolean isEmpty() {
@@ -163,11 +176,20 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     public TemplateModel get(String key) {
         // First check the action
         Object value = null;
-        if (action != null) {
-            try {
-                value = expressionEvaluator.getValue(key, action);
-            } catch (ExpressionException e) {
-                // Smother because the value is probably somewhere else
+
+        Deque<ActionInvocation> actionInvocations = actionInvocationStore.getDeque();
+        if (actionInvocations != null) {
+            for (ActionInvocation actionInvocation : actionInvocations) {
+                if (actionInvocation.action() != null) {
+                    try {
+                        value = expressionEvaluator.getValue(key, actionInvocation.action());
+                        if (value != null) {
+                            break;
+                        }
+                    } catch (ExpressionException e) {
+                        // Smother because the value is probably somewhere else
+                    }
+                }
             }
         }
 
@@ -204,8 +226,13 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     public TemplateCollectionModel keys() {
         Set<String> keys = append(objects.keySet(), iterable(request.getAttributeNames()),
             iterable(request.getSession().getAttributeNames()), iterable(context.getAttributeNames()));
-        if (action != null) {
-            keys.addAll(expressionEvaluator.getAllMembers(action.getClass()));
+        Deque<ActionInvocation> actionInvocations = actionInvocationStore.getDeque();
+        if (actionInvocations != null) {
+            for (ActionInvocation actionInvocation : actionInvocations) {
+                if (actionInvocation.action() != null) {
+                    keys.addAll(expressionEvaluator.getAllMembers(actionInvocation.action().getClass()));
+                }
+            }
         }
 
         keys.add(JSP_TAGLIBS);
@@ -217,8 +244,13 @@ public class FreeMarkerMap implements TemplateHashModelEx {
 
     public TemplateCollectionModel values() {
         Collection<Object> values = new ArrayList<Object>(objects.values());
-        if (action != null) {
-            values.addAll(expressionEvaluator.getAllMemberValues(action));
+        Deque<ActionInvocation> actionInvocations = actionInvocationStore.getDeque();
+        if (actionInvocations != null) {
+            for (ActionInvocation actionInvocation : actionInvocations) {
+                if (actionInvocation.action() != null) {
+                    values.addAll(expressionEvaluator.getAllMemberValues(actionInvocation.action()));
+                }
+            }
         }
 
         Enumeration en = request.getAttributeNames();

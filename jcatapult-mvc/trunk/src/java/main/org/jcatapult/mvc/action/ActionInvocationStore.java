@@ -15,6 +15,8 @@
  */
 package org.jcatapult.mvc.action;
 
+import java.util.Deque;
+
 import com.google.inject.ImplementedBy;
 
 /**
@@ -54,5 +56,10 @@ public interface ActionInvocationStore {
     /**
      * Pops the current action from the stack.
      */
-    void popCurrent();
+    void removeCurrent();
+
+    /**
+     * @return  The deque that contains the action invocations.
+     */
+    Deque<ActionInvocation> getDeque();
 }

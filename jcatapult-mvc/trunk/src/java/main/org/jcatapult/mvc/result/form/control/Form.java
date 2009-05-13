@@ -114,7 +114,7 @@ public class Form extends AbstractControl {
     @Override
     public void renderEnd(Writer writer) {
         if (differentURI) {
-            actionInvocationStore.popCurrent();
+            actionInvocationStore.removeCurrent();
         }
 
         super.renderEnd(writer);
