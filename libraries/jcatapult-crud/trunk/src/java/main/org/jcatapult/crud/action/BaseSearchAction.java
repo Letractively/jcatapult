@@ -96,9 +96,21 @@ public abstract class BaseSearchAction<T extends Identifiable, U extends SearchC
     public boolean editable = true;
 
     /**
+     * Determines if the the edit page will contain pagination controls (next and prev buttons).
+     * The default is false.
+     */
+    public boolean paginationControlsOnEdit = false;
+
+    /**
      * Determines if the entity details can be viewed via the CRUD interface.
      */
     public boolean detailable = true;
+
+    /**
+     * Determines if the the details page will contain pagination controls (next and prev buttons).
+     * The default is false.
+     */
+    public boolean paginationControlsOnDetails = false;
 
     /**
      * Determines if the entity can be deleted via the CRUD interface.
