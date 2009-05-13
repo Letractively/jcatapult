@@ -15,7 +15,8 @@
  */
 package org.jcatapult.mvc.action;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Inject;
@@ -27,8 +28,9 @@ import com.google.inject.Inject;
  *
  * @author  Brian Pontarelli
  */
+@SuppressWarnings("unchecked")
 public class DefaultActionInvocationStore implements ActionInvocationStore {
-    public static final String ACTION_INVOCATION_STACK_KEY = "jcatapultActionInvocationStack";
+    public static final String ACTION_INVOCATION_DEQUE_KEY = "jcatapultActionInvocationDeque";
     public static final String ACTION_INVOCATION_KEY = "jcatapultActionInvocation";
     private final HttpServletRequest request;
 
@@ -41,38 +43,45 @@ public class DefaultActionInvocationStore implements ActionInvocationStore {
      * {@inheritDoc}
      */
     public ActionInvocation getCurrent() {
-        Stack stack = (Stack) request.getAttribute(ACTION_INVOCATION_STACK_KEY);
-        if (stack == null) {
+        Deque deque = (Deque) request.getAttribute(ACTION_INVOCATION_DEQUE_KEY);
+        if (deque == null) {
             return null;
         }
 
-        return (ActionInvocation) stack.peek();
+        return (ActionInvocation) deque.peek();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setCurrent(ActionInvocation invocation) {
-        Stack stack = (Stack) request.getAttribute(ACTION_INVOCATION_STACK_KEY);
-        if (stack == null) {
-            stack = new Stack();
-            request.setAttribute(ACTION_INVOCATION_STACK_KEY, stack);
+        Deque deque = (Deque) request.getAttribute(ACTION_INVOCATION_DEQUE_KEY);
+        if (deque == null) {
+            deque = new ArrayDeque();
+            request.setAttribute(ACTION_INVOCATION_DEQUE_KEY, deque);
         }
 
-        stack.push(invocation);
+        deque.push(invocation);
         request.setAttribute(ACTION_INVOCATION_KEY, invocation);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void popCurrent() {
-        Stack stack = (Stack) request.getAttribute(ACTION_INVOCATION_STACK_KEY);
-        if (stack == null) {
+    public void removeCurrent() {
+        Deque deque = (Deque) request.getAttribute(ACTION_INVOCATION_DEQUE_KEY);
+        if (deque == null) {
             return;
         }
 
-        stack.pop();
+        deque.poll();
         request.removeAttribute(ACTION_INVOCATION_KEY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Deque<ActionInvocation> getDeque() {
+        return (Deque<ActionInvocation>) request.getAttribute(ACTION_INVOCATION_DEQUE_KEY);
     }
 }

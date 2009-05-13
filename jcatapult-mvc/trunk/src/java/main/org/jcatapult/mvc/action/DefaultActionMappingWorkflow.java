@@ -78,7 +78,7 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
 
         actionInvocationStore.setCurrent(invocation);
         chain.continueWorkflow();
-        actionInvocationStore.popCurrent();
+        actionInvocationStore.removeCurrent();
     }
 
     private String determineURI() {

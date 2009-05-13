@@ -103,7 +103,7 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         Capture capture = new Capture();
         ActionInvocationStore store = EasyMock.createStrictMock(ActionInvocationStore.class);
         store.setCurrent((ActionInvocation) capture.capture());
-        store.popCurrent();
+        store.removeCurrent();
         EasyMock.replay(store);
 
         ObjectFactory factory = EasyMock.createStrictMock(ObjectFactory.class);
@@ -152,7 +152,7 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         Capture capture = new Capture();
         ActionInvocationStore store = EasyMock.createStrictMock(ActionInvocationStore.class);
         store.setCurrent((ActionInvocation) capture.capture());
-        store.popCurrent();
+        store.removeCurrent();
         EasyMock.replay(store);
 
         ObjectFactory factory = EasyMock.createStrictMock(ObjectFactory.class);
@@ -214,7 +214,7 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
         Capture capture = new Capture();
         ActionInvocationStore store = EasyMock.createStrictMock(ActionInvocationStore.class);
         store.setCurrent((ActionInvocation) capture.capture());
-        store.popCurrent();
+        store.removeCurrent();
         EasyMock.replay(store);
 
         ObjectFactory factory = EasyMock.createStrictMock(ObjectFactory.class);

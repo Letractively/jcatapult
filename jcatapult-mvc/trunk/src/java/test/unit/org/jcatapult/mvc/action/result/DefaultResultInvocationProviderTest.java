@@ -44,7 +44,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         ActionInvocation ai = new DefaultActionInvocation(null, "/foo/bar", null, null);
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(ai);
         assertNotNull(invocation);
         assertNull(invocation.resultCode());
@@ -65,7 +65,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         ActionInvocation ai = new DefaultActionInvocation(null, "/foo/bar", "ajax", null);
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(ai);
         assertNotNull(invocation);
         assertNull(invocation.resultCode());
@@ -86,7 +86,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         ActionInvocation ai = new DefaultActionInvocation(null, "/foo/bar", null, null);
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(ai);
         assertNotNull(invocation);
         assertNull(invocation.resultCode());
@@ -109,7 +109,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         ActionInvocation ai = new DefaultActionInvocation(null, "/foo/bar", "ajax", null);
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(ai);
         assertNotNull(invocation);
         assertNull(invocation.resultCode());
@@ -128,7 +128,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         ActionInvocation ai = new DefaultActionInvocation(null, "/foo/bar/", null, null);
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(ai);
         assertNotNull(invocation);
         assertNull(invocation.resultCode());
@@ -145,7 +145,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         TestAction action = new TestAction();
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, "/foo/bar", null, null), "success");
         assertNotNull(invocation);
         assertEquals("success", invocation.resultCode());
@@ -164,7 +164,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         TestAction action = new TestAction();
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, "/foo/bar", null, null), "error");
         assertNotNull(invocation);
         assertEquals("error", invocation.resultCode());
@@ -187,7 +187,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         TestAction action = new TestAction();
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, "/foo/bar", "ajax", null), "error");
         assertNotNull(invocation);
         assertEquals("error", invocation.resultCode());
@@ -206,7 +206,7 @@ public class DefaultResultInvocationProviderTest {
         EasyMock.replay(context);
 
         TestAction action = new TestAction();
-        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null));
+        DefaultResultInvocationProvider provider = new DefaultResultInvocationProvider(new ForwardResult(Locale.CANADA, context, null, null, null, null, null));
         ResultInvocation invocation = provider.lookup(new DefaultActionInvocation(action, "/foo/bar/", null, null), "error");
         assertNotNull(invocation);
         assertEquals("error", invocation.resultCode());

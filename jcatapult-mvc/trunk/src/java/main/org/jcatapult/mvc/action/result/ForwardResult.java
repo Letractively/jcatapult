@@ -18,9 +18,9 @@ package org.jcatapult.mvc.action.result;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Locale;
-import java.net.MalformedURLException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
@@ -51,17 +52,20 @@ public class ForwardResult extends AbstractResult<Forward> {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final FreeMarkerService freeMarkerService;
+    private final ActionInvocationStore actionInvocationStore;
 
     @Inject
     public ForwardResult(@CurrentLocale Locale locale, ServletContext servletContext,
-            HttpServletRequest request, HttpServletResponse response,
-            ExpressionEvaluator expressionEvaluator, FreeMarkerService freeMarkerService) {
+                         HttpServletRequest request, HttpServletResponse response,
+                         ExpressionEvaluator expressionEvaluator, FreeMarkerService freeMarkerService,
+                         ActionInvocationStore actionInvocationStore) {
         super(expressionEvaluator);
         this.locale = locale;
         this.servletContext = servletContext;
         this.request = request;
         this.response = response;
         this.freeMarkerService = freeMarkerService;
+        this.actionInvocationStore = actionInvocationStore;
     }
 
     /**
@@ -88,8 +92,7 @@ public class ForwardResult extends AbstractResult<Forward> {
             requestDispatcher.forward(wrapRequest(invocation, request), response);
         } else if (page.endsWith(".ftl")) {
             PrintWriter writer = response.getWriter();
-            FreeMarkerMap map = new FreeMarkerMap(request, response, expressionEvaluator, invocation.action(),
-                new HashMap<String, Object>());
+            FreeMarkerMap map = new FreeMarkerMap(request, response, expressionEvaluator, actionInvocationStore, new HashMap<String, Object>());
             freeMarkerService.render(writer, page, map, locale);
         }
     }

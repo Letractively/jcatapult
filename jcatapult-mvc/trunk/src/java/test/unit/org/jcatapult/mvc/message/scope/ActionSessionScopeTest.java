@@ -19,6 +19,7 @@ import static java.util.Arrays.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Deque;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -61,7 +62,11 @@ public class ActionSessionScopeTest {
             public void setCurrent(ActionInvocation invocation) {
             }
 
-            public void popCurrent() {
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
             }
         });
         List<String> messages = scope.getActionMessages(MessageType.PLAIN);
@@ -86,7 +91,11 @@ public class ActionSessionScopeTest {
             public void setCurrent(ActionInvocation invocation) {
             }
 
-            public void popCurrent() {
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
             }
         });
         scope.addActionMessage(MessageType.PLAIN, "Test message");
@@ -114,7 +123,11 @@ public class ActionSessionScopeTest {
             public void setCurrent(ActionInvocation invocation) {
             }
 
-            public void popCurrent() {
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
             }
         });
         List<String> messages = scope.getActionMessages(MessageType.ERROR);
@@ -139,7 +152,11 @@ public class ActionSessionScopeTest {
             public void setCurrent(ActionInvocation invocation) {
             }
 
-            public void popCurrent() {
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
             }
         });
         scope.addActionMessage(MessageType.ERROR, "Test message");
@@ -170,7 +187,11 @@ public class ActionSessionScopeTest {
             public void setCurrent(ActionInvocation invocation) {
             }
 
-            public void popCurrent() {
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
             }
         });
         Map<String, List<String>> messages = scope.getFieldMessages(MessageType.PLAIN);
@@ -196,7 +217,11 @@ public class ActionSessionScopeTest {
             public void setCurrent(ActionInvocation invocation) {
             }
 
-            public void popCurrent() {
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
             }
         });
         scope.addFieldMessage(MessageType.PLAIN, "user.name", "Test message");
@@ -227,7 +252,11 @@ public class ActionSessionScopeTest {
             public void setCurrent(ActionInvocation invocation) {
             }
 
-            public void popCurrent() {
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
             }
         });
         Map<String, List<String>> messages = scope.getFieldMessages(MessageType.ERROR);
@@ -253,7 +282,11 @@ public class ActionSessionScopeTest {
             public void setCurrent(ActionInvocation invocation) {
             }
 
-            public void popCurrent() {
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
             }
         });
         scope.addFieldMessage(MessageType.ERROR, "user.name", "Test message");
