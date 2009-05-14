@@ -16,17 +16,24 @@ This will produce a list such as:
 
 {{{
 examples/
-jcatapult-ant/
-jcatapult-commerce/
 jcatapult-core/
 jcatapult-dbmgr/
-jcatapult-doc-examples/
+jcatapult-persistence/
+jcatapult-security/
+libraries/
+modules/
+savant/
+tools/
+wiki/
+}}}
+
+Underneath the *libraries*, *modules*, *savant*, and *tools* directories are even more projects. For example, if you perform a listing for the *libraries* directory, you will see these additional projects:
+
+{{{
+jcatapult-crud/
+jcatapult-commerce/
 jcatapult-email/
 jcatapult-filemgr/
-jcatapult-scaffolder/
-jcatapult-security/
-jcatapult-webservices/
-wiki/
 }}}
 
 = Checking out a project =
