@@ -93,8 +93,9 @@ public abstract class BaseCrudAction<T extends Identifiable> {
         if (results != null && criteria != null) {
             totalCount = searchService.totalCount(criteria);
             numberOfPages = (int) totalCount / criteria.getNumberPerPage();
-            if (numberOfPages <= 0) {
-                numberOfPages = 1;
+            int remainder = (int) totalCount % criteria.getNumberPerPage();
+            if (remainder > 0) {
+                numberOfPages++;
             }
 
             if (index == results.size()) {
