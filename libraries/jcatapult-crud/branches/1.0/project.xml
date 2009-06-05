@@ -1,0 +1,47 @@
+<project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
+         name="jcatapult-crud"
+         group="libraries.jcatapult.org"
+         version="1.0">
+
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="mysql" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+  <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0.2"/>
+
+  <!-- Compile properties -->
+  <property name="jdk.version" value="1.6"/>
+
+  <!-- set to true if this libary has hibernate entities and requires database creation -->
+  <property name="project.requires.database" value="true"/>
+
+  <property name="version.jcatapult" value="1.0"/>
+
+  <dependencies>
+    <artifact-group type="compile-only">
+      <artifact group="jsp.servlet.javax" name="jsp-api" version="2.0"/>
+      <artifact group="servlet.javax" name="servlet-api" version="2.4"/>
+    </artifact-group>
+    <artifact-group type="compile">
+      <artifact group="freemarker.org" name="freemarker" version="2.3.12"/>
+      <artifact group="guice.code.google.com" name="guice" version="1.0"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5"/>
+      <artifact group="jcatapult.org" name="jcatapult-core" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" name="jcatapult-mvc" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" name="jcatapult-persistence" version="${version.jcatapult}"/>
+      <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
+      <artifact group="persistence.javax" name="persistence-api" version="1.0"/>
+    </artifact-group>
+    <artifact-group type="run">
+      <artifact group="joda-time.joda.org" name="joda-time-jsptags" version="1.0"/>
+    </artifact-group>
+    <artifact-group type="test-compile">
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" project="jcatapult-mvc" name="jcatapult-mvc-test" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence-test" version="${version.jcatapult}"/>
+      <artifact group="junit.org" name="junit" version="4.4"/>
+    </artifact-group>
+  </dependencies>
+</project>
