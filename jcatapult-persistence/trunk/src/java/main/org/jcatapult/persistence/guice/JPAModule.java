@@ -16,7 +16,9 @@
 package org.jcatapult.persistence.guice;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
+import org.jcatapult.persistence.service.jpa.EntityManagerFactoryProvider;
 import org.jcatapult.persistence.service.jpa.EntityManagerProvider;
 import org.jcatapult.persistence.txn.TransactionMethodInterceptor;
 import org.jcatapult.persistence.txn.annotation.Transactional;
@@ -49,7 +51,8 @@ public class JPAModule extends AbstractModule {
      * {@link Transactional} annotation to the {@link org.jcatapult.persistence.txn.TransactionMethodInterceptor}.
      */
     protected void configureJPA() {
-        bind(EntityManager.class).toProvider(new EntityManagerProvider());
+        bind(EntityManagerFactory.class).toProvider(EntityManagerFactoryProvider.class);
+        bind(EntityManager.class).toProvider(EntityManagerProvider.class);
         bindInterceptor(any(), annotatedWith(Transactional.class), new TransactionMethodInterceptor());
     }
 }
