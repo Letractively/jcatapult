@@ -197,11 +197,26 @@ public abstract class AbstractListInput extends AbstractInput {
             }
         }
 
+        // FreeMarker wraps all maps into Map<String, Object> and does it incorrectly at that.
+        // This is a hack to ensure that when keys are compared, it works for Maps. Most of the time
+        // the class of the value from the bean and the value for the ListInput will be the same,
+        // such as Integer. 
+        boolean equal;
         if (value != null) {
-            return new Option(text, beanValue.equals(value));
+            if (beanValue.getClass().isInstance(value)) {
+                equal = beanValue.equals(value);
+            } else {
+                equal = beanValue.toString().equals(value.toString());
+            }
+        } else {
+            if (beanValue.getClass().isInstance(itemsValue)) {
+                equal = beanValue.equals(itemsValue);
+            } else {
+                equal = beanValue.toString().equals(itemsValue.toString());
+            }
         }
 
-        return new Option(text, beanValue.equals(itemsValue));
+        return new Option(text, equal);
     }
 
     /**
