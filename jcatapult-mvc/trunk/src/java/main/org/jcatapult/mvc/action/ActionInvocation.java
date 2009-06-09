@@ -33,7 +33,7 @@ public interface ActionInvocation {
     Object action();
 
     /**
-     * @return  The action URI that maps to the action object.
+     * @return  The action URI that maps to the action object. This does not include the extension.
      */
     String actionURI();
 

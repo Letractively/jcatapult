@@ -226,7 +226,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
                 try {
                     expressionEvaluator.setValue(member, action, struct.values, struct.attributes);
                 } catch (ConversionException ce) {
-                    messageStore.addConversionError(member, actionInvocation.uri(), struct.attributes, (Object[]) struct.values);
+                    messageStore.addConversionError(member, actionInvocation.actionURI(), struct.attributes, (Object[]) struct.values);
                 }
             }
         }
@@ -271,7 +271,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
             try {
                 expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
             } catch (ConversionException ce) {
-                messageStore.addConversionError(key, actionInvocation.uri(), struct.attributes, (Object[]) struct.values);
+                messageStore.addConversionError(key, actionInvocation.actionURI(), struct.attributes, (Object[]) struct.values);
             }
         }
     }
