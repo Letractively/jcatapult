@@ -70,4 +70,12 @@ public interface SavedRequestService {
      * @return  The mocked out HttpServletRequest or the parameter if there is no saved request.
      */
     HttpServletRequest mockSavedRequest(HttpServletRequest request);
+
+    /**
+     * This returns the current saved request.
+     *
+     * @param   request Used to get the session to lookup the saved request.
+     * @return  The saved request or null if there isn't one currently.
+     */
+    SavedHttpRequest getSavedRequest(HttpServletRequest request);
 }

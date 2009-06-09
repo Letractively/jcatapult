@@ -126,4 +126,12 @@ public class DefaultSavedRequestService implements SavedRequestService {
 
         return request;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public SavedHttpRequest getSavedRequest(HttpServletRequest request) {
+        HttpSession session = request.getSession(true);
+        return (SavedHttpRequest) session.getAttribute(LOGIN_KEY);
+    }
 }
