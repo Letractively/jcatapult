@@ -324,11 +324,7 @@
   <component name="ProjectDetails">
     <option name="projectName" value="jcatapult-security" />
   </component>
-  <component name="ProjectFileVersion" converted="true">
-    <converter id="javaee-modules" />
-    <converter id="ror-modules" />
-    <converter id="SelenaRunConfToDiana" />
-  </component>
+  <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectKey">
     <option name="state" value="https://jcatapult.googlecode.com/svn/jcatapult-security/trunk/jcatapult-security.ipr" />
   </component>

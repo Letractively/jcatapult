@@ -38,6 +38,16 @@ public class DefaultSavedRequestService implements SavedRequestService {
     /**
      * {@inheritDoc}
      */
+    public void saveRequest(HttpServletRequest request, String uri, Map<String, String[]> parameters) {
+        // Save the request
+        SavedHttpRequest saved = new SavedHttpRequest(uri, parameters);
+        HttpSession session = request.getSession(true);
+        session.setAttribute(LOGIN_KEY, saved);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void saveRequest(HttpServletRequest request) {
         Map<String, String[]> requestParameters = null;
         String redirectURI;
@@ -56,9 +66,7 @@ public class DefaultSavedRequestService implements SavedRequestService {
         }
 
         // Save the request
-        SavedHttpRequest saved = new SavedHttpRequest(redirectURI, requestParameters);
-        HttpSession session = request.getSession(true);
-        session.setAttribute(LOGIN_KEY, saved);
+        saveRequest(request, redirectURI, requestParameters);
     }
 
     /**

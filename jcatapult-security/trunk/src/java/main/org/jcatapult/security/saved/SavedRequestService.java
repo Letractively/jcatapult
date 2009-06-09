@@ -15,6 +15,7 @@
  */
 package org.jcatapult.security.saved;
 
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.ImplementedBy;
@@ -31,6 +32,16 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(DefaultSavedRequestService.class)
 public interface SavedRequestService {
+    /**
+     * Allows programmatic saved requests to be added to the session. This is useful for returnTo
+     * URIs.
+     *
+     * @param   request Used to get the session to store the saved request.
+     * @param   uri The URI.
+     * @param   parameters The request parameters (if any - leave null for none).
+     */
+    void saveRequest(HttpServletRequest request, String uri, Map<String, String[]> parameters);
+
     /**
      * The first step of the saved request processing. This saves the current request into the session.
      *
