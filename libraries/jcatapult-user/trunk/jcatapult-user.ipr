@@ -324,11 +324,7 @@
   <component name="ProjectDetails">
     <option name="projectName" value="jcatapult-user" />
   </component>
-  <component name="ProjectFileVersion" converted="true">
-    <converter id="javaee-modules" />
-    <converter id="ror-modules" />
-    <converter id="SelenaRunConfToDiana" />
-  </component>
+  <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectKey">
     <option name="state" value="https://jcatapult.googlecode.com/svn/libraries/jcatapult-user/trunk/jcatapult-user.ipr" />
   </component>
@@ -375,7 +371,7 @@
     <option name="DEFAULT_LAYOUT_MANAGER" value="GridLayoutManager" />
   </component>
   <UsedPathMacros>
-    <macro name="SAVANT_REPOSITORY" />
+    <macro name="SAVANT_REPOSITORY" description="" />
   </UsedPathMacros>
 </project>
 
