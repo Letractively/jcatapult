@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
+import net.java.error.ErrorList;
 import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.action.ActionInvocation;
@@ -31,7 +32,6 @@ import org.jcatapult.mvc.result.form.control.AppendAttributesMethod;
 import org.jcatapult.mvc.result.form.control.MakeClassMethod;
 
 import com.google.inject.Inject;
-import net.java.error.ErrorList;
 
 /**
  * <p>
@@ -171,7 +171,7 @@ public abstract class AbstractControl implements Control {
         } else if (request.getAttribute("jcatapultControlBundle") != null) {
             bundleName = (String) request.getAttribute("jcatapultControlBundle");
         } else {
-            bundleName = currentInvocation().uri();
+            bundleName = currentInvocation().actionURI();
         }
 
         return bundleName;

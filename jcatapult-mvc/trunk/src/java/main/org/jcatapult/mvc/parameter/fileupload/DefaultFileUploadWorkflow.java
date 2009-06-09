@@ -17,16 +17,19 @@ package org.jcatapult.mvc.parameter.fileupload;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import static net.java.lang.ObjectTools.*;
+import net.java.util.IteratorEnumeration;
+import net.java.util.Pair;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -40,9 +43,6 @@ import org.jcatapult.mvc.parameter.fileupload.annotation.FileUpload;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
-import static net.java.lang.ObjectTools.*;
-import net.java.util.IteratorEnumeration;
-import net.java.util.Pair;
 
 /**
  * <p>
@@ -105,12 +105,12 @@ public class DefaultFileUploadWorkflow implements FileUploadWorkflow {
                     FileInfo info = i.next();
                     if ((fileUpload != null && tooBig(info, fileUpload)) ||
                             ((fileUpload == null || fileUpload.maxSize() == -1) && tooBig(info))) {
-                        messageStore.addFileUploadSizeError(key, actionInvocation.uri(), info.file.length());
+                        messageStore.addFileUploadSizeError(key, actionInvocation.actionURI(), info.file.length());
                         info.deleteTempFile();
                         i.remove();
                     } else if ((fileUpload != null && invalidContentType(info, fileUpload)) ||
                             ((fileUpload == null || fileUpload.contentTypes().length == 0) && invalidContentType(info))) {
-                        messageStore.addFileUploadContentTypeError(key, actionInvocation.uri(), info.getContentType());
+                        messageStore.addFileUploadContentTypeError(key, actionInvocation.actionURI(), info.getContentType());
                         info.deleteTempFile();
                         i.remove();
                     }

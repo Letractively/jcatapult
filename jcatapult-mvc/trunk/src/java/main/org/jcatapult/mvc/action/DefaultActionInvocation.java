@@ -63,34 +63,58 @@ public class DefaultActionInvocation implements ActionInvocation {
         this.resultCode = resultCode;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Object action() {
         return action;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String actionURI() {
         return uri;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String extension() {
         return extension;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Collection<String> uriParameters() {
         return Collections.unmodifiableCollection(uriParameters);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public ActionConfiguration configuration() {
         return configuration;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean executeResult() {
         return executeResult;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean executeAction() {
         return executeAction;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String resultCode() {
         return resultCode;
     }

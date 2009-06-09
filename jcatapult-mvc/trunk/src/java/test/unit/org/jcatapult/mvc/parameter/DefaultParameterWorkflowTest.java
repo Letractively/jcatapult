@@ -17,12 +17,13 @@ package org.jcatapult.mvc.parameter;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.HashSet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import static net.java.util.CollectionTools.*;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 import org.example.domain.Action;
@@ -39,7 +40,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.google.inject.Inject;
-import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -82,7 +82,7 @@ public class DefaultParameterWorkflowTest extends JCatapultBaseTest {
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
         EasyMock.expect(invocation.action()).andReturn(action);
-        EasyMock.expect(invocation.uri()).andReturn("/test");
+        EasyMock.expect(invocation.actionURI()).andReturn("/test");
         EasyMock.replay(invocation);
 
         ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);

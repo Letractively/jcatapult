@@ -17,13 +17,14 @@ package org.jcatapult.mvc.parameter.fileupload;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import net.java.io.FileTools;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 import org.easymock.IArgumentMatcher;
@@ -36,8 +37,6 @@ import org.jcatapult.mvc.parameter.fileupload.annotation.FileUpload;
 import org.jcatapult.servlet.WorkflowChain;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import net.java.io.FileTools;
 
 /**
  * <p>
@@ -178,7 +177,7 @@ public class DefaultFileUploadWorkflowTest {
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
         EasyMock.expect(invocation.action()).andReturn(action);
-        EasyMock.expect(invocation.uri()).andReturn("/test");
+        EasyMock.expect(invocation.actionURI()).andReturn("/test");
         EasyMock.replay(invocation);
 
         ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -224,7 +223,7 @@ public class DefaultFileUploadWorkflowTest {
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
         EasyMock.expect(invocation.action()).andReturn(action);
-        EasyMock.expect(invocation.uri()).andReturn("/test");
+        EasyMock.expect(invocation.actionURI()).andReturn("/test");
         EasyMock.replay(invocation);
 
         ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -282,7 +281,7 @@ public class DefaultFileUploadWorkflowTest {
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
         EasyMock.expect(invocation.action()).andReturn(action);
-        EasyMock.expect(invocation.uri()).andReturn("/test");
+        EasyMock.expect(invocation.actionURI()).andReturn("/test");
         EasyMock.replay(invocation);
 
         ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -340,7 +339,7 @@ public class DefaultFileUploadWorkflowTest {
 
         ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
         EasyMock.expect(invocation.action()).andReturn(action);
-        EasyMock.expect(invocation.uri()).andReturn("/test");
+        EasyMock.expect(invocation.actionURI()).andReturn("/test");
         EasyMock.replay(invocation);
 
         ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);

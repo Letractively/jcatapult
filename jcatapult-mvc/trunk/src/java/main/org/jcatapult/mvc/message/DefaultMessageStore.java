@@ -99,7 +99,7 @@ public class DefaultMessageStore implements MessageStore {
     public void addFieldMessage(MessageScope scope, String field, String key, Object... values)
     throws MissingMessageException {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
-        addFieldMessage(scope, field, actionInvocation.uri(), key, values);
+        addFieldMessage(scope, field, actionInvocation.actionURI(), key, values);
     }
 
     /**
@@ -118,7 +118,7 @@ public class DefaultMessageStore implements MessageStore {
     public void addFieldError(MessageScope scope, String field, String key, Object... values)
     throws MissingMessageException {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
-        addFieldError(scope, field, actionInvocation.uri(), key, values);
+        addFieldError(scope, field, actionInvocation.actionURI(), key, values);
     }
 
     /**
@@ -137,7 +137,7 @@ public class DefaultMessageStore implements MessageStore {
     public void addActionMessage(MessageScope scope, String key, Object... values)
     throws MissingMessageException {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
-        addActionMessage(scope, actionInvocation.uri(), key, values);
+        addActionMessage(scope, actionInvocation.actionURI(), key, values);
     }
 
     /**
@@ -156,7 +156,7 @@ public class DefaultMessageStore implements MessageStore {
     public void addActionError(MessageScope scope, String key, Object... values)
     throws MissingMessageException {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
-        addActionError(scope, actionInvocation.uri(), key, values);
+        addActionError(scope, actionInvocation.actionURI(), key, values);
     }
 
     /**
