@@ -97,6 +97,8 @@ public class Register extends BaseUserFormAction {
 
     public String uri;
 
+    public String returnTo;
+
     @Session
     public String captchaText;
     public String captcha;
@@ -111,6 +113,10 @@ public class Register extends BaseUserFormAction {
         if (userConfiguration.isRegistrationDisabled()) {
             messageStore.addActionError(MessageScope.REQUEST, "disabled");
             return "disabled";
+        }
+
+        if (returnTo != null) {
+            savedRequestService.saveRequest(request, returnTo, null);
         }
 
         return "input";

@@ -864,11 +864,7 @@
   <component name="ProjectDetails">
     <option name="projectName" value="jcatapult-user-module" />
   </component>
-  <component name="ProjectFileVersion" converted="true">
-    <converter id="javaee-modules" />
-    <converter id="ror-modules" />
-    <converter id="SelenaRunConfToDiana" />
-  </component>
+  <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectKey">
     <option name="state" value="https://jcatapult.googlecode.com/svn/modules/jcatapult-user-module/trunk/jcatapult-user-module.ipr" />
   </component>
@@ -1087,7 +1083,7 @@
     </LanguageOptions>
   </component>
   <UsedPathMacros>
-    <macro name="SAVANT_REPOSITORY" />
+    <macro name="SAVANT_REPOSITORY" description="" />
   </UsedPathMacros>
 </project>
 

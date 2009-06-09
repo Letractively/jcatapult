@@ -5,7 +5,8 @@ create table addresses (
     district varchar(255),
     postal_code varchar(255),
     state varchar(255),
-    street varchar(512) not null,
+    street varchar(255) not null,
+    street2 varchar(255),
     type varchar(255) not null,
     primary key (id)
 ) ENGINE=InnoDB;
@@ -26,6 +27,7 @@ create table credit_cards (
     postal_code varchar(255),
     state varchar(255),
     street varchar(255) not null,
+    street2 varchar(255),
     expiration_month integer not null,
     expiration_year integer not null,
     first_name varchar(255) not null,
