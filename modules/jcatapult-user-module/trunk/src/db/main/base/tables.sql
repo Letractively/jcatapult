@@ -34,6 +34,7 @@ create table credit_cards (
     last_name varchar(255) not null,
     number varchar(20) not null,
     verified bit not null,
+    deleted bit not null,
     insert_date datetime not null,
     insert_user varchar(255) not null,
     update_date datetime not null,
