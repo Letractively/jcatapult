@@ -67,7 +67,7 @@ public class DefaultUser extends AbstractUsernameTrackedUser<DefaultRole> {
     private PropertySupport properties = new PropertySupport();
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "user", fetch = FetchType.EAGER)
-    private List<AuditableCreditCard> creditCards = new ArrayList<AuditableCreditCard>();
+    private List<UserCreditCard> creditCards = new ArrayList<UserCreditCard>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<DefaultRole> roles = new HashSet<DefaultRole>();
@@ -168,19 +168,19 @@ public class DefaultUser extends AbstractUsernameTrackedUser<DefaultRole> {
         this.properties = properties;
     }
 
-    public List<AuditableCreditCard> getCreditCards() {
+    public List<UserCreditCard> getCreditCards() {
         return creditCards;
     }
 
-    public void setCreditCards(List<AuditableCreditCard> creditCards) {
+    public void setCreditCards(List<UserCreditCard> creditCards) {
         this.creditCards = creditCards;
     }
 
-    public void addCreditCard(AuditableCreditCard creditCard) {
+    public void addCreditCard(UserCreditCard creditCard) {
         this.creditCards.add(creditCard);
     }
 
-    public void removeCreditCard(AuditableCreditCard cc) {
+    public void removeCreditCard(UserCreditCard cc) {
         this.creditCards.remove(cc);
     }
 

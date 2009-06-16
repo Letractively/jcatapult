@@ -22,9 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.java.error.ErrorList;
+import net.java.lang.StringTools;
 import org.jcatapult.config.Configuration;
 import org.jcatapult.module.user.domain.Address;
-import org.jcatapult.module.user.domain.AuditableCreditCard;
+import org.jcatapult.module.user.domain.UserCreditCard;
 import org.jcatapult.module.user.domain.DefaultRole;
 import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.module.user.domain.PhoneNumber;
@@ -39,8 +41,6 @@ import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.user.service.AbstractUserHandler;
 
 import com.google.inject.Inject;
-import net.java.error.ErrorList;
-import net.java.lang.StringTools;
 
 /**
  * <p>
@@ -154,9 +154,9 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
         }
 
         // Credit cards
-        List<AuditableCreditCard> creditCards = user.getCreditCards();
+        List<UserCreditCard> creditCards = user.getCreditCards();
         for (int i = 0; i < creditCards.size(); i++) {
-            AuditableCreditCard creditCard = creditCards.get(i);
+            UserCreditCard creditCard = creditCards.get(i);
             if (creditCard.getExpirationDate() != null || creditCard.getExpirationMonth() != null ||
                     !StringTools.isEmpty(creditCard.getFirstName()) || !StringTools.isEmpty(creditCard.getLastName()) ||
                     !StringTools.isEmpty(creditCard.getNumber()) || !StringTools.isEmpty(creditCard.getSvn()) ||
