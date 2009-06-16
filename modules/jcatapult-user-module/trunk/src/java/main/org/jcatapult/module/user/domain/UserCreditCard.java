@@ -20,16 +20,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.JoinColumn;
 
 import org.hibernate.annotations.Type;
 import org.jcatapult.domain.commerce.CreditCard;
 import org.jcatapult.persistence.domain.Auditable;
 import org.jcatapult.persistence.domain.Identifiable;
+import org.jcatapult.persistence.domain.SoftDeletable;
 import org.jcatapult.security.SecurityContext;
 import org.joda.time.DateTime;
 
@@ -45,7 +46,7 @@ import org.joda.time.DateTime;
  */
 @Entity
 @Table(name="credit_cards")
-public class AuditableCreditCard extends CreditCard implements Identifiable, Auditable {
+public class UserCreditCard extends CreditCard implements Identifiable, Auditable, SoftDeletable {
     private static final long serialVersionUID = 1;
 
     @Id
@@ -65,6 +66,9 @@ public class AuditableCreditCard extends CreditCard implements Identifiable, Aud
 
     @Column(name="update_user")
     private String updateUser;
+
+    @Column
+    public boolean deleted;
 
     @ManyToOne()
     @JoinColumn(name = "users_id")
@@ -108,6 +112,14 @@ public class AuditableCreditCard extends CreditCard implements Identifiable, Aud
 
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @PrePersist
