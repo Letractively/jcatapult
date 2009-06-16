@@ -35,7 +35,6 @@
       <artifact group="jcatapult.org" name="jcatapult-security" version="${version.jcatapult}"/>
 
       <!-- jcatapult libs -->
-      <artifact group="libraries.jcatapult.org" name="jcatapult-commerce" version="${version.jcatapult}"/>
       <artifact group="libraries.jcatapult.org" name="jcatapult-crud" version="${version.jcatapult}"/>
       <artifact group="libraries.jcatapult.org" name="jcatapult-email" version="${version.jcatapult}"/>
       <artifact group="libraries.jcatapult.org" name="jcatapult-user" version="${version.jcatapult}"/>
