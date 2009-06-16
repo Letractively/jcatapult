@@ -23,11 +23,10 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.RollbackException;
 import javax.sql.RowSet;
 
+import static net.java.util.CollectionTools.*;
 import org.jcatapult.persistence.PersistenceBaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import static net.java.util.CollectionTools.mapNV;
 
 /**
  * <p>
@@ -492,12 +491,17 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
         SoftDeletableUser softDeleteUser = new SoftDeletableUser();
         softDeleteUser.setName("Zeus");
 
+        SoftDeletableUser softDeleteUserForce = new SoftDeletableUser();
+        softDeleteUserForce.setName("Force");
+
         service.persist(user);
         service.persist(softDeleteUser);
+        service.persist(softDeleteUserForce);
 
         // Ensure the ids got generated
         assertNotNull(user.getId());
         assertNotNull(softDeleteUser.getId());
+        assertNotNull(softDeleteUserForce.getId());
 
         if (verifyExists) {
             // Verify the data is in there
@@ -510,6 +514,8 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
             rw = executeQuery("select * from SoftDeletableUser where deleted = false");
             assertTrue(rw.next());
             assertEquals("Zeus", rw.getString("name"));
+            assertTrue(rw.next());
+            assertEquals("Force", rw.getString("name"));
             assertFalse(rw.next());
             rw.close();
         } else {
@@ -527,9 +533,11 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
         if (!id) {
             service.delete(user);
             service.delete(softDeleteUser);
+            service.forceDelete(softDeleteUserForce);
         } else {
             assertTrue(service.delete(User.class, user.getId()));
             assertTrue(service.delete(SoftDeletableUser.class, softDeleteUser.getId()));
+            assertTrue(service.forceDelete(SoftDeletableUser.class, softDeleteUserForce.getId()));
         }
     }
 
