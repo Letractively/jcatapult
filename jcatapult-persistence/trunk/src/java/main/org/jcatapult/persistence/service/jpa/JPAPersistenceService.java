@@ -527,6 +527,28 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
+    public <T> boolean forceDelete(Class<T> type, Integer id) {
+        T t = findById(type, id);
+        if (t != null) {
+            // Check for and possibly start a transaction
+            Transaction transaction = startTransaction(entityManager);
+
+            // Remove it
+            entityManager.remove(t);
+
+            // No need for a try-catch block because a call to commit that fails will rollback the
+            // transaction automatically for us.
+            transaction.commit();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void delete(Object obj) {
         // Check for and possibly start a transaction
         Transaction transaction = startTransaction(entityManager);
@@ -547,6 +569,21 @@ public class JPAPersistenceService implements PersistenceService {
     /**
      * {@inheritDoc}
      */
+    public void forceDelete(Object obj) {
+        // Check for and possibly start a transaction
+        Transaction transaction = startTransaction(entityManager);
+
+        // Remove it
+        entityManager.remove(obj);
+        
+        // No need for a try-catch block because a call to commit that fails will rollback the
+        // transaction automatically for us.
+        transaction.commit();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public int execute(String statement, Object... params) {
         // Check for and possibly start a transaction
         Transaction transaction = startTransaction(entityManager);
@@ -554,6 +591,25 @@ public class JPAPersistenceService implements PersistenceService {
         // Create the update and execute it
         Query query = entityManager.createQuery(statement);
         addParams(query, params);
+        int results = query.executeUpdate();
+
+        // No need for a try-catch block because a call to commit that fails will rollback the
+        // transaction automatically for us.
+        transaction.commit();
+
+        return results;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int executeWithNamedParameters(String statement, Map<String, Object> params) {
+        // Check for and possibly start a transaction
+        Transaction transaction = startTransaction(entityManager);
+
+        // Create the update and execute it
+        Query query = entityManager.createQuery(statement);
+        addNamedParams(query, params);
         int results = query.executeUpdate();
 
         // No need for a try-catch block because a call to commit that fails will rollback the

@@ -350,8 +350,8 @@ public interface PersistenceService {
     /**
      * Removes the object with the given type and primary key. Since this uses a primary key to remove
      * the instance, this method will only work with identified instances. In addition, if the object
-     * type passed in is {@link org.jcatapult.persistence.domain.SoftDeletable} than this method will update the active flag and perform
-     * an update rather than a delete.
+     * type passed in is {@link org.jcatapult.persistence.domain.SoftDeletable} than this method will
+     * update the <strong>deleted</strong> flag and perform an update rather than a delete.
      *
      * @param   type The type of Object to remove.
      * @param   id The primary key of the Object to remove.
@@ -360,12 +360,32 @@ public interface PersistenceService {
     <T> boolean delete(Class<T> type, Object id);
 
     /**
+     * Removes the object with the given type and primary key. Since this uses a primary key to remove
+     * the instance, this method will only work with identified instances. In addition, if the object
+     * type passed in is {@link org.jcatapult.persistence.domain.SoftDeletable} than this method will
+     * forcibly remove the instance and not update the <strong>deleted</strong> flag.
+     *
+     * @param   type The type of Object to remove.
+     * @param   id The primary key of the Object to remove.
+     * @return  True if the entity was removed, false if it wasn't because it doesn't exist.
+     */
+    <T> boolean forceDelete(Class<T> type, Integer id);
+
+    /**
      * Removes the given object. If the object type passed in is {@link org.jcatapult.persistence.domain.SoftDeletable} than this
-     * method will update the active flag and perform an update rather than a delete.
+     * method will update the <strong>deleted</strong> ctive flag and perform an update rather than a delete.
      *
      * @param   obj The Object to remove.
      */
     void delete(Object obj);
+
+    /**
+     * Removes the given object. If the object type passed in is {@link org.jcatapult.persistence.domain.SoftDeletable}
+     * than this method forcibly deletes the object and does not update the deleted flag.
+     *
+     * @param   obj The Object to remove.
+     */
+    void forceDelete(Object obj);
 
     /**
      * Allows the execution of arbitrary bulk update/delete statements. These are always implementation
@@ -377,6 +397,16 @@ public interface PersistenceService {
      * @return  The number of rows updated or deleted.
      */
     int execute(String statement, Object... params);
+
+    /**
+     * Allows the execution of arbitrary bulk update/delete statements. These are always implementation
+     * dependent, but for JPA these are EJB-QL bulk update and delete statements.
+     *
+     * @param   statement The statement to execute.
+     * @param   params Parameters that are passed to the query. These are named parameters.
+     * @return  The number of rows updated or deleted.
+     */
+    int executeWithNamedParameters(String statement, Map<String, Object> params);
 
     /**
      * @return  The EntityManager associated with this instance of the PersistenceService.
