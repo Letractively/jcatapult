@@ -178,6 +178,58 @@ public class FreeMarkerEmailServiceTest {
         EasyMock.verify(containerResolver, config, env);
     }
 
+    @Test
+    public void testSendTemplatedEmail() throws Exception {
+        ContainerResolver containerResolver = EasyMock.createStrictMock(ContainerResolver.class);
+        EasyMock.expect(containerResolver.getRealPath("org/jcatapult/email/test-template-with-bean-text_en_US.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getResource("org/jcatapult/email/test-template-with-bean-text_en_US.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getRealPath("org/jcatapult/email/test-template-with-bean-text_en.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getResource("org/jcatapult/email/test-template-with-bean-text_en.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getRealPath("org/jcatapult/email/test-template-with-bean-text.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getResource("org/jcatapult/email/test-template-with-bean-text.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getRealPath("org/jcatapult/email/test-template-with-bean-html_en_US.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getResource("org/jcatapult/email/test-template-with-bean-html_en_US.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getRealPath("org/jcatapult/email/test-template-with-bean-html_en.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getResource("org/jcatapult/email/test-template-with-bean-html_en.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getRealPath("org/jcatapult/email/test-template-with-bean-html.ftl")).andReturn(null);
+        EasyMock.expect(containerResolver.getResource("org/jcatapult/email/test-template-with-bean-html.ftl")).andReturn(null);
+        EasyMock.replay(containerResolver);
+
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getInt("jcatapult.freemarker-service.check-seconds", 2)).andReturn(1);
+        EasyMock.expect(config.getString("jcatapult.email.templates.location")).andReturn("/org/jcatapult/email");
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template-with-bean.to")).andReturn(new String[]{"to@example.com"});
+        EasyMock.expect(config.getString("jcatapult.email.test-template-with-bean.from")).andReturn("from@example.com");
+        EasyMock.expect(config.getString("jcatapult.email.test-template-with-bean.from-display")).andReturn("From Example");
+        EasyMock.expect(config.getString("jcatapult.email.test-template-with-bean.subject")).andReturn("test subject");
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template-with-bean.cc")).andReturn(new String[]{"from@example.com"});
+        EasyMock.expect(config.getStringArray("jcatapult.email.test-template-with-bean.bcc")).andReturn(new String[]{"from@example.com"});
+        EasyMock.replay(config);
+
+        EnvironmentResolver env = EasyMock.createStrictMock(EnvironmentResolver.class);
+        EasyMock.expect(env.getEnvironment()).andReturn("test");
+        EasyMock.replay(env);
+
+        Bean bean = new Bean();
+        bean.name = "frank";
+        bean.bean2 = new Bean2();
+        bean.bean2.hobby = "fishing";
+
+        DefaultFreeMarkerService freeMarker = new DefaultFreeMarkerService(config, env, new OverridingTemplateLoader(containerResolver));
+        MockEmailTransportService transport = new MockEmailTransportService();
+        FreeMarkerEmailService service = new FreeMarkerEmailService(freeMarker, transport, config, "/WEB-INF/email");
+        service.sendEmail("test-template-with-bean").
+            withTemplateParam("bean", bean).
+            now();
+
+        Assert.assertEquals("test subject", transport.email.getSubject());
+        Assert.assertEquals("from@example.com", transport.email.getFrom().getAddress());
+        Assert.assertEquals("to@example.com", transport.email.getTo()[0].getAddress());
+        Assert.assertEquals("Text frank likes fishing", transport.email.getText());
+        Assert.assertEquals("HTML frank likes fishing", transport.email.getHtml());
+        EasyMock.verify(containerResolver, config, env);
+    }
+
     public static class MockEmailTransportService implements EmailTransportService {
         public Email email;
 
