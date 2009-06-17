@@ -17,10 +17,10 @@ package org.jcatapult.mvc.result.form.control;
 
 import java.util.List;
 
-import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 import net.java.lang.ObjectTools;
+import org.jcatapult.freemarker.FieldSupportBeansWrapper;
 
 /**
  * <p>
@@ -34,14 +34,14 @@ import net.java.lang.ObjectTools;
 public class MakeClassMethod implements TemplateMethodModelEx {
     public Object exec(List arguments) throws TemplateModelException {
         if (arguments.size() == 0) {
-            return new SimpleScalar("");
+            return FieldSupportBeansWrapper.INSTANCE.wrap("");
         }
         
         Object first = arguments.get(0);
         if (first == null) {
-            return new SimpleScalar("");
+            return FieldSupportBeansWrapper.INSTANCE.wrap("");
         }
 
-        return new SimpleScalar(ObjectTools.join(arguments, "-"));
+        return FieldSupportBeansWrapper.INSTANCE.wrap(ObjectTools.join(arguments, "-"));
     }
 }
