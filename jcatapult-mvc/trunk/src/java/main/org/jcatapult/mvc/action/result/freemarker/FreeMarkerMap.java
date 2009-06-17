@@ -33,16 +33,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import freemarker.ext.beans.CollectionModel;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleCollection;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import org.jcatapult.freemarker.FieldSupportBeansWrapper;
 import org.jcatapult.mvc.ObjectFactory;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
@@ -63,16 +63,14 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class FreeMarkerMap implements TemplateHashModelEx {
-    private static final String REQUEST_MODEL = "Request";
-    private static final String REQUEST = "request";
-    private static final String SESSION_MODEL = "Session";
-    private static final String SESSION = "session";
-    private static final String APPLICATION_MODEL = "Application";
-    private static final String APPLICATION = "application";
-    private static final String JCATAPULT_TAGS = "jc";
-    private static final String JSP_TAGLIBS = "JspTaglibs";
-
-    private static final ObjectWrapper wrapper = new FieldSupportObjectWrapper();
+    public static final String REQUEST_MODEL = "Request";
+    public static final String REQUEST = "request";
+    public static final String SESSION_MODEL = "Session";
+    public static final String SESSION = "session";
+    public static final String APPLICATION_MODEL = "Application";
+    public static final String APPLICATION = "application";
+    public static final String JCATAPULT_TAGS = "jc";
+    public static final String JSP_TAGLIBS = "JspTaglibs";
 
     private static final Map<String, Class<? extends TemplateModel>> models = new HashMap<String, Class<? extends TemplateModel>>();
     private static final Map<String, Class<? extends Control>> controls = new HashMap<String, Class<? extends Control>>();
@@ -112,11 +110,11 @@ public class FreeMarkerMap implements TemplateHashModelEx {
 
     public FreeMarkerMap(HttpServletRequest request, HttpServletResponse response,
             ExpressionEvaluator expressionEvaluator, ActionInvocationStore actionInvocationStore, Map<String, Object> additionalValues) {
-        objects.put(REQUEST_MODEL, new HttpRequestHashModel(request, response, ObjectWrapper.DEFAULT_WRAPPER));
+        objects.put(REQUEST_MODEL, new HttpRequestHashModel(request, response, FieldSupportBeansWrapper.INSTANCE));
         objects.put(REQUEST, request);
         HttpSession session = request.getSession(false);
         if (session != null) {
-            objects.put(SESSION_MODEL, new HttpSessionHashModel(session, ObjectWrapper.DEFAULT_WRAPPER));
+            objects.put(SESSION_MODEL, new HttpSessionHashModel(session, FieldSupportBeansWrapper.INSTANCE));
             objects.put(SESSION, session);
         }
         objects.put(APPLICATION_MODEL, new ServletContextHashModel(new GenericServlet() {
@@ -134,7 +132,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
             }
 
 
-        }, ObjectWrapper.DEFAULT_WRAPPER));
+        }, FieldSupportBeansWrapper.INSTANCE));
         objects.put(APPLICATION, context);
         objects.put(JSP_TAGLIBS, taglibFactory);
         objects.put(JCATAPULT_TAGS, new ControlHashModel(objectFactory, controls));
@@ -217,7 +215,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
         }
 
         try {
-            return wrapper.wrap(value);
+            return FieldSupportBeansWrapper.INSTANCE.wrap(value);
         } catch (TemplateModelException e) {
             throw new RuntimeException(e);
         }
@@ -237,9 +235,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
 
         keys.add(JSP_TAGLIBS);
 
-        SimpleCollection collection = new SimpleCollection(keys);
-        collection.setObjectWrapper(wrapper);
-        return collection;
+        return new CollectionModel(keys, FieldSupportBeansWrapper.INSTANCE);
     }
 
     public TemplateCollectionModel values() {
@@ -274,9 +270,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
 
         values.add(taglibFactory);
 
-        SimpleCollection collection = new SimpleCollection(values);
-        collection.setObjectWrapper(wrapper);
-        return collection;
+        return new CollectionModel(values, FieldSupportBeansWrapper.INSTANCE);
     }
 
     private int count(Enumeration enumeration) {

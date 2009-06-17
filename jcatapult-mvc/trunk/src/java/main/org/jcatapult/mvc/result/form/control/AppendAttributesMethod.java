@@ -15,6 +15,7 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +23,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import freemarker.template.SimpleHash;
-import freemarker.template.SimpleScalar;
-import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import org.jcatapult.freemarker.FieldSupportBeansWrapper;
 
 /**
  * <p>
@@ -42,17 +42,17 @@ import freemarker.template.TemplateModelException;
  *
  * @author  Brian Pontarelli
  */
+@SuppressWarnings("unchecked")
 public class AppendAttributesMethod implements TemplateMethodModelEx {
     public Object exec(List arguments) throws TemplateModelException {
         Set<String> ignore = new HashSet<String>();
         if (arguments.size() == 2) {
-            SimpleSequence collection = (SimpleSequence) arguments.get(1);
-            ignore.addAll(collection.toList());
+            Collection<String> collection = (Collection<String>) FieldSupportBeansWrapper.INSTANCE.unwrap((TemplateModel) arguments.get(1));
+            ignore.addAll(collection);
         }
 
         StringBuilder build = new StringBuilder();
-        SimpleHash hash = (SimpleHash) arguments.get(0);
-        Map<String, Object> map = hash.toMap();
+        Map<String, Object> map = (Map<String, Object>) FieldSupportBeansWrapper.INSTANCE.unwrap((TemplateModel) arguments.get(0));
         SortedSet<String> sortedKeys = new TreeSet<String>(map.keySet());
         for (String key : sortedKeys) {
             if (!ignore.contains(key) && map.get(key) != null) {
@@ -60,6 +60,6 @@ public class AppendAttributesMethod implements TemplateMethodModelEx {
             }
         }
 
-        return new SimpleScalar(build.toString());
+        return FieldSupportBeansWrapper.INSTANCE.wrap(build.toString());
     }
 }

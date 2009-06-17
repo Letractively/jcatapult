@@ -22,15 +22,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jcatapult.mvc.ObjectFactory;
-import org.jcatapult.mvc.result.control.Control;
-import org.jcatapult.mvc.result.control.FreeMarkerControlProxy;
-
-import freemarker.template.SimpleCollection;
+import freemarker.ext.beans.CollectionModel;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import org.jcatapult.freemarker.FieldSupportBeansWrapper;
+import org.jcatapult.mvc.ObjectFactory;
+import org.jcatapult.mvc.result.control.Control;
+import org.jcatapult.mvc.result.control.FreeMarkerControlProxy;
 
 /**
  * <p>
@@ -50,7 +50,7 @@ public class ControlHashModel implements TemplateHashModelEx {
     }
 
     public TemplateCollectionModel keys() throws TemplateModelException {
-        return new SimpleCollection(keySet());
+        return new CollectionModel(keySet(), FieldSupportBeansWrapper.INSTANCE);
     }
 
     public int size() {
@@ -71,7 +71,7 @@ public class ControlHashModel implements TemplateHashModelEx {
     }
 
     public TemplateCollectionModel values() {
-        return new SimpleCollection(valueCollection());
+        return new CollectionModel(valueCollection(), FieldSupportBeansWrapper.INSTANCE);
     }
 
     public Set<String> keySet() {

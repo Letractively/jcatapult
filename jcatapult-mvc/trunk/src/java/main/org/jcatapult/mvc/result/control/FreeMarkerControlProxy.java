@@ -15,18 +15,18 @@
  */
 package org.jcatapult.mvc.result.control;
 
-import java.util.Map;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.io.IOException;
+import java.util.Map;
 
-import freemarker.template.TemplateDirectiveModel;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModelException;
-import freemarker.template.DefaultObjectWrapper;
 import freemarker.core.Environment;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateDirectiveModel;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
+import org.jcatapult.freemarker.FieldSupportBeansWrapper;
 
 /**
  * <p>
@@ -108,12 +108,11 @@ public class FreeMarkerControlProxy implements TemplateDirectiveModel {
      */
     protected Map<String, Object> makeAttributes(Map params) throws TemplateModelException {
         Map<String, Object> attributes = new HashMap<String, Object>(params.size());
-        DefaultObjectWrapper objectWrapper = new DefaultObjectWrapper();
         for (Object o : params.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
             Object value = entry.getValue();
             if (value != null) {
-                attributes.put((String) entry.getKey(), objectWrapper.unwrap((TemplateModel) value));
+                attributes.put((String) entry.getKey(), FieldSupportBeansWrapper.INSTANCE.unwrap((TemplateModel) value));
             }
         }
 
