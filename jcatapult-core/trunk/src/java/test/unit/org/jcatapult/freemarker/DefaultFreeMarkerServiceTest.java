@@ -18,9 +18,11 @@ package org.jcatapult.freemarker;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
-import org.jcatapult.config.Configuration;
+import freemarker.ext.beans.BeansWrapper;
 import org.easymock.EasyMock;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.container.ContainerResolver;
 import org.jcatapult.environment.EnvironmentResolver;
 import static org.junit.Assert.*;
@@ -51,5 +53,61 @@ public class DefaultFreeMarkerServiceTest {
         DefaultFreeMarkerService service = new DefaultFreeMarkerService(config, env, new OverridingTemplateLoader(containerResolver));
         String result = service.render("src/java/test/unit/org/jcatapult/freemarker/test.ftl", new HashMap<String, Object>(), Locale.US);
         assertEquals("It worked!", result);
+    }
+
+    @Test
+    public void objectWrapper() {
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getInt("jcatapult.freemarker-service.check-seconds", 2)).andReturn(2);
+        EasyMock.replay(config);
+
+        EnvironmentResolver env = EasyMock.createStrictMock(EnvironmentResolver.class);
+        EasyMock.expect(env.getEnvironment()).andReturn("development");
+        EasyMock.replay(env);
+
+        ContainerResolver containerResolver = EasyMock.createStrictMock(ContainerResolver.class);
+        EasyMock.expect(containerResolver.getRealPath("src/java/test/unit/org/jcatapult/freemarker/test-with-bean_en_US.ftl")).andReturn("src/java/test/unit/org/jcatapult/freemarker/test-with-bean.ftl");
+        EasyMock.replay(containerResolver);
+
+        DefaultFreeMarkerService service = new DefaultFreeMarkerService(config, env, new OverridingTemplateLoader(containerResolver));
+
+        BeansWrapper ow = new BeansWrapper();
+        ow.setExposeFields(true);
+        ow.setSimpleMapWrapper(true);
+
+        Bean bean = new Bean();
+        bean.coolMap.put(1, "test");
+        bean.setAge(42);
+
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put("bean", bean);
+        String result = service.render("src/java/test/unit/org/jcatapult/freemarker/test-with-bean.ftl", context, Locale.US, ow);
+        assertEquals("Bean 1 test test 42", result);
+    }
+
+    @Test
+    public void defaultObjectWrapper() {
+        Configuration config = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(config.getInt("jcatapult.freemarker-service.check-seconds", 2)).andReturn(2);
+        EasyMock.replay(config);
+
+        EnvironmentResolver env = EasyMock.createStrictMock(EnvironmentResolver.class);
+        EasyMock.expect(env.getEnvironment()).andReturn("development");
+        EasyMock.replay(env);
+
+        ContainerResolver containerResolver = EasyMock.createStrictMock(ContainerResolver.class);
+        EasyMock.expect(containerResolver.getRealPath("src/java/test/unit/org/jcatapult/freemarker/test-with-bean_en_US.ftl")).andReturn("src/java/test/unit/org/jcatapult/freemarker/test-with-bean.ftl");
+        EasyMock.replay(containerResolver);
+
+        DefaultFreeMarkerService service = new DefaultFreeMarkerService(config, env, new OverridingTemplateLoader(containerResolver));
+
+        Bean bean = new Bean();
+        bean.coolMap.put(1, "test");
+        bean.setAge(42);
+
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put("bean", bean);
+        String result = service.render("src/java/test/unit/org/jcatapult/freemarker/test-with-bean.ftl", context, Locale.US);
+        assertEquals("Bean 1 test test 42", result);
     }
 }
