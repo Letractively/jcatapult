@@ -22,13 +22,14 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Locale;
 
+import freemarker.template.ObjectWrapper;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.jcatapult.config.Configuration;
 import org.jcatapult.environment.EnvironmentResolver;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 /**
  * <p>
@@ -103,7 +104,7 @@ public class DefaultFreeMarkerService implements FreeMarkerService {
     public String render(String templateName, Object root, Locale locale)
     throws FreeMarkerRenderException, MissingTemplateException {
         StringWriter writer = new StringWriter();
-        render(writer, templateName, root, locale);
+        render(writer, templateName, root, locale, null);
         return writer.toString();
     }
 
@@ -112,8 +113,29 @@ public class DefaultFreeMarkerService implements FreeMarkerService {
      */
     public void render(Writer writer, String templateName, Object root, Locale locale)
     throws FreeMarkerRenderException, MissingTemplateException {
+        render(writer, templateName, root, locale, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String render(String templateName, Object root, Locale locale, ObjectWrapper objectWrapper)
+    throws FreeMarkerRenderException, MissingTemplateException {
+        StringWriter writer = new StringWriter();
+        render(writer, templateName, root, locale, objectWrapper);
+        return writer.toString();
+    }
+
+    public void render(Writer writer, String templateName, Object root, Locale locale, ObjectWrapper objectWrapper)
+    throws FreeMarkerRenderException, MissingTemplateException {
         try {
             Template template = freeMarkerConfiguration.getTemplate(templateName, locale);
+            if (objectWrapper != null) {
+                template.setObjectWrapper(objectWrapper);
+            } else {
+                template.setObjectWrapper(FieldSupportBeansWrapper.INSTANCE);
+            }
+            
             template.process(root, writer);
         } catch (FileNotFoundException fnfe) {
             throw new MissingTemplateException(fnfe);
