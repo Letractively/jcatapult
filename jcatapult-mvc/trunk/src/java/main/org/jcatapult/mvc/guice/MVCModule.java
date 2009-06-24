@@ -42,6 +42,7 @@ import org.jcatapult.mvc.result.form.control.Password;
 import org.jcatapult.mvc.result.form.control.RadioList;
 import org.jcatapult.mvc.result.form.control.Reset;
 import org.jcatapult.mvc.result.form.control.Select;
+import org.jcatapult.mvc.result.form.control.StatesSelect;
 import org.jcatapult.mvc.result.form.control.Submit;
 import org.jcatapult.mvc.result.form.control.Text;
 import org.jcatapult.mvc.result.form.control.Textarea;
@@ -109,6 +110,7 @@ public class MVCModule extends AbstractModule {
         bind(RadioList.class);
         bind(Reset.class);
         bind(Select.class);
+        bind(StatesSelect.class);
         bind(Submit.class);
         bind(Text.class);
         bind(Textarea.class);
