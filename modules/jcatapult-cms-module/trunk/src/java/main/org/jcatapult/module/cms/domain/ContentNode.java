@@ -30,6 +30,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.Table;
 
 /**
  * <p>
@@ -40,8 +41,8 @@ import javax.persistence.OrderBy;
  *
  * @author  Brian Pontarelli
  */
-@Entity
 @DiscriminatorValue("content")
+@Entity
 public class ContentNode extends Node {
     @Enumerated(EnumType.STRING)
     @Column(name = "content_type")

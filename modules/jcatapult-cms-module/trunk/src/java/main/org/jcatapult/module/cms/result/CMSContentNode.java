@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
 
+import org.jcatapult.config.Configuration;
 import org.jcatapult.module.cms.domain.CMSMode;
 import org.jcatapult.module.cms.domain.Content;
 import org.jcatapult.module.cms.domain.ContentNode;
@@ -47,12 +48,15 @@ import com.google.inject.Inject;
 )
 public class CMSContentNode extends AbstractComponentControl {
     private final ContentService contentService;
+    private final Configuration configuration;
+    
     private String name;
     private CMSMode mode;
 
     @Inject
-    public CMSContentNode(ContentService contentService) {
+    public CMSContentNode(ContentService contentService, Configuration configuration) {
         this.contentService = contentService;
+        this.configuration = configuration;
     }
 
     @Override
@@ -101,7 +105,7 @@ public class CMSContentNode extends AbstractComponentControl {
 
     @Override
     public void renderBody(Writer writer, Body body) {
-        String site = request.getServerName();
+        String site = configuration.getString("jcatapult.cms.site", request.getServerName());
         ContentNode node;
         if (attributes.containsKey("global") && (Boolean) attributes.get("global")) {
             node = contentService.findGlobalContent(site, name);

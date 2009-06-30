@@ -25,6 +25,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 import org.jcatapult.persistence.domain.AuditableImpl;
 
@@ -113,9 +115,10 @@ import org.jcatapult.persistence.domain.AuditableImpl;
  *
  * @author Brian Pontarelli
  */
-@Entity
-@Table(name = "cms_nodes")
 @DiscriminatorColumn(name = "type")
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "cms_nodes")
 public abstract class Node extends AuditableImpl {
     @Column(nullable = false, unique = true)
     String uid;
