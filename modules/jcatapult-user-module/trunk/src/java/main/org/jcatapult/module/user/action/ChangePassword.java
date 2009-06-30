@@ -20,7 +20,7 @@ import org.jcatapult.mvc.action.annotation.Action;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.message.scope.MessageScope;
-import org.jcatapult.mvc.scope.annotation.Flash;
+import org.jcatapult.mvc.scope.annotation.ActionSession;
 import org.jcatapult.mvc.validation.annotation.Required;
 import org.jcatapult.mvc.validation.annotation.ValidateMethod;
 import org.jcatapult.security.EnhancedSecurityContext;
@@ -66,7 +66,7 @@ public class ChangePassword {
     public final MessageStore messageStore;
 
     // The user
-    @Flash
+    @ActionSession
     public User passwordResetUser;
 
     // For get
