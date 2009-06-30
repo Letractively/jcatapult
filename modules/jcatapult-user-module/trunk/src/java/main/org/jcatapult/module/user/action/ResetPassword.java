@@ -64,7 +64,7 @@ public class ResetPassword {
     public String post() {
         User user = userService.findByUsernameOrEmail(login);
         if (user != null) {
-            String url = URLTools.makeURL(request, "/change-password");
+            String url = URLTools.makeURL(request, "change-password");
             userService.resetPassword(user.getId(), url);
         }
         
