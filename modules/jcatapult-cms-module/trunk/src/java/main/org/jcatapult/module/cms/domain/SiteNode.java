@@ -30,8 +30,8 @@ import javax.persistence.OneToMany;
  *
  * @author  Brian Pontarelli
  */
-@Entity
 @DiscriminatorValue("site")
+@Entity
 public class SiteNode extends Node {
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "parent")
     private Set<PageNode> pages = new HashSet<PageNode>();

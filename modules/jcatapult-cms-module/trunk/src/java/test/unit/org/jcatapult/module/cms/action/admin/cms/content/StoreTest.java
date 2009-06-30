@@ -18,7 +18,8 @@ package org.jcatapult.module.cms.action.admin.cms.content;
 
 import java.util.Locale;
 
-import org.easymock.EasyMock;
+import static org.easymock.EasyMock.*;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.module.cms.BaseTest;
 import org.jcatapult.module.cms.domain.ContentNode;
 import org.jcatapult.module.cms.domain.ContentType;
@@ -50,11 +51,15 @@ public class StoreTest extends BaseTest {
         EnhancedSecurityContext.login(user);
 
         CreateResult<ContentNode> createResult = new CreateResult<ContentNode>(null, true, false);
-        ContentService contentService = EasyMock.createStrictMock(ContentService.class);
-        EasyMock.expect(contentService.storeContent("localhost", "/page", "name", Locale.US, "The content", ContentType.HTML, true, user)).andReturn(createResult);
-        EasyMock.replay(contentService);
+        ContentService contentService = createStrictMock(ContentService.class);
+        expect(contentService.storeContent("localhost", "/page", "name", Locale.US, "The content", ContentType.HTML, true, user)).andReturn(createResult);
+        replay(contentService);
 
-        Store action = new Store(contentService, request, null);
+        Configuration configuration = createStrictMock(Configuration.class);
+        expect(configuration.getString("jcatapult.cms.site", "localhost")).andReturn("localhost");
+        replay(configuration);
+
+        Store action = new Store(contentService, configuration, request, null);
         action.content = "The content";
         action.dynamic = true;
         action.global = false;
@@ -81,11 +86,15 @@ public class StoreTest extends BaseTest {
         EnhancedSecurityContext.login(user);
 
         CreateResult<ContentNode> createResult = new CreateResult<ContentNode>(null, true, false);
-        ContentService contentService = EasyMock.createStrictMock(ContentService.class);
-        EasyMock.expect(contentService.storeContent("localhost", null, "name", Locale.US, "The content", ContentType.HTML, false, user)).andReturn(createResult);
-        EasyMock.replay(contentService);
+        ContentService contentService = createStrictMock(ContentService.class);
+        expect(contentService.storeContent("localhost", null, "name", Locale.US, "The content", ContentType.HTML, false, user)).andReturn(createResult);
+        replay(contentService);
 
-        Store action = new Store(contentService, request, null);
+        Configuration configuration = createStrictMock(Configuration.class);
+        expect(configuration.getString("jcatapult.cms.site", "localhost")).andReturn("localhost");
+        replay(configuration);
+
+        Store action = new Store(contentService, configuration, request, null);
         action.content = "The content";
         action.dynamic = false;
         action.global = true;

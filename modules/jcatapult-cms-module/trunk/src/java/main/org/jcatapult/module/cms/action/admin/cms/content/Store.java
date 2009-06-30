@@ -19,6 +19,7 @@ package org.jcatapult.module.cms.action.admin.cms.content;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.config.Configuration;
 import org.jcatapult.module.cms.domain.ContentNode;
 import org.jcatapult.module.cms.domain.ContentType;
 import org.jcatapult.module.cms.service.ContentService;
@@ -42,6 +43,7 @@ import com.google.inject.Inject;
 public class Store {
     private final ContentService contentService;
     private final HttpServletRequest request;
+    private final Configuration configuration;
     public final MessageStore messageStore;
 
     public boolean dynamic;
@@ -60,15 +62,17 @@ public class Store {
     public CreateResult<ContentNode> result;
 
     @Inject
-    public Store(ContentService contentService, HttpServletRequest request, MessageStore messageStore) {
+    public Store(ContentService contentService, Configuration configuration, HttpServletRequest request,
+                 MessageStore messageStore) {
         this.contentService = contentService;
+        this.configuration = configuration;
         this.request = request;
         this.messageStore = messageStore;
     }
 
     public String post() {
         Identifiable user = (Identifiable) SecurityContext.getCurrentUser();
-        String site = request.getServerName();
+        String site = configuration.getString("jcatapult.cms.site", request.getServerName());
         String page = global ? null : uri;
 
         result = contentService.storeContent(site, page, name, locale, content, contentType, dynamic, user);

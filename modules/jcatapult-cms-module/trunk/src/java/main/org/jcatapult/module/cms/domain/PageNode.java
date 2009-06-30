@@ -33,8 +33,8 @@ import javax.persistence.OneToMany;
  *
  * @author  Brian Pontarelli
  */
-@Entity
 @DiscriminatorValue("page")
+@Entity
 public class PageNode extends Node {
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "parent")
     private Set<ContentNode> content = new HashSet<ContentNode>();

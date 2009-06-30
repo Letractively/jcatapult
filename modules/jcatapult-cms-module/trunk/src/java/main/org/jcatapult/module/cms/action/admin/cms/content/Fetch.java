@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.config.Configuration;
 import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.module.cms.service.ContentService;
 import org.jcatapult.mvc.action.annotation.Action;
@@ -41,20 +42,24 @@ import com.google.inject.Inject;
 public class Fetch {
     private final ContentService contentService;
     private final HttpServletRequest request;
+    private final Configuration configuration;
+
     public final List<NodeResult> results = new ArrayList<NodeResult>();
 
     public Locale locale;
     public List<NodeQuery> queries;
 
     @Inject
-    public Fetch(ContentService contentService, HttpServletRequest request, @CurrentLocale Locale locale) {
+    public Fetch(ContentService contentService, Configuration configuration, HttpServletRequest request,
+                 @CurrentLocale Locale locale) {
         this.contentService = contentService;
         this.request = request;
+        this.configuration = configuration;
         this.locale = locale;
     }
 
     public String get() {
-        String site = request.getServerName();
+        String site = configuration.getString("jcatapult.cms.site", request.getServerName());
 
         for (NodeQuery nodeQuery : queries) {
             NodeResult result = new NodeResult();

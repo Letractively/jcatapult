@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-cms-module"
          group="modules.jcatapult.org"
-         version="1.0-RC14">
+         version="1.0">
   
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
@@ -18,7 +18,7 @@
  
   <!-- Compile properties -->
   <property name="jdk.version" value="1.6"/>
-  <property name="version.jcatapult" value="1.0-RC13"/>
+  <property name="version.jcatapult" value="1.0"/>
 
   <!-- Database properties -->
   <property name="project.requires.database" value="true"/>
@@ -63,7 +63,7 @@
   <!-- This is for testing the module in Tomcat -->
   <dependencies id="dev-test">
     <artifactGroup type="run">
-      <artifact group="modules.jcatapult.org" name="jcatapult-simple-user-module" version="1.0-RC13"/>
+      <artifact group="modules.jcatapult.org" name="jcatapult-simple-user-module" version="1.0"/>
     </artifactGroup>
   </dependencies>
 </project>

@@ -16,6 +16,7 @@
  */
 package org.jcatapult.module.cms.result;
 
+import org.jcatapult.config.Configuration;
 import org.jcatapult.module.cms.service.ContentService;
 
 import com.google.inject.Inject;
@@ -29,8 +30,8 @@ import com.google.inject.Inject;
  */
 public class CMSTitleNode extends CMSContentNode {
     @Inject
-    public CMSTitleNode(ContentService contentService) {
-        super(contentService);
+    public CMSTitleNode(ContentService contentService, Configuration configuration) {
+        super(contentService, configuration);
     }
 
     @Override

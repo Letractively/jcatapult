@@ -19,7 +19,8 @@ package org.jcatapult.module.cms.action.admin.cms.content;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.easymock.EasyMock;
+import static org.easymock.EasyMock.*;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.module.cms.BaseTest;
 import org.jcatapult.module.cms.domain.ContentNode;
 import org.jcatapult.module.cms.service.ContentService;
@@ -37,11 +38,15 @@ public class FetchTest extends BaseTest {
     @Test
     public void testGetPage() {
         ContentNode node = new ContentNode();
-        ContentService contentService = EasyMock.createStrictMock(ContentService.class);
-        EasyMock.expect(contentService.findPageContent("localhost", "/page", "name")).andReturn(node);
-        EasyMock.replay(contentService);
+        ContentService contentService = createStrictMock(ContentService.class);
+        expect(contentService.findPageContent("localhost", "/page", "name")).andReturn(node);
+        replay(contentService);
 
-        Fetch action = new Fetch(contentService, request, Locale.US);
+        Configuration configuration = createStrictMock(Configuration.class);
+        expect(configuration.getString("jcatapult.cms.site", "localhost")).andReturn("localhost");
+        replay(configuration);
+
+        Fetch action = new Fetch(contentService, configuration, request, Locale.US);
         action.queries = new ArrayList<NodeQuery>();
         action.queries.add(new NodeQuery());
         action.queries.get(0).global = false;
@@ -56,11 +61,15 @@ public class FetchTest extends BaseTest {
     @Test
     public void testGetGlobal() {
         ContentNode node = new ContentNode();
-        ContentService contentService = EasyMock.createStrictMock(ContentService.class);
-        EasyMock.expect(contentService.findGlobalContent("localhost", "name")).andReturn(node);
-        EasyMock.replay(contentService);
+        ContentService contentService = createStrictMock(ContentService.class);
+        expect(contentService.findGlobalContent("configured", "name")).andReturn(node);
+        replay(contentService);
 
-        Fetch action = new Fetch(contentService, request, Locale.US);
+        Configuration configuration = createStrictMock(Configuration.class);
+        expect(configuration.getString("jcatapult.cms.site", "localhost")).andReturn("configured");
+        replay(configuration);
+
+        Fetch action = new Fetch(contentService, configuration, request, Locale.US);
         action.queries = new ArrayList<NodeQuery>();
         action.queries.add(new NodeQuery());
         action.queries.get(0).global = true;
