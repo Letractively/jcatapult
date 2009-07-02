@@ -1,0 +1,120 @@
+Editor creates site
+-------------------
+- If the SiteNode already exists, the editor is informed and nothing happens to the database
+- SiteNode is created and added to the database with a state that says the creation is pending approval
+
+Editor deletes site
+-------------------
+- If the SiteNode has already been deleted, the editor is informed and nothing happens to the database
+- If the SiteNode has previously un-approved edits, the delete is a sibling state that the Publisher can choose to accept or reject
+- SiteNode is updated with a state that says the deletion is pending
+
+Editor creates page
+-------------------
+- If the PageNode already exists, the editor is informed and nothing happens to the database
+- PageNode is created and added to the database with a state that says the creation is pending approval
+
+Editor deletes page
+-------------------
+- If the PageNode has already been deleted, the editor is informed and nothing happens to the database
+- If the PageNode has previously un-approved edits, the delete is a sibling state that the Publisher can choose to accept or reject
+- PageNode is updated with a state that says the deletion is pending
+
+Editor creates ContentNode on page
+----------------------------------
+- If the ContentNode already exists and it isn't deleted, the use case "Editor updates ContentNode" is executed
+- If the ContentNode already exists and it is deleted, this use case still works
+- ContentNode is created and added to the database with a state that says the creation is pending approval
+
+Editor deletes ContentNode from page
+------------------------------------
+- If the ContentNode is deleted, the editor is informed and nothing happens to the database
+- If the ContentNode had previously up-approved edits, the delete is a sibling state that the Publisher can choose to accept or reject
+- ContentNode is updated with a state that says the deletion is pending approval
+
+Editor updates ContentNode
+--------------------------
+- If the ContentNode is deleted, the "Editor creates ContentNode on page" use case is executed
+- If the ContentNode has previously un-approved edits, this update is a sibling state that the Publish can choose to accept or reject
+- ContentNode is updated with a state that says the update is pending approval
+
+
+
+Publisher creates site
+
+Publisher deletes page
+
+Publisher creates page
+
+Publisher deletes page
+
+Publisher creates ContentNode to page
+
+Publisher deletes ContentNode from page
+
+Publisher updates ContentNode
+
+Publisher approves site creation
+--------------------------------
+- All approved actions and pending creation actions (except the current one) on the site are archived
+- The creation action is approved
+- The site's current state is set to active
+
+Publisher rejects site creation
+-------------------------------
+- The creation action is rejected
+- No other changes
+
+Publisher approves site deletion
+--------------------------------
+- All approved actions and pending deletion actions (except the current one) on the site are archived
+- The deletion action is approved
+- The site's current state is set to deleted
+
+Publisher rejects site deletion
+-------------------------------
+- The deletion action is rejected
+- No other changes
+
+Publisher approves page creation
+--------------------------------
+- Attempt to run the "Publisher approves site creation" use case to approve the site
+- If the site's current state is deleted, this will fail and should remove the creation???
+- Else, all approved actions on the page are archived
+- The creation action is approved
+- The page's current state is set to active
+
+Publisher rejects page creation
+-------------------------------
+- The creation action is rejected
+- No other changes
+
+Publisher approves page deletion
+--------------------------------
+- All approved actions and pending deletion actions (except the current one) on the page are archived
+- The deletion action is approved
+- The page's current state is set to deleted
+
+Publisher rejects page deletion
+-------------------------------
+- The deletion action is rejected
+- No other changes
+
+Publisher approves ContentNode creation
+---------------------------------------
+- If page doesn't exist, it means that the content node is on a static page and we can by running the "Publisher creates page" use case
+- Else, if it does exist, attempt to run the "Publisher approves page creation" use case to approve the page the content exists on
+- If the site's or page's current state is deleted, this will fail and should remove the addition???
+- Else, all approved actions on the ContentNode are archived
+- The creation is approved
+- The ContentNode's current content is set to this content and the state is set to active
+
+Publisher rejects ContentNode creation
+
+Publisher approves ContentNode deletion
+
+Publisher rejects ContentNode deletion
+
+Publisher approves ContentNode update
+
+Publisher rejects ContentNode update
