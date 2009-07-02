@@ -201,9 +201,8 @@ public class RegisterIntegrationTest extends BaseIntegrationTest {
             withParameter("user.phoneNumbers['cell'].number", "303-555-1212").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
             post();
-        assertEquals(2, runner.messageStore.getFieldMessages(MessageType.ERROR).size());
+        assertEquals(1, runner.messageStore.getFieldMessages(MessageType.ERROR).size());
         assertEquals("That email is already registered.", runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.email").get(0));
-        assertEquals("That username is already registered.", runner.messageStore.getFieldMessages(MessageType.ERROR).get("user.username").get(0));
         assertEquals("anonymous", EnhancedSecurityContext.getCurrentUsername());
     }
 

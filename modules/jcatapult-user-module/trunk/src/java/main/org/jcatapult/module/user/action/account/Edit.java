@@ -19,11 +19,11 @@ package org.jcatapult.module.user.action.account;
 import org.jcatapult.module.user.action.BaseUserFormAction;
 import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.scope.MessageScope;
-import org.jcatapult.security.SecurityContext;
+import org.jcatapult.mvc.parameter.annotation.PreParameterMethod;
 import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.SecurityContext;
 import org.jcatapult.user.domain.User;
 import org.jcatapult.user.service.UpdateResult;
 
@@ -61,7 +61,7 @@ public class Edit extends BaseUserFormAction {
     /**
      * Creates a new user so that it can be edited.
      */
-    @ActionPrepareMethod
+    @PreParameterMethod
     public void prepare() {
         user = (DefaultUser) userService.findByUsername(SecurityContext.getCurrentUsername());
     }
@@ -79,8 +79,7 @@ public class Edit extends BaseUserFormAction {
      * Handles form submission and updates the user.
      *
      * @return  The result, either {@code error} or {@code success}. {@code error} is only returned
-     *          if the update failed according to the method
-     *          {@link org.jcatapult.user.service.UserService#update(org.jcatapult.user.domain.User, String)}.
+     *          if the update failed.
      */
     public String post() {
         // Protected the ID

@@ -16,12 +16,13 @@
  */
 package org.jcatapult.module.user.action.admin.user;
 
+import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.mvc.action.annotation.Action;
-import org.jcatapult.mvc.action.annotation.ActionPrepareMethod;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.message.scope.MessageScope;
-import org.jcatapult.module.user.domain.DefaultUser;
+import org.jcatapult.mvc.parameter.annotation.PreParameter;
+import org.jcatapult.mvc.parameter.annotation.PreParameterMethod;
 
 /**
  * <p>
@@ -34,15 +35,12 @@ import org.jcatapult.module.user.domain.DefaultUser;
 @Forward(code = "error", page = "index.ftl")
 @Redirect(uri = "/admin/user/")
 public class Edit extends Prepare {
+    @PreParameter
     public Integer id;
 
-    @ActionPrepareMethod
-    public void prepare() {
-        super.prepare();
-
-        if (id != null) {
-            user = (DefaultUser) userService.findById(id);
-        }
+    @PreParameterMethod
+    public void prepareUser() {
+        user = (DefaultUser) userService.findById(id);
     }
 
     public String get() {

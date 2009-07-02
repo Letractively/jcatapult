@@ -16,6 +16,7 @@
  */
 package org.jcatapult.module.user.service;
 
+import net.java.error.ErrorList;
 import static org.easymock.EasyMock.*;
 import org.jcatapult.config.Configuration;
 import org.jcatapult.module.user.domain.Address;
@@ -24,12 +25,12 @@ import org.jcatapult.module.user.domain.Name;
 import org.jcatapult.module.user.domain.PhoneNumber;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.validation.ValidatorProvider;
-import org.jcatapult.test.JCatapultBaseTest;
+import org.jcatapult.persistence.service.PersistenceService;
+import org.jcatapult.persistence.test.JPABaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.google.inject.Inject;
-import net.java.error.ErrorList;
 
 /**
  * <p>
@@ -38,7 +39,8 @@ import net.java.error.ErrorList;
  *
  * @author Brian Pontarelli
  */
-public class DefaultUserHandlerTest extends JCatapultBaseTest {
+public class DefaultUserHandlerTest extends JPABaseTest {
+    @Inject public PersistenceService ps;
     @Inject public ExpressionEvaluator expressionEvaluator;
     @Inject public ValidatorProvider validatorProvider;
 
@@ -81,7 +83,7 @@ public class DefaultUserHandlerTest extends JCatapultBaseTest {
         newUserData.getAddresses().put("work", new Address("new street", "new city", "new state", null, "new country", "new postal", "work"));
         newUserData.getPhoneNumbers().put("work", new PhoneNumber("303-555-1111", "work"));
 
-        DefaultUserHandler handler = new DefaultUserHandler(null, configuration, new DefaultUserConfiguration(configuration), expressionEvaluator, validatorProvider);
+        DefaultUserHandler handler = new DefaultUserHandler(ps, configuration, new DefaultUserConfiguration(configuration), expressionEvaluator, validatorProvider);
         ErrorList errors = handler.validate(newUserData, null, false, "password", "password");
         System.out.println("Errors are " + errors);
         assertTrue(errors.isEmpty());
@@ -126,7 +128,7 @@ public class DefaultUserHandlerTest extends JCatapultBaseTest {
         newUserData.getAddresses().put("work", new Address("new street", null, "new state", null, null, "new postal", "work"));
         newUserData.getPhoneNumbers().put("work", new PhoneNumber("303-555-1111", "work"));
 
-        DefaultUserHandler handler = new DefaultUserHandler(null, configuration, new DefaultUserConfiguration(configuration), expressionEvaluator, validatorProvider);
+        DefaultUserHandler handler = new DefaultUserHandler(ps, configuration, new DefaultUserConfiguration(configuration), expressionEvaluator, validatorProvider);
         ErrorList errors = handler.validate(newUserData, null, false, "p", "pc");
         System.out.println("Errors are " + errors);
         assertFalse(errors.isEmpty());
