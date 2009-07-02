@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2009, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,19 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
+
 package org.jcatapult.commerce.service;
 
 /**
  * <p>
- * This stores the results of a card verification request.
+ * This enum stores the different transaction types.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class VerifyResult {
-    private final CommerceError error;
-
-    public VerifyResult(CommerceError error) {
-        this.error = error;
-    }
-
-    public CommerceError getError() {
-        return error;
-    }
-
-    public boolean isError() {
-        return error != null;
-    }
+public enum TransactionType {
+    CHARGE,
+    VERIFY,
+    AUTHORIZE,
+    CAPTURE
 }

@@ -18,7 +18,7 @@ package org.jcatapult.commerce.service;
 /**
  * <p>
  * This is a billing exception for a completely unrecoverable billing
- * error that cannot be handled via the {@link ChargeResult} or
+ * error that cannot be handled via the {@link CommerceResult} or
  * {@link VerifyResult}.
  * </p>
  *

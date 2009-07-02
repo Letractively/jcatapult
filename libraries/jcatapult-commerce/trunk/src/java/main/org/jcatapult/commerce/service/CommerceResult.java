@@ -22,7 +22,7 @@ package org.jcatapult.commerce.service;
  *
  * @author Brian Pontarelli
  */
-public class ChargeResult {
+public class CommerceResult {
     private final String transactionID;
     private final CommerceError error;
     private final int gatewayResponseCode;
@@ -31,7 +31,7 @@ public class ChargeResult {
     private final String gatewayApprovalCode;
     private final String gatewayAVSCode;
 
-    public ChargeResult(String transactionID, String gatewayApprovalCode, String gatewayAVSCode) {
+    public CommerceResult(String transactionID, String gatewayApprovalCode, String gatewayAVSCode) {
         this.transactionID = transactionID;
         this.gatewayApprovalCode = gatewayApprovalCode;
         this.gatewayAVSCode = gatewayAVSCode;
@@ -41,7 +41,7 @@ public class ChargeResult {
         this.error = null;
     }
 
-    public ChargeResult(CommerceError error, int gatewayErrorCode, String gatewayErrorMessage,
+    public CommerceResult(CommerceError error, int gatewayErrorCode, String gatewayErrorMessage,
             int gatewayResponseCode, String gatewayAVSCode) {
         this.gatewayResponseCode = gatewayResponseCode;
         this.gatewayAVSCode = gatewayAVSCode;
@@ -101,6 +101,13 @@ public class ChargeResult {
      */
     public String getGatewayAVSCode() {
         return gatewayAVSCode;
+    }
+
+    /**
+     * @return  True if this result is an error, false otherwise.
+     */
+    public boolean isError() {
+        return error != null;
     }
 
     /**

@@ -46,7 +46,37 @@ public interface CommerceService {
      * @return  The transaction result from the commerce gateway.
      * @throws  CommerceException If the charge failed.
      */
-    ChargeResult chargeCard(CreditCard creditCard, Money amount, Money tax, InetAddress userIp)
+    CommerceResult charge(CreditCard creditCard, Money amount, Money tax, InetAddress userIp)
+    throws CommerceException;
+
+    /**
+     * Pre-authorizes the given credit for the given amount.
+     *
+     * @param   creditCard The credit card.
+     * @param   amount The amount to authorize the credit card for. This should include the tax.
+     * @param   tax The amount of the transaction that is tax.
+     * @param   userIp The IP address of the client computer that is submitting the commerce request.
+     *          This is used for fraud tracking.
+     * @return  The transaction result from the commerce gateway.
+     * @throws  CommerceException If the charge failed.
+     */
+    CommerceResult authorize(CreditCard creditCard, Money amount, Money tax, InetAddress userIp)
+    throws CommerceException;
+
+    /**
+     * Captures the funds from a previous {@link #authorize(CreditCard, Money, Money, InetAddress)}
+     * invocation.
+     *
+     * @param   transactionID The transaction code from the authorize. This is required.
+     * @param   amount (Optional) If you want to capture a different amount then was authorized,
+     *          pass the amount in here. Otherwise, set this to null.
+     * @param   tax The amount of the transaction that is tax.
+     * @param   userIp The IP address of the client computer that is submitting the commerce request.
+     *          This is used for fraud tracking.
+     * @return  The transaction result from the commerce gateway.
+     * @throws  CommerceException If the charge failed.
+     */
+    CommerceResult capture(String transactionID, Money amount, Money tax, InetAddress userIp)
     throws CommerceException;
 
     /**
@@ -62,6 +92,6 @@ public interface CommerceService {
      * @return  The verify result from the commerce gateway.
      * @throws  CommerceException If the verify failed.
      */
-    VerifyResult verifyCard(CreditCard creditCard, Money amount, Money tax, InetAddress userIp)
+    CommerceResult verify(CreditCard creditCard, Money amount, Money tax, InetAddress userIp)
     throws CommerceException;
 }

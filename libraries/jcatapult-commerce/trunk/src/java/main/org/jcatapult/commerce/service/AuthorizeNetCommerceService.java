@@ -32,7 +32,6 @@ import org.jcatapult.domain.commerce.CreditCard;
 import org.jcatapult.domain.commerce.Money;
 
 import com.google.inject.Inject;
-import sun.util.logging.resources.logging;
 
 /**
  * <p>
@@ -44,12 +43,12 @@ import sun.util.logging.resources.logging;
  *
  * <table>
  * <tr><th>Name</th><th>Description</th><th>Default</th></tr>
- * <tr><td>commerce.aim.url</td><td>The URL to communicate with</td><td>N/A</td></tr>
- * <tr><td>commerce.aim.username</td><td>The username passed to the AIM server</td><td>N/A</td></tr>
- * <tr><td>commerce.aim.password</td><td>The password passed to the AIM server</td><td>N/A</td></tr>
- * <tr><td>commerce.aim.test</td><td>Determines if this is a test transaction</td><td>false</td></tr>
- * <tr><td>commerce.aim.connectTimeoutSeconds</td><td>The timeout in seconds to wait for the AIM service to respond</td><td>60</td></tr>
- * <tr><td>commerce.aim.readTimeoutSeconds</td><td>The timeout in seconds to wait for the AIM service to respond</td><td>180</td></tr>
+ * <tr><td>jcatapult.commerce.aim.url</td><td>The URL to communicate with</td><td>N/A</td></tr>
+ * <tr><td>jcatapult.commerce.aim.username</td><td>The username passed to the AIM server</td><td>N/A</td></tr>
+ * <tr><td>jcatapult.commerce.aim.password</td><td>The password passed to the AIM server</td><td>N/A</td></tr>
+ * <tr><td>jcatapult.commerce.aim.test</td><td>Determines if this is a test transaction</td><td>false</td></tr>
+ * <tr><td>jcatapult.commerce.aim.connectTimeoutSeconds</td><td>The timeout in seconds to wait for the AIM service to respond</td><td>60</td></tr>
+ * <tr><td>jcatapult.commerce.aim.readTimeoutSeconds</td><td>The timeout in seconds to wait for the AIM service to respond</td><td>180</td></tr>
  * </table>
  *
  * @author Brian Pontarelli
@@ -72,10 +71,11 @@ public class AuthorizeNetCommerceService implements CommerceService {
     /**
      * {@inheritDoc}
      */
-    public ChargeResult chargeCard(CreditCard creditCard, Money amount, Money tax, InetAddress userIp)
+    @Override
+    public CommerceResult charge(CreditCard creditCard, Money amount, Money tax, InetAddress userIp)
     throws CommerceException {
         try {
-            return (ChargeResult) sendMessage(creditCard, amount, tax, userIp, false);
+            return sendMessage(creditCard, amount, tax, userIp, TransactionType.CHARGE, null);
         } catch (IOException e) {
             logger.log(Level.FINEST, "IOException", e);
             throw new CommerceException(e);
@@ -85,16 +85,38 @@ public class AuthorizeNetCommerceService implements CommerceService {
     /**
      * {@inheritDoc}
      */
-    public VerifyResult verifyCard(CreditCard creditCard, Money amount, Money tax, InetAddress userIp)
-    throws CommerceException {
+    @Override
+    public CommerceResult authorize(CreditCard creditCard, Money amount, Money tax, InetAddress userIp) throws CommerceException {
         try {
-            return (VerifyResult) sendMessage(creditCard, amount, tax, userIp, true);
+            return sendMessage(creditCard, amount, tax, userIp, TransactionType.AUTHORIZE, null);
         } catch (IOException e) {
             throw new CommerceException(e);
         }
     }
 
-    private Object sendMessage(CreditCard creditCard, Money amount, Money tax, InetAddress userIp, boolean verify)
+    @Override
+    public CommerceResult capture(String transactionID, Money amount, Money tax, InetAddress userIp) throws CommerceException {
+        try {
+            return sendMessage(null, amount, tax, userIp, TransactionType.CAPTURE, transactionID);
+        } catch (IOException e) {
+            throw new CommerceException(e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CommerceResult verify(CreditCard creditCard, Money amount, Money tax, InetAddress userIp)
+    throws CommerceException {
+        try {
+            return sendMessage(creditCard, amount, tax, userIp, TransactionType.VERIFY, null);
+        } catch (IOException e) {
+            throw new CommerceException(e);
+        }
+    }
+
+    private CommerceResult sendMessage(CreditCard creditCard, Money amount, Money tax, InetAddress userIp, TransactionType type, String transactionID)
     throws IOException, CommerceException {
         URL url = new URL(configuration.getString("jcatapult.commerce.aim.url"));
         String username = configuration.getString("jcatapult.commerce.aim.username");
@@ -109,51 +131,59 @@ public class AuthorizeNetCommerceService implements CommerceService {
         URLConnection huc = url.openConnection();
 
         StringBuilder build = new StringBuilder();
-        build.append("x_version=3.1&");
-        build.append("x_delim_data=TRUE&");
-        build.append("x_relay_response=FALSE&");
-        build.append("x_login=").append(username).append("&");
-        build.append("x_tran_key=").append(password).append("&");
-        build.append("x_method=CC&");
-        build.append("x_delim_char=|&");
+        build.append("x_version=3.1");
+        build.append("&x_delim_data=TRUE");
+        build.append("&x_relay_response=FALSE");
+        build.append("&x_login=").append(username);
+        build.append("&x_tran_key=").append(password);
+        build.append("&x_method=CC&");
+        build.append("&x_delim_char=|&");
 
-        if (verify) {
-            build.append("x_type=AUTH_ONLY&");
+        if (type == TransactionType.AUTHORIZE || type == TransactionType.VERIFY) {
+            build.append("&x_type=AUTH_ONLY");
+        } else if (type == TransactionType.CAPTURE) {
+            build.append("&x_type=PRIOR_AUTH_CAPTURE");
+            build.append("&x_trans_id=").append(transactionID);
         } else {
-            build.append("x_type=AUTH_CAPTURE&");
+            build.append("&x_type=AUTH_CAPTURE");
         }
 
         if (configuration.getBoolean("jcatapult.commerce.aim.test")) {
             logger.fine("Authorize.Net commerce service is in *************TEST************* mode");
-            build.append("x_test_request=TRUE&");
+            build.append("&x_test_request=TRUE");
         } else {
             logger.fine("Authorize.Net commerce service is in *************PRODUCTION************* mode");
         }
 
-        if (!creditCard.isVerified()) {
-            build.append("x_card_code=").append(creditCard.getSvn()).append("&");
-            build.append("x_first_name=").append(creditCard.getFirstName()).append("&");
-            build.append("x_last_name=").append(creditCard.getLastName()).append("&");
-            build.append("x_address=").append(creditCard.getAddress().getStreet()).append("&");
-            build.append("x_city=").append(creditCard.getAddress().getCity()).append("&");
-            build.append("x_state=").append(creditCard.getAddress().getState()).append("&");
-            build.append("x_zip=").append(creditCard.getAddress().getPostalCode()).append("&");
-            build.append("x_country=").append(creditCard.getAddress().getCountry()).append("&");
-            build.append("x_customer_ip=").append(userIp.toString()).append("&");
-        }
-
         if (tax != null) {
-            build.append("x_tax=").append(tax.toString()).append("&");
+            build.append("&x_tax=").append(tax.toString());
         }
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("CC is [" + creditCard + "]");
+        if (amount != null) {
+            build.append("&x_amount=").append(amount.toString());
+            build.append("&x_currency_code=").append(amount.getCurrency().getCurrencyCode());
         }
 
-        build.append("x_amount=").append(amount.toString()).append("&");
-        build.append("x_currency_code=").append(amount.getCurrency().getCurrencyCode()).append("&");
-        build.append("x_card_num=").append(creditCard.getNumber()).append("&");
-        build.append("x_exp_date=").append(creditCard.getExpirationDate());
+        if (creditCard != null) {
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("CC is [" + creditCard + "]");
+            }
+
+            if (!creditCard.isVerified()) {
+                build.append("&x_card_code=").append(creditCard.getSvn());
+                build.append("&x_first_name=").append(creditCard.getFirstName());
+                build.append("&x_last_name=").append(creditCard.getLastName());
+                build.append("&x_address=").append(creditCard.getAddress().getStreet());
+                build.append("&x_city=").append(creditCard.getAddress().getCity());
+                build.append("&x_state=").append(creditCard.getAddress().getState());
+                build.append("&x_zip=").append(creditCard.getAddress().getPostalCode());
+                build.append("&x_country=").append(creditCard.getAddress().getCountry());
+                build.append("&x_customer_ip=").append(userIp.toString());
+            }
+            
+            build.append("&x_card_num=").append(creditCard.getNumber());
+            build.append("&x_exp_date=").append(creditCard.getExpirationDate());
+        }
 
         huc.setConnectTimeout(configuration.getInt("jcatapult.commerce.aim.connectTimeoutSeconds", 60) * 1000);
         huc.setReadTimeout(configuration.getInt("jcatapult.commerce.aim.readTimeoutSeconds", 180) * 1000);
@@ -191,24 +221,13 @@ public class AuthorizeNetCommerceService implements CommerceService {
                 reasonText + "]    auth [" + authCode + "]     avs [" + avsCode + "]");
         }
 
-        if (verify) {
-            CommerceError error = null;
-            if (responseCode == 2) {
-                error = CommerceError.DECLINED;
-            } else if (responseCode == 3) {
-                error = getError(reasonCode);
-            }
-
-            return new VerifyResult(error);
-        }
-
-        ChargeResult result;
+        CommerceResult result;
         if (responseCode == 1) {
-            result = new ChargeResult(txnID, authCode, avsCode);
+            result = new CommerceResult(txnID, authCode, avsCode);
         } else if (responseCode == 2) {
-            result = new ChargeResult(CommerceError.DECLINED, reasonCode, reasonText, responseCode, avsCode);
+            result = new CommerceResult(CommerceError.DECLINED, reasonCode, reasonText, responseCode, avsCode);
         } else {
-            result = new ChargeResult(getError(reasonCode), reasonCode, reasonText, responseCode, avsCode);
+            result = new CommerceResult(getError(reasonCode), reasonCode, reasonText, responseCode, avsCode);
         }
 
         return result;
