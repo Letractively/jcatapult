@@ -110,7 +110,7 @@ public class AddIntegrationTest extends BaseIntegrationTest {
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
             post();
         System.out.println("Result" + runner.response.getStream().toString());
-        assertEquals(1, runner.messageStore.getFieldErrors().size());
+        assertEquals(3, runner.messageStore.getFieldErrors().size());
         assertEquals("Passwords don't match", runner.messageStore.getFieldErrors().get("passwordConfirm").get(0));
         assertNull(runner.response.getRedirect());
         assertTrue(runner.response.getStream().toString().contains("User Admin | Add"));

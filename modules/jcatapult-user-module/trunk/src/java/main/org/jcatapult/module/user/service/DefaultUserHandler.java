@@ -52,9 +52,9 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("unchecked")
 public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, DefaultRole> {
-    private final UserConfiguration userConfiguration;
-    private final ExpressionEvaluator expressionEvaluator;
-    private final ValidatorProvider validatorProvider;
+    protected final UserConfiguration userConfiguration;
+    protected final ExpressionEvaluator expressionEvaluator;
+    protected final ValidatorProvider validatorProvider;
 
     @Inject
     public DefaultUserHandler(PersistenceService persistenceService, Configuration configuration,
@@ -104,13 +104,45 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
         // User properties. If the username and email are the same, just validate the username as an
         // email. Otherwise, validate both and the email as an email.
         if (!userConfiguration.isUsernameSameAsEmail()) {
-            if (validate(Required.class, user, "username", errors) && !user.getUsername().matches("[a-zA-Z0-9]+")) {
-                errors.addError("user.username", "user.username.invalid-characters");
+            if (validate(Required.class, user, "username", errors)) {
+                if (!user.getUsername().matches("[a-zA-Z0-9]+")) {
+                    errors.addError("user.username", "user.username.invalid-characters");
+                }
+
+                DefaultUser other;
+                if (user.getId() == null) {
+                    other = persistenceService.queryFirst(DefaultUser.class,
+                        "select u from DefaultUser u where u.username = ?1",
+                        user.getUsername());
+                } else {
+                    other = persistenceService.queryFirst(DefaultUser.class,
+                        "select u from DefaultUser u where u.username = ?1 and u.id != ?2",
+                        user.getUsername(), user.getId());
+                }
+
+                if (other != null) {
+                    errors.addError("user.username", "user.username.exists");
+                }
             }
         }
 
         if (validate(Required.class, user, "email", errors)) {
             validate(Email.class, user, "email", errors);
+
+            DefaultUser other;
+            if (user.getId() == null) {
+                other = persistenceService.queryFirst(DefaultUser.class,
+                    "select u from DefaultUser u where u.email = ?1",
+                    user.getEmail());
+            } else {
+                other = persistenceService.queryFirst(DefaultUser.class,
+                    "select u from DefaultUser u where u.email = ?1 and u.id != ?2",
+                    user.getEmail(), user.getId());
+            }
+
+            if (other != null) {
+                errors.addError("user.email", "user.email.exists");
+            }
         }
 
         if (!existing || !StringTools.isTrimmedEmpty(password)) {
