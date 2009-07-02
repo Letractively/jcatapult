@@ -42,6 +42,7 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import net.java.lang.StringTools;
 import org.jcatapult.config.Configuration;
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.EmailException;
@@ -49,7 +50,6 @@ import org.jcatapult.email.domain.Attachment;
 import org.jcatapult.email.domain.Email;
 
 import com.google.inject.Inject;
-import net.java.lang.StringTools;
 
 /**
  * <p>
@@ -149,6 +149,11 @@ public class JavaMailEmailTransportService implements EmailTransportService {
                 throw new JCatapultEmailException("email message 'from' not set");
             }
             message.setFrom(new InternetAddress(from.getAddress(), from.getDisplay(), "UTF-8"));
+
+            // Setup the reply to
+            if (email.getReplyTo() != null) {
+                message.setReplyTo(new InternetAddress[]{new InternetAddress(email.getReplyTo().getAddress(), email.getReplyTo().getDisplay(), "UTF-8")});
+            }
 
             EmailAddress[] toList = email.getTo();
             for (EmailAddress to : toList) {
