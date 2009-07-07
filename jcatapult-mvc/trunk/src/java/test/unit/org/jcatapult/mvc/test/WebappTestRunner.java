@@ -48,6 +48,7 @@ public class WebappTestRunner {
     public MockHttpServletResponse response;
     public MockServletContext context;
     public MockHttpSession session;
+    public boolean guiceSetup;
 
     public WebappTestRunner() {
         this.context = makeContext();
@@ -67,6 +68,7 @@ public class WebappTestRunner {
     }
 
     void run(RequestBuilder builder) throws IOException, ServletException {
+        // Build the request and response for this pass
         this.request = builder.getRequest();
         ServletObjectsHolder.clearServletRequest();
         ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper(request));
@@ -75,11 +77,24 @@ public class WebappTestRunner {
         ServletObjectsHolder.clearServletResponse();
         ServletObjectsHolder.setServletResponse(response);
 
-        GuiceContainer.setGuiceModules(builder.getModules().toArray(new Module[builder.getModules().size()]));
-        GuiceContainer.inject();
-        GuiceContainer.initialize();
-        GuiceContainer.getInjector().injectMembers(this);
+        // If the Guice stuff has already been setup for a previous test using the same runner, use
+        // it, but check that they didn't try to mock anything out.
+        if (guiceSetup) {
+            if (!builder.getModules().isEmpty()) {
+                throw new AssertionError("You can't mock out any interfaces unless you create a new " +
+                    "WebappTestRunner. Reusing the same WebappTestRunner ensures that the Guice " +
+                    "injector is re-used, which simulates multiple requests to the same webapp.");
+            }
+        } else {
+            GuiceContainer.setGuiceModules(builder.getModules().toArray(new Module[builder.getModules().size()]));
+            GuiceContainer.inject();
+            GuiceContainer.initialize();
+            guiceSetup = true;
+        }
 
+        // Inject
+        GuiceContainer.getInjector().injectMembers(this);
+        
         workflow.perform(new WorkflowChain() {
             public void continueWorkflow() {
             }
