@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context allowLinking="true" docBase="${rundir}">
+
+  <Resource name="environment" auth="Container" type="org.jcatapult.environment.Environment"
+            factory="org.apache.naming.factory.BeanFactory" environment="development"/>
+
+  <!-- see http://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-j2ee.html -->
+  <!-- see http://commons.apache.org/dbcp/configuration.html -->
+  <Resource name="jdbc/@PROJECT_NAME@" auth="Container" type="javax.sql.DataSource"
+            maxActive="20" validationQuery="select 1" 
+            username="dev" password="dev" driverClassName="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/@UNDERSCORED_PROJECT_NAME@?relaxAutoCommit=true&amp;characterEncoding=utf8"/>
+
+  <!-- Mail session -->
+  <!--
+    <Resource name="mail/Session" auth="Container" type="javax.mail.Session" mail.smtp.host="localhost" />
+  -->
+</Context>
