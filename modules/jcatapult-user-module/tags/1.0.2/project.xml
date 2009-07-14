@@ -1,0 +1,67 @@
+<project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
+         name="jcatapult-user-module"
+         group="modules.jcatapult.org"
+         version="1.0.2">
+  
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="mysql" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="jee-web" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="tomcat" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+  <plugin group="plugins.savant.jcatapult.org" name="module" version="1.0.2"/>
+  <plugin group="plugins.savant.jcatapult.org" name="dbmgr" version="1.0.2"/>
+  <plugin group="plugins.savant.jcatapult.org" name="security" version="1.0"/>
+
+  <!-- Compile properties -->
+  <property name="jdk.version" value="1.6"/>
+
+  <dependencies>
+    <artifactGroup type="compile-only">
+      <artifact group="servlet.javax" name="servlet-api" version="2.4"/>
+    </artifactGroup>
+    <artifactGroup type="compile">
+      <artifact group="guice.code.google.com" name="guice" version="1.0"/>
+      <artifact group="hibernate.org" name="hibernate-annotations" version="3.3.1"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.4.4"/>
+
+      <!-- jcatapult core -->
+      <artifact group="jcatapult.org" name="jcatapult-core" version="1.0"/>
+      <artifact group="jcatapult.org" name="jcatapult-mvc" version="1.0.7"/>
+      <artifact group="jcatapult.org" name="jcatapult-persistence" version="1.0.1"/>
+      <artifact group="jcatapult.org" name="jcatapult-security" version="1.0.1"/>
+
+      <!-- jcatapult libs -->
+      <artifact group="libraries.jcatapult.org" name="jcatapult-crud" version="1.0.1"/>
+      <artifact group="libraries.jcatapult.org" name="jcatapult-email" version="1.0"/>
+      <artifact group="libraries.jcatapult.org" name="jcatapult-user" version="1.0"/>
+
+      <!-- Captcha -->
+      <artifact group="simplecaptcha.sourceforge.net" name="simplecaptcha" version="1.1.1"/>
+
+      <!-- joda -->
+      <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
+
+      <!-- java persistence-->
+      <artifact group="persistence.javax" name="persistence-api" version="1.0"/>
+
+    </artifactGroup>
+    <artifactGroup type="run">
+      <artifact group="hibernate.org" name="hibernate-entitymanager" version="3.3.2"/>
+      <artifact group="joda-time.joda.org" name="joda-time-jsptags" version="1.0"/>
+      <artifact group="opensymphony.com" name="sitemesh" version="2.3"/>
+      <artifact group="servlet.javax" name="jstl" version="1.1"/>
+      <artifact group="taglibs.jakarta.apache.org" name="standard" version="1.1.2"/>
+    </artifactGroup>
+    <artifactGroup type="test-compile">
+      <artifact group="commons.apache.org" name="commons-configuration" version="1.3"/>
+      <artifact group="easymock.org" name="easymock" version="2.2"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0"/>
+      <artifact group="jcatapult.org" project="jcatapult-mvc" name="jcatapult-mvc-test" version="1.0"/>
+      <artifact group="jcatapult.org" project="jcatapult-persistence" name="jcatapult-persistence-test" version="1.0"/>
+      <artifact group="junit.org" name="junit" version="4.4"/>
+    </artifactGroup>
+  </dependencies>
+</project>
