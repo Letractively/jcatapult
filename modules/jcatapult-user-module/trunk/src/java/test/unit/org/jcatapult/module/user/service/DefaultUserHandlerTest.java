@@ -94,17 +94,17 @@ public class DefaultUserHandlerTest extends JPABaseTest {
     public void testValidateFailure() {
         Configuration configuration = createStrictMock(Configuration.class);
         expect(configuration.getBoolean(DefaultUserConfiguration.NAME, false)).andReturn(false);
-        expect(configuration.getBoolean(DefaultUserConfiguration.NAME_REQUIRED, false)).andReturn(false);
+        expect(configuration.getBoolean(DefaultUserConfiguration.NAME_REQUIRED, false)).andReturn(true);
         expect(configuration.getBoolean(DefaultUserConfiguration.BUSINESS, false)).andReturn(false);
-        expect(configuration.getBoolean(DefaultUserConfiguration.BUSINESS_REQUIRED, false)).andReturn(false);
+        expect(configuration.getBoolean(DefaultUserConfiguration.BUSINESS_REQUIRED, false)).andReturn(true);
         expect(configuration.getBoolean(DefaultUserConfiguration.HOME_ADDRESS, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.HOME_ADDRESS_REQUIRED, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.WORK_ADDRESS, false)).andReturn(false);
-        expect(configuration.getBoolean(DefaultUserConfiguration.WORK_ADDRESS_REQUIRED, false)).andReturn(false);
+        expect(configuration.getBoolean(DefaultUserConfiguration.WORK_ADDRESS_REQUIRED, false)).andReturn(true);
         expect(configuration.getBoolean(DefaultUserConfiguration.HOME_PHONE, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.HOME_PHONE_REQUIRED, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.WORK_PHONE, false)).andReturn(false);
-        expect(configuration.getBoolean(DefaultUserConfiguration.WORK_PHONE_REQUIRED, false)).andReturn(false);
+        expect(configuration.getBoolean(DefaultUserConfiguration.WORK_PHONE_REQUIRED, false)).andReturn(true);
         expect(configuration.getBoolean(DefaultUserConfiguration.CELL_PHONE, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.CELL_PHONE_REQUIRED, false)).andReturn(false);
         expect(configuration.getBoolean(DefaultUserConfiguration.EMAIL_OPTIONS, false)).andReturn(false);
@@ -123,16 +123,25 @@ public class DefaultUserHandlerTest extends JPABaseTest {
         newUserData.setPassword("bar");
         newUserData.setCompanyName("New");
         newUserData.setName(new Name());
-        newUserData.getName().setFirstName("New");
-        newUserData.getName().setLastName("New");
-        newUserData.getAddresses().put("work", new Address("new street", null, "new state", null, null, "new postal", "work"));
-        newUserData.getPhoneNumbers().put("work", new PhoneNumber("303-555-1111", "work"));
+        newUserData.getName().setFirstName("    ");
+        newUserData.getName().setLastName("    ");
+        newUserData.getAddresses().put("work", new Address("    ", null, "new state", null, null, "new postal", "work"));
+        newUserData.getPhoneNumbers().put("work", new PhoneNumber("aalsksjda", "work"));
 
         DefaultUserHandler handler = new DefaultUserHandler(ps, configuration, new DefaultUserConfiguration(configuration), expressionEvaluator, validatorProvider);
         ErrorList errors = handler.validate(newUserData, null, false, "p", "pc");
         System.out.println("Errors are " + errors);
         assertFalse(errors.isEmpty());
-        assertEquals(5, errors.size());
+        assertEquals(9, errors.size());
+        assertNotNull(errors.getPropertyErrors("password"));
+        assertNotNull(errors.getPropertyErrors("passwordConfirm"));
+        assertNotNull(errors.getPropertyErrors("user.email"));
+        assertNotNull(errors.getPropertyErrors("user.name.firstName"));
+        assertNotNull(errors.getPropertyErrors("user.name.lastName"));
+        assertNotNull(errors.getPropertyErrors("user.addresses['work'].street"));
+        assertNotNull(errors.getPropertyErrors("user.addresses['work'].city"));
+        assertNotNull(errors.getPropertyErrors("user.addresses['work'].country"));
+        assertNotNull(errors.getPropertyErrors("user.phoneNumbers['work'].number"));
         verify(configuration);
     }
 }
