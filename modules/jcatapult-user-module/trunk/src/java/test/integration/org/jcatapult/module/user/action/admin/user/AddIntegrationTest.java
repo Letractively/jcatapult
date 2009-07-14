@@ -55,7 +55,7 @@ public class AddIntegrationTest extends BaseIntegrationTest {
         // Render first
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/admin/user/add").
-            withParameter("user.username", "add").
+            withParameter("user.username", "addintegration").
             withParameter("user.email", "add@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "password").
@@ -77,6 +77,7 @@ public class AddIntegrationTest extends BaseIntegrationTest {
             withParameter("user.phoneNumbers['cell'].number", "303-555-1212").
             withMock(EmailTransportService.class, EmailTestHelper.getService()).
             post();
+        assertNoErrors(runner);
         assertEquals("/admin/user/", runner.response.getRedirect());
     }
 
@@ -87,7 +88,7 @@ public class AddIntegrationTest extends BaseIntegrationTest {
         // Render first
         WebappTestRunner runner = new WebappTestRunner();
         runner.test("/admin/user/add").
-            withParameter("user.username", "add").
+            withParameter("user.username", "addintegration").
             withParameter("user.email", "add@test.com").
             withParameter("password", "password").
             withParameter("passwordConfirm", "bad-password").
@@ -111,7 +112,9 @@ public class AddIntegrationTest extends BaseIntegrationTest {
             post();
         System.out.println("Result" + runner.response.getStream().toString());
         assertEquals(3, runner.messageStore.getFieldErrors().size());
-        assertEquals("Passwords don't match", runner.messageStore.getFieldErrors().get("passwordConfirm").get(0));
+        assertNotNull(runner.messageStore.getFieldErrors().get("user.username"));
+        assertNotNull(runner.messageStore.getFieldErrors().get("user.email"));
+        assertNotNull(runner.messageStore.getFieldErrors().get("passwordConfirm"));
         assertNull(runner.response.getRedirect());
         assertTrue(runner.response.getStream().toString().contains("User Admin | Add"));
         assertTrue(runner.response.getStream().toString().contains("<input"));

@@ -26,10 +26,12 @@ import org.jcatapult.module.user.domain.DefaultUser;
 import org.jcatapult.module.user.domain.Name;
 import org.jcatapult.module.user.domain.PhoneNumber;
 import org.jcatapult.module.user.service.DefaultUserConfiguration;
+import org.jcatapult.mvc.test.WebappTestRunner;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.test.JPABaseTest;
 import org.jcatapult.test.MockConfiguration;
 import org.junit.Ignore;
+import static org.junit.Assert.*;
 
 import com.google.inject.Inject;
 
@@ -104,5 +106,12 @@ public class BaseIntegrationTest extends JPABaseTest {
 
         persistenceService.persist(user);
         return user;
+    }
+
+    protected void assertNoErrors(WebappTestRunner runner) {
+        if (!runner.messageStore.getActionErrors().isEmpty() || !runner.messageStore.getFieldErrors().isEmpty()) {
+            fail("Found errors! Action errors -> " + runner.messageStore.getActionErrors() + "\n" +
+                "Field errors -> " + runner.messageStore.getFieldErrors());
+        }
     }
 }

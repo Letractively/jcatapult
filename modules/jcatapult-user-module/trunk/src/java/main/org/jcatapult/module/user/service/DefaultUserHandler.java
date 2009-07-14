@@ -109,6 +109,10 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
                     errors.addError("user.username", "user.username.invalid-characters");
                 }
 
+                if (user.getUsername().length() < 6 || user.getUsername().length() > 20) {
+                    errors.addError("user.username", "user.username.length");
+                }
+
                 DefaultUser other;
                 if (user.getId() == null) {
                     other = persistenceService.queryFirst(DefaultUser.class,
@@ -211,13 +215,22 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
 
         // Check required phone numbers
         if (homePhoneRequired) {
-            validate(Required.class, user, "phoneNumbers['home'].number", errors);
+            if (validate(Required.class, user, "phoneNumbers['home'].number", errors) &&
+                    !user.getPhoneNumbers().get("home").getNumber().matches("[()-.+0-9]+")) {
+                errors.addError("user.phoneNumbers['home'].number", "user.phoneNumbers['home'].number.invalid-characters");
+            }
         }
         if (workPhoneRequired) {
-            validate(Required.class, user, "phoneNumbers['work'].number", errors);
+            if (validate(Required.class, user, "phoneNumbers['work'].number", errors) &&
+                    !user.getPhoneNumbers().get("work").getNumber().matches("[()-.+0-9]+")) {
+                errors.addError("user.phoneNumbers['work'].number", "user.phoneNumbers['work'].number.invalid-characters");
+            }
         }
         if (cellPhoneRequired) {
-            validate(Required.class, user, "phoneNumbers['cell'].number", errors);
+            if (validate(Required.class, user, "phoneNumbers['cell'].number", errors) &&
+                    !user.getPhoneNumbers().get("cell").getNumber().matches("[()-.+0-9]+")) {
+                errors.addError("user.phoneNumbers['cell'].number", "user.phoneNumbers['cell'].number.invalid-characters");
+            }
         }
 
         return errors;
@@ -229,6 +242,11 @@ public class DefaultUserHandler extends AbstractUserHandler<DefaultUser, Default
         if (!validator.validate(null, null, value)) {
             errors.addError("user." + property, "user." + property + "." + type.getSimpleName().toLowerCase());
             return false;
+        }
+
+        // Check for empty strings
+        if (type == Required.class && value instanceof String && value.toString().trim().isEmpty()) {
+            errors.addError("user." + property, "user." + property + ".required");
         }
 
         return true;
