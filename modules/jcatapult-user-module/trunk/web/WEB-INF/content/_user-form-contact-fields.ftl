@@ -15,8 +15,9 @@
     <div id="home-address-input" class="user-module-input-section jcatapult-module-input-section">
       <h3>[@jc.message key="user.addresses['home']"/]</h3>
       [@jc.text name="user.addresses['home'].street" size="30" required=settings['homeAddressRequired']/]
+      [@jc.text name="user.addresses['home'].street2" size="30"/]
       [@jc.text name="user.addresses['home'].city" size="30" required=settings['homeAddressRequired']/]
-      [@jc.text name="user.addresses['home'].state" size="30"/]
+      [@jc.statesselect name="user.addresses['home'].state" includeBlank=true/]
       [@jc.countriesselect name="user.addresses['home'].country" preferredCodes="US" includeBlank=true required=settings['homeAddressRequired']/]
       [@jc.text name="user.addresses['home'].postalCode" size="15"/]
     </div>
@@ -25,8 +26,9 @@
     <div id="work-address-input" class="user-module-input-section jcatapult-module-input-section">
       <h3>[@jc.message key="user.addresses['work']"/]</h3>
       [@jc.text name="user.addresses['work'].street" size="30" required=settings['workAddressRequired']/]
+      [@jc.text name="user.addresses['work'].street2" size="30"/]
       [@jc.text name="user.addresses['work'].city" size="30" required=settings['workAddressRequired']/]
-      [@jc.text name="user.addresses['work'].state" size="30"/]
+      [@jc.statesselect name="user.addresses['work'].state" includeBlank=true/]
       [@jc.countriesselect name="user.addresses['work'].country" preferredCodes="US" includeBlank=true required=settings['workAddressRequired']/]
       [@jc.text name="user.addresses['work'].postalCode" size="15"/]
     </div>

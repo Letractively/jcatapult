@@ -29,7 +29,7 @@
 
       <!-- jcatapult core -->
       <artifact group="jcatapult.org" name="jcatapult-core" version="1.0"/>
-      <artifact group="jcatapult.org" name="jcatapult-mvc" version="1.0.3"/>
+      <artifact group="jcatapult.org" name="jcatapult-mvc" version="1.0.7"/>
       <artifact group="jcatapult.org" name="jcatapult-persistence" version="1.0.1"/>
       <artifact group="jcatapult.org" name="jcatapult-security" version="1.0.1"/>
 
