@@ -51,6 +51,11 @@ public class StatesSelect extends Select {
     @Override
     protected Map<String, Object> makeParameters() {
         LinkedHashMap<String, String> states = new LinkedHashMap<String, String>();
+
+        if (attributes.containsKey("includeBlank") && (Boolean) attributes.get("includeBlank")) {
+            states.put("", "");
+        }
+        
         states.put("AL", "Alabama");
         states.put("AK", "Alaska");
         states.put("AZ", "Arizona");
@@ -101,10 +106,6 @@ public class StatesSelect extends Select {
         states.put("WV", "West Virginia");
         states.put("WI", "Wisconsin");
         states.put("WY", "Wyoming");
-
-        if (attributes.containsKey("includeBlank") && (Boolean) attributes.get("includeBlank")) {
-            states.put("", "");
-        }
 
         attributes.put("items", states);
 
