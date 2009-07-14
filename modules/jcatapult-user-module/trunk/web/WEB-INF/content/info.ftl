@@ -22,6 +22,7 @@
   <div id="home-address-details" class="user-module-details jcatapult-module-details">
     <h3>[@jc.message key="user.addresses['home']"/]</h3>
     [@jc.message key="user.addresses['home'].street"/]: ${user.addresses['home'].street}<br/>
+    [#if user.addresses['home'].street2??]${user.addresses['home'].street2}<br/>[/#if]
     [@jc.message key="user.addresses['home'].city"/]: ${user.addresses['home'].city}<br/>
     [@jc.message key="user.addresses['home'].state"/]: ${user.addresses['home'].state!''}<br/>
     [@jc.message key="user.addresses['home'].country"/]: ${user.addresses['home'].country}<br/>
@@ -32,6 +33,7 @@
   <div id="work-address-details" class="user-module-details jcatapult-module-details">
     <h3>[@jc.message key="user.addresses['work']"/]</h3>
     [@jc.message key="user.addresses['work'].street"/]: ${user.addresses['work'].street}<br/>
+    [#if user.addresses['work'].street2??]${user.addresses['work'].street2}<br/>[/#if]
     [@jc.message key="user.addresses['work'].city"/]: ${user.addresses['work'].city}<br/>
     [@jc.message key="user.addresses['work'].state"/]: ${user.addresses['work'].state!''}<br/>
     [@jc.message key="user.addresses['work'].country"/]: ${user.addresses['work'].country}<br/>
@@ -77,7 +79,7 @@
   <div id="user-property-details" class="user-module-details jcatapult-module-details">
     <h3>[@jc.message key="property-header"/]</h3>
     [#list user.properties.map?keys as key]
-    [@jc.message key=user.properties.map[key].name/]: ${user.properties.map[key].value}<br/>
+    [@jc.message key=user.properties.map[key].name/]: [#if user.properties.map[key].value == 'true']Yes[#elseif user.properties.map[key].value == 'false']No[#else]${user.properties.map[key].value}[/#if]<br/>
   [/#list]
   </div>
 </div>
