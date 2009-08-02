@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +29,7 @@ import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 import org.example.domain.Action;
 import org.example.domain.PreAndPostAction;
+import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
@@ -97,7 +99,106 @@ public class DefaultParameterWorkflowTest extends JCatapultBaseTest {
         chain.continueWorkflow();
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator, null);
+        workflow.perform(chain);
+
+        EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
+    }
+
+    /**
+     * Tests the invalid parameters in development mode.
+     */
+    @Test
+    public void testInvalidParametersDev() throws IOException, ServletException {
+        Action action = new Action();
+
+        Map<String, String[]> values = new LinkedHashMap<String, String[]>();
+        values.put("user.age", array("32"));
+
+        final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("GET");
+        EasyMock.expect(request.getContentType()).andReturn(null);
+        EasyMock.expect(request.getParameterMap()).andReturn(values);
+        EasyMock.replay(request);
+
+        ExpressionEvaluator expressionEvaluator = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        expect(expressionEvaluator.getAllMembers(action.getClass())).andReturn(new HashSet<String>());
+        expressionEvaluator.setValue(eq("user.age"), same(action), aryEq(array("32")), eq(new HashMap<String, String>()));
+        expectLastCall().andThrow(new ExpressionException());
+        EasyMock.replay(expressionEvaluator);
+
+        ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
+        EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.replay(invocation);
+
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
+
+        MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
+        EasyMock.replay(messageStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        EasyMock.replay(chain);
+
+        EnvironmentResolver resolver = createStrictMock(EnvironmentResolver.class);
+        expect(resolver.getEnvironment()).andReturn("development");
+        replay(resolver);
+
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator, resolver);
+        try {
+            workflow.perform(chain);
+            fail("Should have thrown an exception");
+        } catch (ExpressionException ee) {
+            // Expected
+        }
+
+        EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
+    }
+
+    /**
+     * Tests the invalid parameters in production mode.
+     */
+    @Test
+    public void testInvalidParametersProduction() throws IOException, ServletException {
+        Action action = new Action();
+
+        Map<String, String[]> values = new LinkedHashMap<String, String[]>();
+        values.put("user.age", array("32"));
+
+        final HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("GET");
+        EasyMock.expect(request.getContentType()).andReturn(null);
+        EasyMock.expect(request.getParameterMap()).andReturn(values);
+        EasyMock.replay(request);
+
+        ExpressionEvaluator expressionEvaluator = EasyMock.createStrictMock(ExpressionEvaluator.class);
+        expect(expressionEvaluator.getAllMembers(action.getClass())).andReturn(new HashSet<String>());
+        expressionEvaluator.setValue(eq("user.age"), same(action), aryEq(array("32")), eq(new HashMap<String, String>()));
+        expectLastCall().andThrow(new ExpressionException());
+        EasyMock.replay(expressionEvaluator);
+
+        ActionInvocation invocation = EasyMock.createStrictMock(ActionInvocation.class);
+        EasyMock.expect(invocation.action()).andReturn(action);
+        EasyMock.replay(invocation);
+
+        ActionInvocationStore actionInvocationStore = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(actionInvocationStore.getCurrent()).andReturn(invocation);
+        EasyMock.replay(actionInvocationStore);
+
+        MessageStore messageStore = EasyMock.createStrictMock(MessageStore.class);
+        EasyMock.replay(messageStore);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        EnvironmentResolver resolver = createStrictMock(EnvironmentResolver.class);
+        expect(resolver.getEnvironment()).andReturn("production");
+        replay(resolver);
+
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator, resolver);
+        workflow.logger = Logger.getLogger("test");
         workflow.perform(chain);
 
         EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
@@ -143,7 +244,7 @@ public class DefaultParameterWorkflowTest extends JCatapultBaseTest {
         chain.continueWorkflow();
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator, null);
         workflow.perform(chain);
 
         EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
@@ -191,7 +292,7 @@ public class DefaultParameterWorkflowTest extends JCatapultBaseTest {
         chain.continueWorkflow();
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator, null);
         workflow.perform(chain);
 
         EasyMock.verify(request, expressionEvaluator, invocation, actionInvocationStore, messageStore, chain);
@@ -230,7 +331,7 @@ public class DefaultParameterWorkflowTest extends JCatapultBaseTest {
         chain.continueWorkflow();
         EasyMock.replay(chain);
 
-        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator);
+        DefaultParameterWorkflow workflow = new DefaultParameterWorkflow(request, actionInvocationStore, messageStore, expressionEvaluator, null);
         workflow.perform(chain);
 
         assertTrue(action.preCalled);
