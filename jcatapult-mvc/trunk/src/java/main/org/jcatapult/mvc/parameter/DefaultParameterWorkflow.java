@@ -21,9 +21,12 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.message.MessageStore;
@@ -54,19 +57,22 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     public static final String RADIOBUTTON_PREFIX = "__jc_rb_";
     public static final String ACTION_PREFIX = "__jc_a_";
 
+    @Inject public Logger logger;
     private final HttpServletRequest request;
     private final ActionInvocationStore actionInvocationStore;
     private final MessageStore messageStore;
     private final ExpressionEvaluator expressionEvaluator;
+    private final EnvironmentResolver resolver;
     private boolean ignoreEmptyParameters = false;
 
     @Inject
     public DefaultParameterWorkflow(HttpServletRequest request, ActionInvocationStore actionInvocationStore,
-            MessageStore messageStore, ExpressionEvaluator expressionEvaluator) {
+            MessageStore messageStore, ExpressionEvaluator expressionEvaluator, EnvironmentResolver resolver) {
         this.request = request;
         this.actionInvocationStore = actionInvocationStore;
         this.messageStore = messageStore;
         this.expressionEvaluator = expressionEvaluator;
+        this.resolver = resolver;
     }
 
     @Inject(optional = true)
@@ -272,6 +278,13 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
                 expressionEvaluator.setValue(key, action, struct.values, struct.attributes);
             } catch (ConversionException ce) {
                 messageStore.addConversionError(key, actionInvocation.actionURI(), struct.attributes, (Object[]) struct.values);
+            } catch (ExpressionException ee) {
+                String env = resolver.getEnvironment();
+                if (env.startsWith("dev")) {
+                    throw ee;
+                }
+
+                logger.log(Level.FINE, "Invalid parameter to action [" + action.getClass().getName() + "]", ee);
             }
         }
     }
