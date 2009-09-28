@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
          name="jcatapult-persistence"
          group="jcatapult.org"
-         version="1.0.2">
+         version="1.0.3">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
@@ -26,6 +26,7 @@
   <dependencies>
     <artifact-group type="compile-only">
       <artifact group="servlet.javax" name="servlet-api" version="2.4"/>
+      <artifact group="mysql.com" name="mysql-connector-java" version="5.1.6"/>
     </artifact-group>
     <artifact-group type="compile">
       <artifact group="aopalliance.sourceforge.net" name="aopalliance" version="1.0"/>
@@ -35,7 +36,6 @@
       <artifact group="jcatapult.org" name="jcatapult-core" version="${version.jcatapult}"/>
       <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5"/>
       <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
-      <artifact group="mysql.com" name="mysql-connector-java" version="5.1.6"/>
       <artifact group="persistence.javax" name="persistence-api" version="1.0"/>
     </artifact-group>
     <artifact-group type="run">
