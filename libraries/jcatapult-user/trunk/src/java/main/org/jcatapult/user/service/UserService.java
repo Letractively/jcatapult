@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 
+import net.java.error.ErrorList;
 import org.jcatapult.user.domain.Role;
 import org.jcatapult.user.domain.User;
 
 import com.google.inject.ImplementedBy;
-import net.java.error.ErrorList;
 
 /**
  * <p>
@@ -176,6 +176,47 @@ public interface UserService {
     RegisterResult register(User user, String password, String url, Role... roles);
 
     /**
+     * Registers a new user account. This attemptes to encrypt the password, setup the roles, insert
+     * the user, and optionally send a verification email to the user (depending on Configuration).
+     * In order to turn on verification of user accounts, set the boolean flag
+     * <strong>jcatapult.user.verify-emails</strong>. If you have flag set, you will also need to
+     * configure the emails. The default email template used is named <strong>verify-email</strong>.
+     * You can change the templates inside your application. You can also control the emails via these
+     * configuration parameters:
+     *
+     * <p>
+     * <strong>jcatapult.user.verify-emails.template</strong> - A String configuration
+     * parameter that sets the name of the email template that is executed to verification email.
+     * Defaults to <strong>verify-email</strong>
+     * </p>
+     * <p>
+     * <strong>jcatapult.email.verify-email.subject</strong> - A String configuration
+     * parameter that sets the subject of the email. Defaults to <strong>Email verification</strong>.
+     * </p>
+     * <p>
+     * <strong>jcatapult.email.verify-email.from-address</strong> - A String configuration
+     * parameter that sets the from address of the email. This must be configured because it has no
+     * default.
+     * </p>
+     * <p>
+     * <strong>jcatapult.email.verify-email.from-address-display</strong> - A String configuration
+     * parameter that sets the display name of the from address of the email. This must be configured
+     * because it has no default.
+     * </p>
+     *
+     * @param   user The user information.
+     * @param   associations The map of associated IDs for the User.
+     * @param   password The password.
+     * @param   url (Optional) The root of the URL to include in the email to the user with a link
+     *          to reset their password. This should include the protocol, domain name, port, and
+     *          the action URI (i.e. http://example.com:1000/change-password).
+     * @param   roles An optional list of roles for the user. If this is null, the default roles are
+     *          pull from the UserHandler.
+     * @return  The result of the registration.
+     */
+    RegisterResult register(User user, Map<String, int[]> associations, String password, String url, Role... roles);
+
+    /**
      * <p>
      * Registers a partial new user account. This account will have a password that is impossible to
      * log in with and the temporary flag set to true.
@@ -203,7 +244,7 @@ public interface UserService {
 
     /**
      * Resends the verification email for the given user. Check out the JavaDoc for the
-     * {@link #register(User, String, String, Role[])}
+     * {@link #register(User, String, String, Role...)}
      * method to figure out more about the email.
      *
      * @param   login The login.

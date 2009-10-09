@@ -25,6 +25,9 @@ import java.util.Random;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 
+import net.java.error.ErrorList;
+import net.java.lang.StringTools;
+import static net.java.lang.StringTools.*;
 import org.jcatapult.config.Configuration;
 import org.jcatapult.domain.contact.EmailAddress;
 import org.jcatapult.email.service.EmailCommand;
@@ -36,9 +39,6 @@ import org.jcatapult.user.domain.User;
 import org.jcatapult.user.domain.Usernamed;
 
 import com.google.inject.Inject;
-import net.java.error.ErrorList;
-import net.java.lang.StringTools;
-import static net.java.lang.StringTools.*;
 
 /**
  * <p>
@@ -187,6 +187,14 @@ public class DefaultUserService implements UserService {
      * {@inheritDoc}
      */
     public RegisterResult register(User user, String password, String url, Role... roles) {
+        Map<String, int[]> associations = userHandler.getDefaultAssociations();
+        return register(user, associations, password, url, roles);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public RegisterResult register(User user, Map<String, int[]> associations, String password, String url, Role... roles) {
         User partial = findByUsername(user.getEmail());
         if (partial != null) {
             if (partial.isPartial()) {
@@ -203,14 +211,13 @@ public class DefaultUserService implements UserService {
         } else {
             user.setRoles(userHandler.getDefaultRoles());
         }
-        
+
         boolean verify = configuration.getBoolean("jcatapult.user.verify-emails", false);
         if (verify) {
             user.setVerified(false);
             user.setGuid(makeGUID());
         }
 
-        Map<String, int[]> associations = userHandler.getDefaultAssociations();
         if (!persist(user, associations, password)) {
             return RegisterResult.EXISTS;
         }
