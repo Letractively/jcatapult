@@ -13,7 +13,7 @@ Configuration and Setup is broken down into 3 separate categories:
 =Dependency Management Setup=
 jCatapult works a little differently than most open source projects in that there aren't really any distributions that you are required to download and install on your workstations.  The majority of the jCatapult projects can be added by simply adding a new artifact to your dependency list in your project's savant project.xml file.  The best way to find the most current of version of any project in jCatapult is to browse that project's subversion tag repository.  For jCatapult Filemanager, refer to the url below to see what the most current version available is:
 
-http://jcatapult.googlecode.com/svn/jcatapult-filemgr/tags
+http://jcatapult.googlecode.com/svn/libraries/jcatapult-filemgr/tags/
 
 *At the time these docs were written, only 1.0-M1 had been released, therefore, I'll be using 1.0-M1 as an example for the duration of the Configuration and Setup guide.
 
