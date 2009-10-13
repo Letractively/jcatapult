@@ -1,0 +1,24 @@
+#summary Latest versions of each component
+
+= Versions =
+
+Here are all the components of JCatapult and the current versions of each:
+
+|| *Component* || *Dependency info* || *Version* ||
+|| Core || jcatapult.org/jcatapult-core || 1.0.1 ||
+|| MVC || jcatapult.org/jcatapult-mvc || 1.0.8 ||
+|| Persistence || jcatapult.org/jcatapult-persistence || 1.0.3 ||
+|| Security || jcatapult.org/jcatapult-security || 1.0.1 ||
+|| Commerce Library || libraries.jcatapult.org/jcatapult-commerce || 1.0 ||
+|| CRUD Library || libraries.jcatapult.org/jcatapult-crud || 1.0.1 ||
+|| Email Library || libraries.jcatapult.org/jcatapult-email || 1.0.2 ||
+|| File Manager Library || libraries.jcatapult.org/jcatapult-filemgr || 1.0 ||
+|| User Library || libraries.jcatapult.org/jcatapult-user || 1.0.1 ||
+|| User Module || modules.jcatapult.org/jcatapult-user-module || 1.0.2 ||
+|| Simple User Module || modules.jcatapult.org/jcatapult-simple-user-module || 1.0-RC13 ||
+|| CMS Module || modules.jcatapult.org/jcatapult-cms-module || 1.0 ||
+
+
+
+
+
