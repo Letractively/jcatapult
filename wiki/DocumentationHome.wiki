@@ -15,6 +15,10 @@ Here are the documentation pages that are available for the JCatapult framework.
   * [Architecture]
   * [BuildFromSource Build from source]
 
+= Versions =
+
+  * [LatestVersions Latest versions of each component]
+
 = Guides =
 
   * [GuideActionView Actions and views]
