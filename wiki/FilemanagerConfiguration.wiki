@@ -15,12 +15,10 @@ jCatapult works a little differently than most open source projects in that ther
 
 http://jcatapult.googlecode.com/svn/libraries/jcatapult-filemgr/tags/
 
-*At the time these docs were written, only 1.0-M1 had been released, therefore, I'll be using 1.0-M1 as an example for the duration of the Configuration and Setup guide.
-
-If I were adding 1.0-M1 to my project's savant project.xml file, it would look like this:
+If I were adding 1.0 to my project's savant project.xml file, it would look like this:
 
 {{{
-<artifact group="jcatapult.org" project="jcatapult-filemgr" name="jcatapult-filemgr" version="1.0-M1" type="jar"/>
+<artifact group="libraries.jcatapult.org" name="jcatapult-filemgr" version="1.0"/>
 }}}
 
 =Web Application Configuration=
