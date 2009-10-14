@@ -108,7 +108,7 @@ public class JCatapultFilter implements Filter {
     throws IOException, ServletException {
         long start = System.currentTimeMillis();
         if (request.getAttribute(ORIGINAL_REQUEST_URI) == null) {
-            request.setAttribute(ORIGINAL_REQUEST_URI, ((HttpServletRequest) request).getRequestURI());
+            request.setAttribute(ORIGINAL_REQUEST_URI, ServletTools.getRequestURI((HttpServletRequest) request));
         }
 
         ServletObjectsHolder.setServletRequest(new HttpServletRequestWrapper((HttpServletRequest) request));

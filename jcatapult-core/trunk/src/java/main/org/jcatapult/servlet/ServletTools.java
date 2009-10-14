@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Toolkit for Servlet related tasks
@@ -68,5 +69,21 @@ public class ServletTools {
         }
 
         return baseUrl;
+    }
+
+    /**
+     * The request URI without the context path.
+     *
+     * @param   request The request.
+     * @return  The uri minus the context path.
+     */
+    public static String getRequestURI(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        String context = request.getContextPath();
+        if (context.length() > 0) {
+            return uri.substring(context.length());
+        }
+
+        return uri;
     }
 }
