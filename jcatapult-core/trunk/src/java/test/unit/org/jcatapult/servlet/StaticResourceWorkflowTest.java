@@ -111,7 +111,7 @@ public class StaticResourceWorkflowTest {
 
         HttpServletResponse res = EasyMock.createStrictMock(HttpServletResponse.class);
         res.setContentType("image/jpeg");
-        res.setDateHeader(EasyMock.eq("Date"), EasyMock.gt(System.currentTimeMillis()));
+        res.setDateHeader(EasyMock.eq("Date"), EasyMock.geq(System.currentTimeMillis()));
         res.setDateHeader("Expires", Long.MAX_VALUE);
         res.setDateHeader("Retry-After", Long.MAX_VALUE);
         res.setHeader("Cache-Control", "public");
