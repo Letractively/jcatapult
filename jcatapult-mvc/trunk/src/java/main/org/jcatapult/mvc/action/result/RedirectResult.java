@@ -18,6 +18,7 @@ package org.jcatapult.mvc.action.result;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.action.ActionInvocation;
@@ -34,12 +35,15 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public class RedirectResult extends AbstractResult<Redirect> {
+    private final HttpServletRequest request;
     private final HttpServletResponse response;
 
     @Inject
-    public RedirectResult(ExpressionEvaluator expressionEvaluator, HttpServletResponse response) {
+    public RedirectResult(ExpressionEvaluator expressionEvaluator, HttpServletResponse response,
+                          HttpServletRequest request) {
         super(expressionEvaluator);
         this.response = response;
+        this.request = request;
     }
 
     /**
@@ -47,6 +51,11 @@ public class RedirectResult extends AbstractResult<Redirect> {
      */
     public void execute(Redirect redirect, ActionInvocation invocation) throws IOException, ServletException {
         String page = expand(redirect.uri(), invocation.action());
+        String context = request.getContextPath();
+        if (context.length() > 0 && page.startsWith("/")) {
+            page = context + page;
+        }
+
         boolean perm = redirect.perm();
 
         response.setStatus(perm ? 301 : 302);

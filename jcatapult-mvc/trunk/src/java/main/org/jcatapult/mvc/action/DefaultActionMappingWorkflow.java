@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jcatapult.mvc.parameter.InternalParameters;
 import org.jcatapult.mvc.util.RequestTools;
+import org.jcatapult.servlet.ServletTools;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -94,7 +95,7 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
 
                         // Handle relative URIs
                         if (!uri.startsWith("/")) {
-                            String requestURI = request.getRequestURI();
+                            String requestURI = ServletTools.getRequestURI(request);
                             int index = requestURI.lastIndexOf("/");
                             if (index >= 0) {
                                 uri = requestURI.substring(0, index) + "/" + uri;
@@ -106,7 +107,7 @@ public class DefaultActionMappingWorkflow implements ActionMappingWorkflow {
         }
 
         if (uri == null) {
-            uri = request.getRequestURI();
+            uri = ServletTools.getRequestURI(request);
             if (!uri.startsWith("/")) {
                 uri = "/" + uri;
             }

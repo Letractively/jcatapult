@@ -15,8 +15,12 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+import javax.servlet.http.HttpServletRequest;
+
 import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
+import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -38,6 +42,11 @@ import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
     }
 )
 public class Image extends AbstractButtonInput {
+    @Inject
+    public Image(HttpServletRequest request) {
+        super(request);
+    }
+
     /**
      * Calls super and then moves the ismap attribute out and if it is true set it back in as the
      * String <code>ismap</code>.
