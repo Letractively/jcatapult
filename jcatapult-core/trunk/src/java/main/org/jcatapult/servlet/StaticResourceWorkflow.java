@@ -98,7 +98,7 @@ public class StaticResourceWorkflow implements Workflow {
      * @throws  ServletException If the chain throws.
      */
     public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
-        String uri = request.getRequestURI();
+        String uri = ServletTools.getRequestURI(request);
         boolean handled = false;
         if (enabled) {
             // Ensure that this is a request for a resource like foo.jpg

@@ -51,6 +51,54 @@ public class StaticResourceWorkflowTest {
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/component/2.1.1/test.jpg");
+        EasyMock.expect(req.getContextPath()).andReturn("");
+        EasyMock.expect(req.getDateHeader("If-Modified-Since")).andReturn(0l);
+        EasyMock.replay(req);
+
+        final StringBuilder build = new StringBuilder();
+        ServletOutputStream sos = new ServletOutputStream() {
+            public void write(int b) throws IOException {
+                build.appendCodePoint(b);
+            }
+        };
+
+        HttpServletResponse res = EasyMock.createStrictMock(HttpServletResponse.class);
+        res.setContentType("image/jpeg");
+        res.setDateHeader(EasyMock.eq("Date"), EasyMock.geq(System.currentTimeMillis()));
+        res.setDateHeader("Expires", Long.MAX_VALUE);
+        res.setDateHeader("Retry-After", Long.MAX_VALUE);
+        res.setHeader("Cache-Control", "public");
+        res.setDateHeader("Last-Modified", 0);
+        EasyMock.expect(res.getOutputStream()).andReturn(sos);
+        EasyMock.replay(res);
+
+        WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
+        EasyMock.replay(wc);
+
+        StaticResourceWorkflow srw = new StaticResourceWorkflow(context, req, res, configuration);
+        srw.perform(wc);
+        EasyMock.verify(configuration, req, res, wc);
+
+        assertEquals("Test\n", build.toString());
+    }
+
+    /**
+     * Tests that a new request with a context path returns the byte stream.
+     *
+     * @throws  IOException Never.
+     * @throws  ServletException Never.
+     */
+    @Test
+    public void testNewRequestContext() throws IOException, ServletException {
+        Configuration configuration = makeConfiguration();
+
+        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(context.getResource("/component/2.1.1/test.jpg")).andReturn(null);
+        EasyMock.replay(context);
+
+        HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(req.getRequestURI()).andReturn("/context-path/component/2.1.1/test.jpg");
+        EasyMock.expect(req.getContextPath()).andReturn("/context-path");
         EasyMock.expect(req.getDateHeader("If-Modified-Since")).andReturn(0l);
         EasyMock.replay(req);
 
@@ -97,6 +145,7 @@ public class StaticResourceWorkflowTest {
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/component/2.1.1/test.jpg");
+        EasyMock.expect(req.getContextPath()).andReturn("");
         EasyMock.expect(req.getDateHeader("If-Modified-Since")).andReturn(1l);
         EasyMock.replay(req);
 
@@ -129,6 +178,7 @@ public class StaticResourceWorkflowTest {
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/component/2.1.1/bad.jpg");
+        EasyMock.expect(req.getContextPath()).andReturn("");
         EasyMock.expect(req.getDateHeader("If-Modified-Since")).andReturn(0l);
         EasyMock.replay(req);
 
@@ -159,6 +209,7 @@ public class StaticResourceWorkflowTest {
 
         HttpServletRequest req = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(req.getRequestURI()).andReturn("/foo/bar");
+        EasyMock.expect(req.getContextPath()).andReturn("");
         EasyMock.replay(req);
 
         HttpServletResponse res = EasyMock.createStrictMock(HttpServletResponse.class);
