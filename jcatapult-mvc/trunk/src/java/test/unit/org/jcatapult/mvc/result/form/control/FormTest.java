@@ -19,16 +19,15 @@ import java.io.IOException;
 import java.io.StringWriter;
 import javax.servlet.ServletException;
 
+import static net.java.util.CollectionTools.*;
 import org.example.action.user.Edit;
 import org.example.action.user.Index;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.result.control.ControlBaseTest;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.google.inject.Inject;
-import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -50,6 +49,79 @@ public class FormTest extends ControlBaseTest {
             mapNV("action", "/user/", "method", "POST"),
             null, "<div class=\"form\">\n" +
             "<form action=\"/user/\" method=\"POST\">\n" +
+            "</form>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testNoPrepareRelative() {
+        request.setUri("/user/");
+        Index index = new Index();
+        ais.setCurrent(new DefaultActionInvocation(index, "/user/", null, null));
+
+        run(form,
+            mapNV("action", "edit", "method", "POST"),
+            null, "<div class=\"form\">\n" +
+            "<form action=\"edit\" method=\"POST\">\n" +
+            "</form>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testNoPrepareFullyQualified() {
+        request.setUri("/user/");
+        Index index = new Index();
+        ais.setCurrent(new DefaultActionInvocation(index, "/user/", null, null));
+
+        run(form,
+            mapNV("action", "https://www.google.com", "method", "POST"),
+            null, "<div class=\"form\">\n" +
+            "<form action=\"https://www.google.com\" method=\"POST\">\n" +
+            "</form>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testNoPrepareContextPath() {
+        request.setUri("/context/user/");
+        request.setContextPath("/context");
+        Index index = new Index();
+        ais.setCurrent(new DefaultActionInvocation(index, "/user/", null, null));
+
+        run(form,
+            mapNV("action", "/user/", "method", "POST"),
+            null, "<div class=\"form\">\n" +
+            "<form action=\"/context/user/\" method=\"POST\">\n" +
+            "</form>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testRelativeContextPath() {
+        request.setUri("/context/user/");
+        request.setContextPath("/context");
+        Index index = new Index();
+        ais.setCurrent(new DefaultActionInvocation(index, "/user/", null, null));
+
+        run(form,
+            mapNV("action", "edit", "method", "POST"),
+            null, "<div class=\"form\">\n" +
+            "<form action=\"/context/user/edit\" method=\"POST\">\n" +
+            "</form>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testFullyQualifiedContextPath() {
+        request.setUri("/context/user/");
+        request.setContextPath("/context");
+        Index index = new Index();
+        ais.setCurrent(new DefaultActionInvocation(index, "/user/", null, null));
+
+        run(form,
+            mapNV("action", "https://www.google.com", "method", "POST"),
+            null, "<div class=\"form\">\n" +
+            "<form action=\"https://www.google.com\" method=\"POST\">\n" +
             "</form>\n" +
             "</div>\n");
     }

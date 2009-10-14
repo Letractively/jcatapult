@@ -15,13 +15,13 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
+import static net.java.util.CollectionTools.*;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
 import com.google.inject.Inject;
-import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -82,6 +82,34 @@ public class ImageTest extends ControlBaseTest {
             "<div class=\"image-button button control\">\n" +
             "<div class=\"label-container\"> </div>\n" +
             "<div class=\"control-container\"><input type=\"image\" id=\"image\" ismap=\"ismap\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testActionContext() {
+        request.setContextPath("/context");
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
+        run(image,
+            mapNV("name", "image", "value", "test-value", "action", "/foo", "src", "foo.gif"),
+            null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_image\" value=\"/context/foo\"/>\n" +
+            "<div class=\"image-button button control\">\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"image\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testActionContextRelative() {
+        request.setContextPath("/context");
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
+        run(image,
+            mapNV("name", "image", "value", "test-value", "action", "foo", "src", "foo.gif"),
+            null, "<input type=\"hidden\" name=\"image@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_image\" value=\"foo\"/>\n" +
+            "<div class=\"image-button button control\">\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"image\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
             "</div>\n");
     }
 }

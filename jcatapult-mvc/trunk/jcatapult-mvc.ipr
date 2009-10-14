@@ -153,11 +153,12 @@
         <inspection_tool class="UnusedLabel" enabled="false" level="WARNING" enabled_by_default="false" />
       </profile>
     </profiles>
-    <list size="4">
-      <item index="0" class="java.lang.String" itemvalue="WARNING" />
-      <item index="1" class="java.lang.String" itemvalue="SERVER PROBLEM" />
-      <item index="2" class="java.lang.String" itemvalue="INFO" />
-      <item index="3" class="java.lang.String" itemvalue="ERROR" />
+    <list size="5">
+      <item index="0" class="java.lang.String" itemvalue="TYPO" />
+      <item index="1" class="java.lang.String" itemvalue="WARNING" />
+      <item index="2" class="java.lang.String" itemvalue="SERVER PROBLEM" />
+      <item index="3" class="java.lang.String" itemvalue="INFO" />
+      <item index="4" class="java.lang.String" itemvalue="ERROR" />
     </list>
   </component>
   <component name="JavacSettings">
@@ -322,7 +323,9 @@
   <component name="ProjectDetails">
     <option name="projectName" value="jcatapult-mvc" />
   </component>
-  <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectDictionaryState">
+    <dictionary name="bpontarelli" />
+  </component>
   <component name="ProjectKey">
     <option name="state" value="https://jcatapult.googlecode.com/svn/jcatapult-mvc/trunk/jcatapult-mvc.ipr" />
   </component>
@@ -515,8 +518,5 @@
       <option name="useAlternate" value="false" />
     </LanguageOptions>
   </component>
-  <UsedPathMacros>
-    <macro name="SAVANT_REPOSITORY" description="" />
-  </UsedPathMacros>
 </project>
 

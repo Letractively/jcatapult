@@ -15,13 +15,13 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
+import static net.java.util.CollectionTools.*;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
 import com.google.inject.Inject;
-import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -47,7 +47,7 @@ public class ButtonTest extends ControlBaseTest {
     }
 
     @Test
-    public void testAction() {
+    public void testCSS() {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
         run(button,
             mapNV("name", "button", "value", "test-value", "class", "css-class"),
@@ -60,12 +60,40 @@ public class ButtonTest extends ControlBaseTest {
     }
 
     @Test
-    public void testActionAttribute() {
+    public void testAction() {
         ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
         run(button,
             mapNV("name", "button", "action", "/foo", "value", "test-value"),
             null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
             "<input type=\"hidden\" name=\"__jc_a_button\" value=\"/foo\"/>\n" +
+            "<div class=\"button-button button control\">\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"button\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testActionContext() {
+        request.setContextPath("/context");
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
+        run(button,
+            mapNV("name", "button", "action", "/foo", "value", "test-value"),
+            null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_button\" value=\"/context/foo\"/>\n" +
+            "<div class=\"button-button button control\">\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"button\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void testActionContextRelative() {
+        request.setContextPath("/context");
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
+        run(button,
+            mapNV("name", "button", "action", "foo", "value", "test-value"),
+            null, "<input type=\"hidden\" name=\"button@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_button\" value=\"foo\"/>\n" +
             "<div class=\"button-button button control\">\n" +
             "<div class=\"label-container\"> </div>\n" +
             "<div class=\"control-container\"><input type=\"button\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +

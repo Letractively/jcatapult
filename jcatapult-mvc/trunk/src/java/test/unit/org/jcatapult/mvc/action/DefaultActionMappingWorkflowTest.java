@@ -76,6 +76,18 @@ public class DefaultActionMappingWorkflowTest extends JCatapultBaseTest {
     }
 
     @Test
+    public void testRequestURIContext() throws IOException, ServletException {
+        request.setUri("/context-path/admin/user/edit");
+        request.setContextPath("/context-path");
+        request.setPost(true);
+        request.setParameter("__jc_a_submit", "");
+        request.setParameter("__jc_a_cancel", "cancel");
+        request.setParameter("submit", "Submit");
+
+        run("/admin/user/edit", null);
+    }
+
+    @Test
     public void testExtension() throws IOException, ServletException {
         request.setUri("/admin/user/edit.xml");
         request.setPost(true);

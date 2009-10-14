@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-2.0/project"
     name="jcatapult-mvc"
     group="jcatapult.org"
-    version="1.0.8">
+    version="1.0.9">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
@@ -12,7 +12,7 @@
   <!-- compile properties -->
   <property name="jdk.version" value="1.6"/>
 
-  <property name="version.jcatapult" value="1.0.1"/>
+  <property name="version.jcatapult" value="1.0.2"/>
 
   <release>
     <publication name="jcatapult-mvc" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"/>

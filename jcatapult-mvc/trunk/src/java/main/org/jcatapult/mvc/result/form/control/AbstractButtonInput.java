@@ -16,6 +16,9 @@
 package org.jcatapult.mvc.result.form.control;
 
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+
+import com.google.inject.Inject;
 
 /**
  * <p>
@@ -26,8 +29,12 @@ import java.util.Map;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractButtonInput extends AbstractInput {
-    public AbstractButtonInput() {
+    private final HttpServletRequest request;
+
+    @Inject
+    public AbstractButtonInput(HttpServletRequest request) {
         super(true);
+        this.request = request;
     }
 
     /**
@@ -44,6 +51,11 @@ public abstract class AbstractButtonInput extends AbstractInput {
 
         String action = (String) attributes.remove("action");
         if (action != null) {
+            String contextPath = request.getContextPath();
+            if (action.startsWith("/") && contextPath.length() > 0) {
+                action = contextPath + action;
+            }
+            
             parameters.put("actionURI", action);
         }
 

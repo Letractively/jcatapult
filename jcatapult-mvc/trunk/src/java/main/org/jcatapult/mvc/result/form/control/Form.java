@@ -77,10 +77,11 @@ public class Form extends AbstractControl {
     @Override
     public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
         String action = (String) attributes.get("action");
+        boolean fullyQualified = action.startsWith("http://") || action.startsWith("https://");
 
         // Handle relative URIs such as 'delete' with a current URI of '/user/' will result in
         // a new URI of '/user/delete'
-        if (!action.startsWith("/")) {
+        if (!action.startsWith("/") && !fullyQualified) {
             String currentURI = currentInvocation().uri();
             int index = currentURI.lastIndexOf("/");
             if (index >= 0) {
@@ -90,19 +91,29 @@ public class Form extends AbstractControl {
             }
         }
 
-        ActionInvocation current = actionInvocationStore.getCurrent();
+        if (!fullyQualified) {
+            ActionInvocation current = actionInvocationStore.getCurrent();
 
-        ActionInvocation actionInvocation = actionMapper.map(action, false);
-        if (actionInvocation == null || actionInvocation.action() == null) {
-            throw new IllegalArgumentException("The form action [" + action + "] is not a valid URI " +
-                "that maps to an action class by the JCatapult MVC.");
-        } else if (current == null || current.action() == null ||
-                !current.action().getClass().equals(actionInvocation.action().getClass())){
-            actionInvocationStore.setCurrent(actionInvocation);
-            differentURI = true;
+            ActionInvocation actionInvocation = actionMapper.map(action, false);
+            if (actionInvocation == null || actionInvocation.action() == null) {
+                throw new IllegalArgumentException("The form action [" + action + "] is not a valid URI " +
+                    "that maps to an action class by the JCatapult MVC.");
+            } else if (current == null || current.action() == null ||
+                    !current.action().getClass().equals(actionInvocation.action().getClass())){
+                actionInvocationStore.setCurrent(actionInvocation);
+                differentURI = true;
+            }
         }
 
         formPreparer.prepare();
+
+        // Fix the action URI to include the context path
+        String contextPath = request.getContextPath();
+        if (contextPath.length() > 0 && !fullyQualified) {
+            attributes.put("action", contextPath + action);
+        }
+
+        // Render
         super.renderStart(writer, attributes, dynamicAttributes);
     }
 
