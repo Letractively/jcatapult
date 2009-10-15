@@ -49,6 +49,7 @@ public class DefaultLoginWorkflowTest {
         EasyMock.expect(request.getParameter("j_username")).andReturn(null);
         EasyMock.expect(request.getParameter("j_password")).andReturn(null);
         EasyMock.expect(request.getRequestURI()).andReturn("/not-login");
+        EasyMock.expect(request.getContextPath()).andReturn("");
         EasyMock.replay(request);
 
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
@@ -74,6 +75,42 @@ public class DefaultLoginWorkflowTest {
         EasyMock.expect(request.getParameter("j_username")).andReturn("test-username");
         EasyMock.expect(request.getParameter("j_password")).andReturn("test-password");
         EasyMock.expect(request.getRequestURI()).andReturn("/jcatapult-security-check");
+        EasyMock.expect(request.getContextPath()).andReturn("");
+        EasyMock.expect(request.getParameterMap()).andReturn(params);
+        EasyMock.replay(request);
+
+        WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
+        EasyMock.replay(wc);
+
+        Object user = new Object();
+        LoginService ls = EasyMock.createStrictMock(LoginService.class);
+        EasyMock.expect(ls.login("test-username", "test-password", params)).andReturn(user);
+        EasyMock.replay(ls);
+
+        PostLoginHandler plh = EasyMock.createStrictMock(PostLoginHandler.class);
+        plh.handle(wc);
+        EasyMock.replay(plh);
+
+        DefaultLoginWorkflow lw = new DefaultLoginWorkflow(request, ls, new DefaultSecurityConfiguration(c), null, plh);
+        lw.perform(wc);
+
+        EasyMock.verify(c, request, wc, ls, plh);
+    }
+
+    @Test
+    public void testSuccessfulLoginContext() throws IOException, ServletException {
+        Configuration c = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(c.getString("jcatapult.security.login.submit-uri", "/jcatapult-security-check")).andReturn("/jcatapult-security-check");
+        EasyMock.expect(c.getString("jcatapult.security.login.username-parameter", "j_username")).andReturn("j_username");
+        EasyMock.expect(c.getString("jcatapult.security.login.password-parameter", "j_password")).andReturn("j_password");
+        EasyMock.replay(c);
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter("j_username")).andReturn("test-username");
+        EasyMock.expect(request.getParameter("j_password")).andReturn("test-password");
+        EasyMock.expect(request.getRequestURI()).andReturn("/context/jcatapult-security-check");
+        EasyMock.expect(request.getContextPath()).andReturn("/context");
         EasyMock.expect(request.getParameterMap()).andReturn(params);
         EasyMock.replay(request);
 
@@ -108,6 +145,7 @@ public class DefaultLoginWorkflowTest {
         EasyMock.expect(request.getParameter("j_username")).andReturn("test-username");
         EasyMock.expect(request.getParameter("j_password")).andReturn("test-password");
         EasyMock.expect(request.getRequestURI()).andReturn("/jcatapult-security-check");
+        EasyMock.expect(request.getContextPath()).andReturn("");
         EasyMock.expect(request.getParameterMap()).andReturn(params);
         EasyMock.replay(request);
 
@@ -141,6 +179,7 @@ public class DefaultLoginWorkflowTest {
         EasyMock.expect(request.getParameter("j_username")).andReturn("test-username");
         EasyMock.expect(request.getParameter("j_password")).andReturn("test-password");
         EasyMock.expect(request.getRequestURI()).andReturn("/not-login");
+        EasyMock.expect(request.getContextPath()).andReturn("");
         EasyMock.expect(request.getParameterMap()).andReturn(params);
         EasyMock.replay(request);
 
@@ -172,6 +211,7 @@ public class DefaultLoginWorkflowTest {
         EasyMock.expect(request.getParameter("j_username")).andReturn("test-username");
         EasyMock.expect(request.getParameter("j_password")).andReturn("test-password");
         EasyMock.expect(request.getRequestURI()).andReturn("/not-login");
+        EasyMock.expect(request.getContextPath()).andReturn("");
         EasyMock.expect(request.getParameterMap()).andReturn(params);
         EasyMock.replay(request);
 

@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jcatapult.security.UserAdapter;
@@ -108,7 +109,10 @@ public class ConfiguredAuthorizer implements Authorizer {
 
     public void authorize(Object user, String resource) throws AuthorizationException, NotLoggedInException {
         Set<String> roles = user != null ? userAdapter.getRoles(user) : null;
-        logger.finest("Authorizing user for roles [" + roles + "]");
+        if (logger.isLoggable(Level.FINEST)) {
+            logger.finest("Authorizing user for roles [" + roles + "]");
+        }
+        
         for (ResourceAuth resourceAuth : resourceAuths) {
             boolean equal = resource.equals(resourceAuth.resource);
             if (equal || (resource.startsWith(resourceAuth.resource) && (resourceAuth.dirWildcard || resourceAuth.subDirWildcard))) {

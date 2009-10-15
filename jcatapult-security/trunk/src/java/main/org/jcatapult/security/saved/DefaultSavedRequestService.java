@@ -117,7 +117,11 @@ public class DefaultSavedRequestService implements SavedRequestService {
      */
     public HttpServletRequest mockSavedRequest(HttpServletRequest request) {
         // See if there is a saved request
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return request;
+        }
+        
         SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(POST_LOGIN_KEY);
         if (saved != null && SecurityContext.getCurrentUser() != null) {
             session.removeAttribute(POST_LOGIN_KEY);
@@ -131,7 +135,11 @@ public class DefaultSavedRequestService implements SavedRequestService {
      * {@inheritDoc}
      */
     public SavedHttpRequest getSavedRequest(HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
+        
         return (SavedHttpRequest) session.getAttribute(LOGIN_KEY);
     }
 }

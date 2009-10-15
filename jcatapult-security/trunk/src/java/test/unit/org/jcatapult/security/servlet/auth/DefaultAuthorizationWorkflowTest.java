@@ -48,6 +48,34 @@ public class DefaultAuthorizationWorkflowTest {
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getRequestURI()).andReturn("/foo");
+        EasyMock.expect(request.getContextPath()).andReturn("");
+        EasyMock.replay(request);
+
+        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+        EnhancedSecurityContext.login(user);
+
+        AuthorizationExceptionHandler aeh = EasyMock.createStrictMock(AuthorizationExceptionHandler.class);
+        aeh.handle(ue, null);
+        EasyMock.replay(aeh);
+
+        DefaultAuthorizationWorkflow aw = new DefaultAuthorizationWorkflow(request, a, null, aeh);
+        aw.perform(null);
+        EasyMock.verify(a, request, aeh);
+    }
+
+    @Test
+    public void testUnauthorizedContext() throws IOException, ServletException {
+        Object user = new Object();
+
+        AuthorizationException ue = new AuthorizationException();
+        Authorizer a = EasyMock.createStrictMock(Authorizer.class);
+        a.authorize(user, "/foo");
+        EasyMock.expectLastCall().andThrow(ue);
+        EasyMock.replay(a);
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getRequestURI()).andReturn("/context/foo");
+        EasyMock.expect(request.getContextPath()).andReturn("/context");
         EasyMock.replay(request);
 
         EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
@@ -74,6 +102,7 @@ public class DefaultAuthorizationWorkflowTest {
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getRequestURI()).andReturn("/foo");
+        EasyMock.expect(request.getContextPath()).andReturn("");
         EasyMock.replay(request);
 
         EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
@@ -98,6 +127,7 @@ public class DefaultAuthorizationWorkflowTest {
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getRequestURI()).andReturn("/foo");
+        EasyMock.expect(request.getContextPath()).andReturn("");
         EasyMock.replay(request);
 
         WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);

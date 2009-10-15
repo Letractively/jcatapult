@@ -47,6 +47,7 @@ public class DefaultLoginExceptionHandlerTest {
         InvalidUsernameException exception = new InvalidUsernameException();
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getContextPath()).andReturn("");
         request.setAttribute("jcatapult_security_login_exception", exception);
         EasyMock.replay(request);
 
@@ -62,6 +63,38 @@ public class DefaultLoginExceptionHandlerTest {
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
         ServletObjectsHolder.clearServletRequest();
         ServletObjectsHolder.setServletRequest(wrapper);        
+
+        DefaultLoginExceptionHandler dleh = new DefaultLoginExceptionHandler(wrapper, new DefaultSecurityConfiguration(c));
+        dleh.handle(exception, wc);
+        assertTrue(called.get());
+        EasyMock.verify(c, request);
+    }
+
+    @Test
+    public void testHandleContext() throws IOException, ServletException {
+        Configuration c = EasyMock.createStrictMock(Configuration.class);
+        EasyMock.expect(c.getString("jcatapult.security.login.failed-uri", "/login-failed")).andReturn("/login-failed");
+        EasyMock.replay(c);
+
+        InvalidUsernameException exception = new InvalidUsernameException();
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getContextPath()).andReturn("/context");
+        request.setAttribute("jcatapult_security_login_exception", exception);
+        EasyMock.replay(request);
+
+        final AtomicBoolean called = new AtomicBoolean(false);
+        WorkflowChain wc = new WorkflowChain() {
+            public void continueWorkflow() throws IOException, ServletException {
+                assertTrue(ServletObjectsHolder.getServletRequest() instanceof HttpServletRequestWrapper);
+                assertEquals("/context/login-failed", ServletObjectsHolder.getServletRequest().getRequestURI());
+                called.set(true);
+            }
+        };
+
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+        ServletObjectsHolder.clearServletRequest();
+        ServletObjectsHolder.setServletRequest(wrapper);
 
         DefaultLoginExceptionHandler dleh = new DefaultLoginExceptionHandler(wrapper, new DefaultSecurityConfiguration(c));
         dleh.handle(exception, wc);

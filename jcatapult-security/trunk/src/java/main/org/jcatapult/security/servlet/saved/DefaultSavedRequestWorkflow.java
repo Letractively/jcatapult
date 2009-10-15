@@ -25,7 +25,6 @@ import org.jcatapult.security.auth.NotLoggedInException;
 import org.jcatapult.security.config.SecurityConfiguration;
 import org.jcatapult.security.saved.SavedRequestService;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
-import static org.jcatapult.security.servlet.ServletTools.*;
 import org.jcatapult.security.servlet.auth.NotLoggedInHandler;
 import org.jcatapult.security.servlet.login.PostLoginHandler;
 import org.jcatapult.servlet.WorkflowChain;
@@ -120,7 +119,7 @@ public class DefaultSavedRequestWorkflow implements PostLoginHandler, NotLoggedI
     public void handle(WorkflowChain workflowChain) throws ServletException, IOException {
         String uri = savedRequestService.processSavedRequest(request);
         if (uri != null) {
-            response.sendRedirect(getContextURI(request, uri));
+            response.sendRedirect(uri);
         } else {
             HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
             HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
