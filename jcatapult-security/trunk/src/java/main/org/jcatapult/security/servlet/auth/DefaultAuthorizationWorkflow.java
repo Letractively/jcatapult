@@ -23,6 +23,7 @@ import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.security.auth.Authorizer;
 import org.jcatapult.security.auth.NotLoggedInException;
+import org.jcatapult.servlet.ServletTools;
 import org.jcatapult.servlet.WorkflowChain;
 
 import com.google.inject.Inject;
@@ -88,7 +89,7 @@ public class DefaultAuthorizationWorkflow implements AuthorizationWorkflow {
      * @throws  ServletException If the chain throws.
      */
     public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
-        String uri = request.getRequestURI();
+        String uri = ServletTools.getRequestURI(request);
         Object user = EnhancedSecurityContext.getCurrentUser();
 
         try {

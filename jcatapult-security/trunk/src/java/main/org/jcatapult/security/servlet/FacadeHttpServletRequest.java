@@ -46,18 +46,26 @@ public class FacadeHttpServletRequest extends HttpServletRequestWrapper {
     /**
      * Constructs a new request facade.
      *
-     * @param   httpServletRequest The request to wrap.
-     * @param   uri The new URI.
+     * @param   request The request to wrap.
+     * @param   uri The new URI within the current context. You can't facade out a URI to another
+     *          context here. This URI should NOT include the context path. It is appended inside
+     *          this method.
      * @param   parameters Any additional parameters.
      * @param   proxy Determines if the parameter lookups are proxied to the wrapped request. When
      *          this is true, they are proxied to the wrapped request if the parameter map passed to
      *          the constructor doesn't contain the parameter. If this is false, only the parameter
      *          map passed to the constructor is used.
      */
-    public FacadeHttpServletRequest(HttpServletRequest httpServletRequest, String uri,
-            Map<String, String[]> parameters, boolean proxy) {
-        super(httpServletRequest);
-        this.uri = uri;
+    public FacadeHttpServletRequest(HttpServletRequest request, String uri, Map<String, String[]> parameters,
+                                    boolean proxy) {
+        super(request);
+        
+        if (uri != null) {
+            this.uri = request.getContextPath() + uri;
+        } else {
+            this.uri = null;
+        }
+        
         this.parameters = parameters;
         this.proxy = proxy;
     }

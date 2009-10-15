@@ -1,7 +1,7 @@
-<project xmlns="http://www.inversoft.com/schemas/savant-2.0/project"
+<project xmlns="http://www.inversoft.com/schemas/savant-1.5/project"
          name="jcatapult-security"
          group="jcatapult.org"
-         version="1.0.1">
+         version="1.0.2">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
@@ -12,7 +12,7 @@
   <!-- Compile properties -->
   <property name="jdk.version" value="1.6"/>
 
-  <property name="version.jcatapult" value="1.0"/>
+  <property name="version.jcatapult" value="1.0.2"/>
 
   <dependencies>
     <artifact-group type="compile-only">
