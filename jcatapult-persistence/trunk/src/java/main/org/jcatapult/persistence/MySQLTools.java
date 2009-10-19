@@ -15,15 +15,13 @@
  */
 package org.jcatapult.persistence;
 
-import java.io.File;
 import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.w3c.dom.Document;
+import net.java.naming.MockJNDI;
+
+import static org.jcatapult.persistence.ProjectTools.*;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import net.java.naming.MockJNDI;
 
 /**
  * <p>
@@ -35,11 +33,11 @@ import net.java.naming.MockJNDI;
  * @author  James Humphrey
  * @author  Brian Pontarelli
  */
-public class DatabaseTools {
-    private static final Logger logger = Logger.getLogger(DatabaseTools.class.getName());
+public class MySQLTools {
+    private static final Logger logger = Logger.getLogger(MySQLTools.class.getName());
 
     /**
-     * Sets up the JDBC connection pool to MySQL and puts that into the JNDI tree. This uses the
+     * Sets up the connection pool to MySQL and puts that into the JNDI tree. This uses the
      * project.xml file and the $HOME/build.properties file to grab the project name and DB username
      * and password.
      *
@@ -47,7 +45,7 @@ public class DatabaseTools {
      * @param dbName the db name
      * @return The DataSource and never null.
      */
-    public static MysqlDataSource setupJDBCandJNDI(MockJNDI jndi, String dbName) {
+    public static MysqlDataSource setup(MockJNDI jndi, String dbName) {
         String projectName = loadProjectName();
 
         // if the dbName is empty then assume <projectName>_test
@@ -56,7 +54,7 @@ public class DatabaseTools {
         }
 
         String url = "jdbc:mysql://localhost:3306/" + dbName + "?user=dev&password=dev";
-        return setupJDBCURLandJNDI(jndi, url, projectName);
+        return setup(jndi, url, projectName);
     }
 
     /**
@@ -67,7 +65,7 @@ public class DatabaseTools {
      * @param   projectName The name of the project that is used to build the JNDI tree.
      * @return  The DataSource and never null.
      */
-    public static MysqlDataSource setupJDBCURLandJNDI(MockJNDI jndi, String url, String projectName) {
+    public static MysqlDataSource setup(MockJNDI jndi, String url, String projectName) {
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setURL(url);
         dataSource.setAutoReconnect(true);
@@ -79,30 +77,5 @@ public class DatabaseTools {
         logger.info("JNDI name is [" + jndiName + "]");
 
         return dataSource;
-    }
-
-    public static MysqlDataSource setupJDBCandJNDI(MockJNDI jndi) {
-        return setupJDBCandJNDI(jndi, null);
-    }
-
-    /**
-     * Loads the project name from the project.xml file.
-     *
-     * @return  The project name.
-     */
-    public static String loadProjectName() {
-        // Open project.xml and grab the project name for the JDBC connections
-        File f = new File("project.xml");
-        Document dom;
-        try {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            dom = builder.parse(f);
-        } catch (Exception e) {
-            throw new AssertionError("Unable to locate the project.xml for the project. Make sure " +
-                    "you are running ant tests from inside the project and that your project has this " +
-                    "file.");
-        }
-
-        return dom.getDocumentElement().getAttribute("name").trim();
     }
 }

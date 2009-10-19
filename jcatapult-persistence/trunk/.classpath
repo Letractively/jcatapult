@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/conf/main"/>
-	<classpathentry kind="src" output="target/classes/test/integration" path="src/conf/test/integration"/>
-	<classpathentry kind="src" output="target/classes/test/unit" path="src/conf/test/unit"/>
 	<classpathentry kind="src" path="src/java/main"/>
+	<classpathentry kind="src" path="src/conf/main"/>
 	<classpathentry kind="src" output="target/classes/test/integration" path="src/java/test/integration"/>
 	<classpathentry kind="src" output="target/classes/test/unit" path="src/java/test/unit"/>
+	<classpathentry kind="src" output="target/classes/test/integration" path="src/conf/test/integration"/>
+	<classpathentry kind="src" output="target/classes/test/unit" path="src/conf/test/unit"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="SAVANT_REPOSITORY/com/google/code/guice/guice/1.0/guice-1.0.jar" sourcepath="/SAVANT_REPOSITORY/com/google/code/guice/guice/1.0/guice-1.0-src.jar"/>
 	<classpathentry kind="var" path="SAVANT_REPOSITORY/com/mysql/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6.jar" sourcepath="/SAVANT_REPOSITORY/com/mysql/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6-src.jar"/>
@@ -35,5 +35,6 @@
 	<classpathentry kind="var" path="SAVANT_REPOSITORY/org/joda/joda-time/joda-time-hibernate/1.0/joda-time-hibernate-1.0.jar" sourcepath="/SAVANT_REPOSITORY/org/joda/joda-time/joda-time-hibernate/1.0/joda-time-hibernate-1.0-src.jar"/>
 	<classpathentry kind="var" path="SAVANT_REPOSITORY/org/junit/junit/4.4/junit-4.4.jar" sourcepath="/SAVANT_REPOSITORY/org/junit/junit/4.4/junit-4.4-src.jar"/>
 	<classpathentry kind="var" path="SAVANT_REPOSITORY/org/objectweb/asm/asm/3.1/asm-3.1.jar" sourcepath="/SAVANT_REPOSITORY/org/objectweb/asm/asm/3.1/asm-3.1-src.jar"/>
+	<classpathentry kind="var" path="SAVANT_REPOSITORY/org/postgresql/postgresql-jdbc3/8.4.701/postgresql-jdbc3-8.4.701.jar" sourcepath="/SAVANT_REPOSITORY/org/postgresql/postgresql-jdbc3/8.4.701/postgresql-jdbc3-8.4.701-src.jar"/>
 	<classpathentry kind="output" path="target/classes/production/jcatapult-persistence"/>
 </classpath>

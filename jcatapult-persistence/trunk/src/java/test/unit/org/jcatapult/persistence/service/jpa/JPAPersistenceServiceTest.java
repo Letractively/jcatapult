@@ -17,10 +17,9 @@ package org.jcatapult.persistence.service.jpa;
 
 import java.sql.SQLException;
 import java.util.List;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.RollbackException;
+import javax.persistence.PersistenceException;
 import javax.sql.RowSet;
 
 import static net.java.util.CollectionTools.*;
@@ -39,11 +38,11 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testReloadAttached() throws Exception {
-        clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'George')");
+        clearTable("users");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (1, now(), now(), 'Fred')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (2, now(), now(), 'George')");
 
         EntityManager em = EntityManagerContext.get();
         User user = (User) em.createQuery("select u from User u where u.name = 'Fred'").getSingleResult();
@@ -57,11 +56,11 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testReloadDetached() throws Exception {
-        clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'George')");
+        clearTable("users");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (1, now(), now(), 'Fred')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (2, now(), now(), 'George')");
 
         EntityManager em = EntityManagerContext.get();
         User user = (User) em.createQuery("select u from User u where u.name = 'Fred'").getSingleResult();
@@ -79,17 +78,17 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testFindAll() throws Exception {
-        clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'George')");
+        clearTable("users");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (1, now(), now(), 'Fred')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (2, now(), now(), 'George')");
 
         clearTable("SoftDeletableUser");
-        executeSQL("insert into SoftDeletableUser (insert_date, update_date, name, deleted) " +
-            "values (now(), now(), 'Fred', false)");
-        executeSQL("insert into SoftDeletableUser (insert_date, update_date, name, deleted) " +
-            "values (now(), now(), 'George', true)");
+        executeSQL("insert into SoftDeletableUser (id, insert_date, update_date, name, deleted) " +
+            "values (1, now(), now(), 'Fred', false)");
+        executeSQL("insert into SoftDeletableUser (id, insert_date, update_date, name, deleted) " +
+            "values (2, now(), now(), 'George', true)");
 
         // This tests that non-soft delete find all works.
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
@@ -122,16 +121,16 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testFind() throws Exception {
-        clearTable("User");
+        clearTable("users");
         for (int i = 0; i < 100; i++) {
-            executeSQL("insert into User (insert_date, update_date, name) " +
-                "values (now(), now(), 'Fred" + i + "')");
+            executeSQL("insert into users (id, insert_date, update_date, name) " +
+                "values (" + (i + 1) + ", now(), now(), 'Fred" + i + "')");
         }
 
         clearTable("SoftDeletableUser");
         for (int i = 0; i < 100; i++) {
-            executeSQL("insert into SoftDeletableUser (insert_date, update_date, name, deleted) " +
-                "values (now(), now(), 'Fred" + i + "', " + ((i % 2 == 0) ? "false" : "true") + ")");
+            executeSQL("insert into SoftDeletableUser (id, insert_date, update_date, name, deleted) " +
+                "values (" + (i + 1) + ", now(), now(), 'Fred" + i + "', " + ((i % 2 == 0) ? "false" : "true") + ")");
         }
 
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
@@ -178,12 +177,12 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testFindById() throws SQLException {
-        clearTable("User");
-        executeSQL("insert into User (id, insert_date, update_date, name) " +
+        clearTable("users");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
             "values (1, now(), now(), 'Fred')");
-        executeSQL("insert into User (id, insert_date, update_date, name) " +
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
             "values (2, now(), now(), 'George')");
-        executeSQL("insert into User (id, insert_date, update_date, name) " +
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
             "values (3, now(), now(), 'Alan')");
 
         // This tests that querying by id works
@@ -203,12 +202,12 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testFindByIdNoVerify() throws SQLException {
-        clearTable("User");
-        executeSQL("insert into User (id, insert_date, update_date, name) " +
+        clearTable("users");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
             "values (1, now(), now(), 'Fred')");
-        executeSQL("insert into User (id, insert_date, update_date, name) " +
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
             "values (2, now(), now(), 'George')");
-        executeSQL("insert into User (id, insert_date, update_date, name) " +
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
             "values (3, now(), now(), 'Alan')");
 
         // This tests that querying by id works
@@ -229,17 +228,17 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testQueryAll() throws Exception {
-        clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'George')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Alan')");
+        clearTable("users");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (1, now(), now(), 'Fred')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (2, now(), now(), 'George')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (3, now(), now(), 'Alan')");
 
         // This tests that querying with an orderBy clause works
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
-        List<User> users = service.queryAll(User.class, "select user from User user order by user.name");
+        List<User> users = service.queryAll(User.class, "select u from User u order by u.name");
         assertEquals(3, users.size());
         assertEquals("Alan", users.get(0).getName());
         assertEquals("Fred", users.get(1).getName());
@@ -248,36 +247,36 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testQueryCount() throws Exception {
-        clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'George')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Alan')");
+        clearTable("users");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (1, now(), now(), 'Fred')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (2, now(), now(), 'George')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (3, now(), now(), 'Alan')");
 
         // This tests that querying with an orderBy clause works
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
-        long count = service.queryCount("select count(user) from User user where user.name = ?1", "Alan");
+        long count = service.queryCount("select count(u) from User u where u.name = ?1", "Alan");
         assertEquals(1, count);
 
-        count = service.queryCount("select count(user) from User user");
+        count = service.queryCount("select count(u) from User u");
         assertEquals(3, count);
     }
 
     @Test
     public void testQuery() throws Exception {
-        clearTable("User");
+        clearTable("users");
         char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
             'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
         for (int i = 25; i >= 0; i--) {
-            executeSQL("insert into User (insert_date, update_date, name) " +
-                "values (now(), now(), 'Fred" + alphabet[i] + "')");
+            executeSQL("insert into users (id, insert_date, update_date, name) " +
+                "values (" + (i + 1) + ", now(), now(), 'Fred" + alphabet[i] + "')");
         }
 
         // This tests that querying with an orderBy clause works
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
-        List<User> users = service.query(User.class, "select user from User user order by user.name", 3, 21);
+        List<User> users = service.query(User.class, "select u from User u order by u.name", 3, 21);
 //        System.out.println("List is \n" + users);
         assertEquals(21, users.size());
         for (int i = 0; i < 21; i++) {
@@ -287,17 +286,17 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testQueryAllWithNamedParameters() throws Exception {
-        clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'George')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Alan')");
+        clearTable("users");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (1, now(), now(), 'Fred')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (2, now(), now(), 'George')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (3, now(), now(), 'Alan')");
 
         // This tests that querying with an orderBy clause works
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
-        List<User> users = service.queryAllWithNamedParameters(User.class, "select user from User user where name = :name order by user.name",
+        List<User> users = service.queryAllWithNamedParameters(User.class, "select u from User u where u.name = :name order by u.name",
             mapNV("name", "Alan"));
         assertEquals(1, users.size());
         assertEquals("Alan", users.get(0).getName());
@@ -305,37 +304,37 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testQueryCountWithNamedParameters() throws Exception {
-        clearTable("User");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Fred')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'George')");
-        executeSQL("insert into User (insert_date, update_date, name) " +
-            "values (now(), now(), 'Alan')");
+        clearTable("users");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (1, now(), now(), 'Fred')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (2, now(), now(), 'George')");
+        executeSQL("insert into users (id, insert_date, update_date, name) " +
+            "values (3, now(), now(), 'Alan')");
 
         // This tests that querying with an orderBy clause works
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
-        long count = service.queryCountWithNamedParameters("select count(user) from User user where user.name = :name",
+        long count = service.queryCountWithNamedParameters("select count(u) from User u where u.name = :name",
             mapNV("name", "Alan"));
         assertEquals(1, count);
 
-        count = service.queryCountWithNamedParameters("select count(user) from User user", mapNV());
+        count = service.queryCountWithNamedParameters("select count(u) from User u", mapNV());
         assertEquals(3, count);
     }
 
     @Test
     public void testQueryWithNamedParameters() throws Exception {
-        clearTable("User");
+        clearTable("users");
         char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
             'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
         for (int i = 25; i >= 0; i--) {
-            executeSQL("insert into User (insert_date, update_date, name) " +
-                "values (now(), now(), 'Fred" + alphabet[i] + "')");
+            executeSQL("insert into users (id, insert_date, update_date, name) " +
+                "values (" + (i + 1) + ", now(), now(), 'Fred" + alphabet[i] + "')");
         }
 
         // This tests that querying with an orderBy clause works
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
-        List<User> users = service.queryWithNamedParameters(User.class, "select user from User user where name like :name order by user.name", 3, 21,
+        List<User> users = service.queryWithNamedParameters(User.class, "select u from User u where u.name like :name order by u.name", 3, 21,
             mapNV("name", "%Fred%"));
         assertEquals(21, users.size());
         for (int i = 0; i < 21; i++) {
@@ -345,7 +344,7 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testInsert() throws Exception {
-        clearTable("User");
+        clearTable("users");
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
 
         // Test that the persist works and that it correctly handles the dates using the interceptor
@@ -363,7 +362,7 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
         try {
             service.persist(user);
             fail("Should have failed");
-        } catch (EntityExistsException e) {
+        } catch (PersistenceException e) {
         }
     }
 
@@ -394,7 +393,7 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
         try {
             service.persist(user);
             fail("Should have failed");
-        } catch (RollbackException e) {
+        } catch (PersistenceException e) {
         }
     }
 
@@ -418,7 +417,7 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
     @Test
     public void testPersistOuterTransaction() throws Exception {
-        clearTable("User");
+        clearTable("users");
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
 
         EntityManager em = EntityManagerContext.get();
@@ -431,7 +430,7 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
         service.persist(user);
 
         // Check via JDBC that the data is NOT in the database yet
-        RowSet rw = executeQuery("select * from User");
+        RowSet rw = executeQuery("select * from users");
         assertFalse(rw.next());
         rw.close();
 
@@ -439,7 +438,7 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
         et.commit();
 
         // Now check again
-        rw = executeQuery("select * from User");
+        rw = executeQuery("select * from users");
         assertTrue(rw.next());
         assertEquals("Fred", rw.getString("name"));
         rw.close();
@@ -481,7 +480,7 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
      * @throws  Exception If things get dicey.
      */
     private void doRemove(boolean id, boolean verifyExists) throws Exception {
-        clearTable("User");
+        clearTable("users");
         clearTable("SoftDeletableUser");
         JPAPersistenceService service = new JPAPersistenceService(new EntityManagerProxy());
 
@@ -505,7 +504,7 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
 
         if (verifyExists) {
             // Verify the data is in there
-            RowSet rw = executeQuery("select * from User");
+            RowSet rw = executeQuery("select * from users");
             assertTrue(rw.next());
             assertEquals("Fred", rw.getString("name"));
             assertFalse(rw.next());
@@ -520,7 +519,7 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
             rw.close();
         } else {
             // Verify the data has not been committed yet because there is an outer transaction
-            RowSet rw = executeQuery("select * from User");
+            RowSet rw = executeQuery("select * from users");
             assertFalse(rw.next());
             rw.close();
 
@@ -548,7 +547,7 @@ public class JPAPersistenceServiceTest extends PersistenceBaseTest {
      */
     private void ensureDeleted() throws Exception {
         // Ensure it was deleted
-        RowSet rw = executeQuery("select * from User");
+        RowSet rw = executeQuery("select * from users");
         assertFalse(rw.next());
         rw.close();
 

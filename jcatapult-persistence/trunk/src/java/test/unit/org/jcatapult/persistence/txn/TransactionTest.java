@@ -51,7 +51,7 @@ public class TransactionTest extends JPABaseTest {
     @Test
     public void testMarco() throws SQLException {
         service.success();
-        RowSet rs = executeQuery("select name from User where name = 'TransactionTest-success'");
+        RowSet rs = executeQuery("select name from users where name = 'TransactionTest-success'");
         assertTrue(rs.next());
         rs.close();
 
@@ -60,17 +60,17 @@ public class TransactionTest extends JPABaseTest {
         } catch (Exception e) {
             // Expected
         }
-        rs = executeQuery("select name from User where name = 'TransactionTest-failure'");
+        rs = executeQuery("select name from users where name = 'TransactionTest-failure'");
         assertFalse(rs.next());
         rs.close();
 
         service.returnValueSuccess();
-        rs = executeQuery("select name from User where name = 'TransactionTest-returnValueSuccess'");
+        rs = executeQuery("select name from users where name = 'TransactionTest-returnValueSuccess'");
         assertTrue(rs.next());
         rs.close();
 
         service.returnValueFailure();
-        rs = executeQuery("select name from User where name = 'TransactionTest-returnValueFailure'");
+        rs = executeQuery("select name from users where name = 'TransactionTest-returnValueFailure'");
         assertFalse(rs.next());
         rs.close();
     }

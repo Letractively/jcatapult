@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -30,22 +31,23 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Table;
+import javax.sql.DataSource;
 import javax.sql.RowSet;
 import javax.sql.rowset.CachedRowSet;
 
-import org.jcatapult.persistence.DatabaseTools;
-import org.jcatapult.persistence.service.jpa.EntityManagerContext;
-import org.jcatapult.test.Fixture;
-import org.junit.Ignore;
-
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import com.sun.rowset.CachedRowSetImpl;
 import net.java.naming.MockJNDI;
 import net.java.sql.ScriptExecutor;
 import net.java.text.SimplePluralizer;
 import static net.java.util.CollectionTools.*;
 import net.java.xml.JavaBeanObjectCreator;
 import net.java.xml.Unmarshaller;
+import org.jcatapult.persistence.MySQLTools;
+import org.jcatapult.persistence.PostgreSQLTools;
+import org.jcatapult.persistence.service.jpa.EntityManagerContext;
+import org.jcatapult.test.Fixture;
+import org.junit.Ignore;
+
+import com.sun.rowset.CachedRowSetImpl;
 
 /**
  * <p>
@@ -60,7 +62,7 @@ public class JPATestHelper {
     public static final Logger logger = Logger.getLogger(JPABaseTest.class.getName());
     public static String persistentUnit = "punit";
     public static EntityManagerFactory emf;
-    public static MysqlDataSource dataSource = new MysqlDataSource();
+    public static DataSource dataSource;
     public static String databaseName;
 
     /**
@@ -82,7 +84,7 @@ public class JPATestHelper {
     }
 
     /**
-     * Allows sub-classes to setup different databases. The default is to setup a database connection
+     * Allows test classes to setup different databases. The default is to setup a database connection
      * to the database that has the same name as the project (dashes are replaced by underscores).
      *
      * @param   databaseName The database name.
@@ -92,16 +94,43 @@ public class JPATestHelper {
     }
 
     /**
+     * Allows test classes to setup different databases. This is a data source so that PostgreSQL or
+     * Oracle database can be setup.
+     *
+     * @param   dataSource The data source to put into the JNDI tree.
+     */
+    public static void setDataSource(DataSource dataSource) {
+        JPATestHelper.dataSource = dataSource;
+    }
+
+    /**
      * Constructs the JDBC connection pool, places it in the JNDI tree given and then constructs an
      * EntityManagerFactory.
      *
      * @param   jndi The JNDI tree.
      */
     public static void initializeJPA(MockJNDI jndi) {
-        dataSource = DatabaseTools.setupJDBCandJNDI(jndi, databaseName);
+        Map<String, String> properties = new HashMap<String, String>();
+
+        if (dataSource == null) {
+            String dbType = System.getProperty("jcatapult.database.type");
+            if (dbType == null || dbType.equals("mysql")) {
+                logger.info("+++++++++++++++++++++++++++++++ Setting up MySQL data source for testing +++++++++++++++++++++++++++++++");
+                dataSource = MySQLTools.setup(jndi, databaseName);
+
+                // This is required to tell Hibernate to use transactions
+                properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
+            } else if (dbType.equals("postgresql")) {
+                logger.info("+++++++++++++++++++++++++++++++ Setting up PostgreSQL data source for testing +++++++++++++++++++++++++++++++");
+                dataSource = PostgreSQLTools.setup(jndi, databaseName);
+
+                // This is required to tell Hibernate to use postgres to create the tables
+                properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+            }
+        }
 
         // Create the JPA EMF
-        emf = Persistence.createEntityManagerFactory(persistentUnit);
+        emf = Persistence.createEntityManagerFactory(persistentUnit, properties);
     }
 
     /**
