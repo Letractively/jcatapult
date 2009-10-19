@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.java.naming.MockJNDI;
 import static org.easymock.EasyMock.*;
 import org.jcatapult.environment.Environment;
-import org.jcatapult.persistence.DatabaseTools;
+import org.jcatapult.persistence.MySQLTools;
 import org.jcatapult.persistence.service.jpa.EntityManagerContext;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class JCatapultFilterTest {
     @Test
     public void testJPA() throws ServletException, IOException {
         MockJNDI jndi = new MockJNDI();
-        DatabaseTools.setupJDBCandJNDI(jndi, "jcatapult_persistence_test");
+        MySQLTools.setup(jndi, "jcatapult_persistence_test");
         jndi.bind("java:comp/env/environment", new Environment("unittesting"));
         jndi.activate();
 

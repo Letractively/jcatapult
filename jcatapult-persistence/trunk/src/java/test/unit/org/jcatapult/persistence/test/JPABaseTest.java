@@ -18,6 +18,7 @@ package org.jcatapult.persistence.test;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import javax.sql.DataSource;
 import javax.sql.RowSet;
 
 import org.jcatapult.test.JCatapultBaseTest;
@@ -56,12 +57,23 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
 
     /**
      * Allows sub-classes to setup different databases. The default is to setup a database connection
-     * to the database that has the same name as the project (dashes are replaced by underscores).
+     * to the database that has the same name as the project (dashes are replaced by underscores) and
+     * using the MySQL connection.
      *
      * @param   databaseName The database name.
      */
     public static void setDatabaseName(String databaseName) {
         JPATestHelper.setDatabaseName(databaseName);
+    }
+
+    /**
+     * Allows sub-classes to setup different databases. This is a data source so that PostgreSQL or
+     * Oracle database can be setup.
+     *
+     * @param   dataSource The data source to put into the JNDI tree.
+     */
+    public static void setDataSource(DataSource dataSource) {
+        JPATestHelper.setDataSource(dataSource);
     }
 
     /**

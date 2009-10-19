@@ -17,6 +17,7 @@ package org.jcatapult.persistence.service.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import org.jcatapult.persistence.domain.TimeStampableImpl;
 
@@ -28,6 +29,7 @@ import org.jcatapult.persistence.domain.TimeStampableImpl;
  * @author  Brian Pontarelli
  */
 @Entity
+@Table(name = "users")
 public class User extends TimeStampableImpl {
     @Column(unique = true)
     private String name;
