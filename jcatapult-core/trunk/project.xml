@@ -27,7 +27,7 @@
       <artifact group="commons.apache.org" project="commons-lang" name="commons-lang" version="2.3" type="jar"/>
       <artifact group="freemarker.org" project="freemarker" name="freemarker" version="2.3.12" type="jar"/>
       <artifact group="guice.code.google.com" project="guice" name="guice" version="1.0" type="jar"/>
-      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5" type="jar"/>
+      <artifact group="java-net-commons.dev.java.net" project="java-net-commons" name="java-net-commons" version="1.5.4" type="jar"/>
       <artifact group="joda-time.joda.org" project="joda-time" name="joda-time" version="1.4" type="jar"/>
     </artifactGroup>
     <artifactGroup type="test-compile">
