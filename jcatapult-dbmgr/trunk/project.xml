@@ -24,7 +24,7 @@
       <artifact group="groovy.codehaus.org" project="groovy" name="groovy-all" version="1.5.4"/>
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
       <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
-      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.2"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.4"/>
       <artifact group="mysql.com" name="mysql-connector-java" version="5.1.6"/>
       <artifact group="persistence.javax" name="persistence-api" version="1.0"/>
       <artifact group="savant.inversoft.org" name="savant-core" version="1.5"/>
