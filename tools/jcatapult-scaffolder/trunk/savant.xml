@@ -18,7 +18,8 @@
       </artifactcopy>
 
       <zip zipfile="${dir.target}/jcatapult-scaffolder-${project.version}.zip">
-        <fileset dir="${dir.target}/dist" includes="**/*"/>
+        <zipfileset prefix="${project.name}-${project.version}" dir="${dir.target}/dist" includes="**/*" excludes="**/bin/scaffold"/>
+        <zipfileset prefix="${project.name}-${project.version}" dir="${dir.target}/dist" includes="**/bin/scaffold" filemode="744"/>
       </zip>
     </sequential>
   </macrodef>
