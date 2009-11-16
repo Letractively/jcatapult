@@ -45,10 +45,22 @@ public class BooleanConverterTest {
         b = (Boolean) converter.convertFromStrings(array("true"), Boolean.class, null, "testExpr");
         assertTrue(b);
 
+        b = (Boolean) converter.convertFromStrings(array("yes"), Boolean.class, null, "testExpr");
+        assertTrue(b);
+
+        b = (Boolean) converter.convertFromStrings(array("on"), Boolean.class, null, "testExpr");
+        assertTrue(b);
+
         b = (Boolean) converter.convertFromStrings(array("true"), Boolean.TYPE, null, "testExpr");
         assertTrue(b);
 
         b = (Boolean) converter.convertFromStrings(array("false"), Boolean.class, null, "testExpr");
+        assertFalse(b);
+
+        b = (Boolean) converter.convertFromStrings(array("no"), Boolean.class, null, "testExpr");
+        assertFalse(b);
+
+        b = (Boolean) converter.convertFromStrings(array("off"), Boolean.class, null, "testExpr");
         assertFalse(b);
 
         b = (Boolean) converter.convertFromStrings(array("false"), Boolean.TYPE, null, "testExpr");

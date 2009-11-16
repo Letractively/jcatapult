@@ -47,11 +47,12 @@ public class BooleanConverter extends AbstractPrimitiveConverter {
      */
     protected Object stringToPrimitive(String value, Class convertTo, Map<String, String> attributes)
     throws ConversionException, ConverterStateException {
-        if (!StringTools.isValidBoolean(value)) {
+        if (!value.equals("true") && !value.equals("false") && !value.equals("on") && !value.equals("off")
+                && !value.equals("yes") && !value.equals("no")) {
             throw new ConversionException ("Unable to convert invalid boolean String [" + value + "]");
         }
 
-        return Boolean.valueOf(value);
+        return value.equals("true") || value.equals("on") || value.equals("yes");
     }
 
     /**
