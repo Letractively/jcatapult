@@ -7,5 +7,6 @@
 		<testFolder url="file://$MODULE_DIR$/src/conf/test/unit"/>
 		<excludeFolder url="file://$MODULE_DIR$/target"/>
 		<excludeFolder url="file://$MODULE_DIR$/target/classes"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes"/>
 	</contentEntry>
 </component>
