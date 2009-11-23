@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project relativePaths="false" version="4">
+<project version="4">
   <component name="AntConfiguration">
     <defaultAnt name="Apache Ant version 1.7.0" />
     <buildFile url="file://$PROJECT_DIR$/build.xml">
@@ -17,13 +17,8 @@
     <option name="PROJECT_PROFILE" />
     <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
   </component>
-  <component name="CodeStyleSettingsManager">
-    <option name="PER_PROJECT_SETTINGS" />
-    <option name="USE_PER_PROJECT_SETTINGS" value="false" />
-  </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
-    <option name="DEPLOY_AFTER_MAKE" value="0" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -39,11 +34,13 @@
       <entry name="?*.dtd" />
       <entry name="?*.tld" />
     </wildcardResourcePatterns>
+    <annotationProcessing enabled="false" useClasspath="true" />
   </component>
   <component name="CopyrightManager" default="JCatapult">
     <copyright>
       <option name="notice" value="Copyright (c) &amp;#36;today.year, JCatapult.org, All Rights Reserved&#10;&#10;Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);&#10;you may not use this file except in compliance with the License.&#10;You may obtain a copy of the License at&#10;&#10;  http://www.apache.org/licenses/LICENSE-2.0&#10;&#10;Unless required by applicable law or agreed to in writing,&#10;software distributed under the License is distributed on an&#10;&quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,&#10;either express or implied. See the License for the specific&#10;language governing permissions and limitations under the License." />
       <option name="keyword" value="Copyright" />
+      <option name="allowReplaceKeyword" value="" />
       <option name="myName" value="JCatapult" />
       <option name="myLocal" value="true" />
     </copyright>
@@ -94,9 +91,6 @@
   </component>
   <component name="IdProvider" IDEtalkID="C3E10093AD37246DAE72198F2F6CDB7D" />
   <component name="InspectionProjectProfileManager">
-    <option name="PROJECT_PROFILE" value="Project Default" />
-    <option name="USE_PROJECT_PROFILE" value="true" />
-    <version value="1.0" />
     <profiles>
       <profile version="1.0" is_locked="false">
         <option name="myName" value="Project Default" />
@@ -160,7 +154,9 @@
         <inspection_tool class="UnusedLabel" enabled="false" level="WARNING" enabled_by_default="false" />
       </profile>
     </profiles>
-    <list size="0" />
+    <option name="PROJECT_PROFILE" value="Project Default" />
+    <option name="USE_PROJECT_PROFILE" value="true" />
+    <version value="1.0" />
   </component>
   <component name="JavacSettings">
     <option name="DEBUGGING_INFO" value="true" />
