@@ -27,13 +27,15 @@ import org.jcatapult.email.service.EmailTransportService;
 import org.jcatapult.test.JCatapultBaseTest;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 
 /**
  * <p>
  * This class provides tests with the ability to setup email handling.
- * This class relies on the usage of the JCatapult base tests in order
- * to work properly, but the concepts are simple that you could write
- * it yourself if you aren't using those base test classes.
+ * This class can be used with the JUunit base cases supplied by JCatapult
+ * core (in the jcatapult-core-test dependency) or it can be used stand-alone
+ * by providing a Module that can be used with Guice injector to mock out the
+ * email transport service.
  * </p>
  *
  * <p>
@@ -62,9 +64,10 @@ public class EmailTestHelper {
      * tests. This will mock return the mail and also provides the emails via the {@link #getEmailResults()}
      * method on this class. This class is thread safe and can be used in parallel test cases.
      *
-     * @param   test The test to setup for email handling.
+     * @return  A Guice module that contains the email transport service mock. This module should be
+     *          used with the injector for the test cases.
      */
-    public static void setup(JCatapultBaseTest test) {
+    public static Module setup() {
         emailResult.remove();
         future.set(new MockFuture(false));
 
@@ -87,11 +90,22 @@ public class EmailTestHelper {
             }
         };
 
-        test.addModules(new AbstractModule() {
+        return new AbstractModule() {
             protected void configure() {
                 bind(EmailTransportService.class).toInstance(service);
             }
-        });
+        };
+    }
+
+    /**
+     * Mocks out an {@link EmailTransportService} so that an SMTP server is not required to run the
+     * tests. This will mock return the mail and also provides the emails via the {@link #getEmailResults()}
+     * method on this class. This class is thread safe and can be used in parallel test cases.
+     *
+     * @param   test The test to setup for email handling.
+     */
+    public static void setup(JCatapultBaseTest test) {
+        test.addModules(setup());
     }
 
     /**

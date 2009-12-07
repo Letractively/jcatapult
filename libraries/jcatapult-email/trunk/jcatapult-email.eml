@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/target/classes/main" />
-    <exclude-output />
-    <output-test url="file://$MODULE_DIR$/target/classes/test" />
-    <testFolder url="file://$MODULE_DIR$/src/conf/test/unit" />
-    <testFolder url="file://$MODULE_DIR$/src/java/test/integration" />
-    <testFolder url="file://$MODULE_DIR$/src/java/test/unit" />
-    <excludeFolder url="file://$MODULE_DIR$/target" />
+<component>
+	<output-test url="file://$MODULE_DIR$/target/classes/test"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/src/conf/test/unit"/>
+		<testFolder url="file://$MODULE_DIR$/src/java/test/integration"/>
+		<testFolder url="file://$MODULE_DIR$/src/java/test/unit"/>
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/main"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/test"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/main"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/test"/>
+	</contentEntry>
 </component>
-
