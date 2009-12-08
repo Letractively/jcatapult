@@ -110,12 +110,12 @@ public class EnvironmentAwareConfiguration extends CompositeConfiguration implem
 
     private void addConfig(File config, String path) throws ConfigurationException {
         if (config != null && config.exists() && config.isFile()) {
-            logger.info("Loading JCatapult configuration file [" + config.getAbsolutePath() + "]");
+            logger.fine("Loading JCatapult configuration file [" + config.getAbsolutePath() + "]");
             super.addConfiguration(new XMLConfiguration(config));
         } else {
             URL url = this.getClass().getResource(path);
             if (url != null) {
-                logger.info("Loading JCatapult configuration from classpath entry [" + path + "]");
+                logger.fine("Loading JCatapult configuration from classpath entry [" + path + "]");
                 super.addConfiguration(new XMLConfiguration(url));
             }
         }

@@ -118,7 +118,7 @@ public class GuiceContainer {
      * in its constructor and should cover all cases.
      */
     public static void initialize() {
-        logger.info("Initializing JCatapult's Guice support");
+        logger.fine("Initializing JCatapult's Guice support");
 
         Set<Class<? extends Module>> classes = new HashSet<Class<? extends Module>>();
         if (loadFromClasspath) {
@@ -187,7 +187,7 @@ public class GuiceContainer {
             }
 
             for (Class<? extends Module> module : modules) {
-                logger.info("Adding module [" + module + "] from configuration to the Guice injector.");
+                logger.fine("Adding module [" + module + "] from configuration to the Guice injector.");
             }
         }
     }
@@ -221,7 +221,7 @@ public class GuiceContainer {
         }
 
         for (Class<Module> match : matches) {
-            logger.info("Adding module [" + match + "] from classpath to Guice injector.");
+            logger.fine("Adding module [" + match + "] from classpath to Guice injector.");
         }
 
         modules.addAll(matches);
