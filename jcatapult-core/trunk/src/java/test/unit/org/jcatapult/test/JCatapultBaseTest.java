@@ -154,13 +154,13 @@ public abstract class JCatapultBaseTest {
      * Sets up the configuration and then the injector.
      */
     public void setUpGuice() {
-        StringBuffer moduleNames = new StringBuffer(" ");
-        for (Module module : modules) {
-            moduleNames.append(module.getClass().getName()).append(" ");
-        }
-
-        logger.info("Setting up injection with modules [" + moduleNames.toString() + "]");
         if (modules.size() > 0) {
+            StringBuffer moduleNames = new StringBuffer(" ");
+            for (Module module : modules) {
+                moduleNames.append(module.getClass().getName()).append(" ");
+            }
+
+            logger.fine("Setting up injection with modules [" + moduleNames.toString() + "]");
             GuiceContainer.setGuiceModules(modules.toArray(new Module[modules.size()]));
         }
 

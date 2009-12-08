@@ -150,8 +150,8 @@ public class JCatapultFilter implements Filter {
                 ((HttpServletResponse) response).setStatus(500);
             }
         } finally {
-            long end = System.currentTimeMillis();
             if (logger.isLoggable(Level.FINEST)) {
+                long end = System.currentTimeMillis();
                 logger.finest("Processing time in JCatapultFilter [" + (end - start) + "]");
             }
 
