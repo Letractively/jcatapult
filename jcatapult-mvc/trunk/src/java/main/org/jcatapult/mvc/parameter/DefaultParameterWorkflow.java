@@ -304,7 +304,13 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     private void addUncheckedValues(Map<String, String[]> map, Parameters parameters) {
         for (String key : map.keySet()) {
             String[] values = map.get(key);
-            if (values != null && values.length == 1 && values[0].equals("")) {
+            // Only add the values if there is a single one and it is empty, which denotes that they
+            // want to set null into the action, or the values are multiple and they is one non-empty
+            // value in the bunch. The second case occurs when they are using multiple checkboxes or
+            // radio buttons for the same name. This will cause multiple hidden inputs and they should
+            // all either have a unchecked value or should all be empty. If they are all empty, then
+            // null should be put into the object.
+            if ((values != null && values.length == 1 && values[0].equals("")) || empty(values)) {
                 parameters.required.put(key, new Struct());
             } else {
                 parameters.required.put(key, new Struct(values));
