@@ -18,6 +18,7 @@ package org.jcatapult.mvc.scope;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.jcatapult.mvc.scope.annotation.Flash;
 
@@ -54,10 +55,14 @@ public class FlashScope implements Scope<Flash> {
 
         String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
         if (flash == null || !flash.containsKey(key)) {
-            flash = (Map<String, Object>) request.getSession().getAttribute(FLASH_KEY);
-            if (flash == null) {
-                return null;
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                flash = (Map<String, Object>) session.getAttribute(FLASH_KEY);
             }
+        }
+        
+        if (flash == null) {
+            return null;
         }
 
         return flash.get(key);
@@ -67,11 +72,12 @@ public class FlashScope implements Scope<Flash> {
      * {@inheritDoc}
      */
     public void set(String fieldName, Object value, Flash scope) {
-        Map<String, Object> flash = (Map<String, Object>) request.getSession().getAttribute(FLASH_KEY);
+        HttpSession session = request.getSession(true);
+        Map<String, Object> flash = (Map<String, Object>) session.getAttribute(FLASH_KEY);
 
         if (flash == null) {
             flash = new HashMap<String, Object>();
-            request.getSession().setAttribute(FLASH_KEY, flash);
+            session.setAttribute(FLASH_KEY, flash);
         }
 
         String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
@@ -82,10 +88,13 @@ public class FlashScope implements Scope<Flash> {
      * Moves the flash from the session to the request.
      */
     public void transferFlash() {
-        Map<String, Object> flash = (Map<String, Object>) request.getSession().getAttribute(FLASH_KEY);
-        if (flash != null) {
-            request.getSession().removeAttribute(FLASH_KEY);
-            request.setAttribute(FLASH_KEY, flash);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Map<String, Object> flash = (Map<String, Object>) session.getAttribute(FLASH_KEY);
+            if (flash != null) {
+                session.removeAttribute(FLASH_KEY);
+                request.setAttribute(FLASH_KEY, flash);
+            }
         }
     }
 }

@@ -55,7 +55,7 @@ public class FlashScopeTest {
 
             HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
             EasyMock.expect(request.getAttribute(key)).andReturn(requestMessages);
-            EasyMock.expect(request.getSession()).andReturn(session);
+            EasyMock.expect(request.getSession(false)).andReturn(session);
             EasyMock.replay(request);
 
             FlashScope scope = new FlashScope(request);
@@ -74,7 +74,7 @@ public class FlashScopeTest {
 
             HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
             EasyMock.expect(request.getAttribute(key)).andReturn(null);
-            EasyMock.expect(request.getSession()).andReturn(session);
+            EasyMock.expect(request.getSession(false)).andReturn(session);
             EasyMock.replay(request);
 
             FlashScope scope = new FlashScope(request);
@@ -92,7 +92,7 @@ public class FlashScopeTest {
             EasyMock.replay(session);
 
             HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-            EasyMock.expect(request.getSession()).andReturn(session);
+            EasyMock.expect(request.getSession(true)).andReturn(session);
             EasyMock.replay(request);
 
             FlashScope scope = new FlashScope(request);
@@ -111,7 +111,7 @@ public class FlashScopeTest {
             EasyMock.replay(session);
 
             HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-            EasyMock.expect(request.getSession()).andReturn(session);
+            EasyMock.expect(request.getSession(true)).andReturn(session);
             EasyMock.replay(request);
 
             FlashScope scope = new FlashScope(request);
@@ -143,7 +143,7 @@ public class FlashScopeTest {
 
             HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
             EasyMock.expect(request.getAttribute(key)).andReturn(requestMessages);
-            EasyMock.expect(request.getSession()).andReturn(session);
+            EasyMock.expect(request.getSession(false)).andReturn(session);
             EasyMock.replay(request);
 
             FlashScope scope = new FlashScope(request);
@@ -163,7 +163,7 @@ public class FlashScopeTest {
 
             HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
             EasyMock.expect(request.getAttribute(key)).andReturn(null);
-            EasyMock.expect(request.getSession()).andReturn(session);
+            EasyMock.expect(request.getSession(false)).andReturn(session);
             EasyMock.replay(request);
 
             FlashScope scope = new FlashScope(request);
@@ -181,7 +181,7 @@ public class FlashScopeTest {
             EasyMock.replay(session);
 
             HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-            EasyMock.expect(request.getSession()).andReturn(session);
+            EasyMock.expect(request.getSession(true)).andReturn(session);
             EasyMock.replay(request);
 
             FlashScope scope = new FlashScope(request);
@@ -201,7 +201,7 @@ public class FlashScopeTest {
             EasyMock.replay(session);
 
             HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-            EasyMock.expect(request.getSession()).andReturn(session);
+            EasyMock.expect(request.getSession(true)).andReturn(session);
             EasyMock.replay(request);
 
             FlashScope scope = new FlashScope(request);

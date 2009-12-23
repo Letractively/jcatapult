@@ -82,16 +82,18 @@ public class FlashScope implements Scope {
             combined.putAll(fromRequest);
         }
 
-        HttpSession session = request.getSession();
-        synchronized (session) {
-            FieldMessages fromSession = (FieldMessages) session.getAttribute(key);
-            if (fromSession != null && fromSession.size() > 0) {
-                for (String s : fromSession.keySet()) {
-                    List<String> list = fromSession.get(s);
-                    if (combined.get(s) == null) {
-                        combined.put(s, list);
-                    } else {
-                        combined.get(s).addAll(list);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            synchronized (session) {
+                FieldMessages fromSession = (FieldMessages) session.getAttribute(key);
+                if (fromSession != null && fromSession.size() > 0) {
+                    for (String s : fromSession.keySet()) {
+                        List<String> list = fromSession.get(s);
+                        if (combined.get(s) == null) {
+                            combined.put(s, list);
+                        } else {
+                            combined.get(s).addAll(list);
+                        }
                     }
                 }
             }
@@ -108,9 +110,8 @@ public class FlashScope implements Scope {
      * @param   fieldName The name of the field that the message associated with.
      * @param   message The message itself.
      */
-    public void addFieldMessage(MessageType type,
-        String fieldName, String message) {
-        HttpSession session = request.getSession();
+    public void addFieldMessage(MessageType type, String fieldName, String message) {
+        HttpSession session = request.getSession(true);
         FieldMessages messages;
         synchronized (session) {
             String key = fieldKey(type);
@@ -143,11 +144,13 @@ public class FlashScope implements Scope {
             combined.addAll(fromRequest);
         }
 
-        HttpSession session = request.getSession();
-        synchronized (session) {
-            List<String> fromSession = (List<String>) session.getAttribute(key);
-            if (fromSession != null && fromSession.size() > 0) {
-                combined.addAll(fromSession);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            synchronized (session) {
+                List<String> fromSession = (List<String>) session.getAttribute(key);
+                if (fromSession != null && fromSession.size() > 0) {
+                    combined.addAll(fromSession);
+                }
             }
         }
 
@@ -162,7 +165,7 @@ public class FlashScope implements Scope {
      * @param   message The message itself.
      */
     public void addActionMessage(MessageType type, String message) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(true);
         List<String> scope;
         synchronized (session) {
             String key = actionKey(type);
@@ -182,14 +185,16 @@ public class FlashScope implements Scope {
      * {@inheritDoc}
      */
     public void clearActionMessages(MessageType type) {
-        HttpSession session = request.getSession();
-        synchronized (session) {
-            if (type == MessageType.ERROR) {
-                session.removeAttribute(FLASH_ACTION_ERRORS_KEY);
-                request.removeAttribute(FLASH_ACTION_ERRORS_KEY);
-            } else {
-                session.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
-                request.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            synchronized (session) {
+                if (type == MessageType.ERROR) {
+                    session.removeAttribute(FLASH_ACTION_ERRORS_KEY);
+                    request.removeAttribute(FLASH_ACTION_ERRORS_KEY);
+                } else {
+                    session.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
+                    request.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
+                }
             }
         }
     }
@@ -198,14 +203,16 @@ public class FlashScope implements Scope {
      * {@inheritDoc}
      */
     public void clearFieldMessages(MessageType type) {
-        HttpSession session = request.getSession();
-        synchronized (session) {
-            if (type == MessageType.ERROR) {
-                session.removeAttribute(FLASH_FIELD_ERRORS_KEY);
-                request.removeAttribute(FLASH_FIELD_ERRORS_KEY);
-            } else {
-                session.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
-                request.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            synchronized (session) {
+                if (type == MessageType.ERROR) {
+                    session.removeAttribute(FLASH_FIELD_ERRORS_KEY);
+                    request.removeAttribute(FLASH_FIELD_ERRORS_KEY);
+                } else {
+                    session.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
+                    request.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
+                }
             }
         }
     }
@@ -214,12 +221,14 @@ public class FlashScope implements Scope {
      * Moves the flash from the session to the request.
      */
     public void transferFlash() {
-        HttpSession session = request.getSession();
-        synchronized (session) {
-            transferFlash(request, session, FLASH_FIELD_ERRORS_KEY);
-            transferFlash(request, session, FLASH_FIELD_MESSAGES_KEY);
-            transferFlash(request, session, FLASH_ACTION_ERRORS_KEY);
-            transferFlash(request, session, FLASH_ACTION_MESSAGES_KEY);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            synchronized (session) {
+                transferFlash(request, session, FLASH_FIELD_ERRORS_KEY);
+                transferFlash(request, session, FLASH_FIELD_MESSAGES_KEY);
+                transferFlash(request, session, FLASH_ACTION_ERRORS_KEY);
+                transferFlash(request, session, FLASH_ACTION_MESSAGES_KEY);
+            }
         }
     }
 

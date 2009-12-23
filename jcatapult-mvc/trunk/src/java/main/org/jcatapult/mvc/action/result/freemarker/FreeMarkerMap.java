@@ -152,8 +152,14 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     }
 
     public int size() {
-        int size = objects.size() + count(request.getAttributeNames()) +
-            count(request.getSession().getAttributeNames()) + count(context.getAttributeNames());
+        int size = objects.size() + count(request.getAttributeNames());
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            size += count(session.getAttributeNames());
+        }
+
+        size += count(context.getAttributeNames());
 
         Deque<ActionInvocation> actionInvocations = actionInvocationStore.getDeque();
         if (actionInvocations != null) {
@@ -222,8 +228,15 @@ public class FreeMarkerMap implements TemplateHashModelEx {
     }
 
     public TemplateCollectionModel keys() {
-        Set<String> keys = append(objects.keySet(), iterable(request.getAttributeNames()),
-            iterable(request.getSession().getAttributeNames()), iterable(context.getAttributeNames()));
+        Set<String> keys = append(objects.keySet(), iterable(request.getAttributeNames()));
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            keys.addAll(append(iterable(session.getAttributeNames())));
+        }
+
+        keys.addAll(append(iterable(context.getAttributeNames())));
+
         Deque<ActionInvocation> actionInvocations = actionInvocationStore.getDeque();
         if (actionInvocations != null) {
             for (ActionInvocation actionInvocation : actionInvocations) {
@@ -255,11 +268,13 @@ public class FreeMarkerMap implements TemplateHashModelEx {
             values.add(request.getAttribute(name));
         }
 
-        HttpSession session = request.getSession();
-        en = session.getAttributeNames();
-        while (en.hasMoreElements()) {
-            String name = (String) en.nextElement();
-            values.add(session.getAttribute(name));
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            en = session.getAttributeNames();
+            while (en.hasMoreElements()) {
+                String name = (String) en.nextElement();
+                values.add(session.getAttribute(name));
+            }
         }
 
         en = context.getAttributeNames();

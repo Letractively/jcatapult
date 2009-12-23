@@ -51,7 +51,7 @@ public class ActionSessionScopeTest {
         EasyMock.expect(session.getAttribute(ActionSessionScope.ACTION_SESSION_ACTION_MESSAGE_KEY)).andReturn(actionSession);
         EasyMock.replay(session);
 
-        HttpServletRequest request = makeRequest(session);
+        HttpServletRequest request = makeRequest(session, false);
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
@@ -80,7 +80,7 @@ public class ActionSessionScopeTest {
     public void testSetActionMessage() {
         Capture map = new Capture();
         HttpSession session = makeSession(map, ActionSessionScope.ACTION_SESSION_ACTION_MESSAGE_KEY);
-        HttpServletRequest request = makeRequest(session);
+        HttpServletRequest request = makeRequest(session, true);
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
@@ -112,7 +112,7 @@ public class ActionSessionScopeTest {
         EasyMock.expect(session.getAttribute(ActionSessionScope.ACTION_SESSION_ACTION_ERROR_KEY)).andReturn(actionSession);
         EasyMock.replay(session);
 
-        HttpServletRequest request = makeRequest(session);
+        HttpServletRequest request = makeRequest(session, false);
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
@@ -141,7 +141,7 @@ public class ActionSessionScopeTest {
     public void testSetActionError() {
         Capture map = new Capture();
         HttpSession session = makeSession(map, ActionSessionScope.ACTION_SESSION_ACTION_ERROR_KEY);
-        HttpServletRequest request = makeRequest(session);
+        HttpServletRequest request = makeRequest(session, true);
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
@@ -176,7 +176,7 @@ public class ActionSessionScopeTest {
         EasyMock.expect(session.getAttribute(ActionSessionScope.ACTION_SESSION_FIELD_MESSAGE_KEY)).andReturn(actionSession);
         EasyMock.replay(session);
 
-        HttpServletRequest request = makeRequest(session);
+        HttpServletRequest request = makeRequest(session, false);
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
@@ -206,7 +206,7 @@ public class ActionSessionScopeTest {
     public void testSetFieldMessage() {
         Capture map = new Capture();
         HttpSession session = makeSession(map, ActionSessionScope.ACTION_SESSION_FIELD_MESSAGE_KEY);
-        HttpServletRequest request = makeRequest(session);
+        HttpServletRequest request = makeRequest(session, true);
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
@@ -241,7 +241,7 @@ public class ActionSessionScopeTest {
         EasyMock.expect(session.getAttribute(ActionSessionScope.ACTION_SESSION_FIELD_ERROR_KEY)).andReturn(actionSession);
         EasyMock.replay(session);
 
-        HttpServletRequest request = makeRequest(session);
+        HttpServletRequest request = makeRequest(session, false);
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
@@ -271,7 +271,7 @@ public class ActionSessionScopeTest {
     public void testSetFieldError() {
         Capture map = new Capture();
         HttpSession session = makeSession(map, ActionSessionScope.ACTION_SESSION_FIELD_ERROR_KEY);
-        HttpServletRequest request = makeRequest(session);
+        HttpServletRequest request = makeRequest(session, true);
 
         final Edit action = new Edit();
         ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
@@ -297,9 +297,9 @@ public class ActionSessionScopeTest {
 
     // --------------------------------- Helper Methods ----------------------------------
 
-    private HttpServletRequest makeRequest(HttpSession session) {
+    private HttpServletRequest makeRequest(HttpSession session, boolean create) {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(create)).andReturn(session);
         EasyMock.replay(request);
         return request;
     }
