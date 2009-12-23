@@ -112,6 +112,27 @@ public class FlashScopeTest {
     }
 
     @Test
+    public void testGetFromSessionNoSession() {
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getAttribute("jcatapultFlash")).andReturn(new HashMap<String, Object>());
+        EasyMock.expect(request.getSession(false)).andReturn(null);
+        EasyMock.replay(request);
+
+        FlashScope scope = new FlashScope(request);
+        assertNull(scope.get("test", new Flash() {
+            public String value() {
+                return "##field-name##";
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return Flash.class;
+            }
+        }));
+
+        EasyMock.verify(request);
+    }
+
+    @Test
     public void testGetFromSessionDifferentKey() {
         Object value = new Object();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -138,6 +159,27 @@ public class FlashScopeTest {
         }));
 
         EasyMock.verify(request, session);
+    }
+
+    @Test
+    public void testGetFromSessionNoSessionDifferentKey() {
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getAttribute("jcatapultFlash")).andReturn(new HashMap<String, Object>());
+        EasyMock.expect(request.getSession(false)).andReturn(null);
+        EasyMock.replay(request);
+
+        FlashScope scope = new FlashScope(request);
+        assertNull(scope.get("test", new Flash() {
+            public String value() {
+                return "other";
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return Flash.class;
+            }
+        }));
+
+        EasyMock.verify(request);
     }
 
     @Test

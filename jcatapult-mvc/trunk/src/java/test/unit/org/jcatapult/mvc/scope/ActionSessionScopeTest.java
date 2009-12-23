@@ -77,6 +77,33 @@ public class ActionSessionScopeTest {
     }
 
     @Test
+    public void getNoSession() {
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getSession(false)).andReturn(null);
+        EasyMock.replay(request);
+
+        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.replay(ais);
+
+        ActionSessionScope scope = new ActionSessionScope(request, ais);
+        assertNull(scope.get("test", new ActionSession() {
+            public String value() {
+                return "##field-name##";
+            }
+
+            public Class<?> action() {
+                return ActionSession.class;
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return ActionSession.class;
+            }
+        }));
+
+        EasyMock.verify(request, ais);
+    }
+
+    @Test
     public void testGetOtherActionSession() {
         Object value = new Object();
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();

@@ -185,15 +185,19 @@ public class FlashScope implements Scope {
      * {@inheritDoc}
      */
     public void clearActionMessages(MessageType type) {
+        if (type == MessageType.ERROR) {
+            request.removeAttribute(FLASH_ACTION_ERRORS_KEY);
+        } else {
+            request.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
+        }
+
         HttpSession session = request.getSession(false);
         if (session != null) {
             synchronized (session) {
                 if (type == MessageType.ERROR) {
                     session.removeAttribute(FLASH_ACTION_ERRORS_KEY);
-                    request.removeAttribute(FLASH_ACTION_ERRORS_KEY);
                 } else {
                     session.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
-                    request.removeAttribute(FLASH_ACTION_MESSAGES_KEY);
                 }
             }
         }
@@ -203,15 +207,19 @@ public class FlashScope implements Scope {
      * {@inheritDoc}
      */
     public void clearFieldMessages(MessageType type) {
+        if (type == MessageType.ERROR) {
+            request.removeAttribute(FLASH_FIELD_ERRORS_KEY);
+        } else {
+            request.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
+        }
+
         HttpSession session = request.getSession(false);
         if (session != null) {
             synchronized (session) {
                 if (type == MessageType.ERROR) {
                     session.removeAttribute(FLASH_FIELD_ERRORS_KEY);
-                    request.removeAttribute(FLASH_FIELD_ERRORS_KEY);
                 } else {
                     session.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
-                    request.removeAttribute(FLASH_FIELD_MESSAGES_KEY);
                 }
             }
         }
