@@ -85,6 +85,19 @@ public class FlashScopeTest {
         }
 
         {
+            HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+            EasyMock.expect(request.getAttribute(key)).andReturn(null);
+            EasyMock.expect(request.getSession(false)).andReturn(null);
+            EasyMock.replay(request);
+
+            FlashScope scope = new FlashScope(request);
+            List<String> messages = scope.getActionMessages(type);
+            assertEquals(0, messages.size());
+
+            EasyMock.verify(request);
+        }
+
+        {
             List<String> messages = new ArrayList<String>();
 
             HttpSession session = EasyMock.createStrictMock(HttpSession.class);
@@ -171,6 +184,19 @@ public class FlashScopeTest {
             assertEquals(0, messages.size());
 
             EasyMock.verify(request, session);
+        }
+
+        {
+            HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+            EasyMock.expect(request.getAttribute(key)).andReturn(null);
+            EasyMock.expect(request.getSession(false)).andReturn(null);
+            EasyMock.replay(request);
+
+            FlashScope scope = new FlashScope(request);
+            Map<String, List<String>> messages = scope.getFieldMessages(type);
+            assertEquals(0, messages.size());
+
+            EasyMock.verify(request);
         }
 
         {

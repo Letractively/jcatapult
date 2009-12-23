@@ -117,6 +117,7 @@ public class FreeMarkerMap implements TemplateHashModelEx {
             objects.put(SESSION_MODEL, new HttpSessionHashModel(session, FieldSupportBeansWrapper.INSTANCE));
             objects.put(SESSION, session);
         }
+        
         objects.put(APPLICATION_MODEL, new ServletContextHashModel(new GenericServlet() {
             public void service(ServletRequest servletRequest, ServletResponse servletResponse) {
             }

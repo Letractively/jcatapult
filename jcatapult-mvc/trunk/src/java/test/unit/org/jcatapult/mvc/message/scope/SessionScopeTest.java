@@ -58,7 +58,7 @@ public class SessionScopeTest {
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
 
-            EasyMock.verify(request);
+            EasyMock.verify(session, request);
         }
 
         {
@@ -68,6 +68,18 @@ public class SessionScopeTest {
 
             HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
             EasyMock.expect(request.getSession(false)).andReturn(session);
+            EasyMock.replay(request);
+
+            SessionScope scope = new SessionScope(request);
+            List<String> messages = scope.getActionMessages(type);
+            assertEquals(0, messages.size());
+
+            EasyMock.verify(session, request);
+        }
+
+        {
+            HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+            EasyMock.expect(request.getSession(false)).andReturn(null);
             EasyMock.replay(request);
 
             SessionScope scope = new SessionScope(request);
@@ -92,7 +104,7 @@ public class SessionScopeTest {
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
 
-            EasyMock.verify(request);
+            EasyMock.verify(session, request);
         }
 
         {
@@ -112,7 +124,7 @@ public class SessionScopeTest {
             assertEquals(1, messages.size());
             assertEquals("Test message", messages.get(0));
 
-            EasyMock.verify(request);
+            EasyMock.verify(session, request);
         }
     }
 
@@ -141,7 +153,7 @@ public class SessionScopeTest {
             assertEquals(1, messages.get("user.name").size());
             assertEquals("Test message", messages.get("user.name").get(0));
 
-            EasyMock.verify(request);
+            EasyMock.verify(session, request);
         }
 
         {
@@ -151,6 +163,18 @@ public class SessionScopeTest {
 
             HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
             EasyMock.expect(request.getSession(false)).andReturn(session);
+            EasyMock.replay(request);
+
+            SessionScope scope = new SessionScope(request);
+            Map<String, List<String>> messages = scope.getFieldMessages(type);
+            assertEquals(0, messages.size());
+
+            EasyMock.verify(session, request);
+        }
+
+        {
+            HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+            EasyMock.expect(request.getSession(false)).andReturn(null);
             EasyMock.replay(request);
 
             SessionScope scope = new SessionScope(request);
@@ -176,7 +200,7 @@ public class SessionScopeTest {
             assertEquals(1, messages.get("user.name").size());
             assertEquals("Test message", messages.get("user.name").get(0));
 
-            EasyMock.verify(request);
+            EasyMock.verify(session, request);
         }
 
         {
@@ -197,7 +221,7 @@ public class SessionScopeTest {
             assertEquals(1, messages.get("user.name").size());
             assertEquals("Test message", messages.get("user.name").get(0));
 
-            EasyMock.verify(request);
+            EasyMock.verify(session, request);
         }
     }
 }

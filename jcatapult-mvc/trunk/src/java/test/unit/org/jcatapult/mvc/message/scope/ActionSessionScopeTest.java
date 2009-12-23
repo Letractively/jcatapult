@@ -77,6 +77,34 @@ public class ActionSessionScopeTest {
     }
 
     @Test
+    public void testGetActionMessageNoSession() {
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        expect(request.getSession(false)).andReturn(null);
+        replay(request);
+
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation getCurrent() {
+                return new DefaultActionInvocation(action, "", null, null);
+            }
+
+            public void setCurrent(ActionInvocation invocation) {
+            }
+
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
+            }
+        });
+        List<String> messages = scope.getActionMessages(MessageType.PLAIN);
+        assertEquals(0, messages.size());
+        
+        EasyMock.verify(request);
+    }
+
+    @Test
     public void testSetActionMessage() {
         Capture map = new Capture();
         HttpSession session = makeSession(map, ActionSessionScope.ACTION_SESSION_ACTION_MESSAGE_KEY);
@@ -135,6 +163,34 @@ public class ActionSessionScopeTest {
         assertEquals("Test message", messages.get(0));
 
         EasyMock.verify(request, session);
+    }
+
+    @Test
+    public void testGetActionErrorNoSession() {
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        expect(request.getSession(false)).andReturn(null);
+        replay(request);
+
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation getCurrent() {
+                return new DefaultActionInvocation(action, "", null, null);
+            }
+
+            public void setCurrent(ActionInvocation invocation) {
+            }
+
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
+            }
+        });
+        List<String> messages = scope.getActionMessages(MessageType.ERROR);
+        assertEquals(0, messages.size());
+
+        EasyMock.verify(request);
     }
 
     @Test
@@ -203,6 +259,34 @@ public class ActionSessionScopeTest {
     }
 
     @Test
+    public void testGetFieldMessageNoSession() {
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        expect(request.getSession(false)).andReturn(null);
+        replay(request);
+
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation getCurrent() {
+                return new DefaultActionInvocation(action, "", null, null);
+            }
+
+            public void setCurrent(ActionInvocation invocation) {
+            }
+
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
+            }
+        });
+        Map<String, List<String>> messages = scope.getFieldMessages(MessageType.PLAIN);
+        assertEquals(0, messages.size());
+
+        EasyMock.verify(request);
+    }
+
+    @Test
     public void testSetFieldMessage() {
         Capture map = new Capture();
         HttpSession session = makeSession(map, ActionSessionScope.ACTION_SESSION_FIELD_MESSAGE_KEY);
@@ -265,6 +349,34 @@ public class ActionSessionScopeTest {
         assertEquals("Test message", messages.get("user.name").get(0));
 
         EasyMock.verify(request, session);
+    }
+
+    @Test
+    public void testGetFieldErrorsNoSession() {
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        expect(request.getSession(false)).andReturn(null);
+        replay(request);
+
+        final Edit action = new Edit();
+        ActionSessionScope scope = new ActionSessionScope(request, new ActionInvocationStore() {
+            public ActionInvocation getCurrent() {
+                return new DefaultActionInvocation(action, "", null, null);
+            }
+
+            public void setCurrent(ActionInvocation invocation) {
+            }
+
+            public void removeCurrent() {
+            }
+
+            public Deque<ActionInvocation> getDeque() {
+                return null;
+            }
+        });
+        Map<String, List<String>> messages = scope.getFieldMessages(MessageType.ERROR);
+        assertEquals(0, messages.size());
+
+        EasyMock.verify(request);
     }
 
     @Test

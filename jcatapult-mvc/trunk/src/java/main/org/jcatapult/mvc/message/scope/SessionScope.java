@@ -141,7 +141,7 @@ public class SessionScope extends AbstractJEEScope {
      * {@inheritDoc}
      */
     public void clearActionMessages(MessageType type) {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         if (session != null) {
             synchronized (session) {
                 if (type == MessageType.ERROR) {
@@ -157,7 +157,7 @@ public class SessionScope extends AbstractJEEScope {
      * {@inheritDoc}
      */
     public void clearFieldMessages(MessageType type) {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         if (session != null) {
             synchronized (session) {
                 if (type == MessageType.ERROR) {
