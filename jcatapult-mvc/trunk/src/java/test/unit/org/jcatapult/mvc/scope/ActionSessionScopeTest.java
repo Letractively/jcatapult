@@ -51,7 +51,7 @@ public class ActionSessionScopeTest {
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(false)).andReturn(session);
         EasyMock.replay(request);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -89,7 +89,7 @@ public class ActionSessionScopeTest {
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(false)).andReturn(session);
         EasyMock.replay(request);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -126,7 +126,7 @@ public class ActionSessionScopeTest {
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(false)).andReturn(session);
         EasyMock.replay(request);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -164,7 +164,7 @@ public class ActionSessionScopeTest {
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(false)).andReturn(session);
         EasyMock.replay(request);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -201,7 +201,7 @@ public class ActionSessionScopeTest {
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(false)).andReturn(session);
         EasyMock.replay(request);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -241,7 +241,7 @@ public class ActionSessionScopeTest {
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(true)).andReturn(session);
         EasyMock.replay(request);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -277,7 +277,7 @@ public class ActionSessionScopeTest {
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(true)).andReturn(session);
         EasyMock.replay(request);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -312,7 +312,7 @@ public class ActionSessionScopeTest {
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(true)).andReturn(session);
         EasyMock.replay(request);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -348,7 +348,7 @@ public class ActionSessionScopeTest {
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(true)).andReturn(session);
         EasyMock.replay(request);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
@@ -382,7 +382,7 @@ public class ActionSessionScopeTest {
         EasyMock.replay(session);
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession()).andReturn(session);
+        EasyMock.expect(request.getSession(true)).andReturn(session);
         EasyMock.replay(request);
 
         ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);

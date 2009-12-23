@@ -31,25 +31,31 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class SessionScope implements Scope<Session> {
-    private final HttpSession session;
+    private final HttpServletRequest request;
 
     @Inject
     public SessionScope(HttpServletRequest request) {
-        this.session = request.getSession();
+        this.request = request;
     }
 
     /**
      * {@inheritDoc}
      */
     public Object get(String fieldName, Session scope) {
-        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
-        return session.getAttribute(key);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+            return session.getAttribute(key);
+        }
+
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
     public void set(String fieldName, Object value, Session scope) {
+        HttpSession session = request.getSession(true);
         String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
         session.setAttribute(key, value);
     }

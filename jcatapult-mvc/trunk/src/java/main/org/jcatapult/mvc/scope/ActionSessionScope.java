@@ -42,38 +42,44 @@ import com.google.inject.Inject;
 @SuppressWarnings("unchecked")
 public class ActionSessionScope implements Scope<ActionSession> {
     public static final String ACTION_SESSION_KEY = "jcatapultActionSession";
-    private final HttpSession session;
     private final ActionInvocationStore actionInvocationStore;
+    private final HttpServletRequest request;
 
     @Inject
     public ActionSessionScope(HttpServletRequest request, ActionInvocationStore actionInvocationStore) {
         this.actionInvocationStore = actionInvocationStore;
-        this.session = request.getSession();
+        this.request = request;
     }
 
     /**
      * {@inheritDoc}
      */
     public Object get(String fieldName, ActionSession scope) {
-        Map<String, Map<String, Object>> actionSession = (Map<String, Map<String, Object>>) session.getAttribute(ACTION_SESSION_KEY);
-        if (actionSession == null) {
-            return null;
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Map<String, Map<String, Object>> actionSession = (Map<String, Map<String, Object>>) session.getAttribute(ACTION_SESSION_KEY);
+            if (actionSession == null) {
+                return null;
+            }
+
+            String className = getActionClassName(scope);
+            Map<String, Object> values = actionSession.get(className);
+            if (values == null) {
+                return null;
+            }
+
+            String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
+            return values.get(key);
         }
 
-        String className = getActionClassName(scope);
-        Map<String, Object> values = actionSession.get(className);
-        if (values == null) {
-            return null;
-        }
-
-        String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
-        return values.get(key);
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
     public void set(String fieldName, Object value, ActionSession scope) {
+        HttpSession session = request.getSession(true);
         Map<String, Map<String, Object>> actionSession = (Map<String, Map<String, Object>>) session.getAttribute(ACTION_SESSION_KEY);
         if (actionSession == null) {
             actionSession = new HashMap<String, Map<String, Object>>();

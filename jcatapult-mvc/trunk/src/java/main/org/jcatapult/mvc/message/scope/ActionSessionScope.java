@@ -86,15 +86,18 @@ public class ActionSessionScope implements Scope {
      */
     public Map<String, List<String>> getFieldMessages(MessageType type) {
         String key = (type == MessageType.ERROR) ? ACTION_SESSION_FIELD_ERROR_KEY : ACTION_SESSION_FIELD_MESSAGE_KEY;
-        HttpSession session = request.getSession();
-        Map<String, FieldMessages> actionSession;
-        synchronized (session) {
-            actionSession = (Map<String, FieldMessages>) session.getAttribute(key);
-            if (actionSession == null) {
-                return Collections.emptyMap();
+        HttpSession session = request.getSession(false);
+        Map<String, FieldMessages> actionSession = null;
+        if (session != null) {
+            synchronized (session) {
+                actionSession = (Map<String, FieldMessages>) session.getAttribute(key);
             }
         }
 
+        if (actionSession == null) {
+            return Collections.emptyMap();
+        }
+        
         Map<String, List<String>> values;
         synchronized (actionSession) {
             ActionInvocation invocation = actionInvocationStore.getCurrent();
@@ -125,7 +128,7 @@ public class ActionSessionScope implements Scope {
      */
     public void addFieldMessage(MessageType type, String fieldName, String message) {
         String key = (type == MessageType.ERROR) ? ACTION_SESSION_FIELD_ERROR_KEY : ACTION_SESSION_FIELD_MESSAGE_KEY;
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(true);
         Map<String, FieldMessages> actionSession;
         synchronized (session) {
             actionSession = (Map<String, FieldMessages>) session.getAttribute(key);
@@ -165,13 +168,16 @@ public class ActionSessionScope implements Scope {
      */
     public List<String> getActionMessages(MessageType type) {
         String key = (type == MessageType.ERROR) ? ACTION_SESSION_ACTION_ERROR_KEY : ACTION_SESSION_ACTION_MESSAGE_KEY;
-        HttpSession session = request.getSession();
-        Map<String, List<String>> actionSession;
-        synchronized (session) {
-            actionSession = (Map<String, List<String>>) session.getAttribute(key);
-            if (actionSession == null) {
-                return Collections.emptyList();
+        HttpSession session = request.getSession(false);
+        Map<String, List<String>> actionSession = null;
+        if (session != null) {
+            synchronized (session) {
+                actionSession = (Map<String, List<String>>) session.getAttribute(key);
             }
+        }
+        
+        if (actionSession == null) {
+            return Collections.emptyList();
         }
 
         List<String> values;
@@ -203,7 +209,7 @@ public class ActionSessionScope implements Scope {
      */
     public void addActionMessage(MessageType type, String message) {
         String key = (type == MessageType.ERROR) ? ACTION_SESSION_ACTION_ERROR_KEY : ACTION_SESSION_ACTION_MESSAGE_KEY;
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(true);
         Map<String, List<String>> actionSession;
         synchronized (session) {
             actionSession = (Map<String, List<String>>) session.getAttribute(key);
@@ -238,12 +244,14 @@ public class ActionSessionScope implements Scope {
      * {@inheritDoc}
      */
     public void clearActionMessages(MessageType type) {
-        HttpSession session = request.getSession();
-        synchronized (session) {
-            if (type == MessageType.ERROR) {
-                session.removeAttribute(ACTION_SESSION_ACTION_ERROR_KEY);
-            } else {
-                session.removeAttribute(ACTION_SESSION_ACTION_MESSAGE_KEY);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            synchronized (session) {
+                if (type == MessageType.ERROR) {
+                    session.removeAttribute(ACTION_SESSION_ACTION_ERROR_KEY);
+                } else {
+                    session.removeAttribute(ACTION_SESSION_ACTION_MESSAGE_KEY);
+                }
             }
         }
     }
@@ -252,12 +260,14 @@ public class ActionSessionScope implements Scope {
      * {@inheritDoc}
      */
     public void clearFieldMessages(MessageType type) {
-        HttpSession session = request.getSession();
-        synchronized (session) {
-            if (type == MessageType.ERROR) {
-                session.removeAttribute(ACTION_SESSION_FIELD_ERROR_KEY);
-            } else {
-                session.removeAttribute(ACTION_SESSION_FIELD_MESSAGE_KEY);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            synchronized (session) {
+                if (type == MessageType.ERROR) {
+                    session.removeAttribute(ACTION_SESSION_FIELD_ERROR_KEY);
+                } else {
+                    session.removeAttribute(ACTION_SESSION_FIELD_MESSAGE_KEY);
+                }
             }
         }
     }

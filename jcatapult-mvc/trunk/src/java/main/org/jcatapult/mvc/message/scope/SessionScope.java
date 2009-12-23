@@ -35,11 +35,11 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("unchecked")
 public class SessionScope extends AbstractJEEScope {
-    private final HttpSession session;
+    private final HttpServletRequest request;
 
     @Inject
     public SessionScope(HttpServletRequest request) {
-        this.session = request.getSession();
+        this.request = request;
     }
 
     /**
@@ -49,16 +49,21 @@ public class SessionScope extends AbstractJEEScope {
      * @return  The Map or an empty map if the session doesn't contain the FieldMessages yet.
      */
     public Map<String, List<String>> getFieldMessages(MessageType type) {
-        FieldMessages messages;
-        synchronized (session) {
-            messages = (FieldMessages) session.getAttribute(fieldKey(type));
-            if (messages == null) {
-                return Collections.emptyMap();
-            }
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            FieldMessages messages;
+            synchronized (session) {
+                messages = (FieldMessages) session.getAttribute(fieldKey(type));
+                if (messages == null) {
+                    return Collections.emptyMap();
+                }
 
-            // Copy the map to protect it from threading
-            return new HashMap<String, List<String>>(messages);
+                // Copy the map to protect it from threading
+                return new HashMap<String, List<String>>(messages);
+            }
         }
+
+        return Collections.emptyMap();
     }
 
     /**
@@ -69,6 +74,7 @@ public class SessionScope extends AbstractJEEScope {
      * @param   message The message to append.
      */
     public void addFieldMessage(MessageType type, String fieldName, String message) {
+        HttpSession session = request.getSession(true);
         FieldMessages messages;
         synchronized (session) {
             String key = fieldKey(type);
@@ -91,16 +97,21 @@ public class SessionScope extends AbstractJEEScope {
      * @return  The List or an empty List if the session doesn't contain the action messages yet.
      */
     public List<String> getActionMessages(MessageType type) {
-        List<String> messages;
-        synchronized (session) {
-            messages = (List<String>) session.getAttribute(actionKey(type));
-            if (messages == null) {
-                return Collections.emptyList();
-            }
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            List<String> messages;
+            synchronized (session) {
+                messages = (List<String>) session.getAttribute(actionKey(type));
+                if (messages == null) {
+                    return Collections.emptyList();
+                }
 
-            // Copy the map to protect it from threading
-            return new ArrayList<String>(messages);
+                // Copy the map to protect it from threading
+                return new ArrayList<String>(messages);
+            }
         }
+
+        return Collections.emptyList();
     }
 
     /**
@@ -110,6 +121,7 @@ public class SessionScope extends AbstractJEEScope {
      * @param   message The message to append.
      */
     public void addActionMessage(MessageType type, String message) {
+        HttpSession session = request.getSession(true);
         List<String> messages;
         synchronized (session) {
             String key = actionKey(type);
@@ -129,11 +141,14 @@ public class SessionScope extends AbstractJEEScope {
      * {@inheritDoc}
      */
     public void clearActionMessages(MessageType type) {
-        synchronized (session) {
-            if (type == MessageType.ERROR) {
-                session.removeAttribute(ACTION_ERROR_KEY);
-            } else {
-                session.removeAttribute(ACTION_MESSAGE_KEY);
+        HttpSession session = request.getSession(true);
+        if (session != null) {
+            synchronized (session) {
+                if (type == MessageType.ERROR) {
+                    session.removeAttribute(ACTION_ERROR_KEY);
+                } else {
+                    session.removeAttribute(ACTION_MESSAGE_KEY);
+                }
             }
         }
     }
@@ -142,11 +157,14 @@ public class SessionScope extends AbstractJEEScope {
      * {@inheritDoc}
      */
     public void clearFieldMessages(MessageType type) {
-        synchronized (session) {
-            if (type == MessageType.ERROR) {
-                session.removeAttribute(FIELD_ERROR_KEY);
-            } else {
-                session.removeAttribute(FIELD_MESSAGE_KEY);
+        HttpSession session = request.getSession(true);
+        if (session != null) {
+            synchronized (session) {
+                if (type == MessageType.ERROR) {
+                    session.removeAttribute(FIELD_ERROR_KEY);
+                } else {
+                    session.removeAttribute(FIELD_MESSAGE_KEY);
+                }
             }
         }
     }
