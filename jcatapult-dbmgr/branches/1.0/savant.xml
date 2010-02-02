@@ -1,0 +1,100 @@
+<?xml version="1.0" ?>
+<!--
+  ~ Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+  ~ either express or implied. See the License for the specific
+  ~ language governing permissions and limitations under the License.
+  -->
+<project>
+  <macrodef name="compile-main-post">
+    <sequential>
+      <!-- copies db files to the target directory -->
+      <copy todir="target/classes/main">
+        <fileset dir="src/db/main" includes="**/*"/>
+      </copy>
+    </sequential>
+  </macrodef>
+
+  <!-- implemented to jar up the test modules -->
+  <macrodef name="jar-post">
+    <sequential>
+      <jar destfile="target/jars/module1-1.2.jar">
+        <fileset dir="test/module1" includes="**/*"/>
+      </jar>
+      <jar destfile="target/jars/module2-1.1.jar">
+        <fileset dir="test/module2" includes="**/*"/>
+      </jar>
+      <jar destfile="target/jars/module3-2.1.jar">
+        <fileset dir="test/module3" includes="**/*"/>
+      </jar>
+      <jar destfile="target/jars/module4-1.0.jar">
+        <fileset dir="test/module4" includes="**/*"/>
+      </jar>
+      <jar destfile="target/jars/dependency1-1.0.jar">
+        <fileset dir="test/dependency1" includes="**/*"/>
+      </jar>
+      <jar destfile="target/jars/dependency2-1.0.jar">
+        <fileset dir="test/dependency2" includes="**/*"/>
+      </jar>
+      <copy file="test/module1/module1-1.2.jar.amd" todir="target/jars"/>
+      <copy file="test/module2/module2-1.1.jar.amd" todir="target/jars"/>
+      <copy file="test/module3/module3-2.1.jar.amd" todir="target/jars"/>
+      <copy file="test/module4/module4-1.0.jar.amd" todir="target/jars"/>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="create-test-database-post">
+    <sequential>
+      <echo>Creating custom test databases...</echo>
+      <dependencypath pathid="classpath.project" transitive="true" types="compile,compile-test,run,run-test"/>
+      <sql driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/mysql"
+           userid="${db.username}" password="${db.password}" autocommit="true" expandproperties="true"
+           classpathref="classpath.project">
+
+        DROP DATABASE IF EXISTS mysql5_database_provider_test;
+        CREATE DATABASE mysql5_database_provider_test;
+        GRANT ALL PRIVILEGES on mysql5_database_provider_test.* to 'dev'@'localhost' identified by 'dev';
+        GRANT ALL PRIVILEGES on mysql5_database_provider_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+        DROP DATABASE IF EXISTS table_generator_test_project5;
+        CREATE DATABASE table_generator_test_project5;
+        GRANT ALL PRIVILEGES on table_generator_test_project5.* to 'dev'@'localhost' identified by 'dev';
+        GRANT ALL PRIVILEGES on table_generator_test_project5.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+        DROP DATABASE IF EXISTS table_generator_test_module1;
+        CREATE DATABASE table_generator_test_module1;
+        GRANT ALL PRIVILEGES on table_generator_test_module1.* to 'dev'@'localhost' identified by 'dev';
+        GRANT ALL PRIVILEGES on table_generator_test_module1.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+        DROP DATABASE IF EXISTS database_generator_test_project5;
+        CREATE DATABASE database_generator_test_project5;
+        GRANT ALL PRIVILEGES on database_generator_test_project5.* to 'dev'@'localhost' identified by 'dev';
+        GRANT ALL PRIVILEGES on database_generator_test_project5.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+        DROP DATABASE IF EXISTS database_generator_test_project4;
+        CREATE DATABASE database_generator_test_project4;
+        GRANT ALL PRIVILEGES on database_generator_test_project4.* to 'dev'@'localhost' identified by 'dev';
+        GRANT ALL PRIVILEGES on database_generator_test_project4.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+        DROP DATABASE IF EXISTS database_generator_test_project1;
+        CREATE DATABASE database_generator_test_project1;
+        GRANT ALL PRIVILEGES on database_generator_test_project1.* to 'dev'@'localhost' identified by 'dev';
+        GRANT ALL PRIVILEGES on database_generator_test_project1.* to 'dev'@'127.0.0.1' identified by 'dev';
+
+        DROP DATABASE IF EXISTS database_manager_test;
+        CREATE DATABASE database_manager_test;
+        GRANT ALL PRIVILEGES on database_manager_test.* to 'dev'@'localhost' identified by 'dev';
+        GRANT ALL PRIVILEGES on database_manager_test.* to 'dev'@'127.0.0.1' identified by 'dev';
+      </sql>
+    </sequential>
+  </macrodef>
+</project>

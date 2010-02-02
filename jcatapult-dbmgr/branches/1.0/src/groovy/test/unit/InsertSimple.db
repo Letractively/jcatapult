@@ -1,0 +1,1 @@
+insert "simple_dsl_table", [name: "Brian", age: 32, birthday: datetime("1976-5-30T02:13:00-06"), male: true, insert_date: now()]
