@@ -18,8 +18,8 @@
   <macrodef name="compile-main-post">
     <sequential>
       <!-- copies db files to the target directory -->
-      <copy todir="${dir.target.classes.main}">
-        <fileset dir="${dir.src.db.main}" includes="**/*"/>
+      <copy todir="target/classes/main">
+        <fileset dir="src/db/main" includes="**/*"/>
       </copy>
     </sequential>
   </macrodef>
@@ -27,28 +27,28 @@
   <!-- implemented to jar up the test modules -->
   <macrodef name="jar-post">
     <sequential>
-      <jar destfile="${dir.target.jars}/module1-1.2.jar">
+      <jar destfile="target/jars/module1-1.2.jar">
         <fileset dir="test/module1" includes="**/*"/>
       </jar>
-      <jar destfile="${dir.target.jars}/module2-1.1.jar">
+      <jar destfile="target/jars/module2-1.1.jar">
         <fileset dir="test/module2" includes="**/*"/>
       </jar>
-      <jar destfile="${dir.target.jars}/module3-2.1.jar">
+      <jar destfile="target/jars/module3-2.1.jar">
         <fileset dir="test/module3" includes="**/*"/>
       </jar>
-      <jar destfile="${dir.target.jars}/module4-1.0.jar">
+      <jar destfile="target/jars/module4-1.0.jar">
         <fileset dir="test/module4" includes="**/*"/>
       </jar>
-      <jar destfile="${dir.target.jars}/dependency1-1.0.jar">
+      <jar destfile="target/jars/dependency1-1.0.jar">
         <fileset dir="test/dependency1" includes="**/*"/>
       </jar>
-      <jar destfile="${dir.target.jars}/dependency2-1.0.jar">
+      <jar destfile="target/jars/dependency2-1.0.jar">
         <fileset dir="test/dependency2" includes="**/*"/>
       </jar>
-      <copy file="test/module1/module1-1.2.jar.amd" todir="${dir.target.jars}"/>
-      <copy file="test/module2/module2-1.1.jar.amd" todir="${dir.target.jars}"/>
-      <copy file="test/module3/module3-2.1.jar.amd" todir="${dir.target.jars}"/>
-      <copy file="test/module4/module4-1.0.jar.amd" todir="${dir.target.jars}"/>
+      <copy file="test/module1/module1-1.2.jar.amd" todir="target/jars"/>
+      <copy file="test/module2/module2-1.1.jar.amd" todir="target/jars"/>
+      <copy file="test/module3/module3-2.1.jar.amd" todir="target/jars"/>
+      <copy file="test/module4/module4-1.0.jar.amd" todir="target/jars"/>
     </sequential>
   </macrodef>
 
@@ -94,24 +94,7 @@
         CREATE DATABASE database_manager_test;
         GRANT ALL PRIVILEGES on database_manager_test.* to 'dev'@'localhost' identified by 'dev';
         GRANT ALL PRIVILEGES on database_manager_test.* to 'dev'@'127.0.0.1' identified by 'dev';
-
       </sql>
-      <!--<sql driver="org.postgresql.Driver" url="jdbc:postgresql://localhost/postgres"-->
-           <!--userid="postgres" password="postgres" autocommit="true" expandproperties="true"-->
-           <!--classpathref="classpath.project">-->
-
-        <!--DROP DATABASE IF EXISTS postgres8_database_provider_test;-->
-        <!--CREATE DATABASE postgres8_database_provider_test WITH OWNER dev;-->
-
-        <!--DROP DATABASE IF EXISTS database_migrator_test;-->
-        <!--CREATE DATABASE database_migrator_test WITH OWNER dev;-->
-
-        <!--DROP DATABASE IF EXISTS patcher_seeder_test;-->
-        <!--CREATE DATABASE patcher_seeder_test WITH OWNER dev;-->
-
-        <!--DROP DATABASE IF EXISTS table_creator_test;-->
-        <!--CREATE DATABASE table_creator_test WITH OWNER dev;-->
-      <!--</sql>-->
     </sequential>
   </macrodef>
 </project>
