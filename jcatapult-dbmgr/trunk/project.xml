@@ -28,7 +28,7 @@
       <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.4"/>
       <artifact group="mysql.com" name="mysql-connector-java" version="5.1.6"/>
       <artifact group="persistence.javax" name="persistence-api" version="1.0"/>
-      <artifact group="savant.inversoft.org" name="savant-core" version="1.5"/>
+      <artifact group="savant.inversoft.org" name="savant-core" version="1.5.4"/>
     </artifactGroup>
     <artifactGroup type="test-run">
       <artifact group="hsqldb.org" name="hsqldb" version="1.8.9"/>
