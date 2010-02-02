@@ -1,0 +1,57 @@
+class Table {
+  def id(name) {
+    println "Got ID ${name}"
+  }
+  
+  def column(map) {
+    println "Got column ${map}"
+  }
+}
+
+class Database {
+  def createTable(name, Closure closure) {
+    def table = new Table()
+    closure table
+  }
+
+  def dropTable(name) {
+    println "Droppping ${name}"
+  }
+}
+
+class Types {
+  def date = "date"
+  def integer = "integer"
+  def bool = "boolean"
+  def timestamp = "timestamp"
+  def string(size) {
+    return "varchar(${size})"
+  }
+}
+
+class Migration {
+  Database db = new Database()
+  Types types = new Types()
+  def upgrade() {}
+  def downgrade() {}
+}
+
+class Test extends Migration {
+  def upgrade() {
+    db.createTable("simple_dsl_table") { table ->
+      table.id name: "id"
+      table.column name: "name", type: types.string(512), nullable: true
+      table.column name: "age", type: types.integer, nullable: true
+      table.column name: "birthday", type: types.date, nullable: true
+      table.column name: "male", type: types.bool, nullable: true
+      table.column name: "insert_date", type: types.timestamp
+    }
+  }
+
+  def downgrade() {
+    db.dropTable "simple_dsl_table"
+  }
+}
+
+new Test().upgrade()
+new Test().downgrade()
