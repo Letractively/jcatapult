@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component inherit-compiler-output="true">
-    <exclude-output />
-    <testFolder url="file://$MODULE_DIR$/src/java/test/integration" />
-    <testFolder url="file://$MODULE_DIR$/src/java/test/unit" />
-    <excludeFolder url="file://$MODULE_DIR$/target" />
-    <excludeFolder url="file://$MODULE_DIR$/web/WEB-INF/classes" />
-    <excludeFolder url="file://$MODULE_DIR$/web/WEB-INF/lib" />
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/src/java/test/integration"/>
+		<testFolder url="file://$MODULE_DIR$/src/java/test/unit"/>
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
+		<excludeFolder url="file://$MODULE_DIR$/web/WEB-INF/classes"/>
+		<excludeFolder url="file://$MODULE_DIR$/web/WEB-INF/lib"/>
+	</contentEntry>
+	<lib name="junit-4.4.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/junit/junit/4.4/junit-4.4-src.jar!/"/>
+	</lib>
 </component>
-

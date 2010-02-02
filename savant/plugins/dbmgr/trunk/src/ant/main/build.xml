@@ -20,6 +20,20 @@
   <dependencypath pathid="classpath.plugin.dbmgr" projectfile="${dir.plugin.dbmgr}/project.xml"/>
   <dependencypath pathid="classpath.project"/>
 
+  <!-- Post process for overriding -->
+  <macrodef name="create-main-database-post">
+    <sequential>
+      <database-manager url="jdbc:mysql://localhost:3306/${project.database}?user=dev&amp;password=dev&amp;characterEncoding=utf8"/>
+    </sequential>
+  </macrodef>
+
+  <!-- Post process for overriding -->
+  <macrodef name="create-test-database-post">
+    <sequential>
+      <database-manager url="jdbc:mysql://localhost:3306/${project.database}?user=dev&amp;password=dev&amp;characterEncoding=utf8"/>
+    </sequential>
+  </macrodef>
+
   <macrodef name="database-manager">
     <attribute name="url"/>
     <sequential>
@@ -34,35 +48,21 @@
         <classpath>
           <path refid="classpath.project"/>
           <path refid="classpath.plugin.dbmgr"/>
-          <path location="${dir.target.classes.main}"/>
-          <path location="${dir.target.classes.test.unit}"/>
+          <path location="target/classes/main"/>
+          <path location="target/classes/test/unit"/>
 
           <!--
             Is is only here because we need the test JAR in the classpath for components so that
             the persistence.xml will be available to Hibernate
           -->
           <path>
-            <fileset dir="${dir.target.jars}" includes="*test*.jar"/>
+            <fileset dir="target/jars" includes="*test*.jar"/>
           </path>
         </classpath>
         <jvmarg line="-Xmx256M"/>
         <sysproperty key="java.util.logging.config.file" value="${dir.plugin.dbmgr}/logging.properties"/>
         <arg line="${no.domain.switch} punit @{url} ${project.name} src/db/main mysql5 java:comp/env/jdbc/${project.name} ./project.xml ${project.version}"/>
       </java>
-    </sequential>
-  </macrodef>
-
-  <!-- Post process for overriding -->
-  <macrodef name="create-main-database-post">
-    <sequential>
-      <database-manager url="jdbc:mysql://localhost:3306/${project.database}?user=dev&amp;password=dev&amp;characterEncoding=utf8"/>
-    </sequential>
-  </macrodef>
-
-  <!-- Post process for overriding -->
-  <macrodef name="create-test-database-post">
-    <sequential>
-      <database-manager url="jdbc:mysql://localhost:3306/${project.database}?user=dev&amp;password=dev&amp;characterEncoding=utf8"/>
     </sequential>
   </macrodef>
 </project>
