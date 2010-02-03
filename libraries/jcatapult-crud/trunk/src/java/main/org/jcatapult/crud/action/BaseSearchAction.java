@@ -63,7 +63,6 @@ public abstract class BaseSearchAction<T, U extends SearchCriteria<T>> {
     /**
      * The results of the search or an empty list.
      */
-    @ActionSession
     public List<T> results;
 
     /**
