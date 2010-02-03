@@ -1,0 +1,186 @@
+<div id="search-result-count">
+  <span id="search-result-count-label">Number of results:</span><span id="search-result-count-number">300</span>
+</div>
+<form action="delete" method="POST">
+  <div id="pagination-controls" class="user-pagination-controls jcatapult-module-pagination-controls">
+      <a href="?searchCriteria.page=1">&lt;&lt;</a>
+      <a href="?searchCriteria.page=6">&lt;</a>
+
+        <a href="?searchCriteria.page=2">2</a>
+        <a href="?searchCriteria.page=3">3</a>
+        <a href="?searchCriteria.page=4">4</a>
+        <a href="?searchCriteria.page=5">5</a>
+        <a href="?searchCriteria.page=6">6</a>
+        7
+        <a href="?searchCriteria.page=8">8</a>
+        <a href="?searchCriteria.page=9">9</a>
+        <a href="?searchCriteria.page=10">10</a>
+        <a href="?searchCriteria.page=11">11</a>
+        <a href="?searchCriteria.page=12">12</a>
+
+      <a href="?searchCriteria.page=8">&gt;</a>
+      <a href="?searchCriteria.page=15">&gt;&gt;</a>
+  </div>
+<table id="listing" class="user-listing jcatapult-module-listing">
+  <tr>
+      <th id="name-header"><a href="?searchCriteria.sortProperty=name+desc">Name</a></th>
+      <th id="age-header"><a href="?searchCriteria.sortProperty=age+desc">Age</a></th>
+      <th id="edit-header">Edit</th>
+      <th id="delete-header">Delete</th>
+  </tr>
+    <tr>
+      <td class="even name-row"><a href="details?id=121">user120</a></td>
+      <td class="even age-row">120</a></td>
+        <td class="even edit-row"><a href="edit/121"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="even delete-row"><input type="checkbox" name="ids" value="121"/></td>
+    </tr>
+    <tr>
+      <td class="odd name-row"><a href="details?id=122">user121</td>
+      <td class="odd age-row">121</td>
+        <td class="odd edit-row"><a href="edit/122"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="odd delete-row"><input type="checkbox" name="ids" value="122"/></td>
+    </tr>
+    <tr>
+      <td class="even name-row"><a href="details?id=123">user122</td>
+      <td class="even age-row">122</td>
+        <td class="even edit-row"><a href="edit/123"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="even delete-row"><input type="checkbox" name="ids" value="123"/></td>
+    </tr>
+    <tr>
+      <td class="odd name-row"><a href="details?id=124">user123</td>
+      <td class="odd age-row">123</td>
+        <td class="odd edit-row"><a href="edit/124"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="odd delete-row"><input type="checkbox" name="ids" value="124"/></td>
+    </tr>
+    <tr>
+      <td class="even name-row"><a href="details?id=125">user124</td>
+      <td class="even age-row">124</td>
+        <td class="even edit-row"><a href="edit/125"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="even delete-row"><input type="checkbox" name="ids" value="125"/></td>
+    </tr>
+    <tr>
+      <td class="odd name-row"><a href="details?id=126">user125</td>
+      <td class="odd age-row">125</td>
+        <td class="odd edit-row"><a href="edit/126"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="odd delete-row"><input type="checkbox" name="ids" value="126"/></td>
+    </tr>
+    <tr>
+      <td class="even name-row"><a href="details?id=127">user126</td>
+      <td class="even age-row">126</td>
+        <td class="even edit-row"><a href="edit/127"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="even delete-row"><input type="checkbox" name="ids" value="127"/></td>
+    </tr>
+    <tr>
+      <td class="odd name-row"><a href="details?id=128">user127</td>
+      <td class="odd age-row">127</td>
+        <td class="odd edit-row"><a href="edit/128"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="odd delete-row"><input type="checkbox" name="ids" value="128"/></td>
+    </tr>
+    <tr>
+      <td class="even name-row"><a href="details?id=129">user128</td>
+      <td class="even age-row">128</td>
+        <td class="even edit-row"><a href="edit/129"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="even delete-row"><input type="checkbox" name="ids" value="129"/></td>
+    </tr>
+    <tr>
+      <td class="odd name-row"><a href="details?id=130">user129</td>
+      <td class="odd age-row">129</td>
+        <td class="odd edit-row"><a href="edit/130"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="odd delete-row"><input type="checkbox" name="ids" value="130"/></td>
+    </tr>
+    <tr>
+      <td class="even name-row"><a href="details?id=131">user130</td>
+      <td class="even age-row">130</td>
+        <td class="even edit-row"><a href="edit/131"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="even delete-row"><input type="checkbox" name="ids" value="131"/></td>
+    </tr>
+    <tr>
+      <td class="odd name-row"><a href="details?id=132">user131</td>
+      <td class="odd age-row">131</td>
+        <td class="odd edit-row"><a href="edit/132"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="odd delete-row"><input type="checkbox" name="ids" value="132"/></td>
+    </tr>
+    <tr>
+      <td class="even name-row"><a href="details?id=133">user132</td>
+      <td class="even age-row">132</td>
+        <td class="even edit-row"><a href="edit/133"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="even delete-row"><input type="checkbox" name="ids" value="133"/></td>
+    </tr>
+    <tr>
+      <td class="odd name-row"><a href="details?id=134">user133</td>
+      <td class="odd age-row">133</td>
+        <td class="odd edit-row"><a href="edit/134"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="odd delete-row"><input type="checkbox" name="ids" value="134"/></td>
+    </tr>
+    <tr>
+      <td class="even name-row"><a href="details?id=135">user134</td>
+      <td class="even age-row">134</td>
+        <td class="even edit-row"><a href="edit/135"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="even delete-row"><input type="checkbox" name="ids" value="135"/></td>
+    </tr>
+    <tr>
+      <td class="odd name-row"><a href="details?id=136">user135</td>
+      <td class="odd age-row">135</td>
+        <td class="odd edit-row"><a href="edit/136"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="odd delete-row"><input type="checkbox" name="ids" value="136"/></td>
+    </tr>
+    <tr>
+      <td class="even name-row"><a href="details?id=137">user136</td>
+      <td class="even age-row">136</td>
+        <td class="even edit-row"><a href="edit/137"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="even delete-row"><input type="checkbox" name="ids" value="137"/></td>
+    </tr>
+    <tr>
+      <td class="odd name-row"><a href="details?id=138">user137</td>
+      <td class="odd age-row">137</td>
+        <td class="odd edit-row"><a href="edit/138"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="odd delete-row"><input type="checkbox" name="ids" value="138"/></td>
+    </tr>
+    <tr>
+      <td class="even name-row"><a href="details?id=139">user138</td>
+      <td class="even age-row">138</td>
+        <td class="even edit-row"><a href="edit/139"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="even delete-row"><input type="checkbox" name="ids" value="139"/></td>
+    </tr>
+    <tr>
+      <td class="odd name-row"><a href="details?id=140">user139</td>
+      <td class="odd age-row">139</td>
+        <td class="odd edit-row"><a href="edit/140"><img src="/module/jcatapult-crud/edit-1.0.png" alt="" border=""/></a></td>
+        <td class="odd delete-row"><input type="checkbox" name="ids" value="140"/></td>
+    </tr>
+</table><div id="listing-controls" class="user-controls jcatapult-module-controls">
+    <div id="add-control" class="user-control jcatapult-module-control">
+      <a href="add">Add</a>
+    </div>
+    <div id="delete-control" class="user-control jcatapult-module-control">
+<input type="hidden" name="__jc_a_delete" value=""/>
+<div class="submit-button button control">
+<div class="label-container"> </div>
+<div class="control-container"><input type="submit" id="delete" name="delete" value="Delete"/></div>
+</div>
+    </div>
+</div>  <div id="pagination-controls" class="user-pagination-controls jcatapult-module-pagination-controls">
+      <a href="?searchCriteria.page=1">&lt;&lt;</a>
+      <a href="?searchCriteria.page=6">&lt;</a>
+
+        <a href="?searchCriteria.page=2">2</a>
+        <a href="?searchCriteria.page=3">3</a>
+        <a href="?searchCriteria.page=4">4</a>
+        <a href="?searchCriteria.page=5">5</a>
+        <a href="?searchCriteria.page=6">6</a>
+        7
+        <a href="?searchCriteria.page=8">8</a>
+        <a href="?searchCriteria.page=9">9</a>
+        <a href="?searchCriteria.page=10">10</a>
+        <a href="?searchCriteria.page=11">11</a>
+        <a href="?searchCriteria.page=12">12</a>
+
+      <a href="?searchCriteria.page=8">&gt;</a>
+      <a href="?searchCriteria.page=15">&gt;&gt;</a>
+  </div>
+  <div id="number-per-page-controls" class="user-number-per-page-controls jcatapult-module-number-per-page-controls">
+Number per page      <a href="?searchCriteria.numberPerPage=25&searchCriteria.showAll=false">25</a> |
+      <a href="?searchCriteria.numberPerPage=100&searchCriteria.showAll=false">100</a> |
+      <a href="?searchCriteria.showAll=true">Show all</a>
+  </div>
+</form>
