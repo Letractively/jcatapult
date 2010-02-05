@@ -9,4 +9,58 @@
 		<excludeFolder url="file://$MODULE_DIR$/target/classes"/>
 		<excludeFolder url="file://$MODULE_DIR$/target/classes"/>
 	</contentEntry>
+	<lib name="guice-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/com/google/code/guice/guice/1.0/guice-1.0-src.jar!/"/>
+	</lib>
+	<lib name="mysql-connector-java-5.1.6.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/com/mysql/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6-src.jar!/"/>
+	</lib>
+	<lib name="java-net-commons-1.5.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/net/java/dev/java-net-commons/java-net-commons/1.5/java-net-commons-1.5-src.jar!/"/>
+	</lib>
+	<lib name="cglib-2.2.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/net/sourceforge/cglib/cglib/2.2/cglib-2.2-src.jar!/"/>
+	</lib>
+	<lib name="commons-configuration-1.4.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-configuration/1.4/commons-configuration-1.4-src.jar!/"/>
+	</lib>
+	<lib name="commons-lang-2.3.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-lang/2.3/commons-lang-2.3-src.jar!/"/>
+	</lib>
+	<lib name="easymock-2.2.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/easymock/easymock/2.2/easymock-2.2-src.jar!/"/>
+	</lib>
+	<lib name="freemarker-2.3.12.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/freemarker/freemarker/2.3.12/freemarker-2.3.12-src.jar!/"/>
+	</lib>
+	<lib name="hibernate-3.2.6.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/hibernate/hibernate/3.2.6/hibernate-3.2.6-src.jar!/"/>
+	</lib>
+	<lib name="hibernate-annotations-3.3.1.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/hibernate/hibernate-annotations/3.3.1/hibernate-annotations-3.3.1-src.jar!/"/>
+	</lib>
+	<lib name="hibernate-entitymanager-3.3.2.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/hibernate/hibernate-entitymanager/3.3.2/hibernate-entitymanager-3.3.2-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-core-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0/jcatapult-core-1.0-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-core-test-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0/jcatapult-core-test-1.0-src.jar!/"/>
+	</lib>
+	<lib name="joda-time-1.4.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/joda/joda-time/joda-time/1.4/joda-time-1.4-src.jar!/"/>
+	</lib>
+	<lib name="joda-time-hibernate-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/joda/joda-time/joda-time-hibernate/1.0/joda-time-hibernate-1.0-src.jar!/"/>
+	</lib>
+	<lib name="junit-4.4.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/junit/junit/4.4/junit-4.4-src.jar!/"/>
+	</lib>
+	<lib name="asm-3.1.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/objectweb/asm/asm/3.1/asm-3.1-src.jar!/"/>
+	</lib>
+	<lib name="testng-5.11.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/testng/testng/5.11/testng-5.11-src.jar!/"/>
+	</lib>
 </component>

@@ -1,14 +1,14 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-1.5/project"
          name="jcatapult-persistence"
          group="jcatapult.org"
-         version="1.0.4">
+         version="1.0.5">
 
-  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0.1" facet="database"/>
-  <plugin group="plugins.savant.inversoft.org" name="database" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.1.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.1.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="java" version="1.1.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="junit" version="1.1.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="database" version="1.1.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0.1"/>
 
   <!-- Compile properties -->
   <property name="jdk.version" value="1.6"/>
@@ -48,6 +48,7 @@
       <artifact group="easymock.org" name="easymock" version="2.2"/>
       <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
       <artifact group="junit.org" name="junit" version="4.4"/>
+      <artifact group="testng.org" name="testng" version="5.11"/>
     </artifact-group>
   </dependencies>
 </project>
