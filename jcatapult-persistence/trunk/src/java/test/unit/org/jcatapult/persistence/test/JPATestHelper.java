@@ -113,7 +113,7 @@ public class JPATestHelper {
         Map<String, String> properties = new HashMap<String, String>();
 
         if (dataSource == null) {
-            String dbType = System.getProperty("jcatapult.database.type");
+            String dbType = System.getProperty("database.type");
             if (dbType == null || dbType.equals("mysql")) {
                 logger.info("+++++++++++++++++++++++++++++++ Setting up MySQL data source for testing +++++++++++++++++++++++++++++++");
                 dataSource = MySQLTools.setup(jndi, databaseName);
