@@ -3,12 +3,12 @@
   <macrodef name="jar-post">
     <sequential>
       <jar destfile="target/jars/${project.name}-test-${project.version}.jar">
-        <fileset dir="target/classes/test/unit" includes="**/test/**/*"/>
+        <fileset dir="target/classes/test/integration" includes="**/test/**/*"/>
       </jar>
 
       <!-- Source JAR -->
       <jar destfile="target/jars/${project.name}-test-${project.version}-src.jar">
-        <fileset dir="src/java/test/unit" includes="**/test/*"/>
+        <fileset dir="src/java/test/integration" includes="**/test/*"/>
       </jar>
    </sequential>
   </macrodef>
