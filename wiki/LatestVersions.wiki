@@ -1,4 +1,5 @@
 #summary Latest versions of each component
+#labels Featured
 
 = Versions =
 
@@ -17,4 +18,3 @@ Here are all the components of JCatapult and the current versions of each:
 || User Module || modules.jcatapult.org/jcatapult-user-module || 1.0.2 ||
 || Simple User Module || modules.jcatapult.org/jcatapult-simple-user-module || 1.0-RC13 ||
 || CMS Module || modules.jcatapult.org/jcatapult-cms-module || 1.0 ||
-
