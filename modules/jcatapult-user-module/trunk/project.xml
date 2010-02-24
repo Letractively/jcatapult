@@ -25,7 +25,7 @@
     <artifactGroup type="compile">
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
       <artifact group="hibernate.org" name="hibernate-annotations" version="3.3.1"/>
-      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.4"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.5"/>
 
       <!-- jcatapult core -->
       <artifact group="jcatapult.org" name="jcatapult-core" version="1.0"/>
