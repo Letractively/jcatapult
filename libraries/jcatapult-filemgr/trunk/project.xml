@@ -22,7 +22,7 @@
     </artifact-group>
     <artifact-group type="compile">
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
-      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.4"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.5"/>
       <artifact group="jcatapult.org" name="jcatapult-core" version="${version.jcatapult}"/>
       <artifact group="jcatapult.org" name="jcatapult-mvc" version="${version.jcatapult}"/>
     </artifact-group>
