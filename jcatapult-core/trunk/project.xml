@@ -42,7 +42,7 @@
       <artifact group="commons.apache.org" name="commons-lang" version="2.3"/>
       <artifact group="freemarker.org" name="freemarker" version="2.3.12"/>
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
-      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.4"/>
+      <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.5"/>
       <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
     </artifact-group>
     <artifact-group type="test-compile">
