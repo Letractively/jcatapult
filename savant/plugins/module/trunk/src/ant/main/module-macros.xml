@@ -236,7 +236,7 @@
         <moduleClasspath>
           <path refid="classpath.project"/>
           <path>
-            <fileset dir="${dir.target.jars}" includes="*.jar"/>
+            <fileset dir="target/jars" includes="*.jar"/>
           </path>
         </moduleClasspath>
       </module-add-entities>
@@ -254,7 +254,7 @@
       <echo message="File is ${module.file}"/>
       <module-add-dependency group="@{group}" project="@{project}" version="${module.version}"/>
 
-      <module-add-entities persistenceFile="${dir.src.conf.main}/META-INF/persistence.xml">
+      <module-add-entities persistenceFile="src/conf/main/META-INF/persistence.xml">
         <moduleClasspath>
           <pathelement location="${module.file}"/>
         </moduleClasspath>

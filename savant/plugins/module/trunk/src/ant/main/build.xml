@@ -32,64 +32,56 @@
   <import file="${dir.plugin.module}/build-project.xml"/>
   <import file="${dir.plugin.module}/module-macros.xml"/>
 
-  <macrodef name="jar-main">
+  <macrodef name="jar-post">
     <sequential>
-      <mkdir dir="${dir.target.jars}"/>
+      <groovy>
+      <![CDATA[
+        ant.mkdir(dir: "target/jars")
 
-      <!-- copy src/db/main sql files into META-INF/sql -->
-      <property name="dir.target.sql.main" value="${dir.target.classes.main}/META-INF/sql"/>
-      <mkdir dir="${dir.target.sql.main}"/>
-      <copy todir="${dir.target.sql.main}" failonerror="false">
-        <fileset dir="${dir.src.db.main}" includes="**/*"/>
-      </copy>
+        ant.mkdir(dir: "target/classes/main/META-INF/sql")
+        ant.copy(todir: "target/classes/main/META-INF/sql", failonerror: "false") {
+          ant.fileset(dir: "src/db/main", includes: "**/*")
+        }
 
-      <!-- Copy the freemarker templates to the correct locations -->
-      <copy todir="${dir.target.classes.main}/WEB-INF/content" failonerror="false">
-        <fileset dir="${dir.web}/WEB-INF/content" includes="**/*" excludes="test/**/*"/>
-      </copy>
+        ant.copy(todir: "target/classes/main/WEB-INF/content", failonerror: "false") {
+          ant.fileset(dir: "web/WEB-INF/content", includes: "**/*", excludes: "test/**/*")
+        }
 
-      <!-- Copy the messages to the correct locations -->
-      <copy todir="${dir.target.classes.main}/WEB-INF/message" failonerror="false">
-        <fileset dir="${dir.web}/WEB-INF/message" includes="**/*"/>
-      </copy>
+        ant.copy(todir: "target/classes/main/WEB-INF/message", failonerror: "false") {
+          ant.fileset(dir: "web/WEB-INF/message", includes: "**/*")
+        }
 
-      <!-- Copy the emails to the correct locations -->
-      <copy todir="${dir.target.classes.main}/WEB-INF/email" failonerror="false">
-        <fileset dir="${dir.web}/WEB-INF/email" includes="**/*"/>
-      </copy>
+        ant.copy(todir: "target/classes/main/WEB-INF/email", failonerror: "false") {
+          ant.fileset(dir: "web/WEB-INF/email", includes: "**/*")
+        }
 
-      <!-- Copy the control templates to the correct locations -->
-      <copy todir="${dir.target.classes.main}/WEB-INF/control-templates" failonerror="false">
-        <fileset dir="${dir.web}/WEB-INF/control-templates" includes="**/*"/>
-      </copy>
+        ant.copy(todir: "target/classes/main/WEB-INF/control-templates", failonerror: "false") {
+          ant.fileset(dir: "web/WEB-INF/control-templates", includes: "**/*")
+        }
 
-      <!-- Copy the static files into the correct location -->
-      <copy todir="${dir.target.classes.main}/module/${project.name}" failonerror="false">
-        <fileset dir="${dir.web}/module/${project.name}" includes="**/*"/>
-      </copy>
+        ant.copy(todir: "target/classes/main/module/${properties['project.name']}", failonerror: "false") {
+          ant.fileset(dir: "web/module/${properties['project.name']}", includes: "**/*")
+        }
 
-      <jar destfile="${dir.target.jars}/${project.name}-${project.version}.jar">
-        <manifest>
-          <attribute name="Implementation-Version" value="${project.version}"/>
-        </manifest>
-        <fileset dir="${dir.target.classes.main}" includes="**/*"/>
-      </jar>
+        ant.jar(destfile: "target/jars/${properties["project.name"]}-${properties["project.version"]}.jar") {
+          ant.fileset(dir: "target/classes/main", includes: "**/*")
+          ant.manifest() {
+            ant.attribute(name: "Implementation-Version", value: "${properties["project.version"]}")
+          }
+        }
 
-      <!-- delete the META-INF/sql directory.  This is deleted so that these files are not found by the
-            jcatapult database migration api -->
-      <delete dir="${dir.target.sql.main}"/>
+        ant.delete(dir: "target/classes/main/META-INF/sql")
 
-      <!-- Source JAR -->
-      <jar destfile="${dir.target.jars}/${project.name}-${project.version}-src.jar">
-        <fileset dir="${dir.src.java.main}" includes="**/*"/>
-      </jar>
+        ant.jar(destfile: "target/jars/${properties["project.name"]}-${properties["project.version"]}-src.jar") {
+          ant.fileset(dir: "src/java/main", includes: "**/*")
+        }
 
-      <!-- Special test only JAR with the persistence.xml -->
-      <module-create-persistence moduleFile="${dir.src.conf.main}/module.xml"
-                                 persistenceDir="${dir.target.classes.test.unit}"/>
-      <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}.jar">
-        <fileset dir="${dir.target.classes.test.unit}" includes="META-INF/**/*"/>
-      </jar>
+        ant."module-create-persistence"(moduleFile: "src/conf/main/module.xml", persistenceDir:"target/classes/test/unit")
+        ant.jar(destfile: "target/jars/${properties['project.name']}-test-${properties['project.version']}.jar") {
+          ant.fileset(dir: "target/classes/test/unit", includes:"META-INF/**/*")
+        }
+      ]]>
+      </groovy>
     </sequential>
   </macrodef>
 </project>
