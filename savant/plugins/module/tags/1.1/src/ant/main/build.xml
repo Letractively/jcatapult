@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+   either express or implied. See the License for the specific
+   language governing permissions and limitations under the License.
+-->
+
+<!--
+  This creates a module JAR file by packaging up the classes from
+  target/classes/main and these web directories:
+
+    web/WEB-INF/message
+    web/WEB-INF/email
+    web/WEB-INF/content
+
+  This also creates a simple testing JAR file that contains the JPA
+  persistence.xml for module testing in development.
+-->
+<project name="module">
+  <dirname property="dir.plugin.module" file="${ant.file.module}"/>
+  <import file="${dir.plugin.module}/build-project.xml"/>
+  <import file="${dir.plugin.module}/module-macros.xml"/>
+
+  <macrodef name="jar-post">
+    <sequential>
+      <groovy>
+      <![CDATA[
+        ant.mkdir(dir: "target/jars")
+
+        ant.mkdir(dir: "target/classes/main/META-INF/sql")
+        ant.copy(todir: "target/classes/main/META-INF/sql", failonerror: "false") {
+          ant.fileset(dir: "src/db/main", includes: "**/*")
+        }
+
+        ant.copy(todir: "target/classes/main/WEB-INF/content", failonerror: "false") {
+          ant.fileset(dir: "web/WEB-INF/content", includes: "**/*", excludes: "test/**/*")
+        }
+
+        ant.copy(todir: "target/classes/main/WEB-INF/message", failonerror: "false") {
+          ant.fileset(dir: "web/WEB-INF/message", includes: "**/*")
+        }
+
+        ant.copy(todir: "target/classes/main/WEB-INF/email", failonerror: "false") {
+          ant.fileset(dir: "web/WEB-INF/email", includes: "**/*")
+        }
+
+        ant.copy(todir: "target/classes/main/WEB-INF/control-templates", failonerror: "false") {
+          ant.fileset(dir: "web/WEB-INF/control-templates", includes: "**/*")
+        }
+
+        ant.copy(todir: "target/classes/main/module/${properties['project.name']}", failonerror: "false") {
+          ant.fileset(dir: "web/module/${properties['project.name']}", includes: "**/*")
+        }
+
+        ant.jar(destfile: "target/jars/${properties["project.name"]}-${properties["project.version"]}.jar") {
+          ant.fileset(dir: "target/classes/main", includes: "**/*")
+          ant.manifest() {
+            ant.attribute(name: "Implementation-Version", value: "${properties["project.version"]}")
+          }
+        }
+
+        ant.delete(dir: "target/classes/main/META-INF/sql")
+
+        ant.jar(destfile: "target/jars/${properties["project.name"]}-${properties["project.version"]}-src.jar") {
+          ant.fileset(dir: "src/java/main", includes: "**/*")
+        }
+
+        ant."module-create-persistence"(moduleFile: "src/conf/main/module.xml", persistenceDir:"target/classes/test/unit")
+        ant.jar(destfile: "target/jars/${properties['project.name']}-test-${properties['project.version']}.jar") {
+          ant.fileset(dir: "target/classes/test/unit", includes:"META-INF/**/*")
+        }
+      ]]>
+      </groovy>
+    </sequential>
+  </macrodef>
+</project>
