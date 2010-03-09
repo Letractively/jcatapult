@@ -41,13 +41,13 @@ import static net.java.util.CollectionTools.*;
  * @author  Brian Pontarelli
  */
 @Ignore
-public class BaseIntegrationTest extends JPABaseTest {
+public class BaseFunctionalTest extends JPABaseTest {
     @Inject public ContentService contentService;
     protected User publisher = new User();
     protected User editor = new User();
     protected UserAdapter<User> userAdapter;
 
-    public BaseIntegrationTest() {
+    public BaseFunctionalTest() {
         EmailTestHelper.setup(this);
         
         userAdapter = new UserAdapter<User>() {

@@ -2,7 +2,7 @@
 <html id="cms-html">
 <head>
   <title>Site editor</title>
-  <script type="text/javascript" src="/module/jcatapult-cms-module/cms-1.0.js"></script>
+  <script type="text/javascript" src="/module/jcatapult-cms-module/cms-1.0.1.js"></script>
   <script type="text/javascript" src="${richTextEditorURL}"></script>
   <script type="text/javascript">
     CMS.set_options({

@@ -114,8 +114,12 @@ public class CMSContentNode extends AbstractComponentControl {
             node = contentService.findPageContent(site, uri, name);
         }
 
+        // If the node doesn't exist, is pending, or is visible but the content is pending (meaning
+        // just after the first edit by an author that is pending approval such that the node has
+        // no current content), display the body of the tag.
         Content content;
-        if (node == null || !node.isVisible()) {
+        if (node == null || !node.isVisible() ||
+                (!node.getCurrentContents().containsKey(locale) && !node.getCurrentContents().containsKey(Locale.US))) {
             // Get the body contents if there is no content node
             StringWriter strWriter = new StringWriter();
             if (body != null) {

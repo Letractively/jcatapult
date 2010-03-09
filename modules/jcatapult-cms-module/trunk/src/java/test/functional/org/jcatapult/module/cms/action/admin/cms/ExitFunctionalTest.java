@@ -19,36 +19,32 @@ package org.jcatapult.module.cms.action.admin.cms;
 import java.io.IOException;
 import javax.servlet.ServletException;
 
-import org.jcatapult.email.EmailTestHelper;
-import org.jcatapult.email.service.EmailTransportService;
-import org.jcatapult.module.cms.BaseIntegrationTest;
+import org.jcatapult.module.cms.BaseFunctionalTest;
 import org.jcatapult.module.cms.domain.CMSMode;
+import org.jcatapult.mvc.test.RequestBuilder;
 import org.jcatapult.mvc.test.WebappTestRunner;
-import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.UserAdapter;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
  * <p>
- * This class performs the integration test for the Enter action.
+ * This class performs the integration test for the Exit action.
  * </p>
  *
  * @author  Scaffolder
  */
-public class EnterIntegrationTest extends BaseIntegrationTest {
+public class ExitFunctionalTest extends BaseFunctionalTest {
     @Test
-    public void testEnter() throws IOException, ServletException {
-        EnhancedSecurityContext.login(publisher);
-        
+    public void testStoreStaticPageScoped() throws IOException, ServletException {
         WebappTestRunner runner = new WebappTestRunner();
-        runner.test("/admin/cms/enter").
-            withMock(EmailTransportService.class, EmailTestHelper.getService()).
+        RequestBuilder builder = runner.test("/admin/cms/exit");
+        builder.
             withMock(UserAdapter.class, userAdapter).
             get();
 
-        String result = runner.response.getStream().toString();
-        assertTrue(result.contains("<iframe"));
-        assertSame(CMSMode.EDIT, runner.session.getAttribute("cmsMode"));
+        String result = runner.response.getRedirect();
+        assertEquals("/admin/", result);
+        assertSame(CMSMode.DISPLAY, builder.getRequest().getSession().getAttribute("cmsMode"));
     }
 }
