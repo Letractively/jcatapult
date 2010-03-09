@@ -189,6 +189,7 @@ public class DefaultContentService implements ContentService {
             } else {
                 result = createNodeApproved(ContentNode.class, site, uri, name, parent, user);
             }
+
             ContentNode node = result.getNode();
             if (node.getContentType() != null && node.getContentType() != type) {
                 throw new IllegalArgumentException("You can't change the content type of an existing " +
@@ -444,9 +445,9 @@ public class DefaultContentService implements ContentService {
         return site;
     }
 
-    private boolean canPublish(Identifiable user) {
+    private boolean canPublish(Object user) {
         Set<String> roles = userAdapater.getRoles(user);
-        return roles.contains("admin") || roles.contains(ContentRole.publisher.toString());
+        return roles.contains("admin") || roles.contains("Admin") || roles.contains(ContentRole.publisher.toString());
     }
 
     private NodeAction makeAction(ActionType type, NodeActionStateType state, Node node, Identifiable user) {

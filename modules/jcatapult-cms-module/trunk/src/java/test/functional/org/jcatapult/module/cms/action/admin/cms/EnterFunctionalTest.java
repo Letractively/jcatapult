@@ -14,15 +14,15 @@
  * language governing permissions and limitations under the License.
  *
  */
-package org.jcatapult.module.cms.action.admin.cms.content;
+package org.jcatapult.module.cms.action.admin.cms;
 
 import java.io.IOException;
-import java.util.Locale;
 import javax.servlet.ServletException;
 
-import org.jcatapult.module.cms.BaseIntegrationTest;
-import org.jcatapult.module.cms.domain.ContentType;
-import org.jcatapult.mvc.test.RequestBuilder;
+import org.jcatapult.email.EmailTestHelper;
+import org.jcatapult.email.service.EmailTransportService;
+import org.jcatapult.module.cms.BaseFunctionalTest;
+import org.jcatapult.module.cms.domain.CMSMode;
 import org.jcatapult.mvc.test.WebappTestRunner;
 import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.UserAdapter;
@@ -31,31 +31,24 @@ import org.junit.Test;
 
 /**
  * <p>
- * This class performs the integration test for the Fetch action.
+ * This class performs the integration test for the Enter action.
  * </p>
  *
  * @author  Scaffolder
  */
-public class FetchIntegrationTest extends BaseIntegrationTest {
-
+public class EnterFunctionalTest extends BaseFunctionalTest {
     @Test
-    public void testGet() throws IOException, ServletException {
+    public void testEnter() throws IOException, ServletException {
         EnhancedSecurityContext.login(publisher);
-
-        contentService.storeContent("localhost", "/page", "callout", Locale.US, "Some content", ContentType.HTML, false, publisher);
-
+        
         WebappTestRunner runner = new WebappTestRunner();
-        RequestBuilder builder = runner.test("/admin/cms/content/fetch").
+        runner.test("/admin/cms/enter").
+            withMock(EmailTransportService.class, EmailTestHelper.getService()).
             withMock(UserAdapter.class, userAdapter).
-            withParameter("queries[0].global", "false").
-            withParameter("queries[0].uri", "/page").
-            withParameter("queries[0].name", "callout");
-        builder.get();
+            get();
 
         String result = runner.response.getStream().toString();
-        System.out.println("Result is " + result);
-        assertTrue(result.contains("\"callout\": {"));
-        assertTrue(result.contains("\"visible\": true"));
-        assertTrue(result.contains("\"content\": \"Some content\""));
+        assertTrue(result.contains("<iframe"));
+        assertSame(CMSMode.EDIT, runner.session.getAttribute("cmsMode"));
     }
 }

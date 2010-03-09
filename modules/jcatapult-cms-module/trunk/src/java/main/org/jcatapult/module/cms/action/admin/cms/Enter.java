@@ -42,8 +42,8 @@ public class Enter {
     @Inject
     public Enter(Configuration configuration) {
         this.startURI = configuration.getString("jcatapult.cms.start-uri", "/");
-        this.richTextEditor = configuration.getString("jcatapult.cms.rich-text-editor.name", "nic");
-        this.richTextEditorURL = configuration.getString("jcatapult.cms.rich-text-editor.uri", "http://js.nicedit.com/nicEdit-latest.js");
+        this.richTextEditor = configuration.getString("jcatapult.cms.rich-text-editor.name", "none");
+        this.richTextEditorURL = configuration.getString("jcatapult.cms.rich-text-editor.uri", "");
     }
 
     public String get() {

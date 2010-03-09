@@ -21,7 +21,7 @@ import javax.servlet.ServletException;
 
 import org.jcatapult.email.EmailTestHelper;
 import org.jcatapult.email.service.EmailTransportService;
-import org.jcatapult.module.cms.BaseIntegrationTest;
+import org.jcatapult.module.cms.BaseFunctionalTest;
 import org.jcatapult.mvc.test.RequestBuilder;
 import org.jcatapult.mvc.test.WebappTestRunner;
 import org.jcatapult.security.EnhancedSecurityContext;
@@ -36,7 +36,7 @@ import org.junit.Test;
  *
  * @author  Scaffolder
  */
-public class StoreIntegrationTest extends BaseIntegrationTest {
+public class StoreFunctionalTest extends BaseFunctionalTest {
     @Test
     public void testStoreStaticPageScoped() throws IOException, ServletException {
         EnhancedSecurityContext.login(publisher);
