@@ -9,6 +9,8 @@
 		<testFolder url="file://$MODULE_DIR$/src/java/test/unit"/>
 		<testFolder url="file://$MODULE_DIR$/src/java/test/functional"/>
 		<excludeFolder url="file://$MODULE_DIR$/target"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/main"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/test/integration"/>
 		<excludeFolder url="file://$MODULE_DIR$/web/WEB-INF/classes"/>
 		<excludeFolder url="file://$MODULE_DIR$/web/WEB-INF/lib"/>
 		<excludeFolder url="file://$MODULE_DIR$/target/classes/main"/>
