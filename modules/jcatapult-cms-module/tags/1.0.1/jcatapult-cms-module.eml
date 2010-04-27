@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<output-test url="file://$MODULE_DIR$/target/classes/test/integration"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/src/conf/test/integration"/>
+		<testFolder url="file://$MODULE_DIR$/src/conf/test/unit"/>
+		<testFolder url="file://$MODULE_DIR$/src/java/test/integration"/>
+		<testFolder url="file://$MODULE_DIR$/src/java/test/unit"/>
+		<testFolder url="file://$MODULE_DIR$/src/java/test/functional"/>
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/main"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/test/integration"/>
+		<excludeFolder url="file://$MODULE_DIR$/web/WEB-INF/classes"/>
+		<excludeFolder url="file://$MODULE_DIR$/web/WEB-INF/lib"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/main"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/test/integration"/>
+	</contentEntry>
+	<lib name="guice-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/com/google/code/guice/guice/1.0/guice-1.0-src.jar!/"/>
+	</lib>
+	<lib name="mysql-connector-java-5.1.6.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/com/mysql/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6-src.jar!/"/>
+	</lib>
+	<lib name="sitemesh-2.3.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/com/opensymphony/sitemesh/2.3/sitemesh-2.3-src.jar!/"/>
+	</lib>
+	<lib name="java-net-commons-1.5.2.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/net/java/dev/java-net-commons/java-net-commons/1.5.2/java-net-commons-1.5.2-src.jar!/"/>
+	</lib>
+	<lib name="cglib-2.2.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/net/sourceforge/cglib/cglib/2.2/cglib-2.2-src.jar!/"/>
+	</lib>
+	<lib name="commons-codec-1.3.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-codec/1.3/commons-codec-1.3-src.jar!/"/>
+	</lib>
+	<lib name="commons-configuration-1.4.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-configuration/1.4/commons-configuration-1.4-src.jar!/"/>
+	</lib>
+	<lib name="commons-fileupload-1.2.1.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-fileupload/1.2.1/commons-fileupload-1.2.1-src.jar!/"/>
+	</lib>
+	<lib name="commons-io-1.3.2.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-io/1.3.2/commons-io-1.3.2-src.jar!/"/>
+	</lib>
+	<lib name="commons-lang-2.3.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-lang/2.3/commons-lang-2.3-src.jar!/"/>
+	</lib>
+	<lib name="easymock-2.3.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/easymock/easymock/2.3/easymock-2.3-src.jar!/"/>
+	</lib>
+	<lib name="freemarker-2.3.12.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/freemarker/freemarker/2.3.12/freemarker-2.3.12-src.jar!/"/>
+	</lib>
+	<lib name="hibernate-3.2.6.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/hibernate/hibernate/3.2.6/hibernate-3.2.6-src.jar!/"/>
+	</lib>
+	<lib name="hibernate-annotations-3.3.1.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/hibernate/hibernate-annotations/3.3.1/hibernate-annotations-3.3.1-src.jar!/"/>
+	</lib>
+	<lib name="hibernate-entitymanager-3.3.2.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/hibernate/hibernate-entitymanager/3.3.2/hibernate-entitymanager-3.3.2-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-core-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0/jcatapult-core-1.0-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-core-test-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0/jcatapult-core-test-1.0-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-mvc-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-mvc/1.0/jcatapult-mvc-1.0-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-mvc-test-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-mvc/1.0/jcatapult-mvc-test-1.0-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-persistence-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-persistence/1.0/jcatapult-persistence-1.0-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-persistence-test-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-persistence/1.0/jcatapult-persistence-test-1.0-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-security-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-security/1.0/jcatapult-security-1.0-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-email-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/libraries/jcatapult-email/1.0/jcatapult-email-1.0-src.jar!/"/>
+	</lib>
+	<lib name="jcatapult-filemgr-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/jcatapult/libraries/jcatapult-filemgr/1.0/jcatapult-filemgr-1.0-src.jar!/"/>
+	</lib>
+	<lib name="joda-time-1.4.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/joda/joda-time/joda-time/1.4/joda-time-1.4-src.jar!/"/>
+	</lib>
+	<lib name="joda-time-hibernate-1.0.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/joda/joda-time/joda-time-hibernate/1.0/joda-time-hibernate-1.0-src.jar!/"/>
+	</lib>
+	<lib name="junit-4.4.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/junit/junit/4.4/junit-4.4-src.jar!/"/>
+	</lib>
+	<lib name="asm-3.1.jar" scope="COMPILE">
+		<srcroot url="jar://$SAVANT_REPOSITORY$/org/objectweb/asm/asm/3.1/asm-3.1-src.jar!/"/>
+	</lib>
+</component>
