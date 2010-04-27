@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<module name="cms">
+  <persistence>
+    <class>org.jcatapult.module.cms.domain.ContentNode</class>
+    <class>org.jcatapult.module.cms.domain.Content</class>
+    <class>org.jcatapult.module.cms.domain.ContentState</class>
+    <class>org.jcatapult.module.cms.domain.LocaleContent</class>
+    <class>org.jcatapult.module.cms.domain.Node</class>
+    <class>org.jcatapult.module.cms.domain.NodeAction</class>
+    <class>org.jcatapult.module.cms.domain.NodeActionState</class>
+    <class>org.jcatapult.module.cms.domain.NodeState</class>
+    <class>org.jcatapult.module.cms.domain.PageNode</class>
+    <class>org.jcatapult.module.cms.domain.SiteNode</class>
+  </persistence>
+</module>
