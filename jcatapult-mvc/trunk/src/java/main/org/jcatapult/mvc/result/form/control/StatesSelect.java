@@ -63,6 +63,7 @@ public class StatesSelect extends Select {
         states.put("CA", "California");
         states.put("CO", "Colorado");
         states.put("CT", "Connecticut");
+        states.put("DC", "District of Columbia");
         states.put("DE", "Delaware");
         states.put("FL", "Florida");
         states.put("GA", "Georgia");
