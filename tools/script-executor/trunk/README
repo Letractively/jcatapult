@@ -1,0 +1,45 @@
+1.  About
+  The script executor is used for performing database migrations by executing groovy scripts
+  from the command line without needing to install Groovy on the server you're running the migration on.
+
+  The ultimate goal is provide a painfree (no classpath setup, no jdbc connectivity headaches),
+  resuable tool that is backed by Java by leverages all the goodness of Groovy.
+
+2. Installation
+  To install, checkout from subversion and then type the following maven command:
+
+      mvn assembly:assembly
+
+  This will create a 'target/script-executor-1.0-jar-with-dependencies.jar' file which will
+  contain the Java main method for execution.
+
+3.  Execution
+  To display the help text, copy the 'script-executor-1.0-jar-with-dependencies.jar'
+  to a server directory of your choice and then execute via java as follows:
+
+      java -jar script-executor-1.0-jar-with-dependencies.jar help
+
+  If your java environment is setup on the server correctly,
+  you should see a message similar to the one below:
+
+      usage: java -jar script-executor.jar [options]
+     -d,--database <arg>   The database type (mysql | psql)
+     -f,--file <arg>       The script absolute path
+     -j,--url <arg>        JDBC URL
+     -p,--password <arg>   The database password
+     -u,--username <arg>   The database username
+
+4.  Groovy Scripts
+  Groovy scripts should implement the java interface 'Script'.  Example groovy scripts are
+  located in the src/test/groovy directory but all will look similar to the template below:
+
+      import org.jcatapult.migration.scripts.Script
+      import org.jcatapult.migration.scripts.ScriptContext
+
+      public class MigrationScript implements Script {
+
+        void execute(ScriptContext scriptContext) {
+          Connection conn = scriptContext.getConnection();
+          // the rest of your migration script goes here
+        }
+      }
