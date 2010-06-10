@@ -3,7 +3,7 @@
   from the command line without needing to install Groovy on the server you're running the migration on.
 
   The ultimate goal is provide a painfree (no classpath setup, no jdbc connectivity headaches),
-  resuable tool that is backed by Java by leverages all the goodness of Groovy.
+  resuable tool that is backed by Java and leverages all the goodness of Groovy.
 
 2. Installation
   To install, checkout from subversion and then type the following maven command:
@@ -11,7 +11,7 @@
       mvn assembly:assembly
 
   This will create a 'target/script-executor-1.0-jar-with-dependencies.jar' file which will
-  contain the Java main method for execution.
+  contain the Java main method (all all class dependencies) for execution.
 
 3.  Execution
   To display the help text, copy the 'script-executor-1.0-jar-with-dependencies.jar'
