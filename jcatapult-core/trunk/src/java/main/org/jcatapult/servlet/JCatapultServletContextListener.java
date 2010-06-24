@@ -15,9 +15,9 @@
  */
 package org.jcatapult.servlet;
 
-import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.logging.Logger;
 
 import org.jcatapult.guice.GuiceContainer;
 
@@ -54,6 +54,12 @@ public class JCatapultServletContextListener implements ServletContextListener {
         GuiceContainer.initialize();
     }
 
+    /**
+     * Shuts down the GuiceContainer.
+     *
+     * @param   event Not used.
+     */
     public void contextDestroyed(ServletContextEvent event) {
+        GuiceContainer.shutdown();
     }
 }

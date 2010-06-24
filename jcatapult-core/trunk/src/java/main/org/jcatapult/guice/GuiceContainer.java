@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import com.google.inject.Key;
 import org.jcatapult.config.guice.JCatapultConfigurationModule;
 
 import com.google.inject.AbstractModule;
@@ -163,6 +164,28 @@ public class GuiceContainer {
                 requestStaticInjection(GuiceContainer.class);
             }
         });
+    }
+
+    /**
+     * Shuts down the Guice container by locating all of the {@link Closable} classes and calling Close
+     * on each of them. This method sets the Injector to null and returns it.
+     *
+     * @return  The Injector in case it is needed afterwards.
+     */
+    public static Injector shutdown() {
+        List<Key<Closable>> keys = GuiceTools.getKeys(injector, Closable.class);
+        for (Key<Closable> key : keys) {
+            Closable closable = injector.getInstance(key);
+            closable.close();
+        }
+
+        injector = null;
+        guiceExcludeModules = null;
+        guiceModules = null;
+        guiceModulesNames = null;
+        loadFromClasspath = false;
+
+        return injector;
     }
 
     private static void addFromConfiguration(Set<Class<? extends Module>> modules) {

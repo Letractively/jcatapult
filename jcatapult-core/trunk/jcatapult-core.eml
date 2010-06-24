@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
+	<exclude-output/>
 	<contentEntry url="file://$MODULE_DIR$">
 		<testFolder url="file://$MODULE_DIR$/src/conf/test/unit"/>
 		<testFolder url="file://$MODULE_DIR$/src/java/test/integration"/>
 		<testFolder url="file://$MODULE_DIR$/src/java/test/unit"/>
 		<excludeFolder url="file://$MODULE_DIR$/target"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/main"/>
 	</contentEntry>
 	<lib name="easymock-2.2.jar" scope="COMPILE">
 		<srcroot url="jar://$SAVANT_REPOSITORY$/org/easymock/easymock/2.2/easymock-2.2-src.jar!/"/>
