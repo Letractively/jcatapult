@@ -46,6 +46,22 @@ public class GuiceContainerTest {
     }
 
     @Test
+    public void shutdown() {
+        GuiceContainer.setGuiceModules();
+        GuiceContainer.setExcludeGuiceModules(null);
+        GuiceContainer.setGuiceModulesNames("org.jcatapult.guice.ClosableModule");
+        GuiceContainer.setLoadFromClasspath(false);
+        GuiceContainer.initialize();
+        Injector injector = GuiceContainer.getInjector();
+        assertNotNull(injector.getInstance(TestClosable.class));
+        assertTrue(injector.getInstance(TestClosable.class).open);
+
+        GuiceContainer.shutdown();
+        assertFalse(injector.getInstance(TestClosable.class).open);
+        assertNull(GuiceContainer.getInjector());
+    }
+
+    @Test
     public void testImplicitModules() {
         ServletContext context = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(context);
