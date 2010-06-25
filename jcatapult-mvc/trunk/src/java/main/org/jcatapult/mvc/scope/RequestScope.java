@@ -36,7 +36,7 @@ public class RequestScope implements Scope<Request> {
     public RequestScope(HttpServletRequest request) {
         this.request = request;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -50,6 +50,10 @@ public class RequestScope implements Scope<Request> {
      */
     public void set(String fieldName, Object value, Request scope) {
         String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
-        request.setAttribute(key, value);
+        if (value != null) {
+            request.setAttribute(key, value);
+        } else {
+            request.removeAttribute(key);
+        }
     }
 }

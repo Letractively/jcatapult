@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,19 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.example.action;
+package org.jcatapult.mvc.action.result;
 
-import org.jcatapult.mvc.action.annotation.Action;
+import com.google.inject.ImplementedBy;
+import org.jcatapult.servlet.Workflow;
 
 /**
  * <p>
- * This is a simple test action.
+ * This interface defines how results are invoked based on the result from
+ * the Actions or the URI.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-@Action
-public class InvalidExecuteMethod {
-    public boolean invoked = false;
-
-    public void execute() {
-        invoked = true;
-    }
+@ImplementedBy(DefaultResultInvocationWorkflow.class)
+public interface ResultInvocationWorkflow extends Workflow {
 }

@@ -26,7 +26,10 @@ import org.jcatapult.mvc.action.annotation.Action;
  */
 @Action
 public abstract class Extension {
+    public boolean baseInvoked = false;
+
     public String json() {
+        baseInvoked = true;
         return "json";
     }
 }

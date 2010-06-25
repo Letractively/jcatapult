@@ -15,16 +15,15 @@
  */
 package org.jcatapult.mvc.scope;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.google.inject.Inject;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.scope.annotation.ActionSession;
-
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -79,7 +78,17 @@ public class ActionSessionScope implements Scope<ActionSession> {
      * {@inheritDoc}
      */
     public void set(String fieldName, Object value, ActionSession scope) {
-        HttpSession session = request.getSession(true);
+        HttpSession session;
+        if (value != null) {
+            session = request.getSession(true);
+        } else {
+            session = request.getSession(false);
+        }
+
+        if (session == null) {
+            return;
+        }
+
         Map<String, Map<String, Object>> actionSession = (Map<String, Map<String, Object>>) session.getAttribute(ACTION_SESSION_KEY);
         if (actionSession == null) {
             actionSession = new HashMap<String, Map<String, Object>>();
@@ -94,7 +103,11 @@ public class ActionSessionScope implements Scope<ActionSession> {
         }
 
         String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
-        values.put(key, value);
+        if (value != null) {
+            values.put(key, value);
+        } else {
+            values.remove(key);
+        }
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,11 @@ import org.jcatapult.mvc.action.annotation.Action;
  * @author Brian Pontarelli
  */
 @Action
-public class InvalidExecuteMethod {
+public class Head {
     public boolean invoked = false;
 
-    public void execute() {
+    public String head() {
         invoked = true;
+        return "success";
     }
 }

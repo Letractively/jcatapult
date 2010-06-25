@@ -48,7 +48,7 @@ public interface ActionInvocation {
     Collection<String> uriParameters();
 
     /**
-     * @return  The action configuration for this invocation.
+     * @return  The action configuration for this invocation or null if there isn't one.
      */
     ActionConfiguration configuration();
 
@@ -64,7 +64,8 @@ public interface ActionInvocation {
 
     /**
      * @return  The default result code to use if the action is not executed according to the
-     *          {@link #executeAction()} method.
+     *          {@link #executeAction()} method. Or the result code from the action after it
+     *          has been invoked.
      */
     String resultCode();
 

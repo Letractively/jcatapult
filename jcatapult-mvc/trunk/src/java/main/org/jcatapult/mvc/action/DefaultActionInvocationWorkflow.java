@@ -15,21 +15,14 @@
  */
 package org.jcatapult.mvc.action;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.jcatapult.mvc.action.result.Result;
-import org.jcatapult.mvc.action.result.ResultInvocation;
-import org.jcatapult.mvc.action.result.ResultInvocationProvider;
-import org.jcatapult.mvc.action.result.ResultProvider;
-import org.jcatapult.servlet.WorkflowChain;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import com.google.inject.Inject;
+import org.jcatapult.servlet.WorkflowChain;
 
 /**
  * <p>
@@ -42,20 +35,12 @@ import com.google.inject.Inject;
  */
 public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow {
     private final HttpServletRequest request;
-    private final HttpServletResponse response;
     private final ActionInvocationStore actionInvocationStore;
-    private final ResultInvocationProvider resultInvocationProvider;
-    private final ResultProvider resultProvider;
 
     @Inject
-    public DefaultActionInvocationWorkflow(HttpServletRequest request, HttpServletResponse response,
-            ActionInvocationStore actionInvocationStore, ResultInvocationProvider resultInvocationProvider,
-            ResultProvider resultProvider) {
+    public DefaultActionInvocationWorkflow(HttpServletRequest request, ActionInvocationStore actionInvocationStore) {
         this.request = request;
-        this.response = response;
         this.actionInvocationStore = actionInvocationStore;
-        this.resultInvocationProvider = resultInvocationProvider;
-        this.resultProvider = resultProvider;
     }
 
     /**
@@ -63,19 +48,12 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
      *
      * <h3>Action-less request</h3>
      * <ol>
-     * <li>Lookup an action-less result invocation</li>
-     * <li>If it doesn't exist, continue down the chain</li>
-     * <li>If it does exist, call the ResultRegistry to find the Result</li>
-     * <li>Invoke the Result</li>
+     * <li>Continue down the chain</li>
      * </ul>
      *
      * <h3>Action request</h3>
      * <ol>
      * <li>Invoke the action</li>
-     * <li>Lookup an result invocation using the action invocation, action URI and result code from the action</li>
-     * <li>If it doesn't exist, error out</li>
-     * <li>If it does exist, call the ResultRegistry to find the Result</li>
-     * <li>Invoke the Result</li>
      * </ul>
      *
      * @param   chain The chain.
@@ -85,51 +63,23 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
     @SuppressWarnings("unchecked")
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         ActionInvocation invocation = actionInvocationStore.getCurrent();
-
-        ResultInvocation resultInvocation = null;
-        if (invocation.action() == null) {
-            // Try a default result mapping just for the URI
-            resultInvocation = resultInvocationProvider.lookup(invocation);
-            if (resultInvocation == null) {
-                chain.continueWorkflow();
-                return;
-            }
-        } else {
+        if (invocation.action() != null) {
             String resultCode;
             if (invocation.executeAction()) {
                 resultCode = execute(invocation, request.getMethod());
+
+                // Remove the action and put in a new one with the result code
+                actionInvocationStore.removeCurrent();
+                invocation = new DefaultActionInvocation(invocation.action(), invocation.uri(), invocation.extension(),
+                    invocation.uriParameters(), invocation.configuration(), invocation.executeResult(), invocation.executeAction(),
+                    resultCode);
+                actionInvocationStore.setCurrent(invocation);
             } else {
                 resultCode = invocation.resultCode();
             }
-
-            if (invocation.executeResult()) {
-                resultInvocation = resultInvocationProvider.lookup(invocation, resultCode);
-                if (resultInvocation == null) {
-                    response.setStatus(404);
-                    throw new ServletException("Missing result for action class [" +
-                        invocation.configuration().actionClass() + "] uri [" + invocation.actionURI() +
-                        "] and result code [" + resultCode + "]");
-                }
-            }
         }
 
-        if (invocation.executeResult()) {
-            Annotation annotation = resultInvocation.annotation();
-            Result result = resultProvider.lookup(annotation.annotationType());
-            if (result == null) {
-                throw new ServletException("Unmapped result annotationType [" + annotation.getClass() +
-                    "]. You probably need to define a Result implementation that maps to this annotationType " +
-                    "and then add that Result implementation to your Guice Module.");
-            }
-
-            result.execute(annotation, invocation);
-        }
-    }
-
-    /**
-     * Does nothing.
-     */
-    public void destroy() {
+        chain.continueWorkflow();
     }
 
     /**

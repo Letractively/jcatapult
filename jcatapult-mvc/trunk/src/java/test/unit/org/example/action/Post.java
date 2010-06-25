@@ -26,7 +26,10 @@ import org.jcatapult.mvc.action.annotation.Action;
  */
 @Action
 public class Post {
+    public boolean invoked = false;
+
     public String post() {
+        invoked = true;
         return "success";
     }
 }

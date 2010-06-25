@@ -26,7 +26,10 @@ import org.jcatapult.mvc.action.annotation.Action;
  */
 @Action
 public class ExtensionInheritance extends Extension {
+    public boolean invoked = false;
+
     public String ajax() {
+        invoked = true;
         return "ajax";
     }
 }

@@ -13,22 +13,21 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.example.action;
+package org.jcatapult.mvc.scope;
 
-import org.jcatapult.mvc.action.annotation.Action;
+import org.jcatapult.servlet.Workflow;
+
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This is a simple test action.
+ * This interface marks a class as the scope retrieval part of the MVC
+ * workflow. This part is how the JCatapult MVC loads values from the action
+ * into various scopes.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-@Action
-public class InvalidExecuteMethod {
-    public boolean invoked = false;
-
-    public void execute() {
-        invoked = true;
-    }
+@ImplementedBy(DefaultScopeRetrievalWorkflow.class)
+public interface ScopeRetrievalWorkflow extends Workflow {
 }
