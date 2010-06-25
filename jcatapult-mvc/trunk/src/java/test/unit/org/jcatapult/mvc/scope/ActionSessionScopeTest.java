@@ -15,11 +15,11 @@
  */
 package org.jcatapult.mvc.scope;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.easymock.EasyMock;
 import org.example.action.Simple;
@@ -39,7 +39,7 @@ import org.junit.Test;
  */
 public class ActionSessionScopeTest {
     @Test
-    public void testGet() {
+    public void get() {
         Object value = new Object();
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
         Map<String, Object> as = new HashMap<String, Object>();
@@ -104,7 +104,7 @@ public class ActionSessionScopeTest {
     }
 
     @Test
-    public void testGetOtherActionSession() {
+    public void getOtherActionSession() {
         Object value = new Object();
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
         Map<String, Object> as = new HashMap<String, Object>();
@@ -141,7 +141,7 @@ public class ActionSessionScopeTest {
     }
 
     @Test
-    public void testGetDifferentKey() {
+    public void getDifferentKey() {
         Object value = new Object();
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
         Map<String, Object> as = new HashMap<String, Object>();
@@ -179,7 +179,7 @@ public class ActionSessionScopeTest {
     }
 
     @Test
-    public void testGetDifferentKeyOtherActionSession() {
+    public void getDifferentKeyOtherActionSession() {
         Object value = new Object();
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
         Map<String, Object> as = new HashMap<String, Object>();
@@ -216,7 +216,7 @@ public class ActionSessionScopeTest {
     }
 
     @Test
-    public void testFailedGetNoAction() {
+    public void failedGetNoAction() {
         Object value = new Object();
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
         Map<String, Object> as = new HashMap<String, Object>();
@@ -259,7 +259,7 @@ public class ActionSessionScopeTest {
     }
 
     @Test
-    public void testSet() {
+    public void set() {
         Object value = new Object();
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
 
@@ -295,7 +295,68 @@ public class ActionSessionScopeTest {
     }
 
     @Test
-    public void testSetOtherActionSession() {
+    public void setNull() {
+        Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
+        map.put("org.example.action.user.Edit", new HashMap<String, Object>());
+        map.get("org.example.action.user.Edit").put("test", "value");
+
+        HttpSession session = EasyMock.createStrictMock(HttpSession.class);
+        EasyMock.expect(session.getAttribute("jcatapultActionSession")).andReturn(map);
+        EasyMock.replay(session);
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getSession(false)).andReturn(session);
+        EasyMock.replay(request);
+
+        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(ais.getCurrent()).andReturn(new DefaultActionInvocation(new Edit(), null, null, null));
+        EasyMock.replay(ais);
+
+        ActionSessionScope scope = new ActionSessionScope(request, ais);
+        scope.set("test", null, new ActionSession() {
+            public String value() {
+                return "##field-name##";
+            }
+
+            public Class<?> action() {
+                return ActionSession.class;
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return ActionSession.class;
+            }
+        });
+        assertFalse(map.get("org.example.action.user.Edit").containsKey("test"));
+
+        EasyMock.verify(session, request, ais);
+    }
+
+    @Test
+    public void setNullNoSession() {
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getSession(false)).andReturn(null);
+        EasyMock.replay(request);
+
+        ActionSessionScope scope = new ActionSessionScope(request, null);
+        scope.set("test", null, new ActionSession() {
+            public String value() {
+                return "##field-name##";
+            }
+
+            public Class<?> action() {
+                return ActionSession.class;
+            }
+
+            public Class<? extends Annotation> annotationType() {
+                return ActionSession.class;
+            }
+        });
+
+        EasyMock.verify(request);
+    }
+
+    @Test
+    public void setOtherActionSession() {
         Object value = new Object();
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
 
@@ -330,7 +391,7 @@ public class ActionSessionScopeTest {
     }
 
     @Test
-    public void testSetDifferentKey() {
+    public void setDifferentKey() {
         Object value = new Object();
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
 
@@ -366,7 +427,7 @@ public class ActionSessionScopeTest {
     }
 
     @Test
-    public void testSetDifferentKeyOtherActionSession() {
+    public void setDifferentKeyOtherActionSession() {
         Object value = new Object();
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
 
@@ -401,7 +462,7 @@ public class ActionSessionScopeTest {
     }
 
     @Test
-    public void testFailedSetNoAction() {
+    public void failedSetNoAction() {
         Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
 
         HttpSession session = EasyMock.createStrictMock(HttpSession.class);

@@ -55,8 +55,22 @@ public class SessionScope implements Scope<Session> {
      * {@inheritDoc}
      */
     public void set(String fieldName, Object value, Session scope) {
-        HttpSession session = request.getSession(true);
+        HttpSession session;
+        if (value != null) {
+            session = request.getSession(true);
+        } else {
+            session = request.getSession(false);
+        }
+
+        if (session == null) {
+            return;
+        }
+
         String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
-        session.setAttribute(key, value);
+        if (value != null) {
+            session.setAttribute(key, value);
+        } else {
+            session.removeAttribute(key);
+        }
     }
 }

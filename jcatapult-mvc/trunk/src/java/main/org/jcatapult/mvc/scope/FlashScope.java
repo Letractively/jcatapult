@@ -15,14 +15,13 @@
  */
 package org.jcatapult.mvc.scope;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.jcatapult.mvc.scope.annotation.Flash;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.inject.Inject;
+import org.jcatapult.mvc.scope.annotation.Flash;
 
 /**
  * <p>
@@ -60,7 +59,7 @@ public class FlashScope implements Scope<Flash> {
                 flash = (Map<String, Object>) session.getAttribute(FLASH_KEY);
             }
         }
-        
+
         if (flash == null) {
             return null;
         }
@@ -72,7 +71,17 @@ public class FlashScope implements Scope<Flash> {
      * {@inheritDoc}
      */
     public void set(String fieldName, Object value, Flash scope) {
-        HttpSession session = request.getSession(true);
+        HttpSession session;
+        if (value != null) {
+            session = request.getSession(true);
+        } else {
+            session = request.getSession(false);
+        }
+
+        if (session == null) {
+            return;
+        }
+        
         Map<String, Object> flash = (Map<String, Object>) session.getAttribute(FLASH_KEY);
 
         if (flash == null) {
@@ -81,7 +90,11 @@ public class FlashScope implements Scope<Flash> {
         }
 
         String key = scope.value().equals("##field-name##") ? fieldName : scope.value();
-        flash.put(key, value);
+        if (value != null) {
+            flash.put(key, value);
+        } else {
+            flash.remove(key);
+        }
     }
 
     /**

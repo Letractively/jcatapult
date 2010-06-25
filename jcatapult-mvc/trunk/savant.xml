@@ -2,7 +2,7 @@
 <project>
   <macrodef name="compile-main-post">
     <sequential>
-      <copy todir="${dir.target.classes.main}">
+      <copy todir="target/classes/main">
         <fileset dir="src/ftl/main" includes="**"/>
       </copy>
     </sequential>
@@ -10,13 +10,13 @@
 
   <macrodef name="jar-post">
     <sequential>
-      <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}.jar">
-        <fileset dir="${dir.target.classes.test.unit}" includes="**/test/**/*"/>
+      <jar destfile="target/jars/${project.name}-test-${project.version}.jar">
+        <fileset dir="target/classes/test/unit" includes="**/test/**/*"/>
       </jar>
 
       <!-- Source JAR -->
-      <jar destfile="${dir.target.jars}/${project.name}-test-${project.version}-src.jar">
-        <fileset dir="${dir.src.java.test.unit}" includes="**/test/*"/>
+      <jar destfile="target/jars/${project.name}-test-${project.version}-src.jar">
+        <fileset dir="src/java/test/unit" includes="**/test/*"/>
       </jar>
    </sequential>
   </macrodef>

@@ -15,19 +15,18 @@
  */
 package org.jcatapult.mvc.scope;
 
-import org.jcatapult.servlet.Workflow;
-
 import com.google.inject.ImplementedBy;
+import org.jcatapult.servlet.Workflow;
 
 /**
  * <p>
- * This interface marks a class as the scope handling part of the MVC
- * workflow. This part is how the JCatapult MVC loads and stores values
- * from the action into various scopes.
+ * This interface marks a class as the scope storage part of the MVC
+ * workflow. This part is how the JCatapult MVC stores values from the
+ * action into various scopes.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultScopeWorkflow.class)
-public interface ScopeWorkflow extends Workflow {
+@ImplementedBy(DefaultScopeStorageWorkflow.class)
+public interface ScopeStorageWorkflow extends Workflow {
 }

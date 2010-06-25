@@ -26,7 +26,10 @@ import org.jcatapult.mvc.action.annotation.Action;
  */
 @Action
 public class ExecuteMethodThrowsException {
+    public boolean invoked = false;
+
     public String execute() {
+        invoked = true;
         throw new RuntimeException();
     }
 }
