@@ -70,7 +70,7 @@ public class DefaultActionInvocationWorkflow implements ActionInvocationWorkflow
 
                 // Remove the action and put in a new one with the result code
                 actionInvocationStore.removeCurrent();
-                invocation = new DefaultActionInvocation(invocation.action(), invocation.uri(), invocation.extension(),
+                invocation = new DefaultActionInvocation(invocation.action(), invocation.actionURI(), invocation.extension(),
                     invocation.uriParameters(), invocation.configuration(), invocation.executeResult(), invocation.executeAction(),
                     resultCode);
                 actionInvocationStore.setCurrent(invocation);

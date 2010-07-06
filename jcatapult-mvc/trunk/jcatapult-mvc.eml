@@ -6,7 +6,6 @@
 		<testFolder url="file://$MODULE_DIR$/src/conf/test/unit"/>
 		<testFolder url="file://$MODULE_DIR$/src/java/test/integration"/>
 		<testFolder url="file://$MODULE_DIR$/src/java/test/unit"/>
-		<excludeFolder url="file://$MODULE_DIR$/target/classes/main"/>
 	</contentEntry>
 	<lib name="commons-configuration-1.4.jar" scope="COMPILE">
 		<srcroot url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-configuration/1.4/commons-configuration-1.4-src.jar!/"/>
