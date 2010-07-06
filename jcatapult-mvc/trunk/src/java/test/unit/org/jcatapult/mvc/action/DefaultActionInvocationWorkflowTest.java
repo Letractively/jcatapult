@@ -200,6 +200,8 @@ public class DefaultActionInvocationWorkflowTest {
         assertFalse(action.baseInvoked);
         assertTrue(action.invoked);
         assertEquals("ajax", capture.object.resultCode());
+        assertEquals("/foo/bar", capture.object.actionURI());
+        assertEquals("/foo/bar.ajax", capture.object.uri());
 
         EasyMock.verify(request, ais, chain);
     }
@@ -229,6 +231,8 @@ public class DefaultActionInvocationWorkflowTest {
         assertTrue(action.baseInvoked);
         assertFalse(action.invoked);
         assertEquals("json", capture.object.resultCode());
+        assertEquals("/foo/bar", capture.object.actionURI());
+        assertEquals("/foo/bar.json", capture.object.uri());
 
         EasyMock.verify(request, ais, chain);
     }
