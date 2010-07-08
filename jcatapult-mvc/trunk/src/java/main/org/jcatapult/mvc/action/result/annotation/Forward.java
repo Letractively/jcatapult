@@ -43,7 +43,19 @@ public @interface Forward {
     /**
      * @return  The location of the JSP or FreeMarker template (the extension of this attribute
      *          determines if JCatapult forwards to a JSP or renders the FreeMarker template. Any
-     *          page with .jsp on the end goes to a JSP and .ftl goes to a FreeMarker tempalte.)
+     *          page with .jsp on the end goes to a JSP and .ftl goes to a FreeMarker template)
+     *          If this isn't specified, then the default search method is used to find the correct
+     *          FTL or JSP page.
      */
-    public String page();
+    public String page() default "";
+
+    /**
+     * @return  The content type of the FTL or JSP page. This defaults to "text/html; charset=UTF-8".
+     */
+    public String contentType() default "text/html; charset=UTF-8";
+
+    /**
+     * @return  The HTTP response status code. This defaults to 200.
+     */
+    public int status() default 200;
 }
