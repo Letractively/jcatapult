@@ -15,17 +15,21 @@
  */
 package org.jcatapult.mvc.action.result;
 
-import java.io.IOException;
-import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.util.Locale;
 
-import org.easymock.EasyMock;
+import static org.easymock.EasyMock.*;
+import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
+import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
 import org.junit.Test;
 
 /**
@@ -37,52 +41,137 @@ import org.junit.Test;
  */
 public class ForwardResultTest {
     @Test
-    public void testFullyQualified() throws IOException, ServletException {
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-
-        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+    public void fullyQualified() throws IOException, ServletException {
+        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         response.setContentType("text/html; charset=UTF-8");
-        EasyMock.replay(response);
+        response.setStatus(200);
+        replay(response);
 
-        RequestDispatcher dispatcher = EasyMock.createStrictMock(RequestDispatcher.class);
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        RequestDispatcher dispatcher = createStrictMock(RequestDispatcher.class);
         dispatcher.forward(request, response);
-        EasyMock.replay(dispatcher);
+        replay(dispatcher);
 
-        EasyMock.expect(request.getRequestDispatcher("/foo/bar.jsp")).andReturn(dispatcher);
-        EasyMock.replay(request);
+        expect(request.getRequestDispatcher("/foo/bar.jsp")).andReturn(dispatcher);
+        replay(request);
 
-        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.replay(context);
+        ServletContext context = createStrictMock(ServletContext.class);
+        replay(context);
 
         Forward forward = new ForwardResult.ForwardImpl("/foo/bar.jsp", null);
         ForwardResult forwardResult = new ForwardResult(Locale.CANADA, context, request, response, null, null, null);
         forwardResult.execute(forward, new DefaultActionInvocation(null, "/foo/bar", null, null));
 
-        EasyMock.verify(context, dispatcher, request);
+        verify(context, dispatcher, request, response);
     }
 
     @Test
-    public void testRelative() throws IOException, ServletException {
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-
-        HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+    public void relative() throws IOException, ServletException {
+        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         response.setContentType("text/html; charset=UTF-8");
-        EasyMock.replay(response);
+        response.setStatus(200);
+        replay(response);
 
-        RequestDispatcher dispatcher = EasyMock.createStrictMock(RequestDispatcher.class);
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        RequestDispatcher dispatcher = createStrictMock(RequestDispatcher.class);
         dispatcher.forward(request, response);
-        EasyMock.replay(dispatcher);
+        replay(dispatcher);
 
-        EasyMock.expect(request.getRequestDispatcher("/WEB-INF/content/bar.jsp")).andReturn(dispatcher);
-        EasyMock.replay(request);
+        expect(request.getRequestDispatcher("/WEB-INF/content/bar.jsp")).andReturn(dispatcher);
+        replay(request);
 
-        ServletContext context = EasyMock.createStrictMock(ServletContext.class);
-        EasyMock.replay(context);
+        ServletContext context = createStrictMock(ServletContext.class);
+        replay(context);
 
         Forward forward = new ForwardResult.ForwardImpl("bar.jsp", null);
         ForwardResult forwardResult = new ForwardResult(Locale.GERMAN, context, request, response, null, null, null);
         forwardResult.execute(forward, new DefaultActionInvocation(null, "/action", null, null));
 
-        EasyMock.verify(context, dispatcher, request);
+        verify(context, dispatcher, request, response);
+    }
+
+    @Test
+    public void status() throws IOException, ServletException {
+        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
+        response.setContentType("text/html; charset=UTF-8");
+        response.setStatus(300);
+        replay(response);
+
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        RequestDispatcher dispatcher = createStrictMock(RequestDispatcher.class);
+        dispatcher.forward(request, response);
+        replay(dispatcher);
+
+        expect(request.getRequestDispatcher("/WEB-INF/content/bar.jsp")).andReturn(dispatcher);
+        replay(request);
+
+        ServletContext context = createStrictMock(ServletContext.class);
+        replay(context);
+
+        Forward forward = new ForwardResult.ForwardImpl("bar.jsp", null, "text/html; charset=UTF-8", 300);
+        ForwardResult forwardResult = new ForwardResult(Locale.GERMAN, context, request, response, null, null, null);
+        forwardResult.execute(forward, new DefaultActionInvocation(null, "/action", null, null));
+
+        verify(context, dispatcher, request);
+    }
+
+    @Test
+    public void contentType() throws IOException, ServletException {
+        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
+        response.setContentType("text/javascript; charset=UTF-8");
+        response.setStatus(200);
+        replay(response);
+
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        RequestDispatcher dispatcher = createStrictMock(RequestDispatcher.class);
+        dispatcher.forward(request, response);
+        replay(dispatcher);
+
+        expect(request.getRequestDispatcher("/WEB-INF/content/bar.jsp")).andReturn(dispatcher);
+        replay(request);
+
+        ServletContext context = createStrictMock(ServletContext.class);
+        replay(context);
+
+        Forward forward = new ForwardResult.ForwardImpl("bar.jsp", null, "text/javascript; charset=UTF-8", 200);
+        ForwardResult forwardResult = new ForwardResult(Locale.GERMAN, context, request, response, null, null, null);
+        forwardResult.execute(forward, new DefaultActionInvocation(null, "/action", null, null));
+
+        verify(context, dispatcher, request);
+    }
+
+    @Test
+    public void search() throws IOException, ServletException {
+        PrintWriter writer = new PrintWriter(new PrintWriter(System.out));
+        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
+        response.setContentType("text/html; charset=UTF-8");
+        response.setStatus(200);
+        expect(response.getWriter()).andReturn(writer);
+        replay(response);
+
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        expect(request.getSession(false)).andReturn(null);
+        replay(request);
+
+        FreeMarkerService service = createStrictMock(FreeMarkerService.class);
+        service.render(same(writer), eq("/WEB-INF/content/action.ftl"), isA(FreeMarkerMap.class), same(Locale.GERMAN));
+        replay(service);
+
+        ServletContext context = createStrictMock(ServletContext.class);
+        expect(context.getResource("/WEB-INF/content/action-js-failure.jsp")).andReturn(null);
+        expect(context.getResource("/WEB-INF/content/action-js-failure.ftl")).andReturn(null);
+        expect(context.getResource("/WEB-INF/content/action-js.jsp")).andReturn(null);
+        expect(context.getResource("/WEB-INF/content/action-js.ftl")).andReturn(null);
+        expect(context.getResource("/WEB-INF/content/action-failure.jsp")).andReturn(null);
+        expect(context.getResource("/WEB-INF/content/action-failure.ftl")).andReturn(null);
+        expect(context.getResource("/WEB-INF/content/action.jsp")).andReturn(null);
+        expect(context.getResource("/WEB-INF/content/action.ftl")).andReturn(new URL("http://localhost"));
+        replay(context);
+
+        Forward forward = new ForwardResult.ForwardImpl("", "failure");
+        ForwardResult forwardResult = new ForwardResult(Locale.GERMAN, context, request, response, null, service, null);
+        forwardResult.execute(forward, new DefaultActionInvocation(null, "/action", "js", null));
+
+        verify(context, service, request);
     }
 }

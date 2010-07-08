@@ -15,18 +15,18 @@
  */
 package org.jcatapult.mvc.action.result;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.annotation.Annotation;
-import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.Locale;
 
+import com.google.inject.Inject;
 import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.action.ActionInvocation;
@@ -34,8 +34,7 @@ import org.jcatapult.mvc.action.ActionInvocationStore;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-
-import com.google.inject.Inject;
+import org.jcatapult.mvc.util.ResourceTools;
 
 /**
  * <p>
@@ -72,10 +71,27 @@ public class ForwardResult extends AbstractResult<Forward> {
      * {@inheritDoc}
      */
     public void execute(Forward forward, ActionInvocation invocation) throws IOException, ServletException {
-        // Set the default content type for the response. This also activates SiteMesh
-        response.setContentType("text/html; charset=UTF-8");
+        // Set the content type for the response
+        String contentType = forward.contentType();
+        response.setContentType(contentType);
 
-        String page = expand(forward.page(), invocation.action());
+        // Set the status code
+        int status = forward.status();
+        response.setStatus(status);
+
+        // Determine if the default search should be used
+        String page = forward.page();
+        String code = forward.code();
+        if (page.equals("")) {
+            page = findResource(invocation, code);
+        }
+
+        if (page == null) {
+            throw new RuntimeException("Unable to locate result for URI [" + invocation.uri() +
+                "] and result code [" + code + "]");
+        }
+
+        page = expand(page, invocation.action());
         if (!page.startsWith("/")) {
             // Strip off the last part of the URI since it is relative
             String uri = invocation.actionURI();
@@ -97,35 +113,161 @@ public class ForwardResult extends AbstractResult<Forward> {
         }
     }
 
-    protected Forward findResult(String path, String resultCode) {
-        try {
-            String fullPath = DIR + path;
-            String classLoaderPath = fullPath.substring(1, fullPath.length());
-            if (servletContext.getResource(fullPath) != null ||
-                    Thread.currentThread().getContextClassLoader().getResource(classLoaderPath) != null) {
-                return new ForwardResult.ForwardImpl(fullPath, resultCode);
-            }
-        } catch (MalformedURLException e) {
+    /**
+     * Locates the default Forward for an action invocation and result code from an action.
+     *
+     * <p>
+     * Checks for results using this search order:
+     * </p>
+     *
+     * <ol>
+     * <li>/WEB-INF/content/&lt;uri>-&lt;resultCode>.jsp</li>
+     * <li>/WEB-INF/content/&lt;uri>-&lt;resultCode>.ftl</li>
+     * <li>/WEB-INF/content/&lt;uri>.jsp</li>
+     * <li>/WEB-INF/content/&lt;uri>.ftl</li>
+     * <li>/WEB-INF/content/&lt;uri>/index.jsp</li>
+     * <li>/WEB-INF/content/&lt;uri>/index.ftl</li>
+     * </ol>
+     *
+     * <p>
+     * If nothing is found this bombs out.
+     * </p>
+     *
+     * @param   invocation The action invocation.
+     * @param   resultCode The result code from the action invocation.
+     * @return  The Forward and never null.
+     * @throws  RuntimeException If the default forward could not be found.
+     */
+    protected Annotation defaultResult(ActionInvocation invocation, String resultCode) {
+        String uri = findResource(invocation, resultCode);
+        if (uri != null) {
+            return new ForwardImpl(uri, resultCode);
         }
 
         return null;
     }
 
+    /**
+     * <p>
+     * Determines if there is an index resource available for the given action invocation. For example, if the action
+     * URI is:
+     * </p>
+     * <pre>
+     * /foo
+     * </pre>
+     * <p>
+     * And there is a resource at:
+     * </p>
+     * <pre>
+     * /foo/index.ftl
+     * </pre>
+     * <p>
+     * We can redirect the request to that resource.
+     * </p>
+     *
+     * @param   invocation The action invocation.
+     * @return  The redirect URI or null.
+     */
+    protected String redirectURI(ActionInvocation invocation) {
+        String actionURI = invocation.actionURI();
+        if (actionURI.endsWith("/")) {
+            return null;
+        }
+
+        String uri = ResourceTools.findResource(servletContext, DIR + actionURI + "/index.jsp");
+        if (uri == null) {
+            uri = ResourceTools.findResource(servletContext, DIR + actionURI + "/index.ftl");
+        }
+
+        // Return the redirect portion of the URI
+        if (uri != null) {
+            uri = actionURI + "/";
+        }
+
+        return uri;
+    }
+
+    private String findResource(ActionInvocation invocation, String resultCode) {
+        String actionURI = invocation.actionURI();
+        String extension = invocation.extension();
+        String resource = null;
+        if (actionURI.endsWith("/")) {
+            resource = ResourceTools.findResource(servletContext, DIR + actionURI + "index.jsp");
+            if (resource == null) {
+                resource = ResourceTools.findResource(servletContext, DIR + actionURI + "index.ftl");
+            }
+        } else {
+            if (extension != null) {
+                if (resultCode != null) {
+                    resource = ResourceTools.findResource(servletContext, DIR + actionURI + "-" + extension + "-" + resultCode + ".jsp");
+                }
+                if (resource == null && resultCode != null) {
+                    resource = ResourceTools.findResource(servletContext, DIR + actionURI + "-" + extension + "-" + resultCode + ".ftl");
+                }
+                if (resource == null) {
+                    resource = ResourceTools.findResource(servletContext, DIR + actionURI + "-" + extension + ".jsp");
+                }
+                if (resource == null) {
+                    resource = ResourceTools.findResource(servletContext, DIR + actionURI + "-" + extension + ".ftl");
+                }
+            }
+
+            // Look for JSP and FTL results to forward to
+            if (resource == null && resultCode != null) {
+                resource = ResourceTools.findResource(servletContext, DIR + actionURI + "-" + resultCode + ".jsp");
+            }
+            if (resource == null && resultCode != null) {
+                resource = ResourceTools.findResource(servletContext, DIR + actionURI + "-" + resultCode + ".ftl");
+            }
+            if (resource == null) {
+                resource = ResourceTools.findResource(servletContext, DIR + actionURI + ".jsp");
+            }
+            if (resource == null) {
+                resource = ResourceTools.findResource(servletContext, DIR + actionURI + ".ftl");
+            }
+        }
+
+        return resource;
+    }
+
     public static class ForwardImpl implements Forward {
         private final String uri;
         private final String code;
+        private final String contentType;
+        private final int status;
 
         public ForwardImpl(String uri, String code) {
             this.uri = uri;
             this.code = code;
+            this.contentType = "text/html; charset=UTF-8";
+            this.status = 200;
         }
 
+        public ForwardImpl(String uri, String code, String contentType, int status) {
+            this.uri = uri;
+            this.code = code;
+            this.contentType = contentType;
+            this.status = status;
+        }
+
+        @Override
         public String code() {
             return code;
         }
 
+        @Override
         public String page() {
-            return  uri;
+            return uri;
+        }
+
+        @Override
+        public String contentType() {
+            return contentType;
+        }
+
+        @Override
+        public int status() {
+            return status;
         }
 
         public Class<? extends Annotation> annotationType() {
