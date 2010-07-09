@@ -15,16 +15,20 @@
  */
 package org.jcatapult.test.servlet;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.ArrayList;
-import static java.util.Arrays.*;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -32,12 +36,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
+import static java.util.Arrays.*;
 import net.java.util.IteratorEnumeration;
 
 /**
@@ -60,7 +60,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     protected Vector<Locale> locales = new Vector<Locale>(asList(Locale.getDefault()));
 
-    protected boolean post;
+    protected Method method;
     protected String encoding;
     protected String remoteAddr = "127.0.0.1";
     protected String remoteHost;
@@ -102,7 +102,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.parameters = new HashMap<String, List<String>>();
         this.uri = uri;
         this.locales.add(locale);
-        this.post = post;
+        this.method = post ? Method.POST : Method.GET;
         this.encoding = encoding;
         this.context = context;
         this.session = new MockHttpSession(context);
@@ -117,7 +117,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.parameters = new HashMap<String, List<String>>();
         this.uri = uri;
         this.locales.add(locale);
-        this.post = post;
+        this.method = post ? Method.POST : Method.GET;
         this.encoding = encoding;
         this.session = session;
         this.context = session.context;
@@ -133,7 +133,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.uri = uri;
         this.encoding = encoding;
         this.locales.add(locale);
-        this.post = post;
+        this.method = post ? Method.POST : Method.GET;
         this.session = session;
         this.context = session.context;
 
@@ -148,7 +148,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
         this.uri = uri;
         this.encoding = encoding;
         this.locales.add(locale);
-        this.post = post;
+        this.method = post ? Method.POST : Method.GET;
         this.context = context;
         this.session = new MockHttpSession(context);
 
@@ -225,7 +225,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
         if (parametersRetrieved) {
             return new MockServletInputStream(new byte[0]);
         }
-        
+
         return inputStream;
     }
 
@@ -532,7 +532,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
      * @return  GET or POST, depending on the constructor or post flag setup.
      */
     public String getMethod() {
-        return (post) ? "POST" : "GET";
+        return method.toString();
     }
 
     /**
@@ -623,7 +623,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
         if (session == null && create) {
             session = new MockHttpSession(context);
         }
-        
+
         return session;
     }
 
@@ -835,7 +835,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     /**
      * Removes all the values of the request parameter with the given name
      *
-     * @param   name The name of the parameter. 
+     * @param   name The name of the parameter.
      */
     public void removeParameter(String name) {
         parameters.remove(name);
@@ -882,16 +882,25 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
-     * Sets whether or not the request is a POST or a GET.
+     * Sets the request to a POST method.
      *
      * @param   post True for a POST.
      */
     public void setPost(boolean post) {
-        this.post = post;
+        this.method = post ? Method.POST : Method.GET;
 
         if (post && contentType == null) {
             contentType = "application/x-www-form-urlencoded";
         }
+    }
+
+    /**
+     * Sets the method of the request.
+     *
+     * @param   method The method.
+     */
+    public void setMethod(Method method) {
+        this.method = method;
     }
 
     /**
@@ -1005,5 +1014,16 @@ public class MockHttpServletRequest implements HttpServletRequest {
      */
     public void setServletPath(String servletPath) {
         this.servletPath = servletPath;
+    }
+
+    public static enum Method {
+        GET,
+        POST,
+        PUT,
+        HEAD,
+        OPTIONS,
+        DELETE,
+        TRACE,
+        CONNECT
     }
 }
