@@ -15,12 +15,12 @@
  */
 package org.jcatapult.mvc.message.scope;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.Set;
-import java.util.Collection;
 
 /**
  * <p>
@@ -33,7 +33,7 @@ import java.util.Collection;
  * @author  Brian Pontarelli
  */
 public class FieldMessages implements Map<String, List<String>> {
-    private Map<String, List<String>> messages = new HashMap<String, List<String>>();
+    private Map<String, List<String>> messages = new LinkedHashMap<String, List<String>>();
 
     /**
      * Adds the given field message to the list of messages for that field.

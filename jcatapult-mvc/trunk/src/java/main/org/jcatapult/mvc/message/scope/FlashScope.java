@@ -15,12 +15,12 @@
  */
 package org.jcatapult.mvc.message.scope;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.google.inject.Inject;
 
@@ -76,7 +76,7 @@ public class FlashScope implements Scope {
      */
     public Map<String, List<String>> getFieldMessages(MessageType type) {
         String key = fieldKey(type);
-        Map<String, List<String>> combined = new HashMap<String, List<String>>();
+        Map<String, List<String>> combined = new LinkedHashMap<String, List<String>>();
         FieldMessages fromRequest = (FieldMessages) request.getAttribute(key);
         if (fromRequest != null && fromRequest.size() > 0) {
             combined.putAll(fromRequest);

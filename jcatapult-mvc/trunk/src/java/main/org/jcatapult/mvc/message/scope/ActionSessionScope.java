@@ -15,18 +15,17 @@
  */
 package org.jcatapult.mvc.message.scope;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.jcatapult.mvc.action.ActionInvocation;
-import org.jcatapult.mvc.action.ActionInvocationStore;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.google.inject.Inject;
+import org.jcatapult.mvc.action.ActionInvocation;
+import org.jcatapult.mvc.action.ActionInvocationStore;
 
 /**
  * <p>
@@ -97,7 +96,7 @@ public class ActionSessionScope implements Scope {
         if (actionSession == null) {
             return Collections.emptyMap();
         }
-        
+
         Map<String, List<String>> values;
         synchronized (actionSession) {
             ActionInvocation invocation = actionInvocationStore.getCurrent();
@@ -113,7 +112,7 @@ public class ActionSessionScope implements Scope {
             }
 
             // Copy it to protect the Map from threading
-            values = new HashMap<String, List<String>>(values);
+            values = new LinkedHashMap<String, List<String>>(values);
         }
 
         return values;
@@ -133,7 +132,7 @@ public class ActionSessionScope implements Scope {
         synchronized (session) {
             actionSession = (Map<String, FieldMessages>) session.getAttribute(key);
             if (actionSession == null) {
-                actionSession = new HashMap<String, FieldMessages>();
+                actionSession = new LinkedHashMap<String, FieldMessages>();
                 session.setAttribute(key, actionSession);
             }
         }
@@ -175,7 +174,7 @@ public class ActionSessionScope implements Scope {
                 actionSession = (Map<String, List<String>>) session.getAttribute(key);
             }
         }
-        
+
         if (actionSession == null) {
             return Collections.emptyList();
         }
@@ -214,7 +213,7 @@ public class ActionSessionScope implements Scope {
         synchronized (session) {
             actionSession = (Map<String, List<String>>) session.getAttribute(key);
             if (actionSession == null) {
-                actionSession = new HashMap<String, List<String>>();
+                actionSession = new LinkedHashMap<String, List<String>>();
                 session.setAttribute(key, actionSession);
             }
         }
