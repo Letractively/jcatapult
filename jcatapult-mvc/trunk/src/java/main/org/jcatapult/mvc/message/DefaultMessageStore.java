@@ -16,10 +16,11 @@
 package org.jcatapult.mvc.message;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.inject.Inject;
 import org.jcatapult.l10n.MessageProvider;
 import org.jcatapult.l10n.MissingMessageException;
 import org.jcatapult.mvc.action.ActionInvocation;
@@ -28,8 +29,6 @@ import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.message.scope.MessageType;
 import org.jcatapult.mvc.message.scope.Scope;
 import org.jcatapult.mvc.message.scope.ScopeProvider;
-
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -193,7 +192,7 @@ public class DefaultMessageStore implements MessageStore {
      * {@inheritDoc}
      */
     public Map<String, List<String>> getFieldMessages(MessageType type) {
-        Map<String, List<String>> allMessages = new HashMap<String, List<String>>();
+        Map<String, List<String>> allMessages = new LinkedHashMap<String, List<String>>();
         List<Scope> allScopes = scopeProvider.getAllScopes();
         for (Scope scope : allScopes) {
             Map<String, List<String>> messages = scope.getFieldMessages(type);

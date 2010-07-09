@@ -15,12 +15,12 @@
  */
 package org.jcatapult.mvc.message.scope;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Inject;
 
@@ -51,7 +51,7 @@ public class RequestScope extends AbstractJEEScope {
         }
 
         // Copy the map to protect it
-        return new HashMap<String, List<String>>(messages);
+        return new LinkedHashMap<String, List<String>>(messages);
     }
 
     /**
