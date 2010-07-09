@@ -15,17 +15,17 @@
  */
 package org.jcatapult.test;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import javax.servlet.ServletException;
-
-import org.jcatapult.test.servlet.MockHttpServletRequest;
-import org.jcatapult.test.servlet.MockServletInputStream;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import org.jcatapult.test.servlet.MockHttpServletRequest;
+import org.jcatapult.test.servlet.MockHttpServletRequest.Method;
+import org.jcatapult.test.servlet.MockServletInputStream;
 
 /**
  * <p>
@@ -161,6 +161,72 @@ public class RequestBuilder {
      */
     public void get() throws IOException, ServletException {
         request.setPost(false);
+        test.run(this);
+    }
+
+    /**
+     * Sends the HTTP request to the MVC as a HEAD.
+     *
+     * @throws  IOException If the MVC throws an exception.
+     * @throws  ServletException If the MVC throws an exception.
+     */
+    public void head() throws IOException, ServletException {
+        request.setMethod(Method.HEAD);
+        test.run(this);
+    }
+
+    /**
+     * Sends the HTTP request to the MVC as a PUT.
+     *
+     * @throws  IOException If the MVC throws an exception.
+     * @throws  ServletException If the MVC throws an exception.
+     */
+    public void put() throws IOException, ServletException {
+        request.setMethod(Method.PUT);
+        test.run(this);
+    }
+
+    /**
+     * Sends the HTTP request to the MVC as a DELETE.
+     *
+     * @throws  IOException If the MVC throws an exception.
+     * @throws  ServletException If the MVC throws an exception.
+     */
+    public void delete() throws IOException, ServletException {
+        request.setMethod(Method.DELETE);
+        test.run(this);
+    }
+
+    /**
+     * Sends the HTTP request to the MVC as a OPTIONS.
+     *
+     * @throws  IOException If the MVC throws an exception.
+     * @throws  ServletException If the MVC throws an exception.
+     */
+    public void options() throws IOException, ServletException {
+        request.setMethod(Method.OPTIONS);
+        test.run(this);
+    }
+
+    /**
+     * Sends the HTTP request to the MVC as a TRACE.
+     *
+     * @throws  IOException If the MVC throws an exception.
+     * @throws  ServletException If the MVC throws an exception.
+     */
+    public void trace() throws IOException, ServletException {
+        request.setMethod(Method.TRACE);
+        test.run(this);
+    }
+
+    /**
+     * Sends the HTTP request to the MVC as a CONNECT.
+     *
+     * @throws  IOException If the MVC throws an exception.
+     * @throws  ServletException If the MVC throws an exception.
+     */
+    public void connect() throws IOException, ServletException {
+        request.setMethod(Method.CONNECT);
         test.run(this);
     }
 
