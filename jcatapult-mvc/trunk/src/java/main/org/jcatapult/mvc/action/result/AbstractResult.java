@@ -15,13 +15,12 @@
  */
 package org.jcatapult.mvc.action.result;
 
-import java.lang.annotation.Annotation;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.annotation.Annotation;
 
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -34,7 +33,6 @@ import com.google.inject.Inject;
 public abstract class AbstractResult<U extends Annotation> implements Result<U> {
     protected final ExpressionEvaluator expressionEvaluator;
 
-    @Inject
     protected AbstractResult(ExpressionEvaluator expressionEvaluator) {
         this.expressionEvaluator = expressionEvaluator;
     }
@@ -68,5 +66,22 @@ public abstract class AbstractResult<U extends Annotation> implements Result<U> 
         }
 
         return str;
+    }
+
+    /**
+     * Sets the status into the response. If the String <code>statusStr</code> is set, it overrides the int code.
+     *
+     * @param   status The default code to use.
+     * @param   statusStr The String to expand and convert to an int (if specified).
+     * @param   action The action to use for expansion.
+     * @param   response The response to set the status into.
+     */
+    protected void setStatus(int status, String statusStr, Object action, HttpServletResponse response) {
+        int code = status;
+        if (!statusStr.isEmpty()) {
+            code = Integer.valueOf(expand(statusStr, action));
+        }
+
+        response.setStatus(code);
     }
 }

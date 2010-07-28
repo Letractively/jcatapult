@@ -71,13 +71,14 @@ public class ForwardResult extends AbstractResult<Forward> {
      * {@inheritDoc}
      */
     public void execute(Forward forward, ActionInvocation invocation) throws IOException, ServletException {
+        Object action = invocation.action();
+
         // Set the content type for the response
-        String contentType = forward.contentType();
+        String contentType = expand(forward.contentType(), action);
         response.setContentType(contentType);
 
         // Set the status code
-        int status = forward.status();
-        response.setStatus(status);
+        setStatus(forward.status(), forward.statusStr(), action, response);
 
         // Determine if the default search should be used
         String page = forward.page();
@@ -91,7 +92,7 @@ public class ForwardResult extends AbstractResult<Forward> {
                 "] and result code [" + code + "]");
         }
 
-        page = expand(page, invocation.action());
+        page = expand(page, action);
         if (!page.startsWith("/")) {
             // Strip off the last part of the URI since it is relative
             String uri = invocation.actionURI();
@@ -235,12 +236,14 @@ public class ForwardResult extends AbstractResult<Forward> {
         private final String code;
         private final String contentType;
         private final int status;
+        private final String statusStr;
 
         public ForwardImpl(String uri, String code) {
             this.uri = uri;
             this.code = code;
             this.contentType = "text/html; charset=UTF-8";
             this.status = 200;
+            this.statusStr = "";
         }
 
         public ForwardImpl(String uri, String code, String contentType, int status) {
@@ -248,6 +251,7 @@ public class ForwardResult extends AbstractResult<Forward> {
             this.code = code;
             this.contentType = contentType;
             this.status = status;
+            this.statusStr = "";
         }
 
         @Override
@@ -268,6 +272,11 @@ public class ForwardResult extends AbstractResult<Forward> {
         @Override
         public int status() {
             return status;
+        }
+
+        @Override
+        public String statusStr() {
+            return statusStr;
         }
 
         public Class<? extends Annotation> annotationType() {
