@@ -38,7 +38,7 @@ public @interface Forward {
     /**
      * @return  The result code from the action's execute method that this Result is associated with.
      */
-    public String code() default "success";
+    String code() default "success";
 
     /**
      * @return  The location of the JSP or FreeMarker template (the extension of this attribute
@@ -47,15 +47,24 @@ public @interface Forward {
      *          If this isn't specified, then the default search method is used to find the correct
      *          FTL or JSP page.
      */
-    public String page() default "";
+    String page() default "";
 
     /**
      * @return  The content type of the FTL or JSP page. This defaults to "text/html; charset=UTF-8".
      */
-    public String contentType() default "text/html; charset=UTF-8";
+    String contentType() default "text/html; charset=UTF-8";
 
     /**
      * @return  The HTTP response status code. This defaults to 200.
      */
-    public int status() default 200;
+    int status() default 200;
+
+    /**
+     * @return  Overrides the status parameter. If this is set, JCatapult use the value of this parameter
+     *          and first expand it. It uses the <code>${variable}</code> notation that is common for
+     *          variable expanders. After it has been expanded, the result is converted into an int.
+     *          Therefore, you can specify either a number as a String, or a variable expansion. Here
+     *          are some examples: <code>"${myStatus}"</code>, <code>"200"</code>, <code>"40${someField}"</code>
+     */
+    String statusStr() default "";
 }

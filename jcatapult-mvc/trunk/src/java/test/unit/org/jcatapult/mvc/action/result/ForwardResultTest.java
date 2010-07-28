@@ -30,6 +30,7 @@ import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Forward;
 import org.jcatapult.mvc.action.result.freemarker.FreeMarkerMap;
+import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.junit.Test;
 
 /**
@@ -111,6 +112,37 @@ public class ForwardResultTest {
         Forward forward = new ForwardResult.ForwardImpl("bar.jsp", null, "text/html; charset=UTF-8", 300);
         ForwardResult forwardResult = new ForwardResult(Locale.GERMAN, context, request, response, null, null, null);
         forwardResult.execute(forward, new DefaultActionInvocation(null, "/action", null, null));
+
+        verify(context, dispatcher, request);
+    }
+
+    @Test
+    public void expansions() throws IOException, ServletException {
+        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
+        response.setContentType("text/xml; charset=UTF-8");
+        response.setStatus(300);
+        replay(response);
+
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        RequestDispatcher dispatcher = createStrictMock(RequestDispatcher.class);
+        dispatcher.forward(isA(HttpServletRequest.class), same(response));
+        replay(dispatcher);
+
+        expect(request.getRequestDispatcher("/WEB-INF/content/bar.jsp")).andReturn(dispatcher);
+        replay(request);
+
+        ServletContext context = createStrictMock(ServletContext.class);
+        replay(context);
+
+        Object action = new Object();
+        ExpressionEvaluator ee = createStrictMock(ExpressionEvaluator.class);
+        expect(ee.expand("${contentType}", action)).andReturn("text/xml; charset=UTF-8");
+        expect(ee.expand("${page}", action)).andReturn("bar.jsp");
+        replay(ee);
+
+        Forward forward = new ForwardResult.ForwardImpl("${page}", null, "${contentType}", 300);
+        ForwardResult forwardResult = new ForwardResult(Locale.GERMAN, context, request, response, ee, null, null);
+        forwardResult.execute(forward, new DefaultActionInvocation(action, "/action", null, null));
 
         verify(context, dispatcher, request);
     }

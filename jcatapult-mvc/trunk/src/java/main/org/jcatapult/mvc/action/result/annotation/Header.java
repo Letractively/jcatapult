@@ -44,7 +44,11 @@ public @interface Header {
     int status() default 200;
 
     /**
-     * @return  The status code as a String so that it can be expanded.
+     * @return  Overrides the status parameter. If this is set, JCatapult use the value of this parameter
+     *          and first expand it. It uses the <code>${variable}</code> notation that is common for
+     *          variable expanders. After it has been expanded, the result is converted into an int.
+     *          Therefore, you can specify either a number as a String, or a variable expansion. Here
+     *          are some examples: <code>"${myStatus}"</code>, <code>"200"</code>, <code>"40${someField}"</code>
      */
     String statusStr() default "";
 }

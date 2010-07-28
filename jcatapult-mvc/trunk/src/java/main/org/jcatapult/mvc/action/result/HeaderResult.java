@@ -15,15 +15,14 @@
  */
 package org.jcatapult.mvc.action.result;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
+import com.google.inject.Inject;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Header;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
-
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -45,12 +44,6 @@ public class HeaderResult extends AbstractResult<Header> {
      * {@inheritDoc}
      */
     public void execute(Header header, ActionInvocation invocation) throws IOException, ServletException {
-        int code = header.status();
-        if (!header.statusStr().isEmpty()) {
-            code = Integer.valueOf(expand(header.statusStr(), invocation.action()));
-
-        }
-
-        response.setStatus(code);
+        setStatus(header.status(), header.statusStr(), invocation.action(), response);
     }
 }
