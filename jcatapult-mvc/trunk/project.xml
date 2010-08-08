@@ -1,9 +1,9 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-1.5/project"
     name="jcatapult-mvc"
     group="jcatapult.org"
-    version="1.0.18">
+    version="1.0.19">
 
-  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.1.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.2"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.1.1"/>
   <plugin group="plugins.savant.inversoft.org" name="java" version="1.1.1"/>
   <plugin group="plugins.savant.inversoft.org" name="junit" version="1.1.1"/>
@@ -11,8 +11,6 @@
 
   <!-- compile properties -->
   <property name="jdk.version" value="1.6"/>
-
-  <property name="version.jcatapult" value="1.0.6"/>
 
   <release>
     <publication name="jcatapult-mvc" type="jar" compatType="minor" file="target/jars/${project.name}-${project.version}.jar"/>
@@ -29,14 +27,14 @@
       <artifact group="freemarker.org" name="freemarker" version="2.3.16"/>
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
       <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.4"/>
-      <artifact group="jcatapult.org" name="jcatapult-core" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" name="jcatapult-core" version="1.0.6"/>
       <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
     </artifact-group>
     <artifact-group type="run"/>
     <artifact-group type="test-compile">
       <artifact group="commons.apache.org" name="commons-configuration" version="1.4"/>
       <artifact group="easymock.org" name="easymock" version="2.3"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="${version.jcatapult}"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0.6"/>
       <artifact group="junit.org" name="junit" version="4.4"/>
     </artifact-group>
     <artifact-group type="test-run"/>

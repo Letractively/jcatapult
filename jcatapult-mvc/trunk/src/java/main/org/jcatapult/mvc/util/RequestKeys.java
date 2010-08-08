@@ -15,22 +15,16 @@
  */
 package org.jcatapult.mvc.util;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * <p>
- * This class provides some helper methods for dealing with the request.
+ * This class stores request keys.
  * </p>
  *
  * @author Brian Pontarelli
  */
-public class RequestTools {
-    public static boolean canUseParameters(HttpServletRequest request) {
-        String method = request.getMethod().toLowerCase();
-        String contentType = request.getContentType();
-        contentType = contentType != null ? contentType.toLowerCase() : "";
-
-        return (!method.equals("post") ||
-            (method.equals("post") && (contentType.startsWith("application/x-www-form-urlencoded") || contentType.startsWith("multipart/"))));
-    }
+public final class RequestKeys {
+    /**
+     * The name of the attribute in the HttpServletRequest that stores the file information.
+     */
+    public static final String FILE_ATTRIBUTE = "__jc_request_body_files";
 }

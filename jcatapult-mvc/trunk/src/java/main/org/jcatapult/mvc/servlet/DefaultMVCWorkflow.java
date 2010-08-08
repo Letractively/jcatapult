@@ -28,7 +28,7 @@ import org.jcatapult.mvc.action.result.ResultInvocationWorkflow;
 import org.jcatapult.mvc.message.MessageWorkflow;
 import org.jcatapult.mvc.parameter.ParameterWorkflow;
 import org.jcatapult.mvc.parameter.URIParameterWorkflow;
-import org.jcatapult.mvc.parameter.fileupload.FileUploadWorkflow;
+import org.jcatapult.mvc.parameter.RequestBodyWorkflow;
 import org.jcatapult.mvc.scope.ScopeRetrievalWorkflow;
 import org.jcatapult.mvc.scope.ScopeStorageWorkflow;
 import org.jcatapult.mvc.validation.ValidationWorkflow;
@@ -48,13 +48,18 @@ public class DefaultMVCWorkflow implements MVCWorkflow {
     private List<Workflow> workflows;
 
     @Inject
-    public DefaultMVCWorkflow(ActionMappingWorkflow actionMappingWorkflow, ScopeRetrievalWorkflow scopeRetrievalWorkflow,
-            MessageWorkflow messageWorkflow, FileUploadWorkflow fileUploadWorkflow,
-            URIParameterWorkflow uriParameterWorkflow, ActionPrepareWorkflow actionPrepareWorkflow,
-            ParameterWorkflow parameterWorkflow, ValidationWorkflow validationWorkflow,
-            ActionInvocationWorkflow actionInvocationWorkflow, ScopeStorageWorkflow scopeStorageWorkflow,
-            ResultInvocationWorkflow resultInvocationWorflow) {
-        workflows = asList(actionMappingWorkflow, scopeRetrievalWorkflow, messageWorkflow, fileUploadWorkflow,
+    public DefaultMVCWorkflow(RequestBodyWorkflow requestBodyWorkflow,
+                              ActionMappingWorkflow actionMappingWorkflow,
+                              ScopeRetrievalWorkflow scopeRetrievalWorkflow,
+                              MessageWorkflow messageWorkflow,
+                              URIParameterWorkflow uriParameterWorkflow,
+                              ActionPrepareWorkflow actionPrepareWorkflow,
+                              ParameterWorkflow parameterWorkflow,
+                              ValidationWorkflow validationWorkflow,
+                              ActionInvocationWorkflow actionInvocationWorkflow,
+                              ScopeStorageWorkflow scopeStorageWorkflow,
+                              ResultInvocationWorkflow resultInvocationWorflow) {
+        workflows = asList(requestBodyWorkflow,actionMappingWorkflow, scopeRetrievalWorkflow, messageWorkflow, 
             uriParameterWorkflow, actionPrepareWorkflow, parameterWorkflow, validationWorkflow,
             actionInvocationWorkflow, scopeStorageWorkflow, resultInvocationWorflow);
     }

@@ -15,17 +15,24 @@
  */
 package org.jcatapult.mvc.parameter;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import static net.java.lang.ObjectTools.*;
+import org.jcatapult.config.Configuration;
 import org.jcatapult.environment.EnvironmentResolver;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.ActionInvocationStore;
@@ -36,12 +43,11 @@ import org.jcatapult.mvc.parameter.annotation.PreParameterMethod;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.ExpressionException;
+import org.jcatapult.mvc.parameter.fileupload.FileInfo;
+import org.jcatapult.mvc.parameter.fileupload.annotation.FileUpload;
 import org.jcatapult.mvc.util.MethodTools;
-import org.jcatapult.mvc.util.RequestTools;
+import org.jcatapult.mvc.util.RequestKeys;
 import org.jcatapult.servlet.WorkflowChain;
-
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 /**
  * <p>
@@ -53,6 +59,11 @@ import com.google.inject.name.Named;
  * @author  Brian Pontarelli
  */
 public class DefaultParameterWorkflow implements ParameterWorkflow {
+    public static final String[] DEFAULT_TYPES = {
+        "text/plain", "text/xml", "text/rtf", "text/richtext", "text/html", "text/css",
+        "image/jpeg", "image/gif", "image/png", "image/pjpeg", "image/tiff",
+        "video/dv", "video/h261", "video/h262", "video/h263", "video/h264", "video/jpeg", "video/mp4", "video/mpeg", "video/mpv", "video/ogg", "video/quicktime", "video/x-flv",
+        "application/msword", "application/pdf", "application/msword", "application/msexcel", "application/mspowerpoint"};
     public static final String CHECKBOX_PREFIX = "__jc_cb_";
     public static final String RADIOBUTTON_PREFIX = "__jc_rb_";
     public static final String ACTION_PREFIX = "__jc_a_";
@@ -63,16 +74,27 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
     private final MessageStore messageStore;
     private final ExpressionEvaluator expressionEvaluator;
     private final EnvironmentResolver resolver;
+
+    private final long maxSize;
+    private final String[] contentTypes;
     private boolean ignoreEmptyParameters = false;
 
     @Inject
     public DefaultParameterWorkflow(HttpServletRequest request, ActionInvocationStore actionInvocationStore,
-            MessageStore messageStore, ExpressionEvaluator expressionEvaluator, EnvironmentResolver resolver) {
+                                    MessageStore messageStore, ExpressionEvaluator expressionEvaluator,
+                                    EnvironmentResolver resolver, Configuration configuration) {
         this.request = request;
         this.actionInvocationStore = actionInvocationStore;
         this.messageStore = messageStore;
         this.expressionEvaluator = expressionEvaluator;
         this.resolver = resolver;
+
+        String[] types = configuration.getStringArray("jcatapult.mvc.file-upload.allowed-content-types");
+        if (types.length == 0) {
+            types = DEFAULT_TYPES;
+        }
+        this.contentTypes = types;
+        this.maxSize = configuration.getLong("jcatapult.mvc.file-upload.max-size", 1024000);
     }
 
     @Inject(optional = true)
@@ -90,9 +112,8 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         Object action = actionInvocation.action();
 
-        if (action != null && RequestTools.canUseParameters(request)) {
-            Map<String, String[]> parameters = request.getParameterMap();
-
+        Map<String, String[]> parameters = request.getParameterMap();
+        if (action != null && parameters.size() > 0) {
             // First grab the structs
             Parameters params = getValuesToSet(parameters);
 
@@ -104,20 +125,18 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
 
             // Next, set the parameters
             handleParameters(params, action, actionInvocation);
-
-            // Finally, invoke post methods
-            MethodTools.invokeAllWithAnnotation(action, PostParameterMethod.class);
-        } else if (action != null) {
-            // TODO Handle setting the request body onto the action  
         }
 
-        chain.continueWorkflow();
-    }
+        // Set the files
+        Map<String, List<FileInfo>> fileInfos = (Map<String, List<FileInfo>>) request.getAttribute(RequestKeys.FILE_ATTRIBUTE);
+        if (action != null && fileInfos != null && fileInfos.size() > 0) {
+            handleFiles(fileInfos, action, actionInvocation);
+        }
 
-    /**
-     * Does nothing.
-     */
-    public void destroy() {
+        // Finally, invoke post methods
+        MethodTools.invokeAllWithAnnotation(action, PostParameterMethod.class);
+
+        chain.continueWorkflow();
     }
 
     /**
@@ -218,7 +237,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
             } catch (ExpressionException e) {
                 // Ignore
             }
-            
+
             if (annotation != null) {
                 Struct struct = params.optional.remove(member);
                 if (struct == null) {
@@ -228,7 +247,7 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
                 if (struct == null) {
                     continue;
                 }
-                
+
                 try {
                     expressionEvaluator.setValue(member, action, struct.values, struct.attributes);
                 } catch (ConversionException ce) {
@@ -289,6 +308,32 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         }
     }
 
+    private void handleFiles(Map<String, List<FileInfo>> fileInfos, Object action, ActionInvocation actionInvocation) {
+        // Set the files into the action
+        for (String key : fileInfos.keySet()) {
+            // Verify file sizes and types
+            List<FileInfo> list = new ArrayList<FileInfo>(fileInfos.get(key));
+            FileUpload fileUpload = expressionEvaluator.getAnnotation(FileUpload.class, key, action);
+            for (Iterator<FileInfo> i = list.iterator(); i.hasNext();) {
+                FileInfo info = i.next();
+                if ((fileUpload != null && tooBig(info, fileUpload)) ||
+                        ((fileUpload == null || fileUpload.maxSize() == -1) && tooBig(info))) {
+                    messageStore.addFileUploadSizeError(key, actionInvocation.actionURI(), info.file.length());
+                    i.remove();
+                } else if ((fileUpload != null && invalidContentType(info, fileUpload)) ||
+                        ((fileUpload == null || fileUpload.contentTypes().length == 0) && invalidContentType(info))) {
+                    messageStore.addFileUploadContentTypeError(key, actionInvocation.actionURI(), info.getContentType());
+                    i.remove();
+                }
+            }
+
+            if (list.size() > 0) {
+                // Set the files into the property
+                expressionEvaluator.setValue(key, action, list);
+            }
+        }
+    }
+
     private boolean empty(String[] values) {
         if (values != null && values.length > 0) {
             for (String value : values) {
@@ -316,6 +361,48 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
                 parameters.required.put(key, new Struct(values));
             }
         }
+    }
+
+    /**
+     * Checks the size of the given file against the annotation.
+     *
+     * @param   info The file info.
+     * @param   fileUpload The annotation.
+     * @return  False if the file is okay, true if it is too big.
+     */
+    private boolean tooBig(FileInfo info, FileUpload fileUpload) {
+        return fileUpload.maxSize() != -1 && info.file.length() > fileUpload.maxSize();
+    }
+
+    /**
+     * Checks the size of the given file against the global settings.
+     *
+     * @param   info The file info.
+     * @return  False if the file is okay, true if it is too big.
+     */
+    private boolean tooBig(FileInfo info) {
+        return info.file.length() > maxSize;
+    }
+
+    /**
+     * Checks the content type of the given file against the annotation.
+     *
+     * @param   info The file info.
+     * @param   fileUpload The annotation.
+     * @return  False if the file is okay, true if it is an invalid type.
+     */
+    private boolean invalidContentType(FileInfo info, FileUpload fileUpload) {
+        return fileUpload.contentTypes().length != 0 && !arrayContains(fileUpload.contentTypes(), info.contentType);
+    }
+
+    /**
+     * Checks the content type of the global settings.
+     *
+     * @param   info The file info.
+     * @return  False if the file is okay, true if it is an invalid type.
+     */
+    private boolean invalidContentType(FileInfo info) {
+        return !arrayContains(contentTypes, info.contentType);
     }
 
     private class Parameters {
