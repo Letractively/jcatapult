@@ -13,22 +13,20 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.message;
-
-import org.jcatapult.servlet.Workflow;
+package org.jcatapult.mvc.parameter;
 
 import com.google.inject.ImplementedBy;
+import org.jcatapult.servlet.Workflow;
 
 /**
  * <p>
- * This interface defines the workflow process that handles messages.
- * The most common processing is for the flash scope. Messages in the
- * flash scope usually need to be transferred into the request during
- * request processing.
+ * This interface marks a class as the request body handling part of the MVC
+ * workflow. This part is how the JCatapult MVC handles parsing of the HTTP
+ * request body to pull out parameters and/or file uploads.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultMessageWorkflow.class)
-public interface MessageWorkflow extends Workflow {
+@ImplementedBy(DefaultRequestBodyWorkflow.class)
+public interface RequestBodyWorkflow extends Workflow {
 }

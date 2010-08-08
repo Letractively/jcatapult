@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,29 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.parameter.fileupload;
+package org.jcatapult.mvc.servlet;
 
-import org.jcatapult.servlet.Workflow;
+import javax.servlet.ServletException;
+import java.io.IOException;
 
-import com.google.inject.ImplementedBy;
+import org.jcatapult.servlet.WorkflowChain;
 
 /**
  * <p>
- * This interface marks a class as the file upload handling part of the MVC
- * workflow. This part is how the JCatapult MVC handles file uploads.
+ * This is a mock workflow chain for testing.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultFileUploadWorkflow.class)
-public interface FileUploadWorkflow extends Workflow {
+public class MockWorkflowChain implements WorkflowChain {
+    private final Runnable runnable;
+
+    public MockWorkflowChain(Runnable runnable) {
+        this.runnable = runnable;
+    }
+
+    @Override
+    public void continueWorkflow() throws IOException, ServletException {
+        runnable.run();
+    }
 }
