@@ -16,11 +16,12 @@
  */
 package org.jcatapult.servlet;
 
-import java.io.IOException;
-import java.util.Arrays;
 import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.List;
 
 import com.google.inject.Inject;
+import static java.util.Arrays.*;
 
 /**
  * <p>
@@ -30,11 +31,11 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class CoreWorkflow implements Workflow {
-    private final StaticResourceWorkflow staticResourceWorkflow;
+    private final List<Workflow> workflows;
 
     @Inject
-    public CoreWorkflow(StaticResourceWorkflow staticResourceWorkflow) {
-        this.staticResourceWorkflow = staticResourceWorkflow;
+    public CoreWorkflow(RequestBodyWorkflow requestBodyWorkflow, StaticResourceWorkflow staticResourceWorkflow) {
+        this.workflows = asList(requestBodyWorkflow, staticResourceWorkflow);
     }
 
     /**
@@ -45,7 +46,7 @@ public class CoreWorkflow implements Workflow {
      * @throws  ServletException If the sub chain throws.
      */
     public void perform(WorkflowChain chain) throws IOException, ServletException {
-        SubWorkflowChain sub = new SubWorkflowChain(Arrays.asList((Workflow) staticResourceWorkflow), chain);
+        SubWorkflowChain sub = new SubWorkflowChain(workflows, chain);
         sub.continueWorkflow();
     }
 }

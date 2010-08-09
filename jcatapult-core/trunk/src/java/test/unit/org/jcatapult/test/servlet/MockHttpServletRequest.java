@@ -23,8 +23,6 @@ import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.Principal;
@@ -51,7 +49,7 @@ import net.java.util.IteratorEnumeration;
 public class MockHttpServletRequest implements HttpServletRequest {
     protected final Map<String, Object> attributes = new HashMap<String, Object>();
     protected final Map<String, List<String>> headers = new HashMap<String, List<String>>();
-    protected final Map<String, List<String>> parameters;
+    protected final Map<String, List<String>> parameters = new HashMap<String, List<String>>();
     protected final MockServletContext context;
     protected MockHttpSession session;
 
@@ -70,12 +68,13 @@ public class MockHttpServletRequest implements HttpServletRequest {
     protected String localName = "localhost";
     protected int serverPort = 10000;
 
-    protected ServletInputStream inputStream;
-    protected Reader reader;
+    protected ServletInputStream inputStream = new MockServletInputStream(new byte[0]);
+    protected BufferedReader reader;
     protected boolean inputStreamRetrieved;
-
     protected boolean readerRetrieved;
-    protected boolean parametersRetrieved;
+    protected boolean parametersParsed;
+
+//    protected boolean parametersRetrieved;
     protected MockRequestDispatcher dispatcher;
     protected String contextPath = "";
     protected List<Cookie> cookies = new ArrayList<Cookie>();
@@ -87,19 +86,16 @@ public class MockHttpServletRequest implements HttpServletRequest {
     public MockHttpServletRequest(String uri, MockServletContext context) {
         this.uri = uri;
         this.context = context;
-        this.parameters = new HashMap<String, List<String>>();
     }
 
     public MockHttpServletRequest(String uri, MockHttpSession session) {
         this.uri = uri;
         this.session = session;
         this.context = session.context;
-        this.parameters = new HashMap<String, List<String>>();
     }
 
     public MockHttpServletRequest(String uri, Locale locale, boolean post, String encoding,
             MockServletContext context) {
-        this.parameters = new HashMap<String, List<String>>();
         this.uri = uri;
         this.locales.add(locale);
         this.method = post ? Method.POST : Method.GET;
@@ -114,7 +110,6 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     public MockHttpServletRequest(String uri, Locale locale, boolean post, String encoding,
             MockHttpSession session) {
-        this.parameters = new HashMap<String, List<String>>();
         this.uri = uri;
         this.locales.add(locale);
         this.method = post ? Method.POST : Method.GET;
@@ -129,7 +124,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     public MockHttpServletRequest(Map<String, List<String>> parameters, String uri, String encoding,
             Locale locale, boolean post, MockHttpSession session) {
-        this.parameters = parameters;
+        this.parameters.putAll(parameters);
         this.uri = uri;
         this.encoding = encoding;
         this.locales.add(locale);
@@ -144,7 +139,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     public MockHttpServletRequest(Map<String, List<String>> parameters, String uri, String encoding,
             Locale locale, boolean post, MockServletContext context) {
-        this.parameters = parameters;
+        this.parameters.putAll(parameters);
         this.uri = uri;
         this.encoding = encoding;
         this.locales.add(locale);
@@ -222,10 +217,6 @@ public class MockHttpServletRequest implements HttpServletRequest {
         }
 
         inputStreamRetrieved = true;
-        if (parametersRetrieved) {
-            return new MockServletInputStream(new byte[0]);
-        }
-
         return inputStream;
     }
 
@@ -267,7 +258,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
      * @return  The parameter or null.
      */
     public String getParameter(String name) {
-        parametersRetrieved = true;
+        handleInputStream();
         List<String> list = parameters.get(name);
         if (list != null && list.size() > 0) {
             return list.get(0);
@@ -277,7 +268,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     public Map getParameterMap() {
-        parametersRetrieved = true;
+        handleInputStream();
         Map<String, String[]> params = new HashMap<String, String[]>();
         for (String key : parameters.keySet()) {
             params.put(key, parameters.get(key).toArray(new String[parameters.get(key).size()]));
@@ -287,12 +278,12 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     public Enumeration getParameterNames() {
-        parametersRetrieved = true;
+        handleInputStream();
         return new IteratorEnumeration(parameters.keySet().iterator());
     }
 
     public String[] getParameterValues(String name) {
-        parametersRetrieved = true;
+        handleInputStream();
         List<String> list = parameters.get(name);
         if (list != null) {
             return list.toArray(new String[list.size()]);
@@ -317,16 +308,16 @@ public class MockHttpServletRequest implements HttpServletRequest {
             throw new IOException("InputStream already retrieved.");
         }
 
-        if (encoding != null) {
-            return new BufferedReader(new InputStreamReader(inputStream, encoding));
+        if (reader == null) {
+            if (encoding != null) {
+                reader = new BufferedReader(new InputStreamReader(inputStream, encoding));
+            } else {
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+            }
         }
 
         readerRetrieved = true;
-        if (parametersRetrieved) {
-            return new BufferedReader(new StringReader(""));
-        }
-
-        return new BufferedReader(new InputStreamReader(inputStream));
+        return reader;
     }
 
     /**
@@ -751,7 +742,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
      *
      * @param   reader The reader.
      */
-    public void setReader(Reader reader) {
+    public void setReader(BufferedReader reader) {
         this.reader = reader;
     }
 
@@ -1014,6 +1005,20 @@ public class MockHttpServletRequest implements HttpServletRequest {
      */
     public void setServletPath(String servletPath) {
         this.servletPath = servletPath;
+    }
+
+    /**
+     * Simulated how the container drains the InputStream when parameters are retrieved and the content-type is form
+     * encoded.
+     */
+    private void handleInputStream() {
+        if (inputStreamRetrieved || readerRetrieved) {
+            return;
+        }
+
+        if (method == Method.POST && contentType != null && contentType.equals("x-www-form-urlencoded")) {
+            inputStream = new MockServletInputStream(new byte[0]);
+        }
     }
 
     public static enum Method {
