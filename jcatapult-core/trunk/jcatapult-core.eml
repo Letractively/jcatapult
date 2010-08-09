@@ -6,6 +6,8 @@
 		<testFolder url="file://$MODULE_DIR$/src/java/test/integration"/>
 		<testFolder url="file://$MODULE_DIR$/src/java/test/unit"/>
 		<excludeFolder url="file://$MODULE_DIR$/target"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/main"/>
+		<excludeFolder url="file://$MODULE_DIR$/target/classes/main"/>
 	</contentEntry>
 	<lib name="easymock-2.2.jar" scope="COMPILE">
 		<srcroot url="jar://$SAVANT_REPOSITORY$/org/easymock/easymock/2.2/easymock-2.2-src.jar!/"/>
