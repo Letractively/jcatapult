@@ -114,16 +114,20 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
 
         if (action != null) {
             Map<String, String[]> parameters = request.getParameterMap();
+
+            // First grab the structs
+            Parameters params = getValuesToSet(parameters);
+
+            // Next, handle pre parameters if there are any parameters at all
             if (parameters.size() > 0) {
-                // First grab the structs
-                Parameters params = getValuesToSet(parameters);
-
-                // Next, handle pre parameters
                 handlePreParameters(params, action, actionInvocation);
+            }
 
-                // Next, invoke pre methods
-                MethodTools.invokeAllWithAnnotation(action, PreParameterMethod.class);
+            // Next, invoke pre methods
+            MethodTools.invokeAllWithAnnotation(action, PreParameterMethod.class);
 
+            // Next, set the remaining parameters if there are any left
+            if (params.optional.size() > 0 || params.required.size() > 0) {
                 // Next, set the parameters
                 handleParameters(params, action, actionInvocation);
             }
@@ -152,6 +156,9 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
      */
     protected Parameters getValuesToSet(Map<String, String[]> parameters) {
         Parameters result = new Parameters();
+        if (parameters.isEmpty()) {
+            return result;
+        }
 
         // Pull out the check box, radio button and action parameter
         Map<String, String[]> checkBoxes = new HashMap<String, String[]>();
