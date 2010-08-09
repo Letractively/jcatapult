@@ -46,7 +46,7 @@ import org.junit.Test;
 @SuppressWarnings("unchecked")
 public class DefaultRequestBodyWorkflowTest {
     @Test
-    public void noFiles() throws IOException, ServletException {
+    public void parameters() throws IOException, ServletException {
         String body = FileTools.read("src/java/test/unit/org/jcatapult/mvc/parameter/http-test-body-no-files.txt").toString();
 
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
@@ -65,6 +65,28 @@ public class DefaultRequestBodyWorkflowTest {
 
         assertEquals(wrapper.getParameter("param1"), "value1");
         assertEquals(wrapper.getParameter("param2"), "value2");
+        assertTrue(wrapper.getRequest() != request);
+
+        EasyMock.verify(request, chain);
+    }
+
+    @Test
+    public void emptyBody() throws IOException, ServletException {
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getContentType()).andReturn("application/x-www-form-urlencoded").times(2);
+        EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(""));
+        EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
+        EasyMock.replay(request);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        chain.continueWorkflow();
+        EasyMock.replay(chain);
+
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+        DefaultRequestBodyWorkflow workflow = new DefaultRequestBodyWorkflow(wrapper);
+        workflow.perform(chain);
+
+        assertTrue(wrapper.getRequest() == request);
 
         EasyMock.verify(request, chain);
     }

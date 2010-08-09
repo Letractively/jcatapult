@@ -112,29 +112,31 @@ public class DefaultParameterWorkflow implements ParameterWorkflow {
         ActionInvocation actionInvocation = actionInvocationStore.getCurrent();
         Object action = actionInvocation.action();
 
-        Map<String, String[]> parameters = request.getParameterMap();
-        if (action != null && parameters.size() > 0) {
-            // First grab the structs
-            Parameters params = getValuesToSet(parameters);
+        if (action != null) {
+            Map<String, String[]> parameters = request.getParameterMap();
+            if (parameters.size() > 0) {
+                // First grab the structs
+                Parameters params = getValuesToSet(parameters);
 
-            // Next, handle pre parameters
-            handlePreParameters(params, action, actionInvocation);
+                // Next, handle pre parameters
+                handlePreParameters(params, action, actionInvocation);
 
-            // Next, invoke pre methods
-            MethodTools.invokeAllWithAnnotation(action, PreParameterMethod.class);
+                // Next, invoke pre methods
+                MethodTools.invokeAllWithAnnotation(action, PreParameterMethod.class);
 
-            // Next, set the parameters
-            handleParameters(params, action, actionInvocation);
+                // Next, set the parameters
+                handleParameters(params, action, actionInvocation);
+            }
+
+            // Set the files
+            Map<String, List<FileInfo>> fileInfos = (Map<String, List<FileInfo>>) request.getAttribute(RequestKeys.FILE_ATTRIBUTE);
+            if (fileInfos != null && fileInfos.size() > 0) {
+                handleFiles(fileInfos, action, actionInvocation);
+            }
+
+            // Finally, invoke post methods
+            MethodTools.invokeAllWithAnnotation(action, PostParameterMethod.class);
         }
-
-        // Set the files
-        Map<String, List<FileInfo>> fileInfos = (Map<String, List<FileInfo>>) request.getAttribute(RequestKeys.FILE_ATTRIBUTE);
-        if (action != null && fileInfos != null && fileInfos.size() > 0) {
-            handleFiles(fileInfos, action, actionInvocation);
-        }
-
-        // Finally, invoke post methods
-        MethodTools.invokeAllWithAnnotation(action, PostParameterMethod.class);
 
         chain.continueWorkflow();
     }
