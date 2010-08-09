@@ -18,6 +18,7 @@ package org.jcatapult.servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
@@ -30,6 +31,11 @@ import java.util.Map;
 
 import com.google.inject.Inject;
 import net.java.util.IteratorEnumeration;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.jcatapult.servlet.multipart.FileInfo;
 
 /**
  * <p>
@@ -41,6 +47,7 @@ import net.java.util.IteratorEnumeration;
  *
  * @author  Brian Pontarelli
  */
+@SuppressWarnings("unchecked")
 public class RequestBodyWorkflow implements Workflow {
     private final HttpServletRequest request;
 
@@ -50,7 +57,6 @@ public class RequestBodyWorkflow implements Workflow {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
         // Let the container parse out the GET and POST parameters by calling the getParameterMap method
         // After this call, if the method is GET with any content-type or POST with the content-type as
@@ -58,37 +64,95 @@ public class RequestBodyWorkflow implements Workflow {
         Map<String, String[]> parameters = request.getParameterMap();
 
         String contentType = request.getContentType();
-        if (contentType != null && contentType.toLowerCase().startsWith("application/x-www-form-urlencoded")) {
-            // Parse the body and put them in a new request if any parameters were found in the body. If there wasn't
-            // anything in the body, than this won't replace the request
-            Map<String, List<String>> parsedParameters = parse(parameters, request.getInputStream(), request.getCharacterEncoding());
-            if (parsedParameters.size() > 0) {
+        Map<String, List<String>> parsedParameters = null;
+        if (contentType != null && contentType.toLowerCase().startsWith("multipart/")) {
+            FilesAndParameters filesAndParameters = handleFiles();
+            request.setAttribute(RequestKeys.FILE_ATTRIBUTE, filesAndParameters.files);
+            parsedParameters = filesAndParameters.parameters;
+        } else if (contentType != null && contentType.toLowerCase().startsWith("application/x-www-form-urlencoded")) {
+            parsedParameters = parse(request.getInputStream(), request.getCharacterEncoding());
+        }
 
-                HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
-                HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
-                HttpServletRequest newRequest = new ParameterHttpServletRequestWrapper(previous, convert(parsedParameters));
-                wrapper.setRequest(newRequest);
-            }
+        if (parsedParameters != null && parsedParameters.size() > 0) {
+            HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
+            HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
+            HttpServletRequest newRequest = new ParameterHttpServletRequestWrapper(previous, combine(parameters, parsedParameters));
+            wrapper.setRequest(newRequest);
         }
 
         workflowChain.continueWorkflow();
     }
 
     /**
+     * Handles parsing the multi-part body to pull out the files and the parameters.
+     *
+     * @return   The files and the parameters.
+     */
+    private FilesAndParameters handleFiles() {
+        FilesAndParameters filesAndParameters = new FilesAndParameters();
+        FileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        try {
+            List<FileItem> items = upload.parseRequest(request);
+            for (FileItem item : items) {
+                String name = item.getFieldName();
+                if (item.isFormField()) {
+                    String value = item.getString();
+                    List<String> list = filesAndParameters.parameters.get(name);
+                    if (list == null) {
+                        list = new ArrayList<String>();
+                        filesAndParameters.parameters.put(name, list);
+                    }
+
+                    list.add(value);
+                } else {
+                    String fileName = item.getName();
+
+                    // Handle lame ass IE issues with file names
+                    if (fileName.contains(":\\")) {
+                        int index = fileName.lastIndexOf("\\");
+                        fileName = fileName.substring(index + 1);
+                    }
+
+                    String contentType = item.getContentType();
+                    File file = File.createTempFile("jcatapult", "fileupload");
+                    item.write(file);
+
+                    // Handle when the user doesn't provide a file at all
+                    if (file.length() == 0 || fileName == null || contentType == null) {
+                        continue;
+                    }
+
+                    List<FileInfo> list = filesAndParameters.files.get(name);
+                    if (list == null) {
+                        list = new ArrayList<FileInfo>();
+                        filesAndParameters.files.put(name, list);
+                    }
+
+                    list.add(new FileInfo(file, fileName, contentType));
+                }
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to handle file uploads", e);
+        }
+
+        return filesAndParameters;
+    }
+
+    /**
      * Parses the HTTP request body for URL encoded parameters.
      *
-     * @param   parameters THe existing parameters.
      * @param   inputStream The input stream to read from.
      * @param   encoding The encoding header.
      * @return  The parameter map.
      * @throws  IOException If the read failed.
      */
-    private Map<String, List<String>> parse(Map<String, String[]> parameters, InputStream inputStream, String encoding) throws IOException {
+    private Map<String, List<String>> parse(InputStream inputStream, String encoding) throws IOException {
         if (encoding == null) {
             encoding = "UTF-8";
         }
 
-        Map<String, List<String>> parsedParameters = arrayToList(parameters);
+        Map<String, List<String>> parsedParameters = new HashMap<String, List<String>>();
         byte[] str = new byte[1024];
         int length = 0;
         int c;
@@ -123,21 +187,6 @@ public class RequestBodyWorkflow implements Workflow {
         return parsedParameters;
     }
 
-    private Map<String, List<String>> arrayToList(Map<String, String[]> array) {
-        Map<String, List<String>> list = new HashMap<String, List<String>>();
-        for (String key : array.keySet()) {
-            String[] values = array.get(key);
-            List<String> newValues = new ArrayList<String>();
-            for (String value : values) {
-                newValues.add(value);
-            }
-
-            list.put(key, newValues);
-        }
-
-        return list;
-    }
-
     private void addParam(Map<String, List<String>> parsedParameters, String key, byte[] str, int length, String encoding)
     throws IOException {
         if (key == null) {
@@ -160,14 +209,36 @@ public class RequestBodyWorkflow implements Workflow {
         list.add(value);
     }
 
-    private Map<String, String[]> convert(Map<String, List<String>> parameters) {
-        Map<String, String[]> params = new HashMap<String, String[]>();
-        for (String key : parameters.keySet()) {
-            List<String> values = parameters.get(key);
-            params.put(key, values.toArray(new String[values.size()]));
+    private Map<String, String[]> combine(Map<String, String[]> original, Map<String, List<String>> parsed) {
+        Map<String, String[]> map = new HashMap<String, String[]>();
+        for (String key : original.keySet()) {
+            String[] originalValues = original.get(key);
+            List<String> parsedValues = parsed.remove(key);
+
+            String[] newValues = new String[originalValues.length + (parsedValues == null ? 0 : parsedValues.size())];
+            System.arraycopy(originalValues, 0, newValues, 0, originalValues.length);
+
+            if (parsedValues != null && parsedValues.size() > 0) {
+                int index = originalValues.length;
+                for (String parsedValue : parsedValues) {
+                    newValues[index++] = parsedValue;
+                }
+            }
+
+            map.put(key, newValues);
         }
 
-        return params;
+        for (String key : parsed.keySet()) {
+            List<String> parsedValues = parsed.get(key);
+            map.put(key, parsedValues.toArray(new String[parsedValues.size()]));
+        }
+
+        return map;
+    }
+
+    private static class FilesAndParameters {
+        public final Map<String, List<FileInfo>> files = new HashMap<String, List<FileInfo>>();
+        public final Map<String, List<String>> parameters = new HashMap<String, List<String>>();
     }
 
     private static class ParameterHttpServletRequestWrapper extends HttpServletRequestWrapper {
