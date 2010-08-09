@@ -20,11 +20,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static junit.framework.Assert.*;
+import net.java.io.FileTools;
+import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
+import org.jcatapult.servlet.multipart.FileInfo;
+import org.jcatapult.test.Capture;
 import org.jcatapult.test.servlet.MockServletInputStream;
+import org.jcatapult.test.servlet.MockWorkflowChain;
 import org.junit.Test;
 
 /**
@@ -177,5 +184,87 @@ public class RequestBodyWorkflowTest {
         assertEquals(params.get("param2")[1], "value3");
 
         verify(request, chain);
+    }
+
+    @Test
+    public void singleFiles() throws IOException, ServletException {
+        String body = FileTools.read("src/java/test/unit/org/jcatapult/servlet/http-test-body-single-file.txt").toString();
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameterMap()).andReturn(new HashMap());
+        EasyMock.expect(request.getContentType()).andReturn("multipart/form-data, boundary=AaB03x").times(2);
+        EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body.getBytes()));
+        EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
+        EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        final Capture capture = new Capture();
+        request.setAttribute(eq(RequestKeys.FILE_ATTRIBUTE), capture.<Object>capture());
+        EasyMock.replay(request);
+
+        final AtomicBoolean run = new AtomicBoolean(false);
+        MockWorkflowChain chain = new MockWorkflowChain(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, List<FileInfo>> files = (Map<String, List<FileInfo>>) capture.object;
+                assertEquals(1, files.size());
+                try {
+                    assertEquals(FileTools.read(files.get("userfile").get(0).file).toString(), "test");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                run.set(true);
+            }
+        });
+
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+        RequestBodyWorkflow workflow = new RequestBodyWorkflow(wrapper);
+        workflow.perform(chain);
+        assertTrue(run.get());
+
+        assertEquals(wrapper.getParameter("field1"), "value1");
+        assertEquals(wrapper.getParameter("field2"), "value2");
+
+        EasyMock.verify(request);
+    }
+
+    @Test
+    public void multipleFiles() throws IOException, ServletException {
+        String body = FileTools.read("src/java/test/unit/org/jcatapult/servlet/http-test-body-multiple-files.txt").toString();
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameterMap()).andReturn(new HashMap());
+        EasyMock.expect(request.getContentType()).andReturn("multipart/form-data, boundary=AaB03x").times(2);
+        EasyMock.expect(request.getInputStream()).andReturn(new MockServletInputStream(body.getBytes()));
+        EasyMock.expect(request.getCharacterEncoding()).andReturn("UTF-8");
+        EasyMock.expect(request.getContentLength()).andReturn(body.length());
+        final Capture capture = new Capture();
+        request.setAttribute(eq(RequestKeys.FILE_ATTRIBUTE), capture.<Object>capture());
+        EasyMock.replay(request);
+
+        final AtomicBoolean run = new AtomicBoolean(false);
+        MockWorkflowChain chain = new MockWorkflowChain(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, List<FileInfo>> files = (Map<String, List<FileInfo>>) capture.object;
+                assertEquals(1, files.size());
+                try {
+                    assertEquals(FileTools.read(files.get("userfiles").get(0).file).toString(), "test");
+                    assertEquals(FileTools.read(files.get("userfiles").get(1).file).toString(), "test2");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                run.set(true);
+            }
+        });
+
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+        RequestBodyWorkflow workflow = new RequestBodyWorkflow(wrapper);
+        workflow.perform(chain);
+        assertTrue(run.get());
+
+        assertEquals(wrapper.getParameter("field1"), "value1");
+        assertEquals(wrapper.getParameter("field2"), "value2");
+
+        EasyMock.verify(request);
     }
 }
