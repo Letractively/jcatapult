@@ -58,7 +58,25 @@ public class DefaultRequestBodyWorkflow implements RequestBodyWorkflow {
     }
 
     /**
-     * Handles the incoming file uploads.
+     * <p>
+     * Handles the incoming requests to determine if the request body should be parsed as multi-part data, standard
+     * request data (form data url encoded), or ignored. If the request input stream is parsed, the request will be
+     * wrapped to provide the parsed parameters and files (if multi-part).
+     * </p>
+     * <p>
+     * This method only parses the input stream based on the content-type. If the content type is multi-part, it parses
+     * for files. If the content-type is x-www-form-urlencoded, it parses for parameters. Therefore, if the request is
+     * going to an action that needs the input stream not to be read, this should be fine as long as the client sets a
+     * different content-type. Generally, this is for WebServices and the client seets the content-type to something
+     * like text/xml. The JEE containers won't parse the input stream unless the content-type is x-www-form-urlencoded
+     * (and for Tomcat a the request has to be a POST method) and any calls after this workflow to getParameters methods
+     * will not touch the input stream.
+     * </p>
+     * <p>
+     * Also, if the request is a GET or a POST and the JEE container has already parsed the InputStream for the parameters
+     * or something else called one of the getParameter methods before this gets called, then it will take no action and
+     * proceed down the chain.
+     * </p>
      *
      * @param   chain The workflow chain.
      */
@@ -76,12 +94,15 @@ public class DefaultRequestBodyWorkflow implements RequestBodyWorkflow {
             HttpServletRequest newRequest = new ParameterHttpServletRequestWrapper(previous, parameters);
             wrapper.setRequest(newRequest);
         } else if (hasParametersInBody(request)) {
-            // Parse the body and put them in a new request
+            // Parse the body and put them in a new request if any parameters were found in the body. If there wasn't
+            // anything in the body, than this won't replace the request
             Map<String, List<String>> parameters = parse(request.getInputStream(), request.getCharacterEncoding());
-            HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
-            HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
-            HttpServletRequest newRequest = new ParameterHttpServletRequestWrapper(previous, convert(parameters));
-            wrapper.setRequest(newRequest);
+            if (parameters.size() > 0) {
+                HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
+                HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
+                HttpServletRequest newRequest = new ParameterHttpServletRequestWrapper(previous, convert(parameters));
+                wrapper.setRequest(newRequest);
+            }
         }
 
         try {
@@ -99,7 +120,34 @@ public class DefaultRequestBodyWorkflow implements RequestBodyWorkflow {
         }
     }
 
-    protected Pair<Map<String, List<FileInfo>>, Map<String, String[]>> handleFiles() {
+    /**
+     * Determines if the request contains multipart body.
+     *
+     * @param   request The HttpServletRequest to check.
+     * @return  True if the body multipart data, false otherwise.
+     */
+    private boolean multipart(HttpServletRequest request) {
+        String contentType = request.getContentType();
+        return contentType != null && contentType.startsWith("multipart/");
+    }
+
+    /**
+     * Determines if the request contains parameters in the HTTP body and it should be parsed.
+     *
+     * @param   request The HttpServletRequest to check.
+     * @return  True if the body contains parameters, false otherwise.
+     */
+    private boolean hasParametersInBody(HttpServletRequest request) {
+        String contentType = request.getContentType();
+        return contentType != null && contentType.startsWith("application/x-www-form-urlencoded");
+    }
+
+    /**
+     * Handles parsing the multi-part body to pull out the files and the parameters.
+     *
+     * @return   The files and the parameters.
+     */
+    private Pair<Map<String, List<FileInfo>>, Map<String, String[]>> handleFiles() {
         Map<String, List<FileInfo>> files = new HashMap<String, List<FileInfo>>();
         Map<String, List<String>> params = new HashMap<String, List<String>>();
 
@@ -175,28 +223,6 @@ public class DefaultRequestBodyWorkflow implements RequestBodyWorkflow {
     }
 
     /**
-     * Determines if the request contains multipart body.
-     *
-     * @param   request The HttpServletRequest to check.
-     * @return  True if the body multipart data, false otherwise.
-     */
-    private boolean multipart(HttpServletRequest request) {
-        String contentType = request.getContentType();
-        return contentType != null && contentType.startsWith("multipart/");
-    }
-
-    /**
-     * Determines if the request contains parameters in the HTTP body and it should be parsed.
-     *
-     * @param   request The HttpServletRequest to check.
-     * @return  True if the body contains parameters, false otherwise.
-     */
-    private boolean hasParametersInBody(HttpServletRequest request) {
-        String contentType = request.getContentType();
-        return contentType != null && contentType.startsWith("application/x-www-form-urlencoded");
-    }
-
-    /**
      * Parses the HTTP request body for URL encoded parameters.
      *
      * @param   inputStream The input stream to read from.
@@ -236,7 +262,10 @@ public class DefaultRequestBodyWorkflow implements RequestBodyWorkflow {
             }
         }
 
-        addParam(params, key, str, length, encoding);
+        // If the key is null, the input stream was empty
+        if (key != null) {
+            addParam(params, key, str, length, encoding);
+        }
 
         return params;
     }
