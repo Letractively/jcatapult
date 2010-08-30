@@ -65,7 +65,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @param   databaseName The database name.
      */
     public static void setDatabaseName(String databaseName) {
-        JPATestHelper.setDatabaseName(databaseName);
+        JDBCTestHelper.setDatabaseName(databaseName);
     }
 
     /**
@@ -75,7 +75,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @param   dataSource The data source to put into the JNDI tree.
      */
     public static void setDataSource(DataSource dataSource) {
-        JPATestHelper.setDataSource(dataSource);
+        JDBCTestHelper.setDataSource(dataSource);
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      */
     @BeforeClass
     public static void setUpJPA() {
-        JPATestHelper.initializeJPA(jndi);
+        JPATestHelper.initialize(jndi);
     }
 
     /**
@@ -131,7 +131,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws java.io.IOException If the script file could not be read.
      */
     protected void executeScript(String script) throws SQLException, IOException {
-        JPATestHelper.executeScript(script);
+        JDBCTestHelper.executeScript(script);
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws SQLException If the execute failed.
      */
     protected void executeSQL(String sql) throws SQLException {
-        JPATestHelper.executeSQL(sql);
+        JDBCTestHelper.executeSQL(sql);
     }
 
     /**
@@ -153,7 +153,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws SQLException If the clear failed.
      */
     protected void clearTable(String table) throws SQLException {
-        JPATestHelper.clearTable(table);
+        JDBCTestHelper.clearTable(table);
     }
 
     /**
@@ -164,7 +164,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws SQLException If the clear failed.
      */
     protected void clearTable(Class<?> klass) throws SQLException {
-        JPATestHelper.clearTable(klass);
+        JDBCTestHelper.clearTable(klass);
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws SQLException If the query failed.
      */
     protected RowSet executeQuery(String query) throws SQLException {
-        return JPATestHelper.executeQuery(query);
+        return JDBCTestHelper.executeQuery(query);
     }
 
     /**
@@ -183,7 +183,7 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
      * @throws java.sql.SQLException on sql exception
      */
     protected Connection getConnection() throws SQLException {
-        return JPATestHelper.getConnection();
+        return JDBCTestHelper.getConnection();
     }
 
     /**

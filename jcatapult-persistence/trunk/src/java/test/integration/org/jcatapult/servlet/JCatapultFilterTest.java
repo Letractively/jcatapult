@@ -37,7 +37,7 @@ import net.java.naming.MockJNDI;
 import static org.easymock.EasyMock.*;
 import org.jcatapult.environment.Environment;
 import org.jcatapult.guice.GuiceContainer;
-import org.jcatapult.persistence.MySQLTools;
+import org.jcatapult.persistence.test.MySQLTools;
 import org.jcatapult.persistence.service.jdbc.ConnectionContext;
 import org.jcatapult.persistence.service.jpa.EntityManagerContext;
 import static org.junit.Assert.*;
