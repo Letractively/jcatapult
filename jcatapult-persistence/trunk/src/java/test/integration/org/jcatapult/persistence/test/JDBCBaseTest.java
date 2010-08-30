@@ -42,7 +42,7 @@ public abstract class JDBCBaseTest extends JCatapultBaseTest {
      */
     @BeforeClass
     public static void setDataSource() {
-        JPATestHelper.initializeJPA(jndi);
+        JDBCTestHelper.initialize(jndi);
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class JDBCBaseTest extends JCatapultBaseTest {
     @Override
     public void setUp() {
         try {
-            ConnectionContext.set(JPATestHelper.dataSource.getConnection());
+            ConnectionContext.set(JDBCTestHelper.dataSource.getConnection());
             super.addModules(new AbstractModule() {
                 protected void configure() {
                     bindConstant().annotatedWith(Names.named("non-jta-data-source")).to("java:comp/env/jdbc/jcatapult-persistence");
@@ -65,7 +65,7 @@ public abstract class JDBCBaseTest extends JCatapultBaseTest {
     }
 
     /**
-     * Closes the EntityManager and removes it from the context.
+     * Closes the Connection and removes it from the context.
      */
     @After
     public void tearDown() {
@@ -81,10 +81,10 @@ public abstract class JDBCBaseTest extends JCatapultBaseTest {
      * Runs the given query and returns the results in a detached RowSet.
      *
      * @param   query The query to run.
-     * @return The results of the query.
-     * @throws java.sql.SQLException If the query failed.
+     * @return  The results of the query.
+     * @throws  SQLException If the query failed.
      */
     protected RowSet executeQuery(String query) throws SQLException {
-        return JPATestHelper.executeQuery(query);
+        return JDBCTestHelper.executeQuery(query);
     }
 }

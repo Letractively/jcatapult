@@ -25,8 +25,8 @@ import com.google.inject.Inject;
 import org.easymock.EasyMock;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.service.jpa.User;
+import org.jcatapult.persistence.test.JDBCTestHelper;
 import org.jcatapult.persistence.test.JPABaseTest;
-import org.jcatapult.persistence.test.JPATestHelper;
 import org.jcatapult.persistence.txn.annotation.Transactional;
 import org.jcatapult.persistence.txn.jpa.JPATransactionManager;
 import static org.junit.Assert.*;
@@ -137,7 +137,7 @@ public class JPATransactionTest extends JPABaseTest {
             persistenceService.persist(user);
 
             // Verify that another session can't see the data
-            RowSet rs = JPATestHelper.executeQuery("select name from users where name = 'JPATransactionTest-success'");
+            RowSet rs = JDBCTestHelper.executeQuery("select name from users where name = 'JPATransactionTest-success'");
             assertFalse(rs.next());
             rs.close();
         }
@@ -148,7 +148,7 @@ public class JPATransactionTest extends JPABaseTest {
             user.setName("JPATransactionTest-failure");
             persistenceService.persist(user);
             try {
-                RowSet rs = JPATestHelper.executeQuery("select name from users where name = 'JPATransactionTest-failure'");
+                RowSet rs = JDBCTestHelper.executeQuery("select name from users where name = 'JPATransactionTest-failure'");
                 assertFalse(rs.next());
                 rs.close();
             } catch (SQLException e) {

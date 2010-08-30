@@ -24,7 +24,7 @@ import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 import org.jcatapult.persistence.service.jpa.User;
 import org.jcatapult.persistence.test.JDBCBaseTest;
-import static org.jcatapult.persistence.test.JPATestHelper.executeSQL;
+import org.jcatapult.persistence.test.JDBCTestHelper;
 import org.jcatapult.persistence.txn.annotation.Transactional;
 import org.jcatapult.persistence.txn.jdbc.JDBCTransactionManager;
 import static org.junit.Assert.*;
@@ -43,7 +43,7 @@ public class JDBCTransactionTest extends JDBCBaseTest {
 
     @Test
     public void service() throws SQLException {
-        executeSQL("delete from users");
+        JDBCTestHelper.executeSQL("delete from users");
         service.success();
         RowSet rs = executeQuery("select count(*) from users");
         rs.next();

@@ -13,14 +13,13 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.persistence;
+package org.jcatapult.persistence.test;
 
 import javax.sql.DataSource;
 import java.util.logging.Logger;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import net.java.naming.MockJNDI;
-import static org.jcatapult.persistence.ProjectTools.*;
 
 /**
  * <p>
@@ -45,7 +44,7 @@ public class MySQLTools {
      * @return The DataSource and never null.
      */
     public static DataSource setup(MockJNDI jndi, String dbName) {
-        String projectName = loadProjectName();
+        String projectName = ProjectTools.loadProjectName();
 
         // if the dbName is empty then assume <projectName>_test
         if (dbName == null || dbName.isEmpty()) {
