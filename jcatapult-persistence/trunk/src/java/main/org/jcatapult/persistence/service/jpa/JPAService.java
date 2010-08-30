@@ -15,6 +15,7 @@
  */
 package org.jcatapult.persistence.service.jpa;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import com.google.inject.ImplementedBy;
@@ -37,18 +38,16 @@ public interface JPAService {
     EntityManagerFactory getFactory();
 
     /**
-     * This method creates a new EntityManager and sets it into the ThreadLocal storage so that it
-     * can be accessed elsewhere in the application.
+     * This method handles the EntityManager. If there is an EntityManager in the context already, it is returned.
+     * Otherwise, this will create a new EntityManager and set it into the context storage so that it can be accessed
+     * elsewhere in the application.
+     *
+     * @return  The EntityManager
      */
-    void setupEntityManager();
+    EntityManager setupEntityManager();
 
     /**
      * This method removes the EntityManager from the ThreadLocal storage and cleans things up.
      */
     void tearDownEntityManager();
-
-    /**
-     * Closes the factory.
-     */
-    void closeFactory();
 }

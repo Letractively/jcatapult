@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,21 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.persistence;
+package org.jcatapult.persistence.txn.jdbc.annotation;
 
-import org.jcatapult.persistence.service.PersistenceService;
-import org.jcatapult.persistence.test.JPABaseTest;
-import org.junit.Ignore;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import com.google.inject.Inject;
+import com.google.inject.BindingAnnotation;
 
 /**
  * <p>
- * This class is the base test for jcatapult core to setup the test authentication
- * service.
+ * This annotation is a binding annotation for the JDBC transaction manager.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-@Ignore
-public class PersistenceBaseTest extends JPABaseTest {
-    @Inject public PersistenceService persistenceService;
+@BindingAnnotation
+@Retention(RetentionPolicy.RUNTIME)
+public @interface JDBC {
 }

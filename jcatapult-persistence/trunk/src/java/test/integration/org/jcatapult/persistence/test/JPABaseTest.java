@@ -15,12 +15,14 @@
  */
 package org.jcatapult.persistence.test;
 
+import javax.sql.DataSource;
+import javax.sql.RowSet;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.sql.DataSource;
-import javax.sql.RowSet;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 import org.jcatapult.test.JCatapultBaseTest;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -91,6 +93,15 @@ public abstract class JPABaseTest extends JCatapultBaseTest {
     @Override
     public void setUp() {
         JPATestHelper.setupForTest();
+
+        // This turns off the JPAService so that the EntityManager setup by the JPATestHelper is used rather than the
+        // JPAService setup. This also prevents the JPAService from creating the database again without the correct
+        // dialect (i.e. MySQL InnoDB)
+        super.addModules(new AbstractModule() {
+            protected void configure() {
+                bindConstant().annotatedWith(Names.named("jcatapult.jpa.enabled")).to(false);
+            }
+        });
         super.setUp();
     }
 

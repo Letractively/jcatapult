@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,154 +21,133 @@ import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 
+import com.google.inject.Inject;
+
 /**
  * <p>
- * This class is a proxy that allows an EntityManager to be injected into
- * services but lazily initialized from the {@link EntityManagerContext}.
- * The issue is that if a service needs an EntityManager and the
- * {@link org.jcatapult.servlet.JCatapultFilter} hasn't been invoked yet,
- * the {@link EntityManagerContext} will be empty, which causes Guice to
- * explode. This class allows the injection of the EntityManager to occur
- * and the the EntityManagerContext to be called only when the methods
- * are invoked, which <strong>SHOULD</strong> always be during a request
- * that goes through the filter.
- * </p>
- *
- * <p>
- * <strong>NOTE:</strong> This class is NOT thread safe in anyway at all!
- * Don't even think about using it across threads or you will suffer major
- * consequences. You have been warned ;)
+ * This class is an EntityManager proxy. This only calls the EntityManagerProvider when it is
+ * absolutely necessary. This delays the the creation of the EntityManager until it is actually
+ * being used.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 public class EntityManagerProxy implements EntityManager {
-    private EntityManager entityManager;
+    private final EntityManagerProvider provider;
+    private EntityManager proxy;
+
+    @Inject
+    public EntityManagerProxy(EntityManagerProvider provider) {
+        this.provider = provider;
+    }
 
     public void persist(Object o) {
-        init();
-        entityManager.persist(o);
+        proxy = provider.get();
+        proxy.persist(o);
     }
 
     public <T> T merge(T t) {
-        init();
-        return entityManager.merge(t);
+        proxy = provider.get();
+        return proxy.merge(t);
     }
 
     public void remove(Object o) {
-        init();
-        entityManager.remove(o);
+        proxy = provider.get();
+        proxy.remove(o);
     }
 
     public <T> T find(Class<T> tClass, Object o) {
-        init();
-        return entityManager.find(tClass, o);
+        proxy = provider.get();
+        return proxy.find(tClass, o);
     }
 
     public <T> T getReference(Class<T> tClass, Object o) {
-        init();
-        return entityManager.getReference(tClass, o);
+        proxy = provider.get();
+        return proxy.getReference(tClass, o);
     }
 
     public void flush() {
-        init();
-        entityManager.flush();
+        proxy = provider.get();
+        proxy.flush();
     }
 
     public void setFlushMode(FlushModeType flushModeType) {
-        init();
-        entityManager.setFlushMode(flushModeType);
+        proxy = provider.get();
+        proxy.setFlushMode(flushModeType);
     }
 
     public FlushModeType getFlushMode() {
-        init();
-        return entityManager.getFlushMode();
+        proxy = provider.get();
+        return proxy.getFlushMode();
     }
 
     public void lock(Object o, LockModeType lockModeType) {
-        init();
-        entityManager.lock(o, lockModeType);
+        proxy = provider.get();
+        proxy.lock(o, lockModeType);
     }
 
     public void refresh(Object o) {
-        init();
-        entityManager.refresh(o);
+        proxy = provider.get();
+        proxy.refresh(o);
     }
 
     public void clear() {
-        init();
-        entityManager.clear();
+        proxy = provider.get();
+        proxy.clear();
     }
 
     public boolean contains(Object o) {
-        init();
-        return entityManager.contains(o);
+        proxy = provider.get();
+        return proxy.contains(o);
     }
 
     public Query createQuery(String s) {
-        init();
-        return entityManager.createQuery(s);
+        proxy = provider.get();
+        return proxy.createQuery(s);
     }
 
     public Query createNamedQuery(String s) {
-        init();
-        return entityManager.createNamedQuery(s);
+        proxy = provider.get();
+        return proxy.createNamedQuery(s);
     }
 
     public Query createNativeQuery(String s) {
-        init();
-        return entityManager.createNativeQuery(s);
+        proxy = provider.get();
+        return proxy.createNativeQuery(s);
     }
 
     public Query createNativeQuery(String s, Class aClass) {
-        init();
-        return entityManager.createNativeQuery(s, aClass);
+        proxy = provider.get();
+        return proxy.createNativeQuery(s, aClass);
     }
 
     public Query createNativeQuery(String s, String s1) {
-        init();
-        return entityManager.createNativeQuery(s, s1);
+        proxy = provider.get();
+        return proxy.createNativeQuery(s, s1);
     }
 
     public void joinTransaction() {
-        init();
-        entityManager.joinTransaction();
+        proxy = provider.get();
+        proxy.joinTransaction();
     }
 
     public Object getDelegate() {
-        init();
-        return entityManager.getDelegate();
+        proxy = provider.get();
+        return proxy.getDelegate();
     }
 
     public void close() {
-        init();
-        entityManager.close();
+        proxy = provider.get();
+        proxy.close();
     }
 
     public boolean isOpen() {
-        init();
-        return entityManager.isOpen();
+        proxy = provider.get();
+        return proxy.isOpen();
     }
 
     public EntityTransaction getTransaction() {
-        init();
-        return entityManager.getTransaction();
-    }
-
-    protected void init() {
-        if (entityManager == null) {
-            entityManager = EntityManagerContext.get();
-            if (entityManager == null) {
-                throw new IllegalStateException("The EntityManagerContext is null. This is the " +
-                    "ThreadLocal that is used by JCatapult to provide OSIV support for JPA. This " +
-                    "might occur for a few reasons.\n\n First, you might be running a unit test and " +
-                    "are extending from JCatapultBaseTest rather than JPABaseTest. The " +
-                    "JCatapultBaseTest doesn't setup JPA for testing and if you are using JPA or " +
-                    "the PersistenceService in your unit test, you need to extend the JPABaseTest " +
-                    "instead.\n\n Second, you application might be misconfigured or have the JPA " +
-                    "workflow turned off. This is highly unlikely, but possible and you should " +
-                    "probably post an email to the users list for assistance.");
-            }
-        }
+        proxy = provider.get();
+        return proxy.getTransaction();
     }
 }

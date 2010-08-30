@@ -15,13 +15,12 @@
  */
 package org.jcatapult.persistence;
 
+import javax.sql.DataSource;
 import java.util.logging.Logger;
 
-import net.java.naming.MockJNDI;
-
-import static org.jcatapult.persistence.ProjectTools.*;
-
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import net.java.naming.MockJNDI;
+import static org.jcatapult.persistence.ProjectTools.*;
 
 /**
  * <p>
@@ -45,7 +44,7 @@ public class MySQLTools {
      * @param dbName the db name
      * @return The DataSource and never null.
      */
-    public static MysqlDataSource setup(MockJNDI jndi, String dbName) {
+    public static DataSource setup(MockJNDI jndi, String dbName) {
         String projectName = loadProjectName();
 
         // if the dbName is empty then assume <projectName>_test
@@ -65,7 +64,7 @@ public class MySQLTools {
      * @param   projectName The name of the project that is used to build the JNDI tree.
      * @return  The DataSource and never null.
      */
-    public static MysqlDataSource setup(MockJNDI jndi, String url, String projectName) {
+    public static DataSource setup(MockJNDI jndi, String url, String projectName) {
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setURL(url);
         dataSource.setAutoReconnect(true);
@@ -75,7 +74,6 @@ public class MySQLTools {
 
         logger.info("DB Url [" + url + "]");
         logger.info("JNDI name is [" + jndiName + "]");
-
         return dataSource;
     }
 }
