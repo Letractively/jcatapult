@@ -15,8 +15,8 @@
  */
 package org.jcatapult.servlet;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -26,11 +26,19 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.sql.Connection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 import net.java.naming.MockJNDI;
 import static org.easymock.EasyMock.*;
 import org.jcatapult.environment.Environment;
+import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.persistence.MySQLTools;
+import org.jcatapult.persistence.service.jdbc.ConnectionContext;
 import org.jcatapult.persistence.service.jpa.EntityManagerContext;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -62,6 +70,12 @@ public class JCatapultFilterTest {
         replay(filterConfig);
 
         // Initialize JCatapult via the listener first.
+        GuiceContainer.setGuiceModules(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bindConstant().annotatedWith(Names.named("non-jta-data-source")).to("java:comp/env/jdbc/jcatapult-persistence");
+            }
+        });
         ServletContextEvent event = new ServletContextEvent(context);
         JCatapultServletContextListener listener = new JCatapultServletContextListener();
         listener.contextInitialized(event);
@@ -69,13 +83,15 @@ public class JCatapultFilterTest {
         JCatapultFilter filter = new JCatapultFilter();
         filter.init(filterConfig);
 
-        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        HttpServletRequest request = createNiceMock(HttpServletRequest.class);
         // Filter
         expect(request.getAttribute(JCatapultFilter.ORIGINAL_REQUEST_URI)).andReturn(null);
         expect(request.getRequestURI()).andReturn("/test");
+        expect(request.getContextPath()).andReturn("");
         request.setAttribute(JCatapultFilter.ORIGINAL_REQUEST_URI, "/test");
         // StaticResourceWorkflow
         expect(request.getRequestURI()).andReturn("/test");
+        expect(request.getContextPath()).andReturn("");
         // Error handling
         expect(request.getAttribute("javax.servlet.error.exception")).andReturn(null);
         expect(request.getAttribute("javax.servlet.jsp.jspException")).andReturn(null);
@@ -84,10 +100,18 @@ public class JCatapultFilterTest {
         HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         replay(response);
 
+        EntityManagerContext.remove();
+        ConnectionContext.remove();
+
         final AtomicBoolean called = new AtomicBoolean(false);
         FilterChain chain = new FilterChain() {
             public void doFilter(ServletRequest request, ServletResponse response) {
-                assertNotNull(EntityManagerContext.get());
+                assertNull(EntityManagerContext.get());
+                assertNull(ConnectionContext.get());
+                assertNotNull(GuiceContainer.getInjector().getInstance(EntityManagerFactory.class));
+                assertNotNull(GuiceContainer.getInjector().getInstance(EntityManager.class));
+                assertNotNull(GuiceContainer.getInjector().getInstance(DataSource.class));
+                assertNotNull(GuiceContainer.getInjector().getInstance(Connection.class));
                 called.set(true);
             }
         };

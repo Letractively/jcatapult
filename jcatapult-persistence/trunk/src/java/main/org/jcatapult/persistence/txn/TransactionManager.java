@@ -22,24 +22,24 @@ import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This interface defines the operations that are used by the
- * TransactionMethodInterceptor in order to provide AOP transaction
- * support around method invocations. Implementors need not be
- * thread safe because a new transaction manager can be created
- * for each invocation. However, if you want to make your manager a
- * singleton for performance, it will need to be thread safe.
+ * This interface defines the operations that are used by the JPATransactionMethodInterceptor
+ * in order to provide AOP transaction support around method invocations. Implementers need
+ * not be thread safe because a new transaction manager can be created for each invocation.
+ * However, if you want to make your manager a singleton for performance, it will need to
+ * be thread safe.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 @ImplementedBy(JPATransactionManager.class)
-public interface TransactionManager {
+public interface TransactionManager<T, E extends Throwable> {
     /**
      * Starts a new transaction or joins an existing transaction.
      *
      * @return  The transaction state.
+     * @throws  E The exception thrown from the transaction implementations.
      */
-    TransactionState startTransaction();
+    TransactionState<T, E> startTransaction() throws E;
 
     /**
      * Process the end of the transaction using the information in the transaction itself (i.e.
@@ -50,10 +50,11 @@ public interface TransactionManager {
      * @param   t (Optional) The exception thrown from the method invocation or null if nothing was
      *          thrown and the method completed successfully.
      * @param   transactionState The transaction state from the {@link #startTransaction()} method.
-     * @param   processor The transaction result processor that can be used to help deterime if the
+     * @param   processor The transaction result processor that can be used to help determine if the
      *          transaction should be rolled back or not. This is pulled from the annotation.
      *          Implementing classes can ignore this if they like.
+     * @throws  E The exception thrown from the transaction implementations.
      */
-    void endTransaction(Object result, Throwable t, TransactionState transactionState,
-            TransactionResultProcessor processor);
+    void endTransaction(Object result, Throwable t, TransactionState<T, E> transactionState, TransactionResultProcessor processor)
+    throws E;
 }

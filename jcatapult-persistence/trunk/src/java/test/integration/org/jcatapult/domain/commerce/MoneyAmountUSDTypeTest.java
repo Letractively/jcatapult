@@ -19,12 +19,11 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 
+import com.google.inject.Inject;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.test.JPABaseTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -34,22 +33,14 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class MoneyAmountUSDTypeTest extends JPABaseTest {
-    protected PersistenceService persistenceService;
-
-    @Inject
-    public void setPersistenceService(PersistenceService persistenceService) {
-        this.persistenceService = persistenceService;
-    }
+    @Inject public PersistenceService persistenceService;
 
     @Test
-    public void testSave() {
+    public void save() {
         MoneyAmountHolder holder = new MoneyAmountHolder();
         holder.setMoney(Money.valueOf("1.99", Currency.getInstance("USD")));
         persistenceService.persist(holder);
-    }
 
-    @Test
-    public void testCurrency() {
         List<MoneyAmountHolder> holders = persistenceService.findAllByType(MoneyAmountHolder.class);
         assertEquals(1, holders.size());
         assertEquals(new BigDecimal("1.99"), holders.get(0).getMoney().toBigDecimal());
@@ -57,7 +48,7 @@ public class MoneyAmountUSDTypeTest extends JPABaseTest {
     }
 
     @Test
-    public void testBadCurrency() {
+    public void badCurrency() {
         MoneyAmountHolder holder = new MoneyAmountHolder();
         holder.setMoney(Money.valueOf("1.99", Currency.getInstance("EUR")));
         try {

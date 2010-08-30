@@ -16,31 +16,30 @@
  */
 package org.jcatapult.persistence.txn;
 
-import java.sql.SQLException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.sql.RowSet;
+import java.sql.SQLException;
 
+import com.google.inject.Inject;
 import org.easymock.EasyMock;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.service.jpa.User;
 import org.jcatapult.persistence.test.JPABaseTest;
+import org.jcatapult.persistence.test.JPATestHelper;
 import org.jcatapult.persistence.txn.annotation.Transactional;
 import org.jcatapult.persistence.txn.jpa.JPATransactionManager;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import com.google.inject.Inject;
-
 /**
  * <p>
- * This class tests the transactin annotation and the defaults at
- * the macro and micro levels.
+ * This class tests the transaction annotation and the defaults at the macro and micro levels.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class TransactionTest extends JPABaseTest {
+public class JPATransactionTest extends JPABaseTest {
     private JPATestService service;
 
     @Inject
@@ -49,28 +48,31 @@ public class TransactionTest extends JPABaseTest {
     }
 
     @Test
-    public void testMarco() throws SQLException {
+    public void testMarco() throws SQLException, InterruptedException {
         service.success();
-        RowSet rs = executeQuery("select name from users where name = 'TransactionTest-success'");
+        RowSet rs = executeQuery("select name from users where name = 'JPATransactionTest-success'");
         assertTrue(rs.next());
         rs.close();
 
+        rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
+        assertFalse(rs.next());
+        rs.close();
         try {
             service.failure();
         } catch (Exception e) {
             // Expected
         }
-        rs = executeQuery("select name from users where name = 'TransactionTest-failure'");
+        rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
         assertFalse(rs.next());
         rs.close();
 
         service.returnValueSuccess();
-        rs = executeQuery("select name from users where name = 'TransactionTest-returnValueSuccess'");
+        rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueSuccess'");
         assertTrue(rs.next());
         rs.close();
 
         service.returnValueFailure();
-        rs = executeQuery("select name from users where name = 'TransactionTest-returnValueFailure'");
+        rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueFailure'");
         assertFalse(rs.next());
         rs.close();
     }
@@ -96,7 +98,7 @@ public class TransactionTest extends JPABaseTest {
 
         JPATransactionManager manager = new JPATransactionManager(em);
         TransactionState state = manager.startTransaction();
-        assertSame(et, state.transaction());
+        assertSame(et, state.wrapped());
         assertFalse(state.embedded());
 
         EasyMock.verify(et, em);
@@ -114,7 +116,7 @@ public class TransactionTest extends JPABaseTest {
 
         JPATransactionManager manager = new JPATransactionManager(em);
         TransactionState state = manager.startTransaction();
-        assertSame(et, state.transaction());
+        assertSame(et, state.wrapped());
         assertTrue(state.embedded());
 
         EasyMock.verify(et, em);
@@ -129,24 +131,36 @@ public class TransactionTest extends JPABaseTest {
         }
 
         @Transactional()
-        public void success() {
+        public void success() throws SQLException {
             User user = new User();
-            user.setName("TransactionTest-success");
+            user.setName("JPATransactionTest-success");
             persistenceService.persist(user);
+
+            // Verify that another session can't see the data
+            RowSet rs = JPATestHelper.executeQuery("select name from users where name = 'JPATransactionTest-success'");
+            assertFalse(rs.next());
+            rs.close();
         }
 
         @Transactional()
-        public void failure() {
+        public void failure() throws InterruptedException {
             User user = new User();
-            user.setName("TransactionTest-failure");
+            user.setName("JPATransactionTest-failure");
             persistenceService.persist(user);
+            try {
+                RowSet rs = JPATestHelper.executeQuery("select name from users where name = 'JPATransactionTest-failure'");
+                assertFalse(rs.next());
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             throw new RuntimeException();
         }
 
         @Transactional(processor = UserProcessor.class)
         public User returnValueSuccess() {
             User user = new User();
-            user.setName("TransactionTest-returnValueSuccess");
+            user.setName("JPATransactionTest-returnValueSuccess");
             persistenceService.persist(user);
             return user;
         }
@@ -154,7 +168,7 @@ public class TransactionTest extends JPABaseTest {
         @Transactional(processor = UserProcessor.class)
         public User returnValueFailure() {
             User user = new User();
-            user.setName("TransactionTest-returnValueFailure");
+            user.setName("JPATransactionTest-returnValueFailure");
             persistenceService.persist(user);
             return user;
         }
@@ -163,7 +177,7 @@ public class TransactionTest extends JPABaseTest {
     public static class UserProcessor extends DefaultTransactionResultProcessor<User> {
         @Override
         public boolean rollback(User result, Throwable throwable) {
-            return result.getName().equals("TransactionTest-returnValueFailure") ||
+            return result.getName().equals("JPATransactionTest-returnValueFailure") ||
                 super.rollback(result, throwable);
         }
     }

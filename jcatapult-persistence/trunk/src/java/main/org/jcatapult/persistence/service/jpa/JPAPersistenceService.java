@@ -15,9 +15,6 @@
  */
 package org.jcatapult.persistence.service.jpa;
 
-import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -25,13 +22,15 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Map;
 
+import com.google.inject.Inject;
 import org.jcatapult.persistence.domain.Identifiable;
 import org.jcatapult.persistence.domain.SoftDeletable;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.service.Transaction;
-
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -575,7 +574,7 @@ public class JPAPersistenceService implements PersistenceService {
 
         // Remove it
         entityManager.remove(obj);
-        
+
         // No need for a try-catch block because a call to commit that fails will rollback the
         // transaction automatically for us.
         transaction.commit();

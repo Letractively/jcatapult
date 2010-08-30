@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,33 +12,25 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
 package org.jcatapult.persistence.txn;
 
-import javax.persistence.EntityTransaction;
+import java.util.List;
+
+import com.google.inject.ImplementedBy;
 
 /**
  * <p>
- * This is a simple implementation of the state.
+ * This interface defines the method by which transaction managers are looked up for a specific
+ * request.
  * </p>
  *
  * @author Brian Pontarelli
  */
-public class DefaultTransactionState implements TransactionState {
-    private final EntityTransaction txn;
-    private final boolean embedded;
-
-    public DefaultTransactionState(EntityTransaction txn, boolean embedded) {
-        this.txn = txn;
-        this.embedded = embedded;
-    }
-
-    public EntityTransaction transaction() {
-        return txn;
-    }
-
-    public boolean embedded() {
-        return embedded;
-    }
+@ImplementedBy(DefaultTransactionManagerLookup.class)
+public interface TransactionManagerLookup {
+    /**
+     * @return  The list of managers that should participate in the current transaction.
+     */
+    List<TransactionManager> lookupManagers();
 }

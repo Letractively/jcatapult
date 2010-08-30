@@ -34,22 +34,14 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class MoneyCurrencyTypeTest extends JPABaseTest {
-    protected PersistenceService persistenceService;
-
-    @Inject
-    public void setPersistenceService(PersistenceService persistenceService) {
-        this.persistenceService = persistenceService;
-    }
+    @Inject public PersistenceService persistenceService;
 
     @Test
-    public void testSave() {
+    public void save() {
         MoneyHolder holder = new MoneyHolder();
         holder.setMoney(Money.valueOf("1.99", Currency.getInstance("EUR")));
         persistenceService.persist(holder);
-    }
 
-    @Test
-    public void testCurrency() {
         List<MoneyHolder> holders = persistenceService.findAllByType(MoneyHolder.class);
         assertEquals(1, holders.size());
         assertEquals(new BigDecimal("1.99"), holders.get(0).getMoney().toBigDecimal());

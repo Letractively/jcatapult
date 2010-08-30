@@ -16,30 +16,30 @@
  */
 package org.jcatapult.persistence.service.jpa;
 
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import org.jcatapult.guice.Closable;
 
 /**
  * <p>
  * This class implements the JPA service. It is a singleton and in the constructor
  * it sets up the EntityManagerFactory.
  * </p>
- *
  * <p>
  * This class is a singleton since it constructs the EntityManagerFactory in the
- * constrcutor and holds a reference to it.
+ * constructor and holds a reference to it.
  * </p>
  *
  * @author  Brian Pontarelli
  */
 @Singleton
-public class DefaultJPAService implements JPAService {
+public class DefaultJPAService implements JPAService, Closable {
     private static final Logger logger = Logger.getLogger(DefaultJPAService.class.getName());
     private EntityManagerFactory emf;
 
@@ -52,7 +52,7 @@ public class DefaultJPAService implements JPAService {
      */
     @Inject
     public DefaultJPAService(@Named("jcatapult.jpa.enabled") boolean jpaEnabled,
-            @Named("jcatapult.jpa.unit") String persistentUnit) {
+                             @Named("jcatapult.jpa.unit") String persistentUnit) {
         logger.fine("JPA is " + (jpaEnabled ? "enabled" : "disabled"));
 
         if (jpaEnabled) {
@@ -63,6 +63,7 @@ public class DefaultJPAService implements JPAService {
     /**
      * {@inheritDoc}
      */
+    @Override
     public EntityManagerFactory getFactory() {
         return emf;
     }
@@ -70,25 +71,40 @@ public class DefaultJPAService implements JPAService {
     /**
      * {@inheritDoc}
      */
-    public void setupEntityManager() {
-        EntityManager entityManager = emf.createEntityManager();
-        EntityManagerContext.set(entityManager);
+    @Override
+    public EntityManager setupEntityManager() {
+        EntityManager em = EntityManagerContext.get();
+        if (em != null) {
+            return em;
+        }
+        
+        if (emf != null) {
+            em = emf.createEntityManager();
+            EntityManagerContext.set(em);
+            return em;
+        }
+
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void tearDownEntityManager() {
         // Clear out the context just to be safe.
         EntityManager entityManager = EntityManagerContext.get();
-        EntityManagerContext.remove();
-        entityManager.close();
+        if (entityManager != null) {
+            EntityManagerContext.remove();
+            entityManager.close();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    public void closeFactory() {
+    @Override
+    public void close() {
         if (emf != null) {
             emf.close();
         }

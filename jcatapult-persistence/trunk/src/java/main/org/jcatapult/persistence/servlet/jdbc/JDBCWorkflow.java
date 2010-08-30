@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,37 +13,28 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.persistence.servlet.jpa;
+package org.jcatapult.persistence.servlet.jdbc;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
 
 import com.google.inject.Inject;
-import org.jcatapult.persistence.service.jpa.JPAService;
+import org.jcatapult.persistence.service.jdbc.JDBCService;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 
 /**
  * <p>
- * This class handles setting up the JPA support for each request into the
- * servlet container. This allows JPA classes to be injected into classes
- * using a ThreadLocal storage for EntityManagers. This is also the
- * implementation of the Open-Seesion-In-View pattern.
- * </p>
- *
- * <p>
- * The majority of the work is actually performed by the {@link JPAService}
- * and not this class. This class just delegates to the JPAService and fits
- * into the JCatapult workflow processing.
+ * This class is a JCatapult workflow that provides injections for JDBC connections.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class JPAWorkflow implements Workflow {
-    private final JPAService service;
+public class JDBCWorkflow implements Workflow {
+    private final JDBCService service;
 
     @Inject
-    public JPAWorkflow(JPAService service) {
+    public JDBCWorkflow(JDBCService service) {
         this.service = service;
     }
 
@@ -59,7 +50,7 @@ public class JPAWorkflow implements Workflow {
             // Proceed down the chain
             workflowChain.continueWorkflow();
         } finally {
-            service.tearDownEntityManager();
+            service.tearDownConnection();
         }
     }
 }

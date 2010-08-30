@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,13 +12,11 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- *
  */
-package org.jcatapult.persistence.txn.jpa;
+package org.jcatapult.persistence.txn.jdbc;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import com.google.inject.Inject;
 import org.jcatapult.persistence.txn.TransactionManager;
@@ -27,46 +25,37 @@ import org.jcatapult.persistence.txn.TransactionState;
 
 /**
  * <p>
- * This class provides a simple transaction management support
- * by leveraging the current persistence context and starting
- * transactions, but also by using the implementation of the
- * {@link TransactionResultProcessor} that is passed to the end
- * method to determine rollbacks.
- * </p>
- *
- * <p>
- * This is a not a singleton since it gets injected with the
- * current EntityManager.
+ * This class provides the transaction handling for JDBC.
  * </p>
  *
  * @author  Brian Pontarelli
  */
-public class JPATransactionManager implements TransactionManager<EntityTransaction, PersistenceException> {
-    private final EntityManager entityManager;
+public class JDBCTransactionManager implements TransactionManager<Connection, SQLException> {
+    private final Connection connection;
 
     @Inject
-    public JPATransactionManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public JDBCTransactionManager(Connection connection) {
+        this.connection = connection;
     }
 
     /**
      * {@inheritDoc}
      */
-    public TransactionState<EntityTransaction, PersistenceException> startTransaction() {
-        EntityTransaction txn = entityManager.getTransaction();
-        boolean embedded = txn.isActive();
+    public TransactionState<Connection, SQLException> startTransaction() throws SQLException {
+        boolean embedded = !connection.getAutoCommit();
         if (!embedded) {
-            txn.begin();
+            connection.setAutoCommit(false);
         }
 
-        return new JPATransactionState(txn, embedded);
+        return new JDBCTransactionState(connection, embedded);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void endTransaction(Object result, Throwable t, TransactionState<EntityTransaction, PersistenceException> txn,
-                               TransactionResultProcessor processor) {
+    @SuppressWarnings("unchecked")
+    public void endTransaction(Object result, Throwable t, TransactionState<Connection, SQLException> txn,
+                               TransactionResultProcessor processor) throws SQLException {
         boolean rollback = processor.rollback(result, t) || txn.isRollbackOnly();
         if (rollback && !txn.embedded()) { // Not embedded, roll back
             txn.rollback();

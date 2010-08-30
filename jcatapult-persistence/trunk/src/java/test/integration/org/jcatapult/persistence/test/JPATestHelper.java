@@ -15,6 +15,15 @@
  */
 package org.jcatapult.persistence.test;
 
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.Table;
+import javax.sql.DataSource;
+import javax.sql.RowSet;
+import javax.sql.rowset.CachedRowSet;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -25,16 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import javax.persistence.Table;
-import javax.sql.DataSource;
-import javax.sql.RowSet;
-import javax.sql.rowset.CachedRowSet;
 
+import com.sun.rowset.CachedRowSetImpl;
 import net.java.naming.MockJNDI;
 import net.java.sql.ScriptExecutor;
 import net.java.text.SimplePluralizer;
@@ -46,8 +47,6 @@ import org.jcatapult.persistence.PostgreSQLTools;
 import org.jcatapult.persistence.service.jpa.EntityManagerContext;
 import org.jcatapult.test.Fixture;
 import org.junit.Ignore;
-
-import com.sun.rowset.CachedRowSetImpl;
 
 /**
  * <p>
@@ -137,7 +136,6 @@ public class JPATestHelper {
      * Constructs the EntityManager and puts it in the context.
      */
     public static void setupForTest() {
-        logger.info("Setting up JPA test support.");
         EntityManager em = emf.createEntityManager();
         EntityManagerContext.set(em);
     }

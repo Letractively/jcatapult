@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,31 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.persistence.service.jpa;
+package org.jcatapult.persistence.service.jdbc;
 
-import javax.persistence.EntityManager;
+import java.sql.Connection;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
  * <p>
- * This class is a Guice provider that either pulls the EntityManager out of the thread
- * local {@link EntityManagerContext} or creates a new EntityManager using the factory
- * and then puts that in the ThreadLocal.
+ * This class is a provider for a JDBC connection. It uses the {@link JDBCService}
+ * injected by Guice to get the connection from.
  * </p>
  *
- * @author  James Humphrey and Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-public class EntityManagerProvider implements Provider<EntityManager> {
-    private final JPAService service;
+public class ConnectionProvider implements Provider<Connection> {
+    private final JDBCService service;
 
     @Inject
-    public EntityManagerProvider(JPAService service) {
+    public ConnectionProvider(JDBCService service) {
         this.service = service;
     }
 
-    public EntityManager get() {
-        return service.setupEntityManager();
+    @Override
+    public Connection get() {
+        return service.setupConnection();
     }
 }

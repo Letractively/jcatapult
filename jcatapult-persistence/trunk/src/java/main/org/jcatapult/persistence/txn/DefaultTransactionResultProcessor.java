@@ -30,7 +30,7 @@ public class DefaultTransactionResultProcessor<T> implements TransactionResultPr
      *
      * @param   result The method's return value, which is not used.
      * @param   throwable The exception thrown from the method.
-     * @return  True if {@code throwable} is not null.
+     * @return  True if {@code throwable} is not null and is a RuntimeException (or sub-class).
      */
     public boolean rollback(T result, Throwable throwable) {
         return throwable != null && throwable instanceof RuntimeException;
