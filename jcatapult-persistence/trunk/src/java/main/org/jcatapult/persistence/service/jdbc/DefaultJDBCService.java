@@ -89,6 +89,7 @@ public class DefaultJDBCService implements JDBCService {
     public void tearDownConnection() {
         Connection c = ConnectionContext.get();
         if (c != null) {
+            ConnectionContext.remove();
             try {
                 c.setAutoCommit(true);
                 c.close();
