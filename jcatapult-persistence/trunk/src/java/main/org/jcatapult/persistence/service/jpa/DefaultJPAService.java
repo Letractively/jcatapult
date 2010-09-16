@@ -16,15 +16,12 @@
  */
 package org.jcatapult.persistence.service.jpa;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import org.jcatapult.guice.Closable;
 
 /**
  * <p>
@@ -39,74 +36,23 @@ import org.jcatapult.guice.Closable;
  * @author  Brian Pontarelli
  */
 @Singleton
-public class DefaultJPAService implements JPAService, Closable {
+public class DefaultJPAService extends AbstractJPAService {
     private static final Logger logger = Logger.getLogger(DefaultJPAService.class.getName());
-    private EntityManagerFactory emf;
 
     /**
      * @param   jpaEnabled If true, JPA will be setup, false it will not. A boolean flag controlled
      *          by the jcatapult configuration property named <strong>jcatapult.jpa.enabled</strong>
      *          that controls whether or not JPA will be initialized and then setup during each request.
-     * @param   persistentUnit  The name of the JPA persistent unit to use if JPA is being setup.
+     * @param   persistenceUnit  The name of the JPA persistence unit to use if JPA is being setup.
      *          This is controlled by the jcatapult configuration property named <strong>jcatapult.jpa.unit</strong>.
      */
     @Inject
-    public DefaultJPAService(@Named("jcatapult.jpa.enabled") boolean jpaEnabled,
-                             @Named("jcatapult.jpa.unit") String persistentUnit) {
-        logger.fine("JPA is " + (jpaEnabled ? "enabled" : "disabled"));
-
+    public DefaultJPAService(@Named("jcatapult.jpa.enabled") boolean jpaEnabled, @Named("jcatapult.jpa.unit") String persistenceUnit) {
         if (jpaEnabled) {
-            emf = Persistence.createEntityManagerFactory(persistentUnit);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EntityManagerFactory getFactory() {
-        return emf;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EntityManager setupEntityManager() {
-        EntityManager em = EntityManagerContext.get();
-        if (em != null) {
-            return em;
-        }
-        
-        if (emf != null) {
-            em = emf.createEntityManager();
-            EntityManagerContext.set(em);
-            return em;
-        }
-
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void tearDownEntityManager() {
-        // Clear out the context just to be safe.
-        EntityManager entityManager = EntityManagerContext.get();
-        if (entityManager != null) {
-            EntityManagerContext.remove();
-            entityManager.close();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void close() {
-        if (emf != null) {
-            emf.close();
+            logger.fine("JPA is enabled");
+            emf = Persistence.createEntityManagerFactory(persistenceUnit);
+        } else {
+            logger.fine("JPA is disabled");
         }
     }
 }
