@@ -16,6 +16,7 @@
 package org.jcatapult.test;
 
 import javax.servlet.ServletException;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,18 @@ public class RequestBuilder {
     }
 
     /**
+     * Adds a header to the request.
+     *
+     * @param   name The name of the header.
+     * @param   value The value of the header.
+     * @return  This.
+     */
+    public RequestBuilder withHeader(String name, String value) {
+        request.addHeader(name, value);
+        return this;
+    }
+
+    /**
      * Sets the context path.
      *
      * @param   contextPath The context path.
@@ -110,6 +123,19 @@ public class RequestBuilder {
      */
     public RequestBuilder withEncoding(String encoding) {
         request.setEncoding(encoding);
+        return this;
+    }
+
+    /**
+     * Adds a file.
+     *
+     * @param   name The name of the file form field.
+     * @param   file The file.
+     * @param   contentType The content type.
+     * @return  This.
+     */
+    public RequestBuilder withFile(String name, File file, String contentType) {
+        request.addFile(name, file, contentType);
         return this;
     }
 

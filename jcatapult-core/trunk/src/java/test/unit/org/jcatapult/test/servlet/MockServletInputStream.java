@@ -15,8 +15,8 @@
  */
 package org.jcatapult.test.servlet;
 
-import java.io.IOException;
 import javax.servlet.ServletInputStream;
+import java.io.IOException;
 
 /**
  * <p>
@@ -28,6 +28,10 @@ import javax.servlet.ServletInputStream;
 public class MockServletInputStream extends ServletInputStream {
     private final byte[] bytes;
     private int index = 0;
+
+    public MockServletInputStream() {
+        this.bytes = new byte[0];
+    }
 
     public MockServletInputStream(byte[] bytes) {
         this.bytes = bytes;

@@ -21,6 +21,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -37,6 +38,7 @@ import java.util.Vector;
 
 import static java.util.Arrays.*;
 import net.java.util.IteratorEnumeration;
+import org.jcatapult.servlet.multipart.FileInfo;
 
 /**
  * <p>
@@ -50,14 +52,15 @@ public class MockHttpServletRequest implements HttpServletRequest {
     protected final Map<String, Object> attributes = new HashMap<String, Object>();
     protected final Map<String, List<String>> headers = new HashMap<String, List<String>>();
     protected final Map<String, List<String>> parameters = new HashMap<String, List<String>>();
+    protected final Map<String, FileInfo> files = new HashMap<String, FileInfo>();
     protected final MockServletContext context;
-    protected MockHttpSession session;
 
+    protected MockHttpSession session;
     protected String contentType = null;
+
     protected String uri;
 
     protected Vector<Locale> locales = new Vector<Locale>(asList(Locale.getDefault()));
-
     protected Method method;
     protected String encoding;
     protected String remoteAddr = "127.0.0.1";
@@ -66,15 +69,13 @@ public class MockHttpServletRequest implements HttpServletRequest {
     protected String scheme = "HTTP";
     protected String serverName = "localhost";
     protected String localName = "localhost";
-    protected int serverPort = 10000;
 
-    protected ServletInputStream inputStream = new MockServletInputStream(new byte[0]);
+    protected int serverPort = 10000;
+    protected ServletInputStream inputStream;
     protected BufferedReader reader;
     protected boolean inputStreamRetrieved;
     protected boolean readerRetrieved;
-    protected boolean parametersParsed;
 
-//    protected boolean parametersRetrieved;
     protected MockRequestDispatcher dispatcher;
     protected String contextPath = "";
     protected List<Cookie> cookies = new ArrayList<Cookie>();
@@ -216,6 +217,12 @@ public class MockHttpServletRequest implements HttpServletRequest {
             throw new IOException("Reader has already been retrieved.");
         }
 
+        if (files.size() > 0 && inputStream == null) {
+            inputStream = new MultipartInputStream(parameters, files);
+        } else if (inputStream == null) {
+            inputStream = new MockServletInputStream();
+        }
+
         inputStreamRetrieved = true;
         return inputStream;
     }
@@ -258,7 +265,10 @@ public class MockHttpServletRequest implements HttpServletRequest {
      * @return  The parameter or null.
      */
     public String getParameter(String name) {
-        handleInputStream();
+        if (!hasParameters()) {
+            return null;
+        }
+
         List<String> list = parameters.get(name);
         if (list != null && list.size() > 0) {
             return list.get(0);
@@ -268,7 +278,10 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     public Map getParameterMap() {
-        handleInputStream();
+        if (!hasParameters()) {
+            return Collections.emptyMap();
+        }
+
         Map<String, String[]> params = new HashMap<String, String[]>();
         for (String key : parameters.keySet()) {
             params.put(key, parameters.get(key).toArray(new String[parameters.get(key).size()]));
@@ -278,12 +291,18 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     public Enumeration getParameterNames() {
-        handleInputStream();
+        if (!hasParameters()) {
+            return new IteratorEnumeration(Collections.<Object>emptyList().iterator());
+        }
+
         return new IteratorEnumeration(parameters.keySet().iterator());
     }
 
     public String[] getParameterValues(String name) {
-        handleInputStream();
+        if (!hasParameters()) {
+            return null;
+        }
+
         List<String> list = parameters.get(name);
         if (list != null) {
             return list.toArray(new String[list.size()]);
@@ -306,6 +325,10 @@ public class MockHttpServletRequest implements HttpServletRequest {
     public BufferedReader getReader() throws IOException {
         if (inputStreamRetrieved) {
             throw new IOException("InputStream already retrieved.");
+        }
+
+        if (inputStream == null) {
+            inputStream = new MockServletInputStream();
         }
 
         if (reader == null) {
@@ -850,6 +873,13 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @return  The parameter map.
+     */
+    public Map<String, List<String>> getParameters() {
+        return parameters;
+    }
+
+    /**
      * Clears all the attributes
      */
     public void clearAttributes() {
@@ -892,6 +922,9 @@ public class MockHttpServletRequest implements HttpServletRequest {
      */
     public void setMethod(Method method) {
         this.method = method;
+        if (method == Method.POST && contentType == null) {
+            contentType = "application/x-www-form-urlencoded";
+        }
     }
 
     /**
@@ -1008,18 +1041,47 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     /**
-     * Simulated how the container drains the InputStream when parameters are retrieved and the content-type is form
-     * encoded.
+     * Adds a file to the HTTP request body. This must be called if the content type is not set and the InputStream hasn't
+     * been set or retrieved.
+     *
+     * @param   key The name of the form field.
+     * @param   file The file to add.
+     * @param   contentType The content type of the file.
      */
-    private void handleInputStream() {
-        if (inputStreamRetrieved || readerRetrieved) {
-            return;
+    public void addFile(String key, File file, String contentType) {
+        if (contentType == null || file == null) {
+            throw new IllegalArgumentException("The FileInfo must have a file and a contentType");
+        }
+        if (inputStreamRetrieved) {
+            throw new IllegalStateException("InputStream retrieved already. Can't add a file to the HTTP request");
+        }
+        if (readerRetrieved) {
+            throw new IllegalStateException("Reader retrieved already. Can't add a file to the HTTP request");
+        }
+        if (this.contentType != null) {
+            throw new IllegalStateException("Content-Type set already. Can't add a file to the HTTP request");
         }
 
-        if (method == Method.POST && contentType != null && contentType.equals("x-www-form-urlencoded")) {
-            inputStream = new MockServletInputStream(new byte[0]);
-        }
+        this.contentType = "multipart/form-data, boundary=AaB03x";
+        this.files.put(key, new FileInfo(file, key, contentType));
     }
+
+    /**
+     * Simulated how the container drains the InputStream when parameters are retrieved and the content-type is form
+     * encoded.
+     *
+     * @return  True if the parameters are still good, false if there is an input stream to be used.
+     */
+    private boolean hasParameters() {
+        if (method == Method.POST && contentType != null && contentType.equals("application/x-www-form-urlencoded")) {
+            inputStream = new MockServletInputStream(new byte[0]);
+            return true;
+        }
+
+        return method == Method.GET;
+    }
+
+
 
     public static enum Method {
         GET,
