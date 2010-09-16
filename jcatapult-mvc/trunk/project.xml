@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-1.5/project"
     name="jcatapult-mvc"
     group="jcatapult.org"
-    version="1.0.20">
+    version="1.0.21">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.2"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.1.1"/>

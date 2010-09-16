@@ -43,11 +43,11 @@ import org.jcatapult.mvc.parameter.annotation.PreParameterMethod;
 import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
 import org.jcatapult.mvc.parameter.el.ExpressionException;
-import org.jcatapult.mvc.parameter.fileupload.FileInfo;
 import org.jcatapult.mvc.parameter.fileupload.annotation.FileUpload;
 import org.jcatapult.mvc.util.MethodTools;
 import org.jcatapult.mvc.util.RequestKeys;
 import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.servlet.multipart.FileInfo;
 
 /**
  * <p>
