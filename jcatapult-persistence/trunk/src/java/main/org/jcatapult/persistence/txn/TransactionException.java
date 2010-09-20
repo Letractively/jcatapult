@@ -15,22 +15,26 @@
  */
 package org.jcatapult.persistence.txn;
 
-import java.util.List;
-
-import com.google.inject.ImplementedBy;
-
 /**
  * <p>
- * This interface defines the method by which transaction managers are looked up for a specific
- * request.
+ * This class is a generic transaction exception.
  * </p>
  *
- * @author Brian Pontarelli
+ * @author  Brian Pontarelli
  */
-@ImplementedBy(DefaultTransactionManagerLookup.class)
-public interface TransactionManagerLookup {
-    /**
-     * @return  The list of managers that should participate in the current transaction.
-     */
-    List<TransactionManager> lookupManagers();
+public class TransactionException extends RuntimeException {
+    public TransactionException() {
+    }
+
+    public TransactionException(String message) {
+        super(message);
+    }
+
+    public TransactionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public TransactionException(Throwable cause) {
+        super(cause);
+    }
 }

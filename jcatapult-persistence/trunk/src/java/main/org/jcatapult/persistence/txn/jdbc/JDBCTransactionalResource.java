@@ -18,7 +18,8 @@ package org.jcatapult.persistence.txn.jdbc;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.jcatapult.persistence.txn.TransactionState;
+import org.jcatapult.persistence.txn.TransactionException;
+import org.jcatapult.persistence.txn.TransactionalResource;
 
 /**
  * <p>
@@ -27,14 +28,11 @@ import org.jcatapult.persistence.txn.TransactionState;
  *
  * @author  Brian Pontarelli
  */
-public class JDBCTransactionState implements TransactionState<Connection, SQLException> {
+public class JDBCTransactionalResource implements TransactionalResource<Connection, SQLException> {
     private final Connection connection;
-    private final boolean embedded;
-    private boolean rollbackOnly;
 
-    public JDBCTransactionState(Connection connection, boolean embedded) {
+    public JDBCTransactionalResource(Connection connection) {
         this.connection = connection;
-        this.embedded = embedded;
     }
 
     /**
@@ -46,27 +44,17 @@ public class JDBCTransactionState implements TransactionState<Connection, SQLExc
     }
 
     /**
-     * @return  True if the transaction was not started by the current scope, but by an outer scope.
+     * Starts the transaction for the JDBC connection by setting auto-commit to false.
+     *
+     * @throws  SQLException If the start failed.
      */
     @Override
-    public boolean embedded() {
-        return embedded;
-    }
+    public void start() throws SQLException {
+        if (!connection.getAutoCommit()) {
+            throw new TransactionException("The JDBC transaction has already been started and can't be started twice.");
+        }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setRollbackOnly() {
-        rollbackOnly = true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isRollbackOnly() {
-        return rollbackOnly;
+        connection.setAutoCommit(false);
     }
 
     /**

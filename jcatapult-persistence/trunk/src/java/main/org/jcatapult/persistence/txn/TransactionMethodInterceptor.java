@@ -15,9 +15,6 @@
  */
 package org.jcatapult.persistence.txn;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.jcatapult.guice.GuiceContainer;
@@ -34,10 +31,10 @@ import org.jcatapult.persistence.txn.annotation.Transactional;
  */
 public class TransactionMethodInterceptor implements MethodInterceptor {
     /**
-     * Intercepts method invocations that have been tagged with the {@link Transactional} annotation. This delegates for
-     * the most part to the {@link TransactionManager} interface that is injected for the transaction handling. The only
-     * thing this class does is to place a try-catch-finally block around the method invocation and store the results of
-     * the method invocation to pass to the transaction manager.
+     * Intercepts method invocations that have been tagged with the {@link Transactional} annotation. This uses the
+     * {@link TransactionContextManager} to get the current {@link TransactionContext}. The {@link TransactionContext} is
+     * then used to determine if the transaction is new or embeeded. This then handles the starting, committing and rolling
+     * back of the transaction based on the result of the method invocation and if the transaction is embedded or not.
      *
      * @param   methodInvocation The method invocation.
      * @return  The result of the method invocation.
@@ -45,10 +42,18 @@ public class TransactionMethodInterceptor implements MethodInterceptor {
      */
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         TransactionResultProcessor processor = processor(methodInvocation);
-        TransactionManagerLookup lookup = GuiceContainer.getInjector().getInstance(TransactionManagerLookup.class);
+        TransactionContextManager mgr = GuiceContainer.getInjector().getInstance(TransactionContextManager.class);
+        TransactionContext txnContext = mgr.getCurrent();
 
-        List<TransactionManager> managers = lookup.lookupManagers();
-        List<TransactionState> states = startTransactions(managers);
+        // Check if a new transaction needs to be created
+        if (txnContext == null) {
+            txnContext = mgr.start();
+        }
+
+        boolean embedded = txnContext.isStarted();
+        if (!embedded) {
+            txnContext.start();
+        }
 
         Object result = null;
         Throwable t = null;
@@ -58,7 +63,12 @@ public class TransactionMethodInterceptor implements MethodInterceptor {
             t = throwable;
             throw throwable;
         } finally {
-            endTransactions(processor, managers, states, result, t);
+            // Check if this is the outer call and close the transaction if it is
+            if (!embedded) {
+                mgr.tearDownTransactionContext();
+            }
+
+            endTransactions(txnContext, processor, result, t, embedded);
         }
 
         return result;
@@ -78,37 +88,28 @@ public class TransactionMethodInterceptor implements MethodInterceptor {
     }
 
     /**
-     * Starts all of the transactions for each manager.
+     * Ends the transaction.
      *
-     * @param   managers The managers.
-     * @return  The transaction states for each manager.
-     * @throws  Throwable If starting any of the transactions failed.
-     */
-    protected List<TransactionState> startTransactions(List<TransactionManager> managers) throws Throwable {
-        List<TransactionState> states = new ArrayList<TransactionState>();
-        for (TransactionManager manager : managers) {
-            states.add(manager.startTransaction());
-        }
-        return states;
-    }
-
-    /**
-     * Ends the transactions for each manager.
-     *
+     * @param   txnContext The current transaction context.
      * @param   processor The result processor.
-     * @param   managers The managers.
-     * @param   states The transaction states.
      * @param   result The result.
      * @param   t The thrown exception.
+     * @param   embedded True if the transaction is embedded or false if it was started by this method invocation.
      * @throws  Throwable If ending any of the transactions failed.
      */
     @SuppressWarnings("unchecked")
-    private void endTransactions(TransactionResultProcessor processor, List<TransactionManager> managers,
-                                 List<TransactionState> states, Object result, Throwable t) throws Throwable {
-        for (int i = 0; i < managers.size(); i++) {
-            TransactionManager manager = managers.get(i);
-            TransactionState state = states.get(i);
-            manager.endTransaction(result, t, state, processor);
+    private void endTransactions(TransactionContext txnContext, TransactionResultProcessor processor, Object result,
+                                 Throwable t, boolean embedded)
+    throws Throwable {
+        boolean rollback = processor.rollback(result, t);
+        if (!embedded) {
+            if (txnContext.isRollbackOnly() || rollback) {
+                txnContext.rollback();
+            } else {
+                txnContext.commit();
+            }
+        } else if (rollback) {
+            txnContext.setRollbackOnly();
         }
     }
 }

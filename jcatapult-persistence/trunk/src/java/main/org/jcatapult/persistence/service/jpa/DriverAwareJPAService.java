@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import org.jcatapult.persistence.txn.TransactionContextManager;
 
 /**
  * <p>
@@ -52,10 +53,12 @@ public class DriverAwareJPAService extends AbstractJPAService {
     private static final Logger logger = Logger.getLogger(DefaultJPAService.class.getName());
 
     @Inject
-    public DriverAwareJPAService(@Named("jcatapult.jpa.enabled") boolean jpaEnabled,
+    public DriverAwareJPAService(TransactionContextManager txnContextManager,
+                                 @Named("jcatapult.jpa.enabled") boolean jpaEnabled,
                                  @Named("jcatapult.jpa.unit") String persistenceUnit,
                                  @Named("non-jta-data-source") String dataSourceJndiName)
     throws NamingException, SQLException {
+        super(txnContextManager);
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("hibernate.dialect", dialect(dataSourceJndiName));
 

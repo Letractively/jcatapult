@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import org.jcatapult.persistence.txn.TransactionContextManager;
 
 /**
  * <p>
@@ -40,6 +41,7 @@ public class DefaultJPAService extends AbstractJPAService {
     private static final Logger logger = Logger.getLogger(DefaultJPAService.class.getName());
 
     /**
+     * @param   txnContextManager The TransactionContextManager.
      * @param   jpaEnabled If true, JPA will be setup, false it will not. A boolean flag controlled
      *          by the jcatapult configuration property named <strong>jcatapult.jpa.enabled</strong>
      *          that controls whether or not JPA will be initialized and then setup during each request.
@@ -47,7 +49,9 @@ public class DefaultJPAService extends AbstractJPAService {
      *          This is controlled by the jcatapult configuration property named <strong>jcatapult.jpa.unit</strong>.
      */
     @Inject
-    public DefaultJPAService(@Named("jcatapult.jpa.enabled") boolean jpaEnabled, @Named("jcatapult.jpa.unit") String persistenceUnit) {
+    public DefaultJPAService(TransactionContextManager txnContextManager, @Named("jcatapult.jpa.enabled") boolean jpaEnabled,
+                             @Named("jcatapult.jpa.unit") String persistenceUnit) {
+        super(txnContextManager);
         if (jpaEnabled) {
             logger.fine("JPA is enabled");
             emf = Persistence.createEntityManagerFactory(persistenceUnit);
