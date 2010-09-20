@@ -30,11 +30,11 @@ import static net.java.lang.ObjectTools.*;
  *
  * @author  Brian Pontarelli
  */
-public class CollectionAccessor extends Accessor {
-    String index;
+public class IndexedCollectionAccessor extends Accessor {
+    Integer index;
     MemberAccessor memberAccessor;
 
-    public CollectionAccessor(ConverterProvider converterProvider, Accessor accessor, String index,
+    public IndexedCollectionAccessor(ConverterProvider converterProvider, Accessor accessor, Integer index,
             MemberAccessor memberAccessor) {
         super(converterProvider, accessor);
         this.index = index;
@@ -66,11 +66,12 @@ public class CollectionAccessor extends Accessor {
     }
 
     public void set(String[] values, Context context) {
-        set(convert(values, context, memberAccessor.field), context);
+        set(convert(context, memberAccessor.field, values), context);
     }
 
     public void set(Object value, Context context) {
         object = pad(object, context);
+
         setValueIntoCollection(object, index, value);
     }
 
@@ -97,17 +98,15 @@ public class CollectionAccessor extends Accessor {
         if (object instanceof List) {
             List list = ((List) object);
             int length = list.size();
-            int indexInt = Integer.parseInt(index);
-            if (length <= indexInt) {
-                for (int i = length; i <= indexInt; i++) {
+            if (length <= index) {
+                for (int i = length; i <= index; i++) {
                     list.add(null);
                 }
             }
         } else if (isArray(object)) {
             int length = Array.getLength(object);
-            int indexInt = Integer.parseInt(index);
-            if (length <= indexInt) {
-                Object newArray = Array.newInstance(object.getClass().getComponentType(), indexInt + 1);
+            if (length <= index) {
+                Object newArray = Array.newInstance(object.getClass().getComponentType(), index + 1);
                 System.arraycopy(object, 0, newArray, 0, length);
                 object = newArray;
 

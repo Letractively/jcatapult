@@ -39,16 +39,16 @@ public class DateTimeConverterTest {
     @Test
     public void testFromStrings() {
         GlobalConverter converter = new DateTimeConverter();
-        DateTime value = (DateTime) converter.convertFromStrings(array((String) null), DateTime.class, null, "testExpr");
+        DateTime value = (DateTime) converter.convertFromStrings(DateTime.class, null, "testExpr", array((String) null));
         assertNull(value);
 
-        value = (DateTime) converter.convertFromStrings(array("07-08-2008"), Locale.class, map("dateTimeFormat", "MM-dd-yyyy"), "testExpr");
+        value = (DateTime) converter.convertFromStrings(Locale.class, map("dateTimeFormat", "MM-dd-yyyy"), "testExpr", array("07-08-2008"));
         assertEquals(7, value.getMonthOfYear());
         assertEquals(8, value.getDayOfMonth());
         assertEquals(2008, value.getYear());
 
         try {
-            converter.convertFromStrings(array("07/08/2008"), Locale.class, map("dateTimeFormat", "MM-dd-yyyy"), "testExpr");
+            converter.convertFromStrings(Locale.class, map("dateTimeFormat", "MM-dd-yyyy"), "testExpr", array("07/08/2008"));
             fail("Should have failed");
         } catch (ConversionException e) {
         }
@@ -60,10 +60,10 @@ public class DateTimeConverterTest {
     @Test
     public void testToStrings() {
         GlobalConverter converter = new DateTimeConverter();
-        String str = converter.convertToString(null, DateTime.class, null, "testExpr");
+        String str = converter.convertToString(DateTime.class, null, "testExpr", null);
         assertNull(str);
 
-        str = converter.convertToString(new DateTime(2008, 7, 8, 1, 1, 1, 0), DateTime.class, map("dateTimeFormat", "MM-dd-yyyy"), "testExpr");
+        str = converter.convertToString(DateTime.class, map("dateTimeFormat", "MM-dd-yyyy"), "testExpr", new DateTime(2008, 7, 8, 1, 1, 1, 0));
         assertEquals("07-08-2008", str);
     }
 }

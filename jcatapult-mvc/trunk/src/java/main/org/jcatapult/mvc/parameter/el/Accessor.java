@@ -162,14 +162,14 @@ public abstract class Accessor {
      * However, this method short circuits and returns the value unchanged if value is runtime
      * assignable to the type of this BaseBeanProperty.
      *
-     * @param   values The String values to convert.
      * @param   context The current context.
      * @param   field The field that the conversion is occurring for. This is used to look for
      *          conversion annotations.
+     * @param   values The String values to convert.
      * @return  The value parameter converted to the correct type.
      * @throws  ConversionException If there was a problem converting the parameter.
      */
-    protected Object convert(final String[] values, Context context, Field field) throws ConversionException {
+    protected Object convert(Context context, Field field, final String... values) throws ConversionException {
         Object newValue = values;
 
         // First look for annotations
@@ -192,7 +192,7 @@ public abstract class Accessor {
                 throw new ConverterStateException("No type converter found for the type [" + typeClass.getName() + "]");
             }
 
-            newValue = converter.convertFromStrings(values, type, context.getAttributes(), context.getExpression());
+            newValue = converter.convertFromStrings(type, context.getAttributes(), context.getExpression(), values);
         }
 
         return newValue;

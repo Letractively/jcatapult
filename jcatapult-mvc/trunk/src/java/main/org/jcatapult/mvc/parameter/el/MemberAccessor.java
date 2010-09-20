@@ -130,7 +130,7 @@ public class MemberAccessor extends Accessor {
     }
 
     public void set(String[] values, Context context) {
-        set(convert(values, context, field), context);
+        set(convert(context, field, values), context);
     }
 
     public void set(Object value, Context context) {

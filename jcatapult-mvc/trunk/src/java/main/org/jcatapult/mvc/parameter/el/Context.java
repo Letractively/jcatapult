@@ -15,14 +15,14 @@
  */
 package org.jcatapult.mvc.parameter.el;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
-
-import net.java.lang.ObjectTools;
+import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 
 /**
  * <p>
@@ -78,8 +78,13 @@ public class Context {
         // This is the indexed case, so the name is the index to the method
         if (accessor != null && accessor.isIndexed()) {
             accessor = new IndexedAccessor(converterProvider, (MemberAccessor) accessor, name);
-        } else if (ObjectTools.isCollection(object) || object.getClass().isArray()) {
-            accessor = new CollectionAccessor(converterProvider, accessor, name, accessor.getMemberAccessor());
+        } else if (Collection.class.isAssignableFrom(type) || object.getClass().isArray()) {
+            GlobalConverter converter = converterProvider.lookup(Integer.class);
+            Integer index = (Integer) converter.convertFromStrings(Integer.class, null, null, name);
+
+            accessor = new IndexedCollectionAccessor(converterProvider, accessor, index, accessor.getMemberAccessor());
+        } else if (Map.class.isAssignableFrom(type)) {
+            accessor = new MapAccessor(converterProvider, accessor, name, accessor.getMemberAccessor());
         } else {
             accessor = new MemberAccessor(converterProvider, type, name);
         }

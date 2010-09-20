@@ -35,17 +35,17 @@ public class EnumConverterTest {
     @Test
     public void testFromStrings() {
         GlobalConverter converter = new EnumConverter();
-        TestEnum e = (TestEnum) converter.convertFromStrings(array((String) null), TestEnum.class, null, "testExpr");
+        TestEnum e = (TestEnum) converter.convertFromStrings(TestEnum.class, null, "testExpr", array((String) null));
         assertNull(e);
 
-        e = (TestEnum) converter.convertFromStrings(array("value1"), TestEnum.class, null, "testExpr");
+        e = (TestEnum) converter.convertFromStrings(TestEnum.class, null, "testExpr", array("value1"));
         assertSame(e, TestEnum.value1);
 
-        e = (TestEnum) converter.convertFromStrings(array("value2"), TestEnum.class, null, "testExpr");
+        e = (TestEnum) converter.convertFromStrings(TestEnum.class, null, "testExpr", array("value2"));
         assertSame(e, TestEnum.value2);
 
         try {
-            converter.convertFromStrings(array("value1", "value2"), TestEnum.class, null, "testExpr");
+            converter.convertFromStrings(TestEnum.class, null, "testExpr", array("value1", "value2"));
             fail("Should have failed");
         } catch (UnsupportedOperationException e1) {
             // Expected
@@ -58,10 +58,10 @@ public class EnumConverterTest {
     @Test
     public void testToStrings() {
         GlobalConverter converter = new EnumConverter();
-        String str = converter.convertToString(null, TestEnum.class, null, "testExpr");
+        String str = converter.convertToString(TestEnum.class, null, "testExpr", null);
         assertNull(str);
 
-        str = converter.convertToString(TestEnum.value1, TestEnum.class, null, "testExpr");
+        str = converter.convertToString(TestEnum.class, null, "testExpr", TestEnum.value1);
         assertEquals("value1", str);
     }
 }

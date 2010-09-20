@@ -35,16 +35,16 @@ public class StringConverterTest {
     @Test
     public void testFromStrings() {
         GlobalConverter converter = new StringConverter();
-        String str = (String) converter.convertFromStrings(array((String) null), String.class, null, "testExpr");
+        String str = (String) converter.convertFromStrings(String.class, null, "testExpr", array((String) null));
         assertNull(str);
 
-        str = (String) converter.convertFromStrings(array(""), String.class, null, "testExpr");
+        str = (String) converter.convertFromStrings(String.class, null, "testExpr", array(""));
         assertNull(str);
 
-        str = (String) converter.convertFromStrings(array("a"), String.class, null, "testExpr");
+        str = (String) converter.convertFromStrings(String.class, null, "testExpr", array("a"));
         assertEquals("a", str);
 
-        str = (String) converter.convertFromStrings(array("a", "b"), String.class, null, "testExpr");
+        str = (String) converter.convertFromStrings(String.class, null, "testExpr", array("a", "b"));
         assertEquals("a,b", str);
     }
 
@@ -54,10 +54,10 @@ public class StringConverterTest {
     @Test
     public void testToStrings() {
         GlobalConverter converter = new StringConverter();
-        String str = converter.convertToString(null, String.class, null, "testExpr");
+        String str = converter.convertToString(String.class, null, "testExpr", null);
         assertNull(str);
 
-        str = converter.convertToString("foo", String.class, null, "testExpr");
+        str = converter.convertToString(String.class, null, "testExpr", "foo");
         assertEquals("foo", str);
     }
 }

@@ -15,6 +15,8 @@
  */
 package org.jcatapult.mvc.parameter.el;
 
+import javax.servlet.http.HttpServletRequest;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,19 +26,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.lang.annotation.Annotation;
-import javax.servlet.http.HttpServletRequest;
-
-import org.jcatapult.locale.annotation.CurrentLocale;
-import org.jcatapult.mvc.parameter.convert.ConversionException;
-import org.jcatapult.mvc.parameter.convert.ConverterProvider;
-import org.jcatapult.mvc.parameter.convert.ConverterStateException;
-import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 
 import com.google.inject.Inject;
 import net.java.variable.ExpanderException;
 import net.java.variable.ExpanderStrategy;
 import net.java.variable.VariableExpander;
+import org.jcatapult.locale.annotation.CurrentLocale;
+import org.jcatapult.mvc.parameter.convert.ConversionException;
+import org.jcatapult.mvc.parameter.convert.ConverterProvider;
+import org.jcatapult.mvc.parameter.convert.ConverterStateException;
+import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 
 /**
  * <p>
@@ -108,7 +107,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
             throw new ConverterStateException("No type converter found for the type [" + type + "]");
         }
 
-        return converter.convertToString(value, type, attributes, expression);
+        return converter.convertToString(type, attributes, expression, value);
     }
 
     /**
@@ -211,7 +210,7 @@ public class DefaultExpressionEvaluator implements ExpressionEvaluator {
     /**
      * {@inheritDoc}
      */
-    public <T extends Annotation> T getAnnotation(Class<T> type, String expression, Object object) {        
+    public <T extends Annotation> T getAnnotation(Class<T> type, String expression, Object object) {
         List<String> atoms = parse(expression);
         Context context = new Context(converterProvider, expression, atoms);
         context.init(object);

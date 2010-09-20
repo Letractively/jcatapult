@@ -109,7 +109,7 @@ public class CollectionConverter extends AbstractGlobalConverter {
             }
 
             for (String value : values) {
-                collection.add(converter.convertFromStrings(array(value), parameter, dynamicAttributes, expression));
+                collection.add(converter.convertFromStrings(parameter, dynamicAttributes, expression, array(value)));
             }
         }
 
@@ -146,7 +146,7 @@ public class CollectionConverter extends AbstractGlobalConverter {
 
             StringBuilder build = new StringBuilder();
             for (Object o : collection) {
-                String str = converter.convertToString(o, parameter, dynamicAttributes, expression);
+                String str = converter.convertToString(parameter, dynamicAttributes, expression, o);
                 if (build.length() > 0) {
                     build.append(",");
                 }
