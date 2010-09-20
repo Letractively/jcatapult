@@ -53,17 +53,16 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
      * <li>Type is not an array and values length is > 1 - calls stringsToObject</li>
      * </ul>
      *
-     * @param   values The values to convert.
      * @param   convertTo The type to convert to.
      * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
      * @param   expression The full path to the expression that is causing the conversion.
+     * @param   values The values to convert.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    public Object convertFromStrings(String[] values, Type convertTo, Map<String, String> dynamicAttributes,
-            String expression)
+    public Object convertFromStrings(Type convertTo, Map<String, String> dynamicAttributes, String expression, String... values)
     throws ConversionException, ConverterStateException {
         // Handle a zero or one String
         Class<?> rawType = TypeTools.rawType(convertTo);
@@ -115,17 +114,16 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
     /**
      * Converts the value to a String.
      *
-     * @param   value The value to convert.
      * @param   convertFrom The original Type of the value.
      * @param   dynamicAttributes The dynamic attributes used to assist in conversion.
      * @param   expression The full path to the expression that is causing the conversion.
+     * @param   value The value to convert.
      * @return  The converted value.
      * @throws  ConversionException If the conversion failed.
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    public String convertToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes,
-            String expression)
+    public String convertToString(Type convertFrom, Map<String, String> dynamicAttributes, String expression, Object value)
     throws ConversionException {
         // Handle null
         if (value == null) {
@@ -158,8 +156,7 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected Object stringToArray(String value, Type convertTo, Map<String, String> dynamicAttributes,
-            String expression)
+    protected Object stringToArray(String value, Type convertTo, Map<String, String> dynamicAttributes, String expression)
     throws ConversionException {
         if (value == null) {
             return null;
@@ -173,8 +170,7 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
             String[] parts = value.split(",");
             finalArray = Array.newInstance(rawType.getComponentType(), parts.length);
             for (int i = 0; i < parts.length; i++) {
-                Object singleValue = stringToObject(parts[i], rawType.getComponentType(),
-                    dynamicAttributes, expression);
+                Object singleValue = stringToObject(parts[i], rawType.getComponentType(), dynamicAttributes, expression);
                 Array.set(finalArray, i, singleValue);
             }
         }
@@ -194,8 +190,7 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected Object stringsToArray(String[] values, Type convertTo, Map<String, String> dynamicAttributes,
-            String expression)
+    protected Object stringsToArray(String[] values, Type convertTo, Map<String, String> dynamicAttributes, String expression)
     throws ConversionException {
         if (values == null) {
             return null;
@@ -208,8 +203,7 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
         } else {
             finalArray = Array.newInstance(rawType.getComponentType(), values.length);
             for (int i = 0; i < values.length; i++) {
-                Object singleValue = stringToObject(values[i], rawType.getComponentType(),
-                    dynamicAttributes, expression);
+                Object singleValue = stringToObject(values[i], rawType.getComponentType(), dynamicAttributes, expression);
                 Array.set(finalArray, i, singleValue);
             }
         }
@@ -229,8 +223,7 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected String arrayToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes,
-            String expression)
+    protected String arrayToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes, String expression)
     throws ConversionException {
         Class<?> rawType = TypeTools.rawType(convertFrom);
         if (!rawType.isArray()) {
@@ -254,7 +247,7 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
         StringBuffer str = new StringBuffer();
         for (int i = 0; i < length; i++) {
             Object o = Array.get(value, i);
-            str.append(convertToString(o, value.getClass().getComponentType(), dynamicAttributes, expression));
+            str.append(convertToString(value.getClass().getComponentType(), dynamicAttributes, expression, o));
             if (i + 1 < length) {
                 str.append(",");
             }
@@ -275,8 +268,7 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected abstract Object stringToObject(String value, Type convertTo, Map<String, String> dynamicAttributes,
-            String expression)
+    protected abstract Object stringToObject(String value, Type convertTo, Map<String, String> dynamicAttributes, String expression)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -292,8 +284,7 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected abstract Object stringsToObject(String[] values, Type convertTo, Map<String, String> dynamicAttributes,
-            String expression)
+    protected abstract Object stringsToObject(String[] values, Type convertTo, Map<String, String> dynamicAttributes, String expression)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -308,7 +299,6 @@ public abstract class AbstractGlobalConverter implements GlobalConverter {
      * @throws  ConverterStateException if the converter didn't have all of the information it needed
      *          to perform the conversion.
      */
-    protected abstract String objectToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes,
-            String expression)
+    protected abstract String objectToString(Object value, Type convertFrom, Map<String, String> dynamicAttributes, String expression)
     throws ConversionException, ConverterStateException;
 }

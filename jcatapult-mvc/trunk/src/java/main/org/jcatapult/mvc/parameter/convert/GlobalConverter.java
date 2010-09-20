@@ -132,13 +132,13 @@ public interface GlobalConverter {
      * <li>String array to multi-dimensional array</li>
      * </ul>
      *
-     * @param   values The value(s) to convert. This might be a single value or multiple values.
      * @param   convertTo The type to convert the value to. This might be a Class or it might be a
      *          parameterized type such as List&lt;String>.
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
      * @param   expression The full path to the expression that is causing the conversion.
+     * @param   values The value(s) to convert. This might be a single value or multiple values.
      * @return  The converted value.
      * @throws  ConversionException If there was a problem converting the given value to the
      *          given type.
@@ -146,7 +146,7 @@ public interface GlobalConverter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    Object convertFromStrings(String[] values, Type convertTo, Map<String, String> attributes, String expression)
+    Object convertFromStrings(Type convertTo, Map<String, String> attributes, String expression, String... values)
     throws ConversionException, ConverterStateException;
 
     /**
@@ -165,13 +165,13 @@ public interface GlobalConverter {
      * <li>Multi-dimensional array to String</li>
      * </ul>
      *
-     * @param   value The Object value to convert.
      * @param   convertFrom The type to convert the value from. This might be a Class or it might be
      *          a parameterized type such as List&lt;String>.
      * @param   attributes Any attributes associated with the parameter being converted. Parameter
      *          attributes are described in the {@link org.jcatapult.mvc.parameter.ParameterWorkflow}
      *          class comment.
-     * @param expression
+     * @param   expression The expression.
+     * @param   value The Object value to convert.
      * @return  The converted value.
      * @throws  ConversionException If there was a problem converting the given value to the
      *          given type.
@@ -179,6 +179,6 @@ public interface GlobalConverter {
      *          was such that conversion could not occur. This is normally a fatal exception that is
      *          fixable during development but not in production.
      */
-    String convertToString(Object value, Type convertFrom, Map<String, String> attributes, String expression)
+    String convertToString(Type convertFrom, Map<String, String> attributes, String expression, Object value)
     throws ConversionException;
 }

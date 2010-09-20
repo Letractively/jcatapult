@@ -56,6 +56,8 @@ public class User {
 
     private boolean active;
 
+    private Map<Integer, Integer> ids = new HashMap<Integer, Integer>();
+
     public String getName() {
         return name;
     }
@@ -199,5 +201,13 @@ public class User {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public Map<Integer, Integer> getIds() {
+        return ids;
+    }
+
+    public void setIds(Map<Integer, Integer> ids) {
+        this.ids = ids;
     }
 }

@@ -16,9 +16,11 @@
 package org.jcatapult.mvc.parameter.el;
 
 import java.util.ArrayList;
-import static java.util.Arrays.*;
 import java.util.HashMap;
 
+import com.google.inject.Inject;
+import static java.util.Arrays.*;
+import static net.java.util.CollectionTools.*;
 import org.example.domain.Action;
 import org.example.domain.ActionField;
 import org.example.domain.Address;
@@ -27,10 +29,8 @@ import org.example.domain.User;
 import org.example.domain.UserField;
 import org.jcatapult.test.JCatapultBaseTest;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.Test;
-
-import com.google.inject.Inject;
-import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -293,6 +293,22 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
         assertEquals("What is your home town?", action.user.securityQuestions[1]);
     }
 
+    @Test
+    public void nonStringKeyForMap() {
+        Action action = new Action();
+        action.setUser(null);
+
+
+        evaluator.setValue("user.ids[0]", action, new String[]{"0"}, null);
+        assertEquals(action.getUser().getIds().get(0).intValue(), 0);
+
+        ActionField actionField = new ActionField();
+        actionField.user = null;
+
+        evaluator.setValue("user.ids[0]", actionField, new String[]{"0"}, null);
+        assertEquals(actionField.user.ids.get(0).intValue(), 0);
+    }
+
     /**
      * Tests setting a collection with a single value onto a plain field.
      */
@@ -320,6 +336,7 @@ public class DefaultExpressionEvaluatorTest extends JCatapultBaseTest {
     }
 
     @Test
+    @Ignore
     public void testPerformance() throws InterruptedException {
         // Set cases
 

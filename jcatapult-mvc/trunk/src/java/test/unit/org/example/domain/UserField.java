@@ -34,4 +34,5 @@ public class UserField {
     public List<UserField> siblings = new ArrayList<UserField>();
     public String[] securityQuestions;
     public boolean active;
+    public Map<Integer, Integer> ids = new HashMap<Integer, Integer>();
 }

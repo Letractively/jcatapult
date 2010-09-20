@@ -65,6 +65,26 @@ public class TypeTools {
     }
 
     /**
+     * Determines the key type for a Map.
+     *
+     * @param   type The parameterized type.
+     * @param   path The path to the type, used in exception message.
+     * @return  The key type.
+     */
+    public static Type keyType(Type type, String path) {
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            Class<?> rawType = (Class<?>) parameterizedType.getRawType();
+            if (Map.class.isAssignableFrom(rawType)) {
+                return parameterizedType.getActualTypeArguments()[0];
+            }
+        }
+
+        throw new ExpressionException("The method or member [" + path + "] returns a simple Map. Unable to determine the " +
+            "types of the Map. Please make this method or member generic so that the correct type can be determined.");
+    }
+
+    /**
      * Determines the final component type. This continues to loop over Collections until it hits
      * a non-parameterized type.
      *

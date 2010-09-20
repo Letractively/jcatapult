@@ -16,7 +16,6 @@
 package org.jcatapult.mvc.parameter.el;
 
 import java.lang.reflect.Method;
-import java.lang.annotation.Annotation;
 
 import org.jcatapult.mvc.parameter.convert.ConverterProvider;
 
@@ -53,7 +52,7 @@ public class IndexedAccessor extends MemberAccessor {
     }
 
     public void set(String[] values, Context context) {
-        set(convert(values, context, field), context);
+        set(convert(context, field, values), context);
     }
 
     public void set(Object value, Context context) {
