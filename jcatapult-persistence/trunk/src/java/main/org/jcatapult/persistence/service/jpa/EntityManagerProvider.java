@@ -37,6 +37,7 @@ public class EntityManagerProvider implements Provider<EntityManager> {
         this.service = service;
     }
 
+    @Override
     public EntityManager get() {
         return service.setupEntityManager();
     }

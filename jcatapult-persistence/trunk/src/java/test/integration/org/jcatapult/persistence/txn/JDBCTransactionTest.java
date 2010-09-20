@@ -20,14 +20,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import com.google.inject.Inject;
-import org.easymock.EasyMock;
-import static org.easymock.EasyMock.*;
 import org.jcatapult.persistence.service.jpa.User;
 import org.jcatapult.persistence.test.JDBCBaseTest;
 import org.jcatapult.persistence.test.JDBCTestHelper;
+import org.jcatapult.persistence.test.JPATestHelper;
 import org.jcatapult.persistence.txn.annotation.Transactional;
-import org.jcatapult.persistence.txn.jdbc.JDBCTransactionManager;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,6 +39,12 @@ import org.junit.Test;
  */
 public class JDBCTransactionTest extends JDBCBaseTest {
     @Inject public JDBCTestService service;
+
+    @BeforeClass
+    public static void setUpJPA() {
+        // This will create the tables if this tests is run by itself
+        JPATestHelper.initialize(jndi);
+    }
 
     @Test
     public void service() throws SQLException {
@@ -54,6 +59,7 @@ public class JDBCTransactionTest extends JDBCBaseTest {
 
         try {
             service.failure();
+            fail("Should have thrown an exception");
         } catch (Exception e) {
             // Expected
         }
@@ -79,35 +85,6 @@ public class JDBCTransactionTest extends JDBCBaseTest {
         rs = executeQuery("select name from users where name = 'TransactionTest-returnValueFailure'");
         assertFalse(rs.next());
         rs.close();
-    }
-
-    @Test
-    public void transactionManager() throws SQLException {
-        Connection c = createStrictMock(Connection.class);
-        expect(c.getAutoCommit()).andReturn(true);
-        c.setAutoCommit(false);
-        EasyMock.replay(c);
-
-        JDBCTransactionManager manager = new JDBCTransactionManager(c);
-        TransactionState state = manager.startTransaction();
-        assertSame(c, state.wrapped());
-        assertFalse(state.embedded());
-
-        EasyMock.verify(c);
-    }
-
-    @Test
-    public void transactionManagerEmbedded() throws SQLException {
-        Connection c = createStrictMock(Connection.class);
-        expect(c.getAutoCommit()).andReturn(false);
-        EasyMock.replay(c);
-
-        JDBCTransactionManager manager = new JDBCTransactionManager(c);
-        TransactionState state = manager.startTransaction();
-        assertSame(c, state.wrapped());
-        assertTrue(state.embedded());
-
-        EasyMock.verify(c);
     }
 
     public static class JDBCTestService {

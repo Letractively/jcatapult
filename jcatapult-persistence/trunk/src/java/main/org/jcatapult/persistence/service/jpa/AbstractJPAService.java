@@ -19,6 +19,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import org.jcatapult.guice.Closable;
+import org.jcatapult.persistence.txn.TransactionContext;
+import org.jcatapult.persistence.txn.TransactionContextManager;
+import org.jcatapult.persistence.txn.jpa.JPATransactionalResource;
 
 /**
  * <p>
@@ -31,7 +34,12 @@ import org.jcatapult.guice.Closable;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractJPAService implements JPAService, Closable {
+    private final TransactionContextManager txnContextManager;
     protected EntityManagerFactory emf;
+
+    protected AbstractJPAService(TransactionContextManager txnContextManager) {
+        this.txnContextManager = txnContextManager;
+    }
 
     /**
      * {@inheritDoc}
@@ -51,13 +59,23 @@ public abstract class AbstractJPAService implements JPAService, Closable {
             return em;
         }
 
-        if (emf != null) {
+        try {
+            if (emf == null) {
+                return null;
+            }
+
             em = emf.createEntityManager();
             EntityManagerContext.set(em);
-            return em;
-        }
 
-        return null;
+            TransactionContext txnContext = txnContextManager.getCurrent();
+            if (txnContext != null) {
+                txnContext.add(new JPATransactionalResource(em));
+            }
+
+            return em;
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
     }
 
     /**

@@ -22,7 +22,7 @@ package org.jcatapult.persistence.txn;
  *
  * @author  Brian Pontarelli
  */
-public interface TransactionState<T, E extends Throwable> {
+public interface TransactionalResource<T, E extends Exception> {
     /**
      * @return  The wrapped transaction class. This will vary for different ORMs and database connections. JDBC uses the
      *          {@link java.sql.Connection} interface and JPA uses the {@link javax.persistence.EntityTransaction}.
@@ -30,31 +30,21 @@ public interface TransactionState<T, E extends Throwable> {
     T wrapped();
 
     /**
-     * @return  Whether or not the transaction is embedded.
+     * Starts the transaction.
+     *
+     * @throws  E If the transaction could not be started.
      */
-    boolean embedded();
+    void start() throws E;
 
     /**
-     * This method is called if an embedded transaction fails but should delegate to the outer transaction to rollback.
-     */
-    void setRollbackOnly();
-
-    /**
-     * @return  Whether or not the current transaction has been set to rollback only.
-     */
-    boolean isRollbackOnly();
-
-    /**
-     * Commits the transaction. This method doesn't need to check the embedding state, but doing so will not impact the
-     * operation. The {@link TransactionManager} performs these checks.
+     * Commits the transaction.
      *
      * @throws  E Any exception that the underlying transaction API throws.
      */
     void commit() throws E;
 
     /**
-     * Rollsback the transaction. This method doesn't need to check the embedding state, but doing so will not impact the
-     * operation. The {@link TransactionManager} performs these checks.
+     * Rollsback the transaction.
      *
      * @throws  E Any exception that the underlying transaction API throws.
      */

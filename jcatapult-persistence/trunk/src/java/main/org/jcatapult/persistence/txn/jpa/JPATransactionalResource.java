@@ -15,10 +15,12 @@
  */
 package org.jcatapult.persistence.txn.jpa;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
-import org.jcatapult.persistence.txn.TransactionState;
+import org.jcatapult.persistence.txn.TransactionException;
+import org.jcatapult.persistence.txn.TransactionalResource;
 
 /**
  * <p>
@@ -27,45 +29,32 @@ import org.jcatapult.persistence.txn.TransactionState;
  *
  * @author  Brian Pontarelli
  */
-public class JPATransactionState implements TransactionState<EntityTransaction, PersistenceException> {
-    private final EntityTransaction txn;
-    private final boolean embedded;
+public class JPATransactionalResource implements TransactionalResource<EntityManager, PersistenceException> {
+    private final EntityManager em;
 
-    public JPATransactionState(EntityTransaction txn, boolean embedded) {
-        this.txn = txn;
-        this.embedded = embedded;
+    public JPATransactionalResource(EntityManager em) {
+        this.em = em;
     }
 
     /**
-     * @return  The EntityTransaction.
+     * @return  The EntityManager.
      */
     @Override
-    public EntityTransaction wrapped() {
-        return txn;
+    public EntityManager wrapped() {
+        return em;
     }
 
     /**
-     * @return  True if this transaction is embedded, false otherwise.
+     * {@inheritDoc}
      */
     @Override
-    public boolean embedded() {
-        return embedded;
-    }
+    public void start() throws PersistenceException {
+        EntityTransaction et = em.getTransaction();
+        if (et.isActive()) {
+            throw new TransactionException("The JPA transaction has already been started and can't be started twice.");
+        }
 
-    /**
-     * Calls the {@link }EntityTransaction#setRollbackOnly()} method.
-     */
-    @Override
-    public void setRollbackOnly() {
-        txn.setRollbackOnly();
-    }
-
-    /**
-     * @return  The result from the {@link EntityTransaction#getRollbackOnly()} method.
-     */
-    @Override
-    public boolean isRollbackOnly() {
-        return txn.getRollbackOnly();
+        et.begin();
     }
 
     /**
@@ -73,7 +62,7 @@ public class JPATransactionState implements TransactionState<EntityTransaction, 
      */
     @Override
     public void commit() {
-        txn.commit();
+        em.getTransaction().commit();
     }
 
     /**
@@ -81,6 +70,6 @@ public class JPATransactionState implements TransactionState<EntityTransaction, 
      */
     @Override
     public void rollback() {
-        txn.rollback();
+        em.getTransaction().rollback();
     }
 }

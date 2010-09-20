@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,42 +13,38 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.persistence.servlet.jpa;
+package org.jcatapult.persistence.servlet;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
 
 import com.google.inject.Inject;
+import org.jcatapult.persistence.service.jdbc.JDBCService;
 import org.jcatapult.persistence.service.jpa.JPAService;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 
 /**
  * <p>
- * This class handles setting up the JPA support for each request into the
- * servlet container. This allows JPA classes to be injected into classes
- * using a ThreadLocal storage for EntityManagers. This is also the
- * implementation of the Open-Seesion-In-View pattern.
+ * This class is the JCatapult persistence workflow that cleans up all the persistence resources
+ * after the request has been completed. This closes the JDBC connection, releases the JPA entity
+ * manager, and removes the transaction context (if one exists).
  * </p>
  *
- * <p>
- * The majority of the work is actually performed by the {@link JPAService}
- * and not this class. This class just delegates to the JPAService and fits
- * into the JCatapult workflow processing.
- * </p>
- *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public class JPAWorkflow implements Workflow {
-    private final JPAService service;
+public class PersistenceWorkflow implements Workflow {
+    private final JDBCService jdbcService;
+    private final JPAService jpaService;
 
     @Inject
-    public JPAWorkflow(JPAService service) {
-        this.service = service;
+    public PersistenceWorkflow(JDBCService jdbcService, JPAService jpaService) {
+        this.jdbcService = jdbcService;
+        this.jpaService = jpaService;
     }
 
     /**
-     * Sets up an entity manager if JPA is enabled.
+     * Tears down all of the resources and the transaction context if any of them exist.
      *
      * @param   workflowChain The chain.
      * @throws  IOException If the chain throws.
@@ -59,7 +55,8 @@ public class JPAWorkflow implements Workflow {
             // Proceed down the chain
             workflowChain.continueWorkflow();
         } finally {
-            service.tearDownEntityManager();
+            jdbcService.tearDownConnection();
+            jpaService.tearDownEntityManager();
         }
     }
 }

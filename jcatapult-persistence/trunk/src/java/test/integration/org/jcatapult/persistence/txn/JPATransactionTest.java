@@ -16,19 +16,15 @@
  */
 package org.jcatapult.persistence.txn;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.sql.RowSet;
 import java.sql.SQLException;
 
 import com.google.inject.Inject;
-import org.easymock.EasyMock;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.service.jpa.User;
 import org.jcatapult.persistence.test.JDBCTestHelper;
 import org.jcatapult.persistence.test.JPABaseTest;
 import org.jcatapult.persistence.txn.annotation.Transactional;
-import org.jcatapult.persistence.txn.jpa.JPATransactionManager;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -40,12 +36,7 @@ import org.junit.Test;
  * @author  Brian Pontarelli
  */
 public class JPATransactionTest extends JPABaseTest {
-    private JPATestService service;
-
-    @Inject
-    public void setService(JPATestService service) {
-        this.service = service;
-    }
+    @Inject public JPATestService service;
 
     @Test
     public void testMarco() throws SQLException, InterruptedException {
@@ -83,43 +74,6 @@ public class JPATransactionTest extends JPABaseTest {
         assertFalse(processor.rollback(null, new Throwable()));
         assertTrue(processor.rollback(null, new RuntimeException()));
         assertFalse(processor.rollback(new Object(), null));
-    }
-
-    @Test
-    public void testMicroTransactionManager() {
-        EntityTransaction et = EasyMock.createStrictMock(EntityTransaction.class);
-        EasyMock.expect(et.isActive()).andReturn(false);
-        et.begin();
-        EasyMock.replay(et);
-
-        EntityManager em = EasyMock.createStrictMock(EntityManager.class);
-        EasyMock.expect(em.getTransaction()).andReturn(et);
-        EasyMock.replay(em);
-
-        JPATransactionManager manager = new JPATransactionManager(em);
-        TransactionState state = manager.startTransaction();
-        assertSame(et, state.wrapped());
-        assertFalse(state.embedded());
-
-        EasyMock.verify(et, em);
-    }
-
-    @Test
-    public void testMicroTransactionManagerEmbedded() {
-        EntityTransaction et = EasyMock.createStrictMock(EntityTransaction.class);
-        EasyMock.expect(et.isActive()).andReturn(true);
-        EasyMock.replay(et);
-
-        EntityManager em = EasyMock.createStrictMock(EntityManager.class);
-        EasyMock.expect(em.getTransaction()).andReturn(et);
-        EasyMock.replay(em);
-
-        JPATransactionManager manager = new JPATransactionManager(em);
-        TransactionState state = manager.startTransaction();
-        assertSame(et, state.wrapped());
-        assertTrue(state.embedded());
-
-        EasyMock.verify(et, em);
     }
 
     public static class JPATestService {

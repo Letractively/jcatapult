@@ -24,6 +24,9 @@ import java.sql.SQLException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import org.jcatapult.persistence.txn.TransactionContext;
+import org.jcatapult.persistence.txn.TransactionContextManager;
+import org.jcatapult.persistence.txn.jdbc.JDBCTransactionalResource;
 
 /**
  * <p>
@@ -35,7 +38,13 @@ import com.google.inject.name.Named;
  */
 @Singleton
 public class DefaultJDBCService implements JDBCService {
+    private final TransactionContextManager manager;
     private DataSource ds;
+
+    @Inject
+    public DefaultJDBCService(TransactionContextManager manager) {
+        this.manager = manager;
+    }
 
     @Inject(optional = true)
     public void setDatasourceName(@Named("non-jta-data-source") String dataSourceName) {
@@ -76,8 +85,14 @@ public class DefaultJDBCService implements JDBCService {
 
             c = ds.getConnection();
             ConnectionContext.set(c);
+
+            TransactionContext txnContext = manager.getCurrent();
+            if (txnContext != null) {
+                txnContext.add(new JDBCTransactionalResource(c));
+            }
+            
             return c;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
