@@ -18,6 +18,7 @@ package org.jcatapult.persistence.txn;
 import javax.persistence.EntityManager;
 import java.sql.Connection;
 
+import com.google.inject.Singleton;
 import org.jcatapult.persistence.service.jdbc.ConnectionContext;
 import org.jcatapult.persistence.service.jpa.EntityManagerContext;
 import org.jcatapult.persistence.txn.jdbc.JDBCTransactionalResource;
@@ -31,6 +32,7 @@ import org.jcatapult.persistence.txn.jpa.JPATransactionalResource;
  *
  * @author  Brian Pontarelli
  */
+@Singleton
 public class DefaultTransactionContextManager implements TransactionContextManager {
     private final ThreadLocal<TransactionContext> holder = new ThreadLocal<TransactionContext>();
 

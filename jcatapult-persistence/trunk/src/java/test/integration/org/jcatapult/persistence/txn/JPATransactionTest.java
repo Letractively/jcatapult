@@ -37,9 +37,12 @@ import org.junit.Test;
  */
 public class JPATransactionTest extends JPABaseTest {
     @Inject public JPATestService service;
+    @Inject public JPATopTestService topService;
 
     @Test
-    public void testMarco() throws SQLException, InterruptedException {
+    public void marco() throws SQLException, InterruptedException {
+        clearTable("users");
+        
         service.success();
         RowSet rs = executeQuery("select name from users where name = 'JPATransactionTest-success'");
         assertTrue(rs.next());
@@ -63,6 +66,38 @@ public class JPATransactionTest extends JPABaseTest {
         rs.close();
 
         service.returnValueFailure();
+        rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueFailure'");
+        assertFalse(rs.next());
+        rs.close();
+    }
+
+    @Test
+    public void macroNested() throws SQLException, InterruptedException {
+        clearTable("users");
+
+        topService.success();
+        RowSet rs = executeQuery("select name from users where name = 'JPATransactionTest-success'");
+        assertTrue(rs.next());
+        rs.close();
+
+        rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
+        assertFalse(rs.next());
+        rs.close();
+        try {
+            topService.failure();
+        } catch (Exception e) {
+            // Expected
+        }
+        rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
+        assertFalse(rs.next());
+        rs.close();
+
+        topService.returnValueSuccess();
+        rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueSuccess'");
+        assertTrue(rs.next());
+        rs.close();
+
+        topService.returnValueFailure();
         rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueFailure'");
         assertFalse(rs.next());
         rs.close();
@@ -125,6 +160,35 @@ public class JPATransactionTest extends JPABaseTest {
             user.setName("JPATransactionTest-returnValueFailure");
             persistenceService.persist(user);
             return user;
+        }
+    }
+
+    public static class JPATopTestService {
+        private final JPATestService service;
+
+        @Inject
+        public JPATopTestService(JPATestService service) {
+            this.service = service;
+        }
+
+        @Transactional()
+        public void success() throws SQLException {
+            service.success();
+        }
+
+        @Transactional()
+        public void failure() throws InterruptedException {
+            service.failure();
+        }
+
+        @Transactional(processor = UserProcessor.class)
+        public User returnValueSuccess() {
+            return service.returnValueSuccess();
+        }
+
+        @Transactional(processor = UserProcessor.class)
+        public User returnValueFailure() {
+            return service.returnValueFailure();
         }
     }
 
