@@ -145,6 +145,10 @@ public class DefaultTransactionContext implements TransactionContext {
                 resource.rollback();
             } catch (Exception e) {
                 failed = true;
+                logger.log(Level.SEVERE, "A resource failed to be rolled back during a rollback of the current transaction. " +
+                    "This rollback occurred because the " +
+                    (rollbackOnly ? "transaction was set to rollback only" : "the transaction was rollback due to a failure"),
+                    e);
             }
         }
 
