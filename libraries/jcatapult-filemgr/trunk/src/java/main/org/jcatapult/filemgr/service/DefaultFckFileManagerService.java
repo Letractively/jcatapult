@@ -15,22 +15,20 @@
  */
 package org.jcatapult.filemgr.service;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
+import com.google.inject.Inject;
+import net.java.io.FileTools;
+import net.java.lang.StringTools;
 import org.jcatapult.filemgr.domain.CreateDirectoryResult;
 import org.jcatapult.filemgr.domain.DirectoryData;
 import org.jcatapult.filemgr.domain.FileData;
 import org.jcatapult.filemgr.domain.Listing;
 import org.jcatapult.filemgr.domain.StoreResult;
-
-import com.google.inject.Inject;
-import net.java.io.FileTools;
-import net.java.lang.StringTools;
 
 /**
  * <p>
@@ -43,13 +41,11 @@ public class DefaultFckFileManagerService implements FckFileManagerService {
     private static final Logger logger = Logger.getLogger(DefaultFckFileManagerService.class.getName());
     private final FileConfiguration configuration;
     private final ServletContext servletContext;
-    private final HttpServletRequest request;
 
     @Inject
-    public DefaultFckFileManagerService(FileConfiguration configuration, ServletContext servletContext, HttpServletRequest request) {
+    public DefaultFckFileManagerService(FileConfiguration configuration, ServletContext servletContext) {
         this.configuration = configuration;
         this.servletContext = servletContext;
-        this.request = request;
     }
 
     /**
@@ -57,7 +53,7 @@ public class DefaultFckFileManagerService implements FckFileManagerService {
      */
     public StoreResult store(File file, String fileName, String contentType, String type, String directory) {
         directory = stripSlashes(stripSlashes(type) + "/" + stripSlashes(directory));
-        
+
         StoreResult result = new StoreResult();
         if (!file.exists() || file.isDirectory()) {
             logger.severe("The file to store [" + file.getAbsolutePath() + "] no longer exists. " +
@@ -233,12 +229,12 @@ public class DefaultFckFileManagerService implements FckFileManagerService {
         if (new File(dirName).isAbsolute()) {
             uri = configuration.getFileWorkflowPrefix();
         } else {
-            uri = request.getContextPath() + "/" + dirName;
+            uri = servletContext.getContextPath() + "/" + dirName;
         }
 
         for (String path : paths) {
             uri = wrapWithSlashes(uri);
-            
+
             if (!StringTools.isTrimmedEmpty(path)) {
                 if (path.startsWith("/")) {
                     uri = uri + path.substring(1);
@@ -261,7 +257,7 @@ public class DefaultFckFileManagerService implements FckFileManagerService {
      */
     private Listing getListing(String type, String directory, boolean includeFiles) {
         String path = stripSlashes(stripSlashes(type) + "/" + stripSlashes(directory));
-        
+
         Listing listing = new Listing();
         listing.setPath(wrapWithSlashes(directory));
         listing.setURI(wrapWithSlashes(determineURI(path)));
@@ -293,7 +289,7 @@ public class DefaultFckFileManagerService implements FckFileManagerService {
         if (name == null) {
             return "";
         }
-        
+
         if (name.length() > 0 && name.startsWith("/")) {
             name = name.substring(1);
         }
@@ -311,7 +307,7 @@ public class DefaultFckFileManagerService implements FckFileManagerService {
                 path = path + "/";
             }
         }
-        
+
         return path;
     }
 }

@@ -15,23 +15,25 @@
  */
 package org.jcatapult.filemgr.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
+import net.java.io.FileTools;
 import org.easymock.EasyMock;
 import org.jcatapult.config.Configuration;
 import org.jcatapult.filemgr.BaseTest;
+import org.jcatapult.filemgr.domain.CreateDirectoryResult;
+import org.jcatapult.filemgr.domain.DirectoryData;
+import org.jcatapult.filemgr.domain.FileData;
+import org.jcatapult.filemgr.domain.Listing;
 import org.jcatapult.filemgr.domain.StoreResult;
-import org.jcatapult.filemgr.domain.*;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import net.java.io.FileTools;
 
 /**
  * <p>
@@ -52,7 +54,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         EasyMock.replay(servletContext);
 
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, request);
+                servletContext);
         try {
             service.store(new File("project.xml"), "foo.xml", "image/gif", "File", null);
             fail("Should have have thrown an exception");
@@ -75,7 +77,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         EasyMock.replay(servletContext);
 
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, request);
+                servletContext);
         try {
             service.store(new File("project.xml"), "foo.xml", "image/gif", "File", null);
             fail("Should have failed");
@@ -97,18 +99,14 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.expect(servletContext.getRealPath("storage-dir/File")).andReturn(testDir + "/storage-dir");
+        EasyMock.expect(servletContext.getContextPath()).andReturn("/foo");
         EasyMock.replay(servletContext);
-
-        HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(httpRequest.getContextPath()).andReturn("/foo");
-        EasyMock.replay(httpRequest);
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, httpRequest);
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext);
         StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "File", "/");
         assertEquals(0, result.getError());
         assertEquals("/foo/storage-dir/File/foo-bar.xml", result.getFileURI());
@@ -118,7 +116,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
 
-        EasyMock.verify(httpRequest, servletContext, configuration);
+        EasyMock.verify(servletContext, configuration);
     }
 
     @Test
@@ -131,18 +129,15 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.expect(servletContext.getRealPath("storage-dir/Image/my-images")).andReturn(testDir + "/storage-dir");
+        EasyMock.expect(servletContext.getContextPath()).andReturn("/foo");
         EasyMock.replay(servletContext);
-
-        HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(httpRequest.getContextPath()).andReturn("/foo");
-        EasyMock.replay(httpRequest);
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, httpRequest);
+                servletContext);
         StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "Image", "my-images");
         assertEquals(0, result.getError());
         assertEquals("/foo/storage-dir/Image/my-images/foo-bar.xml", result.getFileURI());
@@ -152,7 +147,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
 
-        EasyMock.verify(httpRequest, servletContext, configuration);
+        EasyMock.verify(servletContext, configuration);
     }
 
     @Test
@@ -179,7 +174,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, request);
+                servletContext);
         try {
             service.store(temp, "foo-bar.xml", "image/gif", "File", "/");
             fail("Should have failed");
@@ -209,7 +204,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext);
         StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "File", "/");
 
         assertEquals(0, result.getError());
@@ -245,7 +240,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, request);
+                servletContext);
         StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "File", "my-images");
 
         assertEquals(0, result.getError());
@@ -281,7 +276,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, request);
+                servletContext);
         StoreResult result = service.store(temp, "foo-bar.xml", "image/gif", "File", "my-images");
 
         assertEquals(0, result.getError());
@@ -313,7 +308,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         EasyMock.replay(servletContext);
 
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, request);
+                servletContext);
         CreateDirectoryResult result = service.createDirectory("test", "File", "/");
         assertEquals("/prefix/File/", result.getURI());
         assertEquals("/", result.getPath());
@@ -341,7 +336,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         EasyMock.replay(servletContext);
 
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, request);
+                servletContext);
         CreateDirectoryResult result = service.createDirectory("test", "Flash", "/deep/dir/");
         assertEquals("/prefix/Flash/deep/dir/", result.getURI());
         assertEquals("/deep/dir/", result.getPath());
@@ -363,15 +358,12 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(servletContext.getContextPath()).andReturn("/servlet-context");
         EasyMock.expect(servletContext.getRealPath("files/File")).andReturn(testDir + "/storage-dir");
         EasyMock.replay(servletContext);
 
-        HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(httpRequest.getContextPath()).andReturn("/servlet-context");
-        EasyMock.replay(httpRequest);
-
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, httpRequest);
+                servletContext);
         Listing listing = service.getFolders("File", "/");
         assertEquals("/servlet-context/files/File/", listing.getURI());
         assertEquals("/", listing.getPath());
@@ -383,7 +375,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
 
         assertEquals(0, listing.getFiles().size());
 
-        EasyMock.verify(configuration, servletContext, httpRequest);
+        EasyMock.verify(configuration, servletContext);
     }
 
     @Test
@@ -398,15 +390,12 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         EasyMock.replay(configuration);
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
+        EasyMock.expect(servletContext.getContextPath()).andReturn("/servlet-context");
         EasyMock.expect(servletContext.getRealPath("files/File")).andReturn(testDir + "/storage-dir");
         EasyMock.replay(servletContext);
 
-        HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(httpRequest.getContextPath()).andReturn("/servlet-context");
-        EasyMock.replay(httpRequest);
-
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, httpRequest);
+                servletContext);
         Listing listing = service.getFoldersAndFiles("File", "/");
         assertEquals("/servlet-context/files/File/", listing.getURI());
         assertEquals("/", listing.getPath());
@@ -421,7 +410,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         assertEquals("file", files.get(0).getName());
         assertEquals(0, files.get(0).getSize());
 
-        EasyMock.verify(configuration, servletContext, httpRequest);
+        EasyMock.verify(configuration, servletContext);
     }
 
     @Test
@@ -439,11 +428,8 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.replay(servletContext);
 
-        HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.replay(httpRequest);
-
         DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-                servletContext, httpRequest);
+                servletContext);
         Listing listing = service.getFoldersAndFiles("File", "/");
         assertEquals("/files/File/", listing.getURI());
         assertEquals("/", listing.getPath());
@@ -458,7 +444,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         assertEquals("file", files.get(0).getName());
         assertEquals(0, files.get(0).getSize());
 
-        EasyMock.verify(configuration, servletContext, httpRequest);
+        EasyMock.verify(configuration, servletContext);
     }
 
     @Test
@@ -487,7 +473,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext);
         StoreResult result = service.store(temp, "delete-test.xml", "image/gif", "File", "/");
 
         assertEquals(0, result.getError());
@@ -529,7 +515,7 @@ public class DefaultFckFileManagerServiceTest extends BaseTest {
         temp.deleteOnExit();
         FileTools.copy(new File("src/java/test/unit/org/jcatapult/filemgr/action/jcatapult/test-file.xml"), temp);
 
-        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext, request);
+        DefaultFckFileManagerService service = new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext);
         StoreResult result = service.store(temp, "delete-test.xml", "image/gif", "File", "/");
 
         assertEquals(0, result.getError());

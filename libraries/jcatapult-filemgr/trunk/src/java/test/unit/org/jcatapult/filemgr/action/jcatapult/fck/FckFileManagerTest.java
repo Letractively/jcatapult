@@ -15,22 +15,20 @@
  */
 package org.jcatapult.filemgr.action.jcatapult.fck;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
+import net.java.io.FileTools;
 import org.easymock.EasyMock;
 import org.jcatapult.config.Configuration;
 import org.jcatapult.filemgr.BaseTest;
 import org.jcatapult.filemgr.action.jcatapult.FileManagerCommand;
-import org.jcatapult.filemgr.service.DefaultFileConfiguration;
 import org.jcatapult.filemgr.service.DefaultFckFileManagerService;
+import org.jcatapult.filemgr.service.DefaultFileConfiguration;
 import org.jcatapult.mvc.parameter.fileupload.FileInfo;
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import net.java.io.FileTools;
 
 /**
  * <p>
@@ -50,14 +48,10 @@ public class FckFileManagerTest extends BaseTest {
 
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         EasyMock.expect(servletContext.getRealPath("some-dir/File")).andReturn(testDir + "/some-dir/File");
+        EasyMock.expect(servletContext.getContextPath()).andReturn("/foo");
         EasyMock.replay(servletContext);
 
-        HttpServletRequest httpRequest = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(httpRequest.getContextPath()).andReturn("/foo");
-        EasyMock.replay(httpRequest);
-
-        FckFileManager fm = new FckFileManager(new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration),
-            servletContext, httpRequest));
+        FckFileManager fm = new FckFileManager(new DefaultFckFileManagerService(new DefaultFileConfiguration(configuration), servletContext));
         fm.Command = FileManagerCommand.FileUpload;
 
         File temp = File.createTempFile("jcatapult-filemgr", "xml");
@@ -81,6 +75,6 @@ public class FckFileManagerTest extends BaseTest {
         String contents = FileTools.read(check).toString();
         assertEquals("contents", contents);
 
-        EasyMock.verify(httpRequest, servletContext, configuration);
+        EasyMock.verify(servletContext, configuration);
     }
 }
