@@ -16,14 +16,14 @@
 package org.jcatapult.test.servlet;
 
 import javax.servlet.ServletInputStream;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
-import net.java.io.FileTools;
 import org.jcatapult.servlet.multipart.FileInfo;
 
 /**
@@ -34,43 +34,91 @@ import org.jcatapult.servlet.multipart.FileInfo;
  * @author  Brian Pontarelli
  */
 public class MultipartInputStream extends ServletInputStream {
+    public static final byte[] BOUNDARY = getBytes("--jcatapultmultipartuploadLKAlskld09309djoid");
+    public static final byte[] CLOSE_BOUNDARY = getBytes("--");
+    public static final byte[] CRLF = getBytes("\r\n");
+    public static final byte[] CONTENT_DISPOSITION = getBytes("Content-Disposition: form-data; name=");
+    public static final byte[] CONTENT_TYPE = getBytes("Content-Type: ");
+    public static final byte[] CONTENT_TRANSFER_ENCODING = getBytes("Content-Transfer-Encoding: binary");
+    public static final byte[] FILENAME = getBytes("; filename=");
+    public static final byte[] QUOTE = getBytes("\"");
     private final byte[] bytes;
     private int index = 0;
 
     public MultipartInputStream(Map<String, List<String>> parameters, Map<String, FileInfo> files) throws IOException {
-        ByteArrayOutputStream boas = new ByteArrayOutputStream();
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(boas));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         for (String key : parameters.keySet()) {
             List<String> values = parameters.get(key);
             for (String value : values) {
-                writer.append("--AaB03x\r\nContent-Disposition: form-data; name=\"").
-                    append(key).
-                    append("\"\r\n\r\n").
-                    append(value).
-                    append("\r\n");
+                baos.write(BOUNDARY);
+                baos.write(CRLF);
+
+                // Content disposition header
+                baos.write(CONTENT_DISPOSITION);
+                baos.write(QUOTE);
+                baos.write(getBytes(key));
+                baos.write(QUOTE);
+
+                // Header end
+                baos.write(CRLF);
+                baos.write(CRLF);
+
+                // Data
+                baos.write(getBytes(value));
+
+                // End
+                baos.write(CRLF);
             }
         }
 
         for (String key : files.keySet()) {
             FileInfo file = files.get(key);
-            writer.append("--AaB03x\r\nContent-Disposition: form-data; name=\"").
-                append(key).
-                append("\"; filename=\"").
-                append(file.file.getName()).
-                append("\"\r\nContent-Type: ").
-                append(file.contentType).
-                append("\r\nContent-Transfer-Encoding: binary\r\n\r\n");
-            writer.flush();
+            // Boundary
+            baos.write(BOUNDARY);
+            baos.write(CRLF);
 
-            byte[] ba = FileTools.getBytes(file.file);
-            boas.write(ba);
-            writer.append("\r\n");
+            // Content disposition header
+            baos.write(CONTENT_DISPOSITION);
+            baos.write(QUOTE);
+            baos.write(getBytes(key));
+            baos.write(QUOTE);
+            baos.write(FILENAME);
+            baos.write(QUOTE);
+            baos.write(getBytes(file.file.getName()));
+            baos.write(QUOTE);
+
+            // Content type header
+            baos.write(CRLF);
+            baos.write(CONTENT_TYPE);
+            baos.write(getBytes(file.contentType));
+
+            // Content transfer encoding header
+            baos.write(CRLF);
+            baos.write(CONTENT_TRANSFER_ENCODING);
+
+            // Header end
+            baos.write(CRLF);
+            baos.write(CRLF);
+
+            // Data
+            byte[] ba = new byte[4096];
+            InputStream is = new FileInputStream(file.file);
+            int len;
+            while ((len = is.read(ba)) != -1) {
+                baos.write(ba, 0, len);
+            }
+            is.close();
+
+            // End
+            baos.write(CRLF);
         }
 
-        writer.append("--AaB03x--");
-        writer.flush();
-        boas.flush();
-        bytes = boas.toByteArray();
+        baos.write(BOUNDARY);
+        baos.write(CLOSE_BOUNDARY);
+        baos.write(CRLF);
+        baos.flush();
+        bytes = baos.toByteArray();
+        System.out.println("Body is " + bytes.length);
     }
 
     @Override
@@ -79,9 +127,14 @@ public class MultipartInputStream extends ServletInputStream {
     }
 
     public int read() throws IOException {
-        if (index == bytes.length) {
-            return -1;
+        return (index < bytes.length) ? (bytes[index++] & 0xff) : -1;
+    }
+
+    private static byte[] getBytes(String str) {
+        try {
+            return str.getBytes("US-ASCII");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
-        return bytes[index++];
     }
 }

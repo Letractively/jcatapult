@@ -1062,7 +1062,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
             throw new IllegalStateException("Content-Type set already. Can't add a file to the HTTP request");
         }
 
-        this.contentType = "multipart/form-data, boundary=AaB03x";
+        this.contentType = "multipart/form-data, boundary=jcatapultmultipartuploadLKAlskld09309djoid";
         this.files.put(key, new FileInfo(file, key, contentType));
     }
 
@@ -1078,11 +1078,10 @@ public class MockHttpServletRequest implements HttpServletRequest {
             return true;
         }
 
-        return method == Method.GET;
+        return files.isEmpty();
     }
 
-
-
+    
     public static enum Method {
         GET,
         POST,
