@@ -1,13 +1,13 @@
 <project xmlns="http://www.inversoft.com/schemas/savant-1.5/project"
          name="jcatapult-security"
          group="jcatapult.org"
-         version="1.0.2">
+         version="1.0.3">
 
-  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="java" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="junit" version="1.0"/>
-  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0"/>
+  <plugin group="plugins.savant.inversoft.org" name="ide" version="1.2"/>
+  <plugin group="plugins.savant.inversoft.org" name="clean" version="1.1.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="java" version="1.1.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="junit" version="1.1.1"/>
+  <plugin group="plugins.savant.inversoft.org" name="release-svn" version="1.0.1"/>
 
   <!-- Compile properties -->
   <property name="jdk.version" value="1.6"/>
