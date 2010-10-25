@@ -15,11 +15,11 @@
  */
 package org.jcatapult.security.saved;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
@@ -48,6 +48,7 @@ public class DefaultSavedRequestService implements SavedRequestService {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public void saveRequest(HttpServletRequest request) {
         Map<String, String[]> requestParameters = null;
         String redirectURI;
@@ -80,14 +81,18 @@ public class DefaultSavedRequestService implements SavedRequestService {
             return "";
         }
 
-        StringBuilder build = new StringBuilder("?");
+        StringBuilder build = new StringBuilder();
         for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
             for (String value : entry.getValue()) {
+                if (build.length() > 0) {
+                    build.append("&");
+                }
+
                 build.append(entry.getKey()).append("=").append(value);
             }
         }
 
-        return build.toString();
+        return "?" + build.toString();
     }
 
     /**
@@ -121,7 +126,7 @@ public class DefaultSavedRequestService implements SavedRequestService {
         if (session == null) {
             return request;
         }
-        
+
         SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(POST_LOGIN_KEY);
         if (saved != null && SecurityContext.getCurrentUser() != null) {
             session.removeAttribute(POST_LOGIN_KEY);
@@ -139,7 +144,7 @@ public class DefaultSavedRequestService implements SavedRequestService {
         if (session == null) {
             return null;
         }
-        
+
         return (SavedHttpRequest) session.getAttribute(LOGIN_KEY);
     }
 }
