@@ -16,6 +16,7 @@
 package org.jcatapult.persistence.txn;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -98,15 +99,14 @@ public class DefaultTransactionContext implements TransactionContext {
             throw new TransactionException("The transaction can't be committed because it has been set as rollbackOnly.");
         }
 
-        for (int i = 0; i < resources.size(); i++) {
-            TransactionalResource resource = resources.get(i);
+        int index = 0;
+        for (Iterator<TransactionalResource> i = resources.iterator(); i.hasNext();) {
+            TransactionalResource resource = i.next();
+            i.remove();
             try {
                 resource.commit();
             } catch (Exception e) {
-                if (i == 0) {
-                    rollback();
-                    return;
-                } else {
+                if (index != 0) {
                     // This is seriously bad mojo right here. We don't have two-phase commits, there are multiple
                     // resources and the first couple were successful. We'll have to continue committing
                     logger.log(Level.SEVERE, "A resource failed during commit and there aren't two phase commits available. " +
@@ -114,8 +114,21 @@ public class DefaultTransactionContext implements TransactionContext {
                         "during the commit and can no longer be rolled back. This is a very complex edge case and JCatapult " +
                         "currently doesn't support this case. Therefore, we completed the commit and are simply logging the " +
                         "failure.", e);
+                } else {
+                    try {
+                        rollback(); // Rollback the rest of the resources
+                    } catch (TransactionException te) {
+                        // We can ignore this I guess because we should throw the original exception
+                        logger.log(Level.SEVERE, "During the commit of the transaction, the first resource failed. During the " +
+                            "rollback of the remaining resources an error was encountered that was unexpected and should not " +
+                            "have occurred. The original exception is being thrown and this is the unexpected exception.", e);
+                    }
+
+                    throw e;
                 }
             }
+
+            index++;
         }
 
         committed = true;
