@@ -33,7 +33,7 @@
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
       <artifact group="hibernate.org" name="hibernate" version="3.2.6"/>
       <artifact group="hibernate.org" name="hibernate-annotations" version="3.3.1"/>
-      <artifact group="jcatapult.org" name="jcatapult-core" version="1.0.8-{integration}"/>
+      <artifact group="jcatapult.org" name="jcatapult-core" version="1.0.8"/>
       <artifact group="hibernate.org" name="hibernate-entitymanager" version="3.3.2"/>
       <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.5"/>
       <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
@@ -45,7 +45,7 @@
     </artifact-group>
     <artifact-group type="test-compile">
       <artifact group="easymock.org" name="easymock" version="2.2"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0.8-{integration}"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0.8"/>
       <artifact group="junit.org" name="junit" version="4.4"/>
       <artifact group="testng.org" name="testng" version="5.11"/>
     </artifact-group>
