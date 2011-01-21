@@ -33,7 +33,7 @@ public class TransactionMethodInterceptor implements MethodInterceptor {
     /**
      * Intercepts method invocations that have been tagged with the {@link Transactional} annotation. This uses the
      * {@link TransactionContextManager} to get the current {@link TransactionContext}. The {@link TransactionContext} is
-     * then used to determine if the transaction is new or embeeded. This then handles the starting, committing and rolling
+     * then used to determine if the transaction is new or embedded. This then handles the starting, committing and rolling
      * back of the transaction based on the result of the method invocation and if the transaction is embedded or not.
      *
      * @param   methodInvocation The method invocation.
