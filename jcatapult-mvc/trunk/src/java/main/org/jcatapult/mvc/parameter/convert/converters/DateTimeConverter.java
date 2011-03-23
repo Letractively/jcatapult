@@ -84,7 +84,7 @@ public class DateTimeConverter extends AbstractGlobalConverter {
 
     private DateTime toDateTime(String value, String format) {
         try {
-            return DateTimeFormat.forPattern(format).parseDateTime(value);
+            return DateTimeFormat.forPattern(format).withOffsetParsed().parseDateTime(value);
         } catch (IllegalArgumentException e) {
             throw new ConversionException("Invalid date [" + value + "] for format [" + format + "]", e);
         }

@@ -30,6 +30,6 @@ public class ExecuteMethodThrowsException {
 
     public String execute() {
         invoked = true;
-        throw new RuntimeException();
+        throw new IllegalArgumentException();
     }
 }

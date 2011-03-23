@@ -15,10 +15,12 @@
  */
 package org.jcatapult.mvc.test;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.IOException;
 
+import com.google.inject.Inject;
+import com.google.inject.Module;
 import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.mvc.message.MessageStore;
 import org.jcatapult.mvc.servlet.MVCWorkflow;
@@ -29,9 +31,6 @@ import org.jcatapult.test.servlet.MockHttpServletResponse;
 import org.jcatapult.test.servlet.MockHttpSession;
 import org.jcatapult.test.servlet.MockServletContext;
 import org.jcatapult.test.servlet.WebTestHelper;
-
-import com.google.inject.Inject;
-import com.google.inject.Module;
 
 /**
  * <p>
@@ -94,9 +93,12 @@ public class WebappTestRunner {
 
         // Inject
         GuiceContainer.getInjector().injectMembers(this);
-        
+
         workflow.perform(new WorkflowChain() {
             public void continueWorkflow() {
+            }
+
+            public void reset() {
             }
         });
     }
