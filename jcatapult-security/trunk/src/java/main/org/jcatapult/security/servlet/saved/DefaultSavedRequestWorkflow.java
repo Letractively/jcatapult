@@ -15,12 +15,13 @@
  */
 package org.jcatapult.security.servlet.saved;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
+import com.google.inject.Inject;
 import org.jcatapult.security.auth.NotLoggedInException;
 import org.jcatapult.security.config.SecurityConfiguration;
 import org.jcatapult.security.saved.SavedRequestService;
@@ -28,8 +29,6 @@ import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 import org.jcatapult.security.servlet.auth.NotLoggedInHandler;
 import org.jcatapult.security.servlet.login.PostLoginHandler;
 import org.jcatapult.servlet.WorkflowChain;
-
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -90,6 +89,7 @@ public class DefaultSavedRequestWorkflow implements PostLoginHandler, NotLoggedI
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
+    @Override
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         // See if there is a saved request
         HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
@@ -97,12 +97,6 @@ public class DefaultSavedRequestWorkflow implements PostLoginHandler, NotLoggedI
         HttpServletRequest savedRequest = savedRequestService.mockSavedRequest(previous);
         wrapper.setRequest(savedRequest);
         chain.continueWorkflow();
-    }
-
-    /**
-     * Empty.
-     */
-    public void destroy() {
     }
 
     // --------------------- PostLoginHandler methods ----------------------
@@ -116,6 +110,7 @@ public class DefaultSavedRequestWorkflow implements PostLoginHandler, NotLoggedI
      * @throws  ServletException If the chain throws.
      * @throws  IOException If the chain throws.
      */
+    @Override
     public void handle(WorkflowChain workflowChain) throws ServletException, IOException {
         String uri = savedRequestService.processSavedRequest(request);
         if (uri != null) {
@@ -140,6 +135,7 @@ public class DefaultSavedRequestWorkflow implements PostLoginHandler, NotLoggedI
      * @throws  ServletException If the redirect throws.
      * @throws  IOException If the redirect throws.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public void handle(NotLoggedInException exception, WorkflowChain workflowChain) throws ServletException, IOException {
         savedRequestService.saveRequest(request);

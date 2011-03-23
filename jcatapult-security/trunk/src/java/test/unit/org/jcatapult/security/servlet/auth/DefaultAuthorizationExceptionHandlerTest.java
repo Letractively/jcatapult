@@ -58,6 +58,10 @@ public class DefaultAuthorizationExceptionHandlerTest {
                 assertEquals("/not-authorized", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
             }
+
+            public void reset() {
+                fail("Should not be called");
+            }
         };
 
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
@@ -90,6 +94,10 @@ public class DefaultAuthorizationExceptionHandlerTest {
                 assertTrue(ServletObjectsHolder.getServletRequest() instanceof HttpServletRequestWrapper);
                 assertEquals("/context/not-authorized", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
+            }
+
+            public void reset() {
+                fail("Should not be called");
             }
         };
 

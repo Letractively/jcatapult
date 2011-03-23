@@ -15,9 +15,9 @@
  */
 package org.jcatapult.security.servlet.auth;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 import org.easymock.EasyMock;
 import org.jcatapult.security.EnhancedSecurityContext;
@@ -138,6 +138,38 @@ public class DefaultAuthorizationWorkflowTest {
         EnhancedSecurityContext.login(user);
 
         DefaultAuthorizationWorkflow aw = new DefaultAuthorizationWorkflow(request, a, null, null);
+        aw.perform(wc);
+        EasyMock.verify(a, request);
+    }
+
+    @Test
+    public void successWithAuthorizationExceptionThrownFromApp() throws IOException, ServletException {
+        Object user = new Object();
+
+        Authorizer a = EasyMock.createStrictMock(Authorizer.class);
+        a.authorize(user, "/foo");
+        EasyMock.replay(a);
+
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getRequestURI()).andReturn("/foo");
+        EasyMock.expect(request.getContextPath()).andReturn("");
+        EasyMock.replay(request);
+
+        AuthorizationException ae = new AuthorizationException();
+        WorkflowChain wc = EasyMock.createStrictMock(WorkflowChain.class);
+        wc.continueWorkflow();
+        EasyMock.expectLastCall().andThrow(ae);
+        wc.reset();
+        EasyMock.replay(wc);
+
+        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+        EnhancedSecurityContext.login(user);
+
+        AuthorizationExceptionHandler aeh = EasyMock.createStrictMock(AuthorizationExceptionHandler.class);
+        aeh.handle(ae, wc);
+        EasyMock.replay(aeh);
+
+        DefaultAuthorizationWorkflow aw = new DefaultAuthorizationWorkflow(request, a, null, aeh);
         aw.perform(wc);
         EasyMock.verify(a, request);
     }

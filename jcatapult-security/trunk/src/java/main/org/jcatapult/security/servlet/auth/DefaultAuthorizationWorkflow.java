@@ -15,18 +15,17 @@
  */
 package org.jcatapult.security.servlet.auth;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
+import com.google.inject.Inject;
 import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.security.auth.Authorizer;
 import org.jcatapult.security.auth.NotLoggedInException;
 import org.jcatapult.servlet.ServletTools;
 import org.jcatapult.servlet.WorkflowChain;
-
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -88,6 +87,7 @@ public class DefaultAuthorizationWorkflow implements AuthorizationWorkflow {
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
+    @Override
     public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
         String uri = ServletTools.getRequestURI(request);
         Object user = EnhancedSecurityContext.getCurrentUser();
@@ -102,9 +102,14 @@ public class DefaultAuthorizationWorkflow implements AuthorizationWorkflow {
             return;
         }
 
-        workflowChain.continueWorkflow();
-    }
-
-    public void destroy() {
+        try {
+            workflowChain.continueWorkflow();
+        } catch (AuthorizationException e) {
+            workflowChain.reset();
+            authorizationExceptionHandler.handle(e, workflowChain);
+        } catch (NotLoggedInException e) {
+            workflowChain.reset();
+            notLoggedInHandler.handle(e, workflowChain);
+        }
     }
 }

@@ -15,15 +15,15 @@
  */
 package org.jcatapult.security.servlet.saved;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static net.java.util.CollectionTools.*;
 import static net.java.util.Pair.*;
@@ -167,6 +167,10 @@ public class DefaultSavedRequestWorkflowTest {
                 assertEquals("/login-success", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
             }
+
+            public void reset() {
+                fail("Should not be called");
+            }
         };
 
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
@@ -204,6 +208,10 @@ public class DefaultSavedRequestWorkflowTest {
                 assertTrue(ServletObjectsHolder.getServletRequest().getRequest() instanceof FacadeHttpServletRequest);
                 assertEquals("/context/login-success", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
+            }
+
+            public void reset() {
+                fail("Should not be called");
             }
         };
 
@@ -299,6 +307,10 @@ public class DefaultSavedRequestWorkflowTest {
                 assertEquals("/not-logged-in", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
             }
+
+            public void reset() {
+                fail("Should not be called");
+            }
         };
 
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
@@ -340,6 +352,10 @@ public class DefaultSavedRequestWorkflowTest {
                 assertTrue(ServletObjectsHolder.getServletRequest().getRequest() instanceof FacadeHttpServletRequest);
                 assertEquals("/context/not-logged-in", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
+            }
+
+            public void reset() {
+                fail("Should not be called");
             }
         };
 
@@ -383,6 +399,10 @@ public class DefaultSavedRequestWorkflowTest {
                 assertEquals("/not-logged-in", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
             }
+
+            public void reset() {
+                fail("Should not be called");
+            }
         };
 
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
@@ -424,6 +444,10 @@ public class DefaultSavedRequestWorkflowTest {
                 assertTrue(ServletObjectsHolder.getServletRequest().getRequest() instanceof FacadeHttpServletRequest);
                 assertEquals("/context/not-logged-in", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
+            }
+
+            public void reset() {
+                fail("Should not be called");
             }
         };
 

@@ -15,11 +15,11 @@
  */
 package org.jcatapult.security.servlet.login;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
@@ -58,11 +58,15 @@ public class DefaultLoginExceptionHandlerTest {
                 assertEquals("/login-failed", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
             }
+
+            public void reset() {
+                fail("Should not be called");
+            }
         };
 
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
         ServletObjectsHolder.clearServletRequest();
-        ServletObjectsHolder.setServletRequest(wrapper);        
+        ServletObjectsHolder.setServletRequest(wrapper);
 
         DefaultLoginExceptionHandler dleh = new DefaultLoginExceptionHandler(wrapper, new DefaultSecurityConfiguration(c));
         dleh.handle(exception, wc);
@@ -89,6 +93,10 @@ public class DefaultLoginExceptionHandlerTest {
                 assertTrue(ServletObjectsHolder.getServletRequest() instanceof HttpServletRequestWrapper);
                 assertEquals("/context/login-failed", ServletObjectsHolder.getServletRequest().getRequestURI());
                 called.set(true);
+            }
+
+            public void reset() {
+                fail("Should not be called");
             }
         };
 
