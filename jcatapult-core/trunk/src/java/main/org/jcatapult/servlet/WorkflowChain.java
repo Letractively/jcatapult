@@ -15,8 +15,8 @@
  */
 package org.jcatapult.servlet;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
+import java.io.IOException;
 
 /**
  * <p>
@@ -36,4 +36,10 @@ public interface WorkflowChain {
      * @throws  ServletException If the workflows or filters throw ServletException.
      */
     void continueWorkflow() throws IOException, ServletException;
+
+    /**
+     * This method resets the workflow to its initial state. This is useful when the workflow needs to be reprocessed
+     * completely for any reason (such as security exceptions).
+     */
+    void reset();
 }

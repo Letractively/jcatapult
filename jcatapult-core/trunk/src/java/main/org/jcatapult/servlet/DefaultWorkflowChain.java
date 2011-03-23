@@ -15,11 +15,10 @@
  */
 package org.jcatapult.servlet;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * <p>
@@ -33,20 +32,34 @@ import javax.servlet.ServletException;
  * @author Brian Pontarelli
  */
 public class DefaultWorkflowChain implements WorkflowChain {
-    private final Iterator<Workflow> workflows;
+    private final Iterable<Workflow> workflows;
     private final FilterChain filterChain;
+    private Iterator<Workflow> iterator;
 
-    public DefaultWorkflowChain(List<Workflow> workflows, FilterChain filterChain) {
-        this.workflows = workflows.iterator();
+    public DefaultWorkflowChain(Iterable<Workflow> workflows, FilterChain filterChain) {
+        this.workflows = workflows;
         this.filterChain = filterChain;
+        this.iterator = workflows.iterator();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void continueWorkflow() throws IOException, ServletException {
-        if (workflows.hasNext()) {
-            Workflow workflow = workflows.next();
+        if (iterator.hasNext()) {
+            Workflow workflow = iterator.next();
             workflow.perform(this);
         } else {
             filterChain.doFilter(ServletObjectsHolder.getServletRequest(), ServletObjectsHolder.getServletResponse());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reset() {
+        iterator = workflows.iterator();
     }
 }

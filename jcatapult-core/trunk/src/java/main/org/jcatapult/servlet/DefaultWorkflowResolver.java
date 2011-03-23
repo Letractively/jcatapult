@@ -17,6 +17,7 @@ package org.jcatapult.servlet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -30,6 +31,7 @@ import com.google.inject.name.Named;
  * @author Brian Pontarelli
  */
 public class DefaultWorkflowResolver implements WorkflowResolver {
+    private static final Logger logger = Logger.getLogger(DefaultWorkflowResolver.class.getName());
     private final String[] types;
     private final Injector injector;
 
@@ -50,9 +52,12 @@ public class DefaultWorkflowResolver implements WorkflowResolver {
                 Workflow workflow = (Workflow) injector.getInstance(klass);
                 if (workflow != null) {
                     result.add(workflow);
+                } else {
+                    throw new RuntimeException("A workflow was defined that doesn't exist in the Guice injector [" + type + "].");
                 }
             } catch (ClassNotFoundException e) {
-                // Skip it. It isn't in the classpath
+                logger.severe("++++++++++++++++++++++++++++++++ A workflow was defined that doesn't exist [" + type + "] ++++++++++++++++++++++++++++++++");
+//                throw new RuntimeException("A workflow was defined that doesn't exist [" + type + "].", e);
             }
         }
 
