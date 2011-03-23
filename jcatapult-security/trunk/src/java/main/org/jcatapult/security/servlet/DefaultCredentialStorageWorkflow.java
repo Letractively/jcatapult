@@ -15,14 +15,13 @@
  */
 package org.jcatapult.security.servlet;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-
-import org.jcatapult.security.EnhancedSecurityContext;
-import org.jcatapult.servlet.WorkflowChain;
+import java.io.IOException;
 
 import com.google.inject.Inject;
+import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.servlet.WorkflowChain;
 
 /**
  * <p>
@@ -52,6 +51,7 @@ public class DefaultCredentialStorageWorkflow implements CredentialStorageWorkfl
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
+    @Override
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         Object userObject = credentialStorage.locate(request);
         boolean existing = (userObject != null);
@@ -77,8 +77,5 @@ public class DefaultCredentialStorageWorkflow implements CredentialStorageWorkfl
                 credentialStorage.store(EnhancedSecurityContext.getCurrentUser(), request);
             }
         }
-    }
-
-    public void destroy() {
     }
 }

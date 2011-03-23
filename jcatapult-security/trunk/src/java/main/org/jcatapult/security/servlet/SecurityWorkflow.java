@@ -15,18 +15,17 @@
  */
 package org.jcatapult.security.servlet;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Arrays;
-import javax.servlet.ServletException;
 
+import com.google.inject.Inject;
 import org.jcatapult.security.servlet.auth.DefaultAuthorizationWorkflow;
 import org.jcatapult.security.servlet.login.LoginWorkflow;
 import org.jcatapult.security.servlet.saved.SavedRequestWorkflow;
 import org.jcatapult.servlet.SubWorkflowChain;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
-
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -74,12 +73,10 @@ public class SecurityWorkflow implements Workflow {
      * @throws  IOException If the chain throws.
      * @throws  ServletException If the chain throws.
      */
+    @Override
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         SubWorkflowChain subChain = new SubWorkflowChain(Arrays.asList(credentialStorageWorkflow, savedRequestWorkflow,
             loginWorkflow, authorizationWorkflow), chain);
         subChain.continueWorkflow();
-    }
-
-    public void destroy() {
     }
 }

@@ -15,10 +15,10 @@
  */
 package org.jcatapult.security.servlet;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.easymock.EasyMock;
 import org.jcatapult.security.EnhancedSecurityContext;
@@ -54,6 +54,10 @@ public class DefaultCredentialStorageWorkflowTest {
                 assertNotNull(SecurityContext.getCurrentUser());
                 called.set(true);
             }
+
+            public void reset() {
+                fail("Should not be called");
+            }
         };
 
         DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
@@ -83,6 +87,10 @@ public class DefaultCredentialStorageWorkflowTest {
                 EnhancedSecurityContext.login(user);
                 called.set(true);
             }
+
+            public void reset() {
+                fail("Should not be called");
+            }
         };
 
         DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
@@ -111,6 +119,10 @@ public class DefaultCredentialStorageWorkflowTest {
                 assertNotNull(EnhancedSecurityContext.getCurrentUser());
                 EnhancedSecurityContext.logout();
                 called.set(true);
+            }
+
+            public void reset() {
+                fail("Should not be called");
             }
         };
 
@@ -142,6 +154,10 @@ public class DefaultCredentialStorageWorkflowTest {
                 assertNotNull(EnhancedSecurityContext.getCurrentUser());
                 EnhancedSecurityContext.update(newUser);
                 called.set(true);
+            }
+
+            public void reset() {
+                fail("Should not be called");
             }
         };
 

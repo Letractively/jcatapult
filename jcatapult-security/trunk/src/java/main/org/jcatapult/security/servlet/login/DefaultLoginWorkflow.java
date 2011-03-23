@@ -15,17 +15,16 @@
  */
 package org.jcatapult.security.servlet.login;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
+import com.google.inject.Inject;
 import org.jcatapult.security.JCatapultSecurityException;
 import org.jcatapult.security.config.SecurityConfiguration;
 import org.jcatapult.security.login.LoginService;
 import org.jcatapult.servlet.ServletTools;
 import org.jcatapult.servlet.WorkflowChain;
-
-import com.google.inject.Inject;
 
 /**
  * <p>
@@ -58,6 +57,7 @@ public class DefaultLoginWorkflow implements LoginWorkflow {
         this.passwordParameter = configuration.getPasswordParameter();
     }
 
+    @Override
     public void perform(WorkflowChain chain) throws IOException, ServletException {
         String username = request.getParameter(userNameParameter);
         String password = request.getParameter(passwordParameter);
@@ -84,8 +84,5 @@ public class DefaultLoginWorkflow implements LoginWorkflow {
         } else {
             chain.continueWorkflow();
         }
-    }
-
-    public void destroy() {
     }
 }
