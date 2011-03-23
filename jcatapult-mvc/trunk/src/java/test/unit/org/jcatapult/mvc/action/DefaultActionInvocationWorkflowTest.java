@@ -18,10 +18,12 @@ package org.jcatapult.mvc.action;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.reportMatcher;
 import org.easymock.IArgumentMatcher;
+import org.example.action.ExecuteMethodThrowsCheckedException;
 import org.example.action.ExecuteMethodThrowsException;
 import org.example.action.ExtensionInheritance;
 import org.example.action.Head;
@@ -147,7 +149,7 @@ public class DefaultActionInvocationWorkflowTest {
     }
 
     @Test
-    public void actionThatThrowsException() throws IOException, ServletException {
+    public void actionThatThrowsRuntimeException() throws IOException, ServletException {
         HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
         EasyMock.expect(request.getMethod()).andReturn("GET");
         EasyMock.replay(request);
@@ -165,9 +167,38 @@ public class DefaultActionInvocationWorkflowTest {
         try {
             workflow.perform(chain);
             fail("Should have failed");
-        } catch (RuntimeException e) {
-            System.out.println(e);
+        } catch (IllegalArgumentException e) {
             // Expected
+        }
+
+        assertTrue(action.invoked);
+
+        EasyMock.verify(request, ais, chain);
+    }
+
+    @Test
+    public void actionThatThrowsCheckedException() throws IOException, ServletException {
+        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getMethod()).andReturn("GET");
+        EasyMock.replay(request);
+
+        ExecuteMethodThrowsCheckedException action = new ExecuteMethodThrowsCheckedException();
+        ActionInvocation invocation = new DefaultActionInvocation(action, "/foo/bar", null, null);
+        ActionInvocationStore ais = EasyMock.createStrictMock(ActionInvocationStore.class);
+        EasyMock.expect(ais.getCurrent()).andReturn(invocation);
+        EasyMock.replay(ais);
+
+        WorkflowChain chain = EasyMock.createStrictMock(WorkflowChain.class);
+        EasyMock.replay(chain);
+
+        DefaultActionInvocationWorkflow workflow = new DefaultActionInvocationWorkflow(request, ais);
+        try {
+            workflow.perform(chain);
+            fail("Should have failed");
+        } catch (RuntimeException e) {
+            // Expected
+          assertTrue(e.getCause() instanceof InvocationTargetException);
+          assertTrue(((InvocationTargetException) e.getCause()).getTargetException() instanceof IOException);
         }
 
         assertTrue(action.invoked);

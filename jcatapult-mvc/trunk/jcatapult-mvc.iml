@@ -92,13 +92,13 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="jcatapult-core-test-1.0.7-IB20100809190941029.jar">
+      <library name="jcatapult-core-test-1.0.10-IB20110207222624430.jar">
         <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.7-{integration}/jcatapult-core-test-1.0.7-IB20100809190941029.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.10-{integration}/jcatapult-core-test-1.0.10-IB20110207222624430.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.7-{integration}/jcatapult-core-test-1.0.7-IB20100809190941029-src.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.10-{integration}/jcatapult-core-test-1.0.10-IB20110207222624430-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -224,13 +224,13 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="jcatapult-core-1.0.7-IB20100809190941029.jar">
+      <library name="jcatapult-core-1.0.10-IB20110207222624430.jar">
         <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.7-{integration}/jcatapult-core-1.0.7-IB20100809190941029.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.10-{integration}/jcatapult-core-1.0.10-IB20110207222624430.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.7-{integration}/jcatapult-core-1.0.7-IB20100809190941029-src.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.10-{integration}/jcatapult-core-1.0.10-IB20110207222624430-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

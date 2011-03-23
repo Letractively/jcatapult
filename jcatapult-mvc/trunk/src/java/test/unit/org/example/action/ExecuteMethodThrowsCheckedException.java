@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2010, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2011, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,25 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.mvc.servlet;
+package org.example.action;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 
-import org.jcatapult.servlet.WorkflowChain;
+import org.jcatapult.mvc.action.annotation.Action;
 
 /**
  * <p>
- * This is a mock workflow chain for testing.
+ * This is a simple test action.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
-public class MockWorkflowChain implements WorkflowChain {
-    private final Runnable runnable;
+@Action
+public class ExecuteMethodThrowsCheckedException {
+    public boolean invoked = false;
 
-    public MockWorkflowChain(Runnable runnable) {
-        this.runnable = runnable;
-    }
-
-    @Override
-    public void continueWorkflow() throws IOException, ServletException {
-        runnable.run();
-    }
-
-    @Override
-    public void reset() {
+    public String execute() throws IOException {
+        invoked = true;
+        throw new IOException();
     }
 }

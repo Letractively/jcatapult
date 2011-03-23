@@ -21,6 +21,8 @@ import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.GlobalConverter;
 import org.joda.time.DateTime;
 import static org.junit.Assert.*;
+
+import org.joda.time.DateTimeZone;
 import org.junit.Test;
 
 import static net.java.util.CollectionTools.*;
@@ -37,7 +39,7 @@ public class DateTimeConverterTest {
      * Test the conversion from Strings.
      */
     @Test
-    public void testFromStrings() {
+    public void fromStrings() {
         GlobalConverter converter = new DateTimeConverter();
         DateTime value = (DateTime) converter.convertFromStrings(DateTime.class, null, "testExpr", array((String) null));
         assertNull(value);
@@ -46,6 +48,16 @@ public class DateTimeConverterTest {
         assertEquals(7, value.getMonthOfYear());
         assertEquals(8, value.getDayOfMonth());
         assertEquals(2008, value.getYear());
+
+
+        value = (DateTime) converter.convertFromStrings(Locale.class, map("dateTimeFormat", "MM-dd-yyyy hh:mm:ss aa Z"), "testExpr", array("07-08-2008 10:13:34 AM -0800"));
+        assertEquals(7, value.getMonthOfYear());
+        assertEquals(8, value.getDayOfMonth());
+        assertEquals(2008, value.getYear());
+        assertEquals(10, value.getHourOfDay());
+        assertEquals(13, value.getMinuteOfHour());
+        assertEquals(34, value.getSecondOfMinute());
+        assertEquals(DateTimeZone.forOffsetHours(-8), value.getZone());
 
         try {
             converter.convertFromStrings(Locale.class, map("dateTimeFormat", "MM-dd-yyyy"), "testExpr", array("07/08/2008"));
@@ -58,7 +70,7 @@ public class DateTimeConverterTest {
      * Test the conversion from Strings.
      */
     @Test
-    public void testToStrings() {
+    public void toStrings() {
         GlobalConverter converter = new DateTimeConverter();
         String str = converter.convertToString(DateTime.class, null, "testExpr", null);
         assertNull(str);
