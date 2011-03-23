@@ -38,4 +38,8 @@ public class MockWorkflowChain implements WorkflowChain {
     public void continueWorkflow() throws IOException, ServletException {
         runnable.run();
     }
+
+    @Override
+    public void reset() {
+    }
 }

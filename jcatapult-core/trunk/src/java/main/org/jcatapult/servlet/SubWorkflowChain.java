@@ -15,10 +15,9 @@
  */
 package org.jcatapult.servlet;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
-import javax.servlet.ServletException;
 
 /**
  * <p>
@@ -29,20 +28,35 @@ import javax.servlet.ServletException;
  * @author Brian Pontarelli
  */
 public class SubWorkflowChain implements WorkflowChain {
-    private final Iterator<Workflow> workflows;
+    private final Iterable<Workflow> workflows;
     private final WorkflowChain workflowChain;
+    private Iterator<Workflow> iterator;
 
-    public SubWorkflowChain(List<Workflow> workflows, WorkflowChain workflowChain) {
-        this.workflows = workflows.iterator();
+    public SubWorkflowChain(Iterable<Workflow> workflows, WorkflowChain workflowChain) {
+        this.workflows = workflows;
         this.workflowChain = workflowChain;
+        this.iterator = workflows.iterator();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void continueWorkflow() throws IOException, ServletException {
-        if (workflows.hasNext()) {
-            Workflow workflow = workflows.next();
+        if (iterator.hasNext()) {
+            Workflow workflow = iterator.next();
             workflow.perform(this);
         } else {
             workflowChain.continueWorkflow();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reset() {
+        iterator = workflows.iterator();
+        workflowChain.reset();
     }
 }
