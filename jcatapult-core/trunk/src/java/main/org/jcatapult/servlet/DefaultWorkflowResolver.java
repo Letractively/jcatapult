@@ -21,64 +21,55 @@ import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 /**
  * <p>
- * This is the default workflow resolver and it
+ * This is the default workflow resolver and it locates the workflows defined in the configuration file
+ * when it is loaded up. This is a singleton for performance reasons.
  * </p>
  *
  * @author Brian Pontarelli
  */
+@Singleton
 public class DefaultWorkflowResolver implements WorkflowResolver {
     private static final Logger logger = Logger.getLogger(DefaultWorkflowResolver.class.getName());
-    private final String[] types;
+    private final List<Class<? extends Workflow>> types = new ArrayList<Class<? extends Workflow>>();
     private final Injector injector;
 
     @Inject
+    @SuppressWarnings("unchecked")
     public DefaultWorkflowResolver(@Named("jcatapult.workflows") String workflows, Injector injector) {
-        this.types = workflows.split(",");
         this.injector = injector;
+      
+        String[] types = workflows.split(",");
+        for (String type : types) {
+            try {
+                Class<? extends Workflow> klass = (Class<? extends Workflow>) Class.forName(type);
+                this.types.add(klass);
+            } catch (ClassNotFoundException e) {
+                logger.severe("++++++++++++++++++++++++++++++++ A workflow was defined that doesn't exist [" + type + "] ++++++++++++++++++++++++++++++++");
+            }
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public List<Workflow> resolve() {
-        List<Workflow> result = new ArrayList<Workflow>();
-        for (String type : types) {
-            try {
-                Class<?> klass = Class.forName(type);
-                Workflow workflow = (Workflow) injector.getInstance(klass);
-                if (workflow != null) {
-                    result.add(workflow);
-                } else {
-                    throw new RuntimeException("A workflow was defined that doesn't exist in the Guice injector [" + type + "].");
-                }
-            } catch (ClassNotFoundException e) {
-                logger.severe("++++++++++++++++++++++++++++++++ A workflow was defined that doesn't exist [" + type + "] ++++++++++++++++++++++++++++++++");
-//                throw new RuntimeException("A workflow was defined that doesn't exist [" + type + "].", e);
-            }
+        List<Workflow> workflows = new ArrayList<Workflow>();
+        for (Class<? extends Workflow> type : types) {
+            workflows.add(injector.getInstance(type));
         }
 
-        return result;
+        return workflows;
     }
 
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public List<Class<? extends Workflow>> getTypes() {
-        List<Class<? extends Workflow>> results = new ArrayList<Class<? extends Workflow>>();
-        for (String type : types) {
-            try {
-                Class<? extends Workflow> klass = (Class<? extends Workflow>) Class.forName(type);
-                results.add(klass);
-            } catch (ClassNotFoundException e) {
-                // Skip it. It isn't in the classpath
-            }
-        }
-
-        return results;
+        return types;
     }
 }
