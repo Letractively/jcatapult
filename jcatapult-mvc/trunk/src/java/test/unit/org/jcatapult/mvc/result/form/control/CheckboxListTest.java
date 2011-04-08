@@ -15,7 +15,6 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import static java.util.Arrays.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,9 +26,11 @@ import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
-import com.google.inject.Inject;
-import static net.java.util.CollectionTools.*;
 import net.java.util.Pair;
+
+import com.google.inject.Inject;
+import static java.util.Arrays.*;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -80,6 +81,31 @@ public class CheckboxListTest extends ControlBaseTest {
             "<div class=\"control-container\">\n" +
             "<div class=\"control-item-container\">\n" +
             "<input type=\"checkbox\" checked=\"checked\" value=\"US\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">United States</span>\n" +
+            "</div>\n" +
+            "<div class=\"control-item-container\">\n" +
+            "<input type=\"checkbox\" value=\"DE\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void html() {
+        Address address = new Address();
+        address.setCountry("<US>");
+        Edit action = new Edit();
+        action.user = new User();
+        action.user.setAddress("work", address);
+
+        ais.setCurrent(new DefaultActionInvocation(action, "/checkbox-list", null, null));
+        run(checkboxList,
+            mapNV("name", "user.addresses['work'].country", "items", lmap("<US>", "<United States>", "DE", "Germany")),
+            null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
+            "<div class=\"checkbox-list input control\">\n" +
+            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<div class=\"control-item-container\">\n" +
+            "<input type=\"checkbox\" checked=\"checked\" value=\"&lt;US&gt;\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\"><United States></span>\n" +
             "</div>\n" +
             "<div class=\"control-item-container\">\n" +
             "<input type=\"checkbox\" value=\"DE\" name=\"user.addresses['work'].country\"/><span class=\"checkbox-text\">Germany</span>\n" +

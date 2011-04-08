@@ -15,13 +15,13 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import static net.java.util.CollectionTools.*;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
 import com.google.inject.Inject;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -56,6 +56,19 @@ public class ImageTest extends ControlBaseTest {
             "<div class=\"image-button button control\">\n" +
             "<div class=\"label-container\"> </div>\n" +
             "<div class=\"control-container\"><input type=\"image\" id=\"image\" name=\"image\" src=\"foo.gif\" value=\"Image\"/></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void html() {
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/image", null, null));
+        run(image,
+            mapNV("name", "html", "value", "test-value", "src", "foo.gif"),
+            null, "<input type=\"hidden\" name=\"html@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_html\" value=\"\"/>\n" +
+            "<div class=\"image-button button control\">\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"image\" id=\"html\" name=\"html\" src=\"foo.gif\" value=\"&lt;Image&gt;\"/></div>\n" +
             "</div>\n");
     }
 

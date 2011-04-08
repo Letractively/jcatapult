@@ -83,6 +83,17 @@ public class CheckboxTest extends ControlBaseTest {
         testAction("user.setIDs", true, "3");
         testAction("user.setIDs", false, "4");
 
+        // Test collection with HTML
+        set = new HashSet<String>();
+        set.add("<br>");
+        set.add("<li>");
+        set.add("<td>");
+        action.user.setSetIDs(set);
+        testAction("user.setIDs", true, "<br>");
+        testAction("user.setIDs", true, "<li>");
+        testAction("user.setIDs", true, "<td>");
+        testAction("user.setIDs", false, "<table>");
+
         // Test collection with Integers
         List<Integer> list = new ArrayList<Integer>();
         list.add(1);
@@ -102,7 +113,7 @@ public class CheckboxTest extends ControlBaseTest {
             "<div class=\"checkbox input control\">\n" +
             "<div class=\"label-container\"><label for=\"" + property.replace(".", "_") + "\" class=\"label\">Male?</label></div>\n" +
             "<div class=\"control-container\"><input type=\"checkbox\" " + (flag ? "checked=\"checked\" " : "") +
-                "id=\"" + property.replace(".", "_") + "\" name=\"" + property + "\" value=\"" + value +
+                "id=\"" + property.replace(".", "_") + "\" name=\"" + property + "\" value=\"" + value.replace("<", "&lt;").replace(">", "&gt;") +
                 "\"/><input type=\"hidden\" name=\"__jc_cb_" + property +"\" value=\"\"/></div>\n" +
             "</div>\n");
     }

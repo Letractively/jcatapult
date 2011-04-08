@@ -15,8 +15,8 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 import com.google.inject.Inject;
 
@@ -29,7 +29,7 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractButtonInput extends AbstractInput {
-    private final HttpServletRequest request;
+    protected final HttpServletRequest request;
 
     @Inject
     public AbstractButtonInput(HttpServletRequest request) {
