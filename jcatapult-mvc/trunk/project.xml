@@ -27,14 +27,14 @@
       <artifact group="freemarker.org" name="freemarker" version="2.3.16"/>
       <artifact group="guice.code.google.com" name="guice" version="1.0"/>
       <artifact group="java-net-commons.dev.java.net" name="java-net-commons" version="1.5.4"/>
-      <artifact group="jcatapult.org" name="jcatapult-core" version="1.0.9"/>
+      <artifact group="jcatapult.org" name="jcatapult-core" version="1.0.10"/>
       <artifact group="joda-time.joda.org" name="joda-time" version="1.4"/>
     </artifact-group>
     <artifact-group type="run"/>
     <artifact-group type="test-compile">
       <artifact group="commons.apache.org" name="commons-configuration" version="1.4"/>
       <artifact group="easymock.org" name="easymock" version="2.3"/>
-      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0.9"/>
+      <artifact group="jcatapult.org" project="jcatapult-core" name="jcatapult-core-test" version="1.0.10"/>
       <artifact group="junit.org" name="junit" version="4.4"/>
     </artifact-group>
     <artifact-group type="test-run"/>
