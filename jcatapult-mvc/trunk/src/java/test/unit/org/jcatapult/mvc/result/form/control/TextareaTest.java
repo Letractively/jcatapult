@@ -64,6 +64,22 @@ public class TextareaTest extends ControlBaseTest {
     }
 
     @Test
+    public void html() {
+        Edit action = new Edit();
+        action.user = new User();
+        action.user.setName("<b>brian</b>");
+
+        ais.setCurrent(new DefaultActionInvocation(action, "/textarea", null, null));
+        run(textarea,
+            mapNV("name", "user.name"),
+            null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
+            "<div class=\"textarea input control\">\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><textarea id=\"user_name\" name=\"user.name\">&lt;b&gt;brian&lt;/b&gt;</textarea></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
     public void testFieldErrors() {
         Edit action = new Edit();
         action.user = new User();

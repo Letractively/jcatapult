@@ -64,6 +64,22 @@ public class TextTest extends ControlBaseTest {
     }
 
     @Test
+    public void html() {
+        Edit action = new Edit();
+        action.user = new User();
+        action.user.setName("<Brian>");
+
+        ais.setCurrent(new DefaultActionInvocation(action, "/text", null, null));
+        run(text,
+            mapNV("name", "user.name"),
+            null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
+            "<div class=\"text input control\">\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\">Your name</label></div>\n" +
+            "<div class=\"control-container\"><input type=\"text\" id=\"user_name\" name=\"user.name\" value=\"&lt;Brian&gt;\"/></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
     public void testFieldErrors() {
         Edit action = new Edit();
         action.user = new User();

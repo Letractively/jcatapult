@@ -15,13 +15,13 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import static net.java.util.CollectionTools.*;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
 import com.google.inject.Inject;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -56,6 +56,19 @@ public class SubmitTest extends ControlBaseTest {
             "<div class=\"submit-button button control\">\n" +
             "<div class=\"label-container\"> </div>\n" +
             "<div class=\"control-container\"><input type=\"submit\" id=\"button\" name=\"button\" value=\"Button\"/></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void html() {
+        ais.setCurrent(new DefaultActionInvocation(new Edit(), "/button", null, null));
+        run(submit,
+            mapNV("name", "html", "value", "test-value"),
+            null, "<input type=\"hidden\" name=\"html@param\" value=\"param-value\"/>\n" +
+            "<input type=\"hidden\" name=\"__jc_a_html\" value=\"\"/>\n" +
+            "<div class=\"submit-button button control\">\n" +
+            "<div class=\"label-container\"> </div>\n" +
+            "<div class=\"control-container\"><input type=\"submit\" id=\"html\" name=\"html\" value=\"&lt;Button&gt;\"/></div>\n" +
             "</div>\n");
     }
 

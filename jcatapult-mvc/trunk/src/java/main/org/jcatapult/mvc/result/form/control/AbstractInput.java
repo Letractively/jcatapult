@@ -34,9 +34,9 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractInput extends AbstractControl {
-    protected MessageProvider messageProvider;
     private final boolean labeled;
-    private MessageStore messageStore;
+    protected MessageStore messageStore;
+    protected MessageProvider messageProvider;
 
     protected AbstractInput(boolean labeled) {
         this.labeled = labeled;

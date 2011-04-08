@@ -62,6 +62,21 @@ public class FileTest extends ControlBaseTest {
     }
 
     @Test
+    public void htmlLabel() {
+        Edit action = new Edit();
+        ais.setCurrent(new DefaultActionInvocation(action, "/file", null, null));
+
+        // This verifies that HTML is left in for labels. That way people can style their labels in the message properties files
+        run(file,
+            mapNV("name", "user.name"),
+            null, "<input type=\"hidden\" name=\"user.name@param\" value=\"param-value\"/>\n" +
+            "<div class=\"file input control\">\n" +
+            "<div class=\"label-container\"><label for=\"user_name\" class=\"label\"><Name></label></div>\n" +
+            "<div class=\"control-container\"><input type=\"file\" id=\"user_name\" name=\"user.name\"/></div>\n" +
+            "</div>\n");
+    }
+
+    @Test
     public void testFieldErrors() {
         Edit action = new Edit();
         ais.setCurrent(new DefaultActionInvocation(action, "/file", null, null));

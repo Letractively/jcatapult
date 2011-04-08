@@ -15,7 +15,6 @@
  */
 package org.jcatapult.mvc.result.form.control;
 
-import static java.util.Arrays.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,9 +26,11 @@ import org.jcatapult.mvc.message.scope.MessageScope;
 import org.jcatapult.mvc.result.control.ControlBaseTest;
 import org.junit.Test;
 
-import com.google.inject.Inject;
-import static net.java.util.CollectionTools.*;
 import net.java.util.Pair;
+
+import com.google.inject.Inject;
+import static java.util.Arrays.*;
+import static net.java.util.CollectionTools.*;
 
 /**
  * <p>
@@ -96,6 +97,30 @@ public class SelectTest extends ControlBaseTest {
             "<div class=\"control-container\">\n" +
             "<select id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
             "<option value=\"US\" selected=\"selected\">United States</option>\n" +
+            "<option value=\"DE\">Germany</option>\n" +
+            "</select>\n" +
+            "</div>\n" +
+            "</div>\n");
+    }
+
+    @Test
+    public void html() {
+        Address address = new Address();
+        address.setCountry("<US>");
+        Edit action = new Edit();
+        action.user = new User();
+        action.user.setAddress("work", address);
+
+        ais.setCurrent(new DefaultActionInvocation(action, "/select", null, null));
+
+        run(select,
+            mapNV("name", "user.addresses['work'].country", "items", lmap("<US>", "<United States>", "DE", "Germany")),
+            null, "<input type=\"hidden\" name=\"user.addresses['work'].country@param\" value=\"param-value\"/>\n" +
+            "<div class=\"select input control\">\n" +
+            "<div class=\"label-container\"><label for=\"user_addresses['work']_country\" class=\"label\">Country</label></div>\n" +
+            "<div class=\"control-container\">\n" +
+            "<select id=\"user_addresses['work']_country\" name=\"user.addresses['work'].country\">\n" +
+            "<option value=\"&lt;US&gt;\" selected=\"selected\"><United States></option>\n" +
             "<option value=\"DE\">Germany</option>\n" +
             "</select>\n" +
             "</div>\n" +

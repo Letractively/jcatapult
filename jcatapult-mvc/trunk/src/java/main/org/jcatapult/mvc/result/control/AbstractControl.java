@@ -15,13 +15,13 @@
  */
 package org.jcatapult.mvc.result.control;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import java.util.TreeMap;
 
-import net.java.error.ErrorList;
 import org.jcatapult.freemarker.FreeMarkerService;
 import org.jcatapult.locale.annotation.CurrentLocale;
 import org.jcatapult.mvc.action.ActionInvocation;
@@ -30,6 +30,8 @@ import org.jcatapult.mvc.result.control.annotation.ControlAttribute;
 import org.jcatapult.mvc.result.control.annotation.ControlAttributes;
 import org.jcatapult.mvc.result.form.control.AppendAttributesMethod;
 import org.jcatapult.mvc.result.form.control.MakeClassMethod;
+
+import net.java.error.ErrorList;
 
 import com.google.inject.Inject;
 
@@ -43,13 +45,13 @@ import com.google.inject.Inject;
  * @author  Brian Pontarelli
  */
 public abstract class AbstractControl implements Control {
+    protected final Map<String, Object> attributes = new TreeMap<String, Object>();
+    protected final Map<String, String> dynamicAttributes = new TreeMap<String, String>();
+    protected final Map<String, Object> parameters = new TreeMap<String, Object>();
     protected Locale locale;
     protected FreeMarkerService freeMarkerService;
     protected HttpServletRequest request;
     protected ActionInvocationStore actionInvocationStore;
-    protected Map<String, Object> attributes;
-    protected Map<String, String> dynamicAttributes;
-    protected Map<String, Object> parameters;
     protected Object root;
 
     @Inject
@@ -75,12 +77,16 @@ public abstract class AbstractControl implements Control {
      *          an underscore.
      */
     public void renderStart(Writer writer, Map<String, Object> attributes, Map<String, String> dynamicAttributes) {
-        this.attributes = attributes;
-        this.dynamicAttributes = dynamicAttributes;
+        this.attributes.clear();
+        this.dynamicAttributes.clear();
+        this.parameters.clear();
+
+        this.attributes.putAll(attributes);
+        this.dynamicAttributes.putAll(dynamicAttributes);
 
         verifyAttributes();
         addAdditionalAttributes();
-        this.parameters = makeParameters();
+        this.parameters.putAll(makeParameters());
         this.root = makeRoot();
 
         if (startTemplateName() != null) {
@@ -134,7 +140,7 @@ public abstract class AbstractControl implements Control {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("attributes", attributes);
         parameters.put("dynamic_attributes", dynamicAttributes);
-        parameters.put("append_attributes", new AppendAttributesMethod());
+//        parameters.put("append_attributes", new AppendAttributesMethod());
         parameters.put("make_class", new MakeClassMethod());
         return parameters;
     }
