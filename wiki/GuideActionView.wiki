@@ -32,9 +32,9 @@ The package and class name are translated into a URL using this process:
 Here are some examples of how actions are mapped to URLs by JCatapult.
 
 || *Class* || *URL* ||
-|| com.example.actions.Index || /index ||
-|| com.example.actions.users.List || /users/list ||
-|| com.example.actions.waterProducts.SpeedBoat || /water-products/speed-boat ||
+|| com.example.action.Index || /index ||
+|| com.example.action.users.List || /users/list ||
+|| com.example.action.waterProducts.SpeedBoat || /water-products/speed-boat ||
 
 == Result Conventions ==
 
