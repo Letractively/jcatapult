@@ -19,43 +19,42 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 
-import com.google.inject.Inject;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.test.JPABaseTest;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.google.inject.Inject;
+import static org.junit.Assert.*;
+
 /**
- * <p>
- * This class tests the hibernate types.
- * </p>
+ * <p> This class tests the hibernate types. </p>
  *
  * @author Brian Pontarelli
  */
 public class MoneyAmountUSDTypeTest extends JPABaseTest {
-    @Inject public PersistenceService persistenceService;
+  @Inject public PersistenceService persistenceService;
 
-    @Test
-    public void save() {
-        MoneyAmountHolder holder = new MoneyAmountHolder();
-        holder.setMoney(Money.valueOf("1.99", Currency.getInstance("USD")));
-        persistenceService.persist(holder);
+  @Test
+  public void save() {
+    MoneyAmountHolder holder = new MoneyAmountHolder();
+    holder.setMoney(Money.valueOf("1.99", Currency.getInstance("USD")));
+    persistenceService.persist(holder);
 
-        List<MoneyAmountHolder> holders = persistenceService.findAllByType(MoneyAmountHolder.class);
-        assertEquals(1, holders.size());
-        assertEquals(new BigDecimal("1.99"), holders.get(0).getMoney().toBigDecimal());
-        assertEquals(Currency.getInstance("USD"), holders.get(0).getMoney().getCurrency());
+    List<MoneyAmountHolder> holders = persistenceService.findAllByType(MoneyAmountHolder.class);
+    assertEquals(1, holders.size());
+    assertEquals(new BigDecimal("1.99"), holders.get(0).getMoney().toBigDecimal());
+    assertEquals(Currency.getInstance("USD"), holders.get(0).getMoney().getCurrency());
+  }
+
+  @Test
+  public void badCurrency() {
+    MoneyAmountHolder holder = new MoneyAmountHolder();
+    holder.setMoney(Money.valueOf("1.99", Currency.getInstance("EUR")));
+    try {
+      persistenceService.persist(holder);
+      fail("Should have failed");
+    } catch (Exception e) {
+      // Expected
     }
-
-    @Test
-    public void badCurrency() {
-        MoneyAmountHolder holder = new MoneyAmountHolder();
-        holder.setMoney(Money.valueOf("1.99", Currency.getInstance("EUR")));
-        try {
-            persistenceService.persist(holder);
-            fail("Should have failed");
-        } catch (Exception e) {
-            // Expected
-        }
-    }
+  }
 }

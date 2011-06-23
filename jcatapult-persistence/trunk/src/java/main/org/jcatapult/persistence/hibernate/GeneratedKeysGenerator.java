@@ -28,55 +28,50 @@ import org.hibernate.id.insert.InsertGeneratedIdentifierDelegate;
 import org.jcatapult.persistence.domain.Identifiable;
 
 /**
- * <p>
- * This class provides identifier generation that uses the JDBC 3 getGeneratedKeys
- * exclusively.
- * </p>
- * <p>
- * The only caveat is that if the Entity is Identifiable and has an ID, then that ID
- * is returned.
- * </p>
+ * <p> This class provides identifier generation that uses the JDBC 3 getGeneratedKeys exclusively. </p> <p> The only
+ * caveat is that if the Entity is Identifiable and has an ID, then that ID is returned. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class GeneratedKeysGenerator implements PostInsertIdentifierGenerator {
-    /**
-     * Uses the GetGeneratedKeysDelegate.
-     *
-     * @param   persister The persister.
-     * @param   dialect The dialect.
-     * @param   isGetGeneratedKeysEnabled Not used.
-     * @return  A new GetGeneratedKeysDelegate.
-     * @throws  HibernateException If the delegate throws.
-     */
-    @Override
-    public InsertGeneratedIdentifierDelegate getInsertGeneratedIdentifierDelegate(PostInsertIdentityPersister persister,
-                                                                                  Dialect dialect,
-                                                                                  boolean isGetGeneratedKeysEnabled)
+  /**
+   * Uses the GetGeneratedKeysDelegate.
+   *
+   * @param persister                 The persister.
+   * @param dialect                   The dialect.
+   * @param isGetGeneratedKeysEnabled Not used.
+   * @return A new GetGeneratedKeysDelegate.
+   * @throws HibernateException If the delegate throws.
+   */
+  @Override
+  public InsertGeneratedIdentifierDelegate getInsertGeneratedIdentifierDelegate(PostInsertIdentityPersister persister,
+                                                                                Dialect dialect,
+                                                                                boolean isGetGeneratedKeysEnabled)
     throws HibernateException {
-        if (!isGetGeneratedKeysEnabled) {
-            throw new HibernateException("You can't use the GeneratedKeysGenerator unless the database and Hibernate are setup to support generated keys");
-        }
-        return new GetGeneratedKeysDelegate(persister, dialect);
+    if (!isGetGeneratedKeysEnabled) {
+      throw new HibernateException("You can't use the GeneratedKeysGenerator unless the database and Hibernate are setup to support generated keys");
+    }
+    return new GetGeneratedKeysDelegate(persister, dialect);
+  }
+
+  /**
+   * If the Entity is Identifiable and has an ID, this returns that ID. Otherwise, this returns the
+   * POST_INSERT_INDICATOR to tell Hibernate to not send anything in the insert statement and let the database
+   * generate it.
+   *
+   * @param s   Not used.
+   * @param obj Checked to see if it is Identifiable.
+   * @return The Identifiable ID or the POST_INSERT_INDICATOR.
+   */
+  @Override
+  public Serializable generate(SessionImplementor s, Object obj) {
+    if (obj instanceof Identifiable) {
+      Identifiable i = (Identifiable) obj;
+      if (i.getId() != null) {
+        return i.getId();
+      }
     }
 
-    /**
-     * If the Entity is Identifiable and has an ID, this returns that ID. Otherwise, this returns the POST_INSERT_INDICATOR
-     * to tell Hibernate to not send anything in the insert statement and let the database generate it.
-     *
-     * @param   s Not used.
-     * @param   obj Checked to see if it is Identifiable.
-     * @return  The Identifiable ID or the POST_INSERT_INDICATOR.
-     */
-    @Override
-    public Serializable generate(SessionImplementor s, Object obj) {
-        if (obj instanceof Identifiable) {
-            Identifiable i = (Identifiable) obj;
-            if (i.getId() != null) {
-                return i.getId();
-            }
-        }
-
-        return IdentifierGeneratorFactory.POST_INSERT_INDICATOR;
-    }
+    return IdentifierGeneratorFactory.POST_INSERT_INDICATOR;
+  }
 }

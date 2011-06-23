@@ -19,29 +19,26 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 /**
- * <p>
- * This class implements the SoftDeletable interface and extends the IdentifiableImpl class
- * for a primary key.
- * </p>
+ * <p> This class implements the SoftDeletable interface and extends the IdentifiableImpl class for a primary key. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @MappedSuperclass
 public class SoftDeletableImpl extends IdentifiableImpl implements SoftDeletable {
-    @Column(nullable = false)
-    private boolean deleted = false;
+  @Column(nullable = false)
+  private boolean deleted = false;
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isDeleted() {
-        return deleted;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isDeleted() {
+    return deleted;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+  }
 }

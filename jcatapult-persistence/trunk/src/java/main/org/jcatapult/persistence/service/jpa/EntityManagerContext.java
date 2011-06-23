@@ -18,12 +18,8 @@ package org.jcatapult.persistence.service.jpa;
 import javax.persistence.EntityManager;
 
 /**
- * <p>
- * This class is a context container for the EntityManager that is setup
- * in the filter. The {@link org.jcatapult.servlet.JCatapultFilter}
- * must be configured in the web.xml file like this:
- * </p>
- *
+ * <p> This class is a context container for the EntityManager that is setup in the filter. The {@link
+ * org.jcatapult.servlet.JCatapultFilter} must be configured in the web.xml file like this: </p> <p/>
  * <pre>
  * &lt;filter>
  *   &lt;filter-name>jcatapultFilter&lt;/filter-name>
@@ -35,40 +31,37 @@ import javax.persistence.EntityManager;
  *   &lt;url-pattern>/*&lt;/url-pattern>
  * &lt;/filter-mapping>
  * </pre>
+ * <p/> <p> This filter <em>MUST</em> be the first filter in the chain otherwise the EntityManager will not be correctly
+ * setup. </p>
  *
- * <p>
- * This filter <em>MUST</em> be the first filter in the chain otherwise
- * the EntityManager will not be correctly setup.
- * </p>
- *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class EntityManagerContext {
-    private static ThreadLocal<EntityManager> holder = new ThreadLocal<EntityManager>();
+  private static ThreadLocal<EntityManager> holder = new ThreadLocal<EntityManager>();
 
-    /**
-     * Sets the EntityManager for this Thread.
-     *
-     * @param   manager The EntityManager to set.
-     */
-    public static void set(EntityManager manager) {
-        holder.set(manager);
-    }
+  /**
+   * Sets the EntityManager for this Thread.
+   *
+   * @param   manager The EntityManager to set.
+   */
+  public static void set(EntityManager manager) {
+    holder.set(manager);
+  }
 
-    /**
-     * Returns the EntityManager for this context. This requires that the entity manager filter be
-     * setup according to the class comment.
-     *
-     * @return The EntityManager or null if the filter is not setup correctly.
-     */
-    public static EntityManager get() {
-        return holder.get();
-    }
+  /**
+   * Returns the EntityManager for this context. This requires that the entity manager filter be
+   * setup according to the class comment.
+   *
+   * @return The EntityManager or null if the filter is not setup correctly.
+   */
+  public static EntityManager get() {
+    return holder.get();
+  }
 
-    /**
-     * Removes the EntityManager from the context.
-     */
-    public static void remove() {
-        holder.remove();
-    }
+  /**
+   * Removes the EntityManager from the context.
+   */
+  public static void remove() {
+    holder.remove();
+  }
 }

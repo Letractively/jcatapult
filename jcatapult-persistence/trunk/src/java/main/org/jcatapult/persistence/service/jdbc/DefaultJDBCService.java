@@ -21,96 +21,95 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import org.jcatapult.persistence.txn.TransactionContext;
 import org.jcatapult.persistence.txn.TransactionContextManager;
 import org.jcatapult.persistence.txn.jdbc.JDBCTransactionalResource;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
+
 /**
- * <p>
- * This is the default implementation of the JDBC service. it uses a single named constant
- * to determine if JDBC is enabled. This constant is named <strong>non-jta-data-source</strong>.
- * </p>
+ * <p> This is the default implementation of the JDBC service. it uses a single named constant to determine if JDBC is
+ * enabled. This constant is named <strong>non-jta-data-source</strong>. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @Singleton
 public class DefaultJDBCService implements JDBCService {
-    private final TransactionContextManager manager;
-    private DataSource ds;
+  private final TransactionContextManager manager;
+  private DataSource ds;
 
-    @Inject
-    public DefaultJDBCService(TransactionContextManager manager) {
-        this.manager = manager;
+  @Inject
+  public DefaultJDBCService(TransactionContextManager manager) {
+    this.manager = manager;
+  }
+
+  @Inject(optional = true)
+  public void setDatasourceName(@Named("non-jta-data-source") String dataSourceName) {
+    if (dataSourceName == null) {
+      return;
     }
 
-    @Inject(optional = true)
-    public void setDatasourceName(@Named("non-jta-data-source") String dataSourceName) {
-        if (dataSourceName == null) {
-            return;
-        }
+    try {
+      InitialContext context = new InitialContext();
+      ds = (DataSource) context.lookup(dataSourceName);
+    } catch (NamingException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-        try {
-            InitialContext context = new InitialContext();
-            ds = (DataSource) context.lookup(dataSourceName);
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public DataSource getDataSouce() {
+    return ds;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Connection setupConnection() {
+    Connection c = ConnectionContext.get();
+    if (c != null) {
+      return c;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DataSource getDataSouce() {
-        return ds;
+    try {
+      if (ds == null) {
+        return null;
+      }
+
+      c = ds.getConnection();
+      ConnectionContext.set(c);
+
+      TransactionContext txnContext = manager.getCurrent();
+      if (txnContext != null) {
+        txnContext.add(new JDBCTransactionalResource(c));
+      }
+
+      return c;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Connection setupConnection() {
-        Connection c = ConnectionContext.get();
-        if (c != null) {
-            return c;
-        }
-
-        try {
-            if (ds == null) {
-                return null;
-            }
-
-            c = ds.getConnection();
-            ConnectionContext.set(c);
-
-            TransactionContext txnContext = manager.getCurrent();
-            if (txnContext != null) {
-                txnContext.add(new JDBCTransactionalResource(c));
-            }
-            
-            return c;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void tearDownConnection() {
+    Connection c = ConnectionContext.get();
+    if (c != null) {
+      ConnectionContext.remove();
+      try {
+        c.setAutoCommit(true);
+        c.close();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void tearDownConnection() {
-        Connection c = ConnectionContext.get();
-        if (c != null) {
-            ConnectionContext.remove();
-            try {
-                c.setAutoCommit(true);
-                c.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+  }
 }

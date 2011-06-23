@@ -19,184 +19,183 @@ package org.jcatapult.persistence.txn;
 import javax.sql.RowSet;
 import java.sql.SQLException;
 
-import com.google.inject.Inject;
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.service.jpa.User;
 import org.jcatapult.persistence.test.JDBCTestHelper;
 import org.jcatapult.persistence.test.JPABaseTest;
 import org.jcatapult.persistence.txn.annotation.Transactional;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.google.inject.Inject;
+import static org.junit.Assert.*;
+
 /**
- * <p>
- * This class tests the transaction annotation and the defaults at the macro and micro levels.
- * </p>
+ * <p> This class tests the transaction annotation and the defaults at the macro and micro levels. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class JPATransactionTest extends JPABaseTest {
-    @Inject public JPATestService service;
-    @Inject public JPATopTestService topService;
+  @Inject public JPATestService service;
+  @Inject public JPATopTestService topService;
 
-    @Test
-    public void marco() throws SQLException, InterruptedException {
-        clearTable("users");
-        
-        service.success();
-        RowSet rs = executeQuery("select name from users where name = 'JPATransactionTest-success'");
-        assertTrue(rs.next());
-        rs.close();
+  @Test
+  public void marco() throws SQLException, InterruptedException {
+    clearTable("users");
 
-        rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
-        assertFalse(rs.next());
-        rs.close();
-        try {
-            service.failure();
-        } catch (Exception e) {
-            // Expected
-        }
-        rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
-        assertFalse(rs.next());
-        rs.close();
+    service.success();
+    RowSet rs = executeQuery("select name from users where name = 'JPATransactionTest-success'");
+    assertTrue(rs.next());
+    rs.close();
 
-        service.returnValueSuccess();
-        rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueSuccess'");
-        assertTrue(rs.next());
-        rs.close();
+    rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
+    assertFalse(rs.next());
+    rs.close();
+    try {
+      service.failure();
+    } catch (Exception e) {
+      // Expected
+    }
+    rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
+    assertFalse(rs.next());
+    rs.close();
 
-        service.returnValueFailure();
-        rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueFailure'");
-        assertFalse(rs.next());
-        rs.close();
+    service.returnValueSuccess();
+    rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueSuccess'");
+    assertTrue(rs.next());
+    rs.close();
+
+    service.returnValueFailure();
+    rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueFailure'");
+    assertFalse(rs.next());
+    rs.close();
+  }
+
+  @Test
+  public void macroNested() throws SQLException, InterruptedException {
+    clearTable("users");
+
+    topService.success();
+    RowSet rs = executeQuery("select name from users where name = 'JPATransactionTest-success'");
+    assertTrue(rs.next());
+    rs.close();
+
+    rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
+    assertFalse(rs.next());
+    rs.close();
+    try {
+      topService.failure();
+    } catch (Exception e) {
+      // Expected
+    }
+    rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
+    assertFalse(rs.next());
+    rs.close();
+
+    topService.returnValueSuccess();
+    rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueSuccess'");
+    assertTrue(rs.next());
+    rs.close();
+
+    topService.returnValueFailure();
+    rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueFailure'");
+    assertFalse(rs.next());
+    rs.close();
+  }
+
+  @Test
+  public void testMicroResultProcessor() {
+    DefaultTransactionResultProcessor processor = new DefaultTransactionResultProcessor();
+    assertFalse(processor.rollback(null, new Throwable()));
+    assertTrue(processor.rollback(null, new RuntimeException()));
+    assertFalse(processor.rollback(new Object(), null));
+  }
+
+  public static class JPATestService {
+    private final PersistenceService persistenceService;
+
+    @Inject
+    public JPATestService(PersistenceService persistenceService) {
+      this.persistenceService = persistenceService;
     }
 
-    @Test
-    public void macroNested() throws SQLException, InterruptedException {
-        clearTable("users");
+    @Transactional()
+    public void success() throws SQLException {
+      User user = new User();
+      user.setName("JPATransactionTest-success");
+      persistenceService.persist(user);
 
-        topService.success();
-        RowSet rs = executeQuery("select name from users where name = 'JPATransactionTest-success'");
-        assertTrue(rs.next());
-        rs.close();
+      // Verify that another session can't see the data
+      RowSet rs = JDBCTestHelper.executeQuery("select name from users where name = 'JPATransactionTest-success'");
+      assertFalse(rs.next());
+      rs.close();
+    }
 
-        rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
+    @Transactional()
+    public void failure() throws InterruptedException {
+      User user = new User();
+      user.setName("JPATransactionTest-failure");
+      persistenceService.persist(user);
+      try {
+        RowSet rs = JDBCTestHelper.executeQuery("select name from users where name = 'JPATransactionTest-failure'");
         assertFalse(rs.next());
         rs.close();
-        try {
-            topService.failure();
-        } catch (Exception e) {
-            // Expected
-        }
-        rs = executeQuery("select name from users where name = 'JPATransactionTest-failure'");
-        assertFalse(rs.next());
-        rs.close();
-
-        topService.returnValueSuccess();
-        rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueSuccess'");
-        assertTrue(rs.next());
-        rs.close();
-
-        topService.returnValueFailure();
-        rs = executeQuery("select name from users where name = 'JPATransactionTest-returnValueFailure'");
-        assertFalse(rs.next());
-        rs.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+      throw new RuntimeException();
     }
 
-    @Test
-    public void testMicroResultProcessor() {
-        DefaultTransactionResultProcessor processor = new DefaultTransactionResultProcessor();
-        assertFalse(processor.rollback(null, new Throwable()));
-        assertTrue(processor.rollback(null, new RuntimeException()));
-        assertFalse(processor.rollback(new Object(), null));
+    @Transactional(processor = UserProcessor.class)
+    public User returnValueSuccess() {
+      User user = new User();
+      user.setName("JPATransactionTest-returnValueSuccess");
+      persistenceService.persist(user);
+      return user;
     }
 
-    public static class JPATestService {
-        private final PersistenceService persistenceService;
+    @Transactional(processor = UserProcessor.class)
+    public User returnValueFailure() {
+      User user = new User();
+      user.setName("JPATransactionTest-returnValueFailure");
+      persistenceService.persist(user);
+      return user;
+    }
+  }
 
-        @Inject
-        public JPATestService(PersistenceService persistenceService) {
-            this.persistenceService = persistenceService;
-        }
+  public static class JPATopTestService {
+    private final JPATestService service;
 
-        @Transactional()
-        public void success() throws SQLException {
-            User user = new User();
-            user.setName("JPATransactionTest-success");
-            persistenceService.persist(user);
-
-            // Verify that another session can't see the data
-            RowSet rs = JDBCTestHelper.executeQuery("select name from users where name = 'JPATransactionTest-success'");
-            assertFalse(rs.next());
-            rs.close();
-        }
-
-        @Transactional()
-        public void failure() throws InterruptedException {
-            User user = new User();
-            user.setName("JPATransactionTest-failure");
-            persistenceService.persist(user);
-            try {
-                RowSet rs = JDBCTestHelper.executeQuery("select name from users where name = 'JPATransactionTest-failure'");
-                assertFalse(rs.next());
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            throw new RuntimeException();
-        }
-
-        @Transactional(processor = UserProcessor.class)
-        public User returnValueSuccess() {
-            User user = new User();
-            user.setName("JPATransactionTest-returnValueSuccess");
-            persistenceService.persist(user);
-            return user;
-        }
-
-        @Transactional(processor = UserProcessor.class)
-        public User returnValueFailure() {
-            User user = new User();
-            user.setName("JPATransactionTest-returnValueFailure");
-            persistenceService.persist(user);
-            return user;
-        }
+    @Inject
+    public JPATopTestService(JPATestService service) {
+      this.service = service;
     }
 
-    public static class JPATopTestService {
-        private final JPATestService service;
-
-        @Inject
-        public JPATopTestService(JPATestService service) {
-            this.service = service;
-        }
-
-        @Transactional()
-        public void success() throws SQLException {
-            service.success();
-        }
-
-        @Transactional()
-        public void failure() throws InterruptedException {
-            service.failure();
-        }
-
-        @Transactional(processor = UserProcessor.class)
-        public User returnValueSuccess() {
-            return service.returnValueSuccess();
-        }
-
-        @Transactional(processor = UserProcessor.class)
-        public User returnValueFailure() {
-            return service.returnValueFailure();
-        }
+    @Transactional()
+    public void success() throws SQLException {
+      service.success();
     }
 
-    public static class UserProcessor extends DefaultTransactionResultProcessor<User> {
-        @Override
-        public boolean rollback(User result, Throwable throwable) {
-            return result.getName().equals("JPATransactionTest-returnValueFailure") ||
-                super.rollback(result, throwable);
-        }
+    @Transactional()
+    public void failure() throws InterruptedException {
+      service.failure();
     }
+
+    @Transactional(processor = UserProcessor.class)
+    public User returnValueSuccess() {
+      return service.returnValueSuccess();
+    }
+
+    @Transactional(processor = UserProcessor.class)
+    public User returnValueFailure() {
+      return service.returnValueFailure();
+    }
+  }
+
+  public static class UserProcessor extends DefaultTransactionResultProcessor<User> {
+    @Override
+    public boolean rollback(User result, Throwable throwable) {
+      return result.getName().equals("JPATransactionTest-returnValueFailure") ||
+        super.rollback(result, throwable);
+    }
+  }
 }

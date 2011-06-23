@@ -16,25 +16,23 @@
 package org.jcatapult.persistence.txn;
 
 /**
- * <p>
- * This class is a generic transaction exception.
- * </p>
+ * <p> This class is a generic transaction exception. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class TransactionException extends RuntimeException {
-    public TransactionException() {
-    }
+  public TransactionException() {
+  }
 
-    public TransactionException(String message) {
-        super(message);
-    }
+  public TransactionException(String message) {
+    super(message);
+  }
 
-    public TransactionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public TransactionException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public TransactionException(Throwable cause) {
-        super(cause);
-    }
+  public TransactionException(Throwable cause) {
+    super(cause);
+  }
 }

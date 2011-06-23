@@ -21,29 +21,27 @@ import java.sql.Connection;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface defines the operations for JDBC.
- * </p>
+ * <p> This interface defines the operations for JDBC. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultJDBCService.class)
 public interface JDBCService {
-    /**
-     * @return  The data source or null if JDBC is disabled.
-     */
-    DataSource getDataSouce();
+  /**
+   * @return The data source or null if JDBC is disabled.
+   */
+  DataSource getDataSouce();
 
-    /**
-     * This method checks the current context for an existing connection or creates a new connection and puts it in the
-     * current context.
-     *
-     * @return  The connection or null if JDBC is disabled.
-     */
-    Connection setupConnection();
+  /**
+   * This method checks the current context for an existing connection or creates a new connection and puts it in the
+   * current context.
+   *
+   * @return The connection or null if JDBC is disabled.
+   */
+  Connection setupConnection();
 
-    /**
-     * Removes the connection (if any) from the current context.
-     */
-    void tearDownConnection();
+  /**
+   * Removes the connection (if any) from the current context.
+   */
+  void tearDownConnection();
 }

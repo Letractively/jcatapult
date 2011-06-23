@@ -18,8 +18,6 @@ package org.jcatapult.persistence.test;
 import javax.sql.RowSet;
 import java.sql.SQLException;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.name.Names;
 import org.jcatapult.persistence.service.jdbc.ConnectionContext;
 import org.jcatapult.test.JCatapultBaseTest;
 import org.junit.After;
@@ -27,64 +25,64 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
+
 /**
- * <p>
- * This class is a base class that contains helpful methods for
- * setting up and tearing down JDBC.
- * </p>
+ * <p> This class is a base class that contains helpful methods for setting up and tearing down JDBC. </p>
  *
  * @author Brian Pontarelli
  */
 @Ignore
 public abstract class JDBCBaseTest extends JCatapultBaseTest {
-    /**
-     * Constructs the the DataSource.
-     */
-    @BeforeClass
-    public static void setDataSource() {
-        JDBCTestHelper.initialize(jndi);
-    }
+  /**
+   * Constructs the the DataSource.
+   */
+  @BeforeClass
+  public static void setDataSource() {
+    JDBCTestHelper.initialize(jndi);
+  }
 
-    /**
-     * Constructs the Connection and puts it in the context.
-     */
-    @Before
-    @Override
-    public void setUp() {
-        try {
-            ConnectionContext.set(JDBCTestHelper.dataSource.getConnection());
-            super.addModules(new AbstractModule() {
-                protected void configure() {
-                    bindConstant().annotatedWith(Names.named("non-jta-data-source")).to("java:comp/env/jdbc/jcatapult-persistence");
-                }
-            });
-            super.setUp();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+  /**
+   * Constructs the Connection and puts it in the context.
+   */
+  @Before
+  @Override
+  public void setUp() {
+    try {
+      ConnectionContext.set(JDBCTestHelper.dataSource.getConnection());
+      super.addModules(new AbstractModule() {
+        protected void configure() {
+          bindConstant().annotatedWith(Names.named("non-jta-data-source")).to("java:comp/env/jdbc/jcatapult-persistence");
         }
+      });
+      super.setUp();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    /**
-     * Closes the Connection and removes it from the context.
-     */
-    @After
-    public void tearDown() {
-        try {
-            ConnectionContext.get().close();
-            ConnectionContext.remove();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+  /**
+   * Closes the Connection and removes it from the context.
+   */
+  @After
+  public void tearDown() {
+    try {
+      ConnectionContext.get().close();
+      ConnectionContext.remove();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    /**
-     * Runs the given query and returns the results in a detached RowSet.
-     *
-     * @param   query The query to run.
-     * @return  The results of the query.
-     * @throws  SQLException If the query failed.
-     */
-    protected RowSet executeQuery(String query) throws SQLException {
-        return JDBCTestHelper.executeQuery(query);
-    }
+  /**
+   * Runs the given query and returns the results in a detached RowSet.
+   *
+   * @param query The query to run.
+   * @return The results of the query.
+   * @throws SQLException If the query failed.
+   */
+  protected RowSet executeQuery(String query) throws SQLException {
+    return JDBCTestHelper.executeQuery(query);
+  }
 }

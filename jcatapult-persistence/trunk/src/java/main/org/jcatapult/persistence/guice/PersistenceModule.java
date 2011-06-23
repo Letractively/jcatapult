@@ -20,9 +20,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
-import static com.google.inject.matcher.Matchers.*;
 import org.jcatapult.persistence.service.jdbc.ConnectionProxy;
 import org.jcatapult.persistence.service.jdbc.DataSourceProvider;
 import org.jcatapult.persistence.service.jpa.EntityManagerFactoryProvider;
@@ -30,38 +27,40 @@ import org.jcatapult.persistence.service.jpa.EntityManagerProxy;
 import org.jcatapult.persistence.txn.TransactionMethodInterceptor;
 import org.jcatapult.persistence.txn.annotation.Transactional;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
+import static com.google.inject.matcher.Matchers.*;
+
 /**
- * <p>
- * This module should be used for JPA or JDBC support. It sets up the injection for all of the JPA
- * classes as well as the JDBC classes.
- * </p>
+ * This module should be used for JPA or JDBC support. It sets up the injection for all of the JPA classes as well
+ * as the JDBC classes.
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class PersistenceModule extends AbstractModule {
-    /**
-     * Configures everything.
-     */
-    @Override
-    protected void configure() {
-        configureJDBC();
-        configureJPA();
-        bindInterceptor(any(), annotatedWith(Transactional.class), new TransactionMethodInterceptor());
-    }
+  /**
+   * Configures everything.
+   */
+  @Override
+  protected void configure() {
+    configureJDBC();
+    configureJPA();
+    bindInterceptor(any(), annotatedWith(Transactional.class), new TransactionMethodInterceptor());
+  }
 
-    /**
-     * Sets up injections for the {@link Connection} and {@link DataSource}.
-     */
-    protected void configureJDBC() {
-        bind(DataSource.class).toProvider(DataSourceProvider.class).in(Singleton.class);
-        bind(Connection.class).to(ConnectionProxy.class);
-    }
+  /**
+   * Sets up injections for the {@link Connection} and {@link DataSource}.
+   */
+  protected void configureJDBC() {
+    bind(DataSource.class).toProvider(DataSourceProvider.class).in(Singleton.class);
+    bind(Connection.class).to(ConnectionProxy.class);
+  }
 
-    /**
-     * Sets up injections for {@link EntityManager} and {@link EntityManagerFactory}.
-     */
-    protected void configureJPA() {
-        bind(EntityManagerFactory.class).toProvider(EntityManagerFactoryProvider.class).in(Singleton.class);
-        bind(EntityManager.class).to(EntityManagerProxy.class);
-    }
+  /**
+   * Sets up injections for {@link EntityManager} and {@link EntityManagerFactory}.
+   */
+  protected void configureJPA() {
+    bind(EntityManagerFactory.class).toProvider(EntityManagerFactoryProvider.class).in(Singleton.class);
+    bind(EntityManager.class).to(EntityManagerProxy.class);
+  }
 }

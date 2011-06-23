@@ -21,23 +21,21 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * <p>
- * This class is a provider for a JDBC connection. It uses the {@link JDBCService}
- * injected by Guice to get the connection from.
- * </p>
+ * <p> This class is a provider for a JDBC connection. It uses the {@link JDBCService} injected by Guice to get the
+ * connection from. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class ConnectionProvider implements Provider<Connection> {
-    private final JDBCService service;
+  private final JDBCService service;
 
-    @Inject
-    public ConnectionProvider(JDBCService service) {
-        this.service = service;
-    }
+  @Inject
+  public ConnectionProvider(JDBCService service) {
+    this.service = service;
+  }
 
-    @Override
-    public Connection get() {
-        return service.setupConnection();
-    }
+  @Override
+  public Connection get() {
+    return service.setupConnection();
+  }
 }

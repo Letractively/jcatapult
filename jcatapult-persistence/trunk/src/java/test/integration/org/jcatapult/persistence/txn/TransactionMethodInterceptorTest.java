@@ -15,167 +15,166 @@
  */
 package org.jcatapult.persistence.txn;
 
-import com.google.inject.AbstractModule;
 import org.aopalliance.intercept.MethodInvocation;
-import static org.easymock.EasyMock.*;
 import org.jcatapult.persistence.test.JPABaseTest;
 import org.jcatapult.persistence.txn.annotation.Transactional;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import com.google.inject.AbstractModule;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 /**
- * <p>
- * This class tests the transaction method interceptor.
- * </p>
+ * <p> This class tests the transaction method interceptor. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class TransactionMethodInterceptorTest extends JPABaseTest {
-    private final TxnMgr txnMgr = new TxnMgr();
+  private final TxnMgr txnMgr = new TxnMgr();
 
-    public TransactionMethodInterceptorTest() {
-        addModules(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(TransactionContextManager.class).toInstance(txnMgr);
-            }
-        });
+  public TransactionMethodInterceptorTest() {
+    addModules(new AbstractModule() {
+      @Override
+      protected void configure() {
+        bind(TransactionContextManager.class).toInstance(txnMgr);
+      }
+    });
+  }
+
+  @Transactional
+  public void annotatedMethod() {
+  }
+
+  @Test
+  public void topLevelCommit() throws Throwable {
+    MethodInvocation invocation = createStrictMock(MethodInvocation.class);
+    expect(invocation.getMethod()).andReturn(this.getClass().getMethod("annotatedMethod"));
+    expect(invocation.proceed()).andReturn(null);
+    replay(invocation);
+
+    txnMgr.context = createStrictMock(TransactionContext.class);
+    expect(txnMgr.context.isStarted()).andReturn(false);
+    txnMgr.context.start();
+    expect(txnMgr.context.isRollbackOnly()).andReturn(false);
+    txnMgr.context.commit();
+    replay(txnMgr.context);
+
+    TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    interceptor.invoke(invocation);
+    assertNull(txnMgr.context);
+
+    verify(invocation);
+  }
+
+  @Test
+  public void topLevelRollback() throws Throwable {
+    RuntimeException re = new RuntimeException();
+    MethodInvocation invocation = createStrictMock(MethodInvocation.class);
+    expect(invocation.getMethod()).andReturn(this.getClass().getMethod("annotatedMethod"));
+    expect(invocation.proceed()).andThrow(re);
+    replay(invocation);
+
+    txnMgr.context = createStrictMock(TransactionContext.class);
+    expect(txnMgr.context.isStarted()).andReturn(false);
+    txnMgr.context.start();
+    expect(txnMgr.context.isRollbackOnly()).andReturn(false);
+    txnMgr.context.rollback();
+    replay(txnMgr.context);
+
+    TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    try {
+      interceptor.invoke(invocation);
+      fail("Should have re-thrown the exception");
+    } catch (Throwable throwable) {
+      // Expected
+      assertSame(throwable, re);
+    }
+    assertNull(txnMgr.context);
+
+    verify(invocation);
+  }
+
+  @Test
+  public void topLevelRollbackOnly() throws Throwable {
+    MethodInvocation invocation = createStrictMock(MethodInvocation.class);
+    expect(invocation.getMethod()).andReturn(this.getClass().getMethod("annotatedMethod"));
+    expect(invocation.proceed()).andReturn(null);
+    replay(invocation);
+
+    txnMgr.context = createStrictMock(TransactionContext.class);
+    expect(txnMgr.context.isStarted()).andReturn(false);
+    txnMgr.context.start();
+    expect(txnMgr.context.isRollbackOnly()).andReturn(true);
+    txnMgr.context.rollback();
+    replay(txnMgr.context);
+
+    TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    interceptor.invoke(invocation);
+    assertNull(txnMgr.context);
+
+    verify(invocation);
+  }
+
+  @Test
+  public void nested() throws Throwable {
+    MethodInvocation invocation = createStrictMock(MethodInvocation.class);
+    expect(invocation.getMethod()).andReturn(this.getClass().getMethod("annotatedMethod"));
+    expect(invocation.proceed()).andReturn(null);
+    replay(invocation);
+
+    txnMgr.context = createStrictMock(TransactionContext.class);
+    expect(txnMgr.context.isStarted()).andReturn(true);
+    replay(txnMgr.context);
+
+    TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    interceptor.invoke(invocation);
+    assertNotNull(txnMgr.context);
+
+    verify(invocation);
+  }
+
+  @Test
+  public void nestedFailure() throws Throwable {
+    RuntimeException re = new RuntimeException();
+    MethodInvocation invocation = createStrictMock(MethodInvocation.class);
+    expect(invocation.getMethod()).andReturn(this.getClass().getMethod("annotatedMethod"));
+    expect(invocation.proceed()).andThrow(re);
+    replay(invocation);
+
+    txnMgr.context = createStrictMock(TransactionContext.class);
+    expect(txnMgr.context.isStarted()).andReturn(true);
+    txnMgr.context.setRollbackOnly();
+    replay(txnMgr.context);
+
+    TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    try {
+      interceptor.invoke(invocation);
+      fail("Should have re-thrown the exception");
+    } catch (Throwable throwable) {
+      // Expected
+      assertSame(throwable, re);
+    }
+    assertNotNull(txnMgr.context);
+
+    verify(invocation);
+  }
+
+  public static class TxnMgr implements TransactionContextManager {
+    public TransactionContext context;
+
+    @Override
+    public TransactionContext start() throws Exception {
+      return context;
     }
 
-    @Transactional
-    public void annotatedMethod() {
+    @Override
+    public TransactionContext getCurrent() {
+      return context;
     }
 
-    @Test
-    public void topLevelCommit() throws Throwable {
-        MethodInvocation invocation = createStrictMock(MethodInvocation.class);
-        expect(invocation.getMethod()).andReturn(this.getClass().getMethod("annotatedMethod"));
-        expect(invocation.proceed()).andReturn(null);
-        replay(invocation);
-
-        txnMgr.context = createStrictMock(TransactionContext.class);
-        expect(txnMgr.context.isStarted()).andReturn(false);
-        txnMgr.context.start();
-        expect(txnMgr.context.isRollbackOnly()).andReturn(false);
-        txnMgr.context.commit();
-        replay(txnMgr.context);
-
-        TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
-        interceptor.invoke(invocation);
-        assertNull(txnMgr.context);
-
-        verify(invocation);
+    @Override
+    public void tearDownTransactionContext() {
+      context = null;
     }
-
-    @Test
-    public void topLevelRollback() throws Throwable {
-        RuntimeException re = new RuntimeException();
-        MethodInvocation invocation = createStrictMock(MethodInvocation.class);
-        expect(invocation.getMethod()).andReturn(this.getClass().getMethod("annotatedMethod"));
-        expect(invocation.proceed()).andThrow(re);
-        replay(invocation);
-
-        txnMgr.context = createStrictMock(TransactionContext.class);
-        expect(txnMgr.context.isStarted()).andReturn(false);
-        txnMgr.context.start();
-        expect(txnMgr.context.isRollbackOnly()).andReturn(false);
-        txnMgr.context.rollback();
-        replay(txnMgr.context);
-
-        TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
-        try {
-            interceptor.invoke(invocation);
-            fail("Should have re-thrown the exception");
-        } catch (Throwable throwable) {
-            // Expected
-            assertSame(throwable, re);
-        }
-        assertNull(txnMgr.context);
-
-        verify(invocation);
-    }
-
-    @Test
-    public void topLevelRollbackOnly() throws Throwable {
-        MethodInvocation invocation = createStrictMock(MethodInvocation.class);
-        expect(invocation.getMethod()).andReturn(this.getClass().getMethod("annotatedMethod"));
-        expect(invocation.proceed()).andReturn(null);
-        replay(invocation);
-
-        txnMgr.context = createStrictMock(TransactionContext.class);
-        expect(txnMgr.context.isStarted()).andReturn(false);
-        txnMgr.context.start();
-        expect(txnMgr.context.isRollbackOnly()).andReturn(true);
-        txnMgr.context.rollback();
-        replay(txnMgr.context);
-
-        TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
-        interceptor.invoke(invocation);
-        assertNull(txnMgr.context);
-
-        verify(invocation);
-    }
-
-    @Test
-    public void nested() throws Throwable {
-        MethodInvocation invocation = createStrictMock(MethodInvocation.class);
-        expect(invocation.getMethod()).andReturn(this.getClass().getMethod("annotatedMethod"));
-        expect(invocation.proceed()).andReturn(null);
-        replay(invocation);
-
-        txnMgr.context = createStrictMock(TransactionContext.class);
-        expect(txnMgr.context.isStarted()).andReturn(true);
-        replay(txnMgr.context);
-
-        TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
-        interceptor.invoke(invocation);
-        assertNotNull(txnMgr.context);
-
-        verify(invocation);
-    }
-
-    @Test
-    public void nestedFailure() throws Throwable {
-        RuntimeException re = new RuntimeException();
-        MethodInvocation invocation = createStrictMock(MethodInvocation.class);
-        expect(invocation.getMethod()).andReturn(this.getClass().getMethod("annotatedMethod"));
-        expect(invocation.proceed()).andThrow(re);
-        replay(invocation);
-
-        txnMgr.context = createStrictMock(TransactionContext.class);
-        expect(txnMgr.context.isStarted()).andReturn(true);
-        txnMgr.context.setRollbackOnly();
-        replay(txnMgr.context);
-
-        TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
-        try {
-            interceptor.invoke(invocation);
-            fail("Should have re-thrown the exception");
-        } catch (Throwable throwable) {
-            // Expected
-            assertSame(throwable, re);
-        }
-        assertNotNull(txnMgr.context);
-
-        verify(invocation);
-    }
-
-    public static class TxnMgr implements TransactionContextManager {
-        public TransactionContext context;
-
-        @Override
-        public TransactionContext start() throws Exception {
-            return context;
-        }
-
-        @Override
-        public TransactionContext getCurrent() {
-            return context;
-        }
-
-        @Override
-        public void tearDownTransactionContext() {
-            context = null;
-        }
-    }
+  }
 }

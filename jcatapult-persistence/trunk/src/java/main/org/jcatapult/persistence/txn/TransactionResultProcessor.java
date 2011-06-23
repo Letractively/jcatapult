@@ -17,23 +17,21 @@
 package org.jcatapult.persistence.txn;
 
 /**
- * <p>
- * This interface can be implemented and passed to the {@link org.jcatapult.persistence.txn.annotation.Transactional}
- * annotation. This is useful for determining based on an exception that is thrown or the return value
- * of a method if the transaction should be rolled back.
- * </p>
+ * <p> This interface can be implemented and passed to the {@link org.jcatapult.persistence.txn.annotation.Transactional}
+ * annotation. This is useful for determining based on an exception that is thrown or the return value of a method if
+ * the transaction should be rolled back. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public interface TransactionResultProcessor<T> {
-    /**
-     * Determines if the transaction should be rolled back based on the return value  of a method
-     * invocation or the exception that the method threw.
-     *
-     * @param   result The return value of a method. This could be null of void methods.
-     * @param   throwable The exception thrown from the method. This will be null if the method
-     *          invoked didn't throw an exception.
-     * @return  True if the transaction should be rolled back, false otherwise.
-     */
-    boolean rollback(T result, Throwable throwable);
+  /**
+   * Determines if the transaction should be rolled back based on the return value  of a method invocation or the
+   * exception that the method threw.
+   *
+   * @param result    The return value of a method. This could be null of void methods.
+   * @param throwable The exception thrown from the method. This will be null if the method invoked didn't throw an
+   *                  exception.
+   * @return True if the transaction should be rolled back, false otherwise.
+   */
+  boolean rollback(T result, Throwable throwable);
 }

@@ -16,55 +16,52 @@
 package org.jcatapult.persistence.txn;
 
 /**
- * <p>
- * This interface defines a transactional context. This context can be started, committed,
- * and rolled back. It can also have any transactional resources attached to it while it
- * is active. If it has already be completed, new resource additions will result in an
- * exception.
- * </p>
+ * <p> This interface defines a transactional context. This context can be started, committed, and rolled back. It can
+ * also have any transactional resources attached to it while it is active. If it has already be completed, new resource
+ * additions will result in an exception. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public interface TransactionContext {
-    /**
-     * Starts the transaction.
-     */
-    void start();
+  /**
+   * Starts the transaction.
+   */
+  void start();
 
-    /**
-     * @return  True if the transaction has been started, false otherwise.
-     */
-    boolean isStarted();
+  /**
+   * @return True if the transaction has been started, false otherwise.
+   */
+  boolean isStarted();
 
-    /**
-     * Commits the transaction.
-     *
-     * @throws  Exception If anything went wrong during the commit.
-     */
-    void commit() throws Exception;
+  /**
+   * Commits the transaction.
+   *
+   * @throws Exception If anything went wrong during the commit.
+   */
+  void commit() throws Exception;
 
-    /**
-     * Rolls back the transaction.
-     *
-     * @throws  Exception If anything went wrong during the rollback.
-     */
-    void rollback() throws Exception;
+  /**
+   * Rolls back the transaction.
+   *
+   * @throws Exception If anything went wrong during the rollback.
+   */
+  void rollback() throws Exception;
 
-    /**
-     * @return  True if this transaction can only be rolled back.
-     */
-    boolean isRollbackOnly();
+  /**
+   * @return True if this transaction can only be rolled back.
+   */
+  boolean isRollbackOnly();
 
-    /**
-     * Sets that this transaction can only be rolled back.
-     */
-    void setRollbackOnly();
+  /**
+   * Sets that this transaction can only be rolled back.
+   */
+  void setRollbackOnly();
 
-    /**
-     * Adds the given resources {@link TransactionalResource} to the transaction context.
-     *
-     * @param   resource The TransactionalResource for a transactional resource.
-     * @throws  Exception If the addition (and possibly start) of the transactional resource fails.
-     */
-    void add(TransactionalResource resource) throws Exception;
+  /**
+   * Adds the given resources {@link TransactionalResource} to the transaction context.
+   *
+   * @param resource The TransactionalResource for a transactional resource.
+   * @throws Exception If the addition (and possibly start) of the transactional resource fails.
+   */
+  void add(TransactionalResource resource) throws Exception;
 }

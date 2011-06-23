@@ -25,19 +25,15 @@ import org.jcatapult.persistence.txn.DefaultTransactionResultProcessor;
 import org.jcatapult.persistence.txn.TransactionResultProcessor;
 
 /**
- * <p>
- * This annotation can be placed on methods and used by Guice to add
- * transactional handling to any method. This annotation causes Guice
- * to create proxies and inject a method interceptor that handles the
- * transactions. The actual handling of the transaction is done via
- * the {@link} interface. This allows custom handling to be easily
- * plugged into any application.
- * </p>
+ * <p> This annotation can be placed on methods and used by Guice to add transactional handling to any method. This
+ * annotation causes Guice to create proxies and inject a method interceptor that handles the transactions. The actual
+ * handling of the transaction is done via the {@link} interface. This allows custom handling to be easily plugged into
+ * any application. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface Transactional {
-    Class<? extends TransactionResultProcessor> processor() default DefaultTransactionResultProcessor.class;
+  Class<? extends TransactionResultProcessor> processor() default DefaultTransactionResultProcessor.class;
 }

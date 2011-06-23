@@ -23,53 +23,51 @@ import org.jcatapult.persistence.txn.TransactionException;
 import org.jcatapult.persistence.txn.TransactionalResource;
 
 /**
- * <p>
- * This is the JPA implementation of the transaction state.
- * </p>
+ * <p> This is the JPA implementation of the transaction state. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class JPATransactionalResource implements TransactionalResource<EntityManager, PersistenceException> {
-    private final EntityManager em;
+  private final EntityManager em;
 
-    public JPATransactionalResource(EntityManager em) {
-        this.em = em;
+  public JPATransactionalResource(EntityManager em) {
+    this.em = em;
+  }
+
+  /**
+   * @return The EntityManager.
+   */
+  @Override
+  public EntityManager wrapped() {
+    return em;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void start() throws PersistenceException {
+    EntityTransaction et = em.getTransaction();
+    if (et.isActive()) {
+      throw new TransactionException("The JPA transaction has already been started and can't be started twice.");
     }
 
-    /**
-     * @return  The EntityManager.
-     */
-    @Override
-    public EntityManager wrapped() {
-        return em;
-    }
+    et.begin();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void start() throws PersistenceException {
-        EntityTransaction et = em.getTransaction();
-        if (et.isActive()) {
-            throw new TransactionException("The JPA transaction has already been started and can't be started twice.");
-        }
+  /**
+   * Calls the {@link EntityTransaction#commit()} method.
+   */
+  @Override
+  public void commit() {
+    em.getTransaction().commit();
+  }
 
-        et.begin();
-    }
-
-    /**
-     * Calls the {@link EntityTransaction#commit()} method.
-     */
-    @Override
-    public void commit() {
-        em.getTransaction().commit();
-    }
-
-    /**
-     * Calls the {@link EntityTransaction#rollback()} method.
-     */
-    @Override
-    public void rollback() {
-        em.getTransaction().rollback();
-    }
+  /**
+   * Calls the {@link EntityTransaction#rollback()} method.
+   */
+  @Override
+  public void rollback() {
+    em.getTransaction().rollback();
+  }
 }

@@ -24,64 +24,61 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 /**
- * <p>
- * This class implements the Timestamped interface and extends IdentifiableImpl
- * for a primary key.
- * </p>
+ * <p> This class implements the Timestamped interface and extends IdentifiableImpl for a primary key. </p>
  *
  * @author Brian Pontarelli
  */
 @MappedSuperclass
 public abstract class TimeStampableImpl extends IdentifiableImpl implements TimeStampable {
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-    @Column(name = "insert_date", nullable = false, updatable = false)
-    private DateTime insertDate;
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-    @Column(name = "update_date", nullable = false)
-    private DateTime updateDate;
+  @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+  @Column(name = "insert_date", nullable = false, updatable = false)
+  private DateTime insertDate;
+  @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+  @Column(name = "update_date", nullable = false)
+  private DateTime updateDate;
 
-    /**
-     * {@inheritDoc}
-     */
-    public DateTime getInsertDate() {
-        return insertDate;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public DateTime getInsertDate() {
+    return insertDate;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setInsertDate(DateTime insertDate) {
-        this.insertDate = insertDate;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public void setInsertDate(DateTime insertDate) {
+    this.insertDate = insertDate;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public DateTime getUpdateDate() {
-        return updateDate;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public DateTime getUpdateDate() {
+    return updateDate;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setUpdateDate(DateTime updateDate) {
-        this.updateDate = updateDate;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public void setUpdateDate(DateTime updateDate) {
+    this.updateDate = updateDate;
+  }
 
-    /**
-     * Sets the insertDate and updateDate fields to the current date-time.
-     */
-    @PrePersist
-    public void preInsert() {
-        insertDate = new DateTime();
-        updateDate = new DateTime();
-    }
+  /**
+   * Sets the insertDate and updateDate fields to the current date-time.
+   */
+  @PrePersist
+  public void preInsert() {
+    insertDate = new DateTime();
+    updateDate = new DateTime();
+  }
 
-    /**
-     * Sets the updateDate field to the current date-time.
-     */
-    @PreUpdate
-    public void preUpdate() {
-        updateDate = new DateTime();
-    }
+  /**
+   * Sets the updateDate field to the current date-time.
+   */
+  @PreUpdate
+  public void preUpdate() {
+    updateDate = new DateTime();
+  }
 }

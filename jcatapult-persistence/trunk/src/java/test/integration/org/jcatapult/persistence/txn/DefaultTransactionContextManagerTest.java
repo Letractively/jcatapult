@@ -15,32 +15,31 @@
  */
 package org.jcatapult.persistence.txn;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
- * <p>
- * This class tests the default transaction context manager.
- * </p>
+ * <p> This class tests the default transaction context manager. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class DefaultTransactionContextManagerTest {
-    @Test
-    public void all() throws Exception {
-        DefaultTransactionContextManager manager = new DefaultTransactionContextManager();
-        TransactionContext txnContext = manager.getCurrent();
-        assertNull(txnContext);
+  @Test
+  public void all() throws Exception {
+    DefaultTransactionContextManager manager = new DefaultTransactionContextManager();
+    TransactionContext txnContext = manager.getCurrent();
+    assertNull(txnContext);
 
-        manager.start();
-        txnContext = manager.getCurrent();
-        assertNotNull(txnContext);
-        assertSame(txnContext, manager.getCurrent());
+    manager.start();
+    txnContext = manager.getCurrent();
+    assertNotNull(txnContext);
+    assertSame(txnContext, manager.getCurrent());
 
-        manager.tearDownTransactionContext();
-        assertNull(manager.getCurrent());
+    manager.tearDownTransactionContext();
+    assertNull(manager.getCurrent());
 
-        manager.start();
-        assertNotSame(txnContext, manager.getCurrent());
-    }
+    manager.start();
+    assertNotSame(txnContext, manager.getCurrent());
+  }
 }

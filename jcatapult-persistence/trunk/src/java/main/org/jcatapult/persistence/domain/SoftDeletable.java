@@ -16,23 +16,21 @@
 package org.jcatapult.persistence.domain;
 
 /**
- * <p>
- * This interface marks a class as never being deleted permanently from the database.
- * Instead, it is marked as being deleted and can be resurrected.
- * </p>
+ * <p> This interface marks a class as never being deleted permanently from the database. Instead, it is marked as being
+ * deleted and can be resurrected. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public interface SoftDeletable {
-    /**
-     * @return  True if this entity has been deleted, false otherwise.
-     */
-    boolean isDeleted();
+  /**
+   * @return True if this entity has been deleted, false otherwise.
+   */
+  boolean isDeleted();
 
-    /**
-     * Sets whether or not this entity has been deleted.
-     *
-     * @param   deleted True if the entity is deleted, false otherwise.
-     */
-    void setDeleted(boolean deleted);
+  /**
+   * Sets whether or not this entity has been deleted.
+   *
+   * @param deleted True if the entity is deleted, false otherwise.
+   */
+  void setDeleted(boolean deleted);
 }

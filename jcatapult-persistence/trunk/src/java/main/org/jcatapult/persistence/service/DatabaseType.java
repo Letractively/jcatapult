@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2011, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,18 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.persistence.service.jpa;
+package org.jcatapult.persistence.service;
 
 /**
- * <p> This is a bad entity that doesn't have the annotation. </p>
+ * This class stores the current database type that the JCatapult persistence library is accessing.
  *
  * @author Brian Pontarelli
  */
-public class BadEntity {
+public class DatabaseType {
+  public static enum Database {
+    POSTGRESQL,
+    MYSQL
+  }
+
+  public static Database database;
 }

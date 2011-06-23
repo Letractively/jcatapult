@@ -22,14 +22,11 @@ import org.junit.Ignore;
 import com.google.inject.Inject;
 
 /**
- * <p>
- * This class is the base test for jcatapult core to setup the test authentication
- * service.
- * </p>
+ * <p> This class is the base test for jcatapult core to setup the test authentication service. </p>
  *
  * @author Brian Pontarelli
  */
 @Ignore
 public class PersistenceBaseTest extends JPABaseTest {
-    @Inject public PersistenceService persistenceService;
+  @Inject public PersistenceService persistenceService;
 }

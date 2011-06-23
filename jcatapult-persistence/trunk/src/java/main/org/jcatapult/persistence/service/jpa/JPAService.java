@@ -21,33 +21,30 @@ import javax.persistence.EntityManagerFactory;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface is used to configure, start and handle JPA interactions.
- * The main function of this class is to create the EntityManagerFactory
- * and provide access to it.
- * </p>
+ * <p> This interface is used to configure, start and handle JPA interactions. The main function of this class is to
+ * create the EntityManagerFactory and provide access to it. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultJPAService.class)
 public interface JPAService {
-    /**
-     * @return  The EntityManagerFactory if JPA is enabled and correctly configured. This will return
-     *          null if JPA is disabled.
-     */
-    EntityManagerFactory getFactory();
+  /**
+   * @return The EntityManagerFactory if JPA is enabled and correctly configured. This will return null if JPA is
+   *         disabled.
+   */
+  EntityManagerFactory getFactory();
 
-    /**
-     * This method handles the EntityManager. If there is an EntityManager in the context already, it is returned.
-     * Otherwise, this will create a new EntityManager and set it into the context storage so that it can be accessed
-     * elsewhere in the application.
-     *
-     * @return  The EntityManager
-     */
-    EntityManager setupEntityManager();
+  /**
+   * This method handles the EntityManager. If there is an EntityManager in the context already, it is returned.
+   * Otherwise, this will create a new EntityManager and set it into the context storage so that it can be accessed
+   * elsewhere in the application.
+   *
+   * @return The EntityManager
+   */
+  EntityManager setupEntityManager();
 
-    /**
-     * This method removes the EntityManager from the ThreadLocal storage and cleans things up.
-     */
-    void tearDownEntityManager();
+  /**
+   * This method removes the EntityManager from the ThreadLocal storage and cleans things up.
+   */
+  void tearDownEntityManager();
 }

@@ -18,64 +18,63 @@ package org.jcatapult.persistence.txn;
 import javax.persistence.EntityManager;
 import java.sql.Connection;
 
-import com.google.inject.Singleton;
 import org.jcatapult.persistence.service.jdbc.ConnectionContext;
 import org.jcatapult.persistence.service.jpa.EntityManagerContext;
 import org.jcatapult.persistence.txn.jdbc.JDBCTransactionalResource;
 import org.jcatapult.persistence.txn.jpa.JPATransactionalResource;
 
+import com.google.inject.Singleton;
+
 /**
- * <p>
- * This class is the default transaction context manager. It uses a ThreadLocal to
- * store the current transaction context.
- * </p>
+ * <p> This class is the default transaction context manager. It uses a ThreadLocal to store the current transaction
+ * context. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @Singleton
 public class DefaultTransactionContextManager implements TransactionContextManager {
-    private final ThreadLocal<TransactionContext> holder = new ThreadLocal<TransactionContext>();
+  private final ThreadLocal<TransactionContext> holder = new ThreadLocal<TransactionContext>();
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public TransactionContext start() throws Exception {
-        TransactionContext txnContext = holder.get();
-        if (txnContext != null) {
-            throw new TransactionException("A transaction was found in the ThreadLocal.");
-        }
-
-        txnContext = new DefaultTransactionContext();
-        holder.set(txnContext);
-
-        // Check the thread locals for known resources
-        Connection connection = ConnectionContext.get();
-        if (connection != null) {
-            txnContext.add(new JDBCTransactionalResource(connection));
-        }
-
-        EntityManager em = EntityManagerContext.get();
-        if (em != null) {
-            txnContext.add(new JPATransactionalResource(em));
-        }
-
-        return txnContext;
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public TransactionContext start() throws Exception {
+    TransactionContext txnContext = holder.get();
+    if (txnContext != null) {
+      throw new TransactionException("A transaction was found in the ThreadLocal.");
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public TransactionContext getCurrent() {
-        return holder.get();
+    txnContext = new DefaultTransactionContext();
+    holder.set(txnContext);
+
+    // Check the thread locals for known resources
+    Connection connection = ConnectionContext.get();
+    if (connection != null) {
+      txnContext.add(new JDBCTransactionalResource(connection));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void tearDownTransactionContext() {
-        holder.remove();
+    EntityManager em = EntityManagerContext.get();
+    if (em != null) {
+      txnContext.add(new JPATransactionalResource(em));
     }
+
+    return txnContext;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public TransactionContext getCurrent() {
+    return holder.get();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void tearDownTransactionContext() {
+    holder.remove();
+  }
 }
