@@ -25,64 +25,64 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.jcatapult.persistence.service.DatabaseType;
+import org.jcatapult.persistence.service.DatabaseType.Database;
+import org.jcatapult.persistence.txn.TransactionContextManager;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import org.jcatapult.persistence.txn.TransactionContextManager;
 
 /**
- * <p>
- * This class implements the JPA service. It is a singleton and in the constructor
- * it sets up the EntityManagerFactory. It determines the Hibernate dialect based on
- * the Connection class retrieved from the DataSource in the JNDI tree. This is
- * nice for projects that might need to support multiple databases and don't want to
- * force users to tweak configuration for their specific database.
- * </p>
- * <p>
+ * This class implements the JPA service. It is a singleton and in the constructor it sets up the EntityManagerFactory.
+ * It determines the Hibernate dialect based on the Connection class retrieved from the DataSource in the JNDI tree.
+ * This is nice for projects that might need to support multiple databases and don't want to force users to tweak
+ * configuration for their specific database.
+ * <p/>
  * Currently, this only supports MySQL and PostgreSQL.
- * </p>
- * <p>
- * This class is a singleton since it constructs the EntityManagerFactory in the
- * constructor and holds a reference to it.
- * </p>
+ * <p/>
+ * This class is a singleton since it constructs the EntityManagerFactory in the constructor and holds a reference to
+ * it.
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @Singleton
 public class DriverAwareJPAService extends AbstractJPAService {
-    private static final Logger logger = Logger.getLogger(DefaultJPAService.class.getName());
+  private static final Logger logger = Logger.getLogger(DefaultJPAService.class.getName());
 
-    @Inject
-    public DriverAwareJPAService(TransactionContextManager txnContextManager,
-                                 @Named("jcatapult.jpa.enabled") boolean jpaEnabled,
-                                 @Named("jcatapult.jpa.unit") String persistenceUnit,
-                                 @Named("non-jta-data-source") String dataSourceJndiName)
-    throws NamingException, SQLException {
-        super(txnContextManager);
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put("hibernate.dialect", dialect(dataSourceJndiName));
+  @Inject
+  public DriverAwareJPAService(TransactionContextManager txnContextManager,
+                               @Named("jcatapult.jpa.enabled") boolean jpaEnabled,
+                               @Named("jcatapult.jpa.unit") String persistenceUnit,
+                               @Named("non-jta-data-source") String dataSourceJndiName)
+  throws NamingException, SQLException {
+    super(txnContextManager);
+    Map<String, String> properties = new HashMap<String, String>();
+    properties.put("hibernate.dialect", dialect(dataSourceJndiName));
 
-        if (jpaEnabled) {
-            logger.fine("JPA is enabled");
-            emf = Persistence.createEntityManagerFactory(persistenceUnit, properties);
-        } else {
-            logger.fine("JPA is disabled");
-        }
+    if (jpaEnabled) {
+      logger.fine("JPA is enabled");
+      emf = Persistence.createEntityManagerFactory(persistenceUnit, properties);
+    } else {
+      logger.fine("JPA is disabled");
     }
+  }
 
-    private String dialect(String dataSourceJndiName) throws NamingException, SQLException {
-        InitialContext context = new InitialContext();
-        DataSource ds = (DataSource) context.lookup(dataSourceJndiName);
-        Connection c = ds.getConnection();
-        String name = c.toString();
-        c.close();
+  private String dialect(String dataSourceJndiName) throws NamingException, SQLException {
+    InitialContext context = new InitialContext();
+    DataSource ds = (DataSource) context.lookup(dataSourceJndiName);
+    Connection c = ds.getConnection();
+    String name = c.toString();
+    c.close();
 
-        if (name.contains("mysql")) {
-            logger.fine("Connecting to a MySQL database");
-            return "org.hibernate.dialect.MySQL5InnoDBDialect";
-        } else {
-            logger.fine("Connecting to a PostgreSQL database");
-            return "org.hibernate.dialect.PostgreSQLDialect";
-        }
+    if (name.contains("mysql")) {
+      logger.fine("Connecting to a MySQL database");
+      DatabaseType.database = Database.MYSQL;
+      return "org.jcatapult.persistence.hibernate.MySQL5InnoDBWithUUIDDialect";
+    } else {
+      logger.fine("Connecting to a PostgreSQL database");
+      DatabaseType.database = Database.POSTGRESQL;
+      return "org.jcatapult.persistence.hibernate.PostgreSQLWithUUIDDialect";
     }
+  }
 }

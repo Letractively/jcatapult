@@ -19,44 +19,40 @@ package org.jcatapult.persistence.service.jpa;
 import javax.persistence.Persistence;
 import java.util.logging.Logger;
 
+import org.jcatapult.persistence.txn.TransactionContextManager;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import org.jcatapult.persistence.txn.TransactionContextManager;
 
 /**
- * <p>
- * This class implements the JPA service. It is a singleton and in the constructor
- * it sets up the EntityManagerFactory.
- * </p>
- * <p>
- * This class is a singleton since it constructs the EntityManagerFactory in the
- * constructor and holds a reference to it.
- * </p>
+ * <p> This class implements the JPA service. It is a singleton and in the constructor it sets up the
+ * EntityManagerFactory. </p> <p> This class is a singleton since it constructs the EntityManagerFactory in the
+ * constructor and holds a reference to it. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @Singleton
 public class DefaultJPAService extends AbstractJPAService {
-    private static final Logger logger = Logger.getLogger(DefaultJPAService.class.getName());
+  private static final Logger logger = Logger.getLogger(DefaultJPAService.class.getName());
 
-    /**
-     * @param   txnContextManager The TransactionContextManager.
-     * @param   jpaEnabled If true, JPA will be setup, false it will not. A boolean flag controlled
-     *          by the jcatapult configuration property named <strong>jcatapult.jpa.enabled</strong>
-     *          that controls whether or not JPA will be initialized and then setup during each request.
-     * @param   persistenceUnit  The name of the JPA persistence unit to use if JPA is being setup.
-     *          This is controlled by the jcatapult configuration property named <strong>jcatapult.jpa.unit</strong>.
-     */
-    @Inject
-    public DefaultJPAService(TransactionContextManager txnContextManager, @Named("jcatapult.jpa.enabled") boolean jpaEnabled,
-                             @Named("jcatapult.jpa.unit") String persistenceUnit) {
-        super(txnContextManager);
-        if (jpaEnabled) {
-            logger.fine("JPA is enabled");
-            emf = Persistence.createEntityManagerFactory(persistenceUnit);
-        } else {
-            logger.fine("JPA is disabled");
-        }
+  /**
+   * @param txnContextManager The TransactionContextManager.
+   * @param jpaEnabled        If true, JPA will be setup, false it will not. A boolean flag controlled by the
+   *                          jcatapult configuration property named <strong>jcatapult.jpa.enabled</strong> that
+   *                          controls whether or not JPA will be initialized and then setup during each request.
+   * @param persistenceUnit   The name of the JPA persistence unit to use if JPA is being setup. This is controlled by
+   *                          the jcatapult configuration property named <strong>jcatapult.jpa.unit</strong>.
+   */
+  @Inject
+  public DefaultJPAService(TransactionContextManager txnContextManager, @Named("jcatapult.jpa.enabled") boolean jpaEnabled,
+                           @Named("jcatapult.jpa.unit") String persistenceUnit) {
+    super(txnContextManager);
+    if (jpaEnabled) {
+      logger.fine("JPA is enabled");
+      emf = Persistence.createEntityManagerFactory(persistenceUnit);
+    } else {
+      logger.fine("JPA is disabled");
     }
+  }
 }

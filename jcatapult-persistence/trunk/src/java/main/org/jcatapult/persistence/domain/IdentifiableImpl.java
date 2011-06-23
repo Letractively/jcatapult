@@ -15,35 +15,33 @@
  */
 package org.jcatapult.persistence.domain;
 
-import java.io.Serializable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
- * <p>
- * This class can be the parent class for anything with a primary key.
- * </p>
+ * <p> This class can be the parent class for anything with a primary key. </p>
  *
  * @author Brian Pontarelli
  */
 @MappedSuperclass
 public abstract class IdentifiableImpl implements Serializable, Identifiable {
-    @Id
-    @GeneratedValue
-    private Integer id;
+  @Id
+  @GeneratedValue
+  private Integer id;
 
-    /**
-     * {@inheritDoc}
-     */
-    public Integer getId() {
-        return id;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public Integer getId() {
+    return id;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public void setId(Integer id) {
+    this.id = id;
+  }
 }

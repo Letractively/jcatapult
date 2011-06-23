@@ -21,24 +21,21 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * <p>
- * This class is a Guice provider that either pulls the EntityManager out of the thread
- * local {@link EntityManagerContext} or creates a new EntityManager using the factory
- * and then puts that in the ThreadLocal.
- * </p>
+ * <p> This class is a Guice provider that either pulls the EntityManager out of the thread local {@link
+ * EntityManagerContext} or creates a new EntityManager using the factory and then puts that in the ThreadLocal. </p>
  *
- * @author  James Humphrey and Brian Pontarelli
+ * @author James Humphrey and Brian Pontarelli
  */
 public class EntityManagerProvider implements Provider<EntityManager> {
-    private final JPAService service;
+  private final JPAService service;
 
-    @Inject
-    public EntityManagerProvider(JPAService service) {
-        this.service = service;
-    }
+  @Inject
+  public EntityManagerProvider(JPAService service) {
+    this.service = service;
+  }
 
-    @Override
-    public EntityManager get() {
-        return service.setupEntityManager();
-    }
+  @Override
+  public EntityManager get() {
+    return service.setupEntityManager();
+  }
 }

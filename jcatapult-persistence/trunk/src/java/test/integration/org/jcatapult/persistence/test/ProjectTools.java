@@ -22,32 +22,30 @@ import java.io.File;
 import org.w3c.dom.Document;
 
 /**
- * <p>
- * This class grabs the project name from the project.xml file.
- * </p>
+ * <p> This class grabs the project name from the project.xml file. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class ProjectTools {
 
-    /**
-     * Loads the project name from the project.xml file.
-     *
-     * @return  The project name.
-     */
-    public static String loadProjectName() {
-        // Open project.xml and grab the project name for the JDBC connections
-        File f = new File("project.xml");
-        Document dom;
-        try {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            dom = builder.parse(f);
-        } catch (Exception e) {
-            throw new AssertionError("Unable to locate the project.xml for the project. Make sure " +
-                    "you are running ant tests from inside the project and that your project has this " +
-                    "file.");
-        }
-
-        return dom.getDocumentElement().getAttribute("name").trim();
+  /**
+   * Loads the project name from the project.xml file.
+   *
+   * @return The project name.
+   */
+  public static String loadProjectName() {
+    // Open project.xml and grab the project name for the JDBC connections
+    File f = new File("project.xml");
+    Document dom;
+    try {
+      DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      dom = builder.parse(f);
+    } catch (Exception e) {
+      throw new AssertionError("Unable to locate the project.xml for the project. Make sure " +
+        "you are running ant tests from inside the project and that your project has this " +
+        "file.");
     }
+
+    return dom.getDocumentElement().getAttribute("name").trim();
+  }
 }

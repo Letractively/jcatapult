@@ -17,49 +17,46 @@ package org.jcatapult.persistence.test;
 
 import java.util.logging.Logger;
 
-import net.java.naming.MockJNDI;
 import org.postgresql.ds.PGSimpleDataSource;
 
+import net.java.naming.MockJNDI;
+
 /**
- * <p>
- * This is a toolkit that provides helper methods for working with a PostgreSQL
- * relational databases.
- * </p>
+ * <p> This is a toolkit that provides helper methods for working with a PostgreSQL relational databases. </p>
  *
- * @author  James Humphrey
- * @author  Brian Pontarelli
+ * @author James Humphrey
+ * @author Brian Pontarelli
  */
 public class PostgreSQLTools {
-    private static final Logger logger = Logger.getLogger(PostgreSQLTools.class.getName());
+  private static final Logger logger = Logger.getLogger(PostgreSQLTools.class.getName());
 
-    /**
-     * Sets up the connection pool to PostgreSQL and puts that into the JNDI tree. This uses the
-     * project.xml file and the $HOME/build.properties file to grab the project name and DB username
-     * and password.
-     *
-     * @param jndi {@link net.java.naming.MockJNDI}
-     * @param dbName the db name
-     * @return The DataSource and never null.
-     */
-    public static PGSimpleDataSource setup(MockJNDI jndi, String dbName) {
-        String projectName = ProjectTools.loadProjectName();
+  /**
+   * Sets up the connection pool to PostgreSQL and puts that into the JNDI tree. This uses the project.xml file and
+   * the $HOME/build.properties file to grab the project name and DB username and password.
+   *
+   * @param jndi   {@link net.java.naming.MockJNDI}
+   * @param dbName the db name
+   * @return The DataSource and never null.
+   */
+  public static PGSimpleDataSource setup(MockJNDI jndi, String dbName) {
+    String projectName = ProjectTools.loadProjectName();
 
-        // if the dbName is empty then assume <projectName>_test
-        if (dbName == null || dbName.isEmpty()) {
-            dbName = projectName.replace('-', '_').replace('.', '_') + "_test";
-        }
-
-        PGSimpleDataSource pds = new PGSimpleDataSource();
-        pds.setDatabaseName(dbName);
-        pds.setServerName("localhost");
-        pds.setUser("dev");
-        pds.setPassword("dev");
-
-        String jndiName = "java:comp/env/jdbc/" + projectName;
-        jndi.bind(jndiName, pds);
-
-        logger.info("JNDI name is [" + jndiName + "]");
-
-        return pds;
+    // if the dbName is empty then assume <projectName>_test
+    if (dbName == null || dbName.isEmpty()) {
+      dbName = projectName.replace('-', '_').replace('.', '_') + "_test";
     }
+
+    PGSimpleDataSource pds = new PGSimpleDataSource();
+    pds.setDatabaseName(dbName);
+    pds.setServerName("localhost");
+    pds.setUser("dev");
+    pds.setPassword("dev");
+
+    String jndiName = "java:comp/env/jdbc/" + projectName;
+    jndi.bind(jndiName, pds);
+
+    logger.info("JNDI name is [" + jndiName + "]");
+
+    return pds;
+  }
 }

@@ -23,26 +23,24 @@ import org.hibernate.annotations.Type;
 import org.jcatapult.persistence.domain.IdentifiableImpl;
 
 /**
- * <p>
- * This is a test object for money
- * </p>
+ * <p> This is a test object for money </p>
  *
  * @author Brian Pontarelli
  */
 @Entity
 public class MoneyHolder extends IdentifiableImpl {
-    @Type(type = "org.jcatapult.domain.commerce.MoneyCurrencyType")
-    @Columns(columns = {
-        @Column(name = "amount"),
-        @Column(name = "currency")
-    })
-    private Money money;
+  @Type(type = "org.jcatapult.domain.commerce.MoneyCurrencyType")
+  @Columns(columns = {
+    @Column(name = "amount"),
+    @Column(name = "currency")
+  })
+  private Money money;
 
-    public Money getMoney() {
-        return money;
-    }
+  public Money getMoney() {
+    return money;
+  }
 
-    public void setMoney(Money money) {
-        this.money = money;
-    }
+  public void setMoney(Money money) {
+    this.money = money;
+  }
 }

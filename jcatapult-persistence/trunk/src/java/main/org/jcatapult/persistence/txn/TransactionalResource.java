@@ -16,37 +16,35 @@
 package org.jcatapult.persistence.txn;
 
 /**
- * <p>
- * This interface defines the state of the current transaction.
- * </p>
+ * <p> This interface defines the state of the current transaction. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public interface TransactionalResource<T, E extends Exception> {
-    /**
-     * @return  The wrapped transaction class. This will vary for different ORMs and database connections. JDBC uses the
-     *          {@link java.sql.Connection} interface and JPA uses the {@link javax.persistence.EntityTransaction}.
-     */
-    T wrapped();
+  /**
+   * @return The wrapped transaction class. This will vary for different ORMs and database connections. JDBC uses the
+   *         {@link java.sql.Connection} interface and JPA uses the {@link javax.persistence.EntityTransaction}.
+   */
+  T wrapped();
 
-    /**
-     * Starts the transaction.
-     *
-     * @throws  E If the transaction could not be started.
-     */
-    void start() throws E;
+  /**
+   * Starts the transaction.
+   *
+   * @throws E If the transaction could not be started.
+   */
+  void start() throws E;
 
-    /**
-     * Commits the transaction.
-     *
-     * @throws  E Any exception that the underlying transaction API throws.
-     */
-    void commit() throws E;
+  /**
+   * Commits the transaction.
+   *
+   * @throws E Any exception that the underlying transaction API throws.
+   */
+  void commit() throws E;
 
-    /**
-     * Rollsback the transaction.
-     *
-     * @throws  E Any exception that the underlying transaction API throws.
-     */
-    void rollback() throws E;
+  /**
+   * Rollsback the transaction.
+   *
+   * @throws E Any exception that the underlying transaction API throws.
+   */
+  void rollback() throws E;
 }

@@ -15,42 +15,39 @@
  */
 package org.jcatapult.persistence.service.jdbc;
 
-import javax.persistence.EntityManager;
 import java.sql.Connection;
 
 /**
- * <p>
- * This class is a context container for the JDBC Connection that might be checked out
- * of the JNDI data source by the provider.
- * </p>
+ * <p> This class is a context container for the JDBC Connection that might be checked out of the JNDI data source by
+ * the provider. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class ConnectionContext {
-    private static ThreadLocal<Connection> holder = new ThreadLocal<Connection>();
+  private static ThreadLocal<Connection> holder = new ThreadLocal<Connection>();
 
-    /**
-     * Sets the Connection for this Thread.
-     *
-     * @param   connection The Connection to set.
-     */
-    public static void set(Connection connection) {
-        holder.set(connection);
-    }
+  /**
+   * Sets the Connection for this Thread.
+   *
+   * @param connection The Connection to set.
+   */
+  public static void set(Connection connection) {
+    holder.set(connection);
+  }
 
-    /**
-     * Returns the Connection for this context.
-     *
-     * @return The Connection or null if the filter is not setup correctly.
-     */
-    public static Connection get() {
-        return holder.get();
-    }
+  /**
+   * Returns the Connection for this context.
+   *
+   * @return The Connection or null if the filter is not setup correctly.
+   */
+  public static Connection get() {
+    return holder.get();
+  }
 
-    /**
-     * Removes the Connection from the context.
-     */
-    public static void remove() {
-        holder.remove();
-    }
+  /**
+   * Removes the Connection from the context.
+   */
+  public static void remove() {
+    holder.remove();
+  }
 }

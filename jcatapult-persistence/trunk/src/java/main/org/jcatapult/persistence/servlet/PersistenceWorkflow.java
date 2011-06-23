@@ -18,45 +18,44 @@ package org.jcatapult.persistence.servlet;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-import com.google.inject.Inject;
 import org.jcatapult.persistence.service.jdbc.JDBCService;
 import org.jcatapult.persistence.service.jpa.JPAService;
 import org.jcatapult.servlet.Workflow;
 import org.jcatapult.servlet.WorkflowChain;
 
+import com.google.inject.Inject;
+
 /**
- * <p>
- * This class is the JCatapult persistence workflow that cleans up all the persistence resources
- * after the request has been completed. This closes the JDBC connection, releases the JPA entity
- * manager, and removes the transaction context (if one exists).
- * </p>
+ * <p> This class is the JCatapult persistence workflow that cleans up all the persistence resources after the request
+ * has been completed. This closes the JDBC connection, releases the JPA entity manager, and removes the transaction
+ * context (if one exists). </p>
  *
  * @author Brian Pontarelli
  */
 public class PersistenceWorkflow implements Workflow {
-    private final JDBCService jdbcService;
-    private final JPAService jpaService;
+  private final JDBCService jdbcService;
+  private final JPAService jpaService;
 
-    @Inject
-    public PersistenceWorkflow(JDBCService jdbcService, JPAService jpaService) {
-        this.jdbcService = jdbcService;
-        this.jpaService = jpaService;
-    }
+  @Inject
+  public PersistenceWorkflow(JDBCService jdbcService, JPAService jpaService) {
+    this.jdbcService = jdbcService;
+    this.jpaService = jpaService;
+  }
 
-    /**
-     * Tears down all of the resources and the transaction context if any of them exist.
-     *
-     * @param   workflowChain The chain.
-     * @throws  IOException If the chain throws.
-     * @throws  ServletException If the chain throws.
-     */
-    public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
-        try {
-            // Proceed down the chain
-            workflowChain.continueWorkflow();
-        } finally {
-            jdbcService.tearDownConnection();
-            jpaService.tearDownEntityManager();
-        }
+  /**
+   * Tears down all of the resources and the transaction context if any of them exist.
+   *
+   * @param workflowChain The chain.
+   * @throws IOException      If the chain throws.
+   * @throws ServletException If the chain throws.
+   */
+  public void perform(WorkflowChain workflowChain) throws IOException, ServletException {
+    try {
+      // Proceed down the chain
+      workflowChain.continueWorkflow();
+    } finally {
+      jdbcService.tearDownConnection();
+      jpaService.tearDownEntityManager();
     }
+  }
 }

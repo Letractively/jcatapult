@@ -16,23 +16,20 @@
 package org.jcatapult.persistence.domain;
 
 /**
- * <p>
- * This interface marks a class as identifiable using a Integer based
- * primary key or unique identifier.
- * </p>
+ * <p> This interface marks a class as identifiable using a Integer based primary key or unique identifier. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public interface Identifiable {
-    /**
-     * @return  The primary key or null if this entity has not been persisted.
-     */
-    Integer getId();
+  /**
+   * @return The primary key or null if this entity has not been persisted.
+   */
+  Integer getId();
 
-    /**
-     * Sets the new primary key for the enitty.
-     *
-     * @param   id The primary key.
-     */
-    void setId(Integer id);
+  /**
+   * Sets the new primary key for the enitty.
+   *
+   * @param id The primary key.
+   */
+  void setId(Integer id);
 }

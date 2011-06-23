@@ -21,21 +21,19 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * <p>
- * This class is a Guice provider that provider access to the EntityManagerFactory.
- * </p>
+ * <p> This class is a Guice provider that provider access to the EntityManagerFactory. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class EntityManagerFactoryProvider implements Provider<EntityManagerFactory> {
-    private final JPAService service;
+  private final JPAService service;
 
-    @Inject
-    public EntityManagerFactoryProvider(JPAService service) {
-        this.service = service;
-    }
+  @Inject
+  public EntityManagerFactoryProvider(JPAService service) {
+    this.service = service;
+  }
 
-    public EntityManagerFactory get() {
-        return service.getFactory();
-    }
+  public EntityManagerFactory get() {
+    return service.getFactory();
+  }
 }

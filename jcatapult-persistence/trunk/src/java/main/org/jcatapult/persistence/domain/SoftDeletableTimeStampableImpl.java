@@ -19,29 +19,27 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 /**
- * <p>
- * This class implements the Identifiable, Timestampable and SoftDeletable interfaces and extends
- * TimeStampableImpl for a primary key and the date fields.
- * </p>
+ * <p> This class implements the Identifiable, Timestampable and SoftDeletable interfaces and extends TimeStampableImpl
+ * for a primary key and the date fields. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @MappedSuperclass
 public abstract class SoftDeletableTimeStampableImpl extends TimeStampableImpl implements SoftDeletable {
-    @Column(nullable = false)
-    private boolean deleted = false;
+  @Column(nullable = false)
+  private boolean deleted = false;
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isDeleted() {
-        return deleted;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isDeleted() {
+    return deleted;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+  }
 }

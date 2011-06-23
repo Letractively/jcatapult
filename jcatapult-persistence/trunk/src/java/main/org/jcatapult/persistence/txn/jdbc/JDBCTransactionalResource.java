@@ -22,56 +22,54 @@ import org.jcatapult.persistence.txn.TransactionException;
 import org.jcatapult.persistence.txn.TransactionalResource;
 
 /**
- * <p>
- * This class models the transaction state for the JDBC connection.
- * </p>
+ * <p> This class models the transaction state for the JDBC connection. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class JDBCTransactionalResource implements TransactionalResource<Connection, SQLException> {
-    private final Connection connection;
+  private final Connection connection;
 
-    public JDBCTransactionalResource(Connection connection) {
-        this.connection = connection;
+  public JDBCTransactionalResource(Connection connection) {
+    this.connection = connection;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Connection wrapped() {
+    return connection;
+  }
+
+  /**
+   * Starts the transaction for the JDBC connection by setting auto-commit to false.
+   *
+   * @throws SQLException If the start failed.
+   */
+  @Override
+  public void start() throws SQLException {
+    if (!connection.getAutoCommit()) {
+      throw new TransactionException("The JDBC transaction has already been started and can't be started twice.");
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Connection wrapped() {
-        return connection;
-    }
+    connection.setAutoCommit(false);
+  }
 
-    /**
-     * Starts the transaction for the JDBC connection by setting auto-commit to false.
-     *
-     * @throws  SQLException If the start failed.
-     */
-    @Override
-    public void start() throws SQLException {
-        if (!connection.getAutoCommit()) {
-            throw new TransactionException("The JDBC transaction has already been started and can't be started twice.");
-        }
+  /**
+   * Calls the connection's {@link Connection#commit()} method.
+   */
+  @Override
+  public void commit() throws SQLException {
+    connection.commit();
+    connection.setAutoCommit(true);
+  }
 
-        connection.setAutoCommit(false);
-    }
-
-    /**
-     * Calls the connection's {@link Connection#commit()} method.
-     */
-    @Override
-    public void commit() throws SQLException {
-        connection.commit();
-        connection.setAutoCommit(true);
-    }
-
-    /**
-     * Calls the connection's {@link Connection#rollback()} method.
-     */
-    @Override
-    public void rollback() throws SQLException {
-        connection.rollback();
-        connection.setAutoCommit(true);
-    }
+  /**
+   * Calls the connection's {@link Connection#rollback()} method.
+   */
+  @Override
+  public void rollback() throws SQLException {
+    connection.rollback();
+    connection.setAutoCommit(true);
+  }
 }

@@ -20,25 +20,23 @@ import javax.persistence.Entity;
 import org.jcatapult.persistence.domain.SoftDeletableTimeStampableImpl;
 
 /**
- * <p>
- * This class is an entity bean for testing soft deletes.
- * </p>
+ * <p> This class is an entity bean for testing soft deletes. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @Entity
 public class SoftDeletableUser extends SoftDeletableTimeStampableImpl {
-    private String name;
+  private String name;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String toString() {
-        return super.toString() + " name=" + name;
-    }
+  public String toString() {
+    return super.toString() + " name=" + name;
+  }
 }

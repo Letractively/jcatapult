@@ -21,57 +21,55 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * <p>
- * This class is a JDBC DataSource wrapper that provides all the methods as a standard JDBC DataSource
- * passed through. You can sub-class and override anything you want. Enjoy!
- * </p>
+ * <p> This class is a JDBC DataSource wrapper that provides all the methods as a standard JDBC DataSource passed
+ * through. You can sub-class and override anything you want. Enjoy! </p>
  *
  * @author Brian Pontarelli
  */
 public class DataSourceWrapper implements DataSource {
-    private final DataSource dataSource;
+  private final DataSource dataSource;
 
-    public DataSourceWrapper(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+  public DataSourceWrapper(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
 
-    @Override
-    public Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
-    }
+  @Override
+  public Connection getConnection() throws SQLException {
+    return dataSource.getConnection();
+  }
 
-    @Override
-    public Connection getConnection(String username, String password) throws SQLException {
-        return dataSource.getConnection(username, password);
-    }
+  @Override
+  public Connection getConnection(String username, String password) throws SQLException {
+    return dataSource.getConnection(username, password);
+  }
 
-    @Override
-    public PrintWriter getLogWriter() throws SQLException {
-        return dataSource.getLogWriter();
-    }
+  @Override
+  public PrintWriter getLogWriter() throws SQLException {
+    return dataSource.getLogWriter();
+  }
 
-    @Override
-    public void setLogWriter(PrintWriter out) throws SQLException {
-        dataSource.setLogWriter(out);
-    }
+  @Override
+  public void setLogWriter(PrintWriter out) throws SQLException {
+    dataSource.setLogWriter(out);
+  }
 
-    @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
-        dataSource.setLoginTimeout(seconds);
-    }
+  @Override
+  public void setLoginTimeout(int seconds) throws SQLException {
+    dataSource.setLoginTimeout(seconds);
+  }
 
-    @Override
-    public int getLoginTimeout() throws SQLException {
-        return dataSource.getLoginTimeout();
-    }
+  @Override
+  public int getLoginTimeout() throws SQLException {
+    return dataSource.getLoginTimeout();
+  }
 
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        throw new SQLException();
-    }
+  @Override
+  public <T> T unwrap(Class<T> iface) throws SQLException {
+    throw new SQLException();
+  }
 
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        throw new SQLException();
-    }
+  @Override
+  public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    throw new SQLException();
+  }
 }

@@ -16,46 +16,42 @@
 package org.jcatapult.persistence.service;
 
 /**
- * <p>
- * This class is a transaction facade that provides all the methods that most
- * transactions will require and that all the backing implementations should
- * support.
- * </p>
+ * <p> This class is a transaction facade that provides all the methods that most transactions will require and that all
+ * the backing implementations should support. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public interface Transaction {
-    /**
-     * Commits the transaction. This will throw exceptions if the transaction has already been committed,
-     * rolled back or the commit fails. Those exceptions are implementation dependent and are all runtime.
-     */
-    void commit();
+  /**
+   * Commits the transaction. This will throw exceptions if the transaction has already been committed, rolled back or
+   * the commit fails. Those exceptions are implementation dependent and are all runtime.
+   */
+  void commit();
 
-    /**
-     * Rolls back the transaction. This will throw exceptions if the transaction has already been committed,
-     * rolled back or the roll back fails. Those exceptions are implementation dependent and are all runtime.
-     */
-    void rollback();
+  /**
+   * Rolls back the transaction. This will throw exceptions if the transaction has already been committed, rolled back
+   * or the roll back fails. Those exceptions are implementation dependent and are all runtime.
+   */
+  void rollback();
 
-    /**
-     * Sets the transaction into rollback only state. This will throw exceptions if the transaction has
-     * already been committed, rolled back or the setting of the rollback only flag fails. Those exceptions
-     * are implementation dependent and are all runtime.
-     */
-    void setRollbackOnly();
+  /**
+   * Sets the transaction into rollback only state. This will throw exceptions if the transaction has already been
+   * committed, rolled back or the setting of the rollback only flag fails. Those exceptions are implementation
+   * dependent and are all runtime.
+   */
+  void setRollbackOnly();
 
-    /**
-     * Returns whether or not the transaction is roll back only.
-     *
-     * @return  True if roll back only, false otherwise.
-     */
-    boolean getRollbackOnly();
+  /**
+   * Returns whether or not the transaction is roll back only.
+   *
+   * @return True if roll back only, false otherwise.
+   */
+  boolean getRollbackOnly();
 
-    /**
-     * Returns if the transaction is still active and has not been committed, rolled back or in any other
-     * way closed.
-     *
-     * @return  True if active, false it not.
-     */
-    boolean isActive();
+  /**
+   * Returns if the transaction is still active and has not been committed, rolled back or in any other way closed.
+   *
+   * @return True if active, false it not.
+   */
+  boolean isActive();
 }

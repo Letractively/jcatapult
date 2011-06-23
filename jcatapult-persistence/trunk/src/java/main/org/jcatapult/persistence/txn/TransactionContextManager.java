@@ -18,32 +18,30 @@ package org.jcatapult.persistence.txn;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface defines the manager that manages the current transaction context.
- * </p>
+ * <p> This interface defines the manager that manages the current transaction context. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultTransactionContextManager.class)
 public interface TransactionContextManager {
-    /**
-     * Starts a new transaction.
-     *
-     * @return  The transaction.
-     * @throws  Exception If any of the transactional resources that are already open threw an exception when starting
-     *          a transaction for themselves.
-     */
-    TransactionContext start() throws Exception;
+  /**
+   * Starts a new transaction.
+   *
+   * @return The transaction.
+   * @throws Exception If any of the transactional resources that are already open threw an exception when starting a
+   *                   transaction for themselves.
+   */
+  TransactionContext start() throws Exception;
 
-    /**
-     * Retrieves the current transaction context.
-     *
-     * @return  The current transaction context.
-     */
-    TransactionContext getCurrent();
+  /**
+   * Retrieves the current transaction context.
+   *
+   * @return The current transaction context.
+   */
+  TransactionContext getCurrent();
 
-    /**
-     * Tears down the current transaction context if there is one.
-     */
-    void tearDownTransactionContext();
+  /**
+   * Tears down the current transaction context if there is one.
+   */
+  void tearDownTransactionContext();
 }

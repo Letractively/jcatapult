@@ -1,7 +1,7 @@
 <project xmlns="http://www.inversoft.org/schemas/savant-1.5/project"
          name="jcatapult-persistence"
          group="jcatapult.org"
-         version="1.0.6">
+         version="1.0.7">
 
   <plugin group="plugins.savant.inversoft.org" name="ide" version="1.2"/>
   <plugin group="plugins.savant.inversoft.org" name="clean" version="1.1.1"/>
@@ -26,7 +26,7 @@
     <artifact-group type="compile-only">
       <artifact group="servlet.javax" name="servlet-api" version="2.4"/>
       <artifact group="mysql.com" name="mysql-connector-java" version="5.1.6"/>
-      <artifact group="postgresql.org" name="postgresql-jdbc3" version="8.4.701"/>
+      <artifact group="postgresql.org" name="postgresql-jdbc4" version="9.0.801"/>
     </artifact-group>
     <artifact-group type="compile">
       <artifact group="aopalliance.sourceforge.net" name="aopalliance" version="1.0"/>

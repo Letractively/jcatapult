@@ -17,22 +17,19 @@
 package org.jcatapult.persistence.txn;
 
 /**
- * <p>
- * This class is the default processor and returns true if the exception is not
- * null and a runtime exception.
- * </p>
+ * <p> This class is the default processor and returns true if the exception is not null and a runtime exception. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class DefaultTransactionResultProcessor<T> implements TransactionResultProcessor<T> {
-    /**
-     * Returns true if the throwable parameter is not null.
-     *
-     * @param   result The method's return value, which is not used.
-     * @param   throwable The exception thrown from the method.
-     * @return  True if {@code throwable} is not null and is a RuntimeException (or sub-class).
-     */
-    public boolean rollback(T result, Throwable throwable) {
-        return throwable != null && throwable instanceof RuntimeException;
-    }
+  /**
+   * Returns true if the throwable parameter is not null.
+   *
+   * @param result    The method's return value, which is not used.
+   * @param throwable The exception thrown from the method.
+   * @return True if {@code throwable} is not null and is a RuntimeException (or sub-class).
+   */
+  public boolean rollback(T result, Throwable throwable) {
+    return throwable != null && throwable instanceof RuntimeException;
+  }
 }

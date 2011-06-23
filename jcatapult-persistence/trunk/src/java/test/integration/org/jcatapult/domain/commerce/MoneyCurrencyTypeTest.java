@@ -21,30 +21,28 @@ import java.util.List;
 
 import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.test.JPABaseTest;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.google.inject.Inject;
+import static org.junit.Assert.*;
 
 /**
- * <p>
- * This class tests the hibernate types.
- * </p>
+ * <p> This class tests the hibernate types. </p>
  *
  * @author Brian Pontarelli
  */
 public class MoneyCurrencyTypeTest extends JPABaseTest {
-    @Inject public PersistenceService persistenceService;
+  @Inject public PersistenceService persistenceService;
 
-    @Test
-    public void save() {
-        MoneyHolder holder = new MoneyHolder();
-        holder.setMoney(Money.valueOf("1.99", Currency.getInstance("EUR")));
-        persistenceService.persist(holder);
+  @Test
+  public void save() {
+    MoneyHolder holder = new MoneyHolder();
+    holder.setMoney(Money.valueOf("1.99", Currency.getInstance("EUR")));
+    persistenceService.persist(holder);
 
-        List<MoneyHolder> holders = persistenceService.findAllByType(MoneyHolder.class);
-        assertEquals(1, holders.size());
-        assertEquals(new BigDecimal("1.99"), holders.get(0).getMoney().toBigDecimal());
-        assertEquals(Currency.getInstance("EUR"), holders.get(0).getMoney().getCurrency());
-    }
+    List<MoneyHolder> holders = persistenceService.findAllByType(MoneyHolder.class);
+    assertEquals(1, holders.size());
+    assertEquals(new BigDecimal("1.99"), holders.get(0).getMoney().toBigDecimal());
+    assertEquals(Currency.getInstance("EUR"), holders.get(0).getMoney().getCurrency());
+  }
 }

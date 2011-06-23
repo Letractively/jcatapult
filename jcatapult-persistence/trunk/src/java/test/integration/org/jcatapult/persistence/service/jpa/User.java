@@ -22,27 +22,25 @@ import javax.persistence.Table;
 import org.jcatapult.persistence.domain.TimeStampableImpl;
 
 /**
- * <p>
- * This is a simple User for testing.
- * </p>
+ * <p> This is a simple User for testing. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @Entity
 @Table(name = "users")
 public class User extends TimeStampableImpl {
-    @Column(unique = true)
-    private String name;
+  @Column(unique = true)
+  private String name;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String toString() {
-        return super.toString() + " name=" + name;
-    }
+  public String toString() {
+    return super.toString() + " name=" + name;
+  }
 }
