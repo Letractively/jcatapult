@@ -15,6 +15,8 @@
  */
 package org.jcatapult.mvc;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,9 +59,16 @@ public class GuiceObjectFactory implements ObjectFactory {
         Map<Key<?>, Binding<?>> bindings = injector.getBindings();
         List<Class<? extends T>> results = new ArrayList<Class<? extends T>>();
         for (Key<?> key : bindings.keySet()) {
-            Class<?> bindingType = (Class<?>) key.getTypeLiteral().getType();
-            if (type.isAssignableFrom(bindingType)) {
-                results.add((Class<? extends T>) bindingType);
+            Type t = key.getTypeLiteral().getType();
+            while (t instanceof ParameterizedType) {
+                t = ((ParameterizedType) t).getRawType();
+            }
+
+            if (t instanceof Class) {
+                Class<?> bindingType = (Class<?>) t;
+                if (type.isAssignableFrom(bindingType)) {
+                    results.add((Class<? extends T>) bindingType);
+                }
             }
         }
 
