@@ -23,9 +23,10 @@ import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.ConverterStateException;
 import org.jcatapult.mvc.parameter.convert.annotation.GlobalConverter;
 
+import net.java.lang.StringTools;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import net.java.lang.StringTools;
 
 /**
  * <p>
@@ -50,7 +51,11 @@ public class EnumConverter extends AbstractGlobalConverter {
             return null;
         }
 
-        return toEnum(value, convertTo);
+      try {
+        return Enum.valueOf((Class<Enum>) convertTo, value);
+      } catch (IllegalArgumentException e) {
+        throw new ConversionException(e);
+      }
     }
 
     protected Object stringsToObject(String[] values, Type convertTo, Map<String, String> attributes, String expression)
@@ -63,9 +68,5 @@ public class EnumConverter extends AbstractGlobalConverter {
     protected String objectToString(Object value, Type convertFrom, Map<String, String> attributes, String expression)
     throws ConversionException, ConverterStateException {
         return value.toString();
-    }
-
-    private Enum toEnum(String value, Type convertTo) {
-        return Enum.valueOf((Class<Enum>) convertTo, value);
     }
 }

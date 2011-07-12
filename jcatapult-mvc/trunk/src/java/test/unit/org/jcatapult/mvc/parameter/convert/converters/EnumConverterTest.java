@@ -15,11 +15,12 @@
  */
 package org.jcatapult.mvc.parameter.convert.converters;
 
+import org.jcatapult.mvc.parameter.convert.ConversionException;
 import org.jcatapult.mvc.parameter.convert.GlobalConverter;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import static net.java.util.CollectionTools.*;
+import static org.junit.Assert.*;
 
 /**
  * <p>
@@ -44,7 +45,14 @@ public class EnumConverterTest {
         e = (TestEnum) converter.convertFromStrings(TestEnum.class, null, "testExpr", array("value2"));
         assertSame(e, TestEnum.value2);
 
-        try {
+      try {
+        converter.convertFromStrings(TestEnum.class, null, "testExpr", array("value3"));
+        fail("Should have thrown conversion exception");
+      } catch (ConversionException e1) {
+        // Expected
+      }
+
+      try {
             converter.convertFromStrings(TestEnum.class, null, "testExpr", array("value1", "value2"));
             fail("Should have failed");
         } catch (UnsupportedOperationException e1) {

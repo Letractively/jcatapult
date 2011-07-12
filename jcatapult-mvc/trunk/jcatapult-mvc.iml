@@ -81,13 +81,13 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="jcatapult-core-test-1.0.9.jar">
+      <library name="jcatapult-core-test-1.0.10.jar">
         <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.9/jcatapult-core-test-1.0.9.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.10/jcatapult-core-test-1.0.10.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.9/jcatapult-core-test-1.0.9-src.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.10/jcatapult-core-test-1.0.10-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -224,13 +224,13 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="jcatapult-core-1.0.9.jar">
+      <library name="jcatapult-core-1.0.10.jar">
         <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.9/jcatapult-core-1.0.9.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.10/jcatapult-core-1.0.10.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.9/jcatapult-core-1.0.9-src.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.10/jcatapult-core-1.0.10-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
