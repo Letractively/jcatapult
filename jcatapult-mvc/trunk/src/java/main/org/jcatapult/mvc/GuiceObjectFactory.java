@@ -15,16 +15,12 @@
  */
 package org.jcatapult.mvc;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import com.google.inject.Binding;
+import org.jcatapult.guice.GuiceTools;
+
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Key;
 
 /**
  * <p>
@@ -56,22 +52,6 @@ public class GuiceObjectFactory implements ObjectFactory {
      */
     @SuppressWarnings("unchecked")
     public <T> List<Class<? extends T>> getAllForType(Class<T> type) {
-        Map<Key<?>, Binding<?>> bindings = injector.getBindings();
-        List<Class<? extends T>> results = new ArrayList<Class<? extends T>>();
-        for (Key<?> key : bindings.keySet()) {
-            Type t = key.getTypeLiteral().getType();
-            while (t instanceof ParameterizedType) {
-                t = ((ParameterizedType) t).getRawType();
-            }
-
-            if (t instanceof Class) {
-                Class<?> bindingType = (Class<?>) t;
-                if (type.isAssignableFrom(bindingType)) {
-                    results.add((Class<? extends T>) bindingType);
-                }
-            }
-        }
-
-        return results;
+      return GuiceTools.getTypes(injector, type);
     }
 }
