@@ -23,16 +23,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import com.google.inject.Key;
 import org.jcatapult.config.guice.JCatapultConfigurationModule;
+
+import net.java.lang.ClassClassLoaderResolver;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.name.Named;
-import net.java.lang.ClassClassLoaderResolver;
 
 /**
  * <p>
@@ -173,8 +174,8 @@ public class GuiceContainer {
      * @return  The Injector in case it is needed afterwards.
      */
     public static Injector shutdown() {
-        List<Key<Closable>> keys = GuiceTools.getKeys(injector, Closable.class);
-        for (Key<Closable> key : keys) {
+        List<Key<? extends Closable>> keys = GuiceTools.getKeys(injector, Closable.class);
+        for (Key<? extends Closable> key : keys) {
             Closable closable = injector.getInstance(key);
             closable.close();
         }
