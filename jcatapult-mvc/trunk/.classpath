@@ -13,9 +13,9 @@
   <classpathentry kind="var" path="SAVANT_REPOSITORY/org/apache/commons/commons-lang/2.3/commons-lang-2.3.jar" sourcepath="/SAVANT_REPOSITORY/org/apache/commons/commons-lang/2.3/commons-lang-2.3-src.jar"/>
   <classpathentry kind="var" path="SAVANT_REPOSITORY/org/apache/commons/commons-collections/3.1/commons-collections-3.1.jar" sourcepath="/SAVANT_REPOSITORY/org/apache/commons/commons-collections/3.1/commons-collections-3.1-src.jar"/>
   <classpathentry kind="var" path="SAVANT_REPOSITORY/org/apache/commons/commons-logging/1.1/commons-logging-1.1.jar" sourcepath="/SAVANT_REPOSITORY/org/apache/commons/commons-logging/1.1/commons-logging-1.1-src.jar"/>
-  <classpathentry kind="var" path="SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0.10/jcatapult-core-test-1.0.10.jar" sourcepath="/SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0.10/jcatapult-core-test-1.0.10-src.jar"/>
-  <classpathentry kind="var" path="SAVANT_REPOSITORY/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar" sourcepath="/SAVANT_REPOSITORY/javax/persistence/persistence-api/1.0/persistence-api-1.0-src.jar"/>
   <classpathentry kind="var" path="SAVANT_REPOSITORY/org/junit/junit/4.4/junit-4.4.jar" sourcepath="/SAVANT_REPOSITORY/org/junit/junit/4.4/junit-4.4-src.jar"/>
+  <classpathentry kind="var" path="SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0.11-{integration}/jcatapult-core-test-1.0.11-IB20110714015813539.jar" sourcepath="/SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0.11-{integration}/jcatapult-core-test-1.0.11-IB20110714015813539-src.jar"/>
+  <classpathentry kind="var" path="SAVANT_REPOSITORY/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar" sourcepath="/SAVANT_REPOSITORY/javax/persistence/persistence-api/1.0/persistence-api-1.0-src.jar"/>
   <classpathentry kind="var" path="SAVANT_REPOSITORY/org/testng/testng/5.11/testng-5.11.jar" sourcepath="/SAVANT_REPOSITORY/org/testng/testng/5.11/testng-5.11-src.jar"/>
   <classpathentry kind="var" path="SAVANT_REPOSITORY/org/easymock/easymock/2.3/easymock-2.3.jar" sourcepath="/SAVANT_REPOSITORY/org/easymock/easymock/2.3/easymock-2.3-src.jar"/>
   <classpathentry kind="var" path="SAVANT_REPOSITORY/org/apache/commons/commons-fileupload/1.2.1/commons-fileupload-1.2.1.jar" sourcepath="/SAVANT_REPOSITORY/org/apache/commons/commons-fileupload/1.2.1/commons-fileupload-1.2.1-src.jar"/>
@@ -26,5 +26,5 @@
   <classpathentry kind="var" path="SAVANT_REPOSITORY/net/java/dev/java-net-commons/java-net-commons/1.5.5/java-net-commons-1.5.5.jar" sourcepath="/SAVANT_REPOSITORY/net/java/dev/java-net-commons/java-net-commons/1.5.5/java-net-commons-1.5.5-src.jar"/>
   <classpathentry kind="var" path="SAVANT_REPOSITORY/org/hsqldb/hsqldb/1.8.9/hsqldb-1.8.9.jar" sourcepath="/SAVANT_REPOSITORY/org/hsqldb/hsqldb/1.8.9/hsqldb-1.8.9-src.jar"/>
   <classpathentry kind="var" path="SAVANT_REPOSITORY/org/objectweb/asm/asm/3.1/asm-3.1.jar" sourcepath="/SAVANT_REPOSITORY/org/objectweb/asm/asm/3.1/asm-3.1-src.jar"/>
-  <classpathentry kind="var" path="SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0.10/jcatapult-core-1.0.10.jar" sourcepath="/SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0.10/jcatapult-core-1.0.10-src.jar"/>
+  <classpathentry kind="var" path="SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0.11-{integration}/jcatapult-core-1.0.11-IB20110714015813539.jar" sourcepath="/SAVANT_REPOSITORY/org/jcatapult/jcatapult-core/1.0.11-{integration}/jcatapult-core-1.0.11-IB20110714015813539-src.jar"/>
 </classpath>
