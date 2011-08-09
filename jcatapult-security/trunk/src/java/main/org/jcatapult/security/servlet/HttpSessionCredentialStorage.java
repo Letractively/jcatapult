@@ -15,65 +15,56 @@
  */
 package org.jcatapult.security.servlet;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletRequest;
-
-import org.jcatapult.security.servlet.CredentialStorage;
 
 /**
- * <p>
- * This class provides a persistent storage location within the HTTP
- * session for user credentials. This allows applications to locate the
- * user credentials across multiple request.
- * </p>
- *
- * <p>
- * The object that is stored into the HttpSession is the same object that
- * is returned from the {@link org.jcatapult.security.login.AuthenticationService}
- * and it is stored under the key <code>jcatapult.security.servlet.http.session.credentials</code>.
- * </p>
+ * <p> This class provides a persistent storage location within the HTTP session for user credentials. This allows
+ * applications to locate the user credentials across multiple request. </p> <p/> <p> The object that is stored into the
+ * HttpSession is the same object that is returned from the {@link org.jcatapult.security.login.AuthenticationService}
+ * and it is stored under the key <code>jcatapult.security.servlet.http.session.credentials</code>. </p>
  *
  * @author Brian Pontarelli
  */
 public class HttpSessionCredentialStorage implements CredentialStorage {
-    private static final String KEY = "jcatapult.security.servlet.http.session.credentials";
+  private static final String KEY = "jcatapult.security.servlet.http.session.credentials";
 
-    /**
-     * Loads from the session. If there is no session, it is never created.
-     *
-     * @param   request The request.
-     * @return  The credentials if they exist, otherwise false.
-     */
-    public Object locate(ServletRequest request) {
-        HttpSession session = ((HttpServletRequest) request).getSession(false);
-        if (session != null) {
-            return session.getAttribute(KEY);
-        }
-
-        return null;
+  /**
+   * Loads from the session. If there is no session, it is never created.
+   *
+   * @param   request The request.
+   * @return The credentials if they exist, otherwise false.
+   */
+  public Object locate(ServletRequest request) {
+    HttpSession session = ((HttpServletRequest) request).getSession(false);
+    if (session != null) {
+      return session.getAttribute(KEY);
     }
 
-    /**
-     * Stores the credentials into the session. If there is no session active, one is created.
-     *
-     * @param   credentials The credentials to store.
-     * @param   request Used to get the HTTP session.
-     */
-    public void store(Object credentials, ServletRequest request) {
-        HttpSession session = ((HttpServletRequest) request).getSession(true);
-        session.setAttribute(KEY, credentials);
-    }
+    return null;
+  }
 
-    /**
-     * Removes the credentials from the session.
-     *
-     * @param   request TO get the session from.
-     */
-    public void remove(ServletRequest request) {
-        HttpSession session = ((HttpServletRequest) request).getSession(false);
-        if (session != null) {
-            session.removeAttribute(KEY);
-        }
+  /**
+   * Stores the credentials into the session. If there is no session active, one is created.
+   *
+   * @param   credentials The credentials to store.
+   * @param   request Used to get the HTTP session.
+   */
+  public void store(Object credentials, ServletRequest request) {
+    HttpSession session = ((HttpServletRequest) request).getSession(true);
+    session.setAttribute(KEY, credentials);
+  }
+
+  /**
+   * Removes the credentials from the session.
+   *
+   * @param   request TO get the session from.
+   */
+  public void remove(ServletRequest request) {
+    HttpSession session = ((HttpServletRequest) request).getSession(false);
+    if (session != null) {
+      session.removeAttribute(KEY);
     }
+  }
 }

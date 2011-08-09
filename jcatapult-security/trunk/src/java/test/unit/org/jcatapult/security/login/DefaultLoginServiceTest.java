@@ -16,99 +16,98 @@
 package org.jcatapult.security.login;
 
 import org.easymock.EasyMock;
-import org.jcatapult.security.PasswordEncryptor;
-import org.jcatapult.security.UserAdapter;
-import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.EnhancedSecurityContext;
+import org.jcatapult.security.PasswordEncryptor;
+import org.jcatapult.security.SecurityContext;
+import org.jcatapult.security.UserAdapter;
 import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
- * <p>
- * This class tests the default login service.
- * </p>
+ * <p> This class tests the default login service. </p>
  *
  * @author Brian Pontarelli
  */
 public class DefaultLoginServiceTest {
-    @Test
-    public void testInvalidLogin() {
-        AuthenticationService as = EasyMock.createStrictMock(AuthenticationService.class);
-        EasyMock.expect(as.loadUser("test", null)).andReturn(null);
-        EasyMock.replay(as);
+  @Test
+  public void testInvalidLogin() {
+    AuthenticationService as = EasyMock.createStrictMock(AuthenticationService.class);
+    EasyMock.expect(as.loadUser("test", null)).andReturn(null);
+    EasyMock.replay(as);
 
-        JCatapultSecurityContextProvider scp = new JCatapultSecurityContextProvider(null);
-        SecurityContext.setProvider(scp);
-        DefaultLoginService dls = new DefaultLoginService(as, null, null, scp);
-        try {
-            dls.login("test", "test", null);
-            fail("Should have failed");
-        } catch (InvalidUsernameException e) {
-            // expect
-        } catch (InvalidPasswordException e) {
-            fail("Should not have thrown this");
-        }
-
-        EasyMock.verify(as);
+    JCatapultSecurityContextProvider scp = new JCatapultSecurityContextProvider(null);
+    SecurityContext.setProvider(scp);
+    DefaultLoginService dls = new DefaultLoginService(as, null, null, scp);
+    try {
+      dls.login("test", "test", null);
+      fail("Should have failed");
+    } catch (InvalidUsernameException e) {
+      // expect
+    } catch (InvalidPasswordException e) {
+      fail("Should not have thrown this");
     }
 
-    @Test
-    public void testInvalidPassword() {
-        Object user = new Object();
-        AuthenticationService as = EasyMock.createStrictMock(AuthenticationService.class);
-        EasyMock.expect(as.loadUser("test", null)).andReturn(user);
-        EasyMock.replay(as);
+    EasyMock.verify(as);
+  }
 
-        UserAdapter ua = EasyMock.createStrictMock(UserAdapter.class);
-        EasyMock.expect(ua.getPassword(user)).andReturn("other-encrypted");
-        EasyMock.replay(ua);
+  @Test
+  public void testInvalidPassword() {
+    Object user = new Object();
+    AuthenticationService as = EasyMock.createStrictMock(AuthenticationService.class);
+    EasyMock.expect(as.loadUser("test", null)).andReturn(user);
+    EasyMock.replay(as);
 
-        PasswordEncryptor pe = EasyMock.createStrictMock(PasswordEncryptor.class);
-        EasyMock.expect(pe.encryptPassword("test", user)).andReturn("encrypted");
-        EasyMock.replay(pe);
+    UserAdapter ua = EasyMock.createStrictMock(UserAdapter.class);
+    EasyMock.expect(ua.getPassword(user)).andReturn("other-encrypted");
+    EasyMock.replay(ua);
 
-        JCatapultSecurityContextProvider scp = new JCatapultSecurityContextProvider(ua);
-        SecurityContext.setProvider(scp);
-        DefaultLoginService dls = new DefaultLoginService(as, ua, pe, scp);
-        try {
-            dls.login("test", "test", null);
-            fail("Should have failed");
-        } catch (InvalidUsernameException e) {
-            fail("Should not have thrown this");
-        } catch (InvalidPasswordException e) {
-            // expect
-        }
+    PasswordEncryptor pe = EasyMock.createStrictMock(PasswordEncryptor.class);
+    EasyMock.expect(pe.encryptPassword("test", user)).andReturn("encrypted");
+    EasyMock.replay(pe);
 
-        EasyMock.verify(as, ua, pe);
+    JCatapultSecurityContextProvider scp = new JCatapultSecurityContextProvider(ua);
+    SecurityContext.setProvider(scp);
+    DefaultLoginService dls = new DefaultLoginService(as, ua, pe, scp);
+    try {
+      dls.login("test", "test", null);
+      fail("Should have failed");
+    } catch (InvalidUsernameException e) {
+      fail("Should not have thrown this");
+    } catch (InvalidPasswordException e) {
+      // expect
     }
 
-    @Test
-    public void testSuccessfulLogin() {
-        Object user = new Object();
-        AuthenticationService as = EasyMock.createStrictMock(AuthenticationService.class);
-        EasyMock.expect(as.loadUser("test", null)).andReturn(user);
-        EasyMock.replay(as);
+    EasyMock.verify(as, ua, pe);
+  }
 
-        UserAdapter ua = EasyMock.createStrictMock(UserAdapter.class);
-        EasyMock.expect(ua.getPassword(user)).andReturn("encrypted");
-        EasyMock.replay(ua);
+  @Test
+  public void testSuccessfulLogin() {
+    Object user = new Object();
+    AuthenticationService as = EasyMock.createStrictMock(AuthenticationService.class);
+    EasyMock.expect(as.loadUser("test", null)).andReturn(user);
+    EasyMock.replay(as);
 
-        PasswordEncryptor pe = EasyMock.createStrictMock(PasswordEncryptor.class);
-        EasyMock.expect(pe.encryptPassword("test", user)).andReturn("encrypted");
-        EasyMock.replay(pe);
+    UserAdapter ua = EasyMock.createStrictMock(UserAdapter.class);
+    EasyMock.expect(ua.getPassword(user)).andReturn("encrypted");
+    EasyMock.replay(ua);
 
-        JCatapultSecurityContextProvider scp = new JCatapultSecurityContextProvider(ua);
-        EnhancedSecurityContext.setProvider(scp);
-        DefaultLoginService dls = new DefaultLoginService(as, ua, pe, scp);
-        try {
-            dls.login("test", "test", null);
-        } catch (InvalidUsernameException e) {
-            fail("Should not have thrown this");
-        } catch (InvalidPasswordException e) {
-            fail("Should not have thrown this");
-        }
+    PasswordEncryptor pe = EasyMock.createStrictMock(PasswordEncryptor.class);
+    EasyMock.expect(pe.encryptPassword("test", user)).andReturn("encrypted");
+    EasyMock.replay(pe);
 
-        EasyMock.verify(as, ua, pe);
+    JCatapultSecurityContextProvider scp = new JCatapultSecurityContextProvider(ua);
+    EnhancedSecurityContext.setProvider(scp);
+    DefaultLoginService dls = new DefaultLoginService(as, ua, pe, scp);
+    try {
+      dls.login("test", "test", null);
+    } catch (InvalidUsernameException e) {
+      fail("Should not have thrown this");
+    } catch (InvalidPasswordException e) {
+      fail("Should not have thrown this");
     }
+
+    EasyMock.verify(as, ua, pe);
+  }
 }

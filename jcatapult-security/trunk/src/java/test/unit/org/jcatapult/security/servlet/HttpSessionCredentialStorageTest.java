@@ -19,86 +19,85 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.easymock.EasyMock;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
- * <p>
- * This tests the http session credential storage.
- * </p>
+ * <p> This tests the http session credential storage. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class HttpSessionCredentialStorageTest {
-    @Test
-    public void testLocateWithSession() {
-        Object user = new Object();
-        HttpSession session = EasyMock.createStrictMock(HttpSession.class);
-        EasyMock.expect(session.getAttribute("jcatapult.security.servlet.http.session.credentials")).andReturn(user);
-        EasyMock.replay(session);
+  @Test
+  public void testLocateWithSession() {
+    Object user = new Object();
+    HttpSession session = EasyMock.createStrictMock(HttpSession.class);
+    EasyMock.expect(session.getAttribute("jcatapult.security.servlet.http.session.credentials")).andReturn(user);
+    EasyMock.replay(session);
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession(false)).andReturn(session);
-        EasyMock.replay(request);
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.expect(request.getSession(false)).andReturn(session);
+    EasyMock.replay(request);
 
-        HttpSessionCredentialStorage hscs = new HttpSessionCredentialStorage();
-        Object found = hscs.locate(request);
-        assertNotNull(found);
-        assertSame(user, found);
-        EasyMock.verify(session, request);
-    }
+    HttpSessionCredentialStorage hscs = new HttpSessionCredentialStorage();
+    Object found = hscs.locate(request);
+    assertNotNull(found);
+    assertSame(user, found);
+    EasyMock.verify(session, request);
+  }
 
-    @Test
-    public void testLocateWithoutSession() {
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession(false)).andReturn(null);
-        EasyMock.replay(request);
+  @Test
+  public void testLocateWithoutSession() {
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.expect(request.getSession(false)).andReturn(null);
+    EasyMock.replay(request);
 
-        HttpSessionCredentialStorage hscs = new HttpSessionCredentialStorage();
-        Object found = hscs.locate(request);
-        assertNull(found);
-        EasyMock.verify(request); 
-    }
+    HttpSessionCredentialStorage hscs = new HttpSessionCredentialStorage();
+    Object found = hscs.locate(request);
+    assertNull(found);
+    EasyMock.verify(request);
+  }
 
-    @Test
-    public void testStore() {
-        Object user = new Object();
-        HttpSession session = EasyMock.createStrictMock(HttpSession.class);
-        session.setAttribute("jcatapult.security.servlet.http.session.credentials", user);
-        EasyMock.replay(session);
+  @Test
+  public void testStore() {
+    Object user = new Object();
+    HttpSession session = EasyMock.createStrictMock(HttpSession.class);
+    session.setAttribute("jcatapult.security.servlet.http.session.credentials", user);
+    EasyMock.replay(session);
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession(true)).andReturn(session);
-        EasyMock.replay(request);
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.expect(request.getSession(true)).andReturn(session);
+    EasyMock.replay(request);
 
-        HttpSessionCredentialStorage hscs = new HttpSessionCredentialStorage();
-        hscs.store(user, request);
-        EasyMock.verify(session, request);
-    }
+    HttpSessionCredentialStorage hscs = new HttpSessionCredentialStorage();
+    hscs.store(user, request);
+    EasyMock.verify(session, request);
+  }
 
-    @Test
-    public void testRemoveWithSession() {
-        HttpSession session = EasyMock.createStrictMock(HttpSession.class);
-        session.removeAttribute("jcatapult.security.servlet.http.session.credentials");
-        EasyMock.replay(session);
+  @Test
+  public void testRemoveWithSession() {
+    HttpSession session = EasyMock.createStrictMock(HttpSession.class);
+    session.removeAttribute("jcatapult.security.servlet.http.session.credentials");
+    EasyMock.replay(session);
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession(false)).andReturn(session);
-        EasyMock.replay(request);
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.expect(request.getSession(false)).andReturn(session);
+    EasyMock.replay(request);
 
-        HttpSessionCredentialStorage hscs = new HttpSessionCredentialStorage();
-        hscs.remove(request);
-        EasyMock.verify(session, request);
-    }
+    HttpSessionCredentialStorage hscs = new HttpSessionCredentialStorage();
+    hscs.remove(request);
+    EasyMock.verify(session, request);
+  }
 
-    @Test
-    public void testRemoveWithoutSession() {
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getSession(false)).andReturn(null);
-        EasyMock.replay(request);
+  @Test
+  public void testRemoveWithoutSession() {
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.expect(request.getSession(false)).andReturn(null);
+    EasyMock.replay(request);
 
-        HttpSessionCredentialStorage hscs = new HttpSessionCredentialStorage();
-        hscs.remove(request);
-        EasyMock.verify(request);
-    }
+    HttpSessionCredentialStorage hscs = new HttpSessionCredentialStorage();
+    hscs.remove(request);
+    EasyMock.verify(request);
+  }
 }

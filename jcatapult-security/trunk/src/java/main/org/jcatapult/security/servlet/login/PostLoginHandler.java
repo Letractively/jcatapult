@@ -15,8 +15,8 @@
  */
 package org.jcatapult.security.servlet.login;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
+import java.io.IOException;
 
 import org.jcatapult.security.servlet.saved.DefaultSavedRequestWorkflow;
 import org.jcatapult.servlet.WorkflowChain;
@@ -24,23 +24,19 @@ import org.jcatapult.servlet.WorkflowChain;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface defines the handling of the request and response when
- * a login is successful.
- * </p>
+ * <p> This interface defines the handling of the request and response when a login is successful. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultSavedRequestWorkflow.class)
 public interface PostLoginHandler {
-    /**
-     * Handles a successful login.
-     *
-     * @param   chain The workflow chain if the implementation wants to continue down the
-     *          workflow chain.
-     * @throws  ServletException If the a servlet error occurs.
-     * @throws  IOException If an IO error occurs.
-     */
-    void handle(WorkflowChain chain)
+  /**
+   * Handles a successful login.
+   *
+   * @param chain The workflow chain if the implementation wants to continue down the workflow chain.
+   * @throws ServletException If the a servlet error occurs.
+   * @throws IOException      If an IO error occurs.
+   */
+  void handle(WorkflowChain chain)
     throws ServletException, IOException;
 }

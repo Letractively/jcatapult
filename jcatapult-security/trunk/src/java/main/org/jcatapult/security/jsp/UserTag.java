@@ -15,31 +15,28 @@
  */
 package org.jcatapult.security.jsp;
 
-import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 
 import org.jcatapult.security.SecurityContext;
 
 /**
- * <p>
- * This is a JSP tag that places the user object into the PageContext under
- * the variable name given. If the variable name is not set, the default is
- * <code>user</code>.
- * </p>
+ * <p> This is a JSP tag that places the user object into the PageContext under the variable name given. If the variable
+ * name is not set, the default is <code>user</code>. </p>
  *
  * @author Brian Pontarelli
  */
 public class UserTag extends TagSupport {
-    private String var = "user";
+  private String var = "user";
 
-    public void setVar(String var) {
-        this.var = var;
-    }
+  public void setVar(String var) {
+    this.var = var;
+  }
 
-    @Override
-    public int doEndTag() throws JspException {
-        Object user = SecurityContext.getCurrentUser();
-        pageContext.setAttribute(var, user);
-        return SKIP_BODY;
-    }
+  @Override
+  public int doEndTag() throws JspException {
+    Object user = SecurityContext.getCurrentUser();
+    pageContext.setAttribute(var, user);
+    return SKIP_BODY;
+  }
 }

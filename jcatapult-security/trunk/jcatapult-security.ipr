@@ -75,18 +75,7 @@
     </copyright>
     <module2copyright />
     <LanguageOptions name="__TEMPLATE__">
-      <option name="fileTypeOverride" value="2" />
-      <option name="relativeBefore" value="true" />
       <option name="addBlankAfter" value="false" />
-      <option name="fileLocation" value="1" />
-      <option name="block" value="true" />
-      <option name="separateBefore" value="false" />
-      <option name="separateAfter" value="false" />
-      <option name="prefixLines" value="true" />
-      <option name="lenBefore" value="80" />
-      <option name="lenAfter" value="80" />
-      <option name="box" value="false" />
-      <option name="filler" value=" " />
     </LanguageOptions>
   </component>
   <component name="DependencyValidationManager">
@@ -96,6 +85,7 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
+  <component name="IdProvider" IDEtalkID="D41B95B0EB72B235C8DECE5FE6B7DFC2" />
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
     <option name="OPTION_SCOPE" value="protected" />

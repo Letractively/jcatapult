@@ -26,48 +26,45 @@ import org.jcatapult.security.spi.SecurityContextProvider;
 import com.google.inject.AbstractModule;
 
 /**
- * <p>
- * This class is just a helper class that web applications can extend to
- * ensure that they have defined the correct classes for use with the
- * JCatapult security framework.
- * </p>
+ * <p> This class is just a helper class that web applications can extend to ensure that they have defined the correct
+ * classes for use with the JCatapult security framework. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public abstract class SecurityModule extends AbstractModule {
-    protected void configure() {
-        configureImplementations();
-        configureContexts();
-    }
+  protected void configure() {
+    configureImplementations();
+    configureContexts();
+  }
 
-    /**
-     * Configures the implementations of the security frameworks interfaces that the application
-     * must provide via the abstract methods of this class.
-     */
-    protected void configureImplementations() {
-        // Set the sub-class security implementations
-        bind(AuthenticationService.class).to(getAuthenticationService());
-        bind(UserAdapter.class).to(getUserAdapter());
-    }
+  /**
+   * Configures the implementations of the security frameworks interfaces that the application must provide via the
+   * abstract methods of this class.
+   */
+  protected void configureImplementations() {
+    // Set the sub-class security implementations
+    bind(AuthenticationService.class).to(getAuthenticationService());
+    bind(UserAdapter.class).to(getUserAdapter());
+  }
 
-    /**
-     * Configure the SecurityContext ({@link SecurityContext} and {@link EnhancedSecurityContext}).
-     */
-    protected void configureContexts() {
-        // Static inject the contexts
-        bind(SecurityContextProvider.class).to(JCatapultSecurityContextProvider.class);
-        requestStaticInjection(SecurityContext.class);
-        bind(EnhancedSecurityContextProvider.class).to(JCatapultSecurityContextProvider.class);
-        requestStaticInjection(EnhancedSecurityContext.class);
-    }
+  /**
+   * Configure the SecurityContext ({@link SecurityContext} and {@link EnhancedSecurityContext}).
+   */
+  protected void configureContexts() {
+    // Static inject the contexts
+    bind(SecurityContextProvider.class).to(JCatapultSecurityContextProvider.class);
+    requestStaticInjection(SecurityContext.class);
+    bind(EnhancedSecurityContextProvider.class).to(JCatapultSecurityContextProvider.class);
+    requestStaticInjection(EnhancedSecurityContext.class);
+  }
 
-    /**
-     * @return  The authentication service implementation class.
-     */
-    protected abstract Class<? extends AuthenticationService> getAuthenticationService();
+  /**
+   * @return The authentication service implementation class.
+   */
+  protected abstract Class<? extends AuthenticationService> getAuthenticationService();
 
-    /**
-     * @return  The user adapter implementation class.
-     */
-    protected abstract Class<? extends UserAdapter> getUserAdapter();
+  /**
+   * @return The user adapter implementation class.
+   */
+  protected abstract Class<? extends UserAdapter> getUserAdapter();
 }

@@ -29,34 +29,21 @@ import org.jcatapult.security.config.SecurityConfiguration;
 import com.google.inject.Inject;
 
 /**
- * <p>
- * This class implements the Authorizer interface and uses the JCatapult
- * configuration system in order to determine which resources are accessible
- * by which roles. The configuration parameter that controls the authorization
- * information is named:
- * </p>
- *
+ * <p> This class implements the Authorizer interface and uses the JCatapult configuration system in order to determine
+ * which resources are accessible by which roles. The configuration parameter that controls the authorization
+ * information is named: </p> <p/>
  * <pre>
  * jcatapult.security.authorization.rules
  * </pre>
- *
- * <p>
- * This parameter uses a simple format of the authorization information
- * for a single resource per line. Each line has this format:
- * </p>
- *
+ * <p/> <p> This parameter uses a simple format of the authorization information for a single resource per line. Each
+ * line has this format: </p> <p/>
  * <pre>
  * resource=roles
  * </pre>
- *
- * <p>
- * The resource definition is either the full resource string or a wildcard
- * that contains either * or ** at the end. The * indicates that all of the
- * resources in the given directory are matched and the ** means all resources
- * in the given directory and all sub-directories are matched. This is only
- * applicable to web resources. For example:
- * </p>
- *
+ * <p/> <p> The resource definition is either the full resource string or a wildcard that contains either * or ** at the
+ * end. The * indicates that all of the resources in the given directory are matched and the ** means all resources in
+ * the given directory and all sub-directories are matched. This is only applicable to web resources. For example: </p>
+ * <p/>
  * <pre>
  * /foo matches /foo only
  * /foo* matches /foo and /foobar
@@ -64,11 +51,8 @@ import com.google.inject.Inject;
  * /foo** matches /foo, /foobar, /foo/a and /foo/a/b
  * /foo/** matches /foo/a and /foo/a/b
  * </pre>
- *
- * <p>
- * If no configuration is specified, the default is:
- * </p>
- *
+ * <p/> <p> If no configuration is specified, the default is: </p>
+ * <p/>
  * <pre>
  * /admin**=admin
  * </pre>
@@ -76,84 +60,84 @@ import com.google.inject.Inject;
  * @author Brian Pontarelli
  */
 public class ConfiguredAuthorizer implements Authorizer {
-    private static final Logger logger = Logger.getLogger(ConfiguredAuthorizer.class.getName());
-    private final UserAdapter userAdapter;
-    private final List<ResourceAuth> resourceAuths = new ArrayList<ResourceAuth>();
+  private static final Logger logger = Logger.getLogger(ConfiguredAuthorizer.class.getName());
+  private final UserAdapter userAdapter;
+  private final List<ResourceAuth> resourceAuths = new ArrayList<ResourceAuth>();
 
-    @Inject
-    public ConfiguredAuthorizer(UserAdapter userAdapter, SecurityConfiguration configuration) {
-        this.userAdapter = userAdapter;
-        String[] rules = configuration.getAuthorizationRules().trim().split("\n");
-        for (String rule : rules) {
-            String[] parts = rule.trim().split("=");
-            if (parts.length != 2) {
-                throw new RuntimeException("Invalid authorization configuration rule [" + rule +
-                    "] in the JCatapult configuration files");
-            }
+  @Inject
+  public ConfiguredAuthorizer(UserAdapter userAdapter, SecurityConfiguration configuration) {
+    this.userAdapter = userAdapter;
+    String[] rules = configuration.getAuthorizationRules().trim().split("\n");
+    for (String rule : rules) {
+      String[] parts = rule.trim().split("=");
+      if (parts.length != 2) {
+        throw new RuntimeException("Invalid authorization configuration rule [" + rule +
+          "] in the JCatapult configuration files");
+      }
 
-            String uri = parts[0];
-            boolean wildCard = uri.endsWith("*");
-            boolean subWildCard = uri.endsWith("**");
-            if (subWildCard) {
-                wildCard = false;
-                uri = uri.substring(0, uri.length() - 2);
-            } else if (wildCard) {
-                uri = uri.substring(0, uri.length() - 1);
-            }
+      String uri = parts[0];
+      boolean wildCard = uri.endsWith("*");
+      boolean subWildCard = uri.endsWith("**");
+      if (subWildCard) {
+        wildCard = false;
+        uri = uri.substring(0, uri.length() - 2);
+      } else if (wildCard) {
+        uri = uri.substring(0, uri.length() - 1);
+      }
 
-            String[] roles = parts[1].split("\\W*,\\W*");
-            ResourceAuth resourceAuth = new ResourceAuth(uri, wildCard, subWildCard, new HashSet<String>(Arrays.asList(roles)));
-            resourceAuths.add(resourceAuth);
-        }
+      String[] roles = parts[1].split("\\W*,\\W*");
+      ResourceAuth resourceAuth = new ResourceAuth(uri, wildCard, subWildCard, new HashSet<String>(Arrays.asList(roles)));
+      resourceAuths.add(resourceAuth);
+    }
+  }
+
+  public void authorize(Object user, String resource) throws AuthorizationException, NotLoggedInException {
+    Set<String> roles = user != null ? userAdapter.getRoles(user) : null;
+    if (logger.isLoggable(Level.FINEST)) {
+      logger.finest("Authorizing user for roles [" + roles + "]");
     }
 
-    public void authorize(Object user, String resource) throws AuthorizationException, NotLoggedInException {
-        Set<String> roles = user != null ? userAdapter.getRoles(user) : null;
-        if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("Authorizing user for roles [" + roles + "]");
+    for (ResourceAuth resourceAuth : resourceAuths) {
+      boolean equal = resource.equals(resourceAuth.resource);
+      if (equal || (resource.startsWith(resourceAuth.resource) && (resourceAuth.dirWildcard || resourceAuth.subDirWildcard))) {
+
+        // Check the resource for wildcard cases that fail like /foo* and /foo/bar
+        if (!equal && resourceAuth.dirWildcard && resource.indexOf("/", resourceAuth.resource.length()) != -1) {
+          continue;
         }
-        
-        for (ResourceAuth resourceAuth : resourceAuths) {
-            boolean equal = resource.equals(resourceAuth.resource);
-            if (equal || (resource.startsWith(resourceAuth.resource) && (resourceAuth.dirWildcard || resourceAuth.subDirWildcard))) {
 
-                // Check the resource for wildcard cases that fail like /foo* and /foo/bar
-                if (!equal && resourceAuth.dirWildcard && resource.indexOf("/", resourceAuth.resource.length()) != -1) {
-                    continue;
-                }
-
-                // If the resource requires some roles and the user is not logged in, throw an exception
-                if (user == null) {
-                    throw new NotLoggedInException();
-                }
-
-                // Check the roles
-                boolean found = false;
-                for (String role : resourceAuth.roles) {
-                    if (roles.contains(role)) {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    throw new AuthorizationException();
-                }
-            }
+        // If the resource requires some roles and the user is not logged in, throw an exception
+        if (user == null) {
+          throw new NotLoggedInException();
         }
+
+        // Check the roles
+        boolean found = false;
+        for (String role : resourceAuth.roles) {
+          if (roles.contains(role)) {
+            found = true;
+            break;
+          }
+        }
+
+        if (!found) {
+          throw new AuthorizationException();
+        }
+      }
     }
+  }
 
-    public static class ResourceAuth {
-        final String resource;
-        final boolean dirWildcard;
-        final boolean subDirWildcard;
-        final Set<String> roles;
+  public static class ResourceAuth {
+    final String resource;
+    final boolean dirWildcard;
+    final boolean subDirWildcard;
+    final Set<String> roles;
 
-        public ResourceAuth(String resource, boolean dirWildcard, boolean subDirWildcard, Set<String> roles) {
-            this.resource = resource;
-            this.dirWildcard = dirWildcard;
-            this.subDirWildcard = subDirWildcard;
-            this.roles = roles;
-        }
+    public ResourceAuth(String resource, boolean dirWildcard, boolean subDirWildcard, Set<String> roles) {
+      this.resource = resource;
+      this.dirWildcard = dirWildcard;
+      this.subDirWildcard = subDirWildcard;
+      this.roles = roles;
     }
+  }
 }

@@ -15,11 +15,11 @@
  */
 package org.jcatapult.security.servlet.auth;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
@@ -27,88 +27,87 @@ import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.security.config.DefaultSecurityConfiguration;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.servlet.WorkflowChain;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
- * <p>
- * This tests the default login exception handler.
- * </p>
+ * <p> This tests the default login exception handler. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class DefaultAuthorizationExceptionHandlerTest {
-    @Test
-    public void testHandle() throws IOException, ServletException {
-        Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-uri", "/not-authorized")).andReturn("/not-authorized");
-        EasyMock.replay(c);
+  @Test
+  public void testHandle() throws IOException, ServletException {
+    Configuration c = EasyMock.createStrictMock(Configuration.class);
+    EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-uri", "/not-authorized")).andReturn("/not-authorized");
+    EasyMock.replay(c);
 
-        AuthorizationException exception = new AuthorizationException();
+    AuthorizationException exception = new AuthorizationException();
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getContextPath()).andReturn("");
-        request.setAttribute("jcatapult_authorization_exception", exception);
-        EasyMock.replay(request);
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.expect(request.getContextPath()).andReturn("");
+    request.setAttribute("jcatapult_authorization_exception", exception);
+    EasyMock.replay(request);
 
-        final AtomicBoolean called = new AtomicBoolean(false);
-        WorkflowChain wc = new WorkflowChain() {
-            public void continueWorkflow() throws IOException, ServletException {
-                assertTrue(ServletObjectsHolder.getServletRequest() instanceof HttpServletRequestWrapper);
-                assertEquals("/not-authorized", ServletObjectsHolder.getServletRequest().getRequestURI());
-                called.set(true);
-            }
+    final AtomicBoolean called = new AtomicBoolean(false);
+    WorkflowChain wc = new WorkflowChain() {
+      public void continueWorkflow() throws IOException, ServletException {
+        assertTrue(ServletObjectsHolder.getServletRequest() instanceof HttpServletRequestWrapper);
+        assertEquals("/not-authorized", ServletObjectsHolder.getServletRequest().getRequestURI());
+        called.set(true);
+      }
 
-            public void reset() {
-                fail("Should not be called");
-            }
-        };
+      public void reset() {
+        fail("Should not be called");
+      }
+    };
 
-        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
-        ServletObjectsHolder.clearServletRequest();
-        ServletObjectsHolder.setServletRequest(wrapper);
+    HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+    ServletObjectsHolder.clearServletRequest();
+    ServletObjectsHolder.setServletRequest(wrapper);
 
-        DefaultAuthorizationExceptionHandler dleh = new DefaultAuthorizationExceptionHandler(
-            wrapper, new DefaultSecurityConfiguration(c));
-        dleh.handle(exception, wc);
-        assertTrue(called.get());
-        EasyMock.verify(c, request);
-    }
+    DefaultAuthorizationExceptionHandler dleh = new DefaultAuthorizationExceptionHandler(
+      wrapper, new DefaultSecurityConfiguration(c));
+    dleh.handle(exception, wc);
+    assertTrue(called.get());
+    EasyMock.verify(c, request);
+  }
 
-    @Test
-    public void testHandleContext() throws IOException, ServletException {
-        Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-uri", "/not-authorized")).andReturn("/not-authorized");
-        EasyMock.replay(c);
+  @Test
+  public void testHandleContext() throws IOException, ServletException {
+    Configuration c = EasyMock.createStrictMock(Configuration.class);
+    EasyMock.expect(c.getString("jcatapult.security.authorization.restricted-uri", "/not-authorized")).andReturn("/not-authorized");
+    EasyMock.replay(c);
 
-        AuthorizationException exception = new AuthorizationException();
+    AuthorizationException exception = new AuthorizationException();
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.expect(request.getContextPath()).andReturn("/context");
-        request.setAttribute("jcatapult_authorization_exception", exception);
-        EasyMock.replay(request);
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.expect(request.getContextPath()).andReturn("/context");
+    request.setAttribute("jcatapult_authorization_exception", exception);
+    EasyMock.replay(request);
 
-        final AtomicBoolean called = new AtomicBoolean(false);
-        WorkflowChain wc = new WorkflowChain() {
-            public void continueWorkflow() throws IOException, ServletException {
-                assertTrue(ServletObjectsHolder.getServletRequest() instanceof HttpServletRequestWrapper);
-                assertEquals("/context/not-authorized", ServletObjectsHolder.getServletRequest().getRequestURI());
-                called.set(true);
-            }
+    final AtomicBoolean called = new AtomicBoolean(false);
+    WorkflowChain wc = new WorkflowChain() {
+      public void continueWorkflow() throws IOException, ServletException {
+        assertTrue(ServletObjectsHolder.getServletRequest() instanceof HttpServletRequestWrapper);
+        assertEquals("/context/not-authorized", ServletObjectsHolder.getServletRequest().getRequestURI());
+        called.set(true);
+      }
 
-            public void reset() {
-                fail("Should not be called");
-            }
-        };
+      public void reset() {
+        fail("Should not be called");
+      }
+    };
 
-        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
-        ServletObjectsHolder.clearServletRequest();
-        ServletObjectsHolder.setServletRequest(wrapper);
+    HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request);
+    ServletObjectsHolder.clearServletRequest();
+    ServletObjectsHolder.setServletRequest(wrapper);
 
-        DefaultAuthorizationExceptionHandler dleh = new DefaultAuthorizationExceptionHandler(
-            wrapper, new DefaultSecurityConfiguration(c));
-        dleh.handle(exception, wc);
-        assertTrue(called.get());
-        EasyMock.verify(c, request);
-    }
+    DefaultAuthorizationExceptionHandler dleh = new DefaultAuthorizationExceptionHandler(
+      wrapper, new DefaultSecurityConfiguration(c));
+    dleh.handle(exception, wc);
+    assertTrue(called.get());
+    EasyMock.verify(c, request);
+  }
 }

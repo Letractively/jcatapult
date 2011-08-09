@@ -24,147 +24,146 @@ import org.easymock.EasyMock;
 import org.jcatapult.security.EnhancedSecurityContext;
 import org.jcatapult.security.SecurityContext;
 import org.jcatapult.servlet.WorkflowChain;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
- * <p>
- * This tests the credential storage workflow.
- * </p>
+ * <p> This tests the credential storage workflow. </p>
  *
  * @author Brian Pontarelli
  */
 public class DefaultCredentialStorageWorkflowTest {
-    @Test
-    public void testExisting() throws IOException, ServletException {
-        Object user = new Object();
+  @Test
+  public void testExisting() throws IOException, ServletException {
+    Object user = new Object();
 
-        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+    EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.replay(request);
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.replay(request);
 
-        CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
-        EasyMock.expect(cs.locate(request)).andReturn(user);
-        EasyMock.replay(cs);
+    CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
+    EasyMock.expect(cs.locate(request)).andReturn(user);
+    EasyMock.replay(cs);
 
-        final AtomicBoolean called = new AtomicBoolean(false);
-        WorkflowChain wc = new WorkflowChain() {
-            public void continueWorkflow() {
-                assertNotNull(SecurityContext.getCurrentUser());
-                called.set(true);
-            }
+    final AtomicBoolean called = new AtomicBoolean(false);
+    WorkflowChain wc = new WorkflowChain() {
+      public void continueWorkflow() {
+        assertNotNull(SecurityContext.getCurrentUser());
+        called.set(true);
+      }
 
-            public void reset() {
-                fail("Should not be called");
-            }
-        };
+      public void reset() {
+        fail("Should not be called");
+      }
+    };
 
-        DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
-        csw.perform(wc);
-        assertTrue(called.get());
-        EasyMock.verify(request, cs);
-    }
+    DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
+    csw.perform(wc);
+    assertTrue(called.get());
+    EasyMock.verify(request, cs);
+  }
 
-    @Test
-    public void testLogin() throws IOException, ServletException {
-        final Object user = new Object();
+  @Test
+  public void testLogin() throws IOException, ServletException {
+    final Object user = new Object();
 
-        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+    EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.replay(request);
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.replay(request);
 
-        CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
-        EasyMock.expect(cs.locate(request)).andReturn(null);
-        cs.store(user, request);
-        EasyMock.replay(cs);
+    CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
+    EasyMock.expect(cs.locate(request)).andReturn(null);
+    cs.store(user, request);
+    EasyMock.replay(cs);
 
-        final AtomicBoolean called = new AtomicBoolean(false);
-        WorkflowChain wc = new WorkflowChain() {
-            public void continueWorkflow() {
-                assertNull(SecurityContext.getCurrentUser());
-                EnhancedSecurityContext.login(user);
-                called.set(true);
-            }
+    final AtomicBoolean called = new AtomicBoolean(false);
+    WorkflowChain wc = new WorkflowChain() {
+      public void continueWorkflow() {
+        assertNull(SecurityContext.getCurrentUser());
+        EnhancedSecurityContext.login(user);
+        called.set(true);
+      }
 
-            public void reset() {
-                fail("Should not be called");
-            }
-        };
+      public void reset() {
+        fail("Should not be called");
+      }
+    };
 
-        DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
-        csw.perform(wc);
-        assertTrue(called.get());
-        EasyMock.verify(request, cs);
-    }
+    DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
+    csw.perform(wc);
+    assertTrue(called.get());
+    EasyMock.verify(request, cs);
+  }
 
-    @Test
-    public void testLogout() throws IOException, ServletException {
-        final Object user = new Object();
+  @Test
+  public void testLogout() throws IOException, ServletException {
+    final Object user = new Object();
 
-        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+    EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.replay(request);
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.replay(request);
 
-        CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
-        EasyMock.expect(cs.locate(request)).andReturn(user);
-        cs.remove(request);
-        EasyMock.replay(cs);
+    CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
+    EasyMock.expect(cs.locate(request)).andReturn(user);
+    cs.remove(request);
+    EasyMock.replay(cs);
 
-        final AtomicBoolean called = new AtomicBoolean(false);
-        WorkflowChain wc = new WorkflowChain() {
-            public void continueWorkflow() {
-                assertNotNull(EnhancedSecurityContext.getCurrentUser());
-                EnhancedSecurityContext.logout();
-                called.set(true);
-            }
+    final AtomicBoolean called = new AtomicBoolean(false);
+    WorkflowChain wc = new WorkflowChain() {
+      public void continueWorkflow() {
+        assertNotNull(EnhancedSecurityContext.getCurrentUser());
+        EnhancedSecurityContext.logout();
+        called.set(true);
+      }
 
-            public void reset() {
-                fail("Should not be called");
-            }
-        };
+      public void reset() {
+        fail("Should not be called");
+      }
+    };
 
-        DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
-        csw.perform(wc);
-        assertNull(EnhancedSecurityContext.getCurrentUser());
-        assertTrue(called.get());
-        EasyMock.verify(request, cs);
-    }
+    DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
+    csw.perform(wc);
+    assertNull(EnhancedSecurityContext.getCurrentUser());
+    assertTrue(called.get());
+    EasyMock.verify(request, cs);
+  }
 
-    @Test
-    public void testUpdate() throws IOException, ServletException {
-        final Object user = new Object();
-        final Object newUser = new Object();
+  @Test
+  public void testUpdate() throws IOException, ServletException {
+    final Object user = new Object();
+    final Object newUser = new Object();
 
-        EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
+    EnhancedSecurityContext.setProvider(new JCatapultSecurityContextProvider(null));
 
-        HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-        EasyMock.replay(request);
+    HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
+    EasyMock.replay(request);
 
-        CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
-        EasyMock.expect(cs.locate(request)).andReturn(user);
-        cs.store(newUser, request);
-        EasyMock.replay(cs);
+    CredentialStorage cs = EasyMock.createStrictMock(CredentialStorage.class);
+    EasyMock.expect(cs.locate(request)).andReturn(user);
+    cs.store(newUser, request);
+    EasyMock.replay(cs);
 
-        final AtomicBoolean called = new AtomicBoolean(false);
-        WorkflowChain wc = new WorkflowChain() {
-            public void continueWorkflow() {
-                assertNotNull(EnhancedSecurityContext.getCurrentUser());
-                EnhancedSecurityContext.update(newUser);
-                called.set(true);
-            }
+    final AtomicBoolean called = new AtomicBoolean(false);
+    WorkflowChain wc = new WorkflowChain() {
+      public void continueWorkflow() {
+        assertNotNull(EnhancedSecurityContext.getCurrentUser());
+        EnhancedSecurityContext.update(newUser);
+        called.set(true);
+      }
 
-            public void reset() {
-                fail("Should not be called");
-            }
-        };
+      public void reset() {
+        fail("Should not be called");
+      }
+    };
 
-        DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
-        csw.perform(wc);
-        assertSame(newUser, EnhancedSecurityContext.getCurrentUser());
-        assertTrue(called.get());
-        EasyMock.verify(request, cs);
-    }
+    DefaultCredentialStorageWorkflow csw = new DefaultCredentialStorageWorkflow(request, cs);
+    csw.perform(wc);
+    assertSame(newUser, EnhancedSecurityContext.getCurrentUser());
+    assertTrue(called.get());
+    EasyMock.verify(request, cs);
+  }
 }

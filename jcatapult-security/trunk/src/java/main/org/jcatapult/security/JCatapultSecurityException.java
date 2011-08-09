@@ -16,26 +16,24 @@
 package org.jcatapult.security;
 
 /**
- * <p>
- * This class is the base class for all JCatapult security exceptions.
- * </p>
+ * <p> This class is the base class for all JCatapult security exceptions. </p>
  *
  * @author Brian Pontarelli
  */
 public class JCatapultSecurityException extends RuntimeException {
-    public JCatapultSecurityException() {
-        super();
-    }
+  public JCatapultSecurityException() {
+    super();
+  }
 
-    public JCatapultSecurityException(String message) {
-        super(message);
-    }
+  public JCatapultSecurityException(String message) {
+    super(message);
+  }
 
-    public JCatapultSecurityException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public JCatapultSecurityException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public JCatapultSecurityException(Throwable cause) {
-        super(cause);
-    }
+  public JCatapultSecurityException(Throwable cause) {
+    super(cause);
+  }
 }

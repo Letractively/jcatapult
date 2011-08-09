@@ -20,29 +20,26 @@ import java.util.Map;
 import org.jcatapult.security.JCatapultSecurityException;
 
 /**
- * <p>
- * This interface defines the method that JCatapult framework locates users
- * and returns them in a generic fashion. This allows applications to code
- * their own User objects rather than using a parent class or interface
- * to mark them.
+ * <p> This interface defines the method that JCatapult framework locates users and returns them in a generic fashion.
+ * This allows applications to code their own User objects rather than using a parent class or interface to mark them.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public interface AuthenticationService<T> {
-    /**
-     * Attempts to load the user from the database or any persistent store. This should not worry about the
-     * password at all as that is checked by the code that invokes this interface. If the user account
-     * doesn't exist, this should return null.
-     *
-     * @param   username The username to look for.
-     * @param   parameters These are available for implementations that use something other than usernames.
-     * @return  The user object or null if it doesn't exist.
-     * @throws  JCatapultSecurityException Implementors can throw a JCatapultSecurityException or any
-     *          sub-class on failure cases. For example, some websites verify emails before allowing
-     *          users to log in. If the user hasn't verified their email, the application might throw
-     *          a custom exception from this interface. Any exceptions that are thrown are handled
-     *          by the {@link org.jcatapult.security.servlet.login.LoginExceptionHandler}.
-     */
-    T loadUser(String username, Map<String, Object> parameters) throws JCatapultSecurityException;
+  /**
+   * Attempts to load the user from the database or any persistent store. This should not worry about the password at
+   * all as that is checked by the code that invokes this interface. If the user account doesn't exist, this should
+   * return null.
+   *
+   * @param username   The username to look for.
+   * @param parameters These are available for implementations that use something other than usernames.
+   * @return The user object or null if it doesn't exist.
+   * @throws JCatapultSecurityException Implementors can throw a JCatapultSecurityException or any sub-class on
+   *                                    failure cases. For example, some websites verify emails before allowing users
+   *                                    to log in. If the user hasn't verified their email, the application might
+   *                                    throw a custom exception from this interface. Any exceptions that are thrown
+   *                                    are handled by the {@link org.jcatapult.security.servlet.login.LoginExceptionHandler}.
+   */
+  T loadUser(String username, Map<String, Object> parameters) throws JCatapultSecurityException;
 }

@@ -15,60 +15,58 @@
  */
 package org.jcatapult.security.jsp;
 
-import java.util.Set;
-import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import java.util.Set;
 
+import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.UserAdapter;
-import org.jcatapult.guice.GuiceContainer;
 
 import com.google.inject.Inject;
 
 /**
- * <p>
- * This is a JSP tag that will only execute it's body if the current user exists and
- * has one or more of the given roles. The roles are a comma separated list.
- * </p>
+ * <p> This is a JSP tag that will only execute it's body if the current user exists and has one or more of the given
+ * roles. The roles are a comma separated list. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class HasRoleTag extends BodyTagSupport {
-    private UserAdapter userAdapter;
-    private String[] roles;
+  private UserAdapter userAdapter;
+  private String[] roles;
 
-    @Inject
-    public void setUserAdapter(UserAdapter userAdapter) {
-        this.userAdapter = userAdapter;
+  @Inject
+  public void setUserAdapter(UserAdapter userAdapter) {
+    this.userAdapter = userAdapter;
+  }
+
+  public void setRoles(String roles) {
+    this.roles = roles.split("\\W*,\\W*");
+  }
+
+  @Override
+  public int doStartTag() throws JspException {
+    GuiceContainer.getInjector().injectMembers(this);
+    if (roles == null || roles.length == 0) {
+      throw new JspException("You must supply a list of roles to the hasRole tag.");
     }
 
-    public void setRoles(String roles) {
-        this.roles = roles.split("\\W*,\\W*");
+    Object user = SecurityContext.getCurrentUser();
+    if (user == null) {
+      return SKIP_BODY;
     }
 
-    @Override
-    public int doStartTag() throws JspException {
-        GuiceContainer.getInjector().injectMembers(this);
-        if (roles == null || roles.length == 0) {
-            throw new JspException("You must supply a list of roles to the hasRole tag.");
-        }
-
-        Object user = SecurityContext.getCurrentUser();
-        if (user == null) {
-            return SKIP_BODY;
-        }
-
-        Set<String> userRoles = userAdapter.getRoles(user);
-        if (userRoles == null) {
-            return SKIP_BODY;
-        }
-
-        for (String role : roles) {
-            if (userRoles.contains(role)) {
-                return EVAL_BODY_INCLUDE;
-            }
-        }
-
-        return SKIP_BODY;
+    Set<String> userRoles = userAdapter.getRoles(user);
+    if (userRoles == null) {
+      return SKIP_BODY;
     }
+
+    for (String role : roles) {
+      if (userRoles.contains(role)) {
+        return EVAL_BODY_INCLUDE;
+      }
+    }
+
+    return SKIP_BODY;
+  }
 }

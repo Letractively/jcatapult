@@ -17,35 +17,34 @@ package org.jcatapult.security;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
-import static org.junit.Assert.*;
-import org.junit.Test;
 import org.jcatapult.security.config.DefaultSecurityConfiguration;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * <p>
- * This tests the configured salt source.
- * </p>
+ * <p> This tests the configured salt source. </p>
  *
  * @author Brian Pontarelli
  */
 public class ConfiguredSaltSourceTest {
-    @Test
-    public void testDefault() {
-        Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.salt", "jcatapult")).andReturn("jcatapult");
-        EasyMock.replay(c);
+  @Test
+  public void testDefault() {
+    Configuration c = EasyMock.createStrictMock(Configuration.class);
+    EasyMock.expect(c.getString("jcatapult.security.salt", "jcatapult")).andReturn("jcatapult");
+    EasyMock.replay(c);
 
-        ConfiguredSaltSource ss = new ConfiguredSaltSource(new DefaultSecurityConfiguration(c));
-        assertEquals("jcatapult", ss.getSalt());
-    }
+    ConfiguredSaltSource ss = new ConfiguredSaltSource(new DefaultSecurityConfiguration(c));
+    assertEquals("jcatapult", ss.getSalt());
+  }
 
-    @Test
-    public void testConfigured() {
-        Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getString("jcatapult.security.salt", "jcatapult")).andReturn("foo");
-        EasyMock.replay(c);
+  @Test
+  public void testConfigured() {
+    Configuration c = EasyMock.createStrictMock(Configuration.class);
+    EasyMock.expect(c.getString("jcatapult.security.salt", "jcatapult")).andReturn("foo");
+    EasyMock.replay(c);
 
-        ConfiguredSaltSource ss = new ConfiguredSaltSource(new DefaultSecurityConfiguration(c));
-        assertEquals("foo", ss.getSalt());
-    }
+    ConfiguredSaltSource ss = new ConfiguredSaltSource(new DefaultSecurityConfiguration(c));
+    assertEquals("foo", ss.getSalt());
+  }
 }

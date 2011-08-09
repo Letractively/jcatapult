@@ -25,126 +25,124 @@ import org.jcatapult.security.SecurityContext;
 import org.jcatapult.security.servlet.FacadeHttpServletRequest;
 
 /**
- * <p>
- * This default implementation of the {@link SavedRequestService}.
- * </p>
+ * <p> This default implementation of the {@link SavedRequestService}. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class DefaultSavedRequestService implements SavedRequestService {
-    public static final String LOGIN_KEY = "org.jcatapult.security.servlet.saved.loginSavedHttpRequest";
-    public static final String POST_LOGIN_KEY = "org.jcatapult.security.servlet.saved.postLoginSavedHttpRequest";
+  public static final String LOGIN_KEY = "org.jcatapult.security.servlet.saved.loginSavedHttpRequest";
+  public static final String POST_LOGIN_KEY = "org.jcatapult.security.servlet.saved.postLoginSavedHttpRequest";
 
-    /**
-     * {@inheritDoc}
-     */
-    public void saveRequest(HttpServletRequest request, String uri, Map<String, String[]> parameters) {
-        // Save the request
-        SavedHttpRequest saved = new SavedHttpRequest(uri, parameters);
-        HttpSession session = request.getSession(true);
-        session.setAttribute(LOGIN_KEY, saved);
+  /**
+   * {@inheritDoc}
+   */
+  public void saveRequest(HttpServletRequest request, String uri, Map<String, String[]> parameters) {
+    // Save the request
+    SavedHttpRequest saved = new SavedHttpRequest(uri, parameters);
+    HttpSession session = request.getSession(true);
+    session.setAttribute(LOGIN_KEY, saved);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @SuppressWarnings("unchecked")
+  public void saveRequest(HttpServletRequest request) {
+    Map<String, String[]> requestParameters = null;
+    String redirectURI;
+    if (request.getMethod().equals("GET")) {
+      try {
+        Map<String, String[]> params = request.getParameterMap();
+        URI uri = new URI(request.getRequestURL().toString() + makeQueryString(params));
+        redirectURI = uri.getPath() + (uri.getQuery() != null ? "?" + uri.getQuery() : "") +
+          (uri.getFragment() != null ? "#" + uri.getFragment() : "");
+      } catch (URISyntaxException e) {
+        redirectURI = request.getRequestURI();
+      }
+    } else {
+      requestParameters = request.getParameterMap();
+      redirectURI = request.getRequestURI();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("unchecked")
-    public void saveRequest(HttpServletRequest request) {
-        Map<String, String[]> requestParameters = null;
-        String redirectURI;
-        if (request.getMethod().equals("GET")) {
-            try {
-                Map<String, String[]> params = request.getParameterMap();
-                URI uri = new URI(request.getRequestURL().toString() + makeQueryString(params));
-                redirectURI = uri.getPath() + (uri.getQuery() != null ? "?" + uri.getQuery() : "") +
-                    (uri.getFragment() != null ? "#" + uri.getFragment() : "");
-            } catch (URISyntaxException e) {
-                redirectURI = request.getRequestURI();
-            }
-        } else {
-            requestParameters = request.getParameterMap();
-            redirectURI = request.getRequestURI();
-        }
+    // Save the request
+    saveRequest(request, redirectURI, requestParameters);
+  }
 
-        // Save the request
-        saveRequest(request, redirectURI, requestParameters);
+  /**
+   * Converts the parameters map into a query string.
+   *
+   * @param parameters The parameters.
+   * @return Either an empty String if the parameters is empty or a RFC compliant query String.
+   */
+  private String makeQueryString(Map<String, String[]> parameters) {
+    if (parameters.size() == 0) {
+      return "";
     }
 
-    /**
-     * Converts the parameters map into a query string.
-     *
-     * @param   parameters The parameters.
-     * @return  Either an empty String if the parameters is empty or a RFC compliant query String.
-     */
-    private String makeQueryString(Map<String, String[]> parameters) {
-        if (parameters.size() == 0) {
-            return "";
+    StringBuilder build = new StringBuilder();
+    for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
+      for (String value : entry.getValue()) {
+        if (build.length() > 0) {
+          build.append("&");
         }
 
-        StringBuilder build = new StringBuilder();
-        for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
-            for (String value : entry.getValue()) {
-                if (build.length() > 0) {
-                    build.append("&");
-                }
-
-                build.append(entry.getKey()).append("=").append(value);
-            }
-        }
-
-        return "?" + build.toString();
+        build.append(entry.getKey()).append("=").append(value);
+      }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String processSavedRequest(HttpServletRequest request) {
-        // See if there is a saved request
-        HttpSession session = request.getSession(true);
-        SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(LOGIN_KEY);
-        if (saved != null) {
-            session.removeAttribute(LOGIN_KEY);
+    return "?" + build.toString();
+  }
 
-            // Only set a saved request back in if it has some parameters, otherwise it was probably
-            // a GET and we don't need anything special.
-            if (saved.parameters.size() > 0) {
-                session.setAttribute(POST_LOGIN_KEY, saved);
-            }
+  /**
+   * {@inheritDoc}
+   */
+  public String processSavedRequest(HttpServletRequest request) {
+    // See if there is a saved request
+    HttpSession session = request.getSession(true);
+    SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(LOGIN_KEY);
+    if (saved != null) {
+      session.removeAttribute(LOGIN_KEY);
 
-            return saved.uri;
-        }
+      // Only set a saved request back in if it has some parameters, otherwise it was probably
+      // a GET and we don't need anything special.
+      if (saved.parameters.size() > 0) {
+        session.setAttribute(POST_LOGIN_KEY, saved);
+      }
 
-        return null;
+      return saved.uri;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public HttpServletRequest mockSavedRequest(HttpServletRequest request) {
-        // See if there is a saved request
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return request;
-        }
+    return null;
+  }
 
-        SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(POST_LOGIN_KEY);
-        if (saved != null && SecurityContext.getCurrentUser() != null) {
-            session.removeAttribute(POST_LOGIN_KEY);
-            return new FacadeHttpServletRequest(request, null, saved.parameters, true);
-        }
-
-        return request;
+  /**
+   * {@inheritDoc}
+   */
+  public HttpServletRequest mockSavedRequest(HttpServletRequest request) {
+    // See if there is a saved request
+    HttpSession session = request.getSession(false);
+    if (session == null) {
+      return request;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public SavedHttpRequest getSavedRequest(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return null;
-        }
-
-        return (SavedHttpRequest) session.getAttribute(LOGIN_KEY);
+    SavedHttpRequest saved = (SavedHttpRequest) session.getAttribute(POST_LOGIN_KEY);
+    if (saved != null && SecurityContext.getCurrentUser() != null) {
+      session.removeAttribute(POST_LOGIN_KEY);
+      return new FacadeHttpServletRequest(request, null, saved.parameters, true);
     }
+
+    return request;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public SavedHttpRequest getSavedRequest(HttpServletRequest request) {
+    HttpSession session = request.getSession(false);
+    if (session == null) {
+      return null;
+    }
+
+    return (SavedHttpRequest) session.getAttribute(LOGIN_KEY);
+  }
 }

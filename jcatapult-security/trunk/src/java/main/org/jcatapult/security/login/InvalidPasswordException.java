@@ -18,15 +18,12 @@ package org.jcatapult.security.login;
 import org.jcatapult.security.JCatapultSecurityException;
 
 /**
- * <p>
- * This class is a marker exception that is thrown when the security framework
- * finds and invalid password.
- * </p>
+ * <p> This class is a marker exception that is thrown when the security framework finds and invalid password. </p>
  *
  * @author Brian Pontarelli
  */
 public class InvalidPasswordException extends JCatapultSecurityException {
-    public InvalidPasswordException() {
-        super("invalid-password");
-    }
+  public InvalidPasswordException() {
+    super("invalid-password");
+  }
 }

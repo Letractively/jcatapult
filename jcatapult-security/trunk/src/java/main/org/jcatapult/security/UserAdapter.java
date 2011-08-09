@@ -18,39 +18,35 @@ package org.jcatapult.security;
 import java.util.Set;
 
 /**
- * <p>
- * This interface is a user adapter that allows the JCatapult framework access
- * to custom User objects. Rather than force an interface or parent class,
- * this adapter provides applications with the means to implement their
- * User objects however they want. Applications only need to implement this
- * interface to reveal information about the User and register their
- * implementation with JCatapult via Guice.
- * </p>
+ * <p> This interface is a user adapter that allows the JCatapult framework access to custom User objects. Rather than
+ * force an interface or parent class, this adapter provides applications with the means to implement their User objects
+ * however they want. Applications only need to implement this interface to reveal information about the User and
+ * register their implementation with JCatapult via Guice. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public interface UserAdapter<T> {
-    /**
-     * Retrieves the username for the given User object.
-     *
-     * @param   user The user object.
-     * @return  The username.
-     */
-    String getUsername(T user);
+  /**
+   * Retrieves the username for the given User object.
+   *
+   * @param user The user object.
+   * @return The username.
+   */
+  String getUsername(T user);
 
-    /**
-     * Retrieves the password for the given User object.
-     *
-     * @param   user The user object.
-     * @return  The password so that it can be verified.
-     */
-    String getPassword(T user);
+  /**
+   * Retrieves the password for the given User object.
+   *
+   * @param user The user object.
+   * @return The password so that it can be verified.
+   */
+  String getPassword(T user);
 
-    /**
-     * Retrieves all of the roles that the user has.
-     *
-     * @param   user The user.
-     * @return  The list of rolls or an empty list if they have none.
-     */
-    Set<String> getRoles(T user);
+  /**
+   * Retrieves all of the roles that the user has.
+   *
+   * @param user The user.
+   * @return The list of rolls or an empty list if they have none.
+   */
+  Set<String> getRoles(T user);
 }

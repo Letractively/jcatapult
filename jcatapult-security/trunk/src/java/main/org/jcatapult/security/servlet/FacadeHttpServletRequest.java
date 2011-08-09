@@ -15,153 +15,150 @@
  */
 package org.jcatapult.security.servlet;
 
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import net.java.util.IteratorEnumeration;
 
 /**
- * <p>
- * This class allows the URI to be completely changed, including support for
- * forwards and includes from a RequestDispatcher.
- * </p>
+ * <p> This class allows the URI to be completely changed, including support for forwards and includes from a
+ * RequestDispatcher. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class FacadeHttpServletRequest extends HttpServletRequestWrapper {
-    private final String uri;
-    private final Map<String, String[]> parameters;
-    private final boolean proxy;
+  private final String uri;
+  private final Map<String, String[]> parameters;
+  private final boolean proxy;
 
-    /**
-     * Constructs a new request facade.
-     *
-     * @param   request The request to wrap.
-     * @param   uri The new URI within the current context. You can't facade out a URI to another
-     *          context here. This URI should NOT include the context path. It is appended inside
-     *          this method.
-     * @param   parameters Any additional parameters.
-     * @param   proxy Determines if the parameter lookups are proxied to the wrapped request. When
-     *          this is true, they are proxied to the wrapped request if the parameter map passed to
-     *          the constructor doesn't contain the parameter. If this is false, only the parameter
-     *          map passed to the constructor is used.
-     */
-    public FacadeHttpServletRequest(HttpServletRequest request, String uri, Map<String, String[]> parameters,
-                                    boolean proxy) {
-        super(request);
-        
-        if (uri != null) {
-            this.uri = request.getContextPath() + uri;
-        } else {
-            this.uri = null;
-        }
-        
-        this.parameters = parameters;
-        this.proxy = proxy;
+  /**
+   * Constructs a new request facade.
+   *
+   * @param request    The request to wrap.
+   * @param uri        The new URI within the current context. You can't facade out a URI to another context here.
+   *                   This URI should NOT include the context path. It is appended inside this method.
+   * @param parameters Any additional parameters.
+   * @param proxy      Determines if the parameter lookups are proxied to the wrapped request. When this is true, they
+   *                   are proxied to the wrapped request if the parameter map passed to the constructor doesn't
+   *                   contain the parameter. If this is false, only the parameter map passed to the constructor is
+   *                   used.
+   */
+  public FacadeHttpServletRequest(HttpServletRequest request, String uri, Map<String, String[]> parameters,
+                                  boolean proxy) {
+    super(request);
+
+    if (uri != null) {
+      this.uri = request.getContextPath() + uri;
+    } else {
+      this.uri = null;
     }
 
-    @Override
-    public String getRequestURI() {
-        if (uri == null) {
-            return super.getRequestURI();
-        }
+    this.parameters = parameters;
+    this.proxy = proxy;
+  }
 
-        return uri;
+  @Override
+  public String getRequestURI() {
+    if (uri == null) {
+      return super.getRequestURI();
     }
 
-    @Override
-    public String getServletPath() {
-        if (uri == null) {
-            return super.getServletPath();
-        }
+    return uri;
+  }
 
-        return uri;
+  @Override
+  public String getServletPath() {
+    if (uri == null) {
+      return super.getServletPath();
     }
 
-    @Override
-    public RequestDispatcher getRequestDispatcher(String uri) {
-        if (uri == null) {
-            return super.getRequestDispatcher(uri);
-        }
+    return uri;
+  }
 
-        HttpServletRequest httpRequest = (HttpServletRequest) super.getRequest();
-        RequestDispatcher rd = httpRequest.getRequestDispatcher(uri);
-        return new FacadeRequestDispatcher(rd, httpRequest);
+  @Override
+  public RequestDispatcher getRequestDispatcher(String uri) {
+    if (uri == null) {
+      return super.getRequestDispatcher(uri);
     }
 
-    public String getParameter(String key) {
-        if (parameters != null && parameters.containsKey(key) && parameters.get(key) != null) {
-            return parameters.get(key)[0];
-        }
+    HttpServletRequest httpRequest = (HttpServletRequest) super.getRequest();
+    RequestDispatcher rd = httpRequest.getRequestDispatcher(uri);
+    return new FacadeRequestDispatcher(rd, httpRequest);
+  }
 
-        if (proxy) {
-            return super.getParameter(key);
-        }
-
-        return null;
+  public String getParameter(String key) {
+    if (parameters != null && parameters.containsKey(key) && parameters.get(key) != null) {
+      return parameters.get(key)[0];
     }
 
-    public Map getParameterMap() {
-        Map<String, String[]> complete = new HashMap<String, String[]>();
-        if (parameters != null) {
-            complete.putAll(parameters);
-        }
-
-        if (proxy) {
-            complete.putAll(super.getParameterMap());
-        }
-
-        return complete;
+    if (proxy) {
+      return super.getParameter(key);
     }
 
-    public Enumeration getParameterNames() {
-        Set<String> names = new HashSet<String>();
-        if (parameters != null) {
-            names.addAll(parameters.keySet());
-        }
+    return null;
+  }
 
-        if (proxy) {
-            names.addAll(super.getParameterMap().keySet());
-        }
-
-        return new IteratorEnumeration(names.iterator());
+  public Map getParameterMap() {
+    Map<String, String[]> complete = new HashMap<String, String[]>();
+    if (parameters != null) {
+      complete.putAll(parameters);
     }
 
-    public String[] getParameterValues(String key) {
-        if (parameters != null && parameters.containsKey(key) && parameters.get(key) != null) {
-            return parameters.get(key);
-        }
-
-        return super.getParameterValues(key);
+    if (proxy) {
+      complete.putAll(super.getParameterMap());
     }
 
-    public static class FacadeRequestDispatcher implements RequestDispatcher {
-        private final RequestDispatcher requestDispatcher;
-        private final HttpServletRequest httpRequest;
+    return complete;
+  }
 
-        public FacadeRequestDispatcher(RequestDispatcher requestDispatcher, HttpServletRequest httpRequest) {
-            this.requestDispatcher = requestDispatcher;
-            this.httpRequest = httpRequest;
-        }
-
-        public void forward(ServletRequest servletRequest, ServletResponse servletResponse)
-        throws ServletException, IOException {
-            requestDispatcher.forward(httpRequest, servletResponse);
-        }
-
-        public void include(ServletRequest servletRequest, ServletResponse servletResponse)
-        throws ServletException, IOException {
-            requestDispatcher.include(httpRequest, servletResponse);
-        }
+  public Enumeration getParameterNames() {
+    Set<String> names = new HashSet<String>();
+    if (parameters != null) {
+      names.addAll(parameters.keySet());
     }
+
+    if (proxy) {
+      names.addAll(super.getParameterMap().keySet());
+    }
+
+    return new IteratorEnumeration(names.iterator());
+  }
+
+  public String[] getParameterValues(String key) {
+    if (parameters != null && parameters.containsKey(key) && parameters.get(key) != null) {
+      return parameters.get(key);
+    }
+
+    return super.getParameterValues(key);
+  }
+
+  public static class FacadeRequestDispatcher implements RequestDispatcher {
+    private final RequestDispatcher requestDispatcher;
+    private final HttpServletRequest httpRequest;
+
+    public FacadeRequestDispatcher(RequestDispatcher requestDispatcher, HttpServletRequest httpRequest) {
+      this.requestDispatcher = requestDispatcher;
+      this.httpRequest = httpRequest;
+    }
+
+    public void forward(ServletRequest servletRequest, ServletResponse servletResponse)
+      throws ServletException, IOException {
+      requestDispatcher.forward(httpRequest, servletResponse);
+    }
+
+    public void include(ServletRequest servletRequest, ServletResponse servletResponse)
+      throws ServletException, IOException {
+      requestDispatcher.include(httpRequest, servletResponse);
+    }
+  }
 }

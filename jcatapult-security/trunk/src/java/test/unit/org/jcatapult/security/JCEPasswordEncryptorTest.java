@@ -17,48 +17,47 @@ package org.jcatapult.security;
 
 import org.apache.commons.configuration.Configuration;
 import org.easymock.EasyMock;
-import static org.junit.Assert.*;
-import org.junit.Test;
 import org.jcatapult.security.config.DefaultSecurityConfiguration;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * <p>
- * This tests the JCE password encryptor.
- * </p>
+ * <p> This tests the JCE password encryptor. </p>
  *
  * @author Brian Pontarelli
  */
 public class JCEPasswordEncryptorTest {
-    @Test
-    public void testEncryption() {
-        SaltSource ss = EasyMock.createStrictMock(SaltSource.class);
-        EasyMock.expect(ss.getSalt()).andReturn("salt");
-        EasyMock.replay(ss);
+  @Test
+  public void testEncryption() {
+    SaltSource ss = EasyMock.createStrictMock(SaltSource.class);
+    EasyMock.expect(ss.getSalt()).andReturn("salt");
+    EasyMock.replay(ss);
 
-        Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getBoolean("jcatapult.security.password-encryptor.encode-base-64", true)).andReturn(true);
-        EasyMock.expect(c.getString("jcatapult.security.password-encryptor.algorithm", "MD5")).andReturn("MD5");
-        EasyMock.replay(c);
+    Configuration c = EasyMock.createStrictMock(Configuration.class);
+    EasyMock.expect(c.getBoolean("jcatapult.security.password-encryptor.encode-base-64", true)).andReturn(true);
+    EasyMock.expect(c.getString("jcatapult.security.password-encryptor.algorithm", "MD5")).andReturn("MD5");
+    EasyMock.replay(c);
 
-        JCEPasswordEncryptor encryptor = new JCEPasswordEncryptor(ss, new DefaultSecurityConfiguration(c));
-        String result = encryptor.encryptPassword("test", null);
-        assertEquals("FQZx56X7is5YqqAS3n+bXA==", result);
-    }
+    JCEPasswordEncryptor encryptor = new JCEPasswordEncryptor(ss, new DefaultSecurityConfiguration(c));
+    String result = encryptor.encryptPassword("test", null);
+    assertEquals("FQZx56X7is5YqqAS3n+bXA==", result);
+  }
 
-    @Test
-    public void testEncryptionWithObj() {
-        Object user = new Object();
-        SaltSource ss = EasyMock.createStrictMock(SaltSource.class);
-        EasyMock.expect(ss.getSalt(user)).andReturn("salt");
-        EasyMock.replay(ss);
+  @Test
+  public void testEncryptionWithObj() {
+    Object user = new Object();
+    SaltSource ss = EasyMock.createStrictMock(SaltSource.class);
+    EasyMock.expect(ss.getSalt(user)).andReturn("salt");
+    EasyMock.replay(ss);
 
-        Configuration c = EasyMock.createStrictMock(Configuration.class);
-        EasyMock.expect(c.getBoolean("jcatapult.security.password-encryptor.encode-base-64", true)).andReturn(true);
-        EasyMock.expect(c.getString("jcatapult.security.password-encryptor.algorithm", "MD5")).andReturn("MD5");
-        EasyMock.replay(c);
+    Configuration c = EasyMock.createStrictMock(Configuration.class);
+    EasyMock.expect(c.getBoolean("jcatapult.security.password-encryptor.encode-base-64", true)).andReturn(true);
+    EasyMock.expect(c.getString("jcatapult.security.password-encryptor.algorithm", "MD5")).andReturn("MD5");
+    EasyMock.replay(c);
 
-        JCEPasswordEncryptor encryptor = new JCEPasswordEncryptor(ss, new DefaultSecurityConfiguration(c));
-        String result = encryptor.encryptPassword("test", user);
-        assertEquals("FQZx56X7is5YqqAS3n+bXA==", result);
-    }
+    JCEPasswordEncryptor encryptor = new JCEPasswordEncryptor(ss, new DefaultSecurityConfiguration(c));
+    String result = encryptor.encryptPassword("test", user);
+    assertEquals("FQZx56X7is5YqqAS3n+bXA==", result);
+  }
 }

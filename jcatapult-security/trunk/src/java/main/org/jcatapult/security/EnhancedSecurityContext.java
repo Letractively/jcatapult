@@ -20,49 +20,46 @@ import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
 import com.google.inject.Inject;
 
 /**
- * <p>
- * This class is a ThreadLocal holder that manages an SPI for getting the
- * security credentials.
- * </p>
+ * <p> This class is a ThreadLocal holder that manages an SPI for getting the security credentials. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class EnhancedSecurityContext extends SecurityContext {
-    protected static EnhancedSecurityContextProvider enhancedProvider;
+  protected static EnhancedSecurityContextProvider enhancedProvider;
 
-    /**
-     * Sets the enhanced provider and passes it to the SecurityContext.
-     *
-     * @param   provider The enhanced provider.
-     */
-    @Inject
-    public static void setProvider(EnhancedSecurityContextProvider provider) {
-        enhancedProvider = provider;
-        SecurityContext.setProvider(provider);
-    }
+  /**
+   * Sets the enhanced provider and passes it to the SecurityContext.
+   *
+   * @param provider The enhanced provider.
+   */
+  @Inject
+  public static void setProvider(EnhancedSecurityContextProvider provider) {
+    enhancedProvider = provider;
+    SecurityContext.setProvider(provider);
+  }
 
-    /**
-     * Logs the user into the application.
-     *
-     * @param   user The user domain object. This is dependent on the provider being used.
-     */
-    public static void login(Object user) {
-        enhancedProvider.login(user);
-    }
+  /**
+   * Logs the user into the application.
+   *
+   * @param user The user domain object. This is dependent on the provider being used.
+   */
+  public static void login(Object user) {
+    enhancedProvider.login(user);
+  }
 
-    /**
-     * Logs the user out of the application.
-     */
-    public static void logout() {
-        enhancedProvider.logout();
-    }
+  /**
+   * Logs the user out of the application.
+   */
+  public static void logout() {
+    enhancedProvider.logout();
+  }
 
-    /**
-     * Updates the user that is currently stored in with a new instance.
-     *
-     * @param   user The new user instance.
-     */
-    public static void update(Object user) {
-        enhancedProvider.update(user);
-    }
+  /**
+   * Updates the user that is currently stored in with a new instance.
+   *
+   * @param user The new user instance.
+   */
+  public static void update(Object user) {
+    enhancedProvider.update(user);
+  }
 }

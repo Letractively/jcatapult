@@ -20,27 +20,24 @@ import java.util.Map;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This service defines the mechanism that logs users into the system. This
- * is an abstraction that is used in conjunction with the {@link AuthenticationService}
- * and verifies the password is correct and throws appropriate exceptions
- * on failures.
- * </p>
+ * <p> This service defines the mechanism that logs users into the system. This is an abstraction that is used in
+ * conjunction with the {@link AuthenticationService} and verifies the password is correct and throws appropriate
+ * exceptions on failures. </p>
  *
  * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultLoginService.class)
 public interface LoginService {
-    /**
-     * Attempts to log the user into the application.
-     *
-     * @param   username The username from a form.
-     * @param   password The password from a form.
-     * @param   parameters Any extra parameters that might be used to log the user in.
-     * @return  The user object if it was found.
-     * @throws InvalidUsernameException If the username is incorrect.
-     * @throws  InvalidPasswordException If the password is incorrect.
-     */
-    Object login(String username, String password, Map<String, Object> parameters)
+  /**
+   * Attempts to log the user into the application.
+   *
+   * @param username   The username from a form.
+   * @param password   The password from a form.
+   * @param parameters Any extra parameters that might be used to log the user in.
+   * @return The user object if it was found.
+   * @throws InvalidUsernameException If the username is incorrect.
+   * @throws InvalidPasswordException If the password is incorrect.
+   */
+  Object login(String username, String password, Map<String, Object> parameters)
     throws InvalidUsernameException, InvalidPasswordException;
 }

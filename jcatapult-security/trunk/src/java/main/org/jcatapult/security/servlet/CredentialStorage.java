@@ -17,42 +17,37 @@ package org.jcatapult.security.servlet;
 
 import javax.servlet.ServletRequest;
 
-import org.jcatapult.security.servlet.HttpSessionCredentialStorage;
-
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This class provides a mechanism for locating user credentials within
- * a Servlet container.
- * </p>
+ * <p> This class provides a mechanism for locating user credentials within a Servlet container. </p>
  *
  * @author Brian Pontarelli
  */
 @ImplementedBy(HttpSessionCredentialStorage.class)
 public interface CredentialStorage {
 
-    /**
-     * Locates the user credentials.
-     *
-     * @param   request The HTTP servlet request if it is needed to help find the credentials.
-     * @return  The user credentials or null if there are none (i.e. the user is not logged in).
-     */
-    Object locate(ServletRequest request);
+  /**
+   * Locates the user credentials.
+   *
+   * @param request The HTTP servlet request if it is needed to help find the credentials.
+   * @return The user credentials or null if there are none (i.e. the user is not logged in).
+   */
+  Object locate(ServletRequest request);
 
-    /**
-     * Stores the user credentials into a persistent storage location so that they can be retrieved
-     * across multiple requests.
-     *
-     * @param   credentials The credentials to store.
-     * @param   request The HTTP servlet request if it is needed to store the credentials.
-     */
-    void store(Object credentials, ServletRequest request);
+  /**
+   * Stores the user credentials into a persistent storage location so that they can be retrieved across multiple
+   * requests.
+   *
+   * @param credentials The credentials to store.
+   * @param request     The HTTP servlet request if it is needed to store the credentials.
+   */
+  void store(Object credentials, ServletRequest request);
 
-    /**
-     * Removes the stored user credentials if there are any.
-     *
-     * @param   request The HTTP servlet request if it is needed to remove the credentials.
-     */
-    void remove(ServletRequest request);
+  /**
+   * Removes the stored user credentials if there are any.
+   *
+   * @param request The HTTP servlet request if it is needed to remove the credentials.
+   */
+  void remove(ServletRequest request);
 }

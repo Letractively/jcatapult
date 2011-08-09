@@ -15,8 +15,8 @@
  */
 package org.jcatapult.security.servlet.auth;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
+import java.io.IOException;
 
 import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.servlet.WorkflowChain;
@@ -24,25 +24,22 @@ import org.jcatapult.servlet.WorkflowChain;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface handles authorization exceptions that are thrown by the
- * {@link org.jcatapult.security.auth.Authorizer} out to the {@link DefaultAuthorizationWorkflow}.
- * </p>
+ * <p> This interface handles authorization exceptions that are thrown by the {@link
+ * org.jcatapult.security.auth.Authorizer} out to the {@link DefaultAuthorizationWorkflow}. </p>
  *
  * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultAuthorizationExceptionHandler.class)
 public interface AuthorizationExceptionHandler {
-    /**
-     * Handles the exception.
-     *
-     * @param   exception The exception that was thrown.
-     * @param   chain The workflow chain in case the implementation wants to keep going down
-     *          the chain.
-     * @throws  ServletException If something goes wrong during the exception handling.
-     * @throws  IOException If something goes wrong during the exception handling.
-     */
-    void handle(AuthorizationException exception,
-        WorkflowChain chain)
+  /**
+   * Handles the exception.
+   *
+   * @param exception The exception that was thrown.
+   * @param chain     The workflow chain in case the implementation wants to keep going down the chain.
+   * @throws ServletException If something goes wrong during the exception handling.
+   * @throws IOException      If something goes wrong during the exception handling.
+   */
+  void handle(AuthorizationException exception,
+              WorkflowChain chain)
     throws ServletException, IOException;
 }
