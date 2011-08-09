@@ -19,41 +19,39 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p>
- * This Class is the saved request.
- * </p>
+ * <p> This Class is the saved request. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class SavedHttpRequest {
-    public final String uri;
-    public final Map<String, String[]> parameters;
+  public final String uri;
+  public final Map<String, String[]> parameters;
 
-    public SavedHttpRequest(String uri, Map<String, String[]> parameters) {
-        this.uri = uri;
-        this.parameters = new HashMap<String, String[]>();
-        if (parameters != null) {
-            this.parameters.putAll(parameters);
-        }
+  public SavedHttpRequest(String uri, Map<String, String[]> parameters) {
+    this.uri = uri;
+    this.parameters = new HashMap<String, String[]>();
+    if (parameters != null) {
+      this.parameters.putAll(parameters);
     }
+  }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-        SavedHttpRequest that = (SavedHttpRequest) o;
+    SavedHttpRequest that = (SavedHttpRequest) o;
 
-        if (parameters != null ? !parameters.equals(that.parameters) : that.parameters != null)
-            return false;
-        if (uri != null ? !uri.equals(that.uri) : that.uri != null) return false;
+    if (parameters != null ? !parameters.equals(that.parameters) : that.parameters != null)
+      return false;
+    if (uri != null ? !uri.equals(that.uri) : that.uri != null) return false;
 
-        return true;
-    }
+    return true;
+  }
 
-    public int hashCode() {
-        int result;
-        result = (uri != null ? uri.hashCode() : 0);
-        result = 31 * result + (parameters != null ? parameters.hashCode() : 0);
-        return result;
-    }
+  public int hashCode() {
+    int result;
+    result = (uri != null ? uri.hashCode() : 0);
+    result = 31 * result + (parameters != null ? parameters.hashCode() : 0);
+    return result;
+  }
 }

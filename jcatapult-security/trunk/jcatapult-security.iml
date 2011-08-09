@@ -158,13 +158,13 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="jcatapult-core-1.0.10-IB20110207222624430.jar">
+      <library name="jcatapult-core-1.0.9.jar">
         <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.10-{integration}/jcatapult-core-1.0.10-IB20110207222624430.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.9/jcatapult-core-1.0.9.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.10-{integration}/jcatapult-core-1.0.10-IB20110207222624430-src.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/1.0.9/jcatapult-core-1.0.9-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

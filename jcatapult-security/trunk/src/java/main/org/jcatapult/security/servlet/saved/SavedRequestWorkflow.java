@@ -20,14 +20,11 @@ import org.jcatapult.servlet.Workflow;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface defines the portion of the security workflow that handles loading
- * and executing saved requests. Saved requests are requests made after a users
- * session expired, that should be repeated after the user has successfully logged
- * in.
- * </p>
+ * <p> This interface defines the portion of the security workflow that handles loading and executing saved requests.
+ * Saved requests are requests made after a users session expired, that should be repeated after the user has
+ * successfully logged in. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultSavedRequestWorkflow.class)
 public interface SavedRequestWorkflow extends Workflow {

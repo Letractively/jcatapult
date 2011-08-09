@@ -18,30 +18,27 @@ package org.jcatapult.security;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface defines a method for retrieving a salt that can be
- * used for encryption of passwords.
- * </p>
+ * <p> This interface defines a method for retrieving a salt that can be used for encryption of passwords. </p>
  *
  * @author Brian Pontarelli
  */
 @ImplementedBy(ConfiguredSaltSource.class)
 public interface SaltSource<T> {
-    /**
-     * Retrieves the default salt for the salt source. This salt should always be the same no matter
-     * how many times this method is invoked. This makes the salt less secure but easier to manage.
-     *
-     * @return  The default salt.
-     */
-    String getSalt();
+  /**
+   * Retrieves the default salt for the salt source. This salt should always be the same no matter how many times this
+   * method is invoked. This makes the salt less secure but easier to manage.
+   *
+   * @return The default salt.
+   */
+  String getSalt();
 
-    /**
-     * Returns a salt that is applicable to the specific object given. This salt source is generally
-     * more secure because the salt is based on a variable object. However, this method must return
-     * the same salt for the same object no matter how many times this method is invoked.
-     *
-     * @param   t The object used to get the salt.
-     * @return  The salt.
-     */
-    String getSalt(T t);
+  /**
+   * Returns a salt that is applicable to the specific object given. This salt source is generally more secure because
+   * the salt is based on a variable object. However, this method must return the same salt for the same object no
+   * matter how many times this method is invoked.
+   *
+   * @param t The object used to get the salt.
+   * @return The salt.
+   */
+  String getSalt(T t);
 }

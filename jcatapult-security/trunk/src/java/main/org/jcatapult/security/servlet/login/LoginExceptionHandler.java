@@ -15,10 +15,8 @@
  */
 package org.jcatapult.security.servlet.login;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 import org.jcatapult.security.JCatapultSecurityException;
 import org.jcatapult.servlet.WorkflowChain;
@@ -26,27 +24,23 @@ import org.jcatapult.servlet.WorkflowChain;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface is used to handle all exceptions that are thrown when
- * a login fails. The only two exceptions that implements should be
- * concerned with are {@link org.jcatapult.security.login.InvalidUsernameException}
- * and {@link org.jcatapult.security.login.InvalidPasswordException}.
- * </p>
+ * <p> This interface is used to handle all exceptions that are thrown when a login fails. The only two exceptions that
+ * implements should be concerned with are {@link org.jcatapult.security.login.InvalidUsernameException} and {@link
+ * org.jcatapult.security.login.InvalidPasswordException}. </p>
  *
  * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultLoginExceptionHandler.class)
 public interface LoginExceptionHandler {
-    /**
-     * Handles the exception.
-     *
-     * @param   exception The exception that was thrown.
-     * @param   chain The workflow chain in case the implementation wants to keep going down
-     *          the chain.
-     * @throws  ServletException If something goes wrong during the exception handling.
-     * @throws  IOException If something goes wrong during the exception handling.
-     */
-    void handle(JCatapultSecurityException exception,
-        WorkflowChain chain)
+  /**
+   * Handles the exception.
+   *
+   * @param exception The exception that was thrown.
+   * @param chain     The workflow chain in case the implementation wants to keep going down the chain.
+   * @throws ServletException If something goes wrong during the exception handling.
+   * @throws IOException      If something goes wrong during the exception handling.
+   */
+  void handle(JCatapultSecurityException exception,
+              WorkflowChain chain)
     throws ServletException, IOException;
 }

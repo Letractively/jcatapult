@@ -21,45 +21,42 @@ import org.jcatapult.security.spi.EnhancedSecurityContextProvider;
 import com.google.inject.Inject;
 
 /**
- * <p>
- * This class implements the SecurityContextProvider using the JCatapult security
- * framework. Mainly, this uses the implementations of the {@link UserAdapter} to
- * fulfill the methods.
- * </p>
+ * <p> This class implements the SecurityContextProvider using the JCatapult security framework. Mainly, this uses the
+ * implementations of the {@link UserAdapter} to fulfill the methods. </p>
  *
  * @author Brian Pontarelli
  */
 public class JCatapultSecurityContextProvider implements EnhancedSecurityContextProvider {
-    private static final ThreadLocal<Object> userHolder = new ThreadLocal<Object>();
-    private final UserAdapter userAdapter;
+  private static final ThreadLocal<Object> userHolder = new ThreadLocal<Object>();
+  private final UserAdapter userAdapter;
 
-    @Inject
-    public JCatapultSecurityContextProvider(UserAdapter userAdapter) {
-        this.userAdapter = userAdapter;
+  @Inject
+  public JCatapultSecurityContextProvider(UserAdapter userAdapter) {
+    this.userAdapter = userAdapter;
+  }
+
+  public String getCurrentUsername() {
+    Object user = getCurrentUser();
+    if (user != null) {
+      return userAdapter.getUsername(user);
     }
 
-    public String getCurrentUsername() {
-        Object user = getCurrentUser();
-        if (user != null) {
-            return userAdapter.getUsername(user);
-        }
+    return "anonymous";
+  }
 
-        return "anonymous";
-    }
+  public void login(Object user) {
+    userHolder.set(user);
+  }
 
-    public void login(Object user) {
-        userHolder.set(user);
-    }
+  public void logout() {
+    userHolder.remove();
+  }
 
-    public void logout() {
-        userHolder.remove();
-    }
+  public Object getCurrentUser() {
+    return userHolder.get();
+  }
 
-    public Object getCurrentUser() {
-        return userHolder.get();
-    }
-
-    public void update(Object user) {
-        login(user);
-    }
+  public void update(Object user) {
+    login(user);
+  }
 }

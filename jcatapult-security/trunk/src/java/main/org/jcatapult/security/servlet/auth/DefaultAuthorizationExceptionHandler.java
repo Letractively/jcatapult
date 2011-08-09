@@ -15,10 +15,10 @@
  */
 package org.jcatapult.security.servlet.auth;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.IOException;
 
 import org.jcatapult.security.auth.AuthorizationException;
 import org.jcatapult.security.config.SecurityConfiguration;
@@ -28,35 +28,31 @@ import org.jcatapult.servlet.WorkflowChain;
 import com.google.inject.Inject;
 
 /**
- * <p>
- * This class handles authorization exceptions that are thrown by
- * the implementation of the {@link org.jcatapult.security.auth.Authorizer}
- * that are caught by the {@link DefaultAuthorizationWorkflow}. This class
- * handles the exception by creating a request that is handled by Struts
- * action. The URI for the action that is invoked by Struts is controlled
- * by the configuration parameter named <code>jcatapult.security.authorization.restricted-uri</code>.
- * The default URI is <code>/not-authorized</code>.
- * </p>
+ * <p> This class handles authorization exceptions that are thrown by the implementation of the {@link
+ * org.jcatapult.security.auth.Authorizer} that are caught by the {@link DefaultAuthorizationWorkflow}. This class
+ * handles the exception by creating a request that is handled by Struts action. The URI for the action that is invoked
+ * by Struts is controlled by the configuration parameter named <code>jcatapult.security.authorization.restricted-uri</code>.
+ * The default URI is <code>/not-authorized</code>. </p>
  *
  * @author Brian Pontarelli
  */
 public class DefaultAuthorizationExceptionHandler implements AuthorizationExceptionHandler {
-    public static final String EXCEPTION_KEY = "jcatapult_authorization_exception";
-    private final HttpServletRequest request;
-    private final String notAuthorizedURL;
+  public static final String EXCEPTION_KEY = "jcatapult_authorization_exception";
+  private final HttpServletRequest request;
+  private final String notAuthorizedURL;
 
-    @Inject
-    public DefaultAuthorizationExceptionHandler(HttpServletRequest request, SecurityConfiguration configuration) {
-        this.request = request;
-        this.notAuthorizedURL = configuration.getRestrictedURI();
-    }
+  @Inject
+  public DefaultAuthorizationExceptionHandler(HttpServletRequest request, SecurityConfiguration configuration) {
+    this.request = request;
+    this.notAuthorizedURL = configuration.getRestrictedURI();
+  }
 
-    public void handle(AuthorizationException exception, WorkflowChain chain) throws ServletException, IOException {
-        HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
-        HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
-        FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, notAuthorizedURL, null, false);
-        wrapper.setRequest(facade);
-        request.setAttribute(EXCEPTION_KEY, exception);
-        chain.continueWorkflow();
-    }
+  public void handle(AuthorizationException exception, WorkflowChain chain) throws ServletException, IOException {
+    HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
+    HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
+    FacadeHttpServletRequest facade = new FacadeHttpServletRequest(previous, notAuthorizedURL, null, false);
+    wrapper.setRequest(facade);
+    request.setAttribute(EXCEPTION_KEY, exception);
+    chain.continueWorkflow();
+  }
 }

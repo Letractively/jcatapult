@@ -23,48 +23,41 @@ import org.jcatapult.security.login.InvalidUsernameException;
 import org.jcatapult.security.servlet.login.DefaultLoginExceptionHandler;
 
 /**
- * <p>
- * This is a JSP tag that will only execute it's body if there is a login
- * exception and that exception matches one of the boolean attributes of
- * the tag that is set to true.
- * </p>
+ * <p> This is a JSP tag that will only execute it's body if there is a login exception and that exception matches one
+ * of the boolean attributes of the tag that is set to true. </p> <p/> <p> This tag also allows you to throw your own
+ * custom exceptions and then check for them using a String. The failure String must match the return value of the
+ * getMessage of the thrown exception. </p>
  *
- * <p>
- * This tag also allows you to throw your own custom exceptions and then
- * check for them using a String. The failure String must match the return
- * value of the getMessage of the thrown exception.
- * </p>
- *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class LoginExceptionTag extends BodyTagSupport {
-    private boolean username;
-    private boolean password;
-    private String failure;
+  private boolean username;
+  private boolean password;
+  private String failure;
 
-    public void setUsername(boolean username) {
-        this.username = username;
+  public void setUsername(boolean username) {
+    this.username = username;
+  }
+
+  public void setPassword(boolean password) {
+    this.password = password;
+  }
+
+  public void setFailure(String failure) {
+    this.failure = failure;
+  }
+
+  @Override
+  public int doStartTag() throws JspException {
+    Throwable t = (Throwable) pageContext.findAttribute(DefaultLoginExceptionHandler.EXCEPTION_KEY);
+    if (t != null) {
+      if ((username && t instanceof InvalidUsernameException) ||
+        (password && t instanceof InvalidPasswordException) ||
+        (failure != null && failure.equals(t.getMessage()))) {
+        return EVAL_BODY_INCLUDE;
+      }
     }
 
-    public void setPassword(boolean password) {
-        this.password = password;
-    }
-
-    public void setFailure(String failure) {
-        this.failure = failure;
-    }
-
-    @Override
-    public int doStartTag() throws JspException {
-        Throwable t = (Throwable) pageContext.findAttribute(DefaultLoginExceptionHandler.EXCEPTION_KEY);
-        if (t != null) {
-            if ((username && t instanceof InvalidUsernameException) ||
-                    (password && t instanceof InvalidPasswordException) ||
-                    (failure != null && failure.equals(t.getMessage()))) {
-                return EVAL_BODY_INCLUDE;
-            }
-        }
-
-        return SKIP_BODY;
-    }
+    return SKIP_BODY;
+  }
 }

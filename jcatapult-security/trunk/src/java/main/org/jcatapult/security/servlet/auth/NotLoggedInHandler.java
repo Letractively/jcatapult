@@ -15,8 +15,8 @@
  */
 package org.jcatapult.security.servlet.auth;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
+import java.io.IOException;
 
 import org.jcatapult.security.auth.NotLoggedInException;
 import org.jcatapult.security.servlet.saved.DefaultSavedRequestWorkflow;
@@ -25,25 +25,22 @@ import org.jcatapult.servlet.WorkflowChain;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface defines how the framework responds to authorization failures
- * due to the user not being logged in.
+ * <p> This interface defines how the framework responds to authorization failures due to the user not being logged in.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultSavedRequestWorkflow.class)
 public interface NotLoggedInHandler {
-    /**
-     * Handles the exception.
-     *
-     * @param   exception The exception that was thrown.
-     * @param   chain The workflow chain in case the implementation wants to keep going down
-     *          the chain.
-     * @throws javax.servlet.ServletException If something goes wrong during the exception handling.
-     * @throws java.io.IOException If something goes wrong during the exception handling.
-     */
-    void handle(NotLoggedInException exception,
-        WorkflowChain chain)
+  /**
+   * Handles the exception.
+   *
+   * @param exception The exception that was thrown.
+   * @param chain     The workflow chain in case the implementation wants to keep going down the chain.
+   * @throws javax.servlet.ServletException If something goes wrong during the exception handling.
+   * @throws java.io.IOException            If something goes wrong during the exception handling.
+   */
+  void handle(NotLoggedInException exception,
+              WorkflowChain chain)
     throws ServletException, IOException;
 }

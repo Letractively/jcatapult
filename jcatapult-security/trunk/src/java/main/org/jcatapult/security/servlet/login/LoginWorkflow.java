@@ -20,12 +20,9 @@ import org.jcatapult.servlet.Workflow;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This workflow defines the portion of the security processing that
- * logins the user into the application.
- * </p>
+ * <p> This workflow defines the portion of the security processing that logins the user into the application. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultLoginWorkflow.class)
 public interface LoginWorkflow extends Workflow {

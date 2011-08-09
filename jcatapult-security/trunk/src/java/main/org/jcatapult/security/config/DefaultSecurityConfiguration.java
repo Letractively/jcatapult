@@ -17,103 +17,102 @@ package org.jcatapult.security.config;
 
 import org.apache.commons.configuration.Configuration;
 
-import com.google.inject.Inject;
 import net.java.lang.ObjectTools;
 
+import com.google.inject.Inject;
+
 /**
- * <p>
- * This class implements the security configuration interface.
- * </p>
+ * <p> This class implements the security configuration interface. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class DefaultSecurityConfiguration implements SecurityConfiguration {
-    private final Configuration configuration;
+  private final Configuration configuration;
 
-    @Inject
-    public DefaultSecurityConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+  @Inject
+  public DefaultSecurityConfiguration(Configuration configuration) {
+    this.configuration = configuration;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public String getSalt() {
+    return configuration.getString("jcatapult.security.salt", "jcatapult");
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isBase64Encoded() {
+    return configuration.getBoolean("jcatapult.security.password-encryptor.encode-base-64", true);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public String getAlgorithm() {
+    return configuration.getString("jcatapult.security.password-encryptor.algorithm", "MD5");
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public String getAuthorizationRules() {
+    String[] values = configuration.getStringArray("jcatapult.security.authorization.rules");
+    if (values == null || values.length == 0) {
+      return "/admin**=admin";
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getSalt() {
-        return configuration.getString("jcatapult.security.salt", "jcatapult");
-    }
+    return ObjectTools.join(values, ",");
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isBase64Encoded() {
-        return configuration.getBoolean("jcatapult.security.password-encryptor.encode-base-64", true);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public String getRestrictedURI() {
+    return configuration.getString("jcatapult.security.authorization.restricted-uri", "/not-authorized");
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getAlgorithm() {
-        return configuration.getString("jcatapult.security.password-encryptor.algorithm", "MD5");
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public String getNotLoggedInURI() {
+    return configuration.getString("jcatapult.security.authorization.not-logged-in-uri", "/not-logged-in");
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getAuthorizationRules() {
-        String[] values = configuration.getStringArray("jcatapult.security.authorization.rules");
-        if (values == null || values.length == 0) {
-            return "/admin**=admin";
-        }
+  /**
+   * {@inheritDoc}
+   */
+  public String getLoginURI() {
+    return configuration.getString("jcatapult.security.login.submit-uri", "/jcatapult-security-check");
+  }
 
-        return ObjectTools.join(values, ",");
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public String getLoginSuccessURI() {
+    return configuration.getString("jcatapult.security.login.success-uri", "/login-success");
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getRestrictedURI() {
-        return configuration.getString("jcatapult.security.authorization.restricted-uri", "/not-authorized");
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public String getLoginFailedURI() {
+    return configuration.getString("jcatapult.security.login.failed-uri", "/login-failed");
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getNotLoggedInURI() {
-        return configuration.getString("jcatapult.security.authorization.not-logged-in-uri", "/not-logged-in");
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public String getUsernameParameter() {
+    return configuration.getString("jcatapult.security.login.username-parameter", "j_username");
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getLoginURI() {
-        return configuration.getString("jcatapult.security.login.submit-uri", "/jcatapult-security-check");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getLoginSuccessURI() {
-        return configuration.getString("jcatapult.security.login.success-uri", "/login-success");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getLoginFailedURI() {
-        return configuration.getString("jcatapult.security.login.failed-uri", "/login-failed");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getUsernameParameter() {
-        return configuration.getString("jcatapult.security.login.username-parameter", "j_username");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getPasswordParameter() {
-        return configuration.getString("jcatapult.security.login.password-parameter", "j_password");
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public String getPasswordParameter() {
+    return configuration.getString("jcatapult.security.login.password-parameter", "j_password");
+  }
 }

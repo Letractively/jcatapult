@@ -18,29 +18,27 @@ package org.jcatapult.security;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface is a simple password encryptor.
- * </p>
+ * <p> This interface is a simple password encryptor. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ImplementedBy(JCEPasswordEncryptor.class)
 public interface PasswordEncryptor<T> {
-    /**
-     * Encrypts a password.
-     *
-     * @param   password The password to encrypt.
-     * @param   t This object is sometimes used to assist in the salt source to make the encryption
-     *          better. However, implementations might not use this or a salt source at all.
-     * @return  The encrypted password.
-     */
-    String encryptPassword(String password, T t);
+  /**
+   * Encrypts a password.
+   *
+   * @param password The password to encrypt.
+   * @param t        This object is sometimes used to assist in the salt source to make the encryption better.
+   *                 However, implementations might not use this or a salt source at all.
+   * @return The encrypted password.
+   */
+  String encryptPassword(String password, T t);
 
-    /**
-     * Encrypts a password.
-     *
-     * @param   password The password to encrypt.
-     * @return  The encrypted password.
-     */
-    String encryptPassword(String password);
+  /**
+   * Encrypts a password.
+   *
+   * @param password The password to encrypt.
+   * @return The encrypted password.
+   */
+  String encryptPassword(String password);
 }

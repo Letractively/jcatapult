@@ -18,12 +18,10 @@ package org.jcatapult.security.auth;
 import org.jcatapult.security.JCatapultSecurityException;
 
 /**
- * <p>
- * This class is thrown when the user is logged in but is lacking the
- * correct credentials to access a specific resource.
- * </p>
+ * <p> This class is thrown when the user is logged in but is lacking the correct credentials to access a specific
+ * resource. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class AuthorizationException extends JCatapultSecurityException {
 }

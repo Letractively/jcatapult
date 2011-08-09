@@ -20,13 +20,10 @@ import org.jcatapult.servlet.Workflow;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This interface defines the credential storage workflow that is used to
- * load and store credentials from a persistent storage location, i.e. the
- * session.
- * </p>
+ * <p> This interface defines the credential storage workflow that is used to load and store credentials from a
+ * persistent storage location, i.e. the session. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultCredentialStorageWorkflow.class)
 public interface CredentialStorageWorkflow extends Workflow {

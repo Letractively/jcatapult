@@ -18,27 +18,25 @@ package org.jcatapult.security.login;
 import java.util.Map;
 
 /**
- * <p>
- * This interface defines a mechanism by which applications can listener for
- * authentication events. There can only be one listener per application.
- * </p>
+ * <p> This interface defines a mechanism by which applications can listener for authentication events. There can only
+ * be one listener per application. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public interface AuthenticationListener<T> {
-    /**
-     * The given user successfully logged in.
-     *
-     * @param   user The user.
-     */
-    void successfulLogin(T user);
+  /**
+   * The given user successfully logged in.
+   *
+   * @param user The user.
+   */
+  void successfulLogin(T user);
 
-    /**
-     * The given user failed to logged in.
-     *
-     * @param   username The username.
-     * @param   password The password.
-     * @param   parameters The parameters.
-     */
-    void failedLogin(String username, String password, Map<String, Object> parameters);
+  /**
+   * The given user failed to logged in.
+   *
+   * @param username   The username.
+   * @param password   The password.
+   * @param parameters The parameters.
+   */
+  void failedLogin(String username, String password, Map<String, Object> parameters);
 }

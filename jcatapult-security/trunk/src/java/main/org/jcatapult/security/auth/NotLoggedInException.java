@@ -18,12 +18,9 @@ package org.jcatapult.security.auth;
 import org.jcatapult.security.JCatapultSecurityException;
 
 /**
- * <p>
- * This class is thrown when a resource requires the user to be
- * logged in to access.
- * </p>
+ * <p> This class is thrown when a resource requires the user to be logged in to access. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class NotLoggedInException extends JCatapultSecurityException {
 }

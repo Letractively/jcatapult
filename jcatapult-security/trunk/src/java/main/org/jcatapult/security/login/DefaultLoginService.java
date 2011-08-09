@@ -25,80 +25,70 @@ import org.jcatapult.security.servlet.JCatapultSecurityContextProvider;
 import com.google.inject.Inject;
 
 /**
- * <p>
- * This class is the default implementation of the login service.
- * It uses the {@link AuthenticationService} to get the user object
- * and the {@link UserAdapter} to get the password to ensure that
- * the passwords match. Since passwords are encrypted during registration
- * using the {@link PasswordEncryptor}, this encrypts the incoming
- * password to compare with the password from the user object
- * retrieved from the AuthenticationService.
- * </p>
+ * <p> This class is the default implementation of the login service. It uses the {@link AuthenticationService} to get
+ * the user object and the {@link UserAdapter} to get the password to ensure that the passwords match. Since passwords
+ * are encrypted during registration using the {@link PasswordEncryptor}, this encrypts the incoming password to compare
+ * with the password from the user object retrieved from the AuthenticationService. </p> <p/> <p> In order to track
+ * logins (both successful and failed), you can optionally register an {@link AuthenticationListener} with this service.
+ * That listener will be called whenever a login fails or succeeds. </p>
  *
- * <p>
- * In order to track logins (both successful and failed), you can
- * optionally register an {@link AuthenticationListener} with this
- * service. That listener will be called whenever a login fails or
- * succeeds.
- * </p> 
- *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class DefaultLoginService implements LoginService {
-    private final AuthenticationService authenticationService;
-    private final UserAdapter userAdapter;
-    private final PasswordEncryptor passwordEncryptor;
-    private final JCatapultSecurityContextProvider securityContextProvider;
-    private AuthenticationListener authenticationListener;
+  private final AuthenticationService authenticationService;
+  private final UserAdapter userAdapter;
+  private final PasswordEncryptor passwordEncryptor;
+  private final JCatapultSecurityContextProvider securityContextProvider;
+  private AuthenticationListener authenticationListener;
 
-    @Inject
-    public DefaultLoginService(AuthenticationService authenticationService, UserAdapter userAdapter,
-            PasswordEncryptor passwordEncryptor, JCatapultSecurityContextProvider securityContextProvider) {
-        this.authenticationService = authenticationService;
-        this.userAdapter = userAdapter;
-        this.passwordEncryptor = passwordEncryptor;
-        this.securityContextProvider = securityContextProvider;
-    }
+  @Inject
+  public DefaultLoginService(AuthenticationService authenticationService, UserAdapter userAdapter,
+                             PasswordEncryptor passwordEncryptor, JCatapultSecurityContextProvider securityContextProvider) {
+    this.authenticationService = authenticationService;
+    this.userAdapter = userAdapter;
+    this.passwordEncryptor = passwordEncryptor;
+    this.securityContextProvider = securityContextProvider;
+  }
 
-    /**
-     * Sets in the authentication listener for this application.
-     *
-     * @param   listener The listener.
-     */
-    @Inject(optional = true)
-    public void setAuthenticationListener(AuthenticationListener listener) {
-        this.authenticationListener = listener;
-    }
+  /**
+   * Sets in the authentication listener for this application.
+   *
+   * @param   listener The listener.
+   */
+  @Inject(optional = true)
+  public void setAuthenticationListener(AuthenticationListener listener) {
+    this.authenticationListener = listener;
+  }
 
-    @SuppressWarnings("unchecked")
-    public Object login(String username, String password, Map<String, Object> parameters)
+  @SuppressWarnings("unchecked")
+  public Object login(String username, String password, Map<String, Object> parameters)
     throws InvalidUsernameException, InvalidPasswordException {
-        Object user;
-        try {
-            user = authenticationService.loadUser(username, parameters);
-            if (user == null) {
-                throw new InvalidUsernameException();
-            }
+    Object user;
+    try {
+      user = authenticationService.loadUser(username, parameters);
+      if (user == null) {
+        throw new InvalidUsernameException();
+      }
 
-            String encrypted = passwordEncryptor.encryptPassword(password, user);
-            String userPassword = userAdapter.getPassword(user);
-            if (!userPassword.equals(encrypted)) {
-                throw new InvalidPasswordException();
-            }
-        } catch (JCatapultSecurityException e) {
-            if (authenticationListener != null) {
-                authenticationListener.failedLogin(username, password, parameters);
-            }
-            
-            throw e;
-        }
+      String encrypted = passwordEncryptor.encryptPassword(password, user);
+      String userPassword = userAdapter.getPassword(user);
+      if (!userPassword.equals(encrypted)) {
+        throw new InvalidPasswordException();
+      }
+    } catch (JCatapultSecurityException e) {
+      if (authenticationListener != null) {
+        authenticationListener.failedLogin(username, password, parameters);
+      }
 
-        // Save the user to the context since the login was good
-        if (authenticationListener != null) {
-            authenticationListener.successfulLogin(user);
-        }
-        securityContextProvider.login(user);
-
-        return user;
+      throw e;
     }
+
+    // Save the user to the context since the login was good
+    if (authenticationListener != null) {
+      authenticationListener.successfulLogin(user);
+    }
+    securityContextProvider.login(user);
+
+    return user;
+  }
 }

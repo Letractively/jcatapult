@@ -18,25 +18,23 @@ package org.jcatapult.security.auth;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This class is the abstract method that is used by the JCatapult security
- * framework for authorizing users against application resources.
- * </p>
+ * <p> This class is the abstract method that is used by the JCatapult security framework for authorizing users against
+ * application resources. </p>
  *
  * @author Brian Pontarelli
  */
 @ImplementedBy(ConfiguredAuthorizer.class)
 public interface Authorizer {
-    /**
-     * Authorize the given user for the given resource. In most cases the resource is a the requested
-     * URI from the web browser.
-     *
-     * @param   user The user.
-     * @param   resource The resource.
-     * @throws AuthorizationException If the user is not null (meaning they are logged in) and they
-     *          don't have the correct permissions to access the resource.
-     * @throws  NotLoggedInException If the user is null (meaning they are NOT logged in) and they
-     *          are accessing a resource that requires permission to access.
-     */
-    void authorize(Object user, String resource) throws AuthorizationException, NotLoggedInException;
+  /**
+   * Authorize the given user for the given resource. In most cases the resource is a the requested URI from the web
+   * browser.
+   *
+   * @param user     The user.
+   * @param resource The resource.
+   * @throws AuthorizationException If the user is not null (meaning they are logged in) and they don't have the
+   *                                correct permissions to access the resource.
+   * @throws NotLoggedInException   If the user is null (meaning they are NOT logged in) and they are accessing a
+   *                                resource that requires permission to access.
+   */
+  void authorize(Object user, String resource) throws AuthorizationException, NotLoggedInException;
 }

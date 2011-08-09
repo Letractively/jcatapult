@@ -20,13 +20,10 @@ import org.jcatapult.servlet.Workflow;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p>
- * This class performs the authorization of the request for the
- * user that is currently logged in, or the anonymous user if no one
- * is currently logged in.
- * </p>
+ * <p> This class performs the authorization of the request for the user that is currently logged in, or the anonymous
+ * user if no one is currently logged in. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 @ImplementedBy(DefaultAuthorizationWorkflow.class)
 public interface AuthorizationWorkflow extends Workflow {
