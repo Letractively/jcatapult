@@ -17,6 +17,7 @@ package org.jcatapult.mvc.result.message.control;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,9 @@ import static net.java.util.CollectionTools.*;
 @ControlAttributes(
     required = {
         @ControlAttribute(name = "key")
+    },
+    optional = {
+        @ControlAttribute(name = "values", types = List.class)
     }
 )
 public class Message extends AbstractControl implements TemplateMethodModel {
@@ -62,10 +66,14 @@ public class Message extends AbstractControl implements TemplateMethodModel {
         String bundle = determineBundleName(attributes);
         String key = (String) attributes.remove("key");
         String defaultMesg = (String) attributes.remove("default");
+        List values = (List) attributes.remove("values");
+        if (values == null) {
+            values = new ArrayList();
+        }
 
         String message;
         try {
-            message = messageProvider.getMessage(bundle, key);
+            message = messageProvider.getMessage(bundle, key, values.toArray());
         } catch (MissingMessageException e) {
             message = defaultMesg;
         }

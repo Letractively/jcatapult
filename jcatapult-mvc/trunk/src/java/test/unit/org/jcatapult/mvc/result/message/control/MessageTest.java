@@ -18,11 +18,12 @@ package org.jcatapult.mvc.result.message.control;
 import org.example.action.user.Edit;
 import org.jcatapult.mvc.action.DefaultActionInvocation;
 import org.jcatapult.mvc.result.control.ControlBaseTest;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.google.inject.Inject;
+import static java.util.Arrays.asList;
 import static net.java.util.CollectionTools.*;
+import static org.junit.Assert.*;
 
 /**
  * <p>
@@ -51,6 +52,16 @@ public class MessageTest extends ControlBaseTest {
         run(message,
             mapNV("key", "key", "bundle", "/user/edit-bundle"),
             null, "Bundle Message"
+        );
+    }
+
+    @Test
+    public void messageBundleWithParams() {
+        Edit action = new Edit();
+        ais.setCurrent(new DefaultActionInvocation(action, "/user/edit", null, null));
+        run(message,
+            mapNV("key", "params", "bundle", "/user/edit-bundle", "values", asList("Params")),
+            null, "Params Message"
         );
     }
 
