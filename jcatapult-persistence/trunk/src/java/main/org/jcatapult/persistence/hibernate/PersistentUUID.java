@@ -23,7 +23,8 @@ import java.sql.Types;
 import java.util.UUID;
 
 import org.hibernate.HibernateException;
-import org.hibernate.usertype.EnhancedUserType;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.usertype.UserType;
 import org.jcatapult.persistence.service.DatabaseType;
 import org.jcatapult.persistence.service.DatabaseType.Database;
 import org.jcatapult.persistence.util.UUIDTools;
@@ -43,36 +44,17 @@ import org.jcatapult.persistence.util.UUIDTools;
  *
  * @author Brian Pontarelli
  */
-public class PersistentUUID implements EnhancedUserType {
-  /**
-   * Calls toString on the value.
-   *
-   * @param value The value.
-   * @return toString.
-   */
-  @Override
-  public String objectToSQLString(Object value) {
-    return value.toString();
-  }
-
-  @Override
-  public String toXMLString(Object value) {
-    return value.toString();
-  }
-
-  @Override
-  public Object fromXMLString(String xmlValue) {
-    return UUID.fromString(xmlValue);
-  }
-
+public class PersistentUUID implements UserType {
   /**
    * @return Types.BINARY.
    */
   @Override
   public int[] sqlTypes() {
-    return new int[]{
-      Types.BINARY
-    };
+    if (DatabaseType.database == Database.MYSQL) {
+      return new int[] {Types.BINARY};
+    }
+
+    return new int[] {Types.OTHER};
   }
 
   /**
@@ -112,7 +94,7 @@ public class PersistentUUID implements EnhancedUserType {
    * @throws java.sql.SQLException If the value couldn't be retrieved from the result set.
    */
   @Override
-  public Object nullSafeGet(ResultSet rs, String[] names, Object owner) throws SQLException {
+  public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
     Object value = rs.getObject(names[0]);
     if (value == null || rs.wasNull()) {
       return null;
@@ -135,18 +117,19 @@ public class PersistentUUID implements EnhancedUserType {
    * @throws SQLException If the set fails.
    */
   @Override
-  public void nullSafeSet(PreparedStatement st, Object value, int index) throws SQLException {
+  public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
     if (DatabaseType.database == Database.POSTGRESQL) {
       st.setObject(index, value);
-    } else {
+    } else if (value != null) {
       st.setObject(index, UUIDTools.toByteArray((UUID) value));
+    } else {
+      st.setNull(index, sqlTypes()[0]);
     }
   }
 
   @Override
   public Object deepCopy(Object value) throws HibernateException {
-    UUID u = (UUID) value;
-    return new UUID(u.getMostSignificantBits(), u.getLeastSignificantBits());
+    return value;
   }
 
   /**

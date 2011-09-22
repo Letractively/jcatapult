@@ -78,11 +78,11 @@ public class DriverAwareJPAService extends AbstractJPAService {
     if (name.contains("mysql")) {
       logger.fine("Connecting to a MySQL database");
       DatabaseType.database = Database.MYSQL;
-      return "org.jcatapult.persistence.hibernate.MySQL5InnoDBWithUUIDDialect";
+      return "org.hibernate.dialect.MySQL5InnoDBDialect";
     } else {
       logger.fine("Connecting to a PostgreSQL database");
       DatabaseType.database = Database.POSTGRESQL;
-      return "org.jcatapult.persistence.hibernate.PostgreSQLWithUUIDDialect";
+      return "org.hibernate.dialect.PostgreSQLDialect";
     }
   }
 }

@@ -21,6 +21,7 @@ import javax.persistence.PersistenceException;
 import javax.sql.RowSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 import org.jcatapult.persistence.test.JPABaseTest;
 import org.junit.Test;
@@ -349,11 +350,13 @@ public class JPAPersistenceServiceTest extends JPABaseTest {
     // Test that the persist works and that it correctly handles the dates using the interceptor
     User user = new User();
     user.setName("Fred");
+    user.setUuid(UUID.randomUUID());
     service.persist(user);
 
     user = service.findAllByType(User.class).get(0);
     assertNotNull(user);
     assertEquals("Fred", user.getName());
+    assertNotNull(user.getUuid());
 
     // Test the unique key violation
     user = new User();

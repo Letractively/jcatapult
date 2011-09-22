@@ -16,10 +16,17 @@
 package org.jcatapult.persistence.service.jpa;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.metamodel.Metamodel;
+
+import java.util.Map;
 
 import com.google.inject.Inject;
 
@@ -146,5 +153,115 @@ public class EntityManagerProxy implements EntityManager {
   public EntityTransaction getTransaction() {
     proxy = provider.get();
     return proxy.getTransaction();
+  }
+
+  // JPA 2.0 methods
+
+  @Override
+  public <T> T find(Class<T> entityClass, Object primaryKey, Map<String, Object> properties) {
+    proxy = provider.get();
+    return proxy.find(entityClass, primaryKey, properties);
+  }
+
+  @Override
+  public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode) {
+    proxy = provider.get();
+    return proxy.find(entityClass, primaryKey, lockMode);
+  }
+
+  @Override
+  public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode, Map<String, Object> properties) {
+    proxy = provider.get();
+    return proxy.find(entityClass, primaryKey, lockMode, properties);
+  }
+
+  @Override
+  public void lock(Object entity, LockModeType lockMode, Map<String, Object> properties) {
+    proxy = provider.get();
+    proxy.lock(entity, lockMode, properties);
+  }
+
+  @Override
+  public void refresh(Object entity, Map<String, Object> properties) {
+    proxy = provider.get();
+    proxy.refresh(entity, properties);
+  }
+
+  @Override
+  public void refresh(Object entity, LockModeType lockMode) {
+    proxy = provider.get();
+    proxy.refresh(entity, lockMode);
+  }
+
+  @Override
+  public void refresh(Object entity, LockModeType lockMode, Map<String, Object> properties) {
+    proxy = provider.get();
+    proxy.refresh(entity, lockMode, properties);
+  }
+
+  @Override
+  public void detach(Object entity) {
+    proxy = provider.get();
+    proxy.detach(entity);
+  }
+
+  @Override
+  public LockModeType getLockMode(Object entity) {
+    proxy = provider.get();
+    return proxy.getLockMode(entity);
+  }
+
+  @Override
+  public void setProperty(String propertyName, Object value) {
+    proxy = provider.get();
+    proxy.setProperty(propertyName, value);
+  }
+
+  @Override
+  public Map<String, Object> getProperties() {
+    proxy = provider.get();
+    return proxy.getProperties();
+  }
+
+  @Override
+  public <T> TypedQuery<T> createQuery(CriteriaQuery<T> criteriaQuery) {
+    proxy = provider.get();
+    return proxy.createQuery(criteriaQuery);
+  }
+
+  @Override
+  public <T> TypedQuery<T> createQuery(String qlString, Class<T> resultClass) {
+    proxy = provider.get();
+    return proxy.createQuery(qlString, resultClass);
+  }
+
+  @Override
+  public <T> TypedQuery<T> createNamedQuery(String name, Class<T> resultClass) {
+    proxy = provider.get();
+    return proxy.createNamedQuery(name, resultClass);
+  }
+
+  @Override
+  public <T> T unwrap(Class<T> cls) {
+    proxy = provider.get();
+    return proxy.unwrap(cls);
+  }
+
+  @Override
+  public EntityManagerFactory getEntityManagerFactory() {
+    proxy = provider.get();
+    return proxy.getEntityManagerFactory();
+  }
+
+  @Override
+  public CriteriaBuilder getCriteriaBuilder() {
+    proxy = provider.get();
+    return proxy.getCriteriaBuilder();
+  }
+
+  @Override
+  public Metamodel getMetamodel() {
+    proxy = provider.get();
+    return proxy.getMetamodel();
   }
 }

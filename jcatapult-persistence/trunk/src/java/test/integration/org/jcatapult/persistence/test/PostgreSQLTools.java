@@ -17,9 +17,8 @@ package org.jcatapult.persistence.test;
 
 import java.util.logging.Logger;
 
+import org.jcatapult.jndi.MockJNDI;
 import org.postgresql.ds.PGSimpleDataSource;
-
-import net.java.naming.MockJNDI;
 
 /**
  * <p> This is a toolkit that provides helper methods for working with a PostgreSQL relational databases. </p>
