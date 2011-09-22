@@ -15,12 +15,12 @@
  */
 package org.jcatapult.test;
 
+import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletRequestWrapper;
-
 import org.jcatapult.guice.GuiceContainer;
+import org.jcatapult.jndi.MockJNDI;
 import org.jcatapult.servlet.ServletObjectsHolder;
 import org.jcatapult.test.servlet.MockHttpServletRequest;
 import org.jcatapult.test.servlet.MockHttpServletResponse;
@@ -31,10 +31,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 
+import net.java.util.CollectionTools;
+
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import net.java.naming.MockJNDI;
-import net.java.util.CollectionTools;
 
 /**
  * <p>
