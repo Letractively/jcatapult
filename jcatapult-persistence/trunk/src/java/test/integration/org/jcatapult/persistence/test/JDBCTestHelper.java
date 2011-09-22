@@ -27,10 +27,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
+import org.jcatapult.jndi.MockJNDI;
 import org.jcatapult.persistence.service.DatabaseType;
 import org.jcatapult.persistence.service.DatabaseType.Database;
 
-import net.java.naming.MockJNDI;
 import net.java.sql.ScriptExecutor;
 
 import com.sun.rowset.CachedRowSetImpl;

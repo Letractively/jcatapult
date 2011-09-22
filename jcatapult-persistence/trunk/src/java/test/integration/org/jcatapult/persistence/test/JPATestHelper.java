@@ -26,11 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.jcatapult.jndi.MockJNDI;
 import org.jcatapult.persistence.service.jpa.EntityManagerContext;
 import org.jcatapult.test.Fixture;
 import org.junit.Ignore;
 
-import net.java.naming.MockJNDI;
 import net.java.text.SimplePluralizer;
 import net.java.xml.JavaBeanObjectCreator;
 import net.java.xml.Unmarshaller;
@@ -77,10 +77,10 @@ public class JPATestHelper {
     String dbType = JDBCTestHelper.initialize(jndi);
     if (dbType == null || dbType.equals("mysql")) {
       // This is required to tell Hibernate to use transactions
-      properties.put("hibernate.dialect", "org.jcatapult.persistence.hibernate.MySQL5InnoDBWithUUIDDialect");
+      properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
     } else if (dbType.equals("postgresql")) {
       // This is required to tell Hibernate to use postgres to create the tables
-      properties.put("hibernate.dialect", "org.jcatapult.persistence.hibernate.PostgreSQLWithUUIDDialect");
+      properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
     }
 
     // Create the JPA EMF

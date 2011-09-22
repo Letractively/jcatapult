@@ -33,12 +33,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.jcatapult.environment.Environment;
 import org.jcatapult.guice.GuiceContainer;
+import org.jcatapult.jndi.MockJNDI;
 import org.jcatapult.persistence.service.jdbc.ConnectionContext;
 import org.jcatapult.persistence.service.jpa.EntityManagerContext;
-import org.jcatapult.persistence.test.MySQLTools;
+import org.jcatapult.persistence.test.JPATestHelper;
 import org.junit.Test;
-
-import net.java.naming.MockJNDI;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
@@ -54,9 +53,9 @@ public class JCatapultFilterTest {
   @Test
   public void testJPA() throws ServletException, IOException {
     MockJNDI jndi = new MockJNDI();
-    MySQLTools.setup(jndi, "jcatapult_persistence_test");
     jndi.bind("java:comp/env/environment", new Environment("unittesting"));
     jndi.activate();
+    JPATestHelper.initialize(jndi);
 
     // Setup the configuration for the static resource workflow
     ServletContext context = createStrictMock(ServletContext.class);

@@ -18,7 +18,9 @@ package org.jcatapult.persistence.service.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.UUID;
 
+import org.hibernate.annotations.Type;
 import org.jcatapult.persistence.domain.TimeStampableImpl;
 
 /**
@@ -32,12 +34,24 @@ public class User extends TimeStampableImpl {
   @Column(unique = true)
   private String name;
 
+  @Column
+  @Type(type = "org.jcatapult.persistence.hibernate.PersistentUUID")
+  private UUID uuid;
+
   public String getName() {
     return name;
   }
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public UUID getUuid() {
+    return uuid;
+  }
+
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
   }
 
   public String toString() {

@@ -23,8 +23,10 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Currency;
 
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StringType;
 import org.hibernate.usertype.UserType;
 
 /**
@@ -62,10 +64,10 @@ public class MoneyCurrencyType implements UserType {
     return object.hashCode();
   }
 
-  public Object nullSafeGet(ResultSet resultSet, String[] strings, Object object)
-    throws HibernateException, SQLException {
-    Object amount = Hibernate.BIG_DECIMAL.nullSafeGet(resultSet, strings[0]);
-    Object currency = Hibernate.STRING.nullSafeGet(resultSet, strings[1]);
+  @Override
+  public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
+    Object amount = BigDecimalType.INSTANCE.nullSafeGet(rs, names[0], session, owner);
+    Object currency = StringType.INSTANCE.nullSafeGet(rs, names[1], session, owner);
     if (amount == null || currency == null) {
       return null;
     }
@@ -73,15 +75,15 @@ public class MoneyCurrencyType implements UserType {
     return Money.valueOf((BigDecimal) amount, Currency.getInstance((String) currency));
   }
 
-  public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index)
-    throws HibernateException, SQLException {
+  @Override
+  public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
     if (value == null) {
-      Hibernate.BIG_DECIMAL.nullSafeSet(preparedStatement, null, index);
-      Hibernate.STRING.nullSafeSet(preparedStatement, null, index + 1);
+      BigDecimalType.INSTANCE.nullSafeSet(st, value, index, session);
+      StringType.INSTANCE.nullSafeSet(st, null, index + 1, session);
     } else {
       Money money = (Money) value;
-      Hibernate.BIG_DECIMAL.nullSafeSet(preparedStatement, money.toBigDecimal(), index);
-      Hibernate.STRING.nullSafeSet(preparedStatement, money.getCurrency().getCurrencyCode(), index + 1);
+      BigDecimalType.INSTANCE.nullSafeSet(st, money.toBigDecimal(), index, session);
+      StringType.INSTANCE.nullSafeSet(st, money.getCurrency().getCurrencyCode(), index + 1, session);
     }
   }
 

@@ -19,8 +19,8 @@ import java.io.Serializable;
 
 import org.hibernate.HibernateException;
 import org.hibernate.dialect.Dialect;
-import org.hibernate.engine.SessionImplementor;
-import org.hibernate.id.IdentifierGeneratorFactory;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.id.IdentifierGeneratorHelper;
 import org.hibernate.id.IdentityGenerator.GetGeneratedKeysDelegate;
 import org.hibernate.id.PostInsertIdentifierGenerator;
 import org.hibernate.id.PostInsertIdentityPersister;
@@ -72,6 +72,6 @@ public class GeneratedKeysGenerator implements PostInsertIdentifierGenerator {
       }
     }
 
-    return IdentifierGeneratorFactory.POST_INSERT_INDICATOR;
+    return IdentifierGeneratorHelper.POST_INSERT_INDICATOR;
   }
 }

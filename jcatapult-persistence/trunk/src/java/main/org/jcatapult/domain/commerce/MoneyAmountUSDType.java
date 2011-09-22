@@ -23,8 +23,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Currency;
 
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.BigDecimalType;
 import org.hibernate.usertype.UserType;
 
 /**
@@ -62,9 +63,9 @@ public class MoneyAmountUSDType implements UserType {
     return object.hashCode();
   }
 
-  public Object nullSafeGet(ResultSet resultSet, String[] strings, Object object)
-    throws HibernateException, SQLException {
-    Object value = Hibernate.BIG_DECIMAL.nullSafeGet(resultSet, strings[0]);
+  @Override
+  public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
+    Object value = BigDecimalType.INSTANCE.nullSafeGet(rs, names, session, owner);
     if (value == null) {
       return null;
     }
@@ -72,10 +73,10 @@ public class MoneyAmountUSDType implements UserType {
     return Money.valueOf((BigDecimal) value, Currency.getInstance("USD"));
   }
 
-  public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index)
-    throws HibernateException, SQLException {
+  @Override
+  public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
     if (value == null) {
-      Hibernate.BIG_DECIMAL.nullSafeSet(preparedStatement, null, index);
+      BigDecimalType.INSTANCE.nullSafeSet(st, value, index, session);
     } else {
       Money money = (Money) value;
       if (!money.getCurrency().getCurrencyCode().equals("USD")) {
@@ -84,7 +85,7 @@ public class MoneyAmountUSDType implements UserType {
           "currency code you supplied was [" + money.getCurrency().getCurrencyCode() + "]");
       }
 
-      Hibernate.BIG_DECIMAL.nullSafeSet(preparedStatement, money.toBigDecimal(), index);
+      BigDecimalType.INSTANCE.nullSafeSet(st, money.toBigDecimal(), index, session);
     }
   }
 

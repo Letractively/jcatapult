@@ -18,7 +18,7 @@ package org.jcatapult.persistence.test;
 import javax.sql.DataSource;
 import java.util.logging.Logger;
 
-import net.java.naming.MockJNDI;
+import org.jcatapult.jndi.MockJNDI;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
