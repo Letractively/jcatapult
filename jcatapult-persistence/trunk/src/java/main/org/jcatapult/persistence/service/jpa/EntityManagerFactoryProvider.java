@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * <p> This class is a Guice provider that provider access to the EntityManagerFactory. </p>
+ * This class is a Guice provider that provider access to the EntityManagerFactory.
  *
  * @author Brian Pontarelli
  */

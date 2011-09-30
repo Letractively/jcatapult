@@ -15,30 +15,26 @@
  */
 package org.jcatapult.persistence.domain;
 
-import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
- * <p> This class implements the SoftDeletable interface and extends the IdentifiableImpl class for a primary key. </p>
+ * This class can be the parent class for anything with a primary key.
  *
  * @author Brian Pontarelli
  */
 @MappedSuperclass
-public class SoftDeletableImpl extends IdentifiableImpl implements SoftDeletable {
-  @Column(nullable = false)
-  private boolean deleted = false;
+public abstract class IntegerIdentifiable implements Serializable, Identifiable {
+  @Id
+  @GeneratedValue
+  public Integer id;
 
   /**
    * {@inheritDoc}
    */
-  public boolean isDeleted() {
-    return deleted;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void setDeleted(boolean deleted) {
-    this.deleted = deleted;
+  public Integer getId() {
+    return id;
   }
 }

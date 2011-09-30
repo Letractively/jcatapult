@@ -21,16 +21,16 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 import org.hibernate.annotations.Type;
-import org.jcatapult.persistence.domain.TimeStampableImpl;
+import org.jcatapult.persistence.domain.BaseTimeStampable;
 
 /**
- * <p> This is a simple User for testing. </p>
+ * This is a simple User for testing.
  *
  * @author Brian Pontarelli
  */
 @Entity
 @Table(name = "users")
-public class User extends TimeStampableImpl {
+public class User extends BaseTimeStampable {
   @Column(unique = true)
   private String name;
 

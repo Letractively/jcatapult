@@ -21,8 +21,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * <p> This class is a provider for a JDBC DataSource. This uses the {@link JDBCService} to get the data source from.
- * </p>
+ * This class is a provider for a JDBC DataSource. This uses the {@link JDBCService} to get the data source from.
  *
  * @author Brian Pontarelli
  */
@@ -36,6 +35,6 @@ public class DataSourceProvider implements Provider<DataSource> {
 
   @Override
   public DataSource get() {
-    return service.getDataSouce();
+    return service.getDataSource();
   }
 }

@@ -30,8 +30,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 /**
- * <p> This is the default implementation of the JDBC service. it uses a single named constant to determine if JDBC is
- * enabled. This constant is named <strong>non-jta-data-source</strong>. </p>
+ * This is the default implementation of the JDBC service. it uses a single named constant to determine if JDBC is
+ * enabled. This constant is named <strong>non-jta-data-source</strong>.
  *
  * @author Brian Pontarelli
  */
@@ -63,7 +63,7 @@ public class DefaultJDBCService implements JDBCService {
    * {@inheritDoc}
    */
   @Override
-  public DataSource getDataSouce() {
+  public DataSource getDataSource() {
     return ds;
   }
 

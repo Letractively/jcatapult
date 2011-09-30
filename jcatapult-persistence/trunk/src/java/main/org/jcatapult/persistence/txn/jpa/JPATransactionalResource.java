@@ -23,7 +23,7 @@ import org.jcatapult.persistence.txn.TransactionException;
 import org.jcatapult.persistence.txn.TransactionalResource;
 
 /**
- * <p> This is the JPA implementation of the transaction state. </p>
+ * This is the JPA implementation of the transaction state.
  *
  * @author Brian Pontarelli
  */

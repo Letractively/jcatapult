@@ -18,8 +18,8 @@ package org.jcatapult.persistence.domain;
 import org.joda.time.DateTime;
 
 /**
- * <p> This interface defines an Entity that has time stamp information for when the database record was created and
- * last updated. </p>
+ * This interface defines an Entity that has time stamp information for when the database record was created and last
+ * updated.
  *
  * @author Brian Pontarelli
  */
@@ -30,17 +30,7 @@ public interface TimeStampable {
   DateTime getInsertDate();
 
   /**
-   * @param dateTime The date the Entity was inserted on or null if the entity is trasient.
-   */
-  void setInsertDate(DateTime dateTime);
-
-  /**
    * @return The date the Entity was updated on or null if the entity is trasient.
    */
   DateTime getUpdateDate();
-
-  /**
-   * @param dateTime The date the Entity was updated on or null if the entity is trasient.
-   */
-  void setUpdateDate(DateTime dateTime);
 }

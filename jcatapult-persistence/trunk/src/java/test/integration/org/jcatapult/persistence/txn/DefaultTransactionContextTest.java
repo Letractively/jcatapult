@@ -17,13 +17,13 @@ package org.jcatapult.persistence.txn;
 
 import java.sql.SQLException;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.testng.Assert.*;
 
 /**
- * <p> This class test the default transaction context. </p>
+ * This class test the default transaction context.
  *
  * @author Brian Pontarelli
  */

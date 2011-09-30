@@ -26,9 +26,10 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 /**
- * <p> This class implements the JPA service. It is a singleton and in the constructor it sets up the
- * EntityManagerFactory. </p> <p> This class is a singleton since it constructs the EntityManagerFactory in the
- * constructor and holds a reference to it. </p>
+ * This class implements the JPA service. It is a singleton and in the constructor it sets up the EntityManagerFactory.
+ * <p/>
+ * This class is a singleton since it constructs the EntityManagerFactory in the constructor and holds a reference to
+ * it.
  *
  * @author Brian Pontarelli
  */
@@ -38,15 +39,15 @@ public class DefaultJPAService extends AbstractJPAService {
 
   /**
    * @param txnContextManager The TransactionContextManager.
-   * @param jpaEnabled        If true, JPA will be setup, false it will not. A boolean flag controlled by the
-   *                          jcatapult configuration property named <strong>jcatapult.jpa.enabled</strong> that
-   *                          controls whether or not JPA will be initialized and then setup during each request.
+   * @param jpaEnabled        If true, JPA will be setup, false it will not. A boolean flag controlled by the injection
+   *                          property named <strong>jpa.enabled</strong> that controls whether or not JPA will be
+   *                          initialized and then setup during each request.
    * @param persistenceUnit   The name of the JPA persistence unit to use if JPA is being setup. This is controlled by
-   *                          the jcatapult configuration property named <strong>jcatapult.jpa.unit</strong>.
+   *                          the injection property named <strong>jpa.unit</strong>.
    */
   @Inject
-  public DefaultJPAService(TransactionContextManager txnContextManager, @Named("jcatapult.jpa.enabled") boolean jpaEnabled,
-                           @Named("jcatapult.jpa.unit") String persistenceUnit) {
+  public DefaultJPAService(TransactionContextManager txnContextManager, @Named("jpa.enabled") boolean jpaEnabled,
+                           @Named("jpa.unit") String persistenceUnit) {
     super(txnContextManager);
     if (jpaEnabled) {
       logger.fine("JPA is enabled");

@@ -15,35 +15,31 @@
  */
 package org.jcatapult.persistence.service.jpa;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import java.lang.annotation.Annotation;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Map;
 
 import org.jcatapult.persistence.domain.Identifiable;
 import org.jcatapult.persistence.domain.SoftDeletable;
-import org.jcatapult.persistence.service.PersistenceService;
 import org.jcatapult.persistence.service.Transaction;
 
 import com.google.inject.Inject;
 
 /**
- * <p> This class is the default implementation of the PersistenceService and provides default JPA behavior. It requires
+ * This class is the default implementation of the PersistenceService and provides default JPA behavior. It requires
  * that the {@link EntityManagerContext} be constructed correctly using the filter as described in that classes comments
- * (click on the link and read up on how to setup the filter). </p>
+ * (click on the link and read up on how to setup the filter).
  *
  * @author Brian Pontarelli
  */
-@SuppressWarnings("unchecked")
 public class JPAPersistenceService implements PersistenceService {
   private EntityManager entityManager;
-  private boolean verifyEntityClasses = true;
 
   /**
    * Constructs a new JPAPersistenceService that uses the given EntityManager to communicate with the database.
@@ -53,10 +49,6 @@ public class JPAPersistenceService implements PersistenceService {
   @Inject
   public JPAPersistenceService(EntityManager entityManager) {
     this.entityManager = entityManager;
-  }
-
-  public void setVerifyEntityClasses(boolean verifyEntityClasses) {
-    this.verifyEntityClasses = verifyEntityClasses;
   }
 
   /**
@@ -165,13 +157,12 @@ public class JPAPersistenceService implements PersistenceService {
    * @return The list.
    */
   protected <T> List<T> findAllByTypeInternal(Class<T> type, boolean includeDeleted) {
-    verify(type);
     StringBuilder queryString = new StringBuilder("select eb from ").append(stripPackage(type)).append(" eb");
     if (SoftDeletable.class.isAssignableFrom(type) && !includeDeleted) {
       queryString.append(" where eb.deleted = false");
     }
 
-    Query q = entityManager.createQuery(queryString.toString());
+    TypedQuery<T> q = entityManager.createQuery(queryString.toString(), type);
     return q.getResultList();
   }
 
@@ -201,14 +192,13 @@ public class JPAPersistenceService implements PersistenceService {
    * @return The count.
    */
   protected <T> long countInternal(Class<T> type, boolean includeDeleted) {
-    verify(type);
     StringBuilder queryString = new StringBuilder("select count(eb) from ").append(stripPackage(type)).append(" eb");
     if (SoftDeletable.class.isAssignableFrom(type) && !includeDeleted) {
       queryString.append(" where eb.deleted = false");
     }
 
-    Query q = entityManager.createQuery(queryString.toString());
-    return (Long) q.getSingleResult();
+    TypedQuery<Long> q = entityManager.createQuery(queryString.toString(), Long.class);
+    return q.getSingleResult();
   }
 
   /**
@@ -239,14 +229,12 @@ public class JPAPersistenceService implements PersistenceService {
    * @return The list of objects found.
    */
   protected <T> List<T> findByTypeInternal(Class<T> type, int start, int number, boolean includeDeleted) {
-    verify(type);
-
     StringBuilder queryString = new StringBuilder("select eb from ").append(stripPackage(type)).append(" eb");
     if (SoftDeletable.class.isAssignableFrom(type) && !includeDeleted) {
       queryString.append(" where eb.deleted = false");
     }
 
-    Query q = entityManager.createQuery(queryString.toString());
+    TypedQuery<T> q = entityManager.createQuery(queryString.toString(), type);
     q.setFirstResult(start);
     q.setMaxResults(number);
     return q.getResultList();
@@ -256,7 +244,7 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public <T> List<T> queryAll(Class<T> type, String query, Object... params) {
-    Query q = entityManager.createQuery(query);
+    TypedQuery<T> q = entityManager.createQuery(query, type);
     addParams(q, params);
     return q.getResultList();
   }
@@ -265,7 +253,7 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public <T> List<T> query(Class<T> type, String query, int start, int number, Object... params) {
-    Query q = entityManager.createQuery(query);
+    TypedQuery<T> q = entityManager.createQuery(query, type);
     addParams(q, params);
     q.setFirstResult(start);
     q.setMaxResults(number);
@@ -276,7 +264,7 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public <T> T queryFirst(Class<T> type, String query, Object... params) {
-    Query q = entityManager.createQuery(query);
+    TypedQuery<T> q = entityManager.createQuery(query, type);
     q.setFirstResult(0);
     q.setMaxResults(1);
     addParams(q, params);
@@ -292,16 +280,16 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public long queryCount(String query, Object... params) {
-    Query q = entityManager.createQuery(query);
+    TypedQuery<Long> q = entityManager.createQuery(query, Long.class);
     addParams(q, params);
-    return (Long) q.getSingleResult();
+    return q.getSingleResult();
   }
 
   /**
    * {@inheritDoc}
    */
   public <T> List<T> queryAllWithNamedParameters(Class<T> type, String query, Map<String, Object> params) {
-    Query q = entityManager.createQuery(query);
+    TypedQuery<T> q = entityManager.createQuery(query, type);
     addNamedParams(q, params);
     return q.getResultList();
   }
@@ -310,7 +298,7 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public <T> List<T> queryWithNamedParameters(Class<T> type, String query, int start, int number, Map<String, Object> params) {
-    Query q = entityManager.createQuery(query);
+    TypedQuery<T> q = entityManager.createQuery(query, type);
     addNamedParams(q, params);
     q.setFirstResult(start);
     q.setMaxResults(number);
@@ -321,7 +309,7 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public <T> T queryFirstWithNamedParameters(Class<T> type, String query, Map<String, Object> params) {
-    Query q = entityManager.createQuery(query);
+    TypedQuery<T> q = entityManager.createQuery(query, type);
     q.setFirstResult(0);
     q.setMaxResults(1);
     addNamedParams(q, params);
@@ -343,7 +331,7 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public <T> List<T> namedQueryAll(Class<T> type, String query, Object... params) {
-    Query q = entityManager.createNamedQuery(query);
+    TypedQuery<T> q = entityManager.createNamedQuery(query, type);
     addParams(q, params);
     return q.getResultList();
   }
@@ -352,7 +340,7 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public <T> List<T> namedQuery(Class<T> type, String query, int start, int number, Object... params) {
-    Query q = entityManager.createNamedQuery(query);
+    TypedQuery<T> q = entityManager.createNamedQuery(query, type);
     addParams(q, params);
     q.setFirstResult(start);
     q.setMaxResults(number);
@@ -363,7 +351,7 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public <T> T namedQueryFirst(Class<T> type, String query, Object... params) {
-    Query q = entityManager.createNamedQuery(query);
+    TypedQuery<T> q = entityManager.createNamedQuery(query, type);
     addParams(q, params);
     List<T> results = q.getResultList();
     if (results.size() > 0) {
@@ -377,7 +365,6 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public <T extends Identifiable> T findById(Class<T> type, int id) {
-    verify(type);
     T t = null;
     try {
       t = entityManager.find(type, id);
@@ -392,7 +379,6 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public <T> T findById(Class<T> type, Object id) {
-    verify(type);
     T t = null;
     try {
       t = entityManager.find(type, id);
@@ -418,7 +404,7 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public void persist(Object obj) {
-    // Check for and possibly start a tranasction
+    // Check for and possibly start a transaction
     Transaction transaction = startTransaction(entityManager);
     boolean exception = false;
     try {
@@ -439,7 +425,7 @@ public class JPAPersistenceService implements PersistenceService {
    * {@inheritDoc}
    */
   public void merge(Object obj) {
-    // Check for and possibly start a tranasction
+    // Check for and possibly start a transaction
     Transaction transaction = startTransaction(entityManager);
     boolean exception = false;
     try {
@@ -620,24 +606,6 @@ public class JPAPersistenceService implements PersistenceService {
    */
   public EntityManager getEntityManager() {
     return entityManager;
-  }
-
-  /**
-   * Ensures that the entity class contains the correct annotation to be persisted.
-   *
-   * @param type The entity type to check.
-   * @throws PersistenceException If the class is missing the Entity annotation.
-   */
-  protected void verify(Class<?> type) {
-    if (!verifyEntityClasses) {
-      return;
-    }
-
-    Annotation entityAntn = type.getAnnotation(Entity.class);
-    if (entityAntn == null) {
-      throw new PersistenceException("Invalid Identifiable class [" + type.getName() + "]. The " +
-        "class doesn't contain the @Entity annotation at the class declaration.");
-    }
   }
 
   /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2011, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,27 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.persistence;
-
-import org.jcatapult.persistence.service.PersistenceService;
-import org.jcatapult.persistence.test.JPABaseTest;
-import org.junit.Ignore;
-
-import com.google.inject.Inject;
+package org.jcatapult.persistence.jdbc;
 
 /**
- * <p> This class is the base test for jcatapult core to setup the test authentication service. </p>
+ * This is a generic runtime exception that is thrown from the {@link Select}, {@link Insert} and {@link Execute}
+ * classes.
  *
  * @author Brian Pontarelli
  */
-@Ignore
-public class PersistenceBaseTest extends JPABaseTest {
-  @Inject public PersistenceService persistenceService;
+public class JDBCException extends RuntimeException {
+  public JDBCException() {
+  }
+
+  public JDBCException(String message) {
+    super(message);
+  }
+
+  public JDBCException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public JDBCException(Throwable cause) {
+    super(cause);
+  }
 }

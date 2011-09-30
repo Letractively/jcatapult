@@ -20,16 +20,17 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
-import org.jcatapult.persistence.service.jdbc.ConnectionProxy;
+import org.jcatapult.persistence.service.jdbc.ConnectionProvider;
 import org.jcatapult.persistence.service.jdbc.DataSourceProvider;
 import org.jcatapult.persistence.service.jpa.EntityManagerFactoryProvider;
-import org.jcatapult.persistence.service.jpa.EntityManagerProxy;
+import org.jcatapult.persistence.service.jpa.EntityManagerProvider;
 import org.jcatapult.persistence.txn.TransactionMethodInterceptor;
 import org.jcatapult.persistence.txn.annotation.Transactional;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import static com.google.inject.matcher.Matchers.*;
+import com.google.inject.name.Names;
 
 /**
  * This module should be used for JPA or JDBC support. It sets up the injection for all of the JPA classes as well
@@ -38,6 +39,22 @@ import static com.google.inject.matcher.Matchers.*;
  * @author Brian Pontarelli
  */
 public class PersistenceModule extends AbstractModule {
+  private final boolean jpaEnabled;
+  private final String jpaUnit;
+  private final String dataSourceName;
+
+  public PersistenceModule() {
+    this.jpaEnabled = false;
+    this.jpaUnit = null;
+    this.dataSourceName = null;
+  }
+
+  public PersistenceModule(boolean jpaEnabled, String jpaUnit, String dataSourceName) {
+    this.jpaEnabled = jpaEnabled;
+    this.jpaUnit = jpaUnit;
+    this.dataSourceName = dataSourceName;
+  }
+
   /**
    * Configures everything.
    */
@@ -45,7 +62,9 @@ public class PersistenceModule extends AbstractModule {
   protected void configure() {
     configureJDBC();
     configureJPA();
-    bindInterceptor(any(), annotatedWith(Transactional.class), new TransactionMethodInterceptor());
+    TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    requestInjection(interceptor);
+    bindInterceptor(any(), annotatedWith(Transactional.class), interceptor);
   }
 
   /**
@@ -53,7 +72,8 @@ public class PersistenceModule extends AbstractModule {
    */
   protected void configureJDBC() {
     bind(DataSource.class).toProvider(DataSourceProvider.class).in(Singleton.class);
-    bind(Connection.class).to(ConnectionProxy.class);
+    bind(Connection.class).toProvider(ConnectionProvider.class);
+    bindConstant().annotatedWith(Names.named("non-jta-data-source")).to(dataSourceName);
   }
 
   /**
@@ -61,6 +81,8 @@ public class PersistenceModule extends AbstractModule {
    */
   protected void configureJPA() {
     bind(EntityManagerFactory.class).toProvider(EntityManagerFactoryProvider.class).in(Singleton.class);
-    bind(EntityManager.class).to(EntityManagerProxy.class);
+    bind(EntityManager.class).toProvider(EntityManagerProvider.class);
+    bindConstant().annotatedWith(Names.named("jpa.enabled")).to(jpaEnabled);
+    bindConstant().annotatedWith(Names.named("jpa.unit")).to(jpaUnit);
   }
 }

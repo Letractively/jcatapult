@@ -21,8 +21,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * <p> This class is a Guice provider that either pulls the EntityManager out of the thread local {@link
- * EntityManagerContext} or creates a new EntityManager using the factory and then puts that in the ThreadLocal. </p>
+ * This class is a Guice provider that either pulls the EntityManager out of the thread local {@link
+ * EntityManagerContext} or creates a new EntityManager using the factory and then puts that in the ThreadLocal.
  *
  * @author James Humphrey and Brian Pontarelli
  */

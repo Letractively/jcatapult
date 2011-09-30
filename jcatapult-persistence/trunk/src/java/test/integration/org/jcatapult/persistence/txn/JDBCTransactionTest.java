@@ -15,33 +15,35 @@
  */
 package org.jcatapult.persistence.txn;
 
+import javax.naming.NamingException;
 import javax.sql.RowSet;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.jcatapult.persistence.service.jpa.User;
-import org.jcatapult.persistence.test.JDBCBaseTest;
+import org.jcatapult.persistence.test.BaseJDBCTest;
 import org.jcatapult.persistence.test.JDBCTestHelper;
 import org.jcatapult.persistence.test.JPATestHelper;
 import org.jcatapult.persistence.txn.annotation.Transactional;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import com.google.inject.Inject;
-import static org.junit.Assert.*;
+import static org.jcatapult.persistence.test.JDBCTestHelper.*;
+import static org.testng.Assert.*;
 
 /**
- * <p> This class tests the transaction annotation and the defaults at the macro and micro levels. </p>
+ * This class tests the transaction annotation and the defaults at the macro and micro levels.
  *
  * @author Brian Pontarelli
  */
-public class JDBCTransactionTest extends JDBCBaseTest {
+public class JDBCTransactionTest extends BaseJDBCTest {
   @Inject public JDBCTestService service;
 
   @BeforeClass
-  public static void setUpJPA() {
+  public void setUpJPA() throws NamingException {
     // This will create the tables if this tests is run by itself
-    JPATestHelper.initialize(jndi);
+    JPATestHelper.initialize();
   }
 
   @Test
@@ -95,18 +97,18 @@ public class JDBCTransactionTest extends JDBCBaseTest {
 
     @Transactional()
     public void success() throws SQLException {
-      c.createStatement().executeUpdate("insert into users (id, insert_date, name, update_date) values (20001, now(), 'TransactionTest-success', now())");
+      c.createStatement().executeUpdate("insert into users (id, insert_date, name, update_date) values (20001, 1, 'TransactionTest-success', 1)");
     }
 
     @Transactional()
     public void failure() throws SQLException {
-      c.createStatement().executeUpdate("insert into users (id, insert_date, name, update_date) values (20002, now(), 'TransactionTest-failure', now())");
+      c.createStatement().executeUpdate("insert into users (id, insert_date, name, update_date) values (20002, 1, 'TransactionTest-failure', 1)");
       throw new RuntimeException();
     }
 
     @Transactional(processor = UserProcessor.class)
     public User returnValueSuccess() throws SQLException {
-      c.createStatement().executeUpdate("insert into users (id, insert_date, name, update_date) values (20003, now(), 'TransactionTest-returnValueSuccess', now())");
+      c.createStatement().executeUpdate("insert into users (id, insert_date, name, update_date) values (20003, 1, 'TransactionTest-returnValueSuccess', 1)");
       User user = new User();
       user.setName("TransactionTest-returnValueSuccess");
       return user;
@@ -114,7 +116,7 @@ public class JDBCTransactionTest extends JDBCBaseTest {
 
     @Transactional(processor = UserProcessor.class)
     public User returnValueFailure() throws SQLException {
-      c.createStatement().executeUpdate("insert into users (id, insert_date, name, update_date) values (20004, now(), 'TransactionTest-returnValueFailure', now())");
+      c.createStatement().executeUpdate("insert into users (id, insert_date, name, update_date) values (20004, 1, 'TransactionTest-returnValueFailure', 1)");
       User user = new User();
       user.setName("TransactionTest-returnValueFailure");
       return user;

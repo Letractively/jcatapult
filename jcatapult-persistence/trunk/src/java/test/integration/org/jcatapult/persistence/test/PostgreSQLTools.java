@@ -15,13 +15,14 @@
  */
 package org.jcatapult.persistence.test;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.util.logging.Logger;
 
-import org.jcatapult.jndi.MockJNDI;
 import org.postgresql.ds.PGSimpleDataSource;
 
 /**
- * <p> This is a toolkit that provides helper methods for working with a PostgreSQL relational databases. </p>
+ * This is a toolkit that provides helper methods for working with a PostgreSQL relational databases.
  *
  * @author James Humphrey
  * @author Brian Pontarelli
@@ -30,28 +31,22 @@ public class PostgreSQLTools {
   private static final Logger logger = Logger.getLogger(PostgreSQLTools.class.getName());
 
   /**
-   * Sets up the connection pool to PostgreSQL and puts that into the JNDI tree. This uses the project.xml file and
-   * the $HOME/build.properties file to grab the project name and DB username and password.
+   * Sets up the connection pool to PostgreSQL and puts that into the JNDI tree.
    *
-   * @param jndi   {@link net.java.naming.MockJNDI}
-   * @param dbName the db name
+   * @param jndi   The JNDI context.
+   * @param dbName The database name to connect to as well as the name to put the DataSource into the JNDI context under
+   *               (including the java:comp/env/jdbc/ prefix)
    * @return The DataSource and never null.
+   * @throws NamingException If the JNDI binding fails.
    */
-  public static PGSimpleDataSource setup(MockJNDI jndi, String dbName) {
-    String projectName = ProjectTools.loadProjectName();
-
-    // if the dbName is empty then assume <projectName>_test
-    if (dbName == null || dbName.isEmpty()) {
-      dbName = projectName.replace('-', '_').replace('.', '_') + "_test";
-    }
-
+  public static PGSimpleDataSource setup(InitialContext jndi, String dbName) throws NamingException {
     PGSimpleDataSource pds = new PGSimpleDataSource();
     pds.setDatabaseName(dbName);
     pds.setServerName("localhost");
     pds.setUser("dev");
     pds.setPassword("dev");
 
-    String jndiName = "java:comp/env/jdbc/" + projectName;
+    String jndiName = "java:comp/env/jdbc/" + dbName.replace("_", "-").replace("-test", "");
     jndi.bind(jndiName, pds);
 
     logger.info("JNDI name is [" + jndiName + "]");

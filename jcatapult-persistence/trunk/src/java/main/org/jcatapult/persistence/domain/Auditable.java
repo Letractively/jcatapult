@@ -16,8 +16,8 @@
 package org.jcatapult.persistence.domain;
 
 /**
- * <p> This interface marks a class as being auditable where the user that created the database record is recorded and
- * the user who last updated the record is recorded. </p>
+ * This interface marks a class as being auditable where the user that created the database record is recorded and the
+ * user who last updated the record is recorded.
  *
  * @author Brian Pontarelli
  */
@@ -29,24 +29,8 @@ public interface Auditable extends TimeStampable {
   String getInsertUser();
 
   /**
-   * Sets the user that inserted this entity. This should be set to a signifier if the entity is being inserted by an
-   * anonymous user.
-   *
-   * @param insertUser The insert user.
-   */
-  void setInsertUser(String insertUser);
-
-  /**
    * @return The user that updated this entity last, null if the entity is transient or so type of signifier if the
    *         entity was updated by someone anonymous.
    */
   String getUpdateUser();
-
-  /**
-   * Sets the user that updated this entity. This should be set to a signifier if the entity is being updated by an
-   * anonymous user.
-   *
-   * @param updateUser The update user.
-   */
-  void setUpdateUser(String updateUser);
 }

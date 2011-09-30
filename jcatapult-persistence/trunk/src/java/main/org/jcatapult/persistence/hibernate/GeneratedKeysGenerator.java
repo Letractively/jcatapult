@@ -28,8 +28,9 @@ import org.hibernate.id.insert.InsertGeneratedIdentifierDelegate;
 import org.jcatapult.persistence.domain.Identifiable;
 
 /**
- * <p> This class provides identifier generation that uses the JDBC 3 getGeneratedKeys exclusively. </p> <p> The only
- * caveat is that if the Entity is Identifiable and has an ID, then that ID is returned. </p>
+ * This class provides identifier generation that uses the JDBC 3 getGeneratedKeys exclusively.
+ * <p/>
+ * The only caveat is that if the Entity is Identifiable and has an ID, then that ID is returned.
  *
  * @author Brian Pontarelli
  */
@@ -56,8 +57,8 @@ public class GeneratedKeysGenerator implements PostInsertIdentifierGenerator {
 
   /**
    * If the Entity is Identifiable and has an ID, this returns that ID. Otherwise, this returns the
-   * POST_INSERT_INDICATOR to tell Hibernate to not send anything in the insert statement and let the database
-   * generate it.
+   * POST_INSERT_INDICATOR to tell Hibernate to not send anything in the insert statement and let the database generate
+   * it.
    *
    * @param s   Not used.
    * @param obj Checked to see if it is Identifiable.

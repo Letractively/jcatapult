@@ -17,21 +17,21 @@ package org.jcatapult.persistence.service.jpa;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.io.Closeable;
 
-import org.jcatapult.guice.Closable;
 import org.jcatapult.persistence.txn.TransactionContext;
 import org.jcatapult.persistence.txn.TransactionContextManager;
 import org.jcatapult.persistence.txn.jpa.JPATransactionalResource;
 
 /**
- * <p> This class is an abstract implementation of the JPA service. It providees the methods to handle the
+ * This class is an abstract implementation of the JPA service. It provides the methods to handle the
  * EntityManagerFactory and the EntityManager instances. It leverages the {@link EntityManagerContext} as the
  * ThreadLocal store for EntityManagers as well as tearing down the EntityManager from this context at the end of
- * requests. </p>
+ * requests.
  *
  * @author Brian Pontarelli
  */
-public abstract class AbstractJPAService implements JPAService, Closable {
+public abstract class AbstractJPAService implements JPAService, Closeable {
   private final TransactionContextManager txnContextManager;
   protected EntityManagerFactory emf;
 

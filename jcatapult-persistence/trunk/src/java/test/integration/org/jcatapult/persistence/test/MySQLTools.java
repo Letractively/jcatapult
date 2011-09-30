@@ -15,16 +15,16 @@
  */
 package org.jcatapult.persistence.test;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.util.logging.Logger;
-
-import org.jcatapult.jndi.MockJNDI;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 /**
- * <p> This is a toolkit that provides helper methods for working with relational databases. Some of this is specific to
- * MySQL and should eventually be refactored. </p>
+ * This is a toolkit that provides helper methods for working with relational databases. Some of this is specific to
+ * MySQL and should eventually be refactored.
  *
  * @author James Humphrey
  * @author Brian Pontarelli
@@ -33,39 +33,20 @@ public class MySQLTools {
   private static final Logger logger = Logger.getLogger(MySQLTools.class.getName());
 
   /**
-   * Sets up the connection pool to MySQL and puts that into the JNDI tree. This uses the project.xml file and the
-   * $HOME/build.properties file to grab the project name and DB username and password.
+   * Sets up the connection pool to MySQL and puts that into the JNDI tree.
    *
-   * @param jndi   {@link MockJNDI}
+   * @param jndi   The JDNI context.
    * @param dbName the db name
    * @return The DataSource and never null.
+   * @throws NamingException If the binding fails.
    */
-  public static DataSource setup(MockJNDI jndi, String dbName) {
-    String projectName = ProjectTools.loadProjectName();
-
-    // if the dbName is empty then assume <projectName>_test
-    if (dbName == null || dbName.isEmpty()) {
-      dbName = projectName.replace('-', '_').replace('.', '_') + "_test";
-    }
-
+  public static DataSource setup(InitialContext jndi, String dbName) throws NamingException {
     String url = "jdbc:mysql://localhost:3306/" + dbName + "?user=dev&password=dev";
-    return setup(jndi, url, projectName);
-  }
-
-  /**
-   * Sets up the JDBC connection pool to MySQL and puts that into the JNDI tree.
-   *
-   * @param jndi        The {@link MockJNDI} instance.
-   * @param url         The database url.
-   * @param projectName The name of the project that is used to build the JNDI tree.
-   * @return The DataSource and never null.
-   */
-  public static DataSource setup(MockJNDI jndi, String url, String projectName) {
     MysqlDataSource dataSource = new MysqlDataSource();
     dataSource.setURL(url);
     dataSource.setAutoReconnect(true);
 
-    String jndiName = "java:comp/env/jdbc/" + projectName;
+    String jndiName = "java:comp/env/jdbc/" + dbName.replace("_", "-").replace("-test", "");
     jndi.bind(jndiName, dataSource);
 
     logger.info("DB Url [" + url + "]");

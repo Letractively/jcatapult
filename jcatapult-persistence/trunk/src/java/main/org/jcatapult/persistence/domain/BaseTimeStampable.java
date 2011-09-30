@@ -24,18 +24,19 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 /**
- * <p> This class implements the Timestamped interface and extends IdentifiableImpl for a primary key. </p>
+ * This class implements the Timestamped interface and extends IntegerIdentifiable for a primary key.
  *
  * @author Brian Pontarelli
  */
 @MappedSuperclass
-public abstract class TimeStampableImpl extends IdentifiableImpl implements TimeStampable {
-  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+public abstract class BaseTimeStampable extends IntegerIdentifiable implements TimeStampable {
+  @Type(type = "org.jcatapult.persistence.hibernate.DateTimeType")
   @Column(name = "insert_date", nullable = false, updatable = false)
-  private DateTime insertDate;
-  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+  public DateTime insertDate;
+  
+  @Type(type = "org.jcatapult.persistence.hibernate.DateTimeType")
   @Column(name = "update_date", nullable = false)
-  private DateTime updateDate;
+  public DateTime updateDate;
 
   /**
    * {@inheritDoc}
@@ -47,22 +48,8 @@ public abstract class TimeStampableImpl extends IdentifiableImpl implements Time
   /**
    * {@inheritDoc}
    */
-  public void setInsertDate(DateTime insertDate) {
-    this.insertDate = insertDate;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public DateTime getUpdateDate() {
     return updateDate;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void setUpdateDate(DateTime updateDate) {
-    this.updateDate = updateDate;
   }
 
   /**
