@@ -21,7 +21,7 @@ import java.sql.Connection;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p> This interface defines the operations for JDBC. </p>
+ * This interface defines the operations for JDBC.
  *
  * @author Brian Pontarelli
  */
@@ -30,7 +30,7 @@ public interface JDBCService {
   /**
    * @return The data source or null if JDBC is disabled.
    */
-  DataSource getDataSouce();
+  DataSource getDataSource();
 
   /**
    * This method checks the current context for an existing connection or creates a new connection and puts it in the

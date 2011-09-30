@@ -22,7 +22,7 @@ import org.jcatapult.persistence.txn.TransactionException;
 import org.jcatapult.persistence.txn.TransactionalResource;
 
 /**
- * <p> This class models the transaction state for the JDBC connection. </p>
+ * This class models the transaction state for the JDBC connection.
  *
  * @author Brian Pontarelli
  */

@@ -34,8 +34,8 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * <p> This class is a JDBC connection wrapper that provides all the methods as a standard JDBC connection passed
- * through. You can sub-class and override anything you want. Enjoy! </p>
+ * This class is a JDBC connection wrapper that provides all the methods as a standard JDBC connection passed through.
+ * You can sub-class and override anything you want. Enjoy!
  *
  * @author Brian Pontarelli
  */

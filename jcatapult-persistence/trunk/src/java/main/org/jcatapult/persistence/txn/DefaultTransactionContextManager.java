@@ -26,8 +26,8 @@ import org.jcatapult.persistence.txn.jpa.JPATransactionalResource;
 import com.google.inject.Singleton;
 
 /**
- * <p> This class is the default transaction context manager. It uses a ThreadLocal to store the current transaction
- * context. </p>
+ * This class is the default transaction context manager. It uses a ThreadLocal to store the current transaction
+ * context.
  *
  * @author Brian Pontarelli
  */

@@ -19,15 +19,15 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 /**
- * <p> This class implements the SoftDeletable interface and extends AuditableImpl for all of the audit, timestamp and
- * primary key information. </p>
+ * This class implements the Identifiable, Timestampable and SoftDeletable interfaces and extends BaseTimeStampable
+ * for a primary key and the date fields.
  *
  * @author Brian Pontarelli
  */
 @MappedSuperclass
-public abstract class AuditableSoftDeletableImpl extends AuditableImpl implements SoftDeletable {
+public abstract class BaseSoftDeletableTimeStampable extends BaseTimeStampable implements SoftDeletable {
   @Column(nullable = false)
-  private boolean deleted = false;
+  public boolean deleted = false;
 
   /**
    * {@inheritDoc}

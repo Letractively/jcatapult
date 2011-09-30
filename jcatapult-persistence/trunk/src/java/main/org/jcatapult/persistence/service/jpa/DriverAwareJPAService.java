@@ -52,8 +52,8 @@ public class DriverAwareJPAService extends AbstractJPAService {
 
   @Inject
   public DriverAwareJPAService(TransactionContextManager txnContextManager,
-                               @Named("jcatapult.jpa.enabled") boolean jpaEnabled,
-                               @Named("jcatapult.jpa.unit") String persistenceUnit,
+                               @Named("jpa.enabled") boolean jpaEnabled,
+                               @Named("jpa.unit") String persistenceUnit,
                                @Named("non-jta-data-source") String dataSourceJndiName)
   throws NamingException, SQLException {
     super(txnContextManager);

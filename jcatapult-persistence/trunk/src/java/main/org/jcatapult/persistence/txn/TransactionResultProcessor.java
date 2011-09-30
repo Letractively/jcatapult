@@ -17,9 +17,9 @@
 package org.jcatapult.persistence.txn;
 
 /**
- * <p> This interface can be implemented and passed to the {@link org.jcatapult.persistence.txn.annotation.Transactional}
+ * This interface can be implemented and passed to the {@link org.jcatapult.persistence.txn.annotation.Transactional}
  * annotation. This is useful for determining based on an exception that is thrown or the return value of a method if
- * the transaction should be rolled back. </p>
+ * the transaction should be rolled back.
  *
  * @author Brian Pontarelli
  */

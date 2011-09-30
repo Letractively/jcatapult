@@ -21,8 +21,8 @@ import javax.persistence.EntityManagerFactory;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p> This interface is used to configure, start and handle JPA interactions. The main function of this class is to
- * create the EntityManagerFactory and provide access to it. </p>
+ * This interface is used to configure, start and handle JPA interactions. The main function of this class is to create
+ * the EntityManagerFactory and provide access to it.
  *
  * @author Brian Pontarelli
  */

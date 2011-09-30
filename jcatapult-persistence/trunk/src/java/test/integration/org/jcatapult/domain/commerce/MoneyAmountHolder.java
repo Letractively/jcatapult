@@ -18,16 +18,17 @@ package org.jcatapult.domain.commerce;
 import javax.persistence.Entity;
 
 import org.hibernate.annotations.Type;
-import org.jcatapult.persistence.domain.IdentifiableImpl;
+import org.jcatapult.persistence.domain.IntegerIdentifiable;
+import org.joda.money.Money;
 
 /**
- * <p> This is a test object for money </p>
+ * This is a test object for money.
  *
  * @author Brian Pontarelli
  */
 @Entity
-public class MoneyAmountHolder extends IdentifiableImpl {
-  @Type(type = "org.jcatapult.domain.commerce.MoneyAmountUSDType")
+public class MoneyAmountHolder extends IntegerIdentifiable {
+  @Type(type = "org.jcatapult.persistence.hibernate.MoneyAmountUSDType")
   private Money money;
 
   public Money getMoney() {

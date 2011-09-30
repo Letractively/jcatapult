@@ -19,22 +19,23 @@ package org.jcatapult.persistence.txn;
 import javax.sql.RowSet;
 import java.sql.SQLException;
 
-import org.jcatapult.persistence.service.PersistenceService;
+import org.jcatapult.persistence.service.jpa.PersistenceService;
 import org.jcatapult.persistence.service.jpa.User;
+import org.jcatapult.persistence.test.BaseJPATest;
 import org.jcatapult.persistence.test.JDBCTestHelper;
-import org.jcatapult.persistence.test.JPABaseTest;
 import org.jcatapult.persistence.txn.annotation.Transactional;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import com.google.inject.Inject;
-import static org.junit.Assert.*;
+import static org.jcatapult.persistence.test.JDBCTestHelper.*;
+import static org.testng.Assert.*;
 
 /**
- * <p> This class tests the transaction annotation and the defaults at the macro and micro levels. </p>
+ * This class tests the transaction annotation and the defaults at the macro and micro levels.
  *
  * @author Brian Pontarelli
  */
-public class JPATransactionTest extends JPABaseTest {
+public class JPATransactionTest extends BaseJPATest {
   @Inject public JPATestService service;
   @Inject public JPATopTestService topService;
 

@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <p> This class is the default implementation of the transactional context. </p>
+ * This class is the default implementation of the transactional context.
  *
  * @author Brian Pontarelli
  */

@@ -18,7 +18,7 @@ package org.jcatapult.persistence.txn;
 import com.google.inject.ImplementedBy;
 
 /**
- * <p> This interface defines the manager that manages the current transaction context. </p>
+ * This interface defines the manager that manages the current transaction context.
  *
  * @author Brian Pontarelli
  */

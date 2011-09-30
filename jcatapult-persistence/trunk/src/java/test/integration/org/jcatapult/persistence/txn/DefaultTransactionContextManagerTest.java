@@ -15,12 +15,12 @@
  */
 package org.jcatapult.persistence.txn;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
-import static org.junit.Assert.*;
+import static org.testng.Assert.*;
 
 /**
- * <p> This class tests the default transaction context manager. </p>
+ * This class tests the default transaction context manager.
  *
  * @author Brian Pontarelli
  */

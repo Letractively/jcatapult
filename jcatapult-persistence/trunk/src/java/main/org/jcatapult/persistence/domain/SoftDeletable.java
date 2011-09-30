@@ -16,8 +16,8 @@
 package org.jcatapult.persistence.domain;
 
 /**
- * <p> This interface marks a class as never being deleted permanently from the database. Instead, it is marked as being
- * deleted and can be resurrected. </p>
+ * This interface marks a class as never being deleted permanently from the database. Instead, it is marked as being
+ * deleted and can be resurrected.
  *
  * @author Brian Pontarelli
  */

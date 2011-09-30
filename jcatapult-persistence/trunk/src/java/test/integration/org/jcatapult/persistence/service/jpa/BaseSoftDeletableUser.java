@@ -13,35 +13,30 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.persistence.domain;
+package org.jcatapult.persistence.service.jpa;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
+import javax.persistence.Entity;
+
+import org.jcatapult.persistence.domain.BaseSoftDeletableTimeStampable;
 
 /**
- * <p> This class can be the parent class for anything with a primary key. </p>
+ * This class is an entity bean for testing soft deletes.
  *
  * @author Brian Pontarelli
  */
-@MappedSuperclass
-public abstract class IdentifiableImpl implements Serializable, Identifiable {
-  @Id
-  @GeneratedValue
-  private Integer id;
+@Entity
+public class BaseSoftDeletableUser extends BaseSoftDeletableTimeStampable {
+  private String name;
 
-  /**
-   * {@inheritDoc}
-   */
-  public Integer getId() {
-    return id;
+  public String getName() {
+    return name;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setId(Integer id) {
-    this.id = id;
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String toString() {
+    return super.toString() + " name=" + name;
   }
 }

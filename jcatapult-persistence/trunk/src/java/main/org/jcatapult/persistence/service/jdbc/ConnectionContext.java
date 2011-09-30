@@ -18,8 +18,8 @@ package org.jcatapult.persistence.service.jdbc;
 import java.sql.Connection;
 
 /**
- * <p> This class is a context container for the JDBC Connection that might be checked out of the JNDI data source by
- * the provider. </p>
+ * This class is a context container for the JDBC Connection that might be checked out of the JNDI data source by the
+ * provider.
  *
  * @author Brian Pontarelli
  */

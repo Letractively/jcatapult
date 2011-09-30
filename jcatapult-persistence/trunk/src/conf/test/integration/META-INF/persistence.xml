@@ -5,7 +5,7 @@
   <persistence-unit name="punit">
     <non-jta-data-source>java:comp/env/jdbc/jcatapult-persistence</non-jta-data-source>
     <class>org.jcatapult.persistence.service.jpa.User</class>
-    <class>org.jcatapult.persistence.service.jpa.SoftDeletableUser</class>
+    <class>org.jcatapult.persistence.service.jpa.BaseSoftDeletableUser</class>
     <class>org.jcatapult.domain.commerce.MoneyHolder</class>
     <class>org.jcatapult.domain.commerce.MoneyAmountHolder</class>
     <properties>

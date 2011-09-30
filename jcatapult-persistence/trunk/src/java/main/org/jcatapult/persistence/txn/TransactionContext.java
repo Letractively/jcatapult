@@ -16,9 +16,9 @@
 package org.jcatapult.persistence.txn;
 
 /**
- * <p> This interface defines a transactional context. This context can be started, committed, and rolled back. It can
- * also have any transactional resources attached to it while it is active. If it has already be completed, new resource
- * additions will result in an exception. </p>
+ * This interface defines a transactional context. This context can be started, committed, and rolled back. It can also
+ * have any transactional resources attached to it while it is active. If it has already be completed, new resource
+ * additions will result in an exception.
  *
  * @author Brian Pontarelli
  */

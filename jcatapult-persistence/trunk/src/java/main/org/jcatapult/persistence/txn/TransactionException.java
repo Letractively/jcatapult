@@ -16,7 +16,7 @@
 package org.jcatapult.persistence.txn;
 
 /**
- * <p> This class is a generic transaction exception. </p>
+ * This class is a generic transaction exception.
  *
  * @author Brian Pontarelli
  */

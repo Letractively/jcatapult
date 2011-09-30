@@ -13,12 +13,32 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.persistence.service.jpa;
+package org.jcatapult.persistence.domain;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
- * <p> This is a bad entity that doesn't have the annotation. </p>
+ * This class implements the SoftDeletable interface and extends the IntegerIdentifiable class for a primary key.
  *
  * @author Brian Pontarelli
  */
-public class BadEntity {
+@MappedSuperclass
+public abstract class BaseSoftDeletable extends IntegerIdentifiable implements SoftDeletable {
+  @Column(nullable = false)
+  public boolean deleted = false;
+
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isDeleted() {
+    return deleted;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+  }
 }

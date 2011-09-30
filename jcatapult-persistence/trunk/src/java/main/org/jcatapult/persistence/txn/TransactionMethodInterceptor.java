@@ -17,16 +17,24 @@ package org.jcatapult.persistence.txn;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.jcatapult.guice.GuiceContainer;
 import org.jcatapult.persistence.txn.annotation.Transactional;
 
+import com.google.inject.Inject;
+
 /**
- * <p> This is the AOP method interceptor that provides transaction handling for methods. This transaction handling is
- * generic such that any database connectivity can be used. This includes JDBC, JPA, etc. </p>
+ * This is the AOP method interceptor that provides transaction handling for methods. This transaction handling is
+ * generic such that any database connectivity can be used. This includes JDBC, JPA, etc.
  *
  * @author Brian Pontarelli
  */
 public class TransactionMethodInterceptor implements MethodInterceptor {
+  private TransactionContextManager manager;
+
+  @Inject
+  public void setTransactionMethodInterceptor(TransactionContextManager manager) {
+    this.manager = manager;
+  }
+
   /**
    * Intercepts method invocations that have been tagged with the {@link Transactional} annotation. This uses the
    * {@link TransactionContextManager} to get the current {@link TransactionContext}. The {@link TransactionContext}
@@ -40,12 +48,11 @@ public class TransactionMethodInterceptor implements MethodInterceptor {
    */
   public Object invoke(MethodInvocation methodInvocation) throws Throwable {
     TransactionResultProcessor processor = processor(methodInvocation);
-    TransactionContextManager mgr = GuiceContainer.getInjector().getInstance(TransactionContextManager.class);
-    TransactionContext txnContext = mgr.getCurrent();
+    TransactionContext txnContext = manager.getCurrent();
 
     // Check if a new transaction needs to be created
     if (txnContext == null) {
-      txnContext = mgr.start();
+      txnContext = manager.start();
     }
 
     boolean embedded = txnContext.isStarted();
@@ -63,7 +70,7 @@ public class TransactionMethodInterceptor implements MethodInterceptor {
     } finally {
       // Check if this is the outer call and close the transaction if it is
       if (!embedded) {
-        mgr.tearDownTransactionContext();
+        manager.tearDownTransactionContext();
       }
 
       endTransactions(txnContext, processor, result, t, embedded);

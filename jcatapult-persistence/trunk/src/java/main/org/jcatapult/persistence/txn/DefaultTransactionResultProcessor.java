@@ -17,7 +17,7 @@
 package org.jcatapult.persistence.txn;
 
 /**
- * <p> This class is the default processor and returns true if the exception is not null and a runtime exception. </p>
+ * This class is the default processor and returns true if the exception is not null and a runtime exception.
  *
  * @author Brian Pontarelli
  */

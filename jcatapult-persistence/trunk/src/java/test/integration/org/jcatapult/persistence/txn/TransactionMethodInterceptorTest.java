@@ -16,30 +16,20 @@
 package org.jcatapult.persistence.txn;
 
 import org.aopalliance.intercept.MethodInvocation;
-import org.jcatapult.persistence.test.JPABaseTest;
+import org.jcatapult.persistence.test.BaseJPATest;
 import org.jcatapult.persistence.txn.annotation.Transactional;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
-import com.google.inject.AbstractModule;
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.testng.Assert.*;
 
 /**
- * <p> This class tests the transaction method interceptor. </p>
+ * This class tests the transaction method interceptor.
  *
  * @author Brian Pontarelli
  */
-public class TransactionMethodInterceptorTest extends JPABaseTest {
+public class TransactionMethodInterceptorTest extends BaseJPATest {
   private final TxnMgr txnMgr = new TxnMgr();
-
-  public TransactionMethodInterceptorTest() {
-    addModules(new AbstractModule() {
-      @Override
-      protected void configure() {
-        bind(TransactionContextManager.class).toInstance(txnMgr);
-      }
-    });
-  }
 
   @Transactional
   public void annotatedMethod() {
@@ -60,6 +50,7 @@ public class TransactionMethodInterceptorTest extends JPABaseTest {
     replay(txnMgr.context);
 
     TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    interceptor.setTransactionMethodInterceptor(txnMgr);
     interceptor.invoke(invocation);
     assertNull(txnMgr.context);
 
@@ -82,6 +73,7 @@ public class TransactionMethodInterceptorTest extends JPABaseTest {
     replay(txnMgr.context);
 
     TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    interceptor.setTransactionMethodInterceptor(txnMgr);
     try {
       interceptor.invoke(invocation);
       fail("Should have re-thrown the exception");
@@ -109,6 +101,7 @@ public class TransactionMethodInterceptorTest extends JPABaseTest {
     replay(txnMgr.context);
 
     TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    interceptor.setTransactionMethodInterceptor(txnMgr);
     interceptor.invoke(invocation);
     assertNull(txnMgr.context);
 
@@ -127,6 +120,7 @@ public class TransactionMethodInterceptorTest extends JPABaseTest {
     replay(txnMgr.context);
 
     TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    interceptor.setTransactionMethodInterceptor(txnMgr);
     interceptor.invoke(invocation);
     assertNotNull(txnMgr.context);
 
@@ -147,6 +141,7 @@ public class TransactionMethodInterceptorTest extends JPABaseTest {
     replay(txnMgr.context);
 
     TransactionMethodInterceptor interceptor = new TransactionMethodInterceptor();
+    interceptor.setTransactionMethodInterceptor(txnMgr);
     try {
       interceptor.invoke(invocation);
       fail("Should have re-thrown the exception");

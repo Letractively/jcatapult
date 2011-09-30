@@ -16,7 +16,7 @@
 package org.jcatapult.persistence.txn;
 
 /**
- * <p> This interface defines the state of the current transaction. </p>
+ * This interface defines the state of the current transaction.
  *
  * @author Brian Pontarelli
  */

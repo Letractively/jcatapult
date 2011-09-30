@@ -15,28 +15,25 @@
  */
 package org.jcatapult.persistence.test;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.Table;
 import javax.sql.DataSource;
 import javax.sql.RowSet;
 import javax.sql.rowset.CachedRowSet;
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
-import org.jcatapult.jndi.MockJNDI;
 import org.jcatapult.persistence.service.DatabaseType;
 import org.jcatapult.persistence.service.DatabaseType.Database;
-
-import net.java.sql.ScriptExecutor;
 
 import com.sun.rowset.CachedRowSetImpl;
 
 /**
- * <p> This class provides test helper methods for JDBC. </p>
+ * This class provides test helper methods for JDBC.
  *
  * @author Brian Pontarelli
  */
@@ -69,10 +66,11 @@ public class JDBCTestHelper {
   /**
    * Constructs the JDBC connection pool, places it in the JNDI tree given.
    *
-   * @param jndi The JNDI tree.
    * @return The database type (either the string <strong>mysql</strong> or <strong>postgresql</strong>)
+   * @throws NamingException If setting the data source into the JNDI tree fails.
    */
-  public static String initialize(MockJNDI jndi) {
+  public static String initialize() throws NamingException {
+    InitialContext jndi = new InitialContext();
     if (dataSource == null) {
       String dbType = System.getProperty("database.type");
       if (dbType == null || dbType.equals("mysql")) {
@@ -95,20 +93,6 @@ public class JDBCTestHelper {
     }
 
     return databaseType;
-  }
-
-  /**
-   * Executes the given SQL script via plain old JDBC. This will be committed to the database. This SQL script should
-   * be a SQL99 formatted SQL file that can have any number of statements separated by semi-colons. Comments must be
-   * line comments and start with -- (two dashes).
-   *
-   * @param script The SQL script to execute.
-   * @throws java.sql.SQLException If the execute failed.
-   * @throws java.io.IOException   If the script file could not be read.
-   */
-  public static void executeScript(String script) throws SQLException, IOException {
-    ScriptExecutor executor = new ScriptExecutor(getConnection());
-    executor.execute(new File(script));
   }
 
   /**

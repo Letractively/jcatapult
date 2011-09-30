@@ -16,8 +16,8 @@
 package org.jcatapult.persistence.service;
 
 /**
- * <p> This class is a transaction facade that provides all the methods that most transactions will require and that all
- * the backing implementations should support. </p>
+ * This class is a transaction facade that provides all the methods that most transactions will require and that all the
+ * backing implementations should support.
  *
  * @author Brian Pontarelli
  */

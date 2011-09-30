@@ -18,21 +18,22 @@ package org.jcatapult.persistence.service.jpa;
 import javax.persistence.EntityManager;
 
 /**
- * <p> This class is a context container for the EntityManager that is setup in the filter. The {@link
- * org.jcatapult.servlet.JCatapultFilter} must be configured in the web.xml file like this: </p> <p/>
+ * This class is a context container for the EntityManager that stores the EntityManager for later use during a single
+ * request or operation.
+ * <p/>
  * <pre>
  * &lt;filter>
- *   &lt;filter-name>jcatapultFilter&lt;/filter-name>
- *   &lt;filter-class>org.jcatapult.servlet.JCatapultFilter&lt;/filter-class>
+ *   &lt;filter-name>persistence&lt;/filter-name>
+ *   &lt;filter-class>org.jcatapult.persistence.servlet.PersistenceFilter&lt;/filter-class>
  * &lt;/filter>
  *
  * &lt;filter-mapping>
- *   &lt;filter-name>jcatapultFilter&lt;/filter-name>
+ *   &lt;filter-name>persistence&lt;/filter-name>
  *   &lt;url-pattern>/*&lt;/url-pattern>
  * &lt;/filter-mapping>
  * </pre>
- * <p/> <p> This filter <em>MUST</em> be the first filter in the chain otherwise the EntityManager will not be correctly
- * setup. </p>
+ * <p/>
+ * This filter <em>MUST</em> be the first filter in the chain otherwise the EntityManager will not be correctly setup.
  *
  * @author Brian Pontarelli
  */
@@ -42,15 +43,15 @@ public class EntityManagerContext {
   /**
    * Sets the EntityManager for this Thread.
    *
-   * @param   manager The EntityManager to set.
+   * @param manager The EntityManager to set.
    */
   public static void set(EntityManager manager) {
     holder.set(manager);
   }
 
   /**
-   * Returns the EntityManager for this context. This requires that the entity manager filter be
-   * setup according to the class comment.
+   * Returns the EntityManager for this context. This requires that the entity manager filter be setup according to the
+   * class comment.
    *
    * @return The EntityManager or null if the filter is not setup correctly.
    */

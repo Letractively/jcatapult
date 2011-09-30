@@ -21,8 +21,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * <p> This class is a provider for a JDBC connection. It uses the {@link JDBCService} injected by Guice to get the
- * connection from. </p>
+ * This class is a provider for a JDBC connection. It uses the {@link JDBCService} injected by Guice to get the
+ * connection from.
  *
  * @author Brian Pontarelli
  */

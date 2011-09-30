@@ -21,6 +21,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/conf/main" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/conf/test/integration" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/java/test/integration" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/java/test/unit" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
@@ -70,28 +71,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="easymock-2.2.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/easymock/easymock/2.2/easymock-2.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/easymock/easymock/2.2/easymock-2.2-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="junit-4.4.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/junit/junit/4.4/junit-4.4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/junit/junit/4.4/junit-4.4-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="testng-5.11.jar">
         <CLASSES>
           <root url="jar://$SAVANT_REPOSITORY$/org/testng/testng/5.11/testng-5.11.jar!/" />
@@ -103,68 +82,13 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="jcatapult-core-test-2.0-IB20110922205237411.jar">
+      <library name="jcatapult-mock-2.0-IB20110930173420751.jar">
         <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/2.0-{integration}/jcatapult-core-test-2.0-IB20110922205237411.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-mock/2.0-{integration}/jcatapult-mock-2.0-IB20110930173420751.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/2.0-{integration}/jcatapult-core-test-2.0-IB20110922205237411-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="persistence-api-2.0.1.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/javax/persistence/persistence-api/2.0.1/persistence-api-2.0.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/javax/persistence/persistence-api/2.0.1/persistence-api-2.0.1-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="commons-configuration-1.4.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-configuration/1.4/commons-configuration-1.4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-configuration/1.4/commons-configuration-1.4-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="commons-lang-2.3.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-lang/2.3/commons-lang-2.3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-lang/2.3/commons-lang-2.3-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="commons-collections-3.1.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-collections/3.1/commons-collections-3.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-collections/3.1/commons-collections-3.1-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="commons-logging-1.1.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-logging/1.1/commons-logging-1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-logging/1.1/commons-logging-1.1-src.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-mock/2.0-{integration}/jcatapult-mock-2.0-IB20110930173420751-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -191,24 +115,13 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="freemarker-2.3.16.jar">
+      <library name="easymock-2.3.jar">
         <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/freemarker/freemarker/2.3.16/freemarker-2.3.16.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/easymock/easymock/2.3/easymock-2.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/freemarker/freemarker/2.3.16/freemarker-2.3.16-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="guice-3.0.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/com/google/inject/guice/3.0/guice-3.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/com/google/inject/guice/3.0/guice-3.0-src.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/easymock/easymock/2.3/easymock-2.3-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -224,68 +137,24 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="java-net-commons-1.5.5.jar">
+      <library name="commons-lang3-3.0.1.jar">
         <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/net/java/dev/java-net-commons/java-net-commons/1.5.5/java-net-commons-1.5.5.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-lang3/3.0.1/commons-lang3-3.0.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/net/java/dev/java-net-commons/java-net-commons/1.5.5/java-net-commons-1.5.5-src.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-lang3/3.0.1/commons-lang3-3.0.1-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="hsqldb-1.8.9.jar">
+      <library name="hibernate-commons-annotations-4.0.0-RC2.jar">
         <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/hsqldb/hsqldb/1.8.9/hsqldb-1.8.9.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/hibernate/common/hibernate-commons-annotations/4.0.0-RC2/hibernate-commons-annotations-4.0.0-RC2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/hsqldb/hsqldb/1.8.9/hsqldb-1.8.9-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="asm-3.1.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/objectweb/asm/asm/3.1/asm-3.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/objectweb/asm/asm/3.1/asm-3.1-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="joda-time-2.0.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/joda/joda-time/joda-time/2.0/joda-time-2.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/joda/joda-time/joda-time/2.0/joda-time-2.0-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="hibernate-core-4.0.0-RC3.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/hibernate/hibernate-core/4.0.0-RC3/hibernate-core-4.0.0-RC3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/hibernate/hibernate-core/4.0.0-RC3/hibernate-core-4.0.0-RC3-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="antlr-2.7.7.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/antlr/antlr/2.7.7/antlr-2.7.7.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/antlr/antlr/2.7.7/antlr-2.7.7-src.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/hibernate/common/hibernate-commons-annotations/4.0.0-RC2/hibernate-commons-annotations-4.0.0-RC2-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -334,17 +203,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="hibernate-commons-annotations-4.0.0-RC2.jar">
-        <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/hibernate/common/hibernate-commons-annotations/4.0.0-RC2/hibernate-commons-annotations-4.0.0-RC2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/hibernate/common/hibernate-commons-annotations/4.0.0-RC2/hibernate-commons-annotations-4.0.0-RC2-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="jboss-logging-processor-1.0.0-RC1.jar">
         <CLASSES>
           <root url="jar://$SAVANT_REPOSITORY$/org/jboss/logging/jboss-logging-processor/1.0.0-RC1/jboss-logging-processor-1.0.0-RC1.jar!/" />
@@ -367,6 +225,39 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
+      <library name="guice-3.0.jar">
+        <CLASSES>
+          <root url="jar://$SAVANT_REPOSITORY$/com/google/inject/guice/3.0/guice-3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$SAVANT_REPOSITORY$/com/google/inject/guice/3.0/guice-3.0-src.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="hibernate-core-4.0.0-RC3.jar">
+        <CLASSES>
+          <root url="jar://$SAVANT_REPOSITORY$/org/hibernate/hibernate-core/4.0.0-RC3/hibernate-core-4.0.0-RC3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$SAVANT_REPOSITORY$/org/hibernate/hibernate-core/4.0.0-RC3/hibernate-core-4.0.0-RC3-src.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="antlr-2.7.7.jar">
+        <CLASSES>
+          <root url="jar://$SAVANT_REPOSITORY$/org/antlr/antlr/2.7.7/antlr-2.7.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$SAVANT_REPOSITORY$/org/antlr/antlr/2.7.7/antlr-2.7.7-src.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="dom4j-1.6.1.jar">
         <CLASSES>
           <root url="jar://$SAVANT_REPOSITORY$/org/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar!/" />
@@ -374,6 +265,28 @@
         <JAVADOC />
         <SOURCES>
           <root url="jar://$SAVANT_REPOSITORY$/org/dom4j/dom4j/1.6.1/dom4j-1.6.1-src.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-collections-3.1.jar">
+        <CLASSES>
+          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-collections/3.1/commons-collections-3.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$SAVANT_REPOSITORY$/org/apache/commons/commons-collections/3.1/commons-collections-3.1-src.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="persistence-api-2.0.1.jar">
+        <CLASSES>
+          <root url="jar://$SAVANT_REPOSITORY$/javax/persistence/persistence-api/2.0.1/persistence-api-2.0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$SAVANT_REPOSITORY$/javax/persistence/persistence-api/2.0.1/persistence-api-2.0.1-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -433,13 +346,35 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="jcatapult-core-2.0-IB20110922205237411.jar">
+      <library name="joda-time-2.0.jar">
         <CLASSES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/2.0-{integration}/jcatapult-core-2.0-IB20110922205237411.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/joda/joda-time/2.0/joda-time-2.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$SAVANT_REPOSITORY$/org/jcatapult/jcatapult-core/2.0-{integration}/jcatapult-core-2.0-IB20110922205237411-src.jar!/" />
+          <root url="jar://$SAVANT_REPOSITORY$/org/joda/joda-time/2.0/joda-time-2.0-src.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="joda-money-0.6.jar">
+        <CLASSES>
+          <root url="jar://$SAVANT_REPOSITORY$/org/joda/joda-money/0.6/joda-money-0.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$SAVANT_REPOSITORY$/org/joda/joda-money/0.6/joda-money-0.6-src.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="joda-convert-1.1.jar">
+        <CLASSES>
+          <root url="jar://$SAVANT_REPOSITORY$/org/joda/joda-convert/1.1/joda-convert-1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$SAVANT_REPOSITORY$/org/joda/joda-convert/1.1/joda-convert-1.1-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

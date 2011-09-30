@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2007, JCatapult.org, All Rights Reserved
+ * Copyright (c) 2001-2011, JCatapult.org, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,26 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package org.jcatapult.persistence.service.jpa;
-
-import javax.persistence.Entity;
-
-import org.jcatapult.persistence.domain.SoftDeletableTimeStampableImpl;
+package org.jcatapult.persistence.security;
 
 /**
- * <p> This class is an entity bean for testing soft deletes. </p>
+ * This class is specific to the Persistence framework for the {@link org.jcatapult.persistence.domain.Auditable}
+ * class. In order to use Auditable, you need to setup the username into this context.
  *
  * @author Brian Pontarelli
  */
-@Entity
-public class SoftDeletableUser extends SoftDeletableTimeStampableImpl {
-  private String name;
+public class SecurityContext {
+  private static final ThreadLocal<String> holder = new ThreadLocal<String>();
 
-  public String getName() {
-    return name;
+  public static void setUsername(String username) {
+    holder.set(username);
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public static String getUsername() {
+    return holder.get();
   }
 
-  public String toString() {
-    return super.toString() + " name=" + name;
+  public static void clear() {
+    holder.remove();
   }
 }
