@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Ant test" failures="0" tests="4" time="0.128" errors="0">
+  <properties/>
+  <testcase name="multipart" time="0.063" classname="org.jcatapult.mock.servlet.MockHttpServletRequestTest"/>
+  <testcase name="multipartJARFile" time="0.042" classname="org.jcatapult.mock.servlet.MockHttpServletRequestTest"/>
+  <testcase name="resource" time="0.0040" classname="org.jcatapult.mock.servlet.MockServletContextTest"/>
+  <testcase name="resourcePath" time="0.013" classname="org.jcatapult.mock.servlet.MockServletContextTest"/>
+</testsuite>
