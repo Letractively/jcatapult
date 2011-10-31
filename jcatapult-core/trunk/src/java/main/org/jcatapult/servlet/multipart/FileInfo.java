@@ -18,36 +18,34 @@ package org.jcatapult.servlet.multipart;
 import java.io.File;
 
 /**
- * <p>
- * This class stores the information about a file upload.
- * </p>
+ * <p> This class stores the information about a file upload. </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class FileInfo {
-    public final File file;
-    public final String name;
-    public final String contentType;
+  public final File file;
+  public final String name;
+  public final String contentType;
 
-    public FileInfo(File file, String name, String contentType) {
-        this.file = file;
-        this.name = name;
-        this.contentType = contentType;
-    }
+  public FileInfo(File file, String name, String contentType) {
+    this.file = file;
+    this.name = name;
+    this.contentType = contentType;
+  }
 
-    public File getFile() {
-        return file;
-    }
+  public File getFile() {
+    return file;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getContentType() {
-        return contentType;
-    }
+  public String getContentType() {
+    return contentType;
+  }
 
-    public boolean deleteTempFile() {
-        return file.delete();
-    }
+  public boolean deleteTempFile() {
+    return file.delete();
+  }
 }
