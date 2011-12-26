@@ -17,6 +17,7 @@ package org.jcatapult.mvc.action.result;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -123,7 +124,7 @@ public class RedirectResultTest {
     public void testExpand() throws IOException, ServletException {
         Object action = new Object();
         ExpressionEvaluator ee = createStrictMock(ExpressionEvaluator.class);
-        expect(ee.expand("${foo}", action)).andReturn("result");
+        expect(ee.getValue(eq("foo"), same(action), isA(Map.class))).andReturn("result");
         replay(ee);
 
         HttpServletRequest request = createStrictMock(HttpServletRequest.class);
