@@ -234,6 +234,16 @@
       </item>
     </group>
   </component>
+  <component name="ProjectCodeStyleSettingsManager">
+    <option name="PER_PROJECT_SETTINGS">
+      <value>
+        <XML>
+          <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
+        </XML>
+      </value>
+    </option>
+    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/jcatapult-mvc.iml" filepath="$PROJECT_DIR$/jcatapult-mvc.iml" />
@@ -251,20 +261,6 @@
         <entry key="$PROJECT_DIR$">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://jcatapult.googlecode.com/svn/jcatapult-mvc/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://jcatapult.googlecode.com/svn/jcatapult-mvc/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://jcatapult.googlecode.com/svn/jcatapult-mvc/branches" />

@@ -16,11 +16,17 @@
 package org.jcatapult.mvc.action.result;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.java.variable.ExpanderException;
+import net.java.variable.ExpanderStrategy;
+import net.java.variable.VariableExpander;
 import org.jcatapult.mvc.action.ActionInvocation;
 import org.jcatapult.mvc.action.result.annotation.Redirect;
 import org.jcatapult.mvc.parameter.el.ExpressionEvaluator;
@@ -32,7 +38,7 @@ import com.google.inject.Inject;
  * This result performs a HTTP redirect to a URL.
  * </p>
  *
- * @author  Brian Pontarelli
+ * @author Brian Pontarelli
  */
 public class RedirectResult extends AbstractResult<Redirect> {
     private final HttpServletRequest request;
@@ -49,17 +55,28 @@ public class RedirectResult extends AbstractResult<Redirect> {
     /**
      * {@inheritDoc}
      */
-    public void execute(Redirect redirect, ActionInvocation invocation) throws IOException, ServletException {
-        String page = expand(redirect.uri(), invocation.action());
+    public void execute(Redirect redirect, final ActionInvocation invocation) throws IOException, ServletException {
+        String uri = VariableExpander.expand(redirect.uri(), new ExpanderStrategy() {
+            public String expand(String variableName) throws ExpanderException {
+                try {
+                    return URLEncoder.encode(
+                        expressionEvaluator.getValue(variableName, invocation.action(), new HashMap<String, String>()),
+                        "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    throw new ExpanderException(e);
+                }
+            }
+        });
+
         String context = request.getContextPath();
-        if (context.length() > 0 && page.startsWith("/")) {
-            page = context + page;
+        if (context.length() > 0 && uri.startsWith("/")) {
+            uri = context + uri;
         }
 
         boolean perm = redirect.perm();
 
         response.setStatus(perm ? 301 : 302);
-        response.sendRedirect(page);
+        response.sendRedirect(uri);
     }
 
     public static class RedirectImpl implements Redirect {
