@@ -132,6 +132,7 @@ public class DefaultSavedRequestWorkflowTest {
     EasyMock.replay(request);
 
     HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+    EasyMock.expect(response.encodeRedirectURL("/context/foo")).andReturn("/context/foo");
     response.sendRedirect("/context/foo");
     EasyMock.replay(response);
 
@@ -242,6 +243,7 @@ public class DefaultSavedRequestWorkflowTest {
     EasyMock.replay(request);
 
     HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+    EasyMock.expect(response.encodeRedirectURL("/foo")).andReturn("/foo");
     response.sendRedirect("/foo");
     EasyMock.replay(response);
 
@@ -268,6 +270,7 @@ public class DefaultSavedRequestWorkflowTest {
     EasyMock.replay(request);
 
     HttpServletResponse response = EasyMock.createStrictMock(HttpServletResponse.class);
+    EasyMock.expect(response.encodeRedirectURL("/context/foo")).andReturn("/context/foo");
     response.sendRedirect("/context/foo");
     EasyMock.replay(response);
 
@@ -288,10 +291,10 @@ public class DefaultSavedRequestWorkflowTest {
     EasyMock.replay(session);
 
     HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-    EasyMock.expect(request.getMethod()).andReturn("GET");
     Map<String, String[]> params = map(p("id", new String[]{"1"}));
+    EasyMock.expect(request.getMethod()).andReturn("GET");
     EasyMock.expect(request.getParameterMap()).andReturn(params);
-    EasyMock.expect(request.getRequestURL()).andReturn(new StringBuffer("http://www.example.com/foo/bar"));
+    EasyMock.expect(request.getRequestURI()).andReturn("/foo/bar");
     EasyMock.expect(request.getSession(true)).andReturn(session);
     EasyMock.expect(request.getContextPath()).andReturn("");
     EasyMock.replay(request);
@@ -334,10 +337,10 @@ public class DefaultSavedRequestWorkflowTest {
     EasyMock.replay(session);
 
     HttpServletRequest request = EasyMock.createStrictMock(HttpServletRequest.class);
-    EasyMock.expect(request.getMethod()).andReturn("GET");
     Map<String, String[]> params = map(p("id", new String[]{"1"}));
+    EasyMock.expect(request.getMethod()).andReturn("GET");
     EasyMock.expect(request.getParameterMap()).andReturn(params);
-    EasyMock.expect(request.getRequestURL()).andReturn(new StringBuffer("http://www.example.com/context/foo/bar"));
+    EasyMock.expect(request.getRequestURI()).andReturn("/context/foo/bar");
     EasyMock.expect(request.getSession(true)).andReturn(session);
     EasyMock.expect(request.getContextPath()).andReturn("/context");
     EasyMock.replay(request);
