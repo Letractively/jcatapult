@@ -40,7 +40,5 @@ public interface NotLoggedInHandler {
    * @throws javax.servlet.ServletException If something goes wrong during the exception handling.
    * @throws java.io.IOException            If something goes wrong during the exception handling.
    */
-  void handle(NotLoggedInException exception,
-              WorkflowChain chain)
-    throws ServletException, IOException;
+  void handle(NotLoggedInException exception, WorkflowChain chain) throws ServletException, IOException;
 }

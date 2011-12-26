@@ -37,6 +37,5 @@ public interface PostLoginHandler {
    * @throws ServletException If the a servlet error occurs.
    * @throws IOException      If an IO error occurs.
    */
-  void handle(WorkflowChain chain)
-    throws ServletException, IOException;
+  void handle(WorkflowChain chain) throws ServletException, IOException;
 }

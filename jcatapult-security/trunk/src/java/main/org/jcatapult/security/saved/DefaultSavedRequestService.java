@@ -17,8 +17,8 @@ package org.jcatapult.security.saved;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import org.jcatapult.security.SecurityContext;
@@ -51,14 +51,8 @@ public class DefaultSavedRequestService implements SavedRequestService {
     Map<String, String[]> requestParameters = null;
     String redirectURI;
     if (request.getMethod().equals("GET")) {
-      try {
-        Map<String, String[]> params = request.getParameterMap();
-        URI uri = new URI(request.getRequestURL().toString() + makeQueryString(params));
-        redirectURI = uri.getPath() + (uri.getQuery() != null ? "?" + uri.getQuery() : "") +
-          (uri.getFragment() != null ? "#" + uri.getFragment() : "");
-      } catch (URISyntaxException e) {
-        redirectURI = request.getRequestURI();
-      }
+      Map<String, String[]> params = request.getParameterMap();
+      redirectURI = request.getRequestURI() + makeQueryString(params);
     } else {
       requestParameters = request.getParameterMap();
       redirectURI = request.getRequestURI();
@@ -86,7 +80,11 @@ public class DefaultSavedRequestService implements SavedRequestService {
           build.append("&");
         }
 
-        build.append(entry.getKey()).append("=").append(value);
+        try {
+          build.append(URLEncoder.encode(entry.getKey(), "UTF-8")).append("=").append(URLEncoder.encode(value, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+          throw new RuntimeException(e);
+        }
       }
     }
 

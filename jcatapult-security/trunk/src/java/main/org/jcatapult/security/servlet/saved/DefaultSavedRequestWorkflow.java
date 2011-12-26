@@ -99,7 +99,7 @@ public class DefaultSavedRequestWorkflow implements PostLoginHandler, NotLoggedI
   public void handle(WorkflowChain workflowChain) throws ServletException, IOException {
     String uri = savedRequestService.processSavedRequest(request);
     if (uri != null) {
-      response.sendRedirect(uri);
+      response.sendRedirect(response.encodeRedirectURL(uri));
     } else {
       HttpServletRequestWrapper wrapper = (HttpServletRequestWrapper) request;
       HttpServletRequest previous = (HttpServletRequest) wrapper.getRequest();
