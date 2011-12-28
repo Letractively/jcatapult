@@ -55,13 +55,16 @@ public class RedirectResult extends AbstractResult<Redirect> {
     /**
      * {@inheritDoc}
      */
-    public void execute(Redirect redirect, final ActionInvocation invocation) throws IOException, ServletException {
+    public void execute(final Redirect redirect, final ActionInvocation invocation) throws IOException, ServletException {
         String uri = VariableExpander.expand(redirect.uri(), new ExpanderStrategy() {
             public String expand(String variableName) throws ExpanderException {
                 try {
-                    return URLEncoder.encode(
-                        expressionEvaluator.getValue(variableName, invocation.action(), new HashMap<String, String>()),
-                        "UTF-8");
+                    String val = expressionEvaluator.getValue(variableName, invocation.action(), new HashMap<String, String>());
+                    if (redirect.encodeVariables()) {
+                        val = URLEncoder.encode(val, "UTF-8");
+                    }
+                    
+                    return val;
                 } catch (UnsupportedEncodingException e) {
                     throw new ExpanderException(e);
                 }
@@ -83,11 +86,13 @@ public class RedirectResult extends AbstractResult<Redirect> {
         private final String code;
         private final String uri;
         private final boolean perm;
+        private final boolean encode;
 
-        public RedirectImpl(String uri, String code, boolean perm) {
+        public RedirectImpl(String uri, String code, boolean perm, boolean encode) {
             this.uri = uri;
             this.code = code;
             this.perm = perm;
+            this.encode = encode;
         }
 
         public String code() {
@@ -100,6 +105,10 @@ public class RedirectResult extends AbstractResult<Redirect> {
 
         public boolean perm() {
             return perm;
+        }
+
+        public boolean encodeVariables() {
+            return encode;
         }
 
         public Class<? extends Annotation> annotationType() {

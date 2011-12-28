@@ -50,7 +50,7 @@ public class RedirectResultTest {
         response.sendRedirect("http://www.google.com");
         replay(response);
 
-        Redirect redirect = new RedirectImpl("success", "http://www.google.com", true);
+        Redirect redirect = new RedirectImpl("success", "http://www.google.com", true, false);
         RedirectResult forwardResult = new RedirectResult(ee, response, request);
         forwardResult.execute(redirect, new DefaultActionInvocation(null, "/foo", "", null));
 
@@ -71,7 +71,7 @@ public class RedirectResultTest {
         response.sendRedirect("/foo/bar.jsp");
         replay(response);
 
-        Redirect redirect = new RedirectImpl("success", "/foo/bar.jsp", false);
+        Redirect redirect = new RedirectImpl("success", "/foo/bar.jsp", false, false);
         RedirectResult forwardResult = new RedirectResult(ee, response, request);
         forwardResult.execute(redirect, new DefaultActionInvocation(null, "foo", "", null));
 
@@ -92,7 +92,7 @@ public class RedirectResultTest {
         response.sendRedirect("/context-path/foo/bar.jsp");
         replay(response);
 
-        Redirect redirect = new RedirectImpl("success", "/foo/bar.jsp", false);
+        Redirect redirect = new RedirectImpl("success", "/foo/bar.jsp", false, false);
         RedirectResult forwardResult = new RedirectResult(ee, response, request);
         forwardResult.execute(redirect, new DefaultActionInvocation(null, "foo", "", null));
 
@@ -113,7 +113,7 @@ public class RedirectResultTest {
         response.sendRedirect("foo/bar.jsp");
         replay(response);
 
-        Redirect redirect = new RedirectImpl("success", "foo/bar.jsp", false);
+        Redirect redirect = new RedirectImpl("success", "foo/bar.jsp", false, false);
         RedirectResult forwardResult = new RedirectResult(ee, response, request);
         forwardResult.execute(redirect, new DefaultActionInvocation(null, "foo", "", null));
 
@@ -136,7 +136,30 @@ public class RedirectResultTest {
         response.sendRedirect("result");
         replay(response);
 
-        Redirect redirect = new RedirectImpl("success", "${foo}", false);
+        Redirect redirect = new RedirectImpl("success", "${foo}", false, false);
+        RedirectResult forwardResult = new RedirectResult(ee, response, request);
+        forwardResult.execute(redirect, new DefaultActionInvocation(action, "foo", "", null));
+
+        verify(response);
+    }
+
+    @Test
+    public void testExpandEncode() throws IOException, ServletException {
+        Object action = new Object();
+        ExpressionEvaluator ee = createStrictMock(ExpressionEvaluator.class);
+        expect(ee.getValue(eq("foo"), same(action), isA(Map.class))).andReturn("/result");
+        replay(ee);
+
+        HttpServletRequest request = createStrictMock(HttpServletRequest.class);
+        expect(request.getContextPath()).andReturn("");
+        replay(request);
+
+        HttpServletResponse response = createStrictMock(HttpServletResponse.class);
+        response.setStatus(302);
+        response.sendRedirect("%2Fresult");
+        replay(response);
+
+        Redirect redirect = new RedirectImpl("success", "${foo}", false, true);
         RedirectResult forwardResult = new RedirectResult(ee, response, request);
         forwardResult.execute(redirect, new DefaultActionInvocation(action, "foo", "", null));
 
@@ -147,11 +170,13 @@ public class RedirectResultTest {
         private final String code;
         private final String uri;
         private final boolean perm;
+        private final boolean encode;
 
-        public RedirectImpl(String code, String uri, boolean perm) {
+        public RedirectImpl(String code, String uri, boolean perm, boolean encode) {
             this.code = code;
             this.uri = uri;
             this.perm = perm;
+            this.encode = encode;
         }
 
         public String code() {
@@ -164,6 +189,10 @@ public class RedirectResultTest {
 
         public boolean perm() {
             return perm;
+        }
+
+        public boolean encodeVariables() {
+            return encode;
         }
 
         public Class<? extends Annotation> annotationType() {

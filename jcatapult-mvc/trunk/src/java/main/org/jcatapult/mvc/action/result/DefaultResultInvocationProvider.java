@@ -59,7 +59,7 @@ public class DefaultResultInvocationProvider implements ResultInvocationProvider
             // a forward, therefore we'll ask the forward result for it
             String redirectURI = forwardResult.redirectURI(invocation);
             if (redirectURI != null) {
-                annotation = new RedirectImpl(redirectURI, null, false);
+                annotation = new RedirectImpl(redirectURI, null, false, false);
             } else {
                 return null;
             }
