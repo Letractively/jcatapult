@@ -1,0 +1,49 @@
+﻿= JCatapult Scaffolder =
+
+The JCatapult Scaffolder is a scaffolding framework that uses Java's APT (annotation processing tool) and Groovy to provide an easy way to build new scaffolders that can generate code for an application. The scaffolder comes out of the box with a few scaffolders for you to use. If you are interested in building a custom scaffolder, consult the [Custom Scaffolder](ScaffolderCustomScaffolder.md) document.
+
+# Setup #
+
+This document assumes you have completed the instructions in the GettingStarted document.
+
+The scaffolder comes with a Linux/Unix shell script and a Windows batch file that allow you to invoke the tool from the command-line. In order to use the tool, the scaffolder must be correctly installed and the executable must be in your path or must be executed using the fully-qualified location to the executable. The scaffolder installation is part of the JCatapult installation and is located in the _JCATAPULT\_HOME/scaffolder_ directory. If you would like to add the scaffolder to your path, append this to your PATH environment variable:
+
+**Windows**
+```
+%JCATAPULT_HOME%\scaffolder\bin
+```
+
+**Linux/Unix**
+```
+$JCATAPULT_HOME/scaffolder/bin
+```
+
+# Invoking #
+
+To invoke the scaffolder, simply type:
+
+```
+scaffold help
+```
+
+This command will tell the scaffolder to display help about the installed scaffolders. If you want to invoke a particular scaffolder, simply pass the name of the scaffolder to the executable like this:
+
+```
+scaffold crud
+```
+
+# Interactive #
+
+The scaffolder tool is highly interactive for ease of use. Most of the scaffolders provide tab completion for classes and other information. Whenever you are asked a question by the scaffolder you can usually hit the tab key twice to get a list of some of the possible responses.
+
+# CRUD #
+
+The JCatapult scaffolder comes with a scaffolder for quickly creating CRUD operations. This scaffolder generates all of the necessary code, views, services and tests for a CRUD operation on a single JPA entity class. This scaffolder asks you for the name of the entity class, action package, service package and URI for the CRUD. After it has completed the application will contain everything needed to add, edit, delete and list the entity classes.
+
+# Domain #
+
+The JCatapult scaffolder comes with a scaffolder for quickly creating JPA entity domain classes. This scaffolder creates the entity class with the correct annotations and also adds the class to either the persistence.xml or module.xml file (depending on whether or not the scaffolder is run on a WebApp or a Module).
+
+# Action #
+
+The JCatapult scaffolder comes with a scaffolder for quickly creating JCatapult action classes. This scaffolder creates the action class with the correct annotations and methods as well as a unit and integration test for the action.

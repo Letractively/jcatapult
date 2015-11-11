@@ -1,0 +1,148 @@
+# Entities #
+
+JCatapult uses JPA for database persistence. JPA is the Java Persistence API that was released as part of JEE 1.5. This API makes heavy use of annotations for mapping database tables and columns to JavaBean properties. There are a number of resources available online if you are unfamiliar with JPA or Hibernate. JCatapult recommends the Hibernate documentation for JPA:
+
+http://www.hibernate.org/hib_docs/entitymanager/reference/en/html/
+
+http://www.hibernate.org/hib_docs/annotations/reference/en/html/
+
+Hibernate is the JPA implementation that JCatapult uses. Currently, JCatapult doesn't support any other JPA implementations.
+
+# Creating an entity #
+
+Creating an entity is simple for both webapps and modules. First, most entity classes should be placed in the _domain_ packages that JCatapult creates for you or packages you created that are named _domain_. This is merely a convention, but will help keep consistency across projects.
+
+## Webapp entities ##
+
+Inside a webapp all that is required is to create the entity class inside the _domain_ package. Here is an example entity class:
+
+```
+package org.jcatapult.example.simple.domain;
+
+import javax.persistence.Entity;
+
+import org.jcatapult.domain.IdentifiableImpl;
+
+/**
+ * This entity bean represents the ORM for the Users table in the database
+ */
+@Entity
+public class User extends IdentifiableImpl {
+    private String firstName;
+    private String lastName;
+    private String email;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}
+```
+
+## Module entities ##
+
+Inside a module there is an additional step when creating entity classes. First, you create the entity class in the _domain_ package in the same manner as you would for a webapp. Second, you must add the entity to the _module.xml_ file located in the _src/conf/main/META-INF_ directory. This file is used by JCatapult to manage module entity classes. Here is the syntax for adding an entity class to that file:
+
+```
+<module name="example-module">
+  <persistence>
+    <class>org.jcatapult.example.simple.domain.User</class>
+  </persistence>
+</module>
+```
+
+# Database creation #
+
+After you define entity classes you must recreate your project's database. This is done by executing this command from the project:
+
+```
+ant create-main-database
+```
+
+This command instructs JCatapult to build the project's database using the entity objects you have defined. This command in fact executes the [database manager](DatabaseManager.md) tool that is a highly sophisticated database management and migration tool that is part of JCatapult. For details see these documents.
+
+  * [Database management guide](GuiceDatabaseManagement.md)
+  * [Database manager reference](DatabaseManager.md)
+
+After running this script you can verify the state of the database and verify that your database now contains a table named `User`.
+
+# JCatapult persistence #
+
+JCatapult provides a number of different interfaces and base-classes that you can use to not only simplify your development, but also use some of the more advanced features of the JCatapult persistence API. You might have noticed that the `User` class from above extended the `org.jcatapult.domain.IdentifiableImpl` class. This is one of the base classes provided by JCatapult's persistence API.  IdentifiableImpl is a Hibernate mapped superclass and is sub-class of the Identifiable interface.  This is just one of many other Hibernate Mapped Super Classes at your disposal within the `org.jcatapult.domain` package.  Definitions for some of the available interfaces are provided below:
+
+## Interfaces ##
+
+  * Identifiable: This interface marks a class as identifiable using a Integer based primary key or unique identifier.
+  * Timestampable: This interface defines an Entity that has time stamp information for when the database record was created and last updated.
+  * Auditable: This interface marks a class as being auditable where the user who created the database record is recorded and the user who last updated the record is recorded.
+  * SoftDeletable: This interface marks a class as never being deleted permanently from the database. Instead, it is marked as being deleted and can be resurrected.
+
+## Base-classes ##
+
+  * IdentifiableImpl: Implements Identifiable
+  * TimestampableImpl: Implements Identifiable, and Timestampable
+  * AuditableImpl: Implements Identifiable, Auditable, and Timestampable
+  * SoftDeletableImpl: Implements Identifiable, and SoftDeletable
+  * AuditableSoftDeletableImpl: Implements Identifiable, Auditable, Timestampable, and SoftDeletable
+
+All of these interfaces and classes are defined in the `org.jcatapult.domain` located in the JCatapult-Core library.
+
+
+# Unit testing #
+
+JCatapult provides support for unit testing entity classes. In order to write a unit test for an entity class you must extend the `org.jcatapult.test.JPABaseTest` class. This class provides support for setting up a connection to the test database, creating a DataSource, mocking out a JNDI tree, adding the DataSource to the JNDI tree and setting up JPA for use.
+
+As with all of JCatapult, unit tests can also be dependency injected using Guice. This makes it simple to use the JCatapult Persistence API when unit testing entity classes. Here is a simple unit test that tests the `User` entity class from above.
+
+```
+package org.jcatapult.example.simple.domain;
+
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+import org.jcatapult.persistence.PersistenceService;
+import org.jcatapult.test.JPABaseTest;
+
+import com.google.inject.Inject;
+
+/**
+ * This tests the User class.
+ */
+public class User extends JPABaseTest {
+  private PersistenceService persistenceService;
+
+  @Inject
+  public void setService(PersistenceService persistenceService) {
+    this.persistenceService = persistenceService;
+  }
+
+  @Test
+  public void testInsert() {
+    User user = new User();
+    user.setFirstName("John");
+    user.setLastName("Doe");
+    user.setEmail("john.doe@jcatapult.org");
+
+    assertTrue(persistenceService.persist(user));
+  }
+}
+```

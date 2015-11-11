@@ -1,0 +1,106 @@
+# Introduction #
+
+This document describes how to get up and running with JCatapult.
+
+# Java #
+
+JCatapult requires Java version 6 (1.6) to use. You can download that from Sun's Java website at http://java.sun.com or use the standard method for your operating system. For example, OS X provides Java 6 downloads from the developer site and Linux has most JDKs in their repositories (via apt or yum).
+
+# Ant #
+
+JCatapult requires that have using Apache Ant 1.7.0 or later installed. You will need to download Apache Ant if you don't already have it installed. The website for Ant is http://ant.apache.org.
+
+After you download and install Ant, please create an ANT\_HOME environment variable and set it to the location of your Ant installation.
+
+# Savant #
+
+JCatapult requires that you have Savant 1.5.1 (NOT 1.5) or later installed (but NOT a 2.0 build). You will need to download Savant if you don't already have it installed. The website for Savant is http://code.google.com/p/savant-build
+
+After you download and install Savant, please create an SAVANT\_HOME environment variable and set it to the location of your Savant installation. You also need to setup 2 Savant global plugins that JCatapult provides in order to use the JCatapult make-project and svn-import tools. To setup these plugins, execute these commands:
+
+```
+$ svnt add-plugin plugins.savant.jcatapult.org:make-project
+$ svnt add-plugin plugins.savant.jcatapult.org:svn-import
+```
+
+
+# Tomcat #
+
+## Installation ##
+
+Currently, JCatapult requires the use of Tomcat 5.5 (Tomcat 6.0 will not work with JCatapult yet) for running applications in development. This will change in the future to support Jetty and many other application servers. For now, though, you will need to download Apache Tomcat from http://tomcat.apache.org. Tomcat requires that you configure the CATALINA\_HOME environment variable to point to the Tomcat installation directory.
+
+**NOTE FOR WINDOWS USERS:** JCatapult requires that you install Tomcat using the non-service based installation. Running Tomcat as a Windows service will not work with JCatapult. You must use the ZIP file installation of Tomcat to work with JCatapult.
+
+## SSL Configuration ##
+JCatapult assumes your webapp will require the use of SSL and as a result sets the 8443 connector by default in the JCatault Ant Tomcat-plugin server.xml file.  You must run the java keytool app in your user home to create the .keystore file if you haven't yet done so.  Refer to the tomcat [SSL Configuration HOW-TO](http://tomcat.apache.org/tomcat-5.5-doc/ssl-howto.html) to create your .keystore file successfully.
+
+If your webapp does not require an SSL connection, then you can override the default server.xml by providing your own in your project without the 8443 connector and implementing the tomcat plugin's deploy\_local\_post macrodef inside your project's build.xml.  An example implementation has been provided below and assumes you will be overriding the default server.xml with one in your project located at deploy/tomcat/main/conf/server.xml
+
+```
+<macrodef name="tomcat_post">
+    <sequential>
+      <copy file="deploy/tomcat/main/conf/server.xml" todir="${dir.target.tomcat}/conf" overwrite="true"/>
+    </sequential>
+</macrodef>
+```
+
+Make sure you provide this implementation after the tomcat plugin import.
+
+# MySQL #
+
+## Installation ##
+
+Currently, JCatapult requires the use of MySQL for projects that use a database. It's currently in the works to extend this capability to PostgreSQL and more databases will be added soon. For now, you'll need to download and install MySQL Community or Server version 5 or later from http://www.mysql.com.  It's highly recommended that you use InnoDB for all table schemas but JCatapult supports MyISAM as well.
+
+## Setup and Configuration ##
+
+### Port ###
+
+JCatapult's databasing capabilities currently only work with MySQL's default port setting of 3306.  We recognize that some systems might already have databases configured on this port and, therefore, plan on adding support to configure this setting in the future.
+
+### Environment ###
+
+It's highly recommended to create an environment variable that references the MySQL home directory and adding the mysql home bin directory to your path.  This is optional and not a requirement for JCatapult to function properly but this will make it much easier for you to run the MySQL client from the command line.
+
+### MySQL Connector Driver ###
+
+Because JCatapult uses JNDI to connect to MySQL and this JNDI entry is defined in Tomcat's context.xml, you must place the MySQL connector driver in the the tomcat installation's `common/lib` directory.  Because the version of this driver changes periodically, we recommend that you download the most current version from here -> http://dev.mysql.com/downloads/connector/j/5.0.html
+
+# The properties files #
+
+JCatapult uses Savant for its build system, which provides a plugin mechanism for Apache Ant. Some of the plugins that Savant provides require configuration in order to work properly. Although Savant provides excellent error messages that provide enough information that you could figure out how to configure these files yourself (and it also provides documentation on them), we'll cover them here just to get you up and running faster.
+
+## Java Compiler Configuration ##
+
+The Java plugin for Savant requires a file named _java.properties_ be created in the _~/.savant/plugins_ directory. This file tells the Java plugin where the JDKs are located on your system based on version numbers. You'll need to create this file and add a configuration entry for JDK 1.6 like this:
+
+**Linux/Unix version**
+```
+1.6=/usr/lib/jvm/java-6-sun
+```
+
+**Windows version**
+```
+1.6=C:\\Program Files\\Java\\jdk1.6.0_03
+```
+
+**Mac version**
+```
+1.6=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home
+```
+
+Right now, JCatapult only works with JDK 1.6 and we don't have immediate plans to downgrade back to JDK 1.5.
+
+## Database Credential Configuration ##
+
+The MySQL plugin for Savant requires a file named _mysql.properties_ be created in the _~/.savant/plugins_ directory. This file tells the MySQL plugin the username and password for the local MySQL database. This username and password must be a MySQL user that has permissions to create, update, and delete anything inside MySQL. You'll need to create this file and add a configuration entry for your MySQL username and password like this:
+
+```
+db.username=root
+db.password=secret
+```
+
+# Scaffolder #
+
+If you want to use the JCatapult scaffolder tool, you need to download it from the Downloads section of this project (http://code.google.com/p/jcatapult/downloads/list Downloads). Once you download it you can install it wherever you want and then add that location to your path.

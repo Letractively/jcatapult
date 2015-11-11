@@ -1,0 +1,229 @@
+# Validation #
+
+JCatapult provides two different methods of validation.
+
+  * Annotation based validation
+  * Programmatic validation
+
+# Annotations #
+
+Annotations provide a simple mechanism for validating objects inside the JCatapult framework. Annotations are placed onto member fields of a class and denote the specific constraint for that field. Here is an example of a simple action that uses a validation annotation:
+
+```
+@Action
+public class CoolAction {
+  @Required
+  public String name;
+}
+```
+
+This action specifies that the name value is required. If the name value is not set into the action using the [parameter mapping](MVCParameterMapping.md) workflow, this validation will fail.
+
+## Nesting ##
+
+Annotations can be placed on fields inside the action and they can also be nested. Nested validation does not occur unless the field that contains the nested annotation is annotated with the `org.jcatapult.validation.annotation.Valid` annotation. Here is an example:
+
+```
+public class User {
+  @Required
+  public String name;
+}
+
+@Action
+public class CoolAction {
+  @Valid
+  public User user;
+}
+```
+
+If the @Valid annotation is left out, no validation would occur for the User object.
+
+# Programmatic #
+
+Programmatic validation uses a method that has been annotated with the `org.jcatapult.mvc.validation.annotation.ValidateMethod` annotation. This annotation tells the JCatapult MVC that the method should be invoked during the validation stage. Here is an example of a validate method:
+
+```
+@Action
+public class CoolAction {
+  public String name;
+
+  @ValidateMethod
+  public void validate() {
+    if (name == null) {
+      // add error here
+    }
+  }
+}
+```
+
+If the name value is not specified, the validate method will catch it and generate an error.
+
+# Validation Errors #
+
+Validation error messages are handled in two different ways, depending on the type of validation performed.
+
+## Annotation Errors ##
+
+If the validation was annotation based, each validation annotation defines a **key** property. This **key** property specifies the localized message key of the error message. More information on localization can be found in the [message and localization](MVCMessageLocalization.md) documentation. Here is an example of an annotation with the **key** property:
+
+```
+public class User {
+  @Required(key = "user.name.missing")
+  public String name;
+}
+
+@Action
+public class CoolAction {
+  @Valid
+  public User user;
+}
+```
+
+If the annotation does not contain a **key** property, the error message key defaults to the name of the parameter, plus the name of the annotation (lowercased). For example, if the parameter name is **name** and the annotation is **@Required**, the key would be:
+
+```
+name.required
+```
+
+Here is another example:
+
+```
+public class User {
+  @MinMax(min = 10, max = 70)
+  public int age;
+}
+
+@Action
+public class CoolAction {
+  @Valid
+  public User user;
+}
+```
+
+Here, if the age inside the User class is not between 10 and 70, the error message key for this would be:
+
+```
+user.age.minmax
+```
+
+## Programmatic Errors ##
+
+If the action is using a programmatic validate method, it must use the `org.jcatapult.message.MessageStore` interface to generate error messages. This interface defines a number of methods for creating error for fields and actions. In this case you will usually use field errors.
+
+In order to use the MessageStore, you'll need to inject it into your action. Here is the programmatic validation example from above with the message handling added.
+
+```
+@Action
+public class CoolAction {
+  private final MessageStore messageStore;
+
+  public String name;
+
+  @Inject
+  public CoolAction(MessageStore messageStore) {
+    this.messageStore = messageStore;
+  }
+
+  @ValidateMethod
+  public void validate() {
+    if (name == null) {
+      messageStore.addFieldError(MessageScope.REQUEST, "name", "name.required");
+    }
+  }
+}
+```
+
+This adds the error message with the key **name.required** for the field **name**. The MessageScope defines what type of error is added. For more information on MessageScopes look at the [message localizaton](MVCMessageLocalization.md) documentation.
+
+# Custom Annotations #
+
+The JCatapult MVC makes is simple to add new validation annotations. Here are the steps (as a quick reference) that you need to take to create a custom validator.
+
+  1. Create the annotation
+  1. Implement the Validator interface
+
+## Annotation ##
+
+The first thing to do to create a custom annotation is to create the annotation itself:
+
+```
+@ValidationAnnotation(LowercaseValidator.class)
+@Retention(RUNTIME)
+@Target(FIELD)
+public @interface Lowercase {
+  String key() default "";
+}
+```
+
+There are a number of things to notice about this annotation. First, it is annotated with the `org.jcatapult.mvc.validation.annotation.ValidationAnnotation` annotation. This annotation tells JCatapult two things: first that the annotation is used for validation and second the validator to use to perform the validation.
+
+Next, you'll notice that the annotation must have RUNTIME retention and must be targeted to FIELDs.
+
+Last, you'll notice that we've added the key property to the annotation. This must be added to all custom validation annotations so that the developer using them can specify a custom error message key. If this is not present, JCatapult will throw exceptions.
+
+## Validator ##
+
+The next step to creating a custom validation annotation is to implement the validator. To do this you'll need to implement the `org.jcatapult.mvc.validation.Validator` interface. Here is the validator implementation for the Lowercase annotation:
+
+```
+public class LowercaseValidator implements Validator<Lowercase> {
+  public boolean validate(Lowercase lowercase, Object container, Object value) {
+    char[] ca = value.toString().toCharArray();
+    for (int i = 0; i < ca.length; i++) {
+      char c = ca[i];
+      if (Character.isUpperCase(c)) {
+         return false;
+      }
+    }
+       
+    return true;
+  }
+}
+```
+
+This validator checks if get character in the value is lowercase. You can perform any type of validation you want in you Validator implementations.
+You can now use your custom validator in any class like this:
+
+```
+@Action
+public class MyAction {
+  @Lowercase
+  public String username;
+
+  ...
+}
+```
+
+## Multi-value Validation ##
+
+If you want to validate multiple values at one time, you can make use of the second parameter to the validate method on the Validator interface. This second parameter is called the **container** and it is the object that contains the field that has been annotated. A classic example is checking an address for a state if the country is the United States. Here is how you can create a Validator that checks this constraint:
+
+```
+public class Address {
+  @State
+  public String state;
+  @Required
+  public String country;
+}
+
+public class StateValidator implements Validator<State> {
+  public boolean validate(State state, Object container, Object value) {
+    Address address = (Address) container;
+    if (address.country == 'US' && value == null) {
+      return false;
+    }
+
+    return true;
+  }
+}
+```
+
+## Turning off validation ##
+
+If you want to turn validation off for any reason, you may do so by adding a form input field named 'jcatapultIsValidating' and setting the value to 'false'. The easiest way to accomplish this is by adding a hidden input field as illustrated below:
+
+```
+<input type="hidden" name="jcatapultIsValidating" value="false"/>
+```
+
+Providing any other value besides 'false' or omission of the form field will result in validation being perfomed.

@@ -1,0 +1,55 @@
+# Introduction #
+
+JCatapult provides applications with the ability to determine the environment they are running in and use that information however they might need. The key behind the JCatapult Environment Resolution system is that it allows applications to be migrated from one environment to another without requiring a build or configuration step. Instead, the application can discover the environment it is running in and take actions based on that.
+
+For example, the [Environment Aware Configuration](EnvironmentAwareConfiguration.md) system allows applications to define a hierarchy of configuration files, and configuration files for each environment. This allows the application to load different configuration based on the environment.
+
+In order to facilitate this behavior, the JCatapult Environment Resolution mechanism determines the environment based on configuration located outside of the application itself. There are many ways to accomplish this, but the traditional methods include:
+
+  * JVM command-line parameters (-Denvironment=staging)
+  * A file on the disk (/etc/environment)
+  * A JNDI entry (java:comp/env/environment)
+  * IP address of the server
+  * Subnet of the server
+
+
+# API #
+
+The JCatapult Environment Resolution API consists of a single interface and a default implementation. The interface is:
+
+```
+org.jcatapult.environment.EnvironmentResolver
+```
+
+The interface defines a single method:
+
+```
+    /**
+     * @return  Returns the current environment the application is running in.
+     */
+    public String getEnvironment();
+```
+
+
+# JNDI Resolution #
+
+By default, JCatapult web applications make use of a JNDI entry to determine the environment. This JNDI entry can be any Object since the `EnvironmentResolver` method returns a `String` and the `JNDIEnvironmentResolver` simply does a JNDI lookup and calls the `toString()` method on the Object returned.
+
+For Tomcat, JCatapult provides a simple JavaBean class that can be placed into the JNDI context for the web application. That class is:
+
+```
+org.jcatapult.environment.Environment
+```
+
+The web application template that is used by JCatapult during [project creation](GuideWebApp.md) contains a context.xml file in the _deploy/tomcat/main/conf_ directory that contains the JNDI entry using the Environment JavaBean. That entry looks like this:
+
+```
+<Resource name="environment" auth="Container" type="org.inversoft.vertigo.environment.Environment"
+            factory="org.apache.naming.factory.BeanFactory" environment="development"/>
+```
+
+This definition would place the web application into the development environment. Therefore, a call to the `getEnvironment()` method on the `EnvironmentResolver` interface would return the String **development**.
+
+# Custom Resolution #
+
+In order to provide a custom `EnvironmentResolver`, you must implement the `org.jcatapult.environment.EnvironmentResolver` interface and bind your implementation into Guice using your applications Guice Module (see the [Guice documentation](http://code.google.com/p/google-guice/) and the [JCatapult Guice integration docs](GuideDependencyInjection.md) for more information).

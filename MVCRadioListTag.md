@@ -1,0 +1,67 @@
+# Checkbox List #
+
+The JCatapult MVC provides an easy mechanism for creating groups of radio buttons from collections. The **radiolist** tag takes as an attribute a collection that it iterates over to build the set of radio buttons. This collection can contain any objects and the text and value for each radio button can be pulled from the Object. The text for a radio button can also be pulled from a localized resource bundle.
+
+# Association #
+
+In most cases, a **radiolist** tag can be associated to any type of property in an action since only a single radio button from a group is ever selected at one time. The HTML generated might look like this:
+
+```
+<!-- The user can only have a single role -->
+<label>User role</label>
+<input type="radio" name="roleId" value="1"/>
+
+<label>Admin role</label>
+<input type="radio" name="roleId" value="2"/>
+```
+
+The association on the action would look like this:
+
+```
+public class Register {
+  public int roleId;
+}
+```
+
+When the form is submitted the **roleId** field in the action is populated with the id from the selected radio button.
+
+# Checked State #
+
+When the form is rendered, the checked state of each radio button in the list is determined by using the associated property from the action and the value of each radio button. If the value of the radio button is equal to the value of the property, the radio button is checked. Otherwise, the radio button is left unchecked.
+
+# Attributes #
+
+The radiolist tag supports all of the common HTML attributes that are covered in the [forms](MVCForms.md) documentation. In addition to those attributes, the radiolist tag also supports these attributes:
+
+  * name - (String) The action property that is associated with the radio buttons and used to determine if one of the radio buttons is checked when the form is rendered and also used to populate the associated property of the action when the form is submitted. This is also used to generate the localized label for the radio button group
+  * items - (Collection, Array or Map) The items used to build the radio buttons
+  * valueExpr - (String) An expression that is used to retrieve the value of each radio button from the objects in the **items**
+  * l10nExpr - (String) An expression that is used to retrieve a localization key from the objects in the **items**. This key is then used to retrieve the text for each radio button from the localized resource bundle
+  * textExpr - (String) An expression that is used to retrieve a the text for each radio button from the objects in the **items**
+  * size - (int) The size of the checkboxes
+  * alt - (String) A short description of the checkboxes (used in tool-tips)
+  * tabindex - (int) The tabindex of the checkboxes
+  * accesskey - (String) The access key of the checkboxes
+  * onfocus - (String) The checkboxes got the focus
+  * onblur - (String) The checkboxes lost focus
+
+It is important to understand that attributes such as onfocus are applied to all of the radio buttons in the group.
+
+# Examples #
+
+```
+<!-- Generate a set of checkboxes for different roles a user can have -->
+[@jc.radiolist name="roleId" items=roles valueExpr="id" l10nExpr="code"/]
+
+<!-- Generate a set of checkboxes for objects using nested properties in the expressions -->
+[@jc.radiolist name="someValue" items=objects valueExpr="some.nested.property" l10nExpr="some.other.nested.property"/]
+```
+
+The resource bundle might look like this:
+
+```
+# Example 1, assume that there are two Role objects in the items with the
+# codes of 'user' and 'admin'
+user=User role
+admin=Admin role
+```

@@ -1,0 +1,47 @@
+# JCatapult Versioning Specification #
+
+JCatapult follows a very strict numbering scheme. Your JCatapult web applications, libraries, and modules should also try to adhere to this scheme so that everything is consistent. The versioning numbers are all conform to this format:
+
+```
+<version> ::= <number> "." <number> ("." <number>) ("-" <snapshot>)
+<number> ::= [0-9]+
+<snapshot> ::= [A|B|M|RC][0-9]+
+```
+
+This format is also the primary format that is used by [Savant](http://code.google.com/p/savant-build), the dependency management tool used by JCatapult. Using this format allows Savant to determine compatibility between versions of a project. Here are some examples of the format:
+
+  * 1.0
+  * 1.1
+  * 1.1.1
+  * 2.0-A1
+  * 2.0-B1
+  * 2.0-M1
+  * 2.0-RC1
+
+# Version Types #
+
+JCatapult version numbers fall into four categories:
+
+  * Major
+  * Minor
+  * Patch
+  * Snapshot
+
+Each category can be identified simply by the version number. Here are some examples of version numbers and their categories:
+
+  * 1.0       Major version (major 1, minor 0)
+  * 1.1       Minor version (major 1, minor 1)
+  * 1.1.1     Patch Version (major 1, minor 1, patch 1)
+  * 2.0-A1    Snapshot version (alpha version 1 of the 2.0 major version)
+  * 2.0-B1    Snapshot version (beta version 1 of the 2.0 major version)
+  * 2.0-M1    Snapshot version (milestone version 1 of the 2.0 major version)
+  * 2.0-RC1   Snapshot version (release candidate version 1 of the 2.0 major version)
+
+# Compatibility #
+
+If you haven't read the [Savant](http://code.google.com/p/savant-build) documentation, we encourage you to do so as it contains a wealth of information about versioning, compatibility, dependency management and the Savant tool iteslf.
+
+JCatapult projects use the Savant **minor** compatibility type. This means that JCatapult releases are only compatible across minor versions. Anytime you see two versions of JCatapult that have different major numbers, these versions are not compatible. Here are a few examples:
+
+  * JCatapult 1.0 is compatible with JCatapult 1.1
+  * Jcatapult 1.3 is **NOT** compatible with JCatapult 2.0

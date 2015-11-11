@@ -1,0 +1,122 @@
+# Actions and Views #
+
+This guide is a quick overview of writing actions and views for the JCatapult MVC. For in depth MVC documentation, look at the advanced section of the DocumentationHome wiki page. All of the information contained here and in most of the JCatapult documentation applies to JCatapult webapps and JCatapult modules.
+
+# Conventions #
+
+JCatapult's MVC is convention based. This means that you don't have to mess around with any XML configuration files in order to get going. Instead, JCatapult maps incoming request URLs directly to actions and views. Here is a brief summary of the conventions:
+
+## Action Conventions ##
+
+Actions are translated into URLs based on the package name and the class name of the class. This translation is spelled out in these steps:
+
+  * Actions are located by inspecting the classpath for any packages named `action`
+  * Packages that are found are called the **base action packages**
+  * These packages are inspected for classes that are annotated with the `org.jcatapult.mvc.action.annotation.Action` annotation
+  * All sub-packages are also inspect for action classes
+  * Any classes found are translated into URLs using the package name and class name
+
+The package and class name are translated into a URL using this process:
+
+  * Drop the **base action package** from the fully qualified class name
+  * Replace periods with forward slashes
+  * Drop 'Action' from the end of the name (if applicable)
+  * Split on camel case
+  * Join using dashes
+  * Lower case the entire thing
+
+### Examples ###
+
+Here are some examples of how actions are mapped to URLs by JCatapult.
+
+| **Class** | **URL** |
+|:----------|:--------|
+| com.example.action.Index | /index  |
+| com.example.action.users.List | /users/list |
+| com.example.action.waterProducts.SpeedBoat | /water-products/speed-boat |
+
+## Result Conventions ##
+
+The view part of a traditional MVC are known as results in the JCatapult MVC since they are normally the result of invoking an action. JCatapult locates all of the results in the `WEB-INF/content` directory. The location of a specific result is simply the URL plus the file extension. For example, if the URL is `/foo/bar`, JCatapult would assume the result is located at `WEB-INF/content/foo/bar.ftl`. Currently, JCatapult only supports FreeMarker results, but we have plans to support JSPs soon. FreeMarker is highly preferred because it allows for easier unit testing, it is a much more robust templating engine, allows results to be stored inside JAR files or in the classpath, and it allows for dynamic discovery of new tags. When JSP support is added, many features will be lacking from it because of the severe limitations of JSPs.
+
+### Examples ###
+
+Here are some examples of how results are mapped to URLs (and vice-versa) by JCatapult.
+
+| **URL** | **Result** |
+|:--------|:-----------|
+| /index  | WEB-INF/content/index.ftl |
+| /user/list | WEB-INF/content/user/list.ftl |
+| /water-products/speed-boat | WEB-INF/content/water-products/speed-boat.ftl |
+
+# Results Without Actions #
+
+If you need to create a result that doesn't have an action behind it, you can accomplish this by simply creating an FTL (FreeMarker template) file in the correct location as described above. Here is an example of an FTL without an action:
+
+**WEB-INF/content/hello-world.ftl**
+```
+<html>
+<body>
+Hello world!
+</body>
+</html>
+```
+
+If you compile the application by executing the command:
+
+```
+ant app
+```
+
+and open your browser to http://localhost:8080/hello-world you should see this JSP.
+
+# Actions #
+
+JCatapult actions are simply POJOs that contain the correct annotation. All JCatapult actions must be annotated with the `org.jcatapult.mvc.action.annotation.Action` annotation. This annotation signals to the JCatapult MVC that the class should be mapped to a URL.
+
+Here is an example of an action that would be associated with the _/hello-world_ URL and also with the result example from above. By associating the action with a result, we can provide dynamic data to the view from the action. All public member variables and JavaBean properties inside the action automatically become available to the result.
+
+```
+package com.example.actions;
+
+import org.jcatapult.mvc.action.annotation.Action;
+
+@Action
+public class HelloWorld {
+  public String message;
+
+  public String execute() {
+    message = "Hello World!"
+    return SUCCESS;
+  }
+}
+```
+
+This action will be mapped by JCatapult to the _/hello-world_ URL because of its name and package. Likewise, it will be matched up with the `hello-world.ftl` since they are both associated with the same URL. JCatapult will first invoke the action and then render the result. If we update the result to pull the message value from the action, we will make it dynamic. Here is the dynamic result page:
+
+**WEB-INF/content/hello-world.ftl**
+```
+<html>
+<body>
+The message is ${message}
+</body>
+</html>
+```
+
+If you compile the application again and start up Tomcat, you would see this in your browser:
+
+```
+The message is Hello World!
+```
+
+# Advanced #
+
+This document covers the basics of creating actions and views within a JCatapult application. The JCatapult MVC also includes many other features covered in additional documentation. Here are the other features of the MVC:
+
+  * Parameter mapping
+  * Type conversion
+  * Forms
+  * Validation
+  * Messages and localization
+  * Results
+  * Scopes

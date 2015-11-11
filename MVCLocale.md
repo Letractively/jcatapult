@@ -1,0 +1,35 @@
+# Locale #
+
+JCatapult MVC provides a mechanism for setting and managing the current Locale that the user is in. This is done using a service that is part of the JCatapult-Core library called, `org.jcatapult.locale.LocaleStore`.
+
+This LocaleStore stores the Locale for the user in the session under a key of **jcatapultLocale**. This allows applications to allow individual users to select their Locale using a select box or some other mechanism and store it in the session for use across requests.
+
+The LocaleStore provides support for handling default Locale via the HttpServletRequest interface's **getLocale** method. This method checks to see if the user has selected a Locale in their browser and if they haven't, the system default is used.
+
+The search order for the Locale via the LocaleStore is thus:
+
+  1. In the session under the **jcatapultLocale** key
+  1. From the HttpServletRequest
+
+# Examples #
+
+Here is a simple example of an action that might set the users Locale.
+
+```
+@Action
+public class LocaleSelector {
+  private final LocaleStore localeStore;
+
+  public Locale localeUserSelected;
+
+  @Inject
+  public LocaleSelector(LocaleStore localeStore) {
+    this.localeStore = localeStore;
+  }
+
+  public String execute() {
+    localeStore.put(localeUserSelected);
+    return "success";
+  }
+}
+```

@@ -1,0 +1,11 @@
+# Available plugins #
+
+  * [module](SavantModulePlugin.md) - The JCatapult module plugin for module development and module integration into applications. Web applications and module projects will use this plugin. **latest version 1.0.3**
+
+  * [security](SavantSecurityPlugin.md) - The security plugin that provides tools for helping projects that are using JCatapult security and ACEGI. Most famously, this provides a tool to output the encrypted form of passwords for helping to seed databases. Any project can use this plugin. **latest version 1.0**
+
+  * [dbmgr](SavantDBMgrPlugin.md) - The JCatapult dbmgr plugin for interacting with the database management tool, which can create all of your webapp and module tables and databases. **latest version 1.0.2**
+
+  * [make-project](SavantMakeProjectPlugin.md) - The make-project plugin allows you to create new projects quickly. This is a global plugin, meaning that you must be outside of a project to use it. You also need to invoke it using a namespace like this:  `svnt jcatapult:make-project`
+
+  * [svn-import](SavantSvnImportPlugin.md) - The svn-import plugin allows you to import a new project into a SubVersion repository. This is a global plugin, meaning that you must be outside of a project to use it. You also need to invoke it using a namespace like this:  `svnt jcatapult:svn-import`

@@ -1,0 +1,26 @@
+# Checkbox #
+
+The **hidden** tag generates a hidden field.
+
+# Association #
+
+Hidden tags are often used to store values from properties in the action on the form. This is called client-side storage and avoids having to use the session. A common example is that you want to store the ID of an entity object you are editing as part of a CRUD.
+
+The value of any hidden tag are sent to the server and used to populate the associated property in the action.
+
+# Attributes #
+
+The hidden tag supports all of the common HTML attributes that are covered in the [forms](MVCForms.md) documentation. In addition to those attributes, the hidden tag also supports these attributes:
+
+  * name - (String) The action property that is associated with the hidden tag and used to populate the value if the value attribute is not specified. This is useful for client-side storage
+  * value - (String) The value of the hidden tag. If this is specified it overrides the value from the associated property
+
+# Examples #
+
+```
+<!-- Generate a hidden field using the value from the associated property -->
+[@jc.hidden name="user.id"/]
+
+<!-- Generate a hidden field with a fixed value -->
+[@jc.hidden name="user.id" value="2"/]
+```

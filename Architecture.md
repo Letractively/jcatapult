@@ -1,0 +1,49 @@
+# Frameworks #
+
+JCatapult is a large amount of glue for a bunch of other frameworks. It also adds functionality on top of those frameworks that is often useful for applications. The functionality that JCatapult adds is never required and can always be removed, ignored or replaced.
+
+The frameworks that JCatapult is currently constructed on top of are:
+
+| **Framework/Library** | **Function** | **Required** |
+|:----------------------|:-------------|:-------------|
+| Apache Ant            | Build (this is used via Savant) | Yes          |
+| Savant                | Dependency management and Build | Yes          |
+| Guice                 | Dependency injection | No           |
+| JPA via Hibernate     | ORM          | No           |
+| JavaMail              | Email        | No           |
+| FreeMarker            | MVC views, email, MVC tags | No           |
+| SiteMesh              | Template engine | No           |
+| Commons configuration | Configuration | Yes          |
+| Joda                  | Date time    | Yes          |
+| JUnit                 | Unit testing | No           |
+
+# Modules #
+
+One of the major features of JCatapult is that it provides a module methodology that allows pieces of functionality to be written in separate projects and then incorporated into JCatapult web applications seamlessly. This module architecture allows modules to define this types of objects:
+
+  * Entities
+  * Actions (MVC/URL actions handlers)
+  * Services
+  * Views (MVC views/results using FreeMarker)
+  * Static resources (CSS, HTML, images, JavaScript, etc)
+  * Database migration scripts
+
+The beauty of this type of modularization is that it is very simple to define functionality and reuse it across multiple applications.
+
+An example of a module might be a _user_ module. This module might provide these pieces of functionality:
+
+  * User and contact information entity
+  * User services for managing and manipulating the entities
+  * A login form and action handler
+  * A forgot password form and action handler
+  * A logout form and action handler
+  * AJAX action handlers for AJAX login and logout
+  * Administration interface to managing users via CRUD operations (a search page, list page, add/edit form and delete page)
+
+This module can then be added to an existing web application project using a simple ant target and no additional configuration.
+
+Besides support for stand-alone modules, JCatapult also support modules which depend on other modules. For example, there might be a news module that allows admins to add news to a website. This module might use the **User** class from the user module. JCatapult will handle this dependency and do all the work of database creation, migration, and dependency management.
+
+# Conventions #
+
+Whenever possible, JCatapult prefers providing good defaults and conventions over configuration. This reduces the amount of configuration required to write applications and reduces maintenance costs considerably.

@@ -1,0 +1,67 @@
+# Select #
+
+The JCatapult MVC provides an easy mechanism for creating a select box from collections. The **select** tag takes as an attribute a collection that it iterates over to build the select box options. This collection can contain any objects and the text and value for each option in the select box can be pulled from the Object. The text for an option can also be pulled from a localized resource bundle.
+
+# Association #
+
+In most cases, a **select** tag is associated to any property in an action. This property could be  a collection or array if the select box allows multiple selections or a simple property like a String or int if the select box allows single selections. The HTML generated might look like this:
+
+```
+<label>User roles</label>
+<select name="roleIds" multiple="multiple">
+<option value="1">User</option>
+<option value="2">Admin</option>
+</select>
+```
+
+The association on the action would look like this:
+
+```
+public class Register {
+  public int[] roleIds;
+}
+```
+
+When the form is submitted the **roleIds** field in the action is populated with the ids from the selected options in the select box.
+
+# Selected State #
+
+When the form is rendered, the selected state of each option in the select box is determined by using the associated property from the action and the value of each option. If the associated property is an array or collection, each element in the array or collection is compared to the value of each option. If the value of the option is found in the array or collection, the option is selected. Otherwise, the option is left unselected.
+
+If the property is not a collection or array, it is compared directly to the value of each option. If they are equal, the option is selected, otherwise it is unselected.
+
+# Attributes #
+
+The **select** tag supports all of the common HTML attributes that are covered in the [forms](MVCForms.md) documentation. In addition to those attributes, the **select** tag also supports these attributes:
+
+  * name - (String) The action property that is associated with the select box and used to determine if the options are selected when the form is rendered and also used to populate the associated property of the action when the form is submitted.  This is also used to generate the localized label for the select box
+  * items - (Collection, Array or Map) The items used to build the options for the select box
+  * valueExpr - (String) An expression that is used to retrieve the value of each option from the objects in the **items**
+  * l10nExpr - (String) An expression that is used to retrieve a localization key from the objects in the **items**. This key is then used to retrieve the text of each option from the localized resource bundle
+  * textExpr - (String) An expression that is used to retrieve a the text for each option from the objects in the **items**
+  * mutliple - (boolean) Determines if the select box is a multi-select box
+  * size - (int) The size of the select box
+  * alt - (String) A short description of the select box (used in tool-tips)
+  * tabindex - (int) The tabindex of the select box
+  * accesskey - (String) The access key of the select box
+  * onfocus - (String) The select box got the focus
+  * onblur - (String) The select box lost focus
+
+# Examples #
+
+```
+<!-- Generate a select box for different roles a user can have -->
+[@jc.select name="roleIds" items=roles valueExpr="id" l10nExpr="code" multiple=true/]
+
+<!-- Generate a set of checkboxes for objects using nested properties in the expressions -->
+[@jc.select name="someValue" items=objects valueExpr="some.nested.property" l10nExpr="some.other.nested.property"/]
+```
+
+The resource bundle might look like this:
+
+```
+# Example 1, assume that there are two Role objects in the items with the
+# codes of 'user' and 'admin'
+user=User role
+admin=Admin role
+```

@@ -1,0 +1,100 @@
+# MVC #
+
+Struts/XWork is lacking in many areas and I want to make a list. We'll need to replace it at some point.
+
+  * Be nice to use the same injector for the MVC as the app
+  * SiteMesh plugin required to localize or use struts tags in decorator
+  * OGNL (eeck)
+  * Groovy support
+  * Better configuration, defaults, conventions, etc.
+  * API freezes with no changes
+  * Better plugin support top to bottom
+  * Better APIs
+  * Ability to override or extend interceptors, actions, anything from modules in the application
+  * Better support for wildcard and SEO URLs via conventions
+  * Better type conversion support with support for attributes (currency code, date time format, etc)
+
+Here is some working ideas:
+
+  * Provide support in the configuration system for defining interceptor chains using a list of classes and a name for the chain. Actions can then denote which chain they want to use if not the default.
+  * Have an ObjectFactory that creates the Actions and the Interceptors. Default will use the GuiceContainer from core.
+  * Fields can have getter/setters or just be public member variables of an action
+  * Provide scopes for fields @Request, @Session, @Application, @ActionSession, @Flash
+  * Be nice to provide error handling support without extension. Toolkit method maybe? This would require a ThreadLocal which kinda sucks. Optional argument to the action method? Convention based fields for action and field errors (private Map<String, String> fieldErrors and private List
+
+&lt;String&gt;
+
+ actionErrors)
+  * Localization should be hierarchy. First check for bundle next to the view (/WEB-INF/content/foo.properties). Then check for class and parent-classes.
+  * Validation annotation on action method @Validation(file = "foo.xml", type = Foo.class). Validation in code, annotations on beans and in XML.
+  * Form preparation via an annotation @Page(Foo.class) or @Form(Foo.class). Also support preparing form once if desired using scope of @ActionSession for prepared values
+  * FreeMarker for views to start
+  * Some type of UEL but something that supports type conversion. If the views are FreeMarker, then perhaps all other evaluation can be done using FreeMarker as well. This would unify it. @Result(location="foo.jsp?id=${id}")
+
+Here is some design thoughts
+
+Leverage the Workflow system of JCatapult. The MVC would have a WorkflowChain that would probably have this type of ordering:
+
+  * parameters
+  * validation
+  * action invocation
+  * result handling
+
+The parameters and validation could be flipped.
+
+Here is some ideas for configuration:
+
+  * MVC is loaded via GuiceContainer as a eager singleton
+  * First thing is to find all the actions using Struts2 convention handling
+  * Create FolderConfig and ActionConfig objects that are stored in the MVC singleton
+
+Parameters needs to support generics, and type conversions, which means that OGNL, JUEL and the like might not work at all.
+
+Another thing that needs to be in there is support for CRUD, particularly fetching complex object models from the database, updating them and then saving them. However, there are a number of considerations:
+
+  * The model has been deleted and can't be fetched prior to setting the parameters into it
+  * The validation fails and the object should be rolled back. This could be tricky since JPA is stateful and if you touch an entity, your changes might be saved to the database when you don't want them to be
+  * Form preparation (discussed above)
+  * Using the same action for GET and POST. GET renders the form, POST handles submission
+
+Also, thinking if the validation annotations should be tied back to the tag in order to put the asterisk in the label to denote required fields.
+
+# DSL for the database manager #
+
+There are a number of pages for this brain storm under the DatabaseManager documentation.
+
+# LAF framework #
+
+Allows loading of LAF assets from the classpath so they are versioned and also provides the tag libraries for them. URLs would be handled like:
+
+```
+/laf/foo/js/bar.js
+```
+
+This would be handled by the LAF framework and the asset would be resolved from the classpath.
+
+# Workflow enhancements #
+
+It would be nice to remove the WorkflowResolver and replace it with something better that figures out the workflow order based on dependencies. The Workflow interface would contain a method like this:
+
+```
+List<Class<? extends Workflow>> getDependencies();
+```
+
+The dependencies would list out the other workflows required to have already been executed for the Workflow to run correctly. For example the SecurityWorkflow would depend on the JPA workflow like this:
+
+```
+public class SecurityWorkflow implements Workflow {
+  public List<Class<? extends Workflow>> getDependencies() {
+    return Arrays.asList(JPAWorkflow.class);
+  }
+}
+```
+
+# FreeMarker IDE plugin #
+
+It would be nice to have a plugin for IJ and Eclipse for FreeMarker.
+
+# JCatapult IDE plugin #
+
+It would be nice to provide support for JCatapult actions, JSPs, FTL in IDEs. This would use the actions in the classpath and in the application and determine the values that are available in the page. It would also provide access to the scaffolder. It would also be nice to have a project setup process that would setup Ant, Tomcat, Hibernate/JPA, Database, etc in just one button.

@@ -1,0 +1,335 @@
+# JCatapult Deployer #
+
+As of 1.0-RC2, JCatapult ships with the JCatapult Deployer, which is a deployment framework that uses Apache Commons Configuration, Java Secure CHannel (JSCH), and Groovy to provide an easy way to deploy webapps to remote servers.
+
+# Setup #
+
+(This document assumes you have completed the instructions in the GettingStarted document.)
+
+The deployer comes with a Linux/Unix/Mac shell script and a Windows batch file that provides the capability to invoke the tool from the command-line. In order to use the tool, the deployer must be correctly installed and the executable must be in your path or must be executed using the fully-qualified location to the executable. The deployer installation is part of the JCatapult distribution and is located in the _JCATAPULT\_HOME/deployer_ directory. If you would like to add the deployer to your path, append this to your PATH environment variable:
+
+**Windows**
+```
+%JCATAPULT_HOME%\deployer\bin
+```
+
+**Linux/Unix**
+```
+$JCATAPULT_HOME/deployer/bin
+```
+
+
+# Configuration #
+
+To configure the deployer, there are 2 main concepts that you should be familiar with:
+
+  * Domain
+  * Environment
+
+## Domain ##
+
+The domain represents a server or group of servers where there are one or more environments where you host your web applications from.
+
+## Environment ##
+
+The environment represents a specific location within a domain where your web application is running from.  Each environment is uniquely identified by its name, which is an arbitrary value, however, suggested environment names are:  development, internal-qa, external-qa, staging, production.
+
+Both the Domain and Environment information are configured via an xml file and, by convention, script execution expects the path of this configuration file to be relative to the project root at the following location:
+
+```
+<project-root>/deploy/remote/deploy.xml
+```
+
+An example deploy xml configuration file is included below:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-configuration>
+  <domain name="domain1">
+    <environment name="internal-qa">
+      <host>staging.jcatapult.org</host>
+      <host-username>staging.host.username</host-username>
+      <host-password>staging.host.password</host-password>
+    </environment>
+  </domain>
+  <domain name="domain2">
+    <environment name="external-qa">
+      <host>qa.jcatapult.org</host>
+      <host-username>qa.host.username</host-username>
+      <host-password>qa.host.password</host-password>
+    </environment>
+    <environment name="staging">
+      <host>staging.jcatapult.org</host>
+      <host-username>staging.host.username</host-username>
+      <host-password>staging.host.password</host-password>
+    </environment>
+  </domain>
+  <domain name="domain3">
+    <environment name="production">
+      <host>production.jcatapult.org</host>
+      <host-username>production.host.username</host-username>
+      <host-password>production.host.password</host-password>
+    </environment>
+  </domain>
+</deployment-configuration>
+```
+
+The deployment configuration schema is defined by one or more `domain` descriptors and each domain descriptor contains one or more `environment` descriptors.  The domain `name` attribute, environment `name` attribute, `host`, `host-username`, and `host-password` descriptors are all required fields.  The xml is validated so if you forget to define any of these fields the tool will notify you of such.
+
+## Security ##
+
+Some folks might not want or be allowed to store the passwords for their servers in a plain text file in the project. In this case, the JCatapult Deployer can be setup to use SSH key-pairs instead. Just leave the password blank inside the XML file and follow the instructions below to use SSH key-pairs.
+
+
+# Running the Deployer #
+
+To invoke the deployer, simply execute the following from the root of any JCatapult project:
+
+```
+deploy
+```
+
+At this point the deployer will go into interactive mode. In this mode, the deployer tool will ask you a series of questions to determine what to deploy. The tool provides tab completion for ease of use when answering these questions. This means that whenever you are asked a question by the deployer you can usually hit the tab key twice to get possible options.
+
+In the interactive mode, the deployer will prompt 3 questions to collect the following data:
+
+  * Domain
+  * Environment
+  * Archive
+
+## Domain ##
+
+The first question the deployer will ask is which domain you are deploying to.  These values are taken directly from the xml configuration file.  If only one domain is defined, then the deployer selects this as the default option.
+
+## Environment ##
+
+Once you select your domain, you will be asked for which environment within that domain you wish to deploy to.  The environment options are taken directly from the xml configuration file.  If only one environment is defined, then the deployer selects this as the default option.
+
+## Archive ##
+
+The next question prompts for the archive resource you'd like to deploy to the selected domain environment. By convention, the deployer looks within the `.jcatapult/deploy-archive` directory for available archives.
+
+## Help ##
+
+You can also display the help screen for the deployer by executing this command:
+
+```
+deploy help
+```
+
+
+# Archive Naming Convention #
+
+Each archive within the `.jcatapult/deploy-archive` must conform to the following naming convention format in order for the deployer to load them successfully:
+
+```
+<archive> ::= <project-name> "-" <version> ".tar.gz"
+<project-name> ::= the name of the project taken from the root 'name' attribute in the project.xml
+<version> ::= <number> "." <number> ("." <number>) ("-" <snapshot>)
+<number> ::= [0-9]+
+<snapshot> ::= [A|B|M|RC][0-9]+
+```
+
+**For more information on versioning, please reference the [JCatatpult Versioning](GuideVersioning.md) specification.**
+
+Example:
+Lets say, for instance, you wish to deploy your webapp project named 'jcatapult' and the version of your project is 1.0-RC2.  The archive resource filename would be:
+
+```
+jcatapult-1.0-RC2.tar.gz
+```
+
+
+# Archive Creation #
+
+A deployable archive file contains all files that should be deployed to the selected domain enviroment.  The archive file can be created manually or via the JCatapult Release scripts.  For more information on how to create it using the JCatapult Release scripts, please reference the [JCatapult Release](GuideRelease.md) guide.
+
+
+# The Deployment Script #
+
+Once the deployer collects the domain, environment, and archive resource information it executes a Groovy script named `deployer.groovy`. This script must be located in the `.jcatapult/deployment/<domain>` directory, where the 
+
+&lt;domain&gt;
+
+ is equal to the domain you are deploying to.
+
+The deployer.groovy script must extend the `Deployer` interface and implement the `deploy` method.  The javadoc for the Deploy interface has been provided below:
+
+```
+/*
+ * Copyright (c) 2001-2008, JCatapult.org, All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ */
+
+package org.jcatapult.deployer;
+
+import org.jcatapult.deployer.domain.DeploymentInfo;
+
+/**
+ * <p>Interface for perfoming deployments</p>
+ *
+ * <p>This interface must be implemented by a deploy.groovy script
+ * located in the following directory context:</p>
+ *
+ * <pre>
+ * .jcatapult/deployment/&lt;domain>
+ * </pre>
+ *
+ * <p>where &lt;domain> is equal to the domain you are deploying to.
+ * This domain is the same domain configured in the deploy xml configuration file</p>
+ *
+ * @author jhumphrey
+ */
+public interface Deployer {
+
+    /**
+     * <p>Called to deploy the jar resource to a particular domain environment</p>
+     *
+     * @param deploymentInfo {@link DeploymentInfo} provided to groovy scripts.  This bean contains all the necessary information
+     * for deploying artifacts to remote servers
+     */
+    public void deploy(DeploymentInfo deploymentInfo);
+}
+```
+
+## Deployment Info ##
+
+The `DeploymentInfo` object passed to the `deploy` method contains information the deploy.groovy can use to successfully deploy the jar resource to the domain environment specified.  For more information on the `DeploymentInfo` API, please reference our Deployer [JCatapult Javadocs](JCatapultJavadocs.md).
+
+## BaseDeployer ##
+
+It is usually best to extend the BaseDeployer class. This class contains a number of valuable methods to copying files to servers using SCP and executing commands on the server using SSH. For an overview of these methods, read the BaseDeployer JavaDocs at:
+
+http://jcatapult.googlecode.com/svn/jcatapult-javadocs/jcatapult-deployer/1.0-RC8/org/jcatapult/deployer/BaseDeployer.html
+
+## Security ##
+
+Often, deployer scripts will fetch the username and password from the DeploymentInfo object and use that information to SCP or SSH to a server. This poses a security risk because the password will be stored plain text in the deploy.xml file. To solve this issue, remove the `<host-password>` element from the deploy.xml file. Next, when invoking any of the `scp` or `sshExec` methods on the BaseDeployer, pass `null` in for the password like this:
+
+```
+String username = deploymentInfo.getEnv().getHostUsername();
+scp(username, null, new File(...), "remote-director");
+```
+
+This will instruct the SCP command to use SSH key-pairs for authentication. This means you will have to setup SSH key-pairs for anyone wishing to deploy. You can read up seting up SSH key-pair authentication here:
+
+http://www.colorado.edu/its/docs/authenticate/ssh-keys.html
+
+(You'll need to translate this to your environment and setup)
+
+
+# Example #
+
+Here is an example of configuring the deployer, writing the necessary Groovy script and finally running the deployer.
+
+## Configuration ##
+
+A project named `jcatapult-test-webapp` has a deploy configuration xml file located (relative to the project root) at `deploy/remote/deploy.xml`.  The `deploy.xml` contains the following information:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-configuration>
+  <domain name="jcatapult-test-domain">
+    <environment name="staging">
+      <host>test.jcatapult.org</host>
+      <host-username>test</host-username>
+      <host-password>test</host-password>
+    </environment>
+  </domain>
+</deployment-configuration>
+```
+
+## Deployment Scripts ##
+
+In addition to the xml configuration file, the deployer also requires that you have a `deployer.groovy` file located in the following directory:
+
+```
+.jcatapult/deploy/jcatapult-test-domain
+```
+
+To reiterate what was mentioned earlier, the domain `name` attribute within the deploy.xml file must map to a directory of the same name within the `.jcatapult/deploy` directory.
+
+### deployer.groovy ###
+
+The `deployer.groovy` file must implement the `Deployer` interface and provide an implementation of the `depoly` method.  To help illustrate, a sample deployer.groovy file has been included below:
+
+```
+import org.jcatapult.deployer.BaseDeployer
+import org.jcatapult.deployer.domain.DeploymentInfo
+
+/**
+ * Deployer script for the jcatapult-test-domain.
+ * 
+ * This groovy script is called by the deployer framework and does the following:
+ * 
+ * 1.  SCPs the scripts/deploy.sh file to the remote server ~/work directory
+ * 2.  SCPs the deploy archive to the remote server ~/work directory
+ * 3.  runs SSH exec command 'chmod u+x ~/work/deploy.sh' to give the user exec permissions
+ * 4.  runs SSH exec command 'source ~/.bashrc; source ~/.bash_profile; cd ~/work; sh deploy.sh <archive>' to run
+ * the deploy.sh script on the remote server.
+ */
+public class TestDeployer extends BaseDeployer {
+
+  public void deploy(DeploymentInfo deploymentInfo) {
+    String host = deploymentInfo.getEnv().getHost();
+    String username = deploymentInfo.getEnv().getHostUsername();
+    String password = deploymentInfo.getEnv().getHostPassword();
+    String archive = deploymentInfo.getDeployArchive();
+
+    // scp the deploy.sh file
+    scp(host, username, password, new File(deploymentInfo.getDeploymentDomainDir(), "scripts/deploy.sh"), "~/work");
+
+    // scp the deploy jar
+    scp(host, username, password, new File(deploymentInfo.getDeployArchiveDir(), archive), "~/work");
+
+    // give execute permissions to deploy.sh file once it's uploaded to the remote server
+    sshExec(host, username, password, "chmod u+x ~/work/deploy.sh");
+
+    // execute deploy.sh
+    System.out.println(sshExec(host, username, password, "source ~/.bashrc; source ~/.bash_profile; cd ~/work; sh deploy.sh " + archive));
+  }
+}
+
+```
+
+You might not have noticed that the `deployer.groovy` file illustrated above extends `BaseDeployer`, which is a base class that ships with the deployer framework and provides  2 helper methods,  `scp` and `sshExec`, for performing deploys to remote servers.
+
+Furthermore, the above deployer.groovy script uploads a `deploy.sh` shell script (located at `.jcatapult/deploy/jcatapult-test-domain/scripts/deploy.sh`) via the `scp` method to assist in deploying the archive once it's uploaded to the remote domain environment.
+
+## Deployer Execution ##
+
+To deploy the test-webapp, execute the `deployer` script from your project root (assuming you have the `deployer` in your path as mentioned earlier)
+
+```
+deploy
+```
+
+### Domain Selection ###
+
+Since our test-webapp only has one domain configured in the deploy.xml file (`jcatapult-test-domain`), the deployer will default to this selection automatically without the need for user input
+
+### Environment Selection ###
+
+Since our test-webapp only has one environment configured within the `jcatapult-test-domain`, the deployer will default to this selection automatically without the need for user input
+
+### Archive Selection ###
+
+The deployer will now look within the `.jcatapult/deploy-archive` for any deploy archives that match the following format:
+
+```
+<archive> ::= "test-webapp-" <version> ".tar.gz"
+<version> ::= <number> "." <number> ("." <number>) ("-" <snapshot>)
+<number> ::= [0-9]+
+<snapshot> ::= [A|B|M|RC][0-9]+
+```

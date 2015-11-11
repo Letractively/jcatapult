@@ -1,0 +1,68 @@
+# Web Applications #
+
+At the core of JCatapult is support for building web applications. JCatapult provides a number of tools to make building Java web applications fast and simple. JCatapult web applications will normally consist of these types of classes and resources:
+
+  * Entity classes
+  * Service classes
+  * Action classes
+  * Views (JSPs or FreeMarker templates)
+  * Images
+  * Cascading Style Scripts
+  * JavaScript
+  * etc...
+
+# Create a web application #
+
+To create a web application, run the _make-project_ plugin like this:
+
+```
+$ svnt jcatapult:make-project --type=webapp
+```
+
+When you execute this command you will be asked the following questions:
+
+  1. Project Name:  Enter the name of your project (e.g. jcatapult-example-webapp)
+  1. Creation Directory:  Enter the directory to create the project in. (e.g. win: C:\projects, linux/mac: ~/projects)
+  1. Package Name: The java package root (e.g. org.jcatapult.example.webapp)
+  1. Group:  This is the group that owns the webapp.  This is typically the company domain name (e.g. jcatapult.org) It is used by Savant for dependency management.
+
+After you answer the questions it asks, you should have a newly created webapp. This module can be built using the following command:
+
+```
+svnt clean app
+```
+
+Once the webapp has been compiled, you can run the webapp inside Tomcat by executing the Tomcat scripts located in _target/tomcat/bin_ like this:
+
+**Unix**
+```
+target/tomcat/bin/tomcat.sh run
+```
+
+**Windows**
+```
+target\tomcat\bin\tomcat.bat run
+```
+
+Now you should be able to access the newly created webapp in a browser via http://localhost:8080
+
+# Details #
+
+When you execute the `svnt app` command from above, these steps are taken:
+
+  1. Compile the code
+  1. JAR the project
+  1. Copy the project JARs into the _web/WEB-INF/lib_ directory
+  1. Copy the project dependencies using Savant into the _web/WEB-INF/lib_ directory
+  1. Copy additional configuration from _src/conf/main_ into _web/WEB-INF/classes_
+  1. Setup the Tomcat scripts and configuration into _target/tomcat_ (this is accomplished by Savant's Tomcat plugin)
+
+After these steps have completed, the application is ready to be run. The Tomcat configuration is setup so that the web application is run directly from the _web_ directory of the project. This makes modifications to web application resources immediately available (such as JSP changes).
+
+The `tomcat` script located in `target/tomcat/bin` takes a number of different commands that control how Tomcat is started. Here are the commands and their purpose:
+
+| **start** | Start Tomcat in a new process (fork in `*`nix). Output from Tomcat is directed to _target/tomcat/logs/catalina.out_ |
+|:----------|:--------------------------------------------------------------------------------------------------------------------|
+| **stop**  | Shutdown a previously started Tomcat instance                                                                       |
+| **run**   | Starts Tomcat in the current process. The output is displayed to stdout                                             |
+| **start jpda** | Starts Tomcat in debug mode                                                                                         |

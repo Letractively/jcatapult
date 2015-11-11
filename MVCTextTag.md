@@ -1,0 +1,49 @@
+# Text #
+
+The **text** tag generates a text field.
+
+# Association #
+
+In most cases, a **text** tag is associated to a String property in the action. The value of the property is used when to populate the textarea when the form is rendered. The HTML generated might look like this:
+
+```
+<label>Select a login name</label>
+<input type="text" name="login"/>
+```
+
+The association on the action would look like this:
+
+```
+public class Register {
+  public String login;
+}
+```
+
+When the form is submitted the **login** field in the action is populated with the value from the text field.
+
+# Attributes #
+
+The **text** tag supports all of the common HTML attributes that are covered in the [forms](MVCForms.md) documentation. In addition to those attributes, the tag also supports these attributes:
+
+  * name - (String) The action property that is associated with the text field and used to populate the text field when the form is rendered and also used to populate the associated property of the action when the form is submitted. The name is also used to lookup the localized label for the text field from the resource bundle
+  * defaultValue - (String) Used to populate the text field, if-and-only-if the value from the property in the action is null
+  * value - (String) This value overrides the value from the property in the action when the form is rendered. This attribute is rarely used because if the form fails validation the users input into the text field will be lost
+  * size - (int) The size of the text field
+  * alt - (String) A short description of the textarea (used in tool-tips)
+  * tabindex - (int) The tabindex of the textarea
+  * accesskey - (String) The access key of the textarea
+  * onfocus - (String) The textarea got the focus
+  * onblur - (String) The textarea lost focus
+
+# Examples #
+
+```
+<!-- Generate a text field for the login name -->
+[@jc.text name="login"/]
+```
+
+The resource bundle might look like this:
+
+```
+login=Select a login name
+```

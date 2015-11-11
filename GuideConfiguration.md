@@ -1,0 +1,109 @@
+# Introduction #
+
+JCatapult provides an Environment Aware Configuration API that allows applications to control how they are configured for all of the environments they will be deployed to. This API leverages the [JCatapult Environment Resolution System](GuideEnvironment.md) to determine the current environment.
+
+
+# Commons Configuration #
+
+The JCatapult Environment Aware Configuration API is implemented under the hoods by the Apache Commons Configuration library. The documentation for the Apache Commons Configuration library can be found at http://commons.apache.org/configuration/.
+
+The JCatapult configuration is stored in XML configuration files within the web application. The format of these files is described here:
+
+http://commons.apache.org/configuration/userguide-1.2/howto_xml.html
+http://commons.apache.org/configuration/userguide/user_guide.html
+
+
+# Using the configuration #
+
+Here is an example class that is injected with the Configuration interface:
+
+```
+package org.jcatapult.example;
+
+import org.jcatapult.config.Configuration;
+
+import com.google.inject.Inject;
+
+public class ConfigurationExample {
+    private final Configuration configuration;
+
+    @Inject
+    public ConfigurationExample(Configuration configuration) {
+        this.configuration = configuration;
+    }
+}
+```
+
+This class can then use the _Configuration_ interface to retrieve configuration properties.
+
+Here is an example of using the _Configuration_ interface.
+
+```
+int number = this.configuration.getInt("number.of.turns");
+```
+
+
+# Configuration files #
+
+JCatapult by default expects that the Environment Aware Configuration files are placed in the _WEB-INF/config_ directory. The configuration files form a hierarchy and are named:
+
+  * config-default.xml
+  * config-{environment}.xml
+
+Let's say that you have three environments:
+
+  * development
+  * staging
+  * production
+
+You would have these files in _WEB-INF/config_
+
+  * config-default.xml
+  * config-development.xml
+  * config-staging.xml
+  * config-production.xml
+
+All default properties that are shared across multiple environments are placed into the _config-default.xml_ file. All environment specific values are placed into the individual environment files. Here is an example of using the default and environment specific files:
+
+_config-default.xml_
+```
+<config>
+  <number>
+    <of>
+      <turns>3</turns>
+    </of>
+  </number>
+</config>
+```
+
+_config-development.xml_
+```
+<config>
+  <number>
+    <of>
+      <turns>2</turns>
+    </of>
+  </number>
+</config>
+```
+
+_config-staging.xml_
+```
+<config>
+  <number>
+    <of>
+      <turns>2</turns>
+    </of>
+  </number>
+</config>
+```
+
+_config-production.xml_
+```
+<config>
+</config>
+```
+
+Notice that the production file did not define any value for _number.of.turns_ and therefore it would use the default value of **3**. The development and staging environments would use a value of **2**.
+
+This property would then be retrieved as shown above.

@@ -1,0 +1,203 @@
+# Database Management #
+
+JCatapult has a robust set of tools that allow you to manage project databases. Since JCatapult is also highly modularized, it also provides the ability to manage all of the tables and data required by modules. This support is called the JCatapult Database Management system.
+
+During the course of development, modules and web applications go through various stages with respect to the database. Like all other project assets, the database is a versioned resource that is used by the application. Therefore, it is important to be able to manage the database effectively as a versioned resource.
+
+In order to understand how JCatapult allows you to accomplish this goal, we'll step through the standard life-cycle of a project starting with a web application. Later we will cover the same life-cycle for a module.
+
+## Step 1: Project creation ##
+
+The first step of any project is its creation. When JCatapult creates a project it creates a number of directories that are important when dealing with the database. These directories are:
+
+  * src/java/main/
+
+&lt;your-package&gt;
+
+/domain
+  * src/db/main
+
+The first of these directories is where your projects entity classes are put. Entity classes are JPA annotated classes that map directly to database tables.
+
+The second of these directories is the location of the management scripts, which are used by JCatapult to version your databases.
+
+## Step 2: Writing entities ##
+
+After the project is created you will generally write the data model for the application. The data model is initially written in Java code using the JPA API. This reduces the overhead of getting started by not requiring you to write the entity classes and SQL scripts to create your database tables.
+
+## Step 3: Creating initial development databases ##
+
+JCatapult will use the entity classes that you have added to your project to create the database. At this stage you don't need to do anything special to get JCatapult to work. All you need to do to create your database tables is to execute the command:
+
+```
+ant create-main-database
+```
+
+This will create the database that is used by the application when it is run inside Tomcat for development testing. The name of the database is always the same as the name of your project as it is defined in the _project.xml_ file. The only thing that JCatapult does to this name is to replace dashes (-) with underscores. You can change the name of your database by setting a property in the _project.xml_ file named _project.database_ like this:
+
+```
+<property name="project.database" value="foo_bar"/>
+```
+
+## Step 4: Unit testing ##
+
+JCatapult also manages a second database that is only used for unit testing. This database is always the name of your project, plus `_test` with the same transformation and overriding as mentioned above. For example, if your _project.xml_ file looks like this:
+
+```
+<project name="foo-bar"
+  ...
+```
+
+JCatapult will name the test database:
+
+```
+foo_bar_test
+```
+
+If you want to create the test database without running the unit tests execute this command:
+
+```
+ant create-test-database
+```
+
+## Step 5: Seeding data ##
+
+Most applications will need some amount of initial data put into tables prior to the application being deployed. This also holds true in development. In order to seed the tables of your application, you need to create seed files.
+
+Seed files are placed into the _src/db/main/seed_ directory. The seed files themselves are versioned and must match the version of the project. This means that if the project's current version is 1.0, you should put all of the seed data for that version into a file named something like:
+
+```
+1.0-seed-user-data.sql
+```
+
+The only part of the name that is required by JCatapult is the version and that it end with '.sql'. The rest can be anything you like.
+
+Seed files should contain valid SQL insert, update and/or delete statements that setup the data in database so that it is usable by the application. These files should not change the database structure at all. We cover changing the structure later.
+
+During development, JCatapult locates all seed scripts and executes them in order to setup the database for testing. When you execute either the `ant create-main-database` or `ant create-test-database` command, JCatapult executes the appropriate seed scripts, if there are any, so that you can correctly unit and functional test the application.
+
+## Step 6: Releasing initial version ##
+
+After you completed the initial version of the application and fully tested it, you will then want to release the initial version of the project to either the production or testing environment. This step is quite possibly the most complex step in all of JCatapult. This is due to how Hibernate currently converts your projects entity classes into an SQL table creation script. Before we get into the difficult part, let's look at how you create the projects initial table creation script. In order to convert the entity classes you have created so far into an SQL script, you must execute this command:
+
+```
+ant table-sql
+```
+
+This command creates or overrides the file located at:
+
+```
+src/db/main/base/tables.sql
+```
+
+**NOTE:** This script should only contain the initial state of your database and after your application has been released, it should never be edited or recreated. If you edit this file you will be in for some major headaches when attempting to migrate your application from one environment to another.
+
+After you have created the _tables.sql_ file and completed the release of the project, you can then run the database manager tool in the new environment to create the database. The process of running this tool is not yet complete and therefore we don't have any documentation. If you want to figure something out for your project rather than waiting for the JCatapult team, you should look at the JavaDoc for the jcatapult-dbmgr library to learn how the database manager tool can be invoked.
+
+### The headache ###
+
+One of the current, major headaches with JCatapult is how it uses Hibernate for script and database creation. As mentioned above, JCatapult provides the capability to add modules to a project easily and these modules will generally have entity classes of their own. In order to correctly add a module to a web application you will need to add the entity classes for the module to the _src/conf/main/META-INF/persistence.xml_ file. When you run the `ant tables-sql` command, Hibernate generates a SQL script that creates tables for all entity classes within your project domain and all module entities that are defined in the persistence.xml file.  What this means is that the _tables.sql_ file will contain entities that are not only defined in your project domain but also entities defined in module domains.
+
+Therefore, after executing `ant table-sql` you will need to edit the _tables.sql_ file that is created and remove all of the table definitions for any modules your application uses.
+
+### Immutable files ###
+
+One last thing to mention about the release process is that after you perform a release, all of the files in the _src/db/main_ directories (base, alter, seed) should **NOT** be edited. These become immutable and should not be touched again.
+
+## Step 7: More development ##
+
+The next step in most application's life-cycle are updates. When updating an application you might need to make changes to the database. These changes might include:
+
+  * Creating new tables and entities
+  * Removing old tables and entities
+  * Changing table and entity names
+  * Changing column and property names
+  * Adding new data
+  * Changing existing data
+  * Deleting existing data
+
+These activities fall into two different categories:
+
+  * Altering the schema
+  * Altering the data
+
+JCatapult provides support for both of these activites. After the project's initial release, database management becomes somewhat tedious. The reason is that changes to the database schema are often reflected in entity classes and vice-versa. Therefore, you will have to manage both the Java entity classes and the database management SQL files. Sorry about the pain, but until we figure out some way to generate schema diffs and generate correct SQL, it's the only way to ensure that both the code and database are correct.
+
+### Step 7.1: Changing the database schema ###
+
+In order to change the database schema, you must first make the appropriate changes to the database itself. This is accomplished using JCatapult alter SQL files. These files reside in the _src/db/main/alter_ directory.
+
+Alter files follow the exact same naming format as seed files in that both are based on project verion. If the next released project version will be 1.1, you will need to create a SQL script named something like:
+
+```
+src/db/main/alter/1.1-alter-tables.sql
+```
+
+This informs the JCatapult Database Management system that this file is associated with project version 1.1. Inside the SQL file you can place any statements that are required to alter the database schema.
+
+The second part of schema change is updating the entity classes to reflect the new state of the database. You can simply edit the JPA entity classes inside the _domain_ package of your application to match the new database structure.
+
+### Step 7.2: Changing the database data ###
+
+In some cases, different versions of an application require different seed data to be present. JCatapult allows you to define seed data for specific versions of the application. Building on the example file name from section 7.1, if you need to modify data in the database for version 1.1 of your project you will need to create a SQL script named something like:
+
+```
+src/db/main/seed/1.1-change-some-data.sql
+```
+
+This script should contain all of the data manipulation statements required for version 1.1 of the application.
+
+### Step 7.3: Database creation ###
+
+Okay, you've completed updating your database in the alter and seed SQL files and also updated the entity classes.  Now you want to run the unit tests and perform functional testing inside Tomcat. In order to successfully create the project database, the JCatapult Database Management system performs an analysis of the database scripts you have created thus far and executes them in a specific order. If we look at the state of the application at this point we would have the following structure:
+
+```
+src
+ |--db
+     |--main
+         |--base
+         |   |--tables.sql
+         |
+         |--seed
+         |   |--1.0-seed-user-data.sql
+         |   |--1.1-change-some-data.sql
+         |
+         |--alter
+             |--1.1-alter-tables.sql
+```
+
+Based on the version numbers in the names of these files, JCatapult will determine that it needs to execute them in the following order:
+
+  1. tables.sql
+  1. 1.0-seed-user-data.sql
+  1. 1.1-alter-tables.sql
+  1. 1.1-change-some-data.sql
+
+The general rules that JCatapult uses to determine order are:
+
+  1. Execute tables.sql
+  1. Execute seed scripts up to the lowest alter script number
+  1. Execute alter scripts up to the lowest un-executed seed script number
+  1. Repeat steps 2-3 until all scripts have been executed
+
+When you execute the `ant create-main-database` command in development, Jcatapult first drops the database, recreates it, and then passes control to the Database Manager to execute all of the SQL scripts in the order above. This is only the behavior while in development. When you are ready to release the next version, JCatapult will not drop your database but rather perform a migration from the previous release version to the next release version. This process is discussed in the next section.
+
+## Step 8: Next release ##
+
+After you have finished updating all of the code, database scripts, and completed your testing, it will be time again to release the project to the production or testing environment. This process involves the execution of the Database Manager tool in order to migrate the database from one version to the next. This tool inspects the database to determine what version it is currently at and then figures out which files to execute in order to update it. This process uses a special table inside the database to determine the current version of the database. This table is called `JCATAPULT_ARTIFACT_VERSIONS` and exists specifically to store the version of the database schema for your project and all of the modules your project uses.
+
+Building on our example above, since we initially released version 1.0 of the application to production, the `JCATAPULT_ARTIFACT_VERSIONS` table would contain a row for the project and the 1.0 version as follows:
+
+```
+mysql> select * from JCATAPULT_ARTIFACT_VERSIONS;
++------------------+---------------------------+
+| artifact_name    | version                   |
++------------------+---------------------------+
+| foo-bar          | 1.0                       |
++------------------+---------------------------+
+```
+
+The JCatapult Database Manager would see this version and determine that it only needs to update from version **1.0** to **1.1**. Therefore, it would then only execute these scripts to perform the update:
+
+  1. 1.1-alter-tables.sql
+  1. 1.1-change-some-data.sql

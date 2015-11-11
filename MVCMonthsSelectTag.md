@@ -1,0 +1,58 @@
+# Months Select #
+
+The **monthsselect** tag generates a select box that is populated with the months of the year. The options of the select always have a value of the 1 based index of the month (i.e. May = 5, August = 8). The text of the option is localized based on the current [Locale](MVCLocale.md) of the MVC.
+
+# Association #
+
+The **monthsselect** tag is usually always associated with an numeric or String property of the action. However, you could also create a custom type using a custom type converter. The HTML generated might look like this:
+
+```
+<label>Month</label>
+<select name="creditCard.expirationMonth">
+<option value="1">January</option>
+...
+</select>
+```
+
+The association on the action would look like this:
+
+```
+public class Register {
+  public CreditCard creditCard;
+}
+
+public class CreditCard {
+  public int expirationMonth;
+}
+```
+
+When the form is submitted the **creditCard.expirationMonth** field in the action is populated with the value from the selected option.
+
+# Selected State #
+
+When the form is rendered, the selected state of the options in the select box are determined by using the associated property from the action and the value of each option (the 1 based index of the months). If the value of the associated property matches the value of an option, that options selected state is set to selected.
+
+# Attributes #
+
+The monthsselect tag supports all of the common HTML attributes that are covered in the [forms](MVCForms.md) documentation. In addition to those attributes, the monthsselect tag also supports these attributes:
+
+  * name - (String) The action property that is associated with the monthsselect and used to determine if any options in the select box are selected when the form is rendered. It is also used to populate the associated property of the action when the form is submitted. The name is also used to lookup the localized label for the monthsselect from the resource bundle
+  * size - (int) The size of the select box
+  * alt - (String) A short description of the select box (used in tool-tips)
+  * tabindex - (int) The tabindex of the select box
+  * accesskey - (String) The access key of the select box
+  * onfocus - (String) The select box got the focus
+  * onblur - (String) The select box lost focus
+
+# Examples #
+
+```
+<!-- Generate a months select box -->
+[@jc.monthsselect name="creditCard.expirationMonth"/]
+```
+
+The resource bundle might look like this:
+
+```
+creditCard.expirationMonth=Expiration month of the credit card
+```

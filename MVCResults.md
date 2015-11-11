@@ -1,0 +1,210 @@
+# Results #
+
+The JCatapult MVC handles results in two ways. First, using a standard set of conventions, results are found based on the request URI and possibly the result code from an action invocation. The other method is via annotations defined on action classes.
+
+# FreeMarker #
+
+Currently, JCatapult MVC uses FreeMarker for rendering HTML and other types of text results. FreeMarker has many advantages over JSPs, but mainly it allows JCatapult Modules to ship results inside JAR files, something that is impossible with JSPs.
+
+For more information about FreeMarker, visit the FreeMarker website at http://www.freemarker.org
+
+# Conventions #
+
+The default handling for any request URI is to find the appropriate FreeMarker result and render it. This is known as a Forward result, even though it doesn't use JEE RequestDispatcher to perform a forward to a JSP.
+
+The location of the FreeMarker template that is rendered is based on the request URI, the URI extension, result code, and a base path. The result code is the String return value from an action invocation. The extension is the portion of the URI following a . (dot) character. Here is an example URI:
+
+```
+/profile/summary.ajax
+
+URI: /profile/summary
+Extension: ajax
+```
+
+If the incoming request URI does not map to an action class, the result code defaults to **success**.
+
+The base path used by the JCatapult MVC is:
+
+```
+/WEB-INF/content
+```
+
+All of the FreeMarker results are always stored under this base path. Their specific path is simply the base path, plus the incoming request URI and the result code. If the request URI is:
+
+```
+/admin/user/edit.ajax
+```
+
+and the result code from the action class is **success**, the default location of the FreeMarker result would be:
+
+```
+/WEB-INF/content/admin/user/edit-ajax-success.ftl
+```
+
+This would also be the same default result if there was no action associated with the request URI (remember that the default result code is always **success**). However, if this file doesn't exist, the JCatapult MVC then looks for a result without the result code, followed by a result without the extension but including the result code, followed by a result without the extension or result code. The second location for the default FreeMarker result would be:
+
+```
+/WEB-INF/content/admin/user/edit-ajax.ftl
+```
+
+followed by:
+
+```
+/WEB-INF/content/admin/user/edit-success.ftl
+```
+
+followed by:
+
+```
+/WEB-INF/content/admin/user/edit.ftl
+```
+
+The search order is always:
+
+  1. 
+
+&lt;base-path&gt;
+
+/
+
+&lt;request-uri&gt;
+
+-
+
+&lt;extension&gt;
+
+-
+
+&lt;result-code&gt;
+
+.ftl
+  1. 
+
+&lt;base-path&gt;
+
+/
+
+&lt;request-uri&gt;
+
+-
+
+&lt;extension&gt;
+
+.ftl
+  1. 
+
+&lt;base-path&gt;
+
+/
+
+&lt;request-uri&gt;
+
+-
+
+&lt;result-code&gt;
+
+.ftl
+  1. 
+
+&lt;base-path&gt;
+
+/
+
+&lt;request-uri&gt;
+
+.ftl
+
+# Annotations #
+
+If the default results don't fit the specific needs of the application, you can use annotations to specify different results. Annotations are placed on the action class and the type of result is dependent on the annotation used. The result annotations that come with JCatapult MVC are:
+
+  * `org.jcatapult.mvc.action.result.annotation.Forward` - renders an alternative FreeMarker template
+  * `org.jcatapult.mvc.action.result.annotation.Redirect` - sends back a redirect to the browser
+  * `org.jcatapult.mvc.action.result.annotation.Stream` - returns a byte stream back to the client, which is useful for Files and other raw results
+
+Here is an example action that uses the Redirect annotation:
+
+```
+@Action
+@Redirect(uri = "/")
+public class RedirectAction {
+  public String execute() {
+    return "success";
+  }
+}
+```
+
+This will send back a redirect to the root of the web application (/).
+
+## Result Code ##
+
+If an action needs to have different results based on some type of conditional logic, you can use the result code of the action to control the result that is rendered. Each result annotation has an attribute named **code** that maps to the result code of the action. The default for this attribute is always **success**. Here is the redirect example again with different results:
+
+```
+@Action
+@Redirect(code = "go", uri = "/")
+@Forward(code = "success", page = "/WEB-INF/content/success.ftl")
+public class RedirectAction {
+  public String execute() {
+    if (someCondition) {
+      return "go";
+    }
+
+    return "success";
+  }
+}
+```
+
+As you can see, this action has two different results and the conditional logic inside the execute method determines which result is used based on the return value (e.g. result code).
+
+# Custom Results #
+
+JCatapult makes it easy to create custom results. The steps you take to create a custom result are:
+
+  1. Create a result annotation
+  1. Implement the `org.jcatapult.mvc.action.result.Result` interface
+
+## Annotation ##
+
+First, create your custom result annotation. This annotation must have RUNTIME retention and target FIELDs. This annotation also must be annotated with the `org.jcatapult.mvc.action.result.annotation.ResultAnnotation` annotation so that the JCatapult MVC will know that it is a custom result annotation and the Result implementation to use. Here is an example annotation:
+
+```
+@ResultAnnotation(MyResult.class)
+@Retention(RUNTIME)
+@Target(FIELD)
+public @interface MyResultAnnotation {
+}
+```
+
+## Result Implementation ##
+
+Next, you must implement the `org.jcatapult.mvc.action.result.Result` interface. This interface has a single method that you will use to handle the result. Building on the example annotation from above, let's implement the **MyResult** class:
+
+```
+public class MyResult implements Result<MyResultAnnotation> {
+  public void execute(MyResultAnnotation annoation, ActionInvocation invocation) 
+  throws IOException, ServletException {
+    // Do custom result stuff here!
+  }
+}
+```
+
+At first you might be wondering how you will generate a result without the HttpServletRequest or HttpServletResponse. Results are created during each request to the server. Because of this, you can inject your Result with any object that you need. Here is our **MyResult** class again with the request and response.
+
+```
+public class MyResult implements Result<MyResultAnnotation> {
+  private final HttpServletRequest request;
+  private final HttpServletResponse response;
+
+  @Inject
+  public MyResult(HttpServletRequest request, HttpServletResponse response) {
+    this.request = request;
+    this.response = response;
+  }
+
+  public void execute(MyResultAnnotation annoation, ActionInvocation invocation) 
+  throws IOException, ServletException {
+    // Do custom result stuff here with the request and response!
+  }
+}
+```

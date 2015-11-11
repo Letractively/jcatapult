@@ -1,0 +1,51 @@
+# Overview #
+
+JCatapult is a new open-source platform for building Java web applications. JCatapult is based on a number of industry standards, including JEE and JPA, de-facto standards such as Ant and Hibernate and emerging standards including Guice and Joda-Time. This white paper will discuss the main principles of JCatapult and illustrate how JCatapult can simplify development of large and small applications.
+
+# Principles #
+
+JCatapult was designed from the ground up to address many of the deficiencies in other open source Java platforms. As the platform was built, various open source technologies were selected based on how closely they followed the main principles of JCatapult. These principles are:
+
+  * Minimize configuration whenever possible
+  * Provide intelligent defaults and methods to override them
+  * Support maximum reuse
+  * Allow developers to use what they want
+  * Be as service oriented as possible
+
+## Configuration ##
+
+Over the past ten years or so, most platforms have required a large amount of configuration to use. Spring is a good example of a configuration driven platform. Configuration is a good solution in some cases, but for day-to-day development, configuration can be cumbersome and difficult to maintain. Complex applications might have thousands of lines of XML configuration. This configuration can be difficult for new developers to learn and seasoned developers to maintain. Furthermore, invalid
+configuration changes can cause failures at runtime and impact the performance and usability of the application.
+
+Often times configuration isn't required to get the job done and therefore JCatapult minimizes configuration as much as possible. Instead, JCatapult uses well defined conventions which allow developers to better understand the application by how it is organized. Frameworks like Rails and Grails have shown how beneficial conventions can be. JCatapult takes this concept a step further and discovers features of the application dynamically at runtime. For example, the JCatapult MVC will discover actions by parsing the classpath. You don't have to configure each action by hand in XML as is required with many other MVCs. This has the added benefit of allowing actions to be defined in the
+application as well as libraries that the application depends on.
+
+## Defaults and Overrides ##
+
+On the flip side, configuration makes sense in some cases. In the majority of these cases, JCatapult provides intelligent defaults rather than forcing developers to set each configuration parameter for each application they build. In addition, if the defaults don't work, developers are free to change them.
+
+JCatapult expands on the principle of configuration defaults and overrides by allowing the majority of the platform to be overridden. For example, if the JCatapult email solution doesn't quite satisfy all of your application's needs, you can extend it or replace it completely with a custom solution.
+
+## Maximum Reuse ##
+
+There are many times when features from one application are used in other applications. Examples of this type of reuse include registration, login and user administration. Many companies have reused these features via a copy and paste methodology. This methodology is not only error prone, but can also be time consuming.
+
+JCatapult is built to maximize reuse for these types of features. This concept is called JCatapult Modules. JCatapult Modules bundle sets of features together and allow developers to write the feature once and reuse it whenever it makes sense. Examples of the types of Modules that can be built with JCatapult include a blog, a wiki, a content management system, a user management system, a news publishing system and much more.
+
+By providing reuse within the platform, developers no longer need to use multiple technologies to quickly implement solutions. If a requirement stipulates that a web application needs a blog, the developer could implement the blog from scratch, use a third-party blogging technology such as WordPress, or leverage a pre-built JCatapult blog within their current application.
+
+The benefit of the JCatapult solution is that the blog is contained within the application. Therefore, if the application needs to use services of the blog, it is much easier. Additionally, a third-party solution creates an additional management point. Most third-party solutions have their own administration interface that must be used to administer the blog. Furthermore, they often use a separate database and have a separate user management system. This means that user accounts now have to be managed in two locations.
+
+Since JCatapult Modules are co-located inside an existing application, they will share the same administration interface as well as tools and services. This means that users can be managed in a single location and the entire application is administered via a single interface.
+
+## Use What You Want ##
+
+Although JCatapult provides a suite of useful tools that can greatly reduce development time and cost, applications are not required to use any of these tools. JCatapult allows any the features it provides to be added or removed easily. For example, if you have your own email solution, you can use that instead of JCatapult's.
+
+## Service Oriented ##
+
+JCatapult takes the methodologies of Service Oriented Architecture and applies them to web application development. The entire JCatapult platform is written as a collection of loosely coupled services. This makes it easy to extend or change nearly any part of the platform. It also means that any services you might already have can easily be adapted to work with JCatapult.
+
+# Summary #
+
+These principles make JCatapult a truly lightweight platform for developing web applications. Everything, including the platform itself, is pluggable. This means that if a developer encounters a requirement that JCatapult can fulfill, they just plug in the solution and move onto the next requirement. JCatapult's Modules take this a step further and add the ability to plug in entire sets of functionality quickly.

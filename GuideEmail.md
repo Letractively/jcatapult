@@ -1,0 +1,286 @@
+﻿= Overview =
+
+Built on [FreeMarker](http://freemarker.sourceforge.net/) and [JavaMail](http://java.sun.com/products/javamail/), the JCatapult Email library (JCEL for short) provides a set of APIs to easily create and send emails from an application.
+
+# Getting Started #
+
+In order to use the EmailService, you first need to open the _deploy/tomcat/main/conf/context.xml_ file and uncomment the MailSession configuration. Next, you'll need to setup an email server on your local machine. Most Unix and Linux operating systems come with an email server or you can easily install PostFix or Sendmail. Windows users will need to find an appropriate email server for their version of Windows.
+
+# API and Templates #
+
+The Email Service is an interface that is used to construct emails in a simple and templatized manner.  The API itself consists of one method, `sendEmail`, which takes the name of the email template to be sent. Email templates are stored (by default) in the _web/WEB-INF/email_ directory. The EmailService API can be used to send plain text or HTML emails, depending on which templates exist in this directory. For example, if we wanted to send an HTML email from a **contact us** form, we might invoke the EmailService like this:
+
+```
+emailService.sendEmail("contact-us")...
+```
+
+And we would create an email templated named _contact-us-html.ftl_ inside the _web/WEB-INF/email_ directory. Our template might look like this:
+
+```
+<html>
+<body>
+<p>
+Thanks for contacting us.
+</p>
+</body>
+</html>
+```
+
+# Email Command #
+
+In order to change parameters, such as the subject and to address, of the email, you use the `EmailCommand` interface. This interface is returned from the `sendEmail` method on the `EmailService`. The `EmailCommand` interface provides a DSL (domain specific language) approach to constructing and sending emails. DSLs, such as the `EmailCommand`, are characterized by providing methods that sound like plain English. This allows the code to be more easily read. Let's say we wanted our **Contact Us** email to be sent from a special no reply email address and sent to the email address from the **Contact Us** form. We can specify the to and from addresses using the EmailCommand like this:
+
+```
+// The emailAddress variable is the value from the form
+
+sendEmail("contact-us").to(emailAddress).from("no-reply@example.com").now();
+```
+
+This code will send an email using the `contact-us` email template, to the email address specific on the form, from the email address `no-reply@example.com`.
+
+## Parameters ##
+
+Another cool feature of the `EmailService` is that it uses FreeMarker (by default) for the email templates. This means that you can use all the power of FreeMarker to construct the content of your email. You can also pass in extra parameters to the FreeMarker email template using the `EmailCommand` interface. Let's say we wanted to pass in the first and last name values from our **Contact Us** form. Here's how we would do that:
+
+```
+// The emailAddress, firstName, and lastName variables are the values from the form
+
+sendEmail("contact-us").
+    to(emailAddress).
+    from("no-reply@example.com").
+    withTemplateParam("firstName", firstName).
+    withTemplateParam("lastName", lastName).
+    now();
+```
+
+Now, we could update our email template like this:
+
+```
+<html>
+<body>
+<p>
+Dear ${firstName} ${lastName},
+</p>
+<p>
+Thanks for contacting us.
+</p>
+</body>
+</html>
+```
+
+As you can see, the FreeMarker email template now has access to these parameters. There are a number of additional methods on the `EmailCommand` that you can use to setup the emails. Consult the JavaDoc for more information.
+
+# Templates #
+
+In order for the `EmailService` to find the correct email template to use, the names of the email template files must conform to the following naming convention:
+
+```
+<template-name>-[html|text].ftl
+```
+
+  * template-name: arbitrary name given to the template (e.g. contact).
+  * [html|text]: html or text.  This token informs the service that the email message is a text or html email.
+
+ex:
+```
+contact-us-text.ftl
+contact-us-html.ftl
+```
+
+You can provide either of these two templates or both of the templates. If you only provide one of the two templates, the template will be rendered and then set into the `Email` instance as either the text body, if the `-text.ftl` template is used, or the MIME body, if the `-html.ftl` template is used. If you provide both templates then the email will contain both a text body and a MIME body. It is usually best to provide both versions of your emails for usability reasons.
+
+# Configuration #
+
+Besides using the methods on the `EmailCommand` interface to setup the emails, you can also use the JCatapult Environment Aware Configuration to setup the emails as well as configure the `EmailService` itself. Here are the configuration parameters you can use to setup the how the `EmailService` finds and processes email templates:
+
+  * jcatapult.email.templates.location:
+    * Description: The location within the web application or a fully qualified location on disk of the FreeMarker email templates. The default value for the location of the email template files is configured using the [JCatapult properties](JCatapultProperties.md) files.
+    * Optional: Yes
+    * default value: /WEB-INF/email
+
+  * jcatapult.freemarker-service.check-seconds
+    * Description: The number of seconds to check if the FreeMarker template has been modified. (Changes to this property will also effect the JCatapult MVC and anything else that uses the DefaultFreeMarkerService from jcatapult-core)
+    * Optional: Yes
+    * Default: 2 if the environment is not _production_, Integer.MAX\_INT if the environment is _production_
+
+  * jcatapult.email.username
+    * Description: The user name for the SMTP server
+    * Optional: false
+    * Default: N/A
+
+  * jcatapult.email.password
+    * Description: The password for the SMTP server.
+    * Optional: false
+    * Default: N/A
+
+  * jcatapult.email.smtp-host
+    * Description: The email server that the EmailService will use to send the emails.
+    * Optional: true
+    * Default: localhost
+
+  * jcatapult.email.thread-pool.core-size
+    * Description: The initial size of the thread pool for asynchronous handling of the email sending.
+    * Optional: true
+    * Default: 1
+
+  * jcatapult.email.thread-pool.maximum-size
+    * Description: The maximum size of the thread pool for asynchronous handling of the email sending.
+    * Optional: true
+    * Default: 5
+
+  * jcatapult.email.thread-pool.keep-alive
+    * The keep alive time (in milliseconds) to have threads stick around being idle prior to being thrown out.
+    * Optional: true
+    * Default: 500 milliseconds
+
+To override the defaults, you would include these in your webapp's configuration files.  An example has been provided below for illustration purposes:
+
+```
+<config>
+  <jcatapult>
+    <email>
+      <templates>
+        <location>/WEB-INF/email-templates</location>
+      </templates>
+    </email>
+    <freemarker-service>
+        <check-seconds>60</check-seconds>
+    </freemarker-service>
+  </jcatapult>
+</config>
+```
+
+The above example configures the `EmailService` to load the email templates from the directory location `/WEB-INF/email-templates` and cache the templates in memory for 1 minute (60 seconds).
+
+In addition to configuring how the `EmailService` is configured to process the email templates, you can also configure individual properties for a specific email template, such as the email's from, from-display, to, bcc, and cc. In order to configure a specific email template, you need to specify various configuration values using the templates name. Here are the values you can set:
+
+  * jcatapult.email.'template-name'.subject
+  * jcatapult.email.'template-name'.from
+  * jcatapult.email.'template-name'.from-display
+  * jcatapult.email.'template-name'.to
+  * jcatapult.email.'template-name'.cc
+  * jcatapult.email.'template-name'.bcc
+
+Using our example from above or the **Contact Us** email template, these configuration values would become:
+
+  * jcatapult.email.contact-us.subject
+  * jcatapult.email.contact-us.from
+  * jcatapult.email.contact-us.from-display
+  * jcatapult.email.contact-us.to
+  * jcatapult.email.contact-us.cc
+  * jcatapult.email.contact-us.bcc
+
+The configuration XML file would look something like this:
+
+```
+<config>
+  <jcatapult>
+    <email>
+      <contact-us>
+        <subject>Contact Us</subject>
+        <from>no-reply@example.com</from>
+        <from-display>Example.com's Contact form</from-display>
+      </contact-us>
+    </email>
+  </jcatapult>
+</config>
+```
+
+# Action Example #
+
+here is an example JCatapult action that would use the `EmailService`:
+
+```
+// Imports left out for simplicity
+
+/**
+ * Example action that processes the contact us form
+ */
+@Action
+public class Test {
+    public String firstName;
+    public String lastName;
+    public String email;
+    public EmailService emailService;
+
+    @Inject
+    public Test(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+    public String execute() {
+        emailService.sendEmail("contact-us").
+                     withSubject("Contact Us Form Submission").
+                     to(email).
+                     from("no-reply@example.com).
+                     withTemplateParam("firstName", firstName).
+                     withTemplateParam("lastName", lastName).
+                     withTemplateParam("email", email).
+                     now();
+
+        return "success";
+    }
+}
+```
+
+# Unit Testing #
+
+The JCatapult `EmailService` is also testable without actually sending an emails via SMTP. To setup testing of the `EmailService` you need to use the `org.jcatapult.email.EmailTestHelper` class. This class has a method called `setup` that must be called in the constructor of your test like this:
+
+```
+public class MyTest extends JCatapultBaseTest {
+  public MyTest() {
+    EmailTestHelper.setup(this);
+  }
+
+  ...
+}
+```
+
+This will setup all of the necessary mocks so that the EmailService will work properly without actually sending the email. After each test has completed you can verify that emails were correctly generated and sent using the methods on the `EmailTestHelper`. Here is an example:
+
+```
+public class MyServiceTest extends JCatapultBaseTest {
+  @Inject public MyService service;
+
+  public MyServiceTest() {
+    EmailTestHelper.setup(this);
+  }
+
+  @Test
+  public void testThatEmailsAreSent() {
+    service.doSomething();
+
+    Queue<Email> emails = EmailTestHelper.getEmailResults();
+    assertEquals(1, emails.size());
+    assertEquals("This would be the actual email content", emails.get(0).getText());
+    // Additional asserts
+    ...
+  }
+}
+```
+
+You can also setup the `EmailService` within JCatapult action integration tests. Action integration tests use the WebappTestRunner to invoke an action and this process sets up the entire JCatapult framework separately to ensure the test simulates how the framework is setup inside Tomcat. To setup the `EmailTestHelper` for an integration test, you need to do something like this:
+
+```
+public class MyActionIntegrationTest extends JCatapultBaseTest {
+  public MyTest() {
+    EmailTestHelper.setup(this);
+  }
+
+  @Test
+  public void testTheAction() {
+    WebappTestRunner runner = new WebappTestRunner();
+
+    runner.test("/my-action").
+        withMock(EmailTransportService.class, EmailTestHelper.getService()).
+        ...
+
+    Queue<Email> emails = EmailTestHelper.getEmailResults();
+    assertEquals(1, emails.size());
+    assertEquals("This would be the actual email content", emails.get(0).getText());
+    // Additional asserts
+    ...
+  }
+}
+```

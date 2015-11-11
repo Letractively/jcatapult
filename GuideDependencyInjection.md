@@ -1,0 +1,75 @@
+﻿= JCatapult Dependency Injection =
+
+JCatapult uses Guice for dependency injection. This document will cover the basics of how to use JCatapult's Guice integration. For more detailed coverage of Guice consult the Guice online documentation.
+
+# Why Guice #
+
+The decision to use Guice over Spring was made to keep inline with the general principle of JCatapult, which is, “provide good defaults without configuration and the ability to extend and override when the defaults won't work.” Guice allows JCatapult to provide access to a number of pre-built services without requiring applications provide any configuration. It also allows applications to override and extend these services when it is required.
+
+Guice is also extremely fast. JCatapult is design entirely as an enterprise grade web application development platform. In order to support this level of applications, any dependency injection container has to be extremely fast.
+
+Lastly, the choice of Guice greatly reduces application complexity and speed of development. Guice eliminates error prone and tedious configuration and allows developers to work entirely in Java code in a type safe manner.
+
+# Guice Overview #
+
+Guice uses annotations and Java code rather than XML for dependency injection. In order to inject a class use Guice, all that is required is to annotate either a method or constructor with the _@Inject_ annotation. This annotation will tell Guice to call that method or use that constructor when dependency injecting the class. Here is an example of a dependency injected service:
+
+```
+public class MyService {
+  private final MyOtherService service;
+
+  @Inject
+  public MyService(MyOtherService service) {
+    this.service = service;
+  }
+}
+```
+
+This class will be instantiated by Guice whenever is is required. Guice will also instantiate the MyOtherService class and pass that instance to this service in the constructor.
+
+# Interfaces and Implementations #
+
+In most cases you will want to write service interfaces that will be used by your actions and then implement those service interfaces. Often there is only a single implementation of any given interface. There are two ways to tell Guice which class implements an interface so that the implementation can be injected.
+## ImplementedBy ##
+
+The @ImplementedBy annotation is often the best way to tell Guice which implementation of an interface to use. In the absence of any other information, Guice will use this annotation to determine the class that implements an interface. This means that the annotation provide the _default_ implementation of an interface and can easily be overridden inside a Guice-module.
+
+Here is an example of using this annotation:
+
+```
+@ImplementedBy(MyDefaultService.class)
+public interface MyService {
+  ...
+}
+```
+
+This tells Guice that whenever someone needs an instance of the MyService interface it should create an instance of the MyDefaultService class and inject that.
+
+## Guice Modules ##
+
+The other method that Guice uses to locate implementations is via a Java class that is called a Guice-module. These classes implement the com.google.inject.Module interface. Guice-module classes use a method-chaining pattern to setup the implementations for interfaces. Here is an example of a Guice-module class:
+
+```
+public class MyModule extends AbstractModule {
+  public void bind() {
+     bind(MyService.class).to(MyDefaultService.class);
+  }
+}
+```
+
+This code provides the same injection as the @ImplementedBy annotation from above.
+
+### Discovery ###
+
+JCatapult handles Guice-modules differently than Guice would if it was used outside of JCatapult. Any Guice-modules that exist in the classpath are automatically loaded into the Guice container that is created by JCatapult for the application. This discovery of Guice-modules occurs when the application is initially loaded. Guice-modules classes must conform to a simple naming convention such that their name always ends in **Module**. The JCatapult Guice container will locate of the Guice-modules and pass them to Guice.
+
+**NOTE:** Abstract, package protected and anonymous Guice-modules will not be loaded.
+
+### Overriding Modules ###
+
+JCatapult's Guice-module discovery mechanism allows you to override Guice-modules that are defined inside other libraries or JCatapult-modules. This is accomplished by sub-classing the Guice-module. JCatapult's Guice container will first locate all of the Guice-modules in the classpath and then it will ignore any Guice-modules that have been sub-classed. This allows you to easily override any existing Guice-module simply by sub-classing it.
+
+### Optional Modules ###
+
+Add stuff about optional annotation.
+

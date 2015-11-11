@@ -1,0 +1,61 @@
+# Introduction #
+
+This section documents what you need to do to get the Filemanager configured and setup within your application.
+
+Configuration and Setup is broken down into 3 separate categories:
+
+  1. Dependency Management Setup
+  1. Web Application Configuration
+  1. Filemanager Configuration
+
+# Dependency Management Setup #
+jCatapult works a little differently than most open source projects in that there aren't really any distributions that you are required to download and install on your workstations.  The majority of the jCatapult projects can be added by simply adding a new artifact to your dependency list in your project's savant project.xml file.  The best way to find the most current of version of any project in jCatapult is to browse that project's subversion tag repository.  For jCatapult Filemanager, refer to the url below to see what the most current version available is:
+
+http://jcatapult.googlecode.com/svn/libraries/jcatapult-filemgr/tags/
+
+If I were adding 1.0 to my project's savant project.xml file, it would look like this:
+
+```
+<artifact group="libraries.jcatapult.org" name="jcatapult-filemgr" version="1.0"/>
+```
+
+# Web Application Configuration #
+Now that you've added the dependency to your project's project.xml file, it's time to add the necessary configuration to your projet's web.xml file.  This is required because the jCatapult Filemanager uses a servlet to serve files via http response.  Copy and paste the snippet below to add the servlet to your web.xml (you can change the servlet-name and url-pattern as you see fit):
+
+```
+<servlet>
+  <servlet-name>FileServlet</servlet-name>
+  <servlet-class>org.jcatapult.filemgr.servlet.FileServlet</servlet-class>
+  <load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>FileServlet</servlet-name>
+  <url-pattern>/files/*</url-pattern>
+</servlet-mapping>
+```
+
+# Filemanager Configuration #
+In order for the Filemanager to work correctly, it must know the following information:
+  1. upload directory:  This is the root directory where you will be storing all uploaded files (default: ${user.home}/data/uploads)
+  1. allowed content types: The set of content types that the filemanager should allow to be uploaded (default: image/jpeg, image/png, image/gif, application/x-shockwave-flash, application/pdf)
+  1. The URI prefix: This is the context path in your URL where files are accessible via HTTP requests.  This should map directly to what you have defined in your file servlets's url-pattern in the web.xml (default: /files)
+
+If you need to override the defaults, you can do so within your project's WEB-INF/config files.  Below are examples of overriding the defaults:
+
+```
+<config>
+  <jcatapult>
+    <!-- jCatapult File Manager Overrides -->
+    <file-mgr>
+      <file-upload>
+        <allowed-content-types>image/gif, image/jpg, application/pdf</allowed-content-types>
+      </file-upload>
+      <file-servlet>
+        <prefix>/file-downloads</prefix>
+        <dir>${user.home}/files/webapp/uploads</dir>
+      </file-servlet>
+    </file-mgr>
+  </jcatapult>
+</config>
+```

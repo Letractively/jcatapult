@@ -1,0 +1,47 @@
+# Password #
+
+The **password** tag generates a password entry field.
+
+# Association #
+
+In most cases, a **password** tag is associated with a String property in the action. The HTML generated might look like this:
+
+```
+<label>Password</label>
+<input type="password" name="password"/>
+```
+
+The association on the action would look like this:
+
+```
+public class Register {
+  public String password;
+}
+```
+
+When the form is submitted the **password** field in the action is populated with the value from the password field. **NOTE** password fields are never populated with the value from the property in the action, even if it is non-null. This is to prevent security concerns regarding "view source" in most browsers.
+
+# Attributes #
+
+The password tag supports all of the common HTML attributes that are covered in the [forms](MVCForms.md) documentation. In addition to those attributes, the password tag also supports these attributes:
+
+  * name - (String) The action property that is associated with the password and used to populate the associated property of the action when the form is submitted. The name is also used to lookup the localized label for the password from the resource bundle
+  * size - (int) The size of the checkbox
+  * alt - (String) A short description of the checkbox (used in tool-tips)
+  * tabindex - (int) The tabindex of the checkbox
+  * accesskey - (String) The access key of the checkbox
+  * onfocus - (String) The checkbox got the focus
+  * onblur - (String) The checkbox lost focus
+
+# Examples #
+
+```
+<!-- Generate a password for the password field -->
+[@jc.password name="password"/]
+```
+
+The resource bundle might look like this:
+
+```
+password=Select a password
+```

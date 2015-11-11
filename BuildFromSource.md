@@ -1,0 +1,67 @@
+# Introduction #
+
+This document shows you how to build JCatapult modules and libraries from source.
+
+# Layout #
+
+The layout for the JCatapult source repository is different than other projects at Google Code. Rather than containing just a single project, our repository contains many projects. Each project in turn contains the standard **trunk**, **branches** and **tags** sub-directories.  To get a list of the projects in the repository, issue this command:
+
+```
+svn list http://jcatapult.googlecode.com/svn
+```
+
+This will produce a list such as:
+
+```
+examples/
+jcatapult-core/
+jcatapult-dbmgr/
+jcatapult-persistence/
+jcatapult-security/
+libraries/
+modules/
+savant/
+tools/
+wiki/
+```
+
+Underneath the **libraries**, **modules**, **savant**, and **tools** directories are even more projects. For example, if you perform a listing for the **libraries** directory, you will see these additional projects:
+
+```
+jcatapult-crud/
+jcatapult-commerce/
+jcatapult-email/
+jcatapult-filemgr/
+```
+
+# Checking out a project #
+
+If you want to check out one of the JCatapult projects, determine which one you want to check out and then fetch the **trunk** of that project like this:
+
+```
+svn co http://jcatapult.googlecode.com/svn/jcatapult-core/trunk jcatapult-core
+```
+
+This will check out the project as read-only. If you are a committer, see below.
+
+# Committers #
+
+## Check out ##
+
+Committers can check out projects and submit changes. The command to check out a project as a comitter is:
+
+```
+svn --username=<your-username> co https://jcatapult.googlecode.com/svn/jcatapult-core/trunk jcatapult-core
+```
+
+You will be prompted for your Google Code password.
+
+# Building #
+
+Once you have the project checked out, you can build it with Savant like this:
+
+```
+$ svnt clean jar
+```
+
+This will run the build, create the JAR file and then install an integration build of the project into your local Savant cache.

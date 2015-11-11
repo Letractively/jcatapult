@@ -1,0 +1,85 @@
+# Modules #
+
+Modules are complete working sets of functionality that are able to be plugged into JCatapult web applications. Some examples of modules might include:
+
+  * A news module for administration and publishing of news articles as well as RSS feeds and other news widgets
+  * A complete blog system
+  * A content management system
+  * A user administration system
+
+JCatapult modules are not like modules (sometimes called components) from other Java framework such as JSF and Tapestry modules, whose modules are more like widgets. JCatapult modules contain a full set of features that make up an entire functional part of a webapp. Examples of items that are part of a module are:
+
+  * Entity classes
+  * Services
+  * Actions
+  * Views (FreeMarker templates rather than JSPs)
+
+JCatapult provides all of the support for adding modules to a web application including support for JPA configuration and much more. JCatapult also provides the ability to override views, services and other items from a module.
+
+# Create a module #
+
+To create a module, run the _make-project_ plugin like this:
+
+```
+$ svnt jcatapult:make-project --type=module
+```
+
+After you answer the questions it asks, you should have a newly created module. This module can be built using the following command:
+
+```
+svnt clean app
+```
+
+Once the module has been compiled, you can run the module inside Tomcat by executing the Tomcat scripts located in _target/tomcat/bin_ like this:
+
+**Unix**
+```
+target/tomcat/bin/tomcat.sh run
+```
+
+**Windows**
+```
+target\tomcat\bin\tomcat.bat run
+```
+
+Now you should be able to access the newly created module in a browser via http://localhost:8080
+
+
+# Details #
+
+When you execute the `svnt app` command from above, these steps are taken:
+
+  1. Compile the code
+  1. JAR the project
+  1. Copy the project JARs into the _web/WEB-INF/lib_ directory
+  1. Copy the project dependencies using Savant into the _web/WEB-INF/lib_ directory
+  1. Copy additional configuration from _src/conf/main_ into _web/WEB-INF/classes_
+  1. Setup the Tomcat scripts and configuration into _target/tomcat_ (this is accomplished by Savant's Tomcat plugin)
+
+After these steps have completed, the application is ready to be run. The Tomcat configuration is setup so that the web application is run directly from the _web_ directory of the project. This makes modifications to web application resources immediately available (such as JSP changes).
+
+The `tomcat` script located in `target/tomcat/bin` takes a number of different commands that control how Tomcat is started. Here are the commands and their purpose:
+
+| **start** | Start Tomcat in a new process (fork in `*`nix). Output from Tomcat is directed to _target/tomcat/logs/catalina.out_ |
+|:----------|:--------------------------------------------------------------------------------------------------------------------|
+| **stop**  | Shutdown a previously started Tomcat instance                                                                       |
+| **run**   | Starts Tomcat in the current process. The output is displayed to stdout                                             |
+| **start jpda** | Starts Tomcat in debug mode                                                                                         |
+
+# Module Examples #
+
+Currently, JCatapult has 3 modules which you can easily add to your project. You can also use these modules as examples of how to build and use your own modules. These modules can be checked out from SubVersion here:
+
+  * http://jcatapult.googlecode.com/svn/modules/jcatapult-simple-user-module/trunk
+  * http://jcatapult.googlecode.com/svn/modules/jcatapult-user-module/trunk
+  * http://jcatapult.googlecode.com/svn/modules/jcatapult-cms-module/trunk
+
+The best module you should consult to figure out how to get started is the jcatpault-simple-user-module. This module contains all of these following and is simple and straight-forward:
+
+  * Actions
+  * Entity classes
+  * Database scripts
+  * Views
+  * Services
+
+This module also makes use of a library called **jcatapult-user** and if you look in the project.xml file, you can see how to import modules into your project.
